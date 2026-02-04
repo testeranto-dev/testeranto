@@ -1,0 +1,13 @@
+{
+  "name": "hello-world-bun",
+  "version": "1.0.0",
+  "description": "A simple Bun project that prints hello world",
+  "main": "index.js",
+  "scripts": {
+    "start": "bun run index.js"
+  },
+  "keywords": ["bun", "hello-world"],
+  "author": "",
+  "license": "MIT",
+  "type": "module"
+}
