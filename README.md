@@ -12,23 +12,19 @@ In more conrete terms, testeranto is
 
 - a library of code split across 7 languages and 2 purposes
 
-## the server
+## getting started
 
-testeranto.ts - the server 
-testeranto.rb
-testeranto.py
-testeranto.golang
-testeranto.java
-testeranto.rust
-
-## libraries
-
-2) tiposkripto (ts) npm
-3) rusto  (rust) cargo
-4) pitono (python) pypi
-5) golingvu (go) TBD
-6) kafe (java) TBD
-7) rubeno (ruby ) rubygems 
+Install testeranto
+Add a lib for you language of choice.
+- tiposkripto (ts) npm
+- rusto  (rust) cargo
+- pitono (python) pypi
+- golingvu (go) TBD
+- kafe (java) TBD
+- rubeno (ruby ) rubygems 
+Run `testeranto`
+?
+Profit
 
 ## Philosophy
 
@@ -50,7 +46,7 @@ Testeranto reverses this pattern
 
 By packaging a piece of software first, we can correlate the output aritifacts to it's specific input source files. We can then run static tests and unit tests upon this set of input files. The results of all these tests, plus the BDD test results, are given to an LLM. This allows focus the LLM's context entirely around 1 slice of an application.
 
-## Getting started
+## Development
 
 ```bash
 # Install dependencies
@@ -73,8 +69,3 @@ Make sure `~/.bun/bin` is in your PATH:
 export PATH="$HOME/.bun/bin:$PATH"
 # Add this line to your ~/.zshrc for permanent access
 ```
-```
-
-### Note
-This project uses Bun's built-in TypeScript support, so no separate compilation step is needed. The server runs TypeScript files directly.
-

@@ -1,4 +1,27 @@
-import { ITestconfigV2 } from "../../../Types";
+import type { ITestconfigV2 } from "../../../Types";
+
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+
+// 1. Get the path as Bun resolved it
+import rubyImportPath from "./ruby.rb" with { type: "file" };
+
+// 2. Resolve it to an ABSOLUTE path so Bun.file doesn't get lost
+// rubyImportPath is often just the filename; join it with the script's directory
+const absoluteRubySrc = join(import.meta.dir, rubyImportPath);
+
+const embeddedFile = Bun.file(absoluteRubySrc);
+const tempRubyPath = join(tmpdir(), `ruby-${Date.now()}.rb`);
+
+// Now Bun.file has a full path to look at
+await Bun.write(tempRubyPath, embeddedFile);
+
+console.log("[Server] Ruby builder", tempRubyPath, embeddedFile)
+
+export const rubyBuildCommand = (projectConfigPath: string, rubyConfigPath: string, testName: string) => {
+  return `ruby ${tempRubyPath} /workspace/${rubyConfigPath} ${testName}`;
+}
+
 
 export const rubyDockerComposeFile = (
   config: ITestconfigV2,
@@ -29,11 +52,6 @@ export const rubyDockerComposeFile = (
   }
 };
 
-export const rubyBuildCommand = (projectConfigPath: string, rubyConfigPath: string, testName: string) => {
-  // The testeranto source is mounted at /workspace/testeranto
-  // return `ruby node_modules/testeranto/dist/ruby/ruby.rb /workspace/${rubyConfigPath} ${testName}`;
-  return 'tree /workspace/node_modules/testeranto/dist'
-}
 
 export const rubyBddCommand = (fpath: string) => {
 

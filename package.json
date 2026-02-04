@@ -25,12 +25,9 @@
     "Other"
   ],
   "scripts": {
-    "bundle": "node bundle.js",
     "summarizeLicenses": "yarn licenses list > ALL_LICENSES.txt; yarn license-checker >> ALL_LICENSES.txt; yarn license-checker --summary >> ALL_LICENSES.txt",
     "compile-docs": "node scripts/compile-docs.js",
     "prepublish": "self-import",
-    "type-check": "yarn tsc --noEmit > tsc.log",
-    "type-fix": "aider --model deepseek/deepseek-chat --load type-fix.txt",
     "vscode:prepublish": "yarn run bundle",
     "compile": "yarn run bundle",
     "watch": "yarn run bundle --watch",
@@ -39,7 +36,8 @@
     "build:server": "bun build ./src/index.ts --outdir ./dist --target bun --banner=\"#!/usr/bin/env bun\"",
     "compile:server": "bun compile ./src/index.ts --outfile testeranto-app",
     "prepublishOnly:server": "bun run build",
-    "link:server": "bun run build:server && bun link"
+    "link:server": "bun run build:server && bun link",
+    "bundle": "node bundle.js"
   },
   "keywords": [
     "testeranto",

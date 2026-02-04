@@ -195,7 +195,7 @@ export class Server_Docker extends Server_WS {
       // Add builder service for this runtime if not already added
       if (!processedRuntimes.has(runtime)) {
         const builderServiceName = `${runtime}-builder`;
-        
+
         // Ensure dockerfile path is valid and exists
         const fullDockerfilePath = path.join(process.cwd(), dockerfile);
         if (!fs.existsSync(fullDockerfilePath)) {
@@ -228,7 +228,7 @@ export class Server_Docker extends Server_WS {
           command: buildCommand,
           networks: ["allTests_network"],
         };
-        
+
         processedRuntimes.add(runtime);
       }
 
@@ -475,10 +475,10 @@ ${x}
     } catch (error) {
       console.error(`[Server_Docker] Error in super.start():`, error);
     }
-    
+
     // Write configuration to a JSON file for the VS Code extension to read
     this.writeConfigForExtension();
-    
+
     try {
       await this.setupDockerCompose();
     } catch (error) {
@@ -789,22 +789,13 @@ ${x}
     try {
       const configDir = path.join(process.cwd(), 'testeranto');
       const configPath = path.join(configDir, 'extension-config.json');
-      
+
       // Ensure the directory exists
       if (!fs.existsSync(configDir)) {
         fs.mkdirSync(configDir, { recursive: true });
         console.log(`[Server_Docker] Created directory: ${configDir}`);
       }
-      
-      console.log(`[Server_Docker] Writing extension config to: ${configPath}`);
-      console.log(`[Server_Docker] Current working directory: ${process.cwd()}`);
-      console.log(`[Server_Docker] Configs runtimes exists: ${!!this.configs.runtimes}`);
-      console.log(`[Server_Docker] Configs runtimes type: ${typeof this.configs.runtimes}`);
-      
-      if (this.configs.runtimes) {
-        console.log(`[Server_Docker] Configs runtimes keys:`, Object.keys(this.configs.runtimes));
-      }
-      
+
       // Extract runtime information from configs
       const runtimesArray: Array<{
         key: string;
@@ -812,13 +803,11 @@ ${x}
         label: string;
         tests: string[];
       }> = [];
-      
+
       // Check if runtimes exists and is an object
       if (this.configs.runtimes && typeof this.configs.runtimes === 'object') {
         for (const [key, value] of Object.entries(this.configs.runtimes)) {
-          console.log(`[Server_Docker] Processing runtime key: ${key}`);
-          console.log(`[Server_Docker] Runtime value type: ${typeof value}`, value);
-          
+
           // The value might be a function call result or an object
           // In the provided config, it's wrapped in parentheses, but when parsed it should be an object
           const runtimeObj = value as any;
@@ -826,9 +815,9 @@ ${x}
             // Check for runtime property in various possible locations
             const runtime = runtimeObj.runtime;
             const tests = runtimeObj.tests || [];
-            
+
             console.log(`[Server_Docker] Found runtime: ${runtime}, tests:`, tests);
-            
+
             if (runtime) {
               runtimesArray.push({
                 key,
@@ -846,23 +835,23 @@ ${x}
       } else {
         console.warn(`[Server_Docker] No runtimes found in config`);
       }
-      
+
       const configData = {
         runtimes: runtimesArray,
         timestamp: new Date().toISOString(),
         source: 'testeranto.ts',
         serverStarted: true
       };
-      
+
       const configJson = JSON.stringify(configData, null, 2);
       fs.writeFileSync(configPath, configJson);
       console.log(`[Server_Docker] Successfully wrote extension config to ${configPath} with ${runtimesArray.length} runtimes`);
-      
+
       // Verify the file was written
       if (fs.existsSync(configPath)) {
         const fileStats = fs.statSync(configPath);
         console.log(`[Server_Docker] Config file exists, size: ${fileStats.size} bytes`);
-        
+
         // Read back and log the file contents
         const fileContent = fs.readFileSync(configPath, 'utf-8');
         console.log(`[Server_Docker] Config file contents:`, fileContent);

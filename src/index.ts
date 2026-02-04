@@ -1,18 +1,16 @@
 import { Server } from "./serverDeprecated/serverClasees/Server";
-import { ITestconfigV2 } from "./Types";
 
-// Create a sample configuration
-const config: ITestconfigV2 = {
-  featureIngestor: async (s: string) => {
-    console.log("Feature ingestor called with:", s);
-    return "processed";
-  },
-  runtimes: {
-    // Add your runtime configurations here
-  }
-};
+const mode = process.argv[2] as "once" | "dev";
+if (mode !== "once" && mode !== "dev") {
+  console.error(`The 3rd argument should be 'dev' or 'once', not '${mode}'.`);
 
-// Create and start the server
+  console.error(`you passed '${process.argv}'.`);
+
+  process.exit(-1);
+}
+
+const config = (await import(process.cwd() + '/testeranto/testeranto.ts')).default;
+
 const server = new Server(config, "dev");
 
 server.start().catch((error) => {
@@ -20,4 +18,4 @@ server.start().catch((error) => {
   process.exit(1);
 });
 
-console.log("Testeranto server starting with Bun...");
+console.log("hello testeranto v0.222.9")

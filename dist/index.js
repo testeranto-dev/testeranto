@@ -3068,6 +3068,21 @@ var pythonBddCommand = (fpath) => {
 };
 
 // src/serverDeprecated/runtimes/ruby/docker.ts
+import { join } from "path";
+import { tmpdir } from "os";
+
+// src/serverDeprecated/runtimes/ruby/ruby.rb
+var ruby_default = "./ruby-sk73vk5b.rb";
+
+// src/serverDeprecated/runtimes/ruby/docker.ts
+var absoluteRubySrc = join(import.meta.dir, ruby_default);
+var embeddedFile = Bun.file(absoluteRubySrc);
+var tempRubyPath = join(tmpdir(), `ruby-${Date.now()}.rb`);
+await Bun.write(tempRubyPath, embeddedFile);
+console.log("[Server] Ruby builder", tempRubyPath, embeddedFile);
+var rubyBuildCommand = (projectConfigPath, rubyConfigPath, testName) => {
+  return `ruby ${tempRubyPath} /workspace/${rubyConfigPath} ${testName}`;
+};
 var rubyDockerComposeFile = (config, container_name, projectConfigPath, rubyConfigPath, testName) => {
   return {
     build: {
@@ -3088,9 +3103,6 @@ var rubyDockerComposeFile = (config, container_name, projectConfigPath, rubyConf
     ],
     command: rubyBuildCommand(projectConfigPath, rubyConfigPath, testName)
   };
-};
-var rubyBuildCommand = (projectConfigPath, rubyConfigPath, testName) => {
-  return "tree /workspace/node_modules/testeranto/dist";
 };
 var rubyBddCommand = (fpath) => {
   const jsonStr = JSON.stringify({ ports: [1111] });
@@ -4723,16 +4735,16 @@ Force quitting...`);
 }
 
 // src/index.ts
-var config = {
-  featureIngestor: async (s) => {
-    console.log("Feature ingestor called with:", s);
-    return "processed";
-  },
-  runtimes: {}
-};
+var mode = process.argv[2];
+if (mode !== "once" && mode !== "dev") {
+  console.error(`The 3rd argument should be 'dev' or 'once', not '${mode}'.`);
+  console.error(`you passed '${process.argv}'.`);
+  process.exit(-1);
+}
+var config = (await import(process.cwd() + "/testeranto/testeranto.ts")).default;
 var server = new Server(config, "dev");
 server.start().catch((error) => {
   console.error("Failed to start server:", error);
   process.exit(1);
 });
-console.log("Testeranto server starting with Bun...");
+console.log("hello testeranto v0.222.9");
