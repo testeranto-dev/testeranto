@@ -1,6 +1,6 @@
 .aider*
 
-node_modules
+
 .secret
 secret*
 .aider*
@@ -30,3 +30,4 @@ src/lib/rusto/target
 
 *.tgz
 *.vsix
+node_modules

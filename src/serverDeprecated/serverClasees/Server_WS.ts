@@ -1,71 +1,37 @@
-import { WebSocket, WebSocketServer } from "ws";
 import { ITestconfigV2 } from "../../Types";
 import { WsManager } from "../serverManagers/WsManager";
 import { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
 
 export class Server_WS extends Server_HTTP {
-  protected ws: WebSocketServer;
   protected wsClients: Set<WebSocket> = new Set();
-  wsManager: WsManager
+  wsManager: WsManager;
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
-
-    this.ws = new WebSocketServer({
-      noServer: true,
-    });
-
-    this.wsManager = new WsManager()
-
-    this.setupWebSocketHandlers();
+    this.wsManager = new WsManager();
   }
 
   async start(): Promise<void> {
-    console.log(`[Server_WS] start()`)
+    console.log(`[Server_WS] start()`);
     await super.start();
-    this.attachWebSocketToHttpServer(this.httpServer);
   }
 
   async stop() {
-    console.log(`[Server_WS] stop()`)
+    console.log(`[Server_WS] stop()`);
 
     this.wsClients.forEach((client) => {
       client.close();
     });
     this.wsClients.clear();
 
-    // Close the WebSocket server
-    this.ws.close(() => {
-      console.log("[WebSocket] Server closed");
-    });
-
     await super.stop();
   }
 
-
   escapeXml(unsafe: string): string {
-    return this.wsManager.escapeXml(unsafe)
+    return this.wsManager.escapeXml(unsafe);
   }
 
-  public attachWebSocketToHttpServer(httpServer: any): void {
-
-    httpServer.on("upgrade", (request: any, socket: any, head: any) => {
-      const pathname = new URL(request.url || "", `http://${request.headers.host}`).pathname;
-
-      // Handle WebSocket connections at /ws
-      if (pathname === "/ws") {
-        console.log("[WebSocket] Upgrade request for /ws");
-        this.ws.handleUpgrade(request, socket, head, (ws) => {
-          this.ws.emit("connection", ws, request);
-        });
-      } else {
-        // Close connection for non-WebSocket paths
-        socket.destroy();
-      }
-    });
-
-  }
 
   public broadcast(message: any): void {
     const data = typeof message === "string" ? message : JSON.stringify(message);
@@ -82,68 +48,6 @@ export class Server_WS extends Server_HTTP {
     });
     console.log(`[WebSocket] Sent to ${sentCount} clients`);
   }
-
-
-  private setupWebSocketHandlers(): void {
-    this.ws.on("connection", (ws: WebSocket, request: any) => {
-      console.log(`[WebSocket] New connection from ${request.socket.remoteAddress}`);
-      this.wsClients.add(ws);
-
-      // Send initial connection message
-      ws.send(JSON.stringify({
-        type: "connected",
-        message: "Connected to Process Manager WebSocket",
-        timestamp: new Date().toISOString()
-      }));
-
-      // Immediately send current processes
-      // Note: handleGetProcesses needs to be implemented or handled differently
-      // For now, we'll send a placeholder
-      ws.send(JSON.stringify({
-        type: "processes",
-        data: this.getProcessSummary ? this.getProcessSummary() : { processes: [] },
-        timestamp: new Date().toISOString()
-      }));
-
-      // Handle messages from clients
-      ws.on("message", (data: Buffer) => {
-        try {
-          const message = JSON.parse(data.toString());
-          this.handleWebSocketMessage(ws, message);
-        } catch (error) {
-          console.error("[WebSocket] Error parsing message:", error);
-          ws.send(JSON.stringify({
-            type: "error",
-            message: "Invalid JSON message",
-            timestamp: new Date().toISOString()
-          }));
-        }
-      });
-
-      // Handle client disconnection
-      ws.on("close", () => {
-        console.log("[WebSocket] Client disconnected");
-        this.wsClients.delete(ws);
-      });
-
-      // Handle errors
-      ws.on("error", (error) => {
-        console.error("[WebSocket] Error:", error);
-        this.wsClients.delete(ws);
-      });
-    });
-
-    this.ws.on("error", (error) => {
-      console.error("[WebSocket] Server error:", error);
-    });
-
-    this.ws.on("close", () => {
-      console.log("[WebSocket] Server closing...");
-      this.wsClients.clear();
-    });
-  }
-
-
 
   private handleWebSocketMessage(ws: WebSocket, message: any): void {
     console.log("[WebSocket] Received message:", message.type);
@@ -299,8 +203,6 @@ export class Server_WS extends Server_HTTP {
       }));
     }
   }
-
-  // Broadcast a message to all connected WebSocket clients
 
   protected getProcessSummary?(): any;
 }

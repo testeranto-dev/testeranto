@@ -1,80 +1,80 @@
-# Hello World Bun Project (TypeScript)
+# testeranto
 
-This is a simple Bun project written in TypeScript that prints "hello world" to the console.
+## What is it?
 
-## Getting Started
+Testeranto lets you vibe code large, real-world polyglot codebases via BDD tests written in javascript, python, golang, rust and java. By wrapping your code in gherkin semantics, you specify the behavior of your components. The tests are run and the output of those tests are passed into the context of your favorite LLM. Testeranto edits your code and tests using your documentation and then runs the tests again. Once all the tests pass, the results are committed to the repo. In short, testeranto is my attempt to automate my job. It allows a Product Manager to create a jira ticket and, within minutes, recieve a well-tested pull request addressing that ticket and without human intervention.
 
-Make sure you have [Bun](https://bun.sh) installed on your system.
+In more conrete terms, testeranto is
+- a test runner that uses docker as a multi-language process manager
+- a VS code extension
+- integrates static tests, unit tests, integration tests and source code into focused Aider sessions.
+- turns github issues, BDD specs and markdown documentation into packaged artifacts and human readable test reports.
 
-### Installation
+- a library of code split across 7 languages and 2 purposes
 
-Install dependencies (includes TypeScript types for Bun):
+## the server
+
+testeranto.ts - the server 
+testeranto.rb
+testeranto.py
+testeranto.golang
+testeranto.java
+testeranto.rust
+
+## libraries
+
+2) tiposkripto (ts) npm
+3) rusto  (rust) cargo
+4) pitono (python) pypi
+5) golingvu (go) TBD
+6) kafe (java) TBD
+7) rubeno (ruby ) rubygems 
+
+## Philosophy
+
+The common pattern of testing and packaging software is 
+1) static tests of entire codebase
+2) unit tests  of entire codebase
+3) packaging
+4) integration tests of entire codebase
+
+Testeranto reverses this pattern
+
+1) Breakup the application into "slices"
+2) Package each
+3) static tests of input files
+4) unit tests of input files
+5) run testeranto tests of input files
+6) packaging 
+7) integration tests of entire codebase
+
+By packaging a piece of software first, we can correlate the output aritifacts to it's specific input source files. We can then run static tests and unit tests upon this set of input files. The results of all these tests, plus the BDD test results, are given to an LLM. This allows focus the LLM's context entirely around 1 slice of an application.
+
+## Getting started
 
 ```bash
+# Install dependencies
 bun install
-```
 
-### Running the Project
+# Run the server (Bun runs TypeScript directly)
+bun run start
 
-To run the project, use one of the following commands:
-
-```bash
-bun run index.ts
-```
-
-or
-
-```bash
-npm start
-```
-
-For development with watch mode:
-
-```bash
+# Or run in watch mode
 bun run dev
-```
 
-### Expected Output
+# Build for production
+bun run build
 
-When you run the server, you'll see:
+# Install globally
+bun run link   # This builds first, then links
 
-```
-Server running at http://localhost:3000
-Endpoints:
-  GET  /      - Welcome message
-  GET  /about - About page
-  GET  /json  - JSON response
-  POST /echo  - Echo back request body
-```
-
-## Project Structure
-
-- `index.ts` - Main TypeScript entry point implementing an HTTP server
-- `package.json` - Project configuration
-- `tsconfig.json` - TypeScript configuration
-
-## TypeScript
-
-This project uses TypeScript with Bun's built-in TypeScript support. No separate compilation step is needed—Bun runs TypeScript files directly. The server demonstrates routing, different response types (plain text, JSON), and error handling.
-
-## Testing the Server
-
-Once the server is running, you can test it using:
-
+Make sure `~/.bun/bin` is in your PATH:
 ```bash
-# GET request to root
-curl http://localhost:3000/
-
-# GET request to /about
-curl http://localhost:3000/about
-
-# GET request to /json
-curl http://localhost:3000/json
-
-# POST request to /echo
-curl -X POST -d "Hello server" http://localhost:3000/echo
+export PATH="$HOME/.bun/bin:$PATH"
+# Add this line to your ~/.zshrc for permanent access
+```
 ```
 
-## License
+### Note
+This project uses Bun's built-in TypeScript support, so no separate compilation step is needed. The server runs TypeScript files directly.
 
-MIT

@@ -141,33 +141,19 @@ export class Server_Docker extends Server_WS {
     const services: IService = {};
 
     console.log("mark1")
-    // // Add browser service
+    // Add browser service (commented out until we have the Dockerfile)
     // services['browser'] = {
-
-    //   build:
-    //   {
-    //     context: `/Users/adam/Code/testeranto`,
-    //     dockerfile: `src/server/runtimes/web/web.Dockerfile`
+    //   build: {
+    //     context: process.cwd(),
+    //     dockerfile: 'src/serverDeprecated/runtimes/web/web.Dockerfile'
     //   },
-
-    //   // image: 'browserless/chrome:latest',
     //   shm_size: '2gb',
-
-    //   // environment: [ "DEFAULT_ARGS=--disable-dev-shm-usage"],
-
     //   container_name: 'browser-allTests',
-    //   // environment: {
-    //   //   CONNECTION_TIMEOUT: '60000',
-    //   //   MAX_CONCURRENT_SESSIONS: '10',
-    //   //   ENABLE_CORS: 'true',
-    //   //   TOKEN: '',
-    //   //   DEFAULT_ARGS: '--disable-dev-shm-usage'
-    //   // },
     //   ports: [
     //     '3000:3000',
     //     '9222:9222'
     //   ],
-    //   networks: ["default"],
+    //   networks: ["allTests_network"],
     // };
 
     const runTimeToCompose: Record<IRunTime, [
@@ -191,89 +177,82 @@ export class Server_Docker extends Server_WS {
       "java": [javaDockerComposeFile, javaBuildCommand, javaBddCommand]
     };
 
+    // Track which runtimes we've already added builder services for
+    const processedRuntimes = new Set<IRunTime>();
+
     // Iterate through each entry in the config Map
     for (const [runtimeTestsName, runtimeTests] of Object.entries(this.configs.runtimes)) {
-
       const runtime: IRunTime = runtimeTests.runtime as IRunTime;
       const dockerfile = runtimeTests.dockerfile;
       const buildOptions = runtimeTests.buildOptions;
-      const testsObj = runtimeTests.tests
+      const testsObj = runtimeTests.tests;
 
-      // loop over all suites which are of the right runtime
-      for (const [t, c] of Object.entries(this.configs.runtimes)) {
-        if (c.runtime === runtime) {
-          if (RUN_TIMES.includes(runtime)) {
-            const buildCommand = runTimeToCompose[runtime][1](
-              buildOptions,
-              c.buildOptions,
-              runtimeTestsName
-            )
-
-            console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} build command: "${buildCommand}"`)
-
-            // Add builder service for this runtime
-            const builderServiceName = `${runtime}-builder`;
-
-            // Ensure dockerfile path is valid and exists
-            let dockerfilePath = dockerfile;
-            const fullDockerfilePath = path.join(process.cwd(), dockerfilePath);
-            if (!fs.existsSync(fullDockerfilePath)) {
-              throw (`[Server_Docker] Dockerfile not found at ${fullDockerfilePath}`);
-
-            }
-
-            services[builderServiceName] = {
-              build: {
-                context: process.cwd(),
-                dockerfile: dockerfilePath,
-              },
-              container_name: builderServiceName,
-              environment: {},
-              working_dir: "/workspace",
-              volumes: [
-                `${process.cwd()}/src:/workspace/src`,
-                `${process.cwd()}/example:/workspace/example`,
-                `${process.cwd()}/dist:/workspace/dist`,
-                `${process.cwd()}/testeranto:/workspace/testeranto`,
-              ],
-              command: buildCommand,
-              networks: ["allTests_network"],
-            };
-
-
-            for (const tName of testsObj) {
-              // Clean the test name for use in container names
-              // Handle numeric test names (like '0') by converting to string
-              // const testNameStr = String(testName);
-              const cleanTestName = tName.toLowerCase()
-                .replaceAll("/", "_")
-                .replaceAll(".", "-")
-                .replace(/[^a-z0-9_-]/g, '');
-
-              // Generate UID using the runtimeTestsName (e.g., 'nodeTests') and clean test name
-              const uid = `${runtimeTestsName.toLowerCase()}-${cleanTestName}`;
-
-              // Add BDD service for this test
-              const bddCommandFunc = runTimeToCompose[runtime][2];
-              // TODO find filepath
-              // const filePath = "testeranto/bundles/allTests/ruby/example/Calculator.test.rb"
-
-              const filePath = `testeranto/bundles/allTests/${runtime}/${tName}`
-              const bddCommand = bddCommandFunc(filePath, this.configs.runtimes[runtimeTestsName].buildOptions)
-
-              console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} BDD command: "${bddCommand}"`)
-
-              services[`${uid}-bdd`] = this.bddTestDockerComposeFile(runtime, `${uid}-bdd`, bddCommand);
-              services[`${uid}-aider`] = this.aiderDockerComposeFile(`${uid}-aider`);
-            }
-
-          } else {
-            throw `unknown runtime ${runtime}`;
-          }
-
-        }
+      // Only process if runtime is valid
+      if (!RUN_TIMES.includes(runtime)) {
+        throw `unknown runtime ${runtime}`;
       }
 
+      // Add builder service for this runtime if not already added
+      if (!processedRuntimes.has(runtime)) {
+        const builderServiceName = `${runtime}-builder`;
+        
+        // Ensure dockerfile path is valid and exists
+        const fullDockerfilePath = path.join(process.cwd(), dockerfile);
+        if (!fs.existsSync(fullDockerfilePath)) {
+          throw (`[Server_Docker] Dockerfile not found at ${fullDockerfilePath}`);
+        }
+
+        // Get build command
+        const buildCommand = runTimeToCompose[runtime][1](
+          buildOptions,
+          buildOptions,
+          runtimeTestsName
+        );
+
+        console.log(`[Server_Docker] [generateServices] ${runtime} build command: "${buildCommand}"`);
+
+        services[builderServiceName] = {
+          build: {
+            context: process.cwd(),
+            dockerfile: dockerfile,
+          },
+          container_name: builderServiceName,
+          environment: {},
+          working_dir: "/workspace",
+          volumes: [
+            `${process.cwd()}/src:/workspace/src`,
+            `${process.cwd()}/example:/workspace/example`,
+            `${process.cwd()}/dist:/workspace/dist`,
+            `${process.cwd()}/testeranto:/workspace/testeranto`,
+          ],
+          command: buildCommand,
+          networks: ["allTests_network"],
+        };
+        
+        processedRuntimes.add(runtime);
+      }
+
+      // Add BDD and aider services for each test
+      for (const tName of testsObj) {
+        // Clean the test name for use in container names
+        const cleanTestName = tName.toLowerCase()
+          .replaceAll("/", "_")
+          .replaceAll(".", "-")
+          .replace(/[^a-z0-9_-]/g, '');
+
+        // Generate UID using the runtimeTestsName (e.g., 'nodeTests') and clean test name
+        const uid = `${runtimeTestsName.toLowerCase()}-${cleanTestName}`;
+
+        // Add BDD service for this test
+        const bddCommandFunc = runTimeToCompose[runtime][2];
+        const filePath = `testeranto/bundles/allTests/${runtime}/${tName}`;
+        const bddCommand = bddCommandFunc(filePath, buildOptions);
+
+        console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} BDD command: "${bddCommand}"`);
+
+        services[`${uid}-bdd`] = this.bddTestDockerComposeFile(runtime, `${uid}-bdd`, bddCommand);
+        services[`${uid}-aider`] = this.aiderDockerComposeFile(`${uid}-aider`);
+      }
     }
 
     // Ensure all services use the same network configuration
