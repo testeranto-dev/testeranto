@@ -1,0 +1,14 @@
+demo.mov
+secret*
+.aider*
+node_modules/
+src/lib/pitono/venv/
+example/
+cmd
+docs
+testeranto
+src/lib/rusto/target
+src/lib/pitono/PM/__pycache__
+src/lib/pitono/pitono.egg-inf
+src/lib/pitono/__pycache__
+src/lib/pitono/pitono.egg-info

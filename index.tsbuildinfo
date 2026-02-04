@@ -1,0 +1,1 @@
+{"bundle":{"commonSourceDirectory":"./src","sourceFiles":["./src/Features.ts","./src/IBaseConfig.ts","./src/index.mts","./src/Project.ts","./src/kokomoFeatures.ts"],"dts":{"sections":[{"pos":0,"end":20955,"kind":"text"}],"hash":"bbd98e32a0ae85bf2a2929f2755f8c3216e3aa9baf9b34ec4b8a69dfb0d1efec"}},"version":"4.8.2"}
