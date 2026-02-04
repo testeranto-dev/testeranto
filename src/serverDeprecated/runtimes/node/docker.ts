@@ -1,4 +1,4 @@
-import { ITestconfigV2 } from "../../../Types";
+import type { ITestconfigV2 } from "../../../Types";
 
 export const nodeDockerComposeFile = (
   config: ITestconfigV2,

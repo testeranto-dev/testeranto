@@ -3946,21 +3946,11 @@ class Server_Docker extends Server_WS {
       }
     };
   }
-  staticTestDockerComposeFile(runtime, container_name, command) {
-    let dockerfilePath = "";
-    for (const [key, value] of Object.entries(this.configs.runtimes)) {
-      if (value.runtime === runtime) {
-        dockerfilePath = value.dockerfile;
-        break;
-      }
-    }
-    if (!dockerfilePath) {
-      throw `[Docker] [staticTestDockerComposeFile] no dockerfile found for ${dockerfilePath}, ${Object.entries(this.configs)}`;
-    }
+  staticTestDockerComposeFile(runtime, container_name, command, config, runtimeTestsName) {
     return {
       build: {
         context: process.cwd(),
-        dockerfile: dockerfilePath
+        dockerfile: config.runtimes[runtimeTestsName].dockerfile
       },
       container_name,
       environment: {},
@@ -4014,7 +4004,6 @@ class Server_Docker extends Server_WS {
   }
   generateServices() {
     const services = {};
-    console.log("mark1");
     const runTimeToCompose = {
       node: [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
       web: [webDockerComposeFile, webBuildCommand, webBddCommand],
@@ -4030,6 +4019,7 @@ class Server_Docker extends Server_WS {
       const dockerfile = runtimeTests.dockerfile;
       const buildOptions = runtimeTests.buildOptions;
       const testsObj = runtimeTests.tests;
+      const checks = runtimeTests.checks;
       if (!RUN_TIMES.includes(runtime)) {
         throw `unknown runtime ${runtime}`;
       }
@@ -4069,6 +4059,11 @@ class Server_Docker extends Server_WS {
         console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} BDD command: "${bddCommand}"`);
         services[`${uid}-bdd`] = this.bddTestDockerComposeFile(runtime, `${uid}-bdd`, bddCommand);
         services[`${uid}-aider`] = this.aiderDockerComposeFile(`${uid}-aider`);
+        checks.forEach((check, ndx) => {
+          console.log("mark4", `${uid}-check-${ndx}`);
+          const command = check([]);
+          services[`${uid}-check-${ndx}`] = this.staticTestDockerComposeFile(runtime, `${uid}-check-${ndx}`, command, this.configs, runtimeTestsName);
+        });
       }
     }
     for (const serviceName in services) {
@@ -4202,18 +4197,9 @@ ${x}
     }
   }
   async start() {
-    console.log(`[Server_Docker] start()`);
-    try {
-      await super.start();
-    } catch (error) {
-      console.error(`[Server_Docker] Error in super.start():`, error);
-    }
+    await super.start();
     this.writeConfigForExtension();
-    try {
-      await this.setupDockerCompose();
-    } catch (error) {
-      console.error(`[Server_Docker] Error in setupDockerCompose():`, error);
-    }
+    await this.setupDockerCompose();
     const baseReportsDir = path2.join(process.cwd(), "testeranto", "reports");
     try {
       fs2.mkdirSync(baseReportsDir, { recursive: true });
@@ -4263,7 +4249,6 @@ ${x}
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
       const runtime = configValue.runtime;
       const tests = configValue.tests;
-      console.log(`[Server_Docker] Found tests for ${runtime}:`, JSON.stringify(tests));
       for (const testName of tests) {
         const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
         const aiderServiceName = `${uid}-aider`;
@@ -4284,47 +4269,52 @@ ${x}
       for (const testName of tests) {
         const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
         const bddServiceName = `${uid}-bdd`;
-        console.log(`[Server_Docker] Starting BDD service: ${bddServiceName}, ${configKey}, ${configValue}`);
-        try {
-          await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`);
-          await this.captureExistingLogs(bddServiceName, runtime);
-          this.startServiceLogging(bddServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${bddServiceName}:`, error));
-        } catch (error) {
-          console.error(`[Server_Docker] Failed to start ${bddServiceName}: ${error.message}`);
-          this.captureExistingLogs(bddServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
-        }
+        this.watchInputFile(runtime, testName);
       }
     }
-    for (const [configKey, configValue] of Object.entries(this.configs)) {
-      const runtime = configValue[0];
-      const testsObj = configValue[3];
-      const tests = testsObj?.tests || {};
-      for (const testName in tests) {
-        const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-        const checks = testsObj?.checks || [];
-        for (let i2 = 0;i2 < checks.length; i2++) {
-          const staticServiceName = `${uid}-static-${i2}`;
-          console.log(`[Server_Docker] Starting static test service: ${staticServiceName}`);
-          try {
-            await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${staticServiceName}`);
-            this.startServiceLogging(staticServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${staticServiceName}:`, error));
-            this.captureExistingLogs(staticServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to capture existing logs for ${staticServiceName}:`, error));
-          } catch (error) {
-            console.error(`[Server_Docker] Failed to start ${staticServiceName}: ${error.message}`);
-            this.captureExistingLogs(staticServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
-          }
+  }
+  async watchInputFile(runtime, testsName) {
+    fs2.watchFile(`testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`, () => {
+      for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+        if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
+          this.launchBddTest(runtime, testsName, configKey, configValue);
+          this.launchChecks(runtime, testsName, configKey, configValue);
+          break;
         }
+      }
+    });
+  }
+  async launchBddTest(runtime, testName, configKey, configValue) {
+    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    const bddServiceName = `${uid}-bdd`;
+    console.log(`[Server_Docker] Starting BDD service: ${bddServiceName}, ${configKey}, ${testName}`);
+    try {
+      await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`);
+      await this.captureExistingLogs(bddServiceName, runtime);
+      this.startServiceLogging(bddServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${bddServiceName}:`, error));
+    } catch (error) {
+      console.error(`[Server_Docker] Failed to start ${bddServiceName}: ${error.message}`);
+      this.captureExistingLogs(bddServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
+    }
+  }
+  async launchChecks(runtime, testName, configKey, configValue) {
+    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    const checks = configValue.checks || [];
+    for (let i2 = 0;i2 < checks.length; i2++) {
+      const checkServiceName = `${uid}-check-${i2}`;
+      console.log(`[Server_Docker] Starting check service: ${checkServiceName}`);
+      try {
+        await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${checkServiceName}`);
+        this.startServiceLogging(checkServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${checkServiceName}:`, error));
+        this.captureExistingLogs(checkServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to capture existing logs for ${checkServiceName}:`, error));
+      } catch (error) {
+        console.error(`[Server_Docker] Failed to start ${checkServiceName}: ${error.message}`);
+        this.captureExistingLogs(checkServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
       }
     }
   }
   async captureExistingLogs(serviceName, runtime) {
     const reportDir = path2.join(process.cwd(), "testeranto", "reports", "allTests", "example", runtime);
-    try {
-      fs2.mkdirSync(reportDir, { recursive: true });
-    } catch (error) {
-      console.error(`[Server_Docker] Failed to create report directory ${reportDir}: ${error.message}`);
-      return;
-    }
     const logFilePath = path2.join(reportDir, `${serviceName}.log`);
     try {
       const checkCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
@@ -4391,18 +4381,9 @@ ${x}
         fs2.mkdirSync(configDir, { recursive: true });
         console.log(`[Server_Docker] Created directory: ${configDir}`);
       }
-      console.log(`[Server_Docker] Writing extension config to: ${configPath}`);
-      console.log(`[Server_Docker] Current working directory: ${process.cwd()}`);
-      console.log(`[Server_Docker] Configs runtimes exists: ${!!this.configs.runtimes}`);
-      console.log(`[Server_Docker] Configs runtimes type: ${typeof this.configs.runtimes}`);
-      if (this.configs.runtimes) {
-        console.log(`[Server_Docker] Configs runtimes keys:`, Object.keys(this.configs.runtimes));
-      }
       const runtimesArray = [];
       if (this.configs.runtimes && typeof this.configs.runtimes === "object") {
         for (const [key, value] of Object.entries(this.configs.runtimes)) {
-          console.log(`[Server_Docker] Processing runtime key: ${key}`);
-          console.log(`[Server_Docker] Runtime value type: ${typeof value}`, value);
           const runtimeObj = value;
           if (runtimeObj && typeof runtimeObj === "object") {
             const runtime = runtimeObj.runtime;
@@ -4433,18 +4414,8 @@ ${x}
       };
       const configJson = JSON.stringify(configData, null, 2);
       fs2.writeFileSync(configPath, configJson);
-      console.log(`[Server_Docker] Successfully wrote extension config to ${configPath} with ${runtimesArray.length} runtimes`);
-      if (fs2.existsSync(configPath)) {
-        const fileStats = fs2.statSync(configPath);
-        console.log(`[Server_Docker] Config file exists, size: ${fileStats.size} bytes`);
-        const fileContent = fs2.readFileSync(configPath, "utf-8");
-        console.log(`[Server_Docker] Config file contents:`, fileContent);
-      } else {
-        console.error(`[Server_Docker] Config file was not created at ${configPath}`);
-      }
     } catch (error) {
-      console.error(`[Server_Docker] Failed to write extension config:`, error);
-      console.error(`[Server_Docker] Error stack:`, error.stack);
+      throw `[Server_Docker] Failed to write extension config:`;
     }
   }
   getRuntimeLabel(runtime) {
