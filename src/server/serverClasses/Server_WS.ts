@@ -1,5 +1,5 @@
 import { ITestconfigV2 } from "../../Types";
-import { WsManager } from "../serverManagers/WsManager";
+import { WsManager } from "../WsManager";
 import { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
 

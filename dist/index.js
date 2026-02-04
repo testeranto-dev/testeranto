@@ -251,11 +251,11 @@ var require_ansi_colors = __commonJS((exports, module) => {
   module.exports.create = create;
 });
 
-// src/serverDeprecated/serverClasees/Server.ts
+// src/server/serverClasses/Server.ts
 import fs3 from "fs";
 import readline from "readline";
 
-// src/serverDeprecated/serverClasees/Server_Docker.ts
+// src/server/serverClasses/Server_Docker.ts
 var import_ansi_colors = __toESM(require_ansi_colors(), 1);
 import { exec, execSync, spawn } from "child_process";
 import fs2 from "fs";
@@ -2945,14 +2945,14 @@ var jsYaml = {
   safeDump
 };
 
-// src/serverDeprecated/serverClasees/Server_Docker.ts
+// src/server/serverClasses/Server_Docker.ts
 import path2 from "path";
 import { promisify } from "util";
 
 // src/runtimes.ts
 var RUN_TIMES = ["node", "web", "python", "golang", "java", "rust", "ruby"];
 
-// src/serverDeprecated/runtimes/golang/docker.ts
+// src/server/runtimes/golang/docker.ts
 var golangDockerComposeFile = (config, container_name) => {
   return {
     build: {
@@ -2979,7 +2979,7 @@ var golangBddCommand = () => {
   return `go run example/cmd/calculator-test`;
 };
 
-// src/serverDeprecated/runtimes/java/docker.ts
+// src/server/runtimes/java/docker.ts
 var javaDockerComposeFile = (config, container_name, fpath) => {
   return {
     build: {
@@ -3008,7 +3008,7 @@ var javaBddCommand = (fpath) => {
   return `java testeranto/bundles/java/${fpath} /workspace/java.java`;
 };
 
-// src/serverDeprecated/runtimes/node/docker.ts
+// src/server/runtimes/node/docker.ts
 var nodeDockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName) => {
   return {
     build: {
@@ -3038,7 +3038,7 @@ var nodeBddCommand = (fpath, nodeConfigPath) => {
   return `yarn tsx testeranto/bundles/allTests/node/src/ts/Calculator.test.mjs /workspace/${nodeConfigPath}`;
 };
 
-// src/serverDeprecated/runtimes/python/docker.ts
+// src/server/runtimes/python/docker.ts
 var pythonDockerComposeFile = (config, container_name, fpath) => {
   return {
     build: {
@@ -3068,14 +3068,14 @@ var pythonBddCommand = (fpath) => {
   return `python ${fpath} '${jsonStr}'`;
 };
 
-// src/serverDeprecated/runtimes/ruby/docker.ts
+// src/server/runtimes/ruby/docker.ts
 import { join } from "path";
 import { tmpdir } from "os";
 
-// src/serverDeprecated/runtimes/ruby/ruby.rb
+// src/server/runtimes/ruby/ruby.rb
 var ruby_default = "./ruby-sk73vk5b.rb";
 
-// src/serverDeprecated/runtimes/ruby/docker.ts
+// src/server/runtimes/ruby/docker.ts
 var absoluteRubySrc = join(import.meta.dir, ruby_default);
 var embeddedFile = Bun.file(absoluteRubySrc);
 var tempRubyPath = join(tmpdir(), `ruby-${Date.now()}.rb`);
@@ -3110,7 +3110,7 @@ var rubyBddCommand = (fpath) => {
   return `ruby ${fpath} '${jsonStr}'`;
 };
 
-// src/serverDeprecated/runtimes/rust/docker.ts
+// src/server/runtimes/rust/docker.ts
 var rustDockerComposeFile = (config, container_name, fpath) => {
   return {
     build: {
@@ -3139,7 +3139,7 @@ var rustBddCommand = (fpath) => {
   return `rustc testeranto/bundles/rust/${fpath} /workspace/rust.rs`;
 };
 
-// src/serverDeprecated/runtimes/web/docker.ts
+// src/server/runtimes/web/docker.ts
 var webDockerComposeFile = (config, container_name, fpath) => {
   return {
     platform: "linux/arm64",
@@ -3166,7 +3166,7 @@ var webBddCommand = (fpath) => {
   return `node dist/prebuild/server/runtimes/web/hoist.mjs `;
 };
 
-// src/serverDeprecated/serverManagers/WsManager.ts
+// src/server/WsManager.ts
 class WsManager {
   constructor() {}
   escapeXml(unsafe) {
@@ -3387,11 +3387,11 @@ class WsManager {
   }
 }
 
-// src/serverDeprecated/serverClasees/Server_HTTP.ts
+// src/server/serverClasses/Server_HTTP.ts
 import fs from "fs";
 import path from "path";
 
-// src/serverDeprecated/serverManagers/tcp.ts
+// src/server/tcp.ts
 var CONTENT_TYPES = {
   PLAIN: "text/plain",
   HTML: "text/html",
@@ -3433,7 +3433,7 @@ function getContentType(filePath) {
     return CONTENT_TYPES.PLAIN;
 }
 
-// src/serverDeprecated/serverManagers/HttpManager.ts
+// src/server/HttpManager.ts
 class HttpManager {
   routeName(req) {
     const url = new URL(req.url, `http://${req.headers.host}`);
@@ -3525,7 +3525,7 @@ class HttpManager {
   }
 }
 
-// src/serverDeprecated/serverClasees/Server_Base.ts
+// src/server/serverClasses/Server_Base.ts
 class Server_Base {
   mode;
   configs;
@@ -3541,7 +3541,7 @@ class Server_Base {
   }
 }
 
-// src/serverDeprecated/serverClasees/Server_HTTP.ts
+// src/server/serverClasses/Server_HTTP.ts
 class Server_HTTP extends Server_Base {
   http;
   bunServer = null;
@@ -4118,7 +4118,7 @@ class Server_HTTP extends Server_Base {
   }
 }
 
-// src/serverDeprecated/serverClasees/Server_WS.ts
+// src/server/serverClasses/Server_WS.ts
 class Server_WS extends Server_HTTP {
   wsClients = new Set;
   wsManager;
@@ -4300,7 +4300,7 @@ class Server_WS extends Server_HTTP {
   }
 }
 
-// src/serverDeprecated/serverClasees/Server_Docker.ts
+// src/server/serverClasses/Server_Docker.ts
 class Server_Docker extends Server_WS {
   logProcesses = new Map;
   inputFiles = {};
@@ -4386,7 +4386,7 @@ class Server_Docker extends Server_WS {
     services["browser"] = {
       build: {
         context: process.cwd(),
-        dockerfile: "src/serverDeprecated/runtimes/web/web.Dockerfile"
+        dockerfile: "src/server/runtimes/web/web.Dockerfile"
       },
       shm_size: "2gb",
       container_name: "browser-allTests",
@@ -5192,7 +5192,7 @@ ${x}
   }
 }
 
-// src/serverDeprecated/serverClasees/Server.ts
+// src/server/serverClasses/Server.ts
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY)
   process.stdin.setRawMode(true);

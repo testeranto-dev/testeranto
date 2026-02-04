@@ -15,7 +15,7 @@ export function generateReactAppHtml(
   </head>
   <body>
     <div id="root"></div>
-    <script src="/dist/prebuild/server/serverClasees/${scriptPath}.js"></script>
+    <script src="/dist/prebuild/server/serverClasses/${scriptPath}.js"></script>
     <script>
       // The bundled script automatically calls initApp when loaded
       // Ensure the root element exists

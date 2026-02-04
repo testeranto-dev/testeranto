@@ -7,8 +7,8 @@
 
 import fs from "fs";
 import path from "path";
-import { CONTENT_TYPES, getContentType } from "../serverManagers/tcp";
-import { HttpManager } from "../serverManagers/HttpManager";
+import { CONTENT_TYPES, getContentType } from "../tcp";
+import { HttpManager } from "../HttpManager";
 import { Server_Base } from "./Server_Base";
 import { Server_WS } from "./Server_WS";
 import type { ITestconfigV2 } from "../../Types";

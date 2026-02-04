@@ -136,7 +136,7 @@ export class Server_Docker extends Server_WS {
     services['browser'] = {
       build: {
         context: process.cwd(),
-        dockerfile: 'src/serverDeprecated/runtimes/web/web.Dockerfile'
+        dockerfile: 'src/server/runtimes/web/web.Dockerfile'
       },
       shm_size: '2gb',
       container_name: 'browser-allTests',

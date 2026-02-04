@@ -1,4 +1,4 @@
-import { Server } from "./serverDeprecated/serverClasees/Server";
+import { Server } from "./server/serverClasses/Server";
 
 const mode = process.argv[2] as "once" | "dev";
 if (mode !== "once" && mode !== "dev") {
