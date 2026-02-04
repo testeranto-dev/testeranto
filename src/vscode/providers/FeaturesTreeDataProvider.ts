@@ -21,7 +21,7 @@
 
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
-import { TreeItemType, TreeItemData } from '../types';
+import { TreeItemType } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -344,55 +344,6 @@ export class FeaturesTreeDataProvider implements vscode.TreeDataProvider<TestTre
         }
 
         return [];
-    }
-
-    private getTestFilesForRuntime(runtime: string): TestTreeItem[] {
-        const files = fs.readdirSync(this.resultsDir).filter(file =>
-            file.startsWith(runtime + '.') && file.endsWith('.json')
-        );
-
-        return files.map(file => {
-            const filePath = path.join(this.resultsDir, file);
-            try {
-                const content = fs.readFileSync(filePath, 'utf-8');
-                const result = JSON.parse(content) as TestResult;
-
-                let icon: vscode.ThemeIcon;
-                let description = '';
-
-                if (result.status === true || result.failed === false) {
-                    icon = new vscode.ThemeIcon('check', new vscode.ThemeColor('testing.iconPassed'));
-                    description = 'All tests passed';
-                } else {
-                    icon = new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'));
-                    description = `${result.fails || 0} tests failed`;
-                }
-
-                return new TestTreeItem(
-                    file,
-                    TreeItemType.File,
-                    vscode.TreeItemCollapsibleState.Collapsed,
-                    {
-                        testFile: file,
-                        description: description
-                    },
-                    undefined,
-                    icon
-                );
-            } catch (error) {
-                return new TestTreeItem(
-                    file,
-                    TreeItemType.File,
-                    vscode.TreeItemCollapsibleState.None,
-                    {
-                        testFile: file,
-                        description: 'Error reading file'
-                    },
-                    undefined,
-                    new vscode.ThemeIcon('warning')
-                );
-            }
-        });
     }
 
     private getTestResults(testFile: string): TestTreeItem[] {

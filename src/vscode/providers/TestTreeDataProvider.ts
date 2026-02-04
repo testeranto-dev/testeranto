@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
-import { TreeItemType, TreeItemData } from '../types';
-import { IRunTime } from '../../Types';
+import type { IRunTime } from '../../Types';
+import { TreeItemType } from '../types';
 
 interface TreeNode {
   name: string;
@@ -14,39 +14,56 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
   private _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> = new
     vscode.EventEmitter<TestTreeItem | undefined | null | void>();
   readonly onDidChangeTreeData: vscode.Event<TestTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
-  
+
+  private ws: WebSocket | null = null;
+  private isConnected: boolean = false;
+  private connectionAttempts: number = 0;
+  private maxConnectionAttempts: number = 5;
+  private reconnectTimeout: NodeJS.Timeout | null = null;
+
+  private configData: any = null;
   private configWatcher: vscode.FileSystemWatcher | undefined;
 
   constructor() {
+    // Make initial HTTP request to get configs
+    this.fetchConfigsViaHttp().catch(error => {
+      console.log('[TestTreeDataProvider] Initial HTTP fetch failed:', error);
+    });
+    // Connect to WebSocket for real-time updates
+    this.connectWebSocket();
+    // Also keep the file watcher for backward compatibility
     this.setupConfigWatcher();
   }
 
   refresh(): void {
-    this._onDidChangeTreeData.fire();
+    console.log('[TestTreeDataProvider] Manual refresh requested');
+    this.fetchConfigsViaHttp().catch(error => {
+      console.log('[TestTreeDataProvider] HTTP refresh failed:', error);
+    });
   }
 
   private setupConfigWatcher(): void {
-    // Watch for changes to the extension config file
+    // Watch for changes to the extension config file for backward compatibility
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders || workspaceFolders.length === 0) {
       return;
     }
-    
+
     const workspaceRoot = workspaceFolders[0].uri;
     const configPattern = new vscode.RelativePattern(workspaceRoot, 'testeranto/extension-config.json');
-    
+
     this.configWatcher = vscode.workspace.createFileSystemWatcher(configPattern);
-    
+
     this.configWatcher.onDidChange(() => {
       console.log('[TestTreeDataProvider] Config file changed, refreshing tree');
       this.refresh();
     });
-    
+
     this.configWatcher.onDidCreate(() => {
       console.log('[TestTreeDataProvider] Config file created, refreshing tree');
       this.refresh();
     });
-    
+
     this.configWatcher.onDidDelete(() => {
       console.log('[TestTreeDataProvider] Config file deleted, refreshing tree');
       this.refresh();
@@ -57,6 +74,14 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
     if (this.configWatcher) {
       this.configWatcher.dispose();
     }
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
   }
 
   getTreeItem(element: TestTreeItem): vscode.TreeItem {
@@ -65,100 +90,137 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
 
   getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]> {
     if (!element) {
-      return Promise.resolve(this.getRuntimeItems());
+      return this.getRuntimeItems();
     } else if (element.type === TreeItemType.Runtime) {
       const runtime = element.data?.runtime;
       return Promise.resolve(this.getTestItems(runtime));
     } else if (element.type === TreeItemType.Test) {
       const { runtime, testName } = element.data || {};
-      return this.getFileTreeItems(runtime, testName);
+      // First, show input files from server
+      return this.getInputFileItems(runtime, testName);
     } else if (element.type === TreeItemType.File) {
       // Handle expanding directories
-      const { runtime, testName, path } = element.data || {};
+      const { runtime, testName, path, showAllFiles } = element.data || {};
+
+      if (showAllFiles) {
+        // Show all files in the test bundle
+        return this.getFileTreeItems(runtime as IRunTime, testName);
+      }
+
       if (path && !element.data?.fileName?.endsWith('.')) { // Check if it's a directory
-        return this.getDirectoryItems(runtime, testName, path);
+        return this.getDirectoryItems(runtime as IRunTime, testName, path);
       }
     }
     return Promise.resolve([]);
   }
 
-  private getRuntimeItems(): TestTreeItem[] {
-    // Only show runtimes if the configuration file exists and contains valid data
-    const workspaceFolders = vscode.workspace.workspaceFolders;
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-      console.log('[TestTreeDataProvider] No workspace folder open');
-      // Show a helpful message item
-      return [
+  private async getRuntimeItems(): Promise<TestTreeItem[]> {
+    // Show connection status
+    const items: TestTreeItem[] = [];
+
+    // Add connection status item
+    if (this.isConnected) {
+      items.push(
         new TestTreeItem(
-          "No workspace folder open",
+          "✅ Connected via WebSocket",
           TreeItemType.Info,
           vscode.TreeItemCollapsibleState.None,
-          { info: "Open a workspace folder to see tests" }
+          {
+            description: "Receiving real-time updates",
+            connected: true
+          },
+          undefined,
+          new vscode.ThemeIcon("radio-tower", new vscode.ThemeColor("testing.iconPassed"))
         )
-      ];
-    }
-    
-    const workspaceRoot = workspaceFolders[0].uri;
-    const configUri = vscode.Uri.joinPath(workspaceRoot, 'testeranto', 'extension-config.json');
-    
-    console.log(`[TestTreeDataProvider] Looking for config at: ${configUri.fsPath}`);
-    
-    // Check if the file exists
-    try {
-      const fileContent = vscode.workspace.fs.readFileSync(configUri);
-      const configText = Buffer.from(fileContent).toString('utf-8');
-      console.log(`[TestTreeDataProvider] Config file content length: ${configText.length}`);
-      
-      const config = JSON.parse(configText);
-      console.log(`[TestTreeDataProvider] Parsed config:`, JSON.stringify(config, null, 2));
-      
-      if (config.runtimes && Array.isArray(config.runtimes) && config.runtimes.length > 0) {
-        console.log(`[TestTreeDataProvider] Found ${config.runtimes.length} runtimes in config`);
-        return config.runtimes.map((runtimeConfig: any) => {
-          console.log(`[TestTreeDataProvider] Processing runtime:`, runtimeConfig);
-          return new TestTreeItem(
-            runtimeConfig.label || runtimeConfig.runtime,
-            TreeItemType.Runtime,
-            vscode.TreeItemCollapsibleState.Collapsed,
-            { 
-              runtime: runtimeConfig.runtime,
-              runtimeKey: runtimeConfig.key 
-            }
-          );
-        });
-      } else {
-        console.log('[TestTreeDataProvider] No runtimes found in config file');
-        return [
-          new TestTreeItem(
-            "No runtimes configured",
-            TreeItemType.Info,
-            vscode.TreeItemCollapsibleState.None,
-            { info: "Check your testeranto.ts configuration file" }
-          )
-        ];
-      }
-    } catch (error: any) {
-      // File doesn't exist or can't be read
-      console.log(`[TestTreeDataProvider] Config file not available: ${error.message}`);
-      
-      // Show a helpful message to start the server
-      return [
+      );
+    } else {
+      items.push(
         new TestTreeItem(
-          "Server not running",
+          "⚠️ Not connected",
           TreeItemType.Info,
           vscode.TreeItemCollapsibleState.None,
-          { 
-            info: "Start the Testeranto server to see tests",
-            action: "startServer"
+          {
+            description: "Click to retry WebSocket connection",
+            disconnected: true
           },
           {
-            command: "testeranto.startServer",
-            title: "Start Server",
-            arguments: []
-          }
+            command: "testeranto.retryConnection",
+            title: "Retry Connection",
+            arguments: [this]
+          },
+          new vscode.ThemeIcon("warning", new vscode.ThemeColor("testing.iconFailed"))
         )
-      ];
+      );
     }
+
+    // Add refresh item
+    items.push(
+      new TestTreeItem(
+        "Refresh now",
+        TreeItemType.Info,
+        vscode.TreeItemCollapsibleState.None,
+        {
+          description: "Update configuration from server",
+          refresh: true
+        },
+        {
+          command: "testeranto.refresh",
+          title: "Refresh",
+          arguments: []
+        },
+        new vscode.ThemeIcon("refresh", new vscode.ThemeColor("testing.iconQueued"))
+      )
+    );
+
+    // Check if we have config data from HTTP endpoint
+    if (this.configData && this.configData.configs && this.configData.configs.runtimes) {
+      const runtimes = this.configData.configs.runtimes;
+      console.log(`[TestTreeDataProvider] Found ${Object.keys(runtimes).length} runtimes in config endpoint`);
+
+      // Convert the runtimes object to an array for display
+      const runtimeEntries = Object.entries(runtimes);
+
+      if (runtimeEntries.length > 0) {
+        // Add a header item
+        items.push(
+          new TestTreeItem(
+            `📊 ${runtimeEntries.length} Runtime(s)`,
+            TreeItemType.Info,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              description: "From HTTP /~/configs endpoint",
+              count: runtimeEntries.length
+            },
+            undefined,
+            new vscode.ThemeIcon("server", new vscode.ThemeColor("testing.iconUnset"))
+          )
+        );
+
+        // Add each runtime
+        for (const [runtimeKey, runtimeConfig] of runtimeEntries) {
+          const config = runtimeConfig as any;
+          if (config.runtime) {
+            items.push(
+              new TestTreeItem(
+                // config.runtime.charAt(0).toUpperCase() + config.runtime.slice(1),
+                `${runtimeKey} (${config.runtime})`,
+                TreeItemType.Runtime,
+                vscode.TreeItemCollapsibleState.Collapsed,
+                {
+                  runtime: config.runtime,
+                  runtimeKey: runtimeKey,
+                  testsCount: config.tests?.length || 0
+                },
+                undefined,
+                new vscode.ThemeIcon("symbol-namespace")
+              )
+            );
+          }
+        }
+        return items;
+      }
+    }
+
   }
 
   private getTestItems(runtime?: string): TestTreeItem[] {
@@ -166,20 +228,42 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       return [];
     }
 
-    // Only show tests if the configuration file exists and contains valid data
+    // Try to get tests from HTTP config data first
+    if (this.configData && this.configData.configs && this.configData.configs.runtimes) {
+      const runtimes = this.configData.configs.runtimes;
+
+      // Find the runtime configuration
+      for (const [runtimeKey, runtimeConfig] of Object.entries(runtimes)) {
+        const config = runtimeConfig as any;
+        if (config.runtime === runtime) {
+          const tests = config.tests || [];
+          console.log(`[TestTreeDataProvider] Found ${tests.length} tests for ${runtime} from HTTP endpoint`);
+          return tests.map((testName: string) =>
+            new TestTreeItem(
+              testName,
+              TreeItemType.Test,
+              vscode.TreeItemCollapsibleState.Collapsed,
+              { runtime, testName }
+            )
+          );
+        }
+      }
+    }
+
+    // Fallback to file-based config
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders || workspaceFolders.length === 0) {
       console.log('[TestTreeDataProvider] No workspace folder open');
       return [];
     }
-    
+
     const workspaceRoot = workspaceFolders[0].uri;
     const configUri = vscode.Uri.joinPath(workspaceRoot, 'testeranto', 'extension-config.json');
-    
+
     try {
       const fileContent = vscode.workspace.fs.readFileSync(configUri);
       const config = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
-      
+
       if (config.runtimes && Array.isArray(config.runtimes)) {
         const runtimeConfig = config.runtimes.find((r: any) => r.runtime === runtime);
         if (runtimeConfig && runtimeConfig.tests && Array.isArray(runtimeConfig.tests)) {
@@ -196,187 +280,369 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       console.log(`[TestTreeDataProvider] No tests found for runtime: ${runtime}`);
       return [];
     } catch (error: any) {
-      // File doesn't exist or can't be read
       console.log(`[TestTreeDataProvider] Config file not available for tests: ${error.message}`);
       return [];
     }
   }
 
-  private async getFileItems(runtime: IRunTime, testName: string): Promise<TestTreeItem[]> {
-    console.log("getFileItems");
-    if (!runtime || !testName) {
-      return [];
+  public connectWebSocket(): void {
+    if (this.ws) {
+      // Close existing connection
+      this.ws.close();
+      this.ws = null;
     }
 
-    // Determine which JSON file to read based on runtime and testName
-    let jsonFilePath: string;
-    switch (runtime) {
-      case "golang":
-        jsonFilePath = "testeranto/bundles/allTests/golang/example/Calculator.test.go-inputFiles.json";
-        break;
-      case "python":
-        jsonFilePath = "testeranto/bundles/allTests/python/example/Calculator.test.py-inputFiles.json";
-        break;
-      case "node":
-        jsonFilePath = "testeranto/bundles/allTests/node/example/Calculator.test.mjs-inputFiles.json";
-        break;
-      case "web":
-        jsonFilePath = "testeranto/bundles/allTests/web/example/Calculator.test.mjs-inputFiles.json";
-        break;
-      case "ruby":
-        jsonFilePath = "testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json";
-        break;
-      case "rust":
-        jsonFilePath = "testeranto/bundles/allTests/rust/example/Calculator.test.rs-inputFiles.json";
-        break;
-      case "java":
-        jsonFilePath = "testeranto/bundles/allTests/java/example/Calculator.test.java-inputFiles.json";
-        break;
-      default:
-        return [];
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
     }
+
+    console.log('[TestTreeDataProvider] Connecting to WebSocket at ws://localhost:3000');
 
     try {
-      // Get the workspace root
-      const workspaceFolders = vscode.workspace.workspaceFolders;
-      if (!workspaceFolders || workspaceFolders.length === 0) {
-        throw new Error("No workspace folder open");
+      this.ws = new WebSocket('ws://localhost:3000');
+
+      this.ws.onopen = () => {
+        console.log('[TestTreeDataProvider] WebSocket connected');
+        this.isConnected = true;
+        this.connectionAttempts = 0;
+        this._onDidChangeTreeData.fire();
+      };
+
+      this.ws.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          this.handleWebSocketMessage(message);
+        } catch (error) {
+          console.error('[TestTreeDataProvider] Error parsing WebSocket message:', error);
+        }
+      };
+
+      this.ws.onerror = (error) => {
+        console.error('[TestTreeDataProvider] WebSocket error:', error);
+        this.isConnected = false;
+        this._onDidChangeTreeData.fire();
+      };
+
+      this.ws.onclose = (event) => {
+        console.log(`[TestTreeDataProvider] WebSocket closed: ${event.code} ${event.reason}`);
+        this.isConnected = false;
+        this.ws = null;
+        this._onDidChangeTreeData.fire();
+
+        // Attempt to reconnect after 5 seconds
+        if (this.connectionAttempts < this.maxConnectionAttempts) {
+          this.connectionAttempts++;
+          console.log(`[TestTreeDataProvider] Attempting to reconnect (${this.connectionAttempts}/${this.maxConnectionAttempts}) in 5 seconds...`);
+          this.reconnectTimeout = setTimeout(() => {
+            this.connectWebSocket();
+          }, 5000);
+        } else {
+          console.log('[TestTreeDataProvider] Max reconnection attempts reached');
+        }
+      };
+    } catch (error) {
+      console.error('[TestTreeDataProvider] Failed to create WebSocket:', error);
+      this.isConnected = false;
+      this._onDidChangeTreeData.fire();
+    }
+  }
+
+  private handleWebSocketMessage(message: any): void {
+    console.log('[TestTreeDataProvider] Received WebSocket message:', message.type);
+
+    switch (message.type) {
+      case 'connected':
+        console.log('[TestTreeDataProvider] WebSocket connection confirmed');
+        break;
+      case 'resourceChanged':
+        console.log('[TestTreeDataProvider] Resource changed, fetching updated configs:', message.url);
+        // If the configs resource changed, fetch via HTTP
+        if (message.url === '/~/configs') {
+          this.fetchConfigsViaHttp().catch(error => {
+            console.log('[TestTreeDataProvider] HTTP fetch after resource change failed:', error);
+          });
+        }
+        break;
+      default:
+        console.log('[TestTreeDataProvider] Unhandled message type:', message.type);
+    }
+  }
+
+  private async fetchConfigsViaHttp(): Promise<void> {
+    console.log('[TestTreeDataProvider] Fetching configs via HTTP from http://localhost:3000/~/configs');
+    try {
+      const response = await fetch('http://localhost:3000/~/configs');
+
+      if (!response.ok) {
+        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
+        this.configData = null;
+        this._onDidChangeTreeData.fire();
+        return;
       }
-      const workspaceRoot = workspaceFolders[0].uri;
 
-      // Build the full URI to the JSON file
-      const jsonFileUri = vscode.Uri.joinPath(workspaceRoot, jsonFilePath);
-      console.log(`Reading JSON from: ${jsonFileUri.fsPath}`);
+      const data = await response.json();
+      console.log(`[TestTreeDataProvider] HTTP fetch returned config data`);
 
-      // Read the JSON file
-      const fileContent = await vscode.workspace.fs.readFile(jsonFileUri);
-      const files: string[] = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
-      console.log(`Found ${files.length} files in JSON`);
+      this.configData = data;
+      console.log(`[TestTreeDataProvider] Updated config data`);
+      this._onDidChangeTreeData.fire();
+    } catch (error: any) {
+      console.error('[TestTreeDataProvider] HTTP fetch failed:', error.message || error);
+      this.configData = null;
+      this._onDidChangeTreeData.fire();
+    }
+  }
 
-      // Build a tree structure
-      const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
+  // The rest of the methods remain the same as before...
+  // private async getFileItems(runtime: IRunTime, testName: string): Promise<TestTreeItem[]> {
+  //   console.log("getFileItems");
+  //   if (!runtime || !testName) {
+  //     return [];
+  //   }
 
-      for (const rawFileName of files) {
-        // Remove leading '/' if present to make paths relative to workspace root
-        const fileName = rawFileName.startsWith('/') ? rawFileName.substring(1) : rawFileName;
-        const parts = fileName.split('/');
-        let currentNode = treeRoot;
+  //   // return this.buildTreeItems(treeRoot, runtime, testName, workspaceRoot);
 
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const isLast = i === parts.length - 1;
+  //   // // Determine which JSON file to read based on runtime and testName
+  //   // let jsonFilePath: string;
+  //   // switch (runtime) {
+  //   //   case "golang":
+  //   //     jsonFilePath = "testeranto/bundles/allTests/golang/example/Calculator.test.go-inputFiles.json";
+  //   //     break;
+  //   //   case "python":
+  //   //     jsonFilePath = "testeranto/bundles/allTests/python/example/Calculator.test.py-inputFiles.json";
+  //   //     break;
+  //   //   case "node":
+  //   //     jsonFilePath = "testeranto/bundles/allTests/node/example/Calculator.test.mjs-inputFiles.json";
+  //   //     break;
+  //   //   case "web":
+  //   //     jsonFilePath = "testeranto/bundles/allTests/web/example/Calculator.test.mjs-inputFiles.json";
+  //   //     break;
+  //   //   case "ruby":
+  //   //     jsonFilePath = "testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json";
+  //   //     break;
+  //   //   case "rust":
+  //   //     jsonFilePath = "testeranto/bundles/allTests/rust/example/Calculator.test.rs-inputFiles.json";
+  //   //     break;
+  //   //   case "java":
+  //   //     jsonFilePath = "testeranto/bundles/allTests/java/example/Calculator.test.java-inputFiles.json";
+  //   //     break;
+  //   //   default:
+  //   //     return [];
+  //   // }
 
-          if (!currentNode.children.has(part)) {
-            currentNode.children.set(part, {
-              name: part,
-              children: new Map(),
-              fullPath: parts.slice(0, i + 1).join('/'),
-              isFile: isLast
-            });
-          }
-          currentNode = currentNode.children.get(part)!;
+  //   // try {
+  //   //   // Get the workspace root
+  //   //   const workspaceFolders = vscode.workspace.workspaceFolders;
+  //   //   if (!workspaceFolders || workspaceFolders.length === 0) {
+  //   //     throw new Error("No workspace folder open");
+  //   //   }
+  //   //   const workspaceRoot = workspaceFolders[0].uri;
+
+  //   //   // Build the full URI to the JSON file
+  //   //   const jsonFileUri = vscode.Uri.joinPath(workspaceRoot, jsonFilePath);
+  //   //   console.log(`Reading JSON from: ${jsonFileUri.fsPath}`);
+
+  //   //   // Read the JSON file
+  //   //   const fileContent = await vscode.workspace.fs.readFile(jsonFileUri);
+  //   //   const files: string[] = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
+  //   //   console.log(`Found ${files.length} files in JSON`);
+
+  //   //   // Build a tree structure
+  //   //   const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
+
+  //   //   for (const rawFileName of files) {
+  //   //     // Remove leading '/' if present to make paths relative to workspace root
+  //   //     const fileName = rawFileName.startsWith('/') ? rawFileName.substring(1) : rawFileName;
+  //   //     const parts = fileName.split('/');
+  //   //     let currentNode = treeRoot;
+
+  //   //     for (let i = 0; i < parts.length; i++) {
+  //   //       const part = parts[i];
+  //   //       const isLast = i === parts.length - 1;
+
+  //   //       if (!currentNode.children.has(part)) {
+  //   //         currentNode.children.set(part, {
+  //   //           name: part,
+  //   //           children: new Map(),
+  //   //           fullPath: parts.slice(0, i + 1).join('/'),
+  //   //           isFile: isLast
+  //   //         });
+  //   //       }
+  //   //       currentNode = currentNode.children.get(part)!;
+  //   //     }
+  //   //   }
+
+  //   //   // Convert tree to TestTreeItems
+  //   //   return this.buildTreeItems(treeRoot, runtime, testName, workspaceRoot);
+  //   // } catch (error) {
+  //   //   console.error(`Failed to read file list from ${jsonFilePath}:`, error);
+  //   //   vscode.window.showErrorMessage(`Could not load file list for ${testName}: ${error}`);
+  //   //   // Return empty array to prevent tree view from crashing
+  //   //   return [];
+  //   // }
+  // }
+
+  private async getInputFileItems(runtime: string, testName: string): Promise<TestTreeItem[]> {
+    console.log(`[TestTreeDataProvider] Fetching input files for ${runtime}/${testName}`);
+
+    const items: TestTreeItem[] = [];
+
+    // Add a header for input files
+    items.push(
+      new TestTreeItem(
+        "📄 Input Files",
+        TreeItemType.File,
+        vscode.TreeItemCollapsibleState.None,
+        {
+          description: "Files used by this test",
+          runtime,
+          testName,
+          isHeader: true
+        },
+        undefined,
+        new vscode.ThemeIcon("file")
+      )
+    );
+
+    try {
+      // Fetch input files from server
+      const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
+
+      if (!response.ok) {
+        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
+        items.push(
+          new TestTreeItem(
+            "No input files found",
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              description: "Server returned error",
+              runtime,
+              testName
+            },
+            undefined,
+            new vscode.ThemeIcon("warning")
+          )
+        );
+        return items;
+      }
+
+      const data = await response.json();
+      const inputFiles = data.inputFiles || [];
+
+      console.log(`[TestTreeDataProvider] Found ${inputFiles.length} input files`);
+
+      if (inputFiles.length === 0) {
+        items.push(
+          new TestTreeItem(
+            "No input files available",
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              description: "The test hasn't been built yet",
+              runtime,
+              testName
+            },
+            undefined,
+            new vscode.ThemeIcon("info")
+          )
+        );
+      } else {
+        // Add each input file
+        for (const filePath of inputFiles) {
+          const fileName = filePath.split('/').pop() || filePath;
+          items.push(
+            new TestTreeItem(
+              fileName,
+              TreeItemType.File,
+              vscode.TreeItemCollapsibleState.None,
+              {
+                runtime,
+                testName,
+                fileName: filePath,
+                path: filePath,
+                isInputFile: true
+              },
+              {
+                command: "vscode.open",
+                title: "Open File",
+                arguments: [vscode.Uri.file(filePath)]
+              },
+              new vscode.ThemeIcon("file-text")
+            )
+          );
         }
       }
 
-      // Convert tree to TestTreeItems
-      return this.buildTreeItems(treeRoot, runtime, testName, workspaceRoot);
-    } catch (error) {
-      console.error(`Failed to read file list from ${jsonFilePath}:`, error);
-      vscode.window.showErrorMessage(`Could not load file list for ${testName}: ${error}`);
-      // Return empty array to prevent tree view from crashing
-      return [];
+      // Add a separator
+      items.push(
+        new TestTreeItem(
+          "📁 All Files",
+          TreeItemType.File,
+          vscode.TreeItemCollapsibleState.Collapsed,
+          {
+            description: "All files in the test bundle",
+            runtime,
+            testName,
+            showAllFiles: true
+          },
+          undefined,
+          new vscode.ThemeIcon("folder")
+        )
+      );
+
+    } catch (error: any) {
+      console.error(`[TestTreeDataProvider] Failed to fetch input files:`, error);
+      items.push(
+        new TestTreeItem(
+          "Failed to fetch input files",
+          TreeItemType.File,
+          vscode.TreeItemCollapsibleState.None,
+          {
+            description: error.message,
+            runtime,
+            testName
+          },
+          undefined,
+          new vscode.ThemeIcon("error")
+        )
+      );
     }
+
+    return items;
   }
 
   private async getFileTreeItems(runtime: IRunTime, testName: string): Promise<TestTreeItem[]> {
-    const tree = await this.buildFileTree(runtime, testName);
-    if (!tree) {
-      return [];
-    }
-    return this.buildTreeItems(tree, runtime, testName);
-  }
-
-  private async buildFileTree(runtime: IRunTime, testName: string): Promise<TreeNode | null> {
-    // Determine which JSON file to read based on runtime and testName
-    let jsonFilePath: string;
-    switch (runtime) {
-      case "golang":
-        jsonFilePath = "testeranto/bundles/allTests/golang/example/Calculator.test.go-inputFiles.json";
-        break;
-      case "python":
-        jsonFilePath = "testeranto/bundles/allTests/python/example/Calculator.test.py-inputFiles.json";
-        break;
-      case "node":
-        jsonFilePath = "testeranto/bundles/allTests/node/example/Calculator.test.mjs-inputFiles.json";
-        break;
-      case "web":
-        jsonFilePath = "testeranto/bundles/allTests/web/example/Calculator.test.mjs-inputFiles.json";
-        break;
-      case "ruby":
-        jsonFilePath = "testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json";
-        break;
-      case "rust":
-        jsonFilePath = "testeranto/bundles/allTests/rust/example/Calculator.test.rs-inputFiles.json";
-        break;
-      case "java":
-        jsonFilePath = "testeranto/bundles/allTests/java/example/Calculator.test.java-inputFiles.json";
-        break;
-      default:
-        return null;
-    }
-
+    // Get input files from server API
     try {
-      const workspaceFolders = vscode.workspace.workspaceFolders;
-      if (!workspaceFolders || workspaceFolders.length === 0) {
-        throw new Error("No workspace folder open");
+      const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
+      
+      if (!response.ok) {
+        console.error(`[TestTreeDataProvider] HTTP error getting input files for tree: ${response.status}`);
+        return [];
       }
-      const workspaceRoot = workspaceFolders[0].uri;
-
-      // Read files from JSON input file
-      const jsonFileUri = vscode.Uri.joinPath(workspaceRoot, jsonFilePath);
-      const fileContent = await vscode.workspace.fs.readFile(jsonFileUri);
-      const files: string[] = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
-
-      const allFiles = new Set<string>(files);
-
-      // Add report files for this runtime
-      try {
-        const reportsDir = vscode.Uri.joinPath(workspaceRoot, "testeranto/reports/allTests/example");
-        // Check if directory exists
-        try {
-          await vscode.workspace.fs.stat(reportsDir);
-
-          // Read directory contents
-          const entries = await vscode.workspace.fs.readDirectory(reportsDir);
-
-          for (const [name, type] of entries) {
-            if (type === vscode.FileType.File && name.endsWith('.json')) {
-              // Check if this report file matches the current runtime
-              // For example: python.Calculator.test.ts.json starts with "python"
-              if (name.startsWith(runtime + '.')) {
-                const reportFilePath = `testeranto/reports/allTests/example/${name}`;
-                allFiles.add(reportFilePath);
-              }
-            }
-          }
-        } catch (error) {
-          console.log(`Reports directory doesn't exist or can't be read: ${reportsDir.fsPath}`);
-        }
-      } catch (error) {
-        console.error(`Failed to scan reports directory:`, error);
-      }
-
+      
+      const data = await response.json();
+      const inputFiles = data.inputFiles || [];
+      
+      // Build tree structure from file paths
       const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
-
-      for (const rawFileName of Array.from(allFiles)) {
-        const fileName = rawFileName.startsWith('/') ? rawFileName.substring(1) : rawFileName;
+      
+      for (const filePath of inputFiles) {
+        // Remove leading '/' if present
+        const fileName = filePath.startsWith('/') ? filePath.substring(1) : filePath;
         const parts = fileName.split('/');
         let currentNode = treeRoot;
-
+        
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
+          // Skip empty parts
+          if (!part || part.trim().length === 0) {
+            continue;
+          }
           const isLast = i === parts.length - 1;
-
+          
           if (!currentNode.children.has(part)) {
             currentNode.children.set(part, {
               name: part,
@@ -388,10 +654,11 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
           currentNode = currentNode.children.get(part)!;
         }
       }
-      return treeRoot;
-    } catch (error) {
-      console.error(`Failed to build file tree:`, error);
-      return null;
+      
+      return this.buildTreeItems(treeRoot, runtime, testName);
+    } catch (error: any) {
+      console.error(`[TestTreeDataProvider] Failed to get file tree items:`, error);
+      return [];
     }
   }
 
@@ -415,8 +682,8 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
         : vscode.TreeItemCollapsibleState.Collapsed;
 
       // Create the full file path
-      const fullPath = workspaceRoot ? 
-        vscode.Uri.joinPath(workspaceRoot, child.fullPath).fsPath : 
+      const fullPath = workspaceRoot ?
+        vscode.Uri.joinPath(workspaceRoot, child.fullPath).fsPath :
         child.fullPath;
 
       const treeItem = new TestTreeItem(

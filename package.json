@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.223.0",
+  "version": "0.223.1",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -15,6 +15,79 @@
   "module": "dist/module/index.js",
   "bin": {
     "testeranto": "./dist/index.js"
+  },
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:testeranto.showTests",
+    "onCommand:testeranto.runTest",
+    "onCommand:testeranto.aider",
+    "onCommand:testeranto.openConfig",
+    "onCommand:testeranto.openFile",
+    "onCommand:testeranto.refresh",
+    "onCommand:testeranto.retryConnection",
+    "onCommand:testeranto.startServer",
+    "onView:testerantoTestsView",
+    "onView:testerantoFilesView",
+    "onView:testerantoResultsView",
+    "onView:testerantoFeaturesView",
+    "workspaceContains:**/testeranto/extension-config.json",
+    "workspaceContains:**/testeranto/reports/**/*.json"
+  ],
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "testerantoTestsView",
+          "name": "Tests"
+        },
+        {
+          "id": "testerantoFilesView",
+          "name": "Files"
+        },
+        {
+          "id": "testerantoResultsView",
+          "name": "Processes"
+        },
+        {
+          "id": "testerantoFeaturesView",
+          "name": "Features"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "testeranto.showTests",
+        "title": "Testeranto: Show Tests"
+      },
+      {
+        "command": "testeranto.runTest",
+        "title": "Testeranto: Run Test"
+      },
+      {
+        "command": "testeranto.aider",
+        "title": "Testeranto: Connect to Aider"
+      },
+      {
+        "command": "testeranto.openConfig",
+        "title": "Testeranto: Open Configuration"
+      },
+      {
+        "command": "testeranto.openFile",
+        "title": "Testeranto: Open File"
+      },
+      {
+        "command": "testeranto.refresh",
+        "title": "Testeranto: Refresh All Views"
+      },
+      {
+        "command": "testeranto.retryConnection",
+        "title": "Testeranto: Retry Connection"
+      },
+      {
+        "command": "testeranto.startServer",
+        "title": "Testeranto: Start Server"
+      }
+    ]
   },
   "repository": "git@github.com:adamwong246/testeranto.git",
   "homepage": "https://github.com/adamwong246/testeranto",
@@ -44,10 +117,6 @@
     "testing",
     "bdd",
     "ATDD"
-  ],
-  "files": [
-    "dist",
-    "README.md"
   ],
   "exports": {
     "./src/cjs-shim.ts": {

@@ -1,183 +1,196 @@
-import * as vscode from 'vscode';
-import { TestTreeItem } from '../TestTreeItem';
-import { TreeItemType, TreeItemData } from '../types';
+// import * as vscode from 'vscode';
+// import * as path from 'path';
+// import { TestTreeItem } from '../TestTreeItem';
+// import { TreeItemType } from '../types';
 
-interface TreeNode {
-  name: string;
-  children: Map<string, TreeNode>;
-  fullPath: string;
-  isFile: boolean;
-}
+// interface TreeNode {
+//   name: string;
+//   children: Map<string, TreeNode>;
+//   fullPath: string;
+//   isFile: boolean;
+// }
 
-export class FileTreeDataProvider implements vscode.TreeDataProvider<TestTreeItem> {
-  private _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> = new
-    vscode.EventEmitter<TestTreeItem | undefined | null | void>();
-  readonly onDidChangeTreeData: vscode.Event<TestTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
+// export class FileTreeDataProvider implements vscode.TreeDataProvider<TestTreeItem> {
+//   private _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> = new
+//     vscode.EventEmitter<TestTreeItem | undefined | null | void>();
+//   readonly onDidChangeTreeData: vscode.Event<TestTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
-  refresh(): void {
-    this._onDidChangeTreeData.fire();
-  }
+//   refresh(): void {
+//     this._onDidChangeTreeData.fire();
+//   }
 
-  getTreeItem(element: TestTreeItem): vscode.TreeItem {
-    return element;
-  }
+//   getTreeItem(element: TestTreeItem): vscode.TreeItem {
+//     return element;
+//   }
 
-  getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]> {
-    if (!element) {
-      return this.getRootItems();
-    } else {
-      const path = element.data?.path;
-      return this.getDirectoryItems(path);
-    }
-  }
+//   getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]> {
+//     if (!element) {
+//       return this.getRootItems();
+//     } else {
+//       const path = element.data?.path;
+//       return this.getDirectoryItems(path);
+//     }
+//   }
 
-  private async getRootItems(): Promise<TestTreeItem[]> {
-    const tree = await this.buildFileTree();
-    if (!tree) {
-      return [];
-    }
-    return this.buildTreeItems(tree);
-  }
+//   private async getRootItems(): Promise<TestTreeItem[]> {
+//     const tree = await this.buildFileTree();
+//     if (!tree) {
+//       return [];
+//     }
+//     return this.buildTreeItems(tree);
+//   }
 
-  private async getDirectoryItems(path?: string): Promise<TestTreeItem[]> {
-    if (!path) {
-      return [];
-    }
-    const tree = await this.buildFileTree();
-    if (!tree) {
-      return [];
-    }
+//   private async getDirectoryItems(path?: string): Promise<TestTreeItem[]> {
+//     if (!path) {
+//       return [];
+//     }
+//     const tree = await this.buildFileTree();
+//     if (!tree) {
+//       return [];
+//     }
 
-    // Find the node corresponding to the path
-    const parts = path.split('/').filter(p => p.length > 0);
-    let currentNode = tree;
-    for (const part of parts) {
-      if (currentNode.children.has(part)) {
-        currentNode = currentNode.children.get(part)!;
-      } else {
-        return [];
-      }
-    }
+//     // Find the node corresponding to the path
+//     const parts = path.split('/').filter(p => p.length > 0);
+//     let currentNode = tree;
+//     for (const part of parts) {
+//       if (currentNode.children.has(part)) {
+//         currentNode = currentNode.children.get(part)!;
+//       } else {
+//         return [];
+//       }
+//     }
 
-    return this.buildTreeItems(currentNode);
-  }
+//     return this.buildTreeItems(currentNode);
+//   }
 
-  private async buildFileTree(): Promise<TreeNode | null> {
-    const jsonFilePaths = [
-      "testeranto/bundles/allTests/golang/example/Calculator.test.go-inputFiles.json",
-      "testeranto/bundles/allTests/node/example/Calculator.test.mjs-inputFiles.json",
-      "testeranto/bundles/allTests/web/example/Calculator.test.mjs-inputFiles.json",
-      "testeranto/bundles/allTests/python/example/Calculator.test.py-inputFiles.json",
-      "testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json"
-    ];
+//   private async buildFileTree(): Promise<TreeNode | null> {
+//     // Get all possible JSON input file patterns
+//     const jsonFilePatterns = [
+//       "testeranto/bundles/allTests/**/*-inputFiles.json",
+//       "testeranto/reports/allTests/**/*.json"
+//     ];
 
-    const allFiles: Set<string> = new Set();
-    const workspaceFolders = vscode.workspace.workspaceFolders;
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-      console.error("No workspace folder open");
-      return null;
-    }
-    const workspaceRoot = workspaceFolders[0].uri;
+//     const allFiles: Set<string> = new Set();
+//     const workspaceFolders = vscode.workspace.workspaceFolders;
+//     if (!workspaceFolders || workspaceFolders.length === 0) {
+//       console.error("No workspace folder open");
+//       return null;
+//     }
+//     const workspaceRoot = workspaceFolders[0].uri;
 
-    // Add files from JSON input files
-    for (const jsonFilePath of jsonFilePaths) {
-      try {
-        const jsonFileUri = vscode.Uri.joinPath(workspaceRoot, jsonFilePath);
-        const fileContent = await vscode.workspace.fs.readFile(jsonFileUri);
-        const files: string[] = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
-        files.forEach(file => allFiles.add(file));
-      } catch (error) {
-        console.error(`Failed to read JSON file ${jsonFilePath}:`, error);
-        // Continue with other files
-      }
-    }
+//     // Use findFiles to get all matching JSON files
+//     for (const pattern of jsonFilePatterns) {
+//       try {
+//         const files = await vscode.workspace.findFiles(pattern, null, 1000);
+//         for (const file of files) {
+//           // Convert URI to relative path
+//           const relativePath = path.relative(workspaceRoot.fsPath, file.fsPath);
+          
+//           if (file.fsPath.includes('-inputFiles.json')) {
+//             // Read the JSON file to get the list of files
+//             try {
+//               const fileContent = await vscode.workspace.fs.readFile(file);
+//               const filesList: string[] = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
+//               filesList.forEach(filePath => {
+//                 // Make sure file paths are relative to workspace
+//                 const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+//                 allFiles.add(normalizedPath);
+//               });
+//             } catch (error) {
+//               console.error(`Failed to read JSON file ${file.fsPath}:`, error);
+//             }
+//           } else {
+//             // Add the report file itself
+//             allFiles.add(relativePath);
+//           }
+//         }
+//       } catch (error) {
+//         console.error(`Failed to find files with pattern ${pattern}:`, error);
+//       }
+//     }
 
-    // Add report files from testeranto/reports/allTests/example/
-    try {
-      const reportsDir = vscode.Uri.joinPath(workspaceRoot, "testeranto/reports/allTests/example");
-      // Check if directory exists
-      try {
-        await vscode.workspace.fs.stat(reportsDir);
+//     // Also add the JSON input files themselves
+//     try {
+//       const inputFiles = await vscode.workspace.findFiles("testeranto/bundles/allTests/**/*-inputFiles.json", null, 1000);
+//       for (const file of inputFiles) {
+//         const relativePath = path.relative(workspaceRoot.fsPath, file.fsPath);
+//         allFiles.add(relativePath);
+//       }
+//     } catch (error) {
+//       console.error("Failed to add input files themselves:", error);
+//     }
 
-        // Read directory contents
-        const entries = await vscode.workspace.fs.readDirectory(reportsDir);
+//     // Build tree structure
+//     const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
 
-        for (const [name, type] of entries) {
-          if (type === vscode.FileType.File && name.endsWith('.json')) {
-            // Add the report file path
-            const reportFilePath = `testeranto/reports/allTests/example/${name}`;
-            allFiles.add(reportFilePath);
-          }
-        }
-      } catch (error) {
-        console.log(`Reports directory doesn't exist or can't be read: ${reportsDir.fsPath}`);
-      }
-    } catch (error) {
-      console.error(`Failed to scan reports directory:`, error);
-    }
+//     for (const rawFileName of Array.from(allFiles)) {
+//       // Skip empty paths
+//       if (!rawFileName || rawFileName.trim().length === 0) {
+//         continue;
+//       }
+      
+//       // Remove leading '/' if present
+//       const fileName = rawFileName.startsWith('/') ? rawFileName.substring(1) : rawFileName;
+//       const parts = fileName.split('/');
+//       let currentNode = treeRoot;
 
-    // Build tree structure
-    const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
+//       for (let i = 0; i < parts.length; i++) {
+//         const part = parts[i];
+//         // Skip empty parts
+//         if (!part || part.trim().length === 0) {
+//           continue;
+//         }
+//         const isLast = i === parts.length - 1;
 
-    for (const rawFileName of Array.from(allFiles)) {
-      // Remove leading '/' if present
-      const fileName = rawFileName.startsWith('/') ? rawFileName.substring(1) : rawFileName;
-      const parts = fileName.split('/');
-      let currentNode = treeRoot;
+//         if (!currentNode.children.has(part)) {
+//           currentNode.children.set(part, {
+//             name: part,
+//             children: new Map(),
+//             fullPath: parts.slice(0, i + 1).join('/'),
+//             isFile: isLast
+//           });
+//         }
+//         currentNode = currentNode.children.get(part)!;
+//       }
+//     }
 
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i];
-        const isLast = i === parts.length - 1;
+//     return treeRoot;
+//   }
 
-        if (!currentNode.children.has(part)) {
-          currentNode.children.set(part, {
-            name: part,
-            children: new Map(),
-            fullPath: parts.slice(0, i + 1).join('/'),
-            isFile: isLast
-          });
-        }
-        currentNode = currentNode.children.get(part)!;
-      }
-    }
+//   private buildTreeItems(node: TreeNode): TestTreeItem[] {
+//     const items: TestTreeItem[] = [];
 
-    return treeRoot;
-  }
+//     // Sort children: directories first, then files, alphabetically
+//     const sortedChildren = Array.from(node.children.values()).sort((a, b) => {
+//       if (a.isFile && !b.isFile) return 1;
+//       if (!a.isFile && b.isFile) return -1;
+//       return a.name.localeCompare(b.name);
+//     });
 
-  private buildTreeItems(node: TreeNode): TestTreeItem[] {
-    const items: TestTreeItem[] = [];
+//     for (const child of sortedChildren) {
+//       const collapsibleState = child.isFile
+//         ? vscode.TreeItemCollapsibleState.None
+//         : vscode.TreeItemCollapsibleState.Collapsed;
 
-    // Sort children: directories first, then files, alphabetically
-    const sortedChildren = Array.from(node.children.values()).sort((a, b) => {
-      if (a.isFile && !b.isFile) return 1;
-      if (!a.isFile && b.isFile) return -1;
-      return a.name.localeCompare(b.name);
-    });
+//       const treeItem = new TestTreeItem(
+//         child.name,
+//         TreeItemType.File,
+//         collapsibleState,
+//         {
+//           path: child.fullPath,
+//           fileName: child.fullPath
+//         },
+//         child.isFile ? {
+//           command: "vscode.open",
+//           title: "Open File",
+//           arguments: [vscode.Uri.file(child.fullPath)]
+//         } : undefined,
+//         child.isFile ? new vscode.ThemeIcon("file") : new vscode.ThemeIcon("folder")
+//       );
 
-    for (const child of sortedChildren) {
-      const collapsibleState = child.isFile
-        ? vscode.TreeItemCollapsibleState.None
-        : vscode.TreeItemCollapsibleState.Collapsed;
+//       items.push(treeItem);
+//     }
 
-      const treeItem = new TestTreeItem(
-        child.name,
-        TreeItemType.File,
-        collapsibleState,
-        {
-          path: child.fullPath,
-          fileName: child.fullPath
-        },
-        child.isFile ? {
-          command: "vscode.open",
-          title: "Open File",
-          arguments: [vscode.Uri.file(child.fullPath)]
-        } : undefined,
-        child.isFile ? new vscode.ThemeIcon("file") : new vscode.ThemeIcon("folder")
-      );
-
-      items.push(treeItem);
-    }
-
-    return items;
-  }
-}
+//     return items;
+//   }
+// }

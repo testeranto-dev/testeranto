@@ -17,6 +17,7 @@ var __toESM = (mod, isNodeMode, target) => {
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __require = import.meta.require;
 
 // node_modules/ansi-colors/symbols.js
 var require_symbols = __commonJS((exports, module) => {
@@ -3535,7 +3536,7 @@ class Server_Base {
   }
   async start() {}
   async stop() {
-    console.log(`[Server_Base] stop()`);
+    console.log(`goodbye testeranto`);
     process.exit();
   }
 }
@@ -3548,89 +3549,445 @@ class Server_HTTP extends Server_Base {
   constructor(configs, mode) {
     super(configs, mode);
     this.http = new HttpManager;
-  }
-  async start() {
-    console.log(`[Server_HTTP] start()`);
-    await super.start();
-    const port = 3000;
-    const serverOptions = {
-      port,
-      fetch: (request) => {
-        return this.handleRequest(request);
-      },
-      error: (error) => {
-        console.error(`[HTTP] error:`, error);
-        return new Response(`Error: ${error.message}`, {
-          status: 500,
-          headers: { "Content-Type": "text/plain" }
-        });
+    this.routes = {
+      processes: {
+        method: "GET",
+        handler: () => this.handleHttpGetProcesses()
       }
     };
-    if (this instanceof Server_WS) {
-      serverOptions.websocket = {
-        open: (ws) => {
-          console.log(`[WebSocket] New connection`);
-          this.wsClients.add(ws);
-          ws.send(JSON.stringify({
-            type: "connected",
-            message: "Connected to Process Manager WebSocket",
-            timestamp: new Date().toISOString()
-          }));
-          ws.send(JSON.stringify({
-            type: "processes",
-            data: this.getProcessSummary ? this.getProcessSummary() : { processes: [] },
-            timestamp: new Date().toISOString()
-          }));
-        },
-        message: (ws, message) => {
+  }
+  handleHttpGetProcesses() {
+    console.log(`[HTTP] Checking if getProcessSummary exists...`);
+    if (typeof this.getProcessSummary === "function") {
+      console.log(`[HTTP] getProcessSummary exists, calling it...`);
+      const processSummary = this.getProcessSummary();
+      console.log(`[HTTP] getProcessSummary returned:`, processSummary ? "has data" : "null/undefined");
+      if (processSummary && processSummary.error) {
+        console.log(`[HTTP] Process summary has error:`, processSummary.error);
+        return new Response(JSON.stringify({
+          error: processSummary.error,
+          processes: [],
+          total: 0,
+          timestamp: new Date().toISOString(),
+          message: processSummary.message || "Error retrieving docker processes"
+        }), {
+          status: 503,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
+      const formattedProcesses = (processSummary?.processes || []).map((process2) => ({
+        name: process2.processId || process2.containerId,
+        status: process2.status || process2.state,
+        state: process2.state,
+        image: process2.image,
+        ports: process2.ports,
+        exitCode: process2.exitCode,
+        isActive: process2.isActive,
+        runtime: process2.runtime,
+        startedAt: process2.startedAt,
+        finishedAt: process2.finishedAt
+      }));
+      const responseData = {
+        processes: formattedProcesses,
+        total: processSummary?.total || formattedProcesses.length,
+        timestamp: processSummary?.timestamp || new Date().toISOString(),
+        message: processSummary?.message || "Success"
+      };
+      console.log(`[HTTP] Returning response with ${formattedProcesses.length} processes`);
+      return new Response(JSON.stringify(responseData, null, 2), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    } else {
+      console.log(`[HTTP] getProcessSummary does not exist on this instance`);
+      console.log(`[HTTP] this.constructor.name:`, this.constructor.name);
+      console.log(`[HTTP] this keys:`, Object.keys(this));
+      return new Response(JSON.stringify({
+        error: "getProcessSummary method not available",
+        processes: [],
+        total: 0,
+        timestamp: new Date().toISOString(),
+        message: "Server does not support process listing"
+      }), {
+        status: 503,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    }
+  }
+  handleHttpGetInputFiles(request, url) {
+    const runtime = url.searchParams.get("runtime");
+    const testName = url.searchParams.get("testName");
+    if (!runtime || !testName) {
+      return new Response(JSON.stringify({
+        error: "Missing runtime or testName query parameters",
+        timestamp: new Date().toISOString()
+      }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    }
+    console.log(`[HTTP] Getting input files for runtime: ${runtime}, testName: ${testName}`);
+    if (typeof this.getInputFiles === "function") {
+      console.log(`[HTTP] getInputFiles exists, calling it...`);
+      const inputFiles = this.getInputFiles(runtime, testName);
+      console.log(`[HTTP] getInputFiles returned:`, inputFiles ? `${inputFiles.length} files` : "null/undefined");
+      const responseData = {
+        runtime,
+        testName,
+        inputFiles: inputFiles || [],
+        timestamp: new Date().toISOString(),
+        message: "Success"
+      };
+      return new Response(JSON.stringify(responseData, null, 2), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    } else {
+      console.log(`[HTTP] getInputFiles does not exist on this instance`);
+      const fs2 = __require("fs");
+      const path2 = __require("path");
+      const inputFilePath = path2.join(process.cwd(), "testeranto", "bundles", "allTests", runtime, `${testName}-inputFiles.json`);
+      if (fs2.existsSync(inputFilePath)) {
+        const fileContent = fs2.readFileSync(inputFilePath, "utf-8");
+        const inputFiles = JSON.parse(fileContent);
+        const responseData = {
+          runtime,
+          testName,
+          inputFiles: inputFiles || [],
+          timestamp: new Date().toISOString(),
+          message: "Success (from file)"
+        };
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      } else {
+        return new Response(JSON.stringify({
+          error: "getInputFiles method not available and file not found",
+          runtime,
+          testName,
+          inputFiles: [],
+          timestamp: new Date().toISOString(),
+          message: "No input files found"
+        }), {
+          status: 404,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
+    }
+  }
+  handleHttpGetConfigs() {
+    console.log(`[HTTP] handleHttpGetConfigs() called`);
+    try {
+      console.log(`[HTTP] Checking if configs exists...`);
+      if (this.configs) {
+        console.log(`[HTTP] configs exists, returning it...`);
+        console.log(`[HTTP] configs type:`, typeof this.configs);
+        console.log(`[HTTP] configs keys:`, Object.keys(this.configs));
+        const responseData = {
+          configs: this.configs,
+          timestamp: new Date().toISOString(),
+          message: "Success"
+        };
+        console.log(`[HTTP] Returning configs response`);
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      } else {
+        console.log(`[HTTP] configs does not exist on this instance`);
+        console.log(`[HTTP] this.constructor.name:`, this.constructor.name);
+        console.log(`[HTTP] this keys:`, Object.keys(this));
+        return new Response(JSON.stringify({
+          error: "configs property not available",
+          timestamp: new Date().toISOString(),
+          message: "Server does not have configs"
+        }), {
+          status: 503,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
+    } catch (error) {
+      console.error(`[HTTP] Error in GET /~/configs:`, error);
+      console.error(`[HTTP] Error stack:`, error.stack);
+      return new Response(JSON.stringify({
+        error: error.message,
+        timestamp: new Date().toISOString(),
+        message: "Internal server error"
+      }), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    }
+  }
+  async start() {
+    await super.start();
+    const port = 3000;
+    try {
+      const serverOptions = {
+        port,
+        fetch: async (request, server) => {
+          console.log(`[HTTP] Received request: ${request.method} ${request.url}`);
           try {
-            const data = typeof message === "string" ? JSON.parse(message) : JSON.parse(message.toString());
-            this.handleWebSocketMessage(ws, data);
+            console.log(`[HTTP] Calling handleRequest...`);
+            const response = this.handleRequest(request, server);
+            if (response instanceof Response) {
+              console.log(`[HTTP] handleRequest returned Response with status:`, response.status);
+              return response;
+            } else if (response && typeof response.then === "function") {
+              console.log(`[HTTP] handleRequest returned a Promise, awaiting...`);
+              const awaitedResponse = await response;
+              console.log(`[HTTP] Promise resolved to Response with status:`, awaitedResponse.status);
+              return awaitedResponse;
+            } else if (response === undefined || response === null) {
+              console.log(`[HTTP] handleRequest returned undefined/null, assuming WebSocket upgrade was handled`);
+              return;
+            } else {
+              console.error(`[HTTP] handleRequest returned non-Response:`, response);
+              return new Response(`Server Error: handleRequest did not return a Response`, {
+                status: 500,
+                headers: { "Content-Type": "text/plain" }
+              });
+            }
           } catch (error) {
-            console.error("[WebSocket] Error parsing message:", error);
-            ws.send(JSON.stringify({
-              type: "error",
-              message: "Invalid JSON message",
-              timestamp: new Date().toISOString()
-            }));
+            console.error(`[HTTP] Error handling request ${request.url}:`, error);
+            console.error(`[HTTP] Error stack:`, error.stack);
+            return new Response(`Internal Server Error: ${error.message}`, {
+              status: 500,
+              headers: { "Content-Type": "text/plain" }
+            });
           }
         },
-        close: (ws) => {
-          console.log("[WebSocket] Client disconnected");
-          this.wsClients.delete(ws);
-        },
-        error: (ws, error) => {
-          console.error("[WebSocket] Error:", error);
-          this.wsClients.delete(ws);
+        error: (error) => {
+          console.error(`[HTTP] Server error:`, error);
+          return new Response(`Server Error: ${error.message}`, {
+            status: 500,
+            headers: { "Content-Type": "text/plain" }
+          });
         }
       };
+      if (this instanceof Server_WS) {
+        console.log(`[Server_HTTP] Adding WebSocket configuration`);
+        serverOptions.websocket = {
+          open: (ws) => {
+            console.log(`[WebSocket] New connection`);
+            this.wsClients.add(ws);
+            ws.send(JSON.stringify({
+              type: "connected",
+              message: "Connected to Process Manager WebSocket",
+              timestamp: new Date().toISOString()
+            }));
+            console.log("[WebSocket] Connection established, waiting for resource change notifications");
+          },
+          message: (ws, message) => {
+            try {
+              const data = typeof message === "string" ? JSON.parse(message) : JSON.parse(message.toString());
+              if (ws && typeof ws.send === "function") {
+                this.handleWebSocketMessage(ws, data);
+              } else {
+                console.error("[WebSocket] Invalid WebSocket instance in message handler");
+              }
+            } catch (error) {
+              console.error("[WebSocket] Error parsing message:", error);
+              if (ws && typeof ws.send === "function") {
+                ws.send(JSON.stringify({
+                  type: "error",
+                  message: "Invalid JSON message",
+                  timestamp: new Date().toISOString()
+                }));
+              }
+            }
+          },
+          close: (ws) => {
+            console.log("[WebSocket] Client disconnected");
+            this.wsClients.delete(ws);
+          },
+          error: (ws, error) => {
+            console.error("[WebSocket] Error:", error);
+            this.wsClients.delete(ws);
+          }
+        };
+      }
+      this.bunServer = Bun.serve(serverOptions);
+      console.log(`[HTTP] Bun HTTP server is now listening on http://localhost:${port}`);
+      console.log(`[HTTP] Server URL: http://localhost:${port}/~/processes`);
+    } catch (error) {
+      console.error(`[HTTP] Failed to start server:`, error);
+      throw error;
     }
-    this.bunServer = Bun.serve(serverOptions);
-    console.log(`[HTTP] Bun HTTP server is now listening on http://localhost:${port}`);
   }
   async stop() {
-    console.log(`[Server_HTTP] stop()`);
     if (this.bunServer) {
       this.bunServer.stop();
-      console.log("[HTTP] Bun HTTP server closed");
     }
     await super.stop();
   }
-  handleRequest(request) {
+  handleRequest(request, server) {
     const url = new URL(request.url);
-    console.log(`[Server_HTTP] handleRequest(${url.pathname})`);
+    console.log(`[Server_HTTP] handleRequest(${url.pathname}) from ${request.url}`);
+    console.log(`[Server_HTTP] Request method: ${request.method}`);
+    if (request.headers.get("upgrade") === "websocket") {
+      console.log(`[Server_HTTP] WebSocket upgrade request detected for path: ${url.pathname}`);
+      if (this instanceof Server_WS && server) {
+        console.log(`[Server_HTTP] Upgrading to WebSocket`);
+        const success = server.upgrade(request);
+        if (success) {
+          console.log(`[Server_HTTP] WebSocket upgrade successful`);
+          return;
+        } else {
+          console.error(`[Server_HTTP] WebSocket upgrade failed`);
+          return new Response("WebSocket upgrade failed", { status: 500 });
+        }
+      } else {
+        console.log(`[Server_HTTP] WebSocket not supported`);
+        return new Response("WebSocket not supported", { status: 426 });
+      }
+    }
     if (url.pathname.startsWith("/~/")) {
+      console.log(`[Server_HTTP] Matched route pattern: ${url.pathname}`);
       return this.handleRouteRequest(request, url);
     } else {
+      console.log(`[Server_HTTP] Serving static file: ${url.pathname}`);
       return this.serveStaticFile(request, url);
     }
   }
   handleRouteRequest(request, url) {
-    console.log(`[Server_HTTP] handleRouteRequest(${url.pathname})`);
     const routeName = url.pathname.slice(3);
-    console.log(`[HTTP] Handling route: /~/${routeName}`);
+    console.log(`[HTTP] Handling route: /~/${routeName}, method: ${request.method}, full pathname: ${url.pathname}`);
+    if (routeName === "processes") {
+      console.log(`[HTTP] Matched /processes route`);
+      if (request.method === "GET") {
+        console.log(`[HTTP] Handling GET /~/processes`);
+        console.log(`[HTTP] Checking if handleHttpGetProcesses exists:`, typeof this.handleHttpGetProcesses);
+        if (typeof this.handleHttpGetProcesses === "function") {
+          console.log(`[HTTP] Calling handleHttpGetProcesses`);
+          return this.handleHttpGetProcesses();
+        } else {
+          console.error(`[HTTP] handleHttpGetProcesses is not a function`);
+          return new Response(`Server Error: handleHttpGetProcesses not found`, {
+            status: 500,
+            headers: { "Content-Type": "text/plain" }
+          });
+        }
+      } else if (request.method === "OPTIONS") {
+        console.log(`[HTTP] Handling OPTIONS /~/processes`);
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400"
+          }
+        });
+      } else {
+        console.log(`[HTTP] Method not allowed: ${request.method} for /~/processes`);
+        return new Response(`Method ${request.method} not allowed`, {
+          status: 405,
+          headers: {
+            Allow: "GET, OPTIONS",
+            "Content-Type": "text/plain"
+          }
+        });
+      }
+    }
+    if (routeName === "configs") {
+      console.log(`[HTTP] Matched /configs route`);
+      if (request.method === "GET") {
+        console.log(`[HTTP] Handling GET /~/configs`);
+        console.log(`[HTTP] Checking if handleHttpGetConfigs exists:`, typeof this.handleHttpGetConfigs);
+        if (typeof this.handleHttpGetConfigs === "function") {
+          console.log(`[HTTP] Calling handleHttpGetConfigs`);
+          return this.handleHttpGetConfigs();
+        } else {
+          console.error(`[HTTP] handleHttpGetConfigs is not a function`);
+          return new Response(`Server Error: handleHttpGetConfigs not found`, {
+            status: 500,
+            headers: { "Content-Type": "text/plain" }
+          });
+        }
+      } else if (request.method === "OPTIONS") {
+        console.log(`[HTTP] Handling OPTIONS /~/configs`);
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400"
+          }
+        });
+      } else {
+        console.log(`[HTTP] Method not allowed: ${request.method} for /~/configs`);
+        return new Response(`Method ${request.method} not allowed`, {
+          status: 405,
+          headers: {
+            Allow: "GET, OPTIONS",
+            "Content-Type": "text/plain"
+          }
+        });
+      }
+    }
+    if (routeName === "inputfiles") {
+      console.log(`[HTTP] Matched /inputfiles route`);
+      if (request.method === "GET") {
+        console.log(`[HTTP] Handling GET /~/inputfiles`);
+        return this.handleHttpGetInputFiles(request, url);
+      } else if (request.method === "OPTIONS") {
+        console.log(`[HTTP] Handling OPTIONS /~/inputfiles`);
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400"
+          }
+        });
+      } else {
+        console.log(`[HTTP] Method not allowed: ${request.method} for /~/inputfiles`);
+        return new Response(`Method ${request.method} not allowed`, {
+          status: 405,
+          headers: {
+            Allow: "GET, OPTIONS",
+            "Content-Type": "text/plain"
+          }
+        });
+      }
+    }
     const match = this.http.matchRoute(routeName, this.routes);
     if (match) {
+      console.log(`[HTTP] Found route match for ${routeName}`);
       try {
         const nodeReq = {
           url: url.pathname,
@@ -3663,6 +4020,7 @@ class Server_HTTP extends Server_Base {
         });
       }
     }
+    console.log(`[HTTP] No route found for: /~/${routeName}`);
     return new Response(`Route not found: /~/${routeName}`, {
       status: 404,
       headers: { "Content-Type": "text/plain" }
@@ -3783,22 +4141,43 @@ class Server_WS extends Server_HTTP {
   escapeXml(unsafe) {
     return this.wsManager.escapeXml(unsafe);
   }
+  resourceChanged(url) {
+    console.log(`[WebSocket] Resource changed: ${url}, broadcasting to ${this.wsClients.size} clients`);
+    const message = {
+      type: "resourceChanged",
+      url,
+      timestamp: new Date().toISOString(),
+      message: `Resource at ${url} has been updated`
+    };
+    console.log(`[WebSocket] Broadcasting message:`, message);
+    this.broadcast(message);
+  }
   broadcast(message) {
     const data = typeof message === "string" ? message : JSON.stringify(message);
     console.log(`[WebSocket] Broadcasting to ${this.wsClients.size} clients:`, message.type || message);
     let sentCount = 0;
+    let errorCount = 0;
     this.wsClients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(data);
-        sentCount++;
+        try {
+          client.send(data);
+          sentCount++;
+        } catch (error) {
+          console.error(`[WebSocket] Error sending to client:`, error);
+          errorCount++;
+        }
       } else {
         console.log(`[WebSocket] Client not open, state: ${client.readyState}`);
       }
     });
-    console.log(`[WebSocket] Sent to ${sentCount} clients`);
+    console.log(`[WebSocket] Sent to ${sentCount} clients, ${errorCount} errors`);
   }
   handleWebSocketMessage(ws, message) {
     console.log("[WebSocket] Received message:", message.type);
+    if (message.type === "getProcesses") {
+      this.handleGetProcesses(ws);
+      return;
+    }
     const response = this.wsManager.processMessage(message.type, message.data, () => this.getProcessSummary(), (processId) => {
       const processManager = this;
       if (typeof processManager.getProcessLogs === "function") {
@@ -3908,26 +4287,23 @@ class Server_WS extends Server_HTTP {
     }
   }
   handleGetProcesses(ws) {
-    if (typeof this.getProcessSummary === "function") {
-      const summary = this.getProcessSummary();
-      ws.send(JSON.stringify({
-        type: "processes",
-        data: summary,
-        timestamp: new Date().toISOString()
-      }));
-    } else {
-      ws.send(JSON.stringify({
-        type: "processes",
-        data: { processes: [], message: "getProcessSummary not available" },
-        timestamp: new Date().toISOString()
-      }));
+    if (!ws || typeof ws.send !== "function") {
+      console.error("[WebSocket] Invalid WebSocket instance in handleGetProcesses");
+      return;
     }
+    console.log("[WebSocket] Received getProcesses request, telling client to use HTTP");
+    ws.send(JSON.stringify({
+      type: "useHttp",
+      message: "Please use HTTP GET /~/processes to fetch processes",
+      timestamp: new Date().toISOString()
+    }));
   }
 }
 
 // src/serverDeprecated/serverClasees/Server_Docker.ts
 class Server_Docker extends Server_WS {
   logProcesses = new Map;
+  inputFiles = {};
   constructor(configs, mode) {
     super(configs, mode);
   }
@@ -4007,6 +4383,19 @@ class Server_Docker extends Server_WS {
   }
   generateServices() {
     const services = {};
+    services["browser"] = {
+      build: {
+        context: process.cwd(),
+        dockerfile: "src/serverDeprecated/runtimes/web/web.Dockerfile"
+      },
+      shm_size: "2gb",
+      container_name: "browser-allTests",
+      ports: [
+        "3000:3000",
+        "9222:9222"
+      ],
+      networks: ["allTests_network"]
+    };
     const runTimeToCompose = {
       node: [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
       web: [webDockerComposeFile, webBuildCommand, webBddCommand],
@@ -4076,32 +4465,449 @@ class Server_Docker extends Server_WS {
     }
     return services;
   }
+  async start() {
+    await super.start();
+    this.writeConfigForExtension();
+    await this.setupDockerCompose();
+    const baseReportsDir = path2.join(process.cwd(), "testeranto", "reports");
+    try {
+      fs2.mkdirSync(baseReportsDir, { recursive: true });
+      console.log(`[Server_Docker] Created base reports directory: ${baseReportsDir}`);
+    } catch (error) {
+      console.error(`[Server_Docker] Failed to create base reports directory ${baseReportsDir}: ${error.message}`);
+    }
+    const downCmd = this.getDownCommand();
+    await this.spawnPromise(downCmd);
+    const buildResult = await this.DC_build();
+    for (const runtimeName in this.configs.runtimes) {
+      const runtime = this.configs.runtimes[runtimeName].runtime;
+      const serviceName = `${runtime}-builder`;
+      await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${serviceName}`);
+      await this.captureExistingLogs(serviceName, runtime);
+      this.startServiceLogging(serviceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${serviceName}:`, error));
+      this.resourceChanged("/~/processes");
+    }
+    await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d browser`);
+    console.log(`[Server_Docker] Waiting for browser container to be healthy...`);
+    await this.waitForContainerHealthy("browser-allTests", 60000);
+    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+      const runtime = configValue.runtime;
+      const tests = configValue.tests;
+      for (const testName of tests) {
+        const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+        const aiderServiceName = `${uid}-aider`;
+        console.log(`[Server_Docker] Starting aider service: ${aiderServiceName} for test ${testName}`);
+        try {
+          await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${aiderServiceName}`);
+          await this.captureExistingLogs(aiderServiceName, runtime);
+          this.startServiceLogging(aiderServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${aiderServiceName}:`, error));
+          this.resourceChanged("/~/processes");
+        } catch (error) {
+          console.error(`[Server_Docker] Failed to start ${aiderServiceName}: ${error.message}`);
+        }
+      }
+    }
+    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+      const runtime = configValue.runtime;
+      const tests = configValue.tests;
+      console.log(`[Server_Docker] Found tests for ${runtime}:`, JSON.stringify(tests));
+      for (const testName of tests) {
+        const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+        const bddServiceName = `${uid}-bdd`;
+      }
+    }
+    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+      const runtime = configValue.runtime;
+      const tests = configValue.tests;
+      if (!this.inputFiles[configKey]) {
+        this.inputFiles[configKey] = {};
+      }
+      for (const testName of tests) {
+        if (!this.inputFiles[configKey][testName]) {
+          this.inputFiles[configKey][testName] = [];
+        }
+        this.watchInputFile(runtime, testName);
+      }
+    }
+  }
+  async watchInputFile(runtime, testsName) {
+    let configKey = null;
+    for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
+      if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
+        configKey = key;
+        break;
+      }
+    }
+    const inputFilePath = `testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`;
+    console.log(`[Server_Docker] Setting up file watcher for: ${inputFilePath} (configKey: ${configKey})`);
+    if (!this.inputFiles[configKey]) {
+      this.inputFiles[configKey] = {};
+    }
+    if (fs2.existsSync(inputFilePath)) {
+      const fileContent = fs2.readFileSync(inputFilePath, "utf-8");
+      const inputFiles = JSON.parse(fileContent);
+      this.inputFiles[configKey][testsName] = inputFiles;
+      console.log(`[Server_Docker] Loaded ${inputFiles.length} input files from ${inputFilePath}`);
+    }
+    fs2.watchFile(inputFilePath, (curr, prev) => {
+      console.log(`[Server_Docker] Input file changed: ${inputFilePath}`);
+      const fileContent = fs2.readFileSync(inputFilePath, "utf-8");
+      const inputFiles = JSON.parse(fileContent);
+      this.inputFiles[configKey][testsName] = inputFiles;
+      console.log(`[Server_Docker] Updated input files for ${configKey}/${testsName}: ${inputFiles.length} files`);
+      this.resourceChanged("/~/inputfiles");
+      for (const [ck, configValue] of Object.entries(this.configs.runtimes)) {
+        if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
+          this.launchBddTest(runtime, testsName, ck, configValue);
+          this.launchChecks(runtime, testsName, ck, configValue);
+          this.informAider(runtime, testsName, ck, configValue, inputFiles);
+          break;
+        }
+      }
+    });
+  }
+  async informAider(runtime, testName, configKey, configValue, inputFiles) {
+    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    const aiderServiceName = `${uid}-aider`;
+    console.log(`[Server_Docker] Informing aider service: ${aiderServiceName} about updated input files`);
+    try {
+      const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${aiderServiceName}`;
+      const containerId = execSync(containerIdCmd, {
+        encoding: "utf-8"
+      }).toString().trim();
+      if (!containerId) {
+        console.error(`[Server_Docker] No container found for aider service: ${aiderServiceName}`);
+        return;
+      }
+      console.log(`[Server_Docker] Found container ID: ${containerId} for ${aiderServiceName}`);
+      const inputFilesPath = `testeranto/bundles/allTests/${runtime}/${testName}-inputFiles.json`;
+      let inputContent = "";
+      try {
+        inputContent = fs2.readFileSync(inputFilesPath, "utf-8");
+        console.log(`[Server_Docker] Read input files from ${inputFilesPath}, length: ${inputContent.length}`);
+      } catch (error) {
+        console.error(`[Server_Docker] Failed to read input files: ${error.message}`);
+      }
+      const sendInputCmd = `echo ${JSON.stringify(inputContent)} | docker exec -i ${containerId} sh -c 'cat > /proc/1/fd/0'`;
+      console.log(`[Server_Docker] Executing command to send input to aider process`);
+      try {
+        execSync(sendInputCmd, {
+          encoding: "utf-8",
+          stdio: "pipe"
+        });
+        console.log(`[Server_Docker] Successfully sent input to aider process`);
+      } catch (error) {
+        console.error(`[Server_Docker] Failed to send input via docker exec: ${error.message}`);
+      }
+    } catch (error) {
+      console.error(`[Server_Docker] Failed to inform aider service ${aiderServiceName}: ${error.message}`);
+      this.captureExistingLogs(aiderServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
+    }
+  }
+  async launchBddTest(runtime, testName, configKey, configValue) {
+    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    const bddServiceName = `${uid}-bdd`;
+    console.log(`[Server_Docker] Starting BDD service: ${bddServiceName}, ${configKey}, ${testName}`);
+    try {
+      await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`);
+      await this.captureExistingLogs(bddServiceName, runtime);
+      this.startServiceLogging(bddServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${bddServiceName}:`, error));
+      this.resourceChanged("/~/processes");
+      this.writeConfigForExtension();
+    } catch (error) {
+      console.error(`[Server_Docker] Failed to start ${bddServiceName}: ${error.message}`);
+      this.captureExistingLogs(bddServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
+      this.writeConfigForExtension();
+    }
+  }
+  async launchChecks(runtime, testName, configKey, configValue) {
+    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    const checks = configValue.checks || [];
+    for (let i2 = 0;i2 < checks.length; i2++) {
+      const checkServiceName = `${uid}-check-${i2}`;
+      console.log(`[Server_Docker] Starting check service: ${checkServiceName}`);
+      try {
+        await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${checkServiceName}`);
+        this.startServiceLogging(checkServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${checkServiceName}:`, error));
+        this.captureExistingLogs(checkServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to capture existing logs for ${checkServiceName}:`, error));
+        this.resourceChanged("/~/processes");
+      } catch (error) {
+        console.error(`[Server_Docker] Failed to start ${checkServiceName}: ${error.message}`);
+        this.captureExistingLogs(checkServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
+      }
+    }
+    this.writeConfigForExtension();
+  }
+  async captureExistingLogs(serviceName, runtime) {
+    const reportDir = path2.join(process.cwd(), "testeranto", "reports", "allTests", "example", runtime);
+    const logFilePath = path2.join(reportDir, `${serviceName}.log`);
+    try {
+      const checkCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
+      const containerId = execSync(checkCmd, {
+        encoding: "utf-8"
+      }).toString().trim();
+      if (!containerId) {
+        console.debug(`[Server_Docker] No container found for service ${serviceName}`);
+        return;
+      }
+      const cmd = `docker compose -f "testeranto/docker-compose.yml" logs --no-color ${serviceName} 2>/dev/null || true`;
+      const existingLogs = execSync(cmd, {
+        encoding: "utf-8",
+        maxBuffer: 10 * 1024 * 1024
+      });
+      if (existingLogs && existingLogs.trim().length > 0) {
+        fs2.writeFileSync(logFilePath, existingLogs);
+        console.log(`[Server_Docker] Captured ${existingLogs.length} bytes of existing logs for ${serviceName}`);
+      } else {
+        fs2.writeFileSync(logFilePath, "");
+      }
+      this.captureContainerExitCode(serviceName, reportDir);
+    } catch (error) {
+      console.debug(`[Server_Docker] No existing logs for ${serviceName}: ${error.message}`);
+    }
+  }
+  async waitForContainerHealthy(containerName, timeoutMs) {
+    const startTime = Date.now();
+    const checkInterval = 2000;
+  }
+  async stop() {
+    for (const [containerId, logProcess] of this.logProcesses.entries()) {
+      try {
+        logProcess.process.kill("SIGTERM");
+        console.log(`[Server_Docker] Stopped log process for container ${containerId} (${logProcess.serviceName})`);
+      } catch (error) {
+        console.error(`[Server_Docker] Error stopping log process for ${containerId}:`, error);
+      }
+    }
+    this.logProcesses.clear();
+    const result = await this.DC_down();
+    this.resourceChanged("/~/processes");
+    this.writeConfigForExtensionOnStop();
+    super.stop();
+  }
+  async setupDockerCompose() {
+    const composeDir = path2.join(process.cwd(), "testeranto", "bundles");
+    try {
+      fs2.mkdirSync(composeDir, { recursive: true });
+      const services = this.generateServices();
+      this.writeComposeFile(services);
+    } catch (err) {
+      console.error(`Error in setupDockerCompose:`, err);
+      throw err;
+    }
+  }
+  writeConfigForExtension() {
+    try {
+      const configDir = path2.join(process.cwd(), "testeranto");
+      const configPath = path2.join(configDir, "extension-config.json");
+      if (!fs2.existsSync(configDir)) {
+        fs2.mkdirSync(configDir, { recursive: true });
+        console.log(`[Server_Docker] Created directory: ${configDir}`);
+      }
+      const runtimesArray = [];
+      if (this.configs.runtimes && typeof this.configs.runtimes === "object") {
+        for (const [key, value] of Object.entries(this.configs.runtimes)) {
+          const runtimeObj = value;
+          if (runtimeObj && typeof runtimeObj === "object") {
+            const runtime = runtimeObj.runtime;
+            const tests = runtimeObj.tests || [];
+            console.log(`[Server_Docker] Found runtime: ${runtime}, tests:`, tests);
+            if (runtime) {
+              runtimesArray.push({
+                key,
+                runtime,
+                label: this.getRuntimeLabel(runtime),
+                tests: Array.isArray(tests) ? tests : []
+              });
+            } else {
+              console.warn(`[Server_Docker] No runtime property found for key: ${key}`, runtimeObj);
+            }
+          } else {
+            console.warn(`[Server_Docker] Invalid runtime configuration for key: ${key}, value type: ${typeof value}`);
+          }
+        }
+      } else {
+        console.warn(`[Server_Docker] No runtimes found in config`);
+      }
+      const processSummary = this.getProcessSummary();
+      const configData = {
+        runtimes: runtimesArray,
+        timestamp: new Date().toISOString(),
+        source: "testeranto.ts",
+        serverStarted: true,
+        processes: processSummary.processes || [],
+        totalProcesses: processSummary.total || 0,
+        lastUpdated: new Date().toISOString()
+      };
+      const configJson = JSON.stringify(configData, null, 2);
+      fs2.writeFileSync(configPath, configJson);
+      console.log(`[Server_Docker] Updated extension config with ${processSummary.total || 0} processes`);
+    } catch (error) {
+      console.error(`[Server_Docker] Failed to write extension config:`, error);
+    }
+  }
+  getRuntimeLabel(runtime) {
+    const labels = {
+      node: "Node",
+      web: "Web",
+      python: "Python",
+      golang: "Golang",
+      ruby: "Ruby",
+      rust: "Rust",
+      java: "Java"
+    };
+    return labels[runtime] || runtime.charAt(0).toUpperCase() + runtime.slice(1);
+  }
+  writeConfigForExtensionOnStop() {
+    try {
+      const configDir = path2.join(process.cwd(), "testeranto");
+      const configPath = path2.join(configDir, "extension-config.json");
+      if (!fs2.existsSync(configDir)) {
+        fs2.mkdirSync(configDir, { recursive: true });
+        console.log(`[Server_Docker] Created directory: ${configDir}`);
+      }
+      const configData = {
+        runtimes: [],
+        timestamp: new Date().toISOString(),
+        source: "testeranto.ts",
+        serverStarted: false
+      };
+      const configJson = JSON.stringify(configData, null, 2);
+      fs2.writeFileSync(configPath, configJson);
+      console.log(`[Server_Docker] Updated extension config to indicate server stopped`);
+    } catch (error) {
+      console.error(`[Server_Docker] Failed to write extension config on stop:`, error);
+    }
+  }
+  writeComposeFile(services) {
+    const dockerComposeFileContents = this.BaseCompose(services);
+    fs2.writeFileSync("testeranto/docker-compose.yml", jsYaml.dump(dockerComposeFileContents, {
+      lineWidth: -1,
+      noRefs: true
+    }));
+  }
+  getInputFiles(runtime, testName) {
+    console.log(`[Server_Docker] getInputFiles called for ${runtime}/${testName}`);
+    let configKey = null;
+    for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
+      if (configValue.runtime === runtime && configValue.tests.includes(testName)) {
+        configKey = key;
+        break;
+      }
+    }
+    if (!configKey) {
+      console.log(`[Server_Docker] No config found for runtime ${runtime} and test ${testName}`);
+      return [];
+    }
+    console.log(`[Server_Docker] Found config key: ${configKey} for ${runtime}/${testName}`);
+    console.log("INPUT FILES", this.inputFiles);
+    if (this.inputFiles && typeof this.inputFiles === "object" && this.inputFiles[configKey] && typeof this.inputFiles[configKey] === "object" && this.inputFiles[configKey][testName]) {
+      const files = this.inputFiles[configKey][testName];
+      console.log(`[Server_Docker] Found ${files.length} input files in memory for ${configKey}/${testName}`);
+      return Array.isArray(files) ? files : [];
+    }
+    console.log(`[Server_Docker] No input files in memory for ${configKey}/${testName}`);
+    console.log(`[Server_Docker] Available config keys:`, Object.keys(this.inputFiles || {}));
+    if (this.inputFiles && this.inputFiles[configKey]) {
+      console.log(`[Server_Docker] Tests in ${configKey}:`, Object.keys(this.inputFiles[configKey]));
+    }
+    return [];
+  }
+  getProcessSummary() {
+    try {
+      const cmd = 'docker ps -a --format "{{.Names}}|{{.Image}}|{{.Status}}|{{.Ports}}|{{.State}}|{{.Command}}|{{.ID}}"';
+      let output;
+      try {
+        output = execSync(cmd).toString();
+      } catch (dockerError) {
+        console.error(`[Server_Docker] Error running docker ps: ${dockerError.message}`);
+        return {
+          processes: [],
+          total: 0,
+          timestamp: new Date().toISOString(),
+          error: `Docker not available: ${dockerError.message}`
+        };
+      }
+      if (!output || output.trim() === "") {
+        return {
+          processes: [],
+          total: 0,
+          timestamp: new Date().toISOString(),
+          message: "No docker containers found"
+        };
+      }
+      const lines = output.trim().split(`
+`).filter((line) => line.trim());
+      if (lines.length === 0) {
+        return {
+          processes: [],
+          total: 0,
+          timestamp: new Date().toISOString(),
+          message: "No docker containers found"
+        };
+      }
+      const processes = lines.map((line) => {
+        const parts = line.split("|");
+        const [name = "", image = "", status = "", ports = "", state = "", command = "", containerId = ""] = parts;
+        let exitCode = null;
+        let startedAt = null;
+        let finishedAt = null;
+        if (containerId && containerId.trim()) {
+          try {
+            const inspectCmd = `docker inspect --format='{{.State.ExitCode}}|{{.State.StartedAt}}|{{.State.FinishedAt}}' ${containerId} 2>/dev/null || echo ""`;
+            const inspectOutput = execSync(inspectCmd).toString().trim();
+            if (inspectOutput && inspectOutput !== "") {
+              const [exitCodeStr, startedAtStr, finishedAtStr] = inspectOutput.split("|");
+              if (exitCodeStr && exitCodeStr !== "" && exitCodeStr !== "<no value>") {
+                exitCode = parseInt(exitCodeStr, 10);
+              }
+              if (startedAtStr && startedAtStr !== "" && startedAtStr !== "<no value>") {
+                startedAt = startedAtStr;
+              }
+              if (finishedAtStr && finishedAtStr !== "" && finishedAtStr !== "<no value>") {
+                finishedAt = finishedAtStr;
+              }
+            }
+          } catch (error) {
+            console.debug(`[Server_Docker] Could not inspect container ${containerId}: ${error}`);
+          }
+        }
+        const isActive = state === "running";
+        return {
+          processId: name || containerId,
+          containerId,
+          command: command || image,
+          image,
+          timestamp: new Date().toISOString(),
+          status,
+          state,
+          ports,
+          exitCode,
+          startedAt,
+          finishedAt,
+          isActive,
+          health: "unknown"
+        };
+      });
+      return {
+        processes,
+        total: processes.length,
+        timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error(`[Server_Docker] Unexpected error in getProcessSummary: ${error.message}`);
+      return {
+        processes: [],
+        total: 0,
+        timestamp: new Date().toISOString(),
+        error: `Unexpected error: ${error.message}`
+      };
+    }
+  }
   autogenerateStamp(x) {
     return `# This file is autogenerated. Do not edit it directly
 ${x}
     `;
-  }
-  getUpCommand() {
-    return `docker compose -f "testeranto/docker-compose.yml" up -d`;
-  }
-  getDownCommand() {
-    return `docker compose -f "testeranto/docker-compose.yml" down -v --remove-orphans`;
-  }
-  getPsCommand() {
-    return `docker compose -f "testeranto/docker-compose.yml" ps`;
-  }
-  getLogsCommand(serviceName, tail = 100) {
-    const base = `docker compose -f "testeranto/docker-compose.yml" logs --no-color --tail=${tail}`;
-    return serviceName ? `${base} ${serviceName}` : base;
-  }
-  getConfigServicesCommand() {
-    return `docker compose -f "testeranto/docker-compose.yml" config --services`;
-  }
-  getBuildCommand() {
-    return `docker compose -f "testeranto/docker-compose.yml" build`;
-  }
-  getStartCommand() {
-    return `docker compose -f "testeranto/docker-compose.yml" start`;
   }
   async startServiceLogging(serviceName, runtime) {
     const reportDir = path2.join(process.cwd(), "testeranto", "reports", "allTests", "example", runtime);
@@ -4177,328 +4983,26 @@ ${x}
     });
     const trackingKey = containerId || serviceName;
     this.logProcesses.set(trackingKey, { process: child, serviceName });
+    this.writeConfigForExtension();
   }
   async captureContainerExitCode(serviceName, reportDir) {
-    try {
-      const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
-      const containerId = execSync(containerIdCmd, {}).toString().trim();
-      if (containerId) {
-        const inspectCmd = `docker inspect --format='{{.State.ExitCode}}' ${containerId}`;
-        const exitCode = execSync(inspectCmd, {}).toString().trim();
-        const containerExitCodeFilePath = path2.join(reportDir, `${serviceName}.container.exitcode`);
-        fs2.writeFileSync(containerExitCodeFilePath, exitCode);
-        console.log(`[Server_Docker] Container ${serviceName} (${containerId.substring(0, 12)}) exited with code ${exitCode}`);
-        const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
-        const status = execSync(statusCmd, {}).toString().trim();
-        const statusFilePath = path2.join(reportDir, `${serviceName}.container.status`);
-        fs2.writeFileSync(statusFilePath, status);
-      } else {
-        console.debug(`[Server_Docker] No container found for service ${serviceName}`);
-      }
-    } catch (error) {
-      console.debug(`[Server_Docker] Could not capture container exit code for ${serviceName}: ${error.message}`);
+    const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
+    const containerId = execSync(containerIdCmd, {}).toString().trim();
+    if (containerId) {
+      const inspectCmd = `docker inspect --format='{{.State.ExitCode}}' ${containerId}`;
+      const exitCode = execSync(inspectCmd, {}).toString().trim();
+      const containerExitCodeFilePath = path2.join(reportDir, `${serviceName}.container.exitcode`);
+      fs2.writeFileSync(containerExitCodeFilePath, exitCode);
+      console.log(`[Server_Docker] Container ${serviceName} (${containerId.substring(0, 12)}) exited with code ${exitCode}`);
+      const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
+      const status = execSync(statusCmd, {}).toString().trim();
+      const statusFilePath = path2.join(reportDir, `${serviceName}.container.status`);
+      fs2.writeFileSync(statusFilePath, status);
+      this.resourceChanged("/~/processes");
+      this.writeConfigForExtension();
+    } else {
+      console.debug(`[Server_Docker] No container found for service ${serviceName}`);
     }
-  }
-  async start() {
-    await super.start();
-    this.writeConfigForExtension();
-    await this.setupDockerCompose();
-    const baseReportsDir = path2.join(process.cwd(), "testeranto", "reports");
-    try {
-      fs2.mkdirSync(baseReportsDir, { recursive: true });
-      console.log(`[Server_Docker] Created base reports directory: ${baseReportsDir}`);
-    } catch (error) {
-      console.error(`[Server_Docker] Failed to create base reports directory ${baseReportsDir}: ${error.message}`);
-    }
-    console.log(`[Server_Docker] Dropping everything...`);
-    try {
-      const downCmd = this.getDownCommand();
-      console.log(`[Server_Docker] Running: ${downCmd}`);
-      await this.spawnPromise(downCmd);
-      console.log(`[Server_Docker] Docker compose down completed`);
-    } catch (error) {
-      console.log(`[Server_Docker] Docker compose down noted: ${error.message}`);
-    }
-    console.log(`[Server_Docker] Rebuilding all services...`);
-    try {
-      const buildResult = await this.DC_build();
-      if (buildResult.exitCode !== 0) {
-        console.error(`[Server_Docker] Build failed: ${buildResult.err}`);
-      } else {
-        console.log(`[Server_Docker] Build completed successfully`);
-      }
-    } catch (error) {
-      console.error(`[Server_Docker] Build error: ${error.message}`);
-    }
-    for (const runtime of RUN_TIMES) {
-      const serviceName = `${runtime}-builder`;
-      console.log(`[Server_Docker] Starting builder service: ${serviceName}`);
-      try {
-        await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${serviceName}`);
-        await this.captureExistingLogs(serviceName, runtime);
-        this.startServiceLogging(serviceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${serviceName}:`, error));
-      } catch (error) {
-        console.error(`[Server_Docker] Failed to start ${serviceName}: ${error.message}`);
-      }
-    }
-    console.log(`[Server_Docker] Starting browser service...`);
-    try {
-      await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d browser`);
-    } catch (error) {
-      console.error(`[Server_Docker] Failed to start browser service: ${error.message}`);
-    }
-    console.log(`[Server_Docker] Waiting for browser container to be healthy...`);
-    await this.waitForContainerHealthy("browser-allTests", 60000);
-    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-      const runtime = configValue.runtime;
-      const tests = configValue.tests;
-      for (const testName of tests) {
-        const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-        const aiderServiceName = `${uid}-aider`;
-        console.log(`[Server_Docker] Starting aider service: ${aiderServiceName} for test ${testName}`);
-        try {
-          await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${aiderServiceName}`);
-          await this.captureExistingLogs(aiderServiceName, runtime);
-          this.startServiceLogging(aiderServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${aiderServiceName}:`, error));
-        } catch (error) {
-          console.error(`[Server_Docker] Failed to start ${aiderServiceName}: ${error.message}`);
-        }
-      }
-    }
-    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-      const runtime = configValue.runtime;
-      const tests = configValue.tests;
-      console.log(`[Server_Docker] Found tests for ${runtime}:`, JSON.stringify(tests));
-      for (const testName of tests) {
-        const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-        const bddServiceName = `${uid}-bdd`;
-        this.watchInputFile(runtime, testName);
-      }
-    }
-  }
-  async watchInputFile(runtime, testsName) {
-    fs2.watchFile(`testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`, (inputFiles) => {
-      for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-        if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
-          this.launchBddTest(runtime, testsName, configKey, configValue);
-          this.launchChecks(runtime, testsName, configKey, configValue);
-          this.informAider(runtime, testsName, configKey, configValue, inputFiles);
-          break;
-        }
-      }
-    });
-  }
-  async informAider(runtime, testName, configKey, configValue, inputFiles) {
-    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-    const aiderServiceName = `${uid}-aider`;
-    console.log(`[Server_Docker] Informing aider service: ${aiderServiceName} about updated input files`);
-    try {
-      const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${aiderServiceName}`;
-      const containerId = execSync(containerIdCmd, {
-        encoding: "utf-8"
-      }).toString().trim();
-      if (!containerId) {
-        console.error(`[Server_Docker] No container found for aider service: ${aiderServiceName}`);
-        return;
-      }
-      console.log(`[Server_Docker] Found container ID: ${containerId} for ${aiderServiceName}`);
-      const inputFilesPath = `testeranto/bundles/allTests/${runtime}/${testName}-inputFiles.json`;
-      let inputContent = "";
-      try {
-        inputContent = fs2.readFileSync(inputFilesPath, "utf-8");
-        console.log(`[Server_Docker] Read input files from ${inputFilesPath}, length: ${inputContent.length}`);
-      } catch (error) {
-        console.error(`[Server_Docker] Failed to read input files: ${error.message}`);
-      }
-      const sendInputCmd = `echo ${JSON.stringify(inputContent)} | docker exec -i ${containerId} sh -c 'cat > /proc/1/fd/0'`;
-      console.log(`[Server_Docker] Executing command to send input to aider process`);
-      try {
-        execSync(sendInputCmd, {
-          encoding: "utf-8",
-          stdio: "pipe"
-        });
-        console.log(`[Server_Docker] Successfully sent input to aider process`);
-      } catch (error) {
-        console.error(`[Server_Docker] Failed to send input via docker exec: ${error.message}`);
-        this.alternativeAiderUpdate(containerId, inputContent, aiderServiceName, runtime);
-      }
-    } catch (error) {
-      console.error(`[Server_Docker] Failed to inform aider service ${aiderServiceName}: ${error.message}`);
-      this.captureExistingLogs(aiderServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
-    }
-  }
-  alternativeAiderUpdate(containerId, inputContent, aiderServiceName, runtime) {
-    console.log(`[Server_Docker] Trying alternative approach to update aider`);
-    try {
-      const tempFilePath = `/tmp/input-update-${Date.now()}.json`;
-      const writeFileCmd = `echo ${JSON.stringify(inputContent)} | docker exec -i ${containerId} sh -c 'cat > ${tempFilePath}'`;
-      execSync(writeFileCmd, {
-        encoding: "utf-8",
-        stdio: "pipe"
-      });
-      console.log(`[Server_Docker] Wrote input to ${tempFilePath} inside container`);
-      const notifyCmd = `docker exec -i ${containerId} sh -c 'echo "/add ${tempFilePath}" > /proc/1/fd/0'`;
-      execSync(notifyCmd, {
-        encoding: "utf-8",
-        stdio: "pipe"
-      });
-      console.log(`[Server_Docker] Sent command to read file from ${tempFilePath}`);
-    } catch (error) {
-      console.error(`[Server_Docker] Alternative approach also failed: ${error.message}`);
-    }
-  }
-  async launchBddTest(runtime, testName, configKey, configValue) {
-    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-    const bddServiceName = `${uid}-bdd`;
-    console.log(`[Server_Docker] Starting BDD service: ${bddServiceName}, ${configKey}, ${testName}`);
-    try {
-      await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`);
-      await this.captureExistingLogs(bddServiceName, runtime);
-      this.startServiceLogging(bddServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${bddServiceName}:`, error));
-    } catch (error) {
-      console.error(`[Server_Docker] Failed to start ${bddServiceName}: ${error.message}`);
-      this.captureExistingLogs(bddServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
-    }
-  }
-  async launchChecks(runtime, testName, configKey, configValue) {
-    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-    const checks = configValue.checks || [];
-    for (let i2 = 0;i2 < checks.length; i2++) {
-      const checkServiceName = `${uid}-check-${i2}`;
-      console.log(`[Server_Docker] Starting check service: ${checkServiceName}`);
-      try {
-        await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${checkServiceName}`);
-        this.startServiceLogging(checkServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${checkServiceName}:`, error));
-        this.captureExistingLogs(checkServiceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to capture existing logs for ${checkServiceName}:`, error));
-      } catch (error) {
-        console.error(`[Server_Docker] Failed to start ${checkServiceName}: ${error.message}`);
-        this.captureExistingLogs(checkServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
-      }
-    }
-  }
-  async captureExistingLogs(serviceName, runtime) {
-    const reportDir = path2.join(process.cwd(), "testeranto", "reports", "allTests", "example", runtime);
-    const logFilePath = path2.join(reportDir, `${serviceName}.log`);
-    try {
-      const checkCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
-      const containerId = execSync(checkCmd, {
-        encoding: "utf-8"
-      }).toString().trim();
-      if (!containerId) {
-        console.debug(`[Server_Docker] No container found for service ${serviceName}`);
-        return;
-      }
-      const cmd = `docker compose -f "testeranto/docker-compose.yml" logs --no-color ${serviceName} 2>/dev/null || true`;
-      const existingLogs = execSync(cmd, {
-        encoding: "utf-8",
-        maxBuffer: 10 * 1024 * 1024
-      });
-      if (existingLogs && existingLogs.trim().length > 0) {
-        fs2.writeFileSync(logFilePath, existingLogs);
-        console.log(`[Server_Docker] Captured ${existingLogs.length} bytes of existing logs for ${serviceName}`);
-      } else {
-        fs2.writeFileSync(logFilePath, "");
-      }
-      this.captureContainerExitCode(serviceName, reportDir);
-    } catch (error) {
-      console.debug(`[Server_Docker] No existing logs for ${serviceName}: ${error.message}`);
-    }
-  }
-  async waitForContainerHealthy(containerName, timeoutMs) {
-    const startTime = Date.now();
-    const checkInterval = 2000;
-  }
-  async stop() {
-    console.log(`[Server_Docker] stop()`);
-    for (const [containerId, logProcess] of this.logProcesses.entries()) {
-      try {
-        logProcess.process.kill("SIGTERM");
-        console.log(`[Server_Docker] Stopped log process for container ${containerId} (${logProcess.serviceName})`);
-      } catch (error) {
-        console.error(`[Server_Docker] Error stopping log process for ${containerId}:`, error);
-      }
-    }
-    this.logProcesses.clear();
-    const result = await this.DC_down();
-    if (result.exitCode !== 0) {
-      console.error(`Docker Compose down failed: ${result.err}`);
-    }
-    super.stop();
-  }
-  async setupDockerCompose() {
-    const composeDir = path2.join(process.cwd(), "testeranto", "bundles");
-    try {
-      fs2.mkdirSync(composeDir, { recursive: true });
-      const services = this.generateServices();
-      this.writeComposeFile(services);
-    } catch (err) {
-      console.error(`Error in setupDockerCompose:`, err);
-      throw err;
-    }
-  }
-  writeConfigForExtension() {
-    try {
-      const configDir = path2.join(process.cwd(), "testeranto");
-      const configPath = path2.join(configDir, "extension-config.json");
-      if (!fs2.existsSync(configDir)) {
-        fs2.mkdirSync(configDir, { recursive: true });
-        console.log(`[Server_Docker] Created directory: ${configDir}`);
-      }
-      const runtimesArray = [];
-      if (this.configs.runtimes && typeof this.configs.runtimes === "object") {
-        for (const [key, value] of Object.entries(this.configs.runtimes)) {
-          const runtimeObj = value;
-          if (runtimeObj && typeof runtimeObj === "object") {
-            const runtime = runtimeObj.runtime;
-            const tests = runtimeObj.tests || [];
-            console.log(`[Server_Docker] Found runtime: ${runtime}, tests:`, tests);
-            if (runtime) {
-              runtimesArray.push({
-                key,
-                runtime,
-                label: this.getRuntimeLabel(runtime),
-                tests: Array.isArray(tests) ? tests : []
-              });
-            } else {
-              console.warn(`[Server_Docker] No runtime property found for key: ${key}`, runtimeObj);
-            }
-          } else {
-            console.warn(`[Server_Docker] Invalid runtime configuration for key: ${key}, value type: ${typeof value}`);
-          }
-        }
-      } else {
-        console.warn(`[Server_Docker] No runtimes found in config`);
-      }
-      const configData = {
-        runtimes: runtimesArray,
-        timestamp: new Date().toISOString(),
-        source: "testeranto.ts",
-        serverStarted: true
-      };
-      const configJson = JSON.stringify(configData, null, 2);
-      fs2.writeFileSync(configPath, configJson);
-    } catch (error) {
-      throw `[Server_Docker] Failed to write extension config:`;
-    }
-  }
-  getRuntimeLabel(runtime) {
-    const labels = {
-      node: "Node",
-      web: "Web",
-      python: "Python",
-      golang: "Golang",
-      ruby: "Ruby",
-      rust: "Rust",
-      java: "Java"
-    };
-    return labels[runtime] || runtime.charAt(0).toUpperCase() + runtime.slice(1);
-  }
-  writeComposeFile(services) {
-    const dockerComposeFileContents = this.BaseCompose(services);
-    fs2.writeFileSync("testeranto/docker-compose.yml", jsYaml.dump(dockerComposeFileContents, {
-      lineWidth: -1,
-      noRefs: true
-    }));
   }
   async exec(cmd, options) {
     const execAsync = promisify(exec);
@@ -4664,67 +5168,27 @@ ${x}
       };
     }
   }
-  getProcessSummary() {
-    console.log(`[Server_Docker] getProcessSummary called`);
-    try {
-      const output = execSync('docker ps --format "{{.Names}}|{{.Image}}|{{.Status}}|{{.Ports}}|{{.State}}|{{.Command}}"').toString();
-      const processes = output.trim().split(`
-`).filter((line) => line.trim()).map((line) => {
-        const parts = line.split("|");
-        const [name, image, status, ports, state, command] = parts;
-        let exitCode = null;
-        try {
-          const inspectCmd = `docker inspect --format='{{.State.ExitCode}}' ${name} 2>/dev/null || echo ""`;
-          const exitCodeStr = execSync(inspectCmd).toString().trim();
-          if (exitCodeStr !== "") {
-            exitCode = parseInt(exitCodeStr, 10);
-            if (state === "running") {
-              exitCode = null;
-            }
-          }
-        } catch (error) {}
-        return {
-          processId: name,
-          command: command || image,
-          image,
-          timestamp: new Date().toISOString(),
-          status,
-          state,
-          ports,
-          exitCode,
-          runtime: this.getRuntimeFromName(name),
-          health: "unknown"
-        };
-      });
-      return {
-        processes,
-        total: processes.length,
-        timestamp: new Date().toISOString()
-      };
-    } catch (error) {
-      console.error(`[Server_Docker] Error getting docker processes: ${error.message}`);
-      return {
-        processes: [],
-        total: 0,
-        timestamp: new Date().toISOString(),
-        error: error.message
-      };
-    }
+  getUpCommand() {
+    return `docker compose -f "testeranto/docker-compose.yml" up -d`;
   }
-  getRuntimeFromName(name) {
-    if (name.includes("node"))
-      return "node";
-    if (name.includes("web"))
-      return "web";
-    if (name.includes("golang"))
-      return "golang";
-    if (name.includes("python"))
-      return "python";
-    if (name.includes("ruby"))
-      return "ruby";
-    if (name.includes("browser"))
-      return "browser";
-    return "unknown";
+  getDownCommand() {
+    return `docker compose -f "testeranto/docker-compose.yml" down -v --remove-orphans`;
+  }
+  getPsCommand() {
+    return `docker compose -f "testeranto/docker-compose.yml" ps`;
+  }
+  getLogsCommand(serviceName, tail = 100) {
+    const base = `docker compose -f "testeranto/docker-compose.yml" logs --no-color --tail=${tail}`;
+    return serviceName ? `${base} ${serviceName}` : base;
+  }
+  getConfigServicesCommand() {
+    return `docker compose -f "testeranto/docker-compose.yml" config --services`;
+  }
+  getBuildCommand() {
+    return `docker compose -f "testeranto/docker-compose.yml" build`;
+  }
+  getStartCommand() {
+    return `docker compose -f "testeranto/docker-compose.yml" start`;
   }
 }
 

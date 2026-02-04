@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { TerminalManager } from "./TerminalManager";
 import { TestTreeDataProvider } from "./providers/TestTreeDataProvider";
-import { FileTreeDataProvider } from "./providers/FileTreeDataProvider";
+// import { FileTreeDataProvider } from "./providers/FileTreeDataProvider";
 import { ProcessesTreeDataProvider } from "./providers/ProcessesTreeDataProvider";
 import { FeaturesTreeDataProvider } from "./providers/FeaturesTreeDataProvider";
 import { TestTreeItem } from "./TestTreeItem";
@@ -39,24 +39,58 @@ export function activate(context: vscode.ExtensionContext): void {
                 const configUri = vscode.Uri.joinPath(workspaceRoot, 'testeranto', 'extension-config.json');
 
                 try {
-                    await vscode.workspace.fs.stat(configUri);
-                    // File exists - server is likely running
-                    serverStatusBarItem.text = "$(check) Server";
-                    serverStatusBarItem.tooltip = "Testeranto server is running. Click to restart.";
-                    serverStatusBarItem.backgroundColor = undefined;
-                    console.log('[Testeranto] Server status: Running (config file found)');
-                } catch {
-                    // File doesn't exist - server not running
+                    const fileContent = await vscode.workspace.fs.readFile(configUri);
+                    const configText = Buffer.from(fileContent).toString('utf-8');
+                    const config = JSON.parse(configText);
+
+                    // Check the serverStarted field
+                    if (config.serverStarted === true) {
+                        serverStatusBarItem.text = "$(check) Server";
+                        serverStatusBarItem.tooltip = "Testeranto server is running. Click to restart.";
+                        serverStatusBarItem.backgroundColor = undefined;
+                        console.log('[Testeranto] Server status: Running (config indicates server is started)');
+
+                        // Also check if there are any processes
+                        if (config.processes && config.processes.length > 0) {
+                            const runningProcesses = config.processes.filter((p: any) => p.isActive === true);
+                            const stoppedProcesses = config.processes.filter((p: any) => p.isActive !== true);
+
+                            if (runningProcesses.length > 0) {
+                                serverStatusBarItem.text = `$(check) Server (${runningProcesses.length} running)`;
+                                if (stoppedProcesses.length > 0) {
+                                    serverStatusBarItem.tooltip = `Testeranto server is running. ${runningProcesses.length} containers running, ${stoppedProcesses.length} stopped.`;
+                                }
+                            } else {
+                                serverStatusBarItem.text = "$(check) Server (0 running)";
+                                if (stoppedProcesses.length > 0) {
+                                    serverStatusBarItem.tooltip = `Testeranto server is running. All ${stoppedProcesses.length} containers are stopped.`;
+                                }
+                            }
+                        }
+                    } else {
+                        serverStatusBarItem.text = "$(circle-slash) Server";
+                        serverStatusBarItem.tooltip = "Testeranto server not running. Click to start.";
+                        serverStatusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+                        console.log('[Testeranto] Server status: Not running (config indicates server is stopped)');
+                    }
+                } catch (error) {
+                    // File doesn't exist or can't be parsed - server not running
                     serverStatusBarItem.text = "$(circle-slash) Server";
                     serverStatusBarItem.tooltip = "Testeranto server not running. Click to start.";
                     serverStatusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
-                    console.log('[Testeranto] Server status: Not running (config file not found)');
+                    console.log('[Testeranto] Server status: Not running (config file not found or invalid):', error);
                 }
             } else {
                 console.log('[Testeranto] No workspace folder open');
+                serverStatusBarItem.text = "$(circle-slash) Server";
+                serverStatusBarItem.tooltip = "No workspace folder open";
+                serverStatusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
             }
         } catch (error) {
             console.error('[Testeranto] Error checking server status:', error);
+            serverStatusBarItem.text = "$(error) Server Error";
+            serverStatusBarItem.tooltip = "Error checking server status";
+            serverStatusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
         }
     };
 
@@ -70,27 +104,38 @@ export function activate(context: vscode.ExtensionContext): void {
         if (workspaceFolders && workspaceFolders.length > 0) {
             const workspaceRoot = workspaceFolders[0].uri;
             const configPattern = new vscode.RelativePattern(workspaceRoot, 'testeranto/extension-config.json');
-            
+
             // Dispose existing watcher if any
             if (configWatcher) {
                 configWatcher.dispose();
             }
-            
-            configWatcher = vscode.workspace.createFileSystemWatcher(configPattern);
-            
-            const handleConfigChange = () => {
-                console.log('[Testeranto] Config file changed, updating server status');
+
+            configWatcher = vscode.workspace.createFileSystemWatcher(configPattern, false, false, false);
+
+            const handleConfigChange = (uri: vscode.Uri) => {
+                console.log('[Testeranto] Config file changed:', uri.fsPath);
+                // Debounce to avoid multiple rapid updates
+                setTimeout(() => {
+                    updateServerStatus();
+                    // Also refresh tree views
+                    testTreeDataProvider.refresh();
+                    processesTreeDataProvider.refresh();
+                    featuresTreeDataProvider.refresh();
+                    // fileTreeDataProvider.refresh();
+                }, 100);
+            };
+
+            configWatcher.onDidChange(handleConfigChange);
+            configWatcher.onDidCreate(handleConfigChange);
+            configWatcher.onDidDelete(() => {
+                console.log('[Testeranto] Config file deleted');
                 updateServerStatus();
-                // Also refresh tree views
                 testTreeDataProvider.refresh();
                 processesTreeDataProvider.refresh();
                 featuresTreeDataProvider.refresh();
-            };
-            
-            configWatcher.onDidChange(handleConfigChange);
-            configWatcher.onDidCreate(handleConfigChange);
-            configWatcher.onDidDelete(handleConfigChange);
-            
+                // fileTreeDataProvider.refresh();
+            });
+
             context.subscriptions.push(configWatcher);
             console.log('[Testeranto] Config file watcher set up');
         }
@@ -98,7 +143,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
     // Set up initial watcher
     setupConfigWatcher();
-    
+
     // Also watch for workspace folder changes
     context.subscriptions.push(
         vscode.workspace.onDidChangeWorkspaceFolders(() => {
@@ -108,9 +153,12 @@ export function activate(context: vscode.ExtensionContext): void {
         })
     );
 
+    // No periodic HTTP polling - rely on WebSocket messages and config file watcher
+    // The config file watcher will update status when the config file changes
+
     // Create tree data providers
     const testTreeDataProvider = new TestTreeDataProvider();
-    const fileTreeDataProvider = new FileTreeDataProvider();
+    // const fileTreeDataProvider = new FileTreeDataProvider();
     const processesTreeDataProvider = new ProcessesTreeDataProvider();
     const featuresTreeDataProvider = new FeaturesTreeDataProvider();
 
@@ -209,27 +257,38 @@ export function activate(context: vscode.ExtensionContext): void {
         await updateServerStatus();
         // Then refresh all tree views
         testTreeDataProvider.refresh();
-        fileTreeDataProvider.refresh();
+        // fileTreeDataProvider.refresh();
         processesTreeDataProvider.refresh();
         featuresTreeDataProvider.refresh();
     });
 
-    const retryConnectionCommand = vscode.commands.registerCommand("testeranto.retryConnection", (provider: ProcessesTreeDataProvider) => {
-        vscode.window.showInformationMessage("Retrying connection to Docker process server...");
-        // Reset connection attempts and try to reconnect
-        (provider as any).connectionAttempts = 0;
-        (provider as any).isConnected = false;
-        (provider as any).connectWebSocket();
-        provider.refresh();
+    const retryConnectionCommand = vscode.commands.registerCommand("testeranto.retryConnection", (provider: any) => {
+        vscode.window.showInformationMessage("Retrying connection to server...");
+        // Check if provider has connectWebSocket method
+        if (provider && typeof provider.connectWebSocket === 'function') {
+            // Reset connection attempts and try to reconnect
+            if (provider.connectionAttempts !== undefined) {
+                provider.connectionAttempts = 0;
+            }
+            if (provider.isConnected !== undefined) {
+                provider.isConnected = false;
+            }
+            provider.connectWebSocket();
+            if (typeof provider.refresh === 'function') {
+                provider.refresh();
+            }
+        } else {
+            vscode.window.showWarningMessage("Provider does not support WebSocket reconnection");
+        }
     });
 
     const startServerCommand = vscode.commands.registerCommand("testeranto.startServer", async () => {
         vscode.window.showInformationMessage("Starting Testeranto server...");
-        
+
         // Create a terminal to run the server
         const terminal = vscode.window.createTerminal('Testeranto Server');
         terminal.show();
-        
+
         // Change to workspace directory and run npm start
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (workspaceFolders && workspaceFolders.length > 0) {
@@ -238,9 +297,9 @@ export function activate(context: vscode.ExtensionContext): void {
         } else {
             terminal.sendText('npm start');
         }
-        
+
         vscode.window.showInformationMessage('Server starting in terminal. It may take a few moments...');
-        
+
         // Update status after a delay
         setTimeout(async () => {
             await updateServerStatus();
@@ -255,10 +314,10 @@ export function activate(context: vscode.ExtensionContext): void {
         showCollapseAll: true
     });
 
-    const fileTreeView = vscode.window.createTreeView("testerantoFilesView", {
-        treeDataProvider: fileTreeDataProvider,
-        showCollapseAll: true
-    });
+    // const fileTreeView = vscode.window.createTreeView("testerantoFilesView", {
+    //     treeDataProvider: fileTreeDataProvider,
+    //     showCollapseAll: true
+    // });
 
     const processesTreeView = vscode.window.createTreeView("testerantoResultsView", {
         treeDataProvider: processesTreeDataProvider,
@@ -276,7 +335,7 @@ export function activate(context: vscode.ExtensionContext): void {
             terminalManager.disposeAll();
             processesTreeDataProvider.dispose();
             testTreeDataProvider.dispose();
-            fileTreeDataProvider.dispose();
+            // fileTreeDataProvider.dispose();
             featuresTreeDataProvider.dispose();
         }
     });
@@ -292,7 +351,7 @@ export function activate(context: vscode.ExtensionContext): void {
         retryConnectionCommand,
         startServerCommand,
         testTreeView,
-        fileTreeView,
+        // fileTreeView,
         processesTreeView,
         featuresTreeView,
         mainStatusBarItem,

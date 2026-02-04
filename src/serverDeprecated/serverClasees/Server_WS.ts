@@ -32,25 +32,49 @@ export class Server_WS extends Server_HTTP {
     return this.wsManager.escapeXml(unsafe);
   }
 
+  // Notify clients that a resource has changed via WebSocket
+  resourceChanged(url: string) {
+    console.log(`[WebSocket] Resource changed: ${url}, broadcasting to ${this.wsClients.size} clients`);
+    const message = {
+      type: "resourceChanged",
+      url: url,
+      timestamp: new Date().toISOString(),
+      message: `Resource at ${url} has been updated`
+    };
+    console.log(`[WebSocket] Broadcasting message:`, message);
+    this.broadcast(message);
+  }
 
   public broadcast(message: any): void {
     const data = typeof message === "string" ? message : JSON.stringify(message);
     console.log(`[WebSocket] Broadcasting to ${this.wsClients.size} clients:`, message.type || message);
 
     let sentCount = 0;
+    let errorCount = 0;
     this.wsClients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(data);
-        sentCount++;
+        try {
+          client.send(data);
+          sentCount++;
+        } catch (error) {
+          console.error(`[WebSocket] Error sending to client:`, error);
+          errorCount++;
+        }
       } else {
         console.log(`[WebSocket] Client not open, state: ${client.readyState}`);
       }
     });
-    console.log(`[WebSocket] Sent to ${sentCount} clients`);
+    console.log(`[WebSocket] Sent to ${sentCount} clients, ${errorCount} errors`);
   }
 
   private handleWebSocketMessage(ws: WebSocket, message: any): void {
     console.log("[WebSocket] Received message:", message.type);
+
+    // Handle getProcesses message directly
+    if (message.type === "getProcesses") {
+      this.handleGetProcesses(ws);
+      return;
+    }
 
     // Use WsManager to process the message
     const response = this.wsManager.processMessage(
@@ -188,20 +212,19 @@ export class Server_WS extends Server_HTTP {
   }
 
   private handleGetProcesses(ws: WebSocket): void {
-    if (typeof (this as any).getProcessSummary === 'function') {
-      const summary = (this as any).getProcessSummary();
-      ws.send(JSON.stringify({
-        type: "processes",
-        data: summary,
-        timestamp: new Date().toISOString()
-      }));
-    } else {
-      ws.send(JSON.stringify({
-        type: "processes",
-        data: { processes: [], message: "getProcessSummary not available" },
-        timestamp: new Date().toISOString()
-      }));
+    if (!ws || typeof ws.send !== 'function') {
+      console.error("[WebSocket] Invalid WebSocket instance in handleGetProcesses");
+      return;
     }
+
+    // Don't send processes via WebSocket
+    // Instead, send a message telling the client to make an HTTP request
+    console.log("[WebSocket] Received getProcesses request, telling client to use HTTP");
+    ws.send(JSON.stringify({
+      type: "useHttp",
+      message: "Please use HTTP GET /~/processes to fetch processes",
+      timestamp: new Date().toISOString()
+    }));
   }
 
   protected getProcessSummary?(): any;

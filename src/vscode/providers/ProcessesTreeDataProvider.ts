@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
-import { TreeItemType, TreeItemData } from '../types';
+import { TreeItemType } from '../types';
 
 export class ProcessesTreeDataProvider implements vscode.TreeDataProvider<TestTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> = new
@@ -8,24 +8,26 @@ export class ProcessesTreeDataProvider implements vscode.TreeDataProvider<TestTr
   readonly onDidChangeTreeData: vscode.Event<TestTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
   private processes: any[] = [];
-  private refreshInterval: NodeJS.Timeout | null = null;
-  private ws: any = null;
+  private ws: WebSocket | null = null;
   private isConnected: boolean = false;
   private connectionAttempts: number = 0;
   private maxConnectionAttempts: number = 5;
+  private reconnectTimeout: NodeJS.Timeout | null = null;
 
   constructor() {
-    // Start WebSocket connection
+    // Start with an initial HTTP fetch
+    this.fetchProcessesViaHttp().catch(error => {
+      console.log('[ProcessesTreeDataProvider] Initial HTTP fetch failed:', error);
+    });
+    // Connect to WebSocket for real-time updates
     this.connectWebSocket();
-    // Start periodic refresh
-    this.startRefreshing();
   }
 
   refresh(): void {
-    // Trigger a fresh fetch from the WebSocket server
-    this.fetchProcesses();
-    // Also fire the event to update the view
-    this._onDidChangeTreeData.fire();
+    console.log('[ProcessesTreeDataProvider] Manual refresh requested');
+    this.fetchProcessesViaHttp().catch(error => {
+      console.log('[ProcessesTreeDataProvider] HTTP refresh failed:', error);
+    });
   }
 
   getTreeItem(element: TestTreeItem): vscode.TreeItem {
@@ -40,150 +42,51 @@ export class ProcessesTreeDataProvider implements vscode.TreeDataProvider<TestTr
   }
 
   private getProcessItems(): TestTreeItem[] {
-    // If not connected, show connection status with retry option
-    if (!this.isConnected) {
-      const items: TestTreeItem[] = [];
-      
-      // Check if we've exceeded max connection attempts
-      if (this.connectionAttempts >= this.maxConnectionAttempts) {
-        items.push(
-          new TestTreeItem(
-            "❌ Failed to connect to Docker process server",
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              description: "Make sure the Testeranto server is running on port 3456",
-              connectionFailed: true
-            },
-            {
-              command: "testeranto.retryConnection",
-              title: "Retry Connection",
-              arguments: [this]
-            },
-            new vscode.ThemeIcon("error", new vscode.ThemeColor("testing.iconFailed"))
-          )
-        );
-        
-        // Add a retry button
-        items.push(
-          new TestTreeItem(
-            "Click to retry connection",
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              description: "Or run the Testeranto server first",
-              retry: true
-            },
-            {
-              command: "testeranto.retryConnection",
-              title: "Retry Connection",
-              arguments: [this]
-            },
-            new vscode.ThemeIcon("refresh", new vscode.ThemeColor("testing.iconQueued"))
-          )
-        );
-        
-        // Show how to start the server
-        items.push(
-          new TestTreeItem(
-            "To start the server, run:",
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              description: "npm start in the project root",
-              info: true
-            },
-            undefined,
-            new vscode.ThemeIcon("info", new vscode.ThemeColor("testing.iconUnset"))
-          )
-        );
-      } else {
-        items.push(
-          new TestTreeItem(
-            "Connecting to Docker process server...",
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              description: `Attempt ${this.connectionAttempts + 1}/${this.maxConnectionAttempts} to WebSocket server on port 3456`,
-              connecting: true
-            },
-            undefined,
-            new vscode.ThemeIcon("sync", new vscode.ThemeColor("testing.iconQueued"))
-          )
-        );
-        
-        // Add a manual refresh option
-        items.push(
-          new TestTreeItem(
-            "Click to manually refresh",
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              description: "Try to reconnect immediately",
-              manualRefresh: true
-            },
-            {
-              command: "testeranto.refresh",
-              title: "Refresh",
-              arguments: []
-            },
-            new vscode.ThemeIcon("refresh", new vscode.ThemeColor("testing.iconQueued"))
-          )
-        );
-      }
-      return items;
-    }
-
-    // Connected but no processes
-    if (this.processes.length === 0) {
-      return [
+    // Show connection status
+    const items: TestTreeItem[] = [];
+    
+    // Add connection status item
+    if (this.isConnected) {
+      items.push(
         new TestTreeItem(
-          "No Docker processes found",
+          "✅ Connected via WebSocket",
           TreeItemType.File,
           vscode.TreeItemCollapsibleState.None,
-          { 
-            description: "Waiting for Docker containers to start",
-            noProcesses: true
+          {
+            description: "Receiving real-time updates",
+            connected: true
           },
           undefined,
-          new vscode.ThemeIcon("info", new vscode.ThemeColor("testing.iconUnset"))
-        ),
+          new vscode.ThemeIcon("radio-tower", new vscode.ThemeColor("testing.iconPassed"))
+        )
+      );
+    } else {
+      items.push(
         new TestTreeItem(
-          "Click to refresh",
+          "⚠️ Not connected",
           TreeItemType.File,
           vscode.TreeItemCollapsibleState.None,
-          { 
-            description: "Check for new Docker containers",
-            refresh: true
+          {
+            description: "Click to retry WebSocket connection",
+            disconnected: true
           },
           {
-            command: "testeranto.refresh",
-            title: "Refresh",
-            arguments: []
+            command: "testeranto.retryConnection",
+            title: "Retry Connection",
+            arguments: [this]
           },
-          new vscode.ThemeIcon("refresh", new vscode.ThemeColor("testing.iconQueued"))
+          new vscode.ThemeIcon("warning", new vscode.ThemeColor("testing.iconFailed"))
         )
-      ];
+      );
     }
-
-    // Show connected status and processes
-    const items: TestTreeItem[] = [
+    
+    // Add refresh item
+    items.push(
       new TestTreeItem(
-        `✅ Connected to Docker process server`,
+        "Refresh now",
         TreeItemType.File,
         vscode.TreeItemCollapsibleState.None,
-        { 
-          description: `Found ${this.processes.length} container(s)`,
-          connected: true
-        },
-        undefined,
-        new vscode.ThemeIcon("check", new vscode.ThemeColor("testing.iconPassed"))
-      ),
-      new TestTreeItem(
-        "Click to refresh",
-        TreeItemType.File,
-        vscode.TreeItemCollapsibleState.None,
-        { 
+        {
           description: "Update Docker container list",
           refresh: true
         },
@@ -194,144 +97,254 @@ export class ProcessesTreeDataProvider implements vscode.TreeDataProvider<TestTr
         },
         new vscode.ThemeIcon("refresh", new vscode.ThemeColor("testing.iconQueued"))
       )
-    ];
-
-    // Add all processes
-    items.push(...this.processes.map(process => {
-      let icon: vscode.ThemeIcon;
-      
-      const status = process.status || '';
-      if (status.toLowerCase().includes('up') || status.toLowerCase().includes('running')) {
-        icon = new vscode.ThemeIcon("check", new vscode.ThemeColor("testing.iconPassed"));
-      } else if (status.toLowerCase().includes('exited') || status.toLowerCase().includes('stopped')) {
-        icon = new vscode.ThemeIcon("error", new vscode.ThemeColor("testing.iconFailed"));
-      } else {
-        icon = new vscode.ThemeIcon("circle-outline", new vscode.ThemeColor("testing.iconUnset"));
-      }
-
-      const label = `${process.processId || process.name || 'Unknown'} - ${status || 'unknown'}`;
-      const description = process.command || process.image || 'No command';
-      
-      return new TestTreeItem(
-        label,
-        TreeItemType.File,
-        vscode.TreeItemCollapsibleState.None,
-        { 
-          description: description,
-          status: status,
-          processId: process.processId,
-          runtime: process.runtime,
-          ports: process.ports
-        },
-        undefined,
-        icon
+    );
+    
+    // Show processes if we have them
+    if (this.processes.length > 0) {
+      items.push(
+        new TestTreeItem(
+          `📦 ${this.processes.length} Docker container(s)`,
+          TreeItemType.File,
+          vscode.TreeItemCollapsibleState.None,
+          {
+            description: "Active and stopped containers",
+            count: this.processes.length
+          },
+          undefined,
+          new vscode.ThemeIcon("package", new vscode.ThemeColor("testing.iconUnset"))
+        )
       );
-    }));
+
+      // Show all processes directly without grouping
+      for (const process of this.processes) {
+        let icon: vscode.ThemeIcon;
+        let labelPrefix = '';
+        let statusColor: vscode.ThemeColor | undefined;
+
+        let status = process.status || '';
+        const state = process.state || '';
+        const isActive = process.isActive === true;
+        const runtime = process.runtime || 'unknown';
+
+        if (isActive) {
+          icon = new vscode.ThemeIcon("play", new vscode.ThemeColor("testing.iconPassed"));
+          labelPrefix = '▶ ';
+          statusColor = new vscode.ThemeColor("testing.iconPassed");
+        } else {
+          icon = new vscode.ThemeIcon("stop", new vscode.ThemeColor("testing.iconFailed"));
+          labelPrefix = '■ ';
+          statusColor = new vscode.ThemeColor("testing.iconFailed");
+
+          // Add exit code to status if available
+          if (process.exitCode !== null && process.exitCode !== undefined) {
+            status = `${status} (exit: ${process.exitCode})`;
+          }
+        }
+
+        // Create a more informative label
+        const containerName = process.processId || process.name || 'Unknown';
+        const label = `${labelPrefix}${containerName}`;
+        
+        // Create detailed description
+        let description = '';
+        if (process.command) {
+          description = process.command;
+        } else if (process.image) {
+          description = process.image;
+        }
+        
+        // Add status and runtime to description
+        if (status) {
+          description = `${description} - ${status}`;
+        }
+        description = `${description} [${runtime}]`;
+
+        items.push(
+          new TestTreeItem(
+            label,
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              description: description,
+              status: status,
+              state: state,
+              isActive: isActive,
+              processId: process.processId,
+              runtime: runtime,
+              ports: process.ports,
+              exitCode: process.exitCode,
+              containerName: containerName,
+              startedAt: process.startedAt,
+              finishedAt: process.finishedAt
+            },
+            undefined,
+            icon
+          )
+        );
+      }
+    } else {
+      // No processes found
+      items.push(
+        new TestTreeItem(
+          "No Docker containers found",
+          TreeItemType.File,
+          vscode.TreeItemCollapsibleState.None,
+          {
+            description: "Make sure the Testeranto server is running on port 3000",
+            noProcesses: true
+          },
+          undefined,
+          new vscode.ThemeIcon("info", new vscode.ThemeColor("testing.iconUnset"))
+        )
+      );
+      items.push(
+        new TestTreeItem(
+          "Start Testeranto Server",
+          TreeItemType.File,
+          vscode.TreeItemCollapsibleState.None,
+          {
+            description: "Launch the server in a terminal",
+            startServer: true
+          },
+          {
+            command: "testeranto.startServer",
+            title: "Start Server",
+            arguments: []
+          },
+          new vscode.ThemeIcon("play", new vscode.ThemeColor("testing.iconPassed"))
+        )
+      );
+    }
 
     return items;
   }
 
   public connectWebSocket(): void {
-    if (this.connectionAttempts >= this.maxConnectionAttempts) {
-      console.error('Max WebSocket connection attempts reached');
-      return;
+    if (this.ws) {
+      // Close existing connection
+      this.ws.close();
+      this.ws = null;
     }
 
-    this.connectionAttempts++;
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+
+    console.log('[ProcessesTreeDataProvider] Connecting to WebSocket at ws://localhost:3000');
     
     try {
-      // Use the ws library for Node.js environment
-      const WS = require('ws');
-      // The WebSocket server runs on port 3456
-      this.ws = new WS('ws://localhost:3456/ws');
+      this.ws = new WebSocket('ws://localhost:3000');
       
-      this.ws.on('open', () => {
-        console.log('WebSocket connected to process server');
+      this.ws.onopen = () => {
+        console.log('[ProcessesTreeDataProvider] WebSocket connected');
         this.isConnected = true;
         this.connectionAttempts = 0;
-        // Request initial processes
-        this.requestProcesses();
-      });
+        this._onDidChangeTreeData.fire();
+      };
       
-      this.ws.on('message', (data: Buffer) => {
+      this.ws.onmessage = (event) => {
         try {
-          const message = JSON.parse(data.toString());
+          const message = JSON.parse(event.data);
           this.handleWebSocketMessage(message);
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          console.error('[ProcessesTreeDataProvider] Error parsing WebSocket message:', error);
         }
-      });
+      };
       
-      this.ws.on('error', (error: any) => {
-        console.error('WebSocket error:', error);
+      this.ws.onerror = (error) => {
+        console.error('[ProcessesTreeDataProvider] WebSocket error:', error);
         this.isConnected = false;
-      });
+        this._onDidChangeTreeData.fire();
+      };
       
-      this.ws.on('close', () => {
-        console.log('WebSocket disconnected');
+      this.ws.onclose = (event) => {
+        console.log(`[ProcessesTreeDataProvider] WebSocket closed: ${event.code} ${event.reason}`);
         this.isConnected = false;
+        this.ws = null;
+        this._onDidChangeTreeData.fire();
+        
         // Attempt to reconnect after 5 seconds
-        setTimeout(() => {
-          this.connectWebSocket();
-        }, 5000);
-      });
+        if (this.connectionAttempts < this.maxConnectionAttempts) {
+          this.connectionAttempts++;
+          console.log(`[ProcessesTreeDataProvider] Attempting to reconnect (${this.connectionAttempts}/${this.maxConnectionAttempts}) in 5 seconds...`);
+          this.reconnectTimeout = setTimeout(() => {
+            this.connectWebSocket();
+          }, 5000);
+        } else {
+          console.log('[ProcessesTreeDataProvider] Max reconnection attempts reached');
+        }
+      };
     } catch (error) {
-      console.error('Failed to create WebSocket:', error);
+      console.error('[ProcessesTreeDataProvider] Failed to create WebSocket:', error);
       this.isConnected = false;
+      this._onDidChangeTreeData.fire();
     }
   }
 
   private handleWebSocketMessage(message: any): void {
-    if (message.type === 'processes') {
-      if (message.data && message.data.processes) {
-        this.processes = message.data.processes;
-        this._onDidChangeTreeData.fire();
-      }
-    } else if (message.type === 'connected') {
-      console.log('Connected to process server:', message.message);
-      this.isConnected = true;
-      // Request processes after connection
-      this.requestProcesses();
-    }
-  }
-
-  private requestProcesses(): void {
-    if (this.ws && this.ws.readyState === 1) { // 1 = OPEN
-      this.ws.send(JSON.stringify({
-        type: 'getProcesses'
-      }));
-    } else {
-      console.warn('WebSocket not ready, cannot request processes');
-    }
-  }
-
-  private async fetchProcesses(): Promise<void> {
-    if (this.isConnected) {
-      this.requestProcesses();
-    } else {
-      // Try to reconnect if not connected
-      this.connectWebSocket();
-    }
-  }
-
-  private startRefreshing(): void {
-    // Fetch immediately
-    this.fetchProcesses();
+    console.log('[ProcessesTreeDataProvider] Received WebSocket message:', message.type);
     
-    // Set up periodic refresh every 10 seconds
-    this.refreshInterval = setInterval(() => {
-      this.fetchProcesses();
-    }, 10000);
+    switch (message.type) {
+      case 'connected':
+        console.log('[ProcessesTreeDataProvider] WebSocket connection confirmed');
+        break;
+      case 'resourceChanged':
+        console.log('[ProcessesTreeDataProvider] Resource changed, fetching updated processes:', message.url);
+        // If the processes resource changed, fetch via HTTP
+        if (message.url === '/~/processes') {
+          this.fetchProcessesViaHttp().catch(error => {
+            console.log('[ProcessesTreeDataProvider] HTTP fetch after resource change failed:', error);
+          });
+        }
+        break;
+      case 'useHttp':
+        console.log('[ProcessesTreeDataProvider] Server requested HTTP for processes');
+        // Make an HTTP request to get processes
+        this.fetchProcessesViaHttp().catch(error => {
+          console.log('[ProcessesTreeDataProvider] HTTP fetch failed:', error);
+        });
+        break;
+      default:
+        console.log('[ProcessesTreeDataProvider] Unhandled message type:', message.type);
+    }
+  }
+
+
+  private async fetchProcessesViaHttp(): Promise<void> {
+    console.log('[ProcessesTreeDataProvider] Fetching processes via HTTP from http://localhost:3000/~/processes');
+    try {
+      // Use a simple fetch without timeout for now
+      const response = await fetch('http://localhost:3000/~/processes');
+      
+      if (!response.ok) {
+        console.error(`[ProcessesTreeDataProvider] HTTP error! status: ${response.status}`);
+        this.processes = [];
+        this._onDidChangeTreeData.fire();
+        return;
+      }
+      
+      const data = await response.json();
+      console.log(`[ProcessesTreeDataProvider] HTTP fetch returned ${data.processes?.length || 0} processes`);
+      
+      this.processes = data.processes || [];
+      console.log(`[ProcessesTreeDataProvider] Updated processes array to have ${this.processes.length} items`);
+      this._onDidChangeTreeData.fire();
+    } catch (error: any) {
+      console.error('[ProcessesTreeDataProvider] HTTP fetch failed:', error.message || error);
+      this.processes = [];
+      this._onDidChangeTreeData.fire();
+    }
   }
 
   public dispose(): void {
-    if (this.refreshInterval) {
-      clearInterval(this.refreshInterval);
-      this.refreshInterval = null;
-    }
     if (this.ws) {
       this.ws.close();
       this.ws = null;
+    }
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
     }
   }
 }

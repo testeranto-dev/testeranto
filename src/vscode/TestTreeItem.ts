@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { TreeItemType, TreeItemData } from './types';
+import { TreeItemType, type TreeItemData } from './types';
 
 export class TestTreeItem extends vscode.TreeItem {
   constructor(
@@ -12,6 +12,9 @@ export class TestTreeItem extends vscode.TreeItem {
   ) {
     super(label, collapsibleState);
     this.tooltip = `${this.label}`;
+    if (data?.description) {
+      this.description = data.description;
+    }
     this.iconPath = iconPath || this.getDefaultIcon();
     this.contextValue = this.getContextValue();
   }
@@ -24,6 +27,8 @@ export class TestTreeItem extends vscode.TreeItem {
         return new vscode.ThemeIcon("beaker");
       case TreeItemType.File:
         return new vscode.ThemeIcon("file");
+      case TreeItemType.Info:
+        return new vscode.ThemeIcon("info");
       default:
         return undefined;
     }
@@ -37,6 +42,8 @@ export class TestTreeItem extends vscode.TreeItem {
         return 'testItem';
       case TreeItemType.File:
         return 'fileItem';
+      case TreeItemType.Info:
+        return 'infoItem';
       default:
         return 'unknown';
     }

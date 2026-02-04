@@ -1,7 +1,8 @@
 export enum TreeItemType {
   Runtime,
   Test,
-  File
+  File,
+  Info
 }
 
 export interface TreeItemData {
@@ -12,4 +13,15 @@ export interface TreeItemData {
   test?: string;
   status?: string;
   isFile?: boolean;
+  info?: string;
+  action?: string;
+  description?: string;
+  connected?: boolean;
+  disconnected?: boolean;
+  refresh?: boolean;
+  runtimeKey?: string;
+  testsCount?: number;
+  count?: number;
+  startServer?: boolean;
+  noProcesses?: boolean;
 }

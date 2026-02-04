@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
-import { TreeItemType, TreeItemData } from '../types';
+import { TreeItemType } from '../types';
 
 export class ResultsTreeDataProvider implements vscode.TreeDataProvider<TestTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> = new
