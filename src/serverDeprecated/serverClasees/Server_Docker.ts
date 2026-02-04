@@ -117,6 +117,9 @@ export class Server_Docker extends Server_WS {
         // NODE_ENV: "production",
         // ...config.env,
       },
+      volumes: [
+        `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
+      ],
       working_dir: "/workspace",
       command: "aider",
       networks: ["allTests_network"],
@@ -577,12 +580,13 @@ ${x}
 
   // when the input file changes, launch the tests
   async watchInputFile(runtime: IRunTime, testsName: string) {
-    fs.watchFile(`testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`, () => {
+    fs.watchFile(`testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`, (inputFiles) => {
       // Find the configuration for this runtime and test
       for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
         if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
           this.launchBddTest(runtime, testsName, configKey, configValue);
           this.launchChecks(runtime, testsName, configKey, configValue);
+          this.informAider(runtime, testsName, configKey, configValue, inputFiles);
           break;
         }
       }
@@ -590,12 +594,100 @@ ${x}
   }
 
 
+  // Alert the aider process that the context should be updated
+  async informAider(runtime: IRunTime, testName: string, configKey: string, configValue: any, inputFiles?: any) {
+    // Generate the UID exactly as in generateServices
+    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    const aiderServiceName = `${uid}-aider`;
+
+    console.log(`[Server_Docker] Informing aider service: ${aiderServiceName} about updated input files`);
+
+    try {
+      // First, get the container ID for the aider service
+      const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${aiderServiceName}`;
+      const containerId = execSync(containerIdCmd, {
+        encoding: 'utf-8'
+      }).toString().trim();
+
+      if (!containerId) {
+        console.error(`[Server_Docker] No container found for aider service: ${aiderServiceName}`);
+        return;
+      }
+
+      console.log(`[Server_Docker] Found container ID: ${containerId} for ${aiderServiceName}`);
+
+      // Read the input files content
+      const inputFilesPath = `testeranto/bundles/allTests/${runtime}/${testName}-inputFiles.json`;
+      let inputContent = '';
+      try {
+        inputContent = fs.readFileSync(inputFilesPath, 'utf-8');
+        console.log(`[Server_Docker] Read input files from ${inputFilesPath}, length: ${inputContent.length}`);
+      } catch (error: any) {
+        console.error(`[Server_Docker] Failed to read input files: ${error.message}`);
+        // Continue with empty content
+      }
+
+      // Send the input content to the aider process's stdin
+      // We'll use docker exec to write to the main process's stdin (PID 1)
+      // The -i flag keeps stdin open, and we pipe the content
+      const sendInputCmd = `echo ${JSON.stringify(inputContent)} | docker exec -i ${containerId} sh -c 'cat > /proc/1/fd/0'`;
+      console.log(`[Server_Docker] Executing command to send input to aider process`);
+
+      try {
+        execSync(sendInputCmd, {
+          encoding: 'utf-8',
+          stdio: 'pipe'
+        });
+        console.log(`[Server_Docker] Successfully sent input to aider process`);
+      } catch (error: any) {
+        console.error(`[Server_Docker] Failed to send input via docker exec: ${error.message}`);
+        // Try an alternative approach: write to a file and then send a command
+        this.alternativeAiderUpdate(containerId, inputContent, aiderServiceName, runtime);
+      }
+
+    } catch (error: any) {
+      console.error(`[Server_Docker] Failed to inform aider service ${aiderServiceName}: ${error.message}`);
+      // Even if sending input failed, try to capture any logs that might exist
+      this.captureExistingLogs(aiderServiceName, runtime)
+        .catch(err => console.error(`[Server_Docker] Also failed to capture logs:`, err));
+    }
+  }
+
+  private alternativeAiderUpdate(containerId: string, inputContent: string, aiderServiceName: string, runtime: string) {
+    console.log(`[Server_Docker] Trying alternative approach to update aider`);
+
+    try {
+      // Write the input content to a temporary file inside the container
+      const tempFilePath = `/tmp/input-update-${Date.now()}.json`;
+      const writeFileCmd = `echo ${JSON.stringify(inputContent)} | docker exec -i ${containerId} sh -c 'cat > ${tempFilePath}'`;
+      execSync(writeFileCmd, {
+        encoding: 'utf-8',
+        stdio: 'pipe'
+      });
+
+      console.log(`[Server_Docker] Wrote input to ${tempFilePath} inside container`);
+
+      // Now send a command to the aider process to read the file
+      // We need to know how aider accepts commands. For now, just log
+      const notifyCmd = `docker exec -i ${containerId} sh -c 'echo "/add ${tempFilePath}" > /proc/1/fd/0'`;
+      execSync(notifyCmd, {
+        encoding: 'utf-8',
+        stdio: 'pipe'
+      });
+
+      console.log(`[Server_Docker] Sent command to read file from ${tempFilePath}`);
+
+    } catch (error: any) {
+      console.error(`[Server_Docker] Alternative approach also failed: ${error.message}`);
+    }
+  }
+
   // each test has a bdd test to be launched when inputFiles.json changes
   async launchBddTest(runtime: IRunTime, testName: string, configKey: string, configValue: any) {
     // Generate the UID exactly as in generateServices
     const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
     const bddServiceName = `${uid}-bdd`;
-    
+
     console.log(`[Server_Docker] Starting BDD service: ${bddServiceName}, ${configKey}, ${testName}`);
     try {
       // Start the service

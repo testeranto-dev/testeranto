@@ -3997,6 +3997,9 @@ class Server_Docker extends Server_WS {
       },
       container_name,
       environment: {},
+      volumes: [
+        `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`
+      ],
       working_dir: "/workspace",
       command: "aider",
       networks: ["allTests_network"]
@@ -4274,15 +4277,75 @@ ${x}
     }
   }
   async watchInputFile(runtime, testsName) {
-    fs2.watchFile(`testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`, () => {
+    fs2.watchFile(`testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`, (inputFiles) => {
       for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
         if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
           this.launchBddTest(runtime, testsName, configKey, configValue);
           this.launchChecks(runtime, testsName, configKey, configValue);
+          this.informAider(runtime, testsName, configKey, configValue, inputFiles);
           break;
         }
       }
     });
+  }
+  async informAider(runtime, testName, configKey, configValue, inputFiles) {
+    const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    const aiderServiceName = `${uid}-aider`;
+    console.log(`[Server_Docker] Informing aider service: ${aiderServiceName} about updated input files`);
+    try {
+      const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${aiderServiceName}`;
+      const containerId = execSync(containerIdCmd, {
+        encoding: "utf-8"
+      }).toString().trim();
+      if (!containerId) {
+        console.error(`[Server_Docker] No container found for aider service: ${aiderServiceName}`);
+        return;
+      }
+      console.log(`[Server_Docker] Found container ID: ${containerId} for ${aiderServiceName}`);
+      const inputFilesPath = `testeranto/bundles/allTests/${runtime}/${testName}-inputFiles.json`;
+      let inputContent = "";
+      try {
+        inputContent = fs2.readFileSync(inputFilesPath, "utf-8");
+        console.log(`[Server_Docker] Read input files from ${inputFilesPath}, length: ${inputContent.length}`);
+      } catch (error) {
+        console.error(`[Server_Docker] Failed to read input files: ${error.message}`);
+      }
+      const sendInputCmd = `echo ${JSON.stringify(inputContent)} | docker exec -i ${containerId} sh -c 'cat > /proc/1/fd/0'`;
+      console.log(`[Server_Docker] Executing command to send input to aider process`);
+      try {
+        execSync(sendInputCmd, {
+          encoding: "utf-8",
+          stdio: "pipe"
+        });
+        console.log(`[Server_Docker] Successfully sent input to aider process`);
+      } catch (error) {
+        console.error(`[Server_Docker] Failed to send input via docker exec: ${error.message}`);
+        this.alternativeAiderUpdate(containerId, inputContent, aiderServiceName, runtime);
+      }
+    } catch (error) {
+      console.error(`[Server_Docker] Failed to inform aider service ${aiderServiceName}: ${error.message}`);
+      this.captureExistingLogs(aiderServiceName, runtime).catch((err) => console.error(`[Server_Docker] Also failed to capture logs:`, err));
+    }
+  }
+  alternativeAiderUpdate(containerId, inputContent, aiderServiceName, runtime) {
+    console.log(`[Server_Docker] Trying alternative approach to update aider`);
+    try {
+      const tempFilePath = `/tmp/input-update-${Date.now()}.json`;
+      const writeFileCmd = `echo ${JSON.stringify(inputContent)} | docker exec -i ${containerId} sh -c 'cat > ${tempFilePath}'`;
+      execSync(writeFileCmd, {
+        encoding: "utf-8",
+        stdio: "pipe"
+      });
+      console.log(`[Server_Docker] Wrote input to ${tempFilePath} inside container`);
+      const notifyCmd = `docker exec -i ${containerId} sh -c 'echo "/add ${tempFilePath}" > /proc/1/fd/0'`;
+      execSync(notifyCmd, {
+        encoding: "utf-8",
+        stdio: "pipe"
+      });
+      console.log(`[Server_Docker] Sent command to read file from ${tempFilePath}`);
+    } catch (error) {
+      console.error(`[Server_Docker] Alternative approach also failed: ${error.message}`);
+    }
   }
   async launchBddTest(runtime, testName, configKey, configValue) {
     const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;

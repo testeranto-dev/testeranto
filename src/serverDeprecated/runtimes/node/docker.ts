@@ -24,6 +24,7 @@ export const nodeDockerComposeFile = (
       `${process.cwd()}/example:/workspace/example`,
       `${process.cwd()}/dist:/workspace/dist`,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
+
     ],
     command: nodeBuildCommand(projectConfigPath, nodeConfigPath, testName),
   }
