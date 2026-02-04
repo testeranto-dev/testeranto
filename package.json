@@ -1,13 +1,17 @@
 {
-  "name": "hello-world-bun",
-  "version": "1.0.0",
-  "description": "A simple Bun project that prints hello world",
-  "main": "index.js",
+  "name": "testeranto",
+  "version": "0.0.1",
+  "description": "Testerant's server",
+  "main": "index.ts",
   "scripts": {
-    "start": "bun run index.js"
+    "start": "bun run index.ts",
+    "dev": "bun --watch index.ts"
   },
-  "keywords": ["bun", "hello-world"],
+  "keywords": ["testeranto"],
   "author": "",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
 }
