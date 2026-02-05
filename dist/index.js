@@ -4383,19 +4383,6 @@ class Server_Docker extends Server_WS {
   }
   generateServices() {
     const services = {};
-    services["browser"] = {
-      build: {
-        context: process.cwd(),
-        dockerfile: "src/server/runtimes/web/web.Dockerfile"
-      },
-      shm_size: "2gb",
-      container_name: "browser-allTests",
-      ports: [
-        "3000:3000",
-        "9222:9222"
-      ],
-      networks: ["allTests_network"]
-    };
     const runTimeToCompose = {
       node: [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
       web: [webDockerComposeFile, webBuildCommand, webBddCommand],
@@ -4487,9 +4474,6 @@ class Server_Docker extends Server_WS {
       this.startServiceLogging(serviceName, runtime).catch((error) => console.error(`[Server_Docker] Failed to start logging for ${serviceName}:`, error));
       this.resourceChanged("/~/processes");
     }
-    await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d browser`);
-    console.log(`[Server_Docker] Waiting for browser container to be healthy...`);
-    await this.waitForContainerHealthy("browser-allTests", 60000);
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
       const runtime = configValue.runtime;
       const tests = configValue.tests;
@@ -4538,7 +4522,7 @@ class Server_Docker extends Server_WS {
         break;
       }
     }
-    const inputFilePath = `testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`;
+    const inputFilePath = `testeranto/bundles/allTests/${runtime}/${testsName.split(".").slice(0, -1).concat("mjs").join(".")}-inputFiles.json`;
     console.log(`[Server_Docker] Setting up file watcher for: ${inputFilePath} (configKey: ${configKey})`);
     if (!this.inputFiles[configKey]) {
       this.inputFiles[configKey] = {};
@@ -4688,7 +4672,13 @@ class Server_Docker extends Server_WS {
   async setupDockerCompose() {
     const composeDir = path2.join(process.cwd(), "testeranto", "bundles");
     try {
-      fs2.mkdirSync(composeDir, { recursive: true });
+      const requiredDirs = [
+        path2.join(process.cwd(), "src"),
+        path2.join(process.cwd(), "example"),
+        path2.join(process.cwd(), "dist"),
+        path2.join(process.cwd(), "testeranto"),
+        composeDir
+      ];
       const services = this.generateServices();
       this.writeComposeFile(services);
     } catch (err) {
@@ -5009,8 +4999,8 @@ ${x}
     return execAsync(cmd, { cwd: options.cwd });
   }
   spawnPromise(command) {
+    console.log(`[spawnPromise] Executing: ${command}`);
     return new Promise((resolve, reject) => {
-      console.log(`[spawnPromise] Executing: ${command}`);
       const child = spawn(command, {
         stdio: "inherit",
         shell: true

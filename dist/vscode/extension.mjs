@@ -214,51 +214,16 @@ var TestTreeDataProvider = class {
       const { runtime, testName } = element.data || {};
       return this.getInputFileItems(runtime, testName);
     } else if (element.type === 2 /* File */) {
-      const { runtime, testName, path: path2, showAllFiles } = element.data || {};
-      if (showAllFiles) {
-        return this.getFileTreeItems(runtime, testName);
+      const { runtime, testName, path: path2, isFile } = element.data || {};
+      if (isFile) {
+        return Promise.resolve([]);
       }
-      if (path2 && !element.data?.fileName?.endsWith(".")) {
-        return this.getDirectoryItems(runtime, testName, path2);
-      }
+      return this.getDirectoryChildren(runtime, testName, path2);
     }
     return Promise.resolve([]);
   }
   async getRuntimeItems() {
     const items = [];
-    if (this.isConnected) {
-      items.push(
-        new TestTreeItem(
-          "\u2705 Connected via WebSocket",
-          3 /* Info */,
-          vscode3.TreeItemCollapsibleState.None,
-          {
-            description: "Receiving real-time updates",
-            connected: true
-          },
-          void 0,
-          new vscode3.ThemeIcon("radio-tower", new vscode3.ThemeColor("testing.iconPassed"))
-        )
-      );
-    } else {
-      items.push(
-        new TestTreeItem(
-          "\u26A0\uFE0F Not connected",
-          3 /* Info */,
-          vscode3.TreeItemCollapsibleState.None,
-          {
-            description: "Click to retry WebSocket connection",
-            disconnected: true
-          },
-          {
-            command: "testeranto.retryConnection",
-            title: "Retry Connection",
-            arguments: [this]
-          },
-          new vscode3.ThemeIcon("warning", new vscode3.ThemeColor("testing.iconFailed"))
-        )
-      );
-    }
     items.push(
       new TestTreeItem(
         "Refresh now",
@@ -541,27 +506,11 @@ var TestTreeDataProvider = class {
   // }
   async getInputFileItems(runtime, testName) {
     console.log(`[TestTreeDataProvider] Fetching input files for ${runtime}/${testName}`);
-    const items = [];
-    items.push(
-      new TestTreeItem(
-        "\u{1F4C4} Input Files",
-        2 /* File */,
-        vscode3.TreeItemCollapsibleState.None,
-        {
-          description: "Files used by this test",
-          runtime,
-          testName,
-          isHeader: true
-        },
-        void 0,
-        new vscode3.ThemeIcon("file")
-      )
-    );
     try {
       const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
       if (!response.ok) {
         console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
-        items.push(
+        return [
           new TestTreeItem(
             "No input files found",
             2 /* File */,
@@ -574,14 +523,30 @@ var TestTreeDataProvider = class {
             void 0,
             new vscode3.ThemeIcon("warning")
           )
-        );
-        return items;
+        ];
       }
       const data = await response.json();
-      const inputFiles = data.inputFiles || [];
+      let inputFiles = [];
+      if (Array.isArray(data.inputFiles)) {
+        inputFiles = data.inputFiles;
+      } else if (data.inputFiles && typeof data.inputFiles === "object") {
+        for (const key in data.inputFiles) {
+          if (Array.isArray(data.inputFiles[key])) {
+            inputFiles = data.inputFiles[key];
+            break;
+          }
+        }
+      } else {
+        for (const key in data) {
+          if (Array.isArray(data[key])) {
+            inputFiles = data[key];
+            break;
+          }
+        }
+      }
       console.log(`[TestTreeDataProvider] Found ${inputFiles.length} input files`);
       if (inputFiles.length === 0) {
-        items.push(
+        return [
           new TestTreeItem(
             "No input files available",
             2 /* File */,
@@ -594,50 +559,32 @@ var TestTreeDataProvider = class {
             void 0,
             new vscode3.ThemeIcon("info")
           )
-        );
-      } else {
-        for (const filePath of inputFiles) {
-          const fileName = filePath.split("/").pop() || filePath;
-          items.push(
-            new TestTreeItem(
-              fileName,
-              2 /* File */,
-              vscode3.TreeItemCollapsibleState.None,
-              {
-                runtime,
-                testName,
-                fileName: filePath,
-                path: filePath,
-                isInputFile: true
-              },
-              {
-                command: "vscode.open",
-                title: "Open File",
-                arguments: [vscode3.Uri.file(filePath)]
-              },
-              new vscode3.ThemeIcon("file-text")
-            )
-          );
+        ];
+      }
+      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
+      for (const filePath of inputFiles) {
+        const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
+        const parts = normalizedPath.split("/").filter((part) => part.length > 0);
+        if (parts.length === 0) continue;
+        let currentNode = treeRoot;
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          const isLast = i === parts.length - 1;
+          if (!currentNode.children.has(part)) {
+            currentNode.children.set(part, {
+              name: part,
+              children: /* @__PURE__ */ new Map(),
+              fullPath: parts.slice(0, i + 1).join("/"),
+              isFile: isLast
+            });
+          }
+          currentNode = currentNode.children.get(part);
         }
       }
-      items.push(
-        new TestTreeItem(
-          "\u{1F4C1} All Files",
-          2 /* File */,
-          vscode3.TreeItemCollapsibleState.Collapsed,
-          {
-            description: "All files in the test bundle",
-            runtime,
-            testName,
-            showAllFiles: true
-          },
-          void 0,
-          new vscode3.ThemeIcon("folder")
-        )
-      );
+      return this.buildTreeItemsFromNode(treeRoot, runtime, testName);
     } catch (error) {
       console.error(`[TestTreeDataProvider] Failed to fetch input files:`, error);
-      items.push(
+      return [
         new TestTreeItem(
           "Failed to fetch input files",
           2 /* File */,
@@ -650,9 +597,111 @@ var TestTreeDataProvider = class {
           void 0,
           new vscode3.ThemeIcon("error")
         )
+      ];
+    }
+  }
+  buildTreeItemsFromNode(node, runtime, testName) {
+    const items = [];
+    const sortedChildren = Array.from(node.children.values()).sort((a, b) => {
+      if (!a.isFile && b.isFile) return -1;
+      if (a.isFile && !b.isFile) return 1;
+      return a.name.localeCompare(b.name);
+    });
+    for (const child of sortedChildren) {
+      const collapsibleState = child.isFile ? vscode3.TreeItemCollapsibleState.None : vscode3.TreeItemCollapsibleState.Collapsed;
+      const workspaceFolders = vscode3.workspace.workspaceFolders;
+      let fileUri;
+      if (child.isFile && workspaceFolders && workspaceFolders.length > 0) {
+        const workspaceRoot = workspaceFolders[0].uri;
+        if (child.fullPath.startsWith("/")) {
+          fileUri = vscode3.Uri.file(child.fullPath);
+        } else {
+          fileUri = vscode3.Uri.joinPath(workspaceRoot, child.fullPath);
+        }
+      }
+      const treeItem = new TestTreeItem(
+        child.name,
+        2 /* File */,
+        collapsibleState,
+        {
+          runtime,
+          testName,
+          fileName: child.fullPath,
+          path: child.fullPath,
+          isFile: child.isFile
+        },
+        child.isFile && fileUri ? {
+          command: "vscode.open",
+          title: "Open File",
+          arguments: [fileUri]
+        } : void 0,
+        child.isFile ? new vscode3.ThemeIcon("file-text") : new vscode3.ThemeIcon("folder")
       );
+      items.push(treeItem);
     }
     return items;
+  }
+  async getDirectoryChildren(runtime, testName, dirPath) {
+    try {
+      const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
+      if (!response.ok) {
+        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
+        return [];
+      }
+      const data = await response.json();
+      let inputFiles = [];
+      if (Array.isArray(data.inputFiles)) {
+        inputFiles = data.inputFiles;
+      } else if (data.inputFiles && typeof data.inputFiles === "object") {
+        for (const key in data.inputFiles) {
+          if (Array.isArray(data.inputFiles[key])) {
+            inputFiles = data.inputFiles[key];
+            break;
+          }
+        }
+      } else {
+        for (const key in data) {
+          if (Array.isArray(data[key])) {
+            inputFiles = data[key];
+            break;
+          }
+        }
+      }
+      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
+      for (const filePath of inputFiles) {
+        const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
+        const parts = normalizedPath.split("/").filter((part) => part.length > 0);
+        if (parts.length === 0) continue;
+        let currentNode2 = treeRoot;
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          const isLast = i === parts.length - 1;
+          if (!currentNode2.children.has(part)) {
+            currentNode2.children.set(part, {
+              name: part,
+              children: /* @__PURE__ */ new Map(),
+              fullPath: parts.slice(0, i + 1).join("/"),
+              isFile: isLast
+            });
+          }
+          currentNode2 = currentNode2.children.get(part);
+        }
+      }
+      const normalizedDirPath = dirPath.startsWith("/") ? dirPath.substring(1) : dirPath;
+      const dirParts = normalizedDirPath.split("/").filter((part) => part.length > 0);
+      let currentNode = treeRoot;
+      for (const part of dirParts) {
+        if (currentNode.children.has(part)) {
+          currentNode = currentNode.children.get(part);
+        } else {
+          return [];
+        }
+      }
+      return this.buildTreeItemsFromNode(currentNode, runtime, testName);
+    } catch (error) {
+      console.error(`[TestTreeDataProvider] Failed to get directory children:`, error);
+      return [];
+    }
   }
   async getFileTreeItems(runtime, testName) {
     try {
@@ -722,22 +771,23 @@ var TestTreeDataProvider = class {
     }
     return items;
   }
-  async getDirectoryItems(runtime, testName, path2) {
-    const tree = await this.buildFileTree(runtime, testName);
-    if (!tree) {
-      return [];
-    }
-    const parts = path2.split("/").filter((p) => p.length > 0);
-    let currentNode = tree;
-    for (const part of parts) {
-      if (currentNode.children.has(part)) {
-        currentNode = currentNode.children.get(part);
-      } else {
-        return [];
-      }
-    }
-    return this.buildTreeItems(currentNode, runtime, testName);
-  }
+  // private async getDirectoryItems(runtime: IRunTime, testName: string, path: string): Promise<TestTreeItem[]> {
+  //   const tree = await this.buildFileTree(runtime, testName);
+  //   if (!tree) {
+  //     return [];
+  //   }
+  //   // Find the node corresponding to the path
+  //   const parts = path.split('/').filter(p => p.length > 0);
+  //   let currentNode = tree;
+  //   for (const part of parts) {
+  //     if (currentNode.children.has(part)) {
+  //       currentNode = currentNode.children.get(part)!;
+  //     } else {
+  //       return [];
+  //     }
+  //   }
+  //   return this.buildTreeItems(currentNode, runtime, testName);
+  // }
 };
 
 // src/vscode/providers/ProcessesTreeDataProvider.ts

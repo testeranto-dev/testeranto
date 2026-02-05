@@ -130,22 +130,23 @@ export class Server_Docker extends Server_WS {
   generateServices(
     // config: IBuiltConfig,
   ): Record<string, any> {
+
     const services: IService = {};
 
     // Add browser service (commented out until we have the Dockerfile)
-    services['browser'] = {
-      build: {
-        context: process.cwd(),
-        dockerfile: 'src/server/runtimes/web/web.Dockerfile'
-      },
-      shm_size: '2gb',
-      container_name: 'browser-allTests',
-      ports: [
-        '3000:3000',
-        '9222:9222'
-      ],
-      networks: ["allTests_network"],
-    };
+    // services['browser'] = {
+    //   build: {
+    //     context: process.cwd(),
+    //     dockerfile: 'src/server/runtimes/web/web.Dockerfile'
+    //   },
+    //   shm_size: '2gb',
+    //   container_name: 'browser-allTests',
+    //   ports: [
+    //     '3000:3000',
+    //     '9222:9222'
+    //   ],
+    //   networks: ["allTests_network"],
+    // };
 
     const runTimeToCompose: Record<IRunTime, [
       (
@@ -307,11 +308,11 @@ export class Server_Docker extends Server_WS {
       this.resourceChanged('/~/processes');
     }
 
-    await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d browser`);
+    // await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d browser`);
 
-    // Wait for browser service to be healthy before starting web BDD services
-    console.log(`[Server_Docker] Waiting for browser container to be healthy...`);
-    await this.waitForContainerHealthy('browser-allTests', 60000); // 60 seconds max
+    // // Wait for browser service to be healthy before starting web BDD services
+    // console.log(`[Server_Docker] Waiting for browser container to be healthy...`);
+    // await this.waitForContainerHealthy('browser-allTests', 60000); // 60 seconds max
 
     // Start aider services
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
@@ -385,7 +386,7 @@ export class Server_Docker extends Server_WS {
       }
     }
 
-    const inputFilePath = `testeranto/bundles/allTests/${runtime}/${testsName}-inputFiles.json`;
+    const inputFilePath = `testeranto/bundles/allTests/${runtime}/${testsName.split('.').slice(0, -1).concat('mjs').join('.')}-inputFiles.json`;
 
     console.log(`[Server_Docker] Setting up file watcher for: ${inputFilePath} (configKey: ${configKey})`);
     // Initialize the structure if needed
@@ -657,20 +658,21 @@ export class Server_Docker extends Server_WS {
     const composeDir = path.join(process.cwd(), "testeranto", "bundles");
 
     try {
-      // Setup directories
-      fs.mkdirSync(composeDir, { recursive: true });
+      // Setup directories that are referenced in volume mounts
+      const requiredDirs = [
+        path.join(process.cwd(), "src"),
+        path.join(process.cwd(), "example"),
+        path.join(process.cwd(), "dist"),
+        path.join(process.cwd(), "testeranto"),
+        composeDir
+      ];
 
-      // Generate Dockerfiles for each runtime
-      // Note: runtimes needs to be defined - we'll get it from config
-      // const runtimes: IRunTime[] = ["node", "web", "golang", "python", "ruby"];
-      // deprecated 
-      // this.generateRuntimeDockerfiles(config, runtimes, composeDir, log, error);
 
       const services = this.generateServices(
         // config,
       );
-
       this.writeComposeFile(services);
+
     } catch (err) {
       console.error(`Error in setupDockerCompose:`, err);
       throw err;
@@ -1119,8 +1121,10 @@ ${x}
   }
 
   spawnPromise(command: string) {
+    console.log(`[spawnPromise] Executing: ${command}`);
+
     return new Promise<number>((resolve, reject) => {
-      console.log(`[spawnPromise] Executing: ${command}`);
+
 
       // Use shell: true to let the shell handle command parsing (including quotes)
       const child = spawn(command, {
