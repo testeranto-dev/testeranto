@@ -45,50 +45,94 @@ var TerminalManager = class {
     }
     this.terminals.clear();
   }
-  getAllTestConfigs() {
-    const configs = [];
-    const runtimes = ["node", "web", "python", "golang"];
-    for (const runtime of runtimes) {
-      let testNames = [];
-      switch (runtime) {
-        case "node":
-          testNames = ["Calculator.test.ts"];
-          break;
-        case "web":
-          testNames = ["Calculator.test.ts"];
-          break;
-        case "python":
-          testNames = ["Calculator.pitono.test.py"];
-          break;
-        case "golang":
-          testNames = ["Calculator.golingvu.test.go"];
-          break;
+  // Fetch aider processes from the server
+  async fetchAiderProcesses() {
+    try {
+      const response = await fetch("http://localhost:3000/~/aider-processes");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      for (const testName of testNames) {
-        configs.push({ runtime, testName });
-      }
+      const data = await response.json();
+      return data.aiderProcesses || [];
+    } catch (error) {
+      console.error("Failed to fetch aider processes:", error);
+      return [];
     }
-    return configs;
   }
-  createAiderTerminal(runtime, testName) {
-    const key = this.getTerminalKey(runtime, testName);
+  // Create terminals for all aider processes (but don't automatically start them)
+  async createAiderTerminals() {
+    try {
+      const aiderProcesses = await this.fetchAiderProcesses();
+      console.log(`Found ${aiderProcesses.length} aider processes`);
+      for (const process2 of aiderProcesses) {
+        console.log(`Aider process available: ${process2.testName} (${process2.runtime}) - ${process2.isActive ? "running" : "stopped"}`);
+      }
+    } catch (error) {
+      console.error("Failed to fetch aider processes:", error);
+    }
+  }
+  async createAiderTerminal(runtimeKey, testName) {
+    const extractString = (value, isRuntime = false) => {
+      if (typeof value === "string") {
+        return value;
+      }
+      if (value && typeof value === "object") {
+        if (isRuntime) {
+          return value.runtimeKey || value.data?.runtimeKey || value.label || value.name || String(value);
+        } else {
+          return value.testName || value.data?.testName || value.label || value.name || String(value);
+        }
+      }
+      return String(value || "unknown");
+    };
+    const runtimeStr2 = runtimeKey;
+    const testNameStr2 = extractString(testName, false);
+    console.log(`[TerminalManager] createAiderTerminal called with runtime: "${runtimeStr2}", testName: "${testNameStr2}"`);
+    console.log(`[TerminalManager] Original runtime:`, runtimeKey);
+    console.log(`[TerminalManager] Original testName:`, testName);
+    const key = this.getTerminalKey(runtimeStr2, testNameStr2);
     let terminal = this.terminals.get(key);
     if (terminal && terminal.exitStatus === void 0) {
+      terminal.show();
       return terminal;
     }
-    terminal = vscode.window.createTerminal(`Aider: ${testName} (${runtime})`);
+    terminal = vscode.window.createTerminal(`Aider: ${testNameStr2} (${runtimeStr2})`);
     this.terminals.set(key, terminal);
+    terminal.sendText(`cd Code/testeranto-example-project`);
+    const tname = `nodetests-src_ts_calculator-test-ts-aider`;
+    terminal.sendText(`docker compose -f "testeranto/docker-compose.yml" run -it ${tname} aider`);
+    terminal.show();
     return terminal;
   }
-  createAllTerminals() {
-    const configs = this.getAllTestConfigs();
-    for (const { runtime, testName } of configs) {
-      try {
-        this.createTerminal(runtime, testName);
-      } catch (error) {
-        console.error(`Failed to create terminal for ${testName} (${runtime}):`, error);
+  // Restart a specific aider process
+  async restartAiderProcess(runtime, testName) {
+    try {
+      const aiderProcesses = await this.fetchAiderProcesses();
+      const process2 = aiderProcesses.find(
+        (p) => p.runtime === runtime && p.testName === testName
+      );
+      if (process2) {
+        const key = this.getTerminalKey(runtime, testName);
+        let terminal = this.terminals.get(key);
+        if (!terminal || terminal.exitStatus !== void 0) {
+          terminal = vscode.window.createTerminal(`Aider: ${testName} (${runtime})`);
+          this.terminals.set(key, terminal);
+        }
+        terminal.sendText(`docker restart ${process2.containerId}`);
+        terminal.sendText(`sleep 2 && docker exec -it ${process2.containerId} /bin/bash`);
+        terminal.show();
+      } else {
+        vscode.window.showErrorMessage(`No aider process found for ${testName} (${runtime})`);
       }
+    } catch (error) {
+      console.error("Failed to restart aider process:", error);
+      vscode.window.showErrorMessage(`Failed to restart aider process: ${error}`);
     }
+  }
+  createAllTerminals() {
+    this.createAiderTerminals().catch((error) => {
+      console.error("Error in createAllTerminals:", error);
+    });
   }
 };
 
@@ -98,7 +142,7 @@ import * as vscode3 from "vscode";
 // src/vscode/TestTreeItem.ts
 import * as vscode2 from "vscode";
 var TestTreeItem = class extends vscode2.TreeItem {
-  constructor(label, type, collapsibleState, data, command, iconPath) {
+  constructor(label, type, collapsibleState, data, command, iconPath, contextValue) {
     super(label, collapsibleState);
     this.label = label;
     this.type = type;
@@ -111,7 +155,7 @@ var TestTreeItem = class extends vscode2.TreeItem {
       this.description = data.description;
     }
     this.iconPath = iconPath || this.getDefaultIcon();
-    this.contextValue = this.getContextValue();
+    this.contextValue = contextValue || this.getContextValue();
   }
   getDefaultIcon() {
     switch (this.type) {
@@ -294,45 +338,25 @@ var TestTreeDataProvider = class {
         if (config.runtime === runtime) {
           const tests = config.tests || [];
           console.log(`[TestTreeDataProvider] Found ${tests.length} tests for ${runtime} from HTTP endpoint`);
-          return tests.map(
-            (testName) => new TestTreeItem(
+          return tests.map((testName) => {
+            const item = new TestTreeItem(
               testName,
               1 /* Test */,
               vscode3.TreeItemCollapsibleState.Collapsed,
-              { runtime, testName }
-            )
-          );
+              { runtimeKey, testName },
+              {
+                command: "testeranto.launchAiderTerminal",
+                title: "Launch Aider Terminal",
+                arguments: [runtimeKey, testName]
+              },
+              new vscode3.ThemeIcon("terminal"),
+              "testWithAider"
+            );
+            item.tooltip = `Click to launch aider terminal for ${testName}`;
+            return item;
+          });
         }
       }
-    }
-    const workspaceFolders = vscode3.workspace.workspaceFolders;
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-      console.log("[TestTreeDataProvider] No workspace folder open");
-      return [];
-    }
-    const workspaceRoot = workspaceFolders[0].uri;
-    const configUri = vscode3.Uri.joinPath(workspaceRoot, "testeranto", "extension-config.json");
-    try {
-      const fileContent = vscode3.workspace.fs.readFileSync(configUri);
-      const config = JSON.parse(Buffer.from(fileContent).toString("utf-8"));
-      if (config.runtimes && Array.isArray(config.runtimes)) {
-        const runtimeConfig = config.runtimes.find((r) => r.runtime === runtime);
-        if (runtimeConfig && runtimeConfig.tests && Array.isArray(runtimeConfig.tests)) {
-          return runtimeConfig.tests.map(
-            (testName) => new TestTreeItem(
-              testName,
-              1 /* Test */,
-              vscode3.TreeItemCollapsibleState.Collapsed,
-              { runtime, testName }
-            )
-          );
-        }
-      }
-      console.log(`[TestTreeDataProvider] No tests found for runtime: ${runtime}`);
-      return [];
-    } catch (error) {
-      console.log(`[TestTreeDataProvider] Config file not available for tests: ${error.message}`);
-      return [];
     }
   }
   connectWebSocket() {
@@ -1916,22 +1940,104 @@ function activate(context) {
   );
   const aiderCommand = vscode6.commands.registerCommand(
     "testeranto.aider",
-    async (item) => {
-      if (item.type === 1 /* Test */) {
-        const { runtime, testName } = item.data || {};
-        vscode6.window.showInformationMessage(`Connecting to aider process for ${testName} (${runtime})...`);
-        const aiderTerminal = terminalManager.createAiderTerminal(runtime, testName);
+    async (...args) => {
+      console.log("[Testeranto] Aider command triggered with args:", args);
+      let runtime;
+      let testName;
+      if (args.length === 0) {
+        vscode6.window.showErrorMessage("Cannot connect to aider: No arguments provided");
+        return;
+      }
+      const firstArg = args[0];
+      if (firstArg && typeof firstArg === "object" && firstArg.type !== void 0) {
+        if (firstArg.type === 1 /* Test */) {
+          console.log("[Testeranto] Item label:", firstArg.label);
+          console.log("[Testeranto] Item data:", JSON.stringify(firstArg.data, null, 2));
+          runtime = firstArg.data?.runtime;
+          testName = firstArg.data?.testName;
+          if (!runtime) {
+            runtime = firstArg.data?.runtimeKey;
+          }
+          if (!testName) {
+            testName = firstArg.label;
+          }
+        } else {
+          vscode6.window.showErrorMessage(`Cannot connect to aider: Item is not a test (type: ${firstArg.type})`);
+          return;
+        }
+      } else if (args.length >= 2) {
+        runtime = args[0];
+        testName = args[1];
+        console.log("[Testeranto] Using direct parameters:", runtime, testName);
+      } else {
+        runtime = firstArg;
+        testName = "unknown";
+        console.log("[Testeranto] Using single parameter:", runtime);
+      }
+      console.log("[Testeranto] Extracted runtime:", runtime, "type:", typeof runtime);
+      console.log("[Testeranto] Extracted testName:", testName, "type:", typeof testName);
+      if (!runtime || !testName) {
+        vscode6.window.showErrorMessage(`Cannot connect to aider: Missing runtime or test name. Runtime: ${runtime}, Test: ${testName}`);
+        return;
+      }
+      console.log("[Testeranto] Calling createAiderTerminal with raw values");
+      vscode6.window.showInformationMessage(`Connecting to aider process for ${testName || "unknown"} (${runtime || "unknown"})...`);
+      try {
+        const aiderTerminal = await terminalManager.createAiderTerminal(runtime, testName);
         aiderTerminal.show();
-        let processedTestName = testName;
+        let processedTestName = testNameStr || "";
         processedTestName = processedTestName?.replace(/\.[^/.]+$/, "") || "";
         processedTestName = processedTestName.replace(/^example\//, "");
-        const sanitizedTestName = processedTestName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-");
-        const containerName = `${runtime}-${sanitizedTestName}-aider`;
+        const sanitizedTestName = processedTestName ? processedTestName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-") : "";
+        const containerName = `${runtimeStr}-${sanitizedTestName}-aider`;
         aiderTerminal.sendText("clear");
         setTimeout(() => {
           aiderTerminal.sendText(`echo "Connecting to aider container: ${containerName}"`);
           aiderTerminal.sendText(`docker exec -it ${containerName} /bin/bash`);
         }, 500);
+      } catch (error) {
+        vscode6.window.showErrorMessage(`Failed to create aider terminal: ${error.message}`);
+        console.error("[Testeranto] Error creating aider terminal:", error);
+        return;
+      }
+    }
+  );
+  const launchAiderTerminalCommand = vscode6.commands.registerCommand(
+    "testeranto.launchAiderTerminal",
+    async (...args) => {
+      console.log("[Testeranto] launchAiderTerminal called with args:", args);
+      let runtime;
+      let testName;
+      if (args.length === 0) {
+        vscode6.window.showErrorMessage("Cannot launch aider terminal: No arguments provided");
+        return;
+      }
+      const firstArg = args[0];
+      if (firstArg && typeof firstArg === "object" && firstArg.type !== void 0) {
+        runtime = firstArg.data?.runtime;
+        testName = firstArg.data?.testName;
+        console.log("[Testeranto] Extracted from TestTreeItem - runtime:", runtime, "type:", typeof runtime);
+        console.log("[Testeranto] Extracted from TestTreeItem - testName:", testName, "type:", typeof testName);
+        console.log("[Testeranto] Full data object:", JSON.stringify(firstArg.data, null, 2));
+      } else if (args.length >= 2) {
+        runtime = args[0];
+        testName = args[1];
+        console.log("[Testeranto] Using direct arguments:", runtime, testName);
+      } else {
+        runtime = firstArg;
+        testName = "unknown";
+        console.log("[Testeranto] Using single argument:", runtime);
+      }
+      console.log("[Testeranto] Raw values - runtime:", runtime, "type:", typeof runtime);
+      console.log("[Testeranto] Raw values - testName:", testName, "type:", typeof testName);
+      vscode6.window.showInformationMessage(`Launching aider terminal for ${testName || "unknown"} (${runtime || "unknown"})...`);
+      try {
+        const terminal = await terminalManager.createAiderTerminal(runtime, testName);
+        terminal.show();
+        vscode6.window.showInformationMessage(`Aider terminal launched for ${testName || "unknown"} (${runtime || "unknown"})`);
+      } catch (error) {
+        console.error("Failed to launch aider terminal:", error);
+        vscode6.window.showErrorMessage(`Failed to launch aider terminal: ${error}`);
       }
     }
   );
@@ -2034,6 +2140,7 @@ function activate(context) {
     showTestsCommand,
     runTestCommand,
     aiderCommand,
+    launchAiderTerminalCommand,
     openFileCommand,
     openConfigCommand,
     refreshCommand,

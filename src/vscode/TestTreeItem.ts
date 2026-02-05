@@ -8,7 +8,8 @@ export class TestTreeItem extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly data?: TreeItemData,
     public readonly command?: vscode.Command,
-    public readonly iconPath?: vscode.ThemeIcon
+    public readonly iconPath?: vscode.ThemeIcon,
+    contextValue?: string
   ) {
     super(label, collapsibleState);
     this.tooltip = `${this.label}`;
@@ -16,7 +17,7 @@ export class TestTreeItem extends vscode.TreeItem {
       this.description = data.description;
     }
     this.iconPath = iconPath || this.getDefaultIcon();
-    this.contextValue = this.getContextValue();
+    this.contextValue = contextValue || this.getContextValue();
   }
 
   private getDefaultIcon(): vscode.ThemeIcon | undefined {

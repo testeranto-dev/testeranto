@@ -101,12 +101,12 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
     } else if (element.type === TreeItemType.File) {
       // Check if this is a directory (not a file)
       const { runtime, testName, path, isFile } = element.data || {};
-      
+
       // If it's a file, no children
       if (isFile) {
         return Promise.resolve([]);
       }
-      
+
       // If it's a directory, we need to get its children
       // Fetch all files and find the children for this path
       return this.getDirectoryChildren(runtime, testName, path);
@@ -238,51 +238,71 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
         if (config.runtime === runtime) {
           const tests = config.tests || [];
           console.log(`[TestTreeDataProvider] Found ${tests.length} tests for ${runtime} from HTTP endpoint`);
-          return tests.map((testName: string) =>
-            new TestTreeItem(
+          return tests.map((testName: string) => {
+            const item = new TestTreeItem(
               testName,
               TreeItemType.Test,
               vscode.TreeItemCollapsibleState.Collapsed,
-              { runtime, testName }
-            )
-          );
+              { runtimeKey, testName },
+              {
+                command: 'testeranto.launchAiderTerminal',
+                title: 'Launch Aider Terminal',
+                arguments: [runtimeKey, testName]
+              },
+              new vscode.ThemeIcon('terminal'),
+              'testWithAider'
+            );
+            // Add tooltip
+            item.tooltip = `Click to launch aider terminal for ${testName}`;
+            return item;
+          });
         }
       }
     }
 
-    // Fallback to file-based config
-    const workspaceFolders = vscode.workspace.workspaceFolders;
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-      console.log('[TestTreeDataProvider] No workspace folder open');
-      return [];
-    }
+    // // Fallback to file-based config
+    // const workspaceFolders = vscode.workspace.workspaceFolders;
+    // if (!workspaceFolders || workspaceFolders.length === 0) {
+    //   console.log('[TestTreeDataProvider] No workspace folder open');
+    //   return [];
+    // }
 
-    const workspaceRoot = workspaceFolders[0].uri;
-    const configUri = vscode.Uri.joinPath(workspaceRoot, 'testeranto', 'extension-config.json');
+    // const workspaceRoot = workspaceFolders[0].uri;
+    // const configUri = vscode.Uri.joinPath(workspaceRoot, 'testeranto', 'extension-config.json');
 
-    try {
-      const fileContent = vscode.workspace.fs.readFileSync(configUri);
-      const config = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
+    // try {
+    //   const fileContent = vscode.workspace.fs.readFileSync(configUri);
+    //   const config = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
 
-      if (config.runtimes && Array.isArray(config.runtimes)) {
-        const runtimeConfig = config.runtimes.find((r: any) => r.runtime === runtime);
-        if (runtimeConfig && runtimeConfig.tests && Array.isArray(runtimeConfig.tests)) {
-          return runtimeConfig.tests.map((testName: string) =>
-            new TestTreeItem(
-              testName,
-              TreeItemType.Test,
-              vscode.TreeItemCollapsibleState.Collapsed,
-              { runtime, testName }
-            )
-          );
-        }
-      }
-      console.log(`[TestTreeDataProvider] No tests found for runtime: ${runtime}`);
-      return [];
-    } catch (error: any) {
-      console.log(`[TestTreeDataProvider] Config file not available for tests: ${error.message}`);
-      return [];
-    }
+    //   if (config.runtimes && Array.isArray(config.runtimes)) {
+    //     const runtimeConfig = config.runtimes.find((r: any) => r.runtime === runtime);
+    //     if (runtimeConfig && runtimeConfig.tests && Array.isArray(runtimeConfig.tests)) {
+    //       return runtimeConfig.tests.map((testName: string) => {
+    //         const item = new TestTreeItem(
+    //           testName,
+    //           TreeItemType.Test,
+    //           vscode.TreeItemCollapsibleState.Collapsed,
+    //           { runtime, testName },
+    //           {
+    //             command: 'testeranto.launchAiderTerminal',
+    //             title: 'Launch Aider Terminal',
+    //             arguments: [runtime, testName]
+    //           },
+    //           new vscode.ThemeIcon('terminal'),
+    //           'testWithAider'
+    //         );
+    //         // Add tooltip
+    //         item.tooltip = `Click to launch aider terminal for ${testName}`;
+    //         return item;
+    //       });
+    //     }
+    //   }
+    //   console.log(`[TestTreeDataProvider] No tests found for runtime: ${runtime}`);
+    //   return [];
+    // } catch (error: any) {
+    //   console.log(`[TestTreeDataProvider] Config file not available for tests: ${error.message}`);
+    //   return [];
+    // }
   }
 
   public connectWebSocket(): void {
@@ -485,7 +505,7 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
 
   private async getTestFileItems(runtime: string, testName: string): Promise<TestTreeItem[]> {
     console.log(`[TestTreeDataProvider] Getting combined input and output files for ${runtime}/${testName}`);
-    
+
     try {
       // Fetch both input and output files in parallel
       const [inputResponse, outputResponse] = await Promise.all([
@@ -569,15 +589,15 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
         const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
         // Split and filter out empty parts and '.' which represents current directory
         const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-        
+
         if (parts.length === 0) continue;
-        
+
         let currentNode = treeRoot;
-        
+
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
           const isLast = i === parts.length - 1;
-          
+
           if (!currentNode.children.has(part)) {
             currentNode.children.set(part, {
               name: part,
@@ -639,11 +659,11 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       }
 
       const data = await response.json();
-      
+
       // Extract the list of input files
       // The API might return them in different formats, so let's be flexible
       let inputFiles: string[] = [];
-      
+
       if (Array.isArray(data.inputFiles)) {
         // Direct array format
         inputFiles = data.inputFiles;
@@ -693,15 +713,15 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
         const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
         // Split and filter out empty parts and '.' which represents current directory
         const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-        
+
         if (parts.length === 0) continue;
-        
+
         let currentNode = treeRoot;
-        
+
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
           const isLast = i === parts.length - 1;
-          
+
           if (!currentNode.children.has(part)) {
             currentNode.children.set(part, {
               name: part,
@@ -764,10 +784,10 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       }
 
       const data = await response.json();
-      
+
       // Extract the list of output files
       let outputFiles: string[] = [];
-      
+
       if (Array.isArray(data.outputFiles)) {
         outputFiles = data.outputFiles;
       } else if (data.outputFiles && typeof data.outputFiles === 'object') {
@@ -814,15 +834,15 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
         const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
         // Split and filter out empty parts and '.' which represents current directory
         const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-        
+
         if (parts.length === 0) continue;
-        
+
         let currentNode = treeRoot;
-        
+
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
           const isLast = i === parts.length - 1;
-          
+
           if (!currentNode.children.has(part)) {
             currentNode.children.set(part, {
               name: part,
@@ -883,7 +903,7 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       // Get the workspace root to create absolute paths
       const workspaceFolders = vscode.workspace.workspaceFolders;
       let fileUri: vscode.Uri | undefined;
-      
+
       if (child.isFile && workspaceFolders && workspaceFolders.length > 0) {
         // Create an absolute path by joining with workspace root
         // The child.fullPath might be relative, so we need to handle it properly
@@ -989,15 +1009,15 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
         const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
         // Split and filter out empty parts and '.' which represents current directory
         const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-        
+
         if (parts.length === 0) continue;
-        
+
         let currentNode = treeRoot;
-        
+
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
           const isLast = i === parts.length - 1;
-          
+
           if (!currentNode.children.has(part)) {
             currentNode.children.set(part, {
               name: part,
@@ -1014,7 +1034,7 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       // Remove leading '/' if present in dirPath
       const normalizedDirPath = dirPath.startsWith('/') ? dirPath.substring(1) : dirPath;
       const dirParts = normalizedDirPath.split('/').filter(part => part.length > 0);
-      
+
       let currentNode = treeRoot;
       for (const part of dirParts) {
         if (currentNode.children.has(part)) {

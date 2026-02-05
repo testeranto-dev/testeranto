@@ -305,6 +305,84 @@ export abstract class Server_HTTP extends Server_Base {
     }
   }
 
+  private handleHttpGetAiderProcesses(): Response {
+    console.log(`[HTTP] handleHttpGetAiderProcesses() called`);
+
+    try {
+      // Check if handleAiderProcesses method exists (available in Server_Docker)
+      if (typeof (this as any).handleAiderProcesses === 'function') {
+        console.log(`[HTTP] handleAiderProcesses exists, calling it...`);
+        const result = (this as any).handleAiderProcesses();
+        console.log(`[HTTP] handleAiderProcesses returned:`, result ? `has data` : 'null/undefined');
+
+        const responseData = {
+          aiderProcesses: result.aiderProcesses || [],
+          timestamp: result.timestamp || new Date().toISOString(),
+          message: result.message || 'Success'
+        };
+
+        console.log(`[HTTP] Returning aider processes response with ${responseData.aiderProcesses.length} processes`);
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      } else if (typeof (this as any).getAiderProcesses === 'function') {
+        // Fallback to getAiderProcesses for backward compatibility
+        console.log(`[HTTP] getAiderProcesses exists (fallback), calling it...`);
+        const aiderProcesses = (this as any).getAiderProcesses();
+        console.log(`[HTTP] getAiderProcesses returned:`, aiderProcesses ? `${aiderProcesses.length} processes` : 'null/undefined');
+
+        const responseData = {
+          aiderProcesses: aiderProcesses || [],
+          timestamp: new Date().toISOString(),
+          message: 'Success'
+        };
+
+        console.log(`[HTTP] Returning aider processes response with ${aiderProcesses?.length || 0} processes`);
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      } else {
+        console.log(`[HTTP] Neither handleAiderProcesses nor getAiderProcesses exists on this instance`);
+        // Return empty array if method not available
+        const responseData = {
+          aiderProcesses: [],
+          timestamp: new Date().toISOString(),
+          message: 'Aider processes not available'
+        };
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      }
+    } catch (error: any) {
+      console.error(`[HTTP] Error in GET /~/aider-processes:`, error);
+      console.error(`[HTTP] Error stack:`, error.stack);
+      return new Response(JSON.stringify({
+        error: error.message,
+        aiderProcesses: [],
+        timestamp: new Date().toISOString(),
+        message: 'Internal server error'
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
+    }
+  }
+
   private handleHttpGetConfigs(): Response {
     console.log(`[HTTP] handleHttpGetConfigs() called`);
 
@@ -635,6 +713,37 @@ export abstract class Server_HTTP extends Server_Base {
       } else {
         // Return 405 Method Not Allowed for other methods
         console.log(`[HTTP] Method not allowed: ${request.method} for /~/outputfiles`);
+        return new Response(`Method ${request.method} not allowed`, {
+          status: 405,
+          headers: {
+            'Allow': 'GET, OPTIONS',
+            'Content-Type': 'text/plain'
+          }
+        });
+      }
+    }
+
+    // Special handling for /aider-processes route
+    if (routeName === 'aider-processes') {
+      console.log(`[HTTP] Matched /aider-processes route`);
+      if (request.method === 'GET') {
+        console.log(`[HTTP] Handling GET /~/aider-processes`);
+        return this.handleHttpGetAiderProcesses();
+      } else if (request.method === 'OPTIONS') {
+        // Handle CORS preflight request
+        console.log(`[HTTP] Handling OPTIONS /~/aider-processes`);
+        return new Response(null, {
+          status: 204,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '86400'
+          }
+        });
+      } else {
+        // Return 405 Method Not Allowed for other methods
+        console.log(`[HTTP] Method not allowed: ${request.method} for /~/aider-processes`);
         return new Response(`Method ${request.method} not allowed`, {
           status: 405,
           headers: {

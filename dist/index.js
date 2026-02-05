@@ -3778,6 +3778,75 @@ class Server_HTTP extends Server_Base {
       }
     }
   }
+  handleHttpGetAiderProcesses() {
+    console.log(`[HTTP] handleHttpGetAiderProcesses() called`);
+    try {
+      if (typeof this.handleAiderProcesses === "function") {
+        console.log(`[HTTP] handleAiderProcesses exists, calling it...`);
+        const result = this.handleAiderProcesses();
+        console.log(`[HTTP] handleAiderProcesses returned:`, result ? `has data` : "null/undefined");
+        const responseData = {
+          aiderProcesses: result.aiderProcesses || [],
+          timestamp: result.timestamp || new Date().toISOString(),
+          message: result.message || "Success"
+        };
+        console.log(`[HTTP] Returning aider processes response with ${responseData.aiderProcesses.length} processes`);
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      } else if (typeof this.getAiderProcesses === "function") {
+        console.log(`[HTTP] getAiderProcesses exists (fallback), calling it...`);
+        const aiderProcesses = this.getAiderProcesses();
+        console.log(`[HTTP] getAiderProcesses returned:`, aiderProcesses ? `${aiderProcesses.length} processes` : "null/undefined");
+        const responseData = {
+          aiderProcesses: aiderProcesses || [],
+          timestamp: new Date().toISOString(),
+          message: "Success"
+        };
+        console.log(`[HTTP] Returning aider processes response with ${aiderProcesses?.length || 0} processes`);
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      } else {
+        console.log(`[HTTP] Neither handleAiderProcesses nor getAiderProcesses exists on this instance`);
+        const responseData = {
+          aiderProcesses: [],
+          timestamp: new Date().toISOString(),
+          message: "Aider processes not available"
+        };
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
+    } catch (error) {
+      console.error(`[HTTP] Error in GET /~/aider-processes:`, error);
+      console.error(`[HTTP] Error stack:`, error.stack);
+      return new Response(JSON.stringify({
+        error: error.message,
+        aiderProcesses: [],
+        timestamp: new Date().toISOString(),
+        message: "Internal server error"
+      }), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    }
+  }
   handleHttpGetConfigs() {
     console.log(`[HTTP] handleHttpGetConfigs() called`);
     try {
@@ -4057,6 +4126,33 @@ class Server_HTTP extends Server_Base {
         });
       } else {
         console.log(`[HTTP] Method not allowed: ${request.method} for /~/outputfiles`);
+        return new Response(`Method ${request.method} not allowed`, {
+          status: 405,
+          headers: {
+            Allow: "GET, OPTIONS",
+            "Content-Type": "text/plain"
+          }
+        });
+      }
+    }
+    if (routeName === "aider-processes") {
+      console.log(`[HTTP] Matched /aider-processes route`);
+      if (request.method === "GET") {
+        console.log(`[HTTP] Handling GET /~/aider-processes`);
+        return this.handleHttpGetAiderProcesses();
+      } else if (request.method === "OPTIONS") {
+        console.log(`[HTTP] Handling OPTIONS /~/aider-processes`);
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400"
+          }
+        });
+      } else {
+        console.log(`[HTTP] Method not allowed: ${request.method} for /~/aider-processes`);
         return new Response(`Method ${request.method} not allowed`, {
           status: 405,
           headers: {
@@ -4483,11 +4579,14 @@ class Server_Docker extends Server_WS {
       container_name,
       environment: {},
       volumes: [
-        `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`
+        `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
+        `${process.cwd()}:/workspace`
       ],
       working_dir: "/workspace",
-      command: "aider",
-      networks: ["allTests_network"]
+      command: "tail -f /dev/null",
+      networks: ["allTests_network"],
+      tty: true,
+      stdin_open: true
     };
   }
   generateServices() {
@@ -4968,6 +5067,77 @@ class Server_Docker extends Server_WS {
     }
     console.log(`[Server_Docker] No output files in memory for ${configKey}/${testName}`);
     return [];
+  }
+  getAiderProcesses() {
+    try {
+      const summary = this.getProcessSummary();
+      const aiderProcesses = summary.processes.filter((process2) => process2.name && process2.name.includes("-aider"));
+      return aiderProcesses.map((process2) => {
+        let runtime = "";
+        let testName = "";
+        let configKey = "";
+        const name = process2.name || process2.containerName || "";
+        if (name.includes("-aider")) {
+          const match = name.match(/^(.+?)-(.+)-aider$/);
+          if (match) {
+            configKey = match[1];
+            const testPart = match[2];
+            for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
+              if (key === configKey) {
+                runtime = configValue.runtime;
+                for (const t of configValue.tests) {
+                  const cleanTestName = t.toLowerCase().replaceAll("/", "_").replaceAll(".", "-").replace(/[^a-z0-9_-]/g, "");
+                  if (cleanTestName === testPart) {
+                    testName = t;
+                    break;
+                  }
+                }
+                break;
+              }
+            }
+          }
+        }
+        const connectCommand = `docker exec -it ${process2.containerId} aider`;
+        return {
+          ...process2,
+          name,
+          containerId: process2.containerId || "",
+          runtime,
+          testName,
+          configKey,
+          status: process2.status || "",
+          state: process2.state || "",
+          isActive: process2.isActive || false,
+          exitCode: process2.exitCode || null,
+          startedAt: process2.startedAt || null,
+          finishedAt: process2.finishedAt || null,
+          connectCommand,
+          terminalCommand: connectCommand,
+          containerName: name,
+          timestamp: new Date().toISOString()
+        };
+      });
+    } catch (error) {
+      console.error(`[Server_Docker] Error getting aider processes: ${error.message}`);
+      return [];
+    }
+  }
+  handleAiderProcesses() {
+    try {
+      const aiderProcesses = this.getAiderProcesses();
+      return {
+        aiderProcesses,
+        timestamp: new Date().toISOString(),
+        message: "Success"
+      };
+    } catch (error) {
+      console.error(`[Server_Docker] Error in handleAiderProcesses: ${error.message}`);
+      return {
+        aiderProcesses: [],
+        timestamp: new Date().toISOString(),
+        message: `Error: ${error.message}`
+      };
+    }
   }
   getProcessSummary() {
     try {

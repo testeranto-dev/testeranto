@@ -189,29 +189,144 @@ export function activate(context: vscode.ExtensionContext): void {
 
     const aiderCommand = vscode.commands.registerCommand(
         "testeranto.aider",
-        async (item: TestTreeItem) => {
-            if (item.type === TreeItemType.Test) {
-                const { runtime, testName } = item.data || {};
-                vscode.window.showInformationMessage(`Connecting to aider process for ${testName} (${runtime})...`);
-                const aiderTerminal = terminalManager.createAiderTerminal(runtime, testName);
+        async (...args: any[]) => {
+            console.log('[Testeranto] Aider command triggered with args:', args);
+
+            let runtime: any;
+            let testName: any;
+
+            if (args.length === 0) {
+                vscode.window.showErrorMessage('Cannot connect to aider: No arguments provided');
+                return;
+            }
+
+            const firstArg = args[0];
+
+            // Check if first argument is a TestTreeItem
+            if (firstArg && typeof firstArg === 'object' && firstArg.type !== undefined) {
+                if (firstArg.type === TreeItemType.Test) {
+                    console.log('[Testeranto] Item label:', firstArg.label);
+                    console.log('[Testeranto] Item data:', JSON.stringify(firstArg.data, null, 2));
+
+                    // Extract runtime and testName from item.data
+                    runtime = firstArg.data?.runtime;
+                    testName = firstArg.data?.testName;
+
+                    // If not found, try alternative property names
+                    if (!runtime) {
+                        runtime = firstArg.data?.runtimeKey;
+                    }
+                    if (!testName) {
+                        testName = firstArg.label;
+                    }
+                } else {
+                    vscode.window.showErrorMessage(`Cannot connect to aider: Item is not a test (type: ${firstArg.type})`);
+                    return;
+                }
+            } else if (args.length >= 2) {
+                // Direct parameters: runtime, testName
+                runtime = args[0];
+                testName = args[1];
+                console.log('[Testeranto] Using direct parameters:', runtime, testName);
+            } else {
+                // Single parameter case
+                runtime = firstArg;
+                testName = 'unknown';
+                console.log('[Testeranto] Using single parameter:', runtime);
+            }
+
+            // Log the extracted values
+            console.log('[Testeranto] Extracted runtime:', runtime, 'type:', typeof runtime);
+            console.log('[Testeranto] Extracted testName:', testName, 'type:', typeof testName);
+
+            if (!runtime || !testName) {
+                vscode.window.showErrorMessage(`Cannot connect to aider: Missing runtime or test name. Runtime: ${runtime}, Test: ${testName}`);
+                return;
+            }
+
+            console.log('[Testeranto] Calling createAiderTerminal with raw values');
+            vscode.window.showInformationMessage(`Connecting to aider process for ${testName || 'unknown'} (${runtime || 'unknown'})...`);
+            try {
+                // Pass the original values, not stringified versions
+                const aiderTerminal = await terminalManager.createAiderTerminal(runtime, testName);
                 aiderTerminal.show();
 
                 // Process test name to match Docker container naming convention
-                let processedTestName = testName;
+                let processedTestName = testNameStr || "";
                 // Remove file extension
                 processedTestName = processedTestName?.replace(/\.[^/.]+$/, "") || "";
                 // Remove 'example/' prefix if present
                 processedTestName = processedTestName.replace(/^example\//, "");
                 // Replace special characters with underscores (matching DockerManager)
-                const sanitizedTestName = processedTestName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-");
+                const sanitizedTestName = processedTestName ? processedTestName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-") : "";
                 // Construct container name matching DockerManager's convention
-                const containerName = `${runtime}-${sanitizedTestName}-aider`;
+                const containerName = `${runtimeStr}-${sanitizedTestName}-aider`;
 
                 aiderTerminal.sendText("clear");
                 setTimeout(() => {
                     aiderTerminal.sendText(`echo "Connecting to aider container: ${containerName}"`);
                     aiderTerminal.sendText(`docker exec -it ${containerName} /bin/bash`);
                 }, 500);
+            } catch (error: any) {
+                vscode.window.showErrorMessage(`Failed to create aider terminal: ${error.message}`);
+                console.error('[Testeranto] Error creating aider terminal:', error);
+                return;
+            }
+        }
+    );
+
+    const launchAiderTerminalCommand = vscode.commands.registerCommand(
+        "testeranto.launchAiderTerminal",
+        async (...args: any[]) => {
+            console.log('[Testeranto] launchAiderTerminal called with args:', args);
+
+            let runtime: any;
+            let testName: any;
+
+            // Check the number and type of arguments
+            if (args.length === 0) {
+                vscode.window.showErrorMessage('Cannot launch aider terminal: No arguments provided');
+                return;
+            }
+
+            const firstArg = args[0];
+
+            // Case 1: First argument is a TestTreeItem (when clicked from tree view)
+            if (firstArg && typeof firstArg === 'object' && firstArg.type !== undefined) {
+                // Extract from TestTreeItem data
+                runtime = firstArg.data?.runtime;
+                testName = firstArg.data?.testName;
+
+                console.log('[Testeranto] Extracted from TestTreeItem - runtime:', runtime, 'type:', typeof runtime);
+                console.log('[Testeranto] Extracted from TestTreeItem - testName:', testName, 'type:', typeof testName);
+                console.log('[Testeranto] Full data object:', JSON.stringify(firstArg.data, null, 2));
+            }
+            // Case 2: First argument is runtime string, second is testName string (when called with arguments)
+            else if (args.length >= 2) {
+                runtime = args[0];
+                testName = args[1];
+                console.log('[Testeranto] Using direct arguments:', runtime, testName);
+            }
+            // Case 3: Only one argument which might be runtime or something else
+            else {
+                runtime = firstArg;
+                testName = 'unknown';
+                console.log('[Testeranto] Using single argument:', runtime);
+            }
+
+            console.log('[Testeranto] Raw values - runtime:', runtime, 'type:', typeof runtime);
+            console.log('[Testeranto] Raw values - testName:', testName, 'type:', typeof testName);
+
+            vscode.window.showInformationMessage(`Launching aider terminal for ${testName || 'unknown'} (${runtime || 'unknown'})...`);
+            try {
+                // Pass the original values, not stringified versions
+                // The TerminalManager will handle extraction
+                const terminal = await terminalManager.createAiderTerminal(runtime, testName);
+                terminal.show();
+                vscode.window.showInformationMessage(`Aider terminal launched for ${testName || 'unknown'} (${runtime || 'unknown'})`);
+            } catch (error) {
+                console.error('Failed to launch aider terminal:', error);
+                vscode.window.showErrorMessage(`Failed to launch aider terminal: ${error}`);
             }
         }
     );
@@ -345,6 +460,7 @@ export function activate(context: vscode.ExtensionContext): void {
         showTestsCommand,
         runTestCommand,
         aiderCommand,
+        launchAiderTerminalCommand,
         openFileCommand,
         openConfigCommand,
         refreshCommand,

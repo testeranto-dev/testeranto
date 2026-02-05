@@ -121,10 +121,14 @@ export class Server_Docker extends Server_WS {
       },
       volumes: [
         `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
+        // Mount the entire workspace to allow aider to access files
+        `${process.cwd()}:/workspace`,
       ],
       working_dir: "/workspace",
-      command: "aider",
+      command: "tail -f /dev/null",  // Keep container running
       networks: ["allTests_network"],
+      tty: true,           // Allocate a pseudo-TTY
+      stdin_open: true,    // Keep STDIN open even if not attached
     };
   };
 
@@ -923,6 +927,98 @@ export class Server_Docker extends Server_WS {
 
     console.log(`[Server_Docker] No output files in memory for ${configKey}/${testName}`);
     return [];
+  }
+
+  public getAiderProcesses(): any[] {
+    try {
+      const summary = this.getProcessSummary();
+      // Filter for aider containers
+      const aiderProcesses = summary.processes.filter((process: any) => 
+        process.name && process.name.includes('-aider')
+      );
+      
+      // Enhance the aider processes with additional information
+      return aiderProcesses.map((process: any) => {
+        // Extract runtime and test name from container name
+        let runtime = '';
+        let testName = '';
+        let configKey = '';
+        
+        const name = process.name || process.containerName || '';
+        if (name.includes('-aider')) {
+          // Parse container name to extract runtime and test name
+          // Format: {configKey}-{testName}-aider
+          const match = name.match(/^(.+?)-(.+)-aider$/);
+          if (match) {
+            configKey = match[1];
+            const testPart = match[2];
+            
+            // Try to find the runtime from configs
+            for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
+              if (key === configKey) {
+                runtime = configValue.runtime;
+                // Try to find the test name
+                for (const t of configValue.tests) {
+                  const cleanTestName = t.toLowerCase()
+                    .replaceAll("/", "_")
+                    .replaceAll(".", "-")
+                    .replace(/[^a-z0-9_-]/g, '');
+                  if (cleanTestName === testPart) {
+                    testName = t;
+                    break;
+                  }
+                }
+                break;
+              }
+            }
+          }
+        }
+        
+        // Create the connect command
+        const connectCommand = `docker exec -it ${process.containerId} aider`;
+        
+        return {
+          ...process,
+          name: name,
+          containerId: process.containerId || '',
+          runtime: runtime,
+          testName: testName,
+          configKey: configKey,
+          status: process.status || '',
+          state: process.state || '',
+          isActive: process.isActive || false,
+          exitCode: process.exitCode || null,
+          startedAt: process.startedAt || null,
+          finishedAt: process.finishedAt || null,
+          connectCommand: connectCommand,
+          terminalCommand: connectCommand,
+          containerName: name,
+          timestamp: new Date().toISOString()
+        };
+      });
+    } catch (error: any) {
+      console.error(`[Server_Docker] Error getting aider processes: ${error.message}`);
+      return [];
+    }
+  }
+
+  // HTTP endpoint handler for aider processes
+  public handleAiderProcesses(): any {
+    try {
+      const aiderProcesses = this.getAiderProcesses();
+      return {
+        aiderProcesses: aiderProcesses,
+        timestamp: new Date().toISOString(),
+        message: "Success"
+      };
+    } catch (error: any) {
+      console.error(`[Server_Docker] Error in handleAiderProcesses: ${error.message}`);
+      return {
+        aiderProcesses: [],
+        timestamp: new Date().toISOString(),
+        message: `Error: ${error.message}`
+      };
+    }
   }
 
   public getProcessSummary(): any {
