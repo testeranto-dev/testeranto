@@ -212,7 +212,7 @@ var TestTreeDataProvider = class {
       return Promise.resolve(this.getTestItems(runtime));
     } else if (element.type === 1 /* Test */) {
       const { runtime, testName } = element.data || {};
-      return this.getInputFileItems(runtime, testName);
+      return this.getTestFileItems(runtime, testName);
     } else if (element.type === 2 /* File */) {
       const { runtime, testName, path: path2, isFile } = element.data || {};
       if (isFile) {
@@ -504,6 +504,112 @@ var TestTreeDataProvider = class {
   //   //   return [];
   //   // }
   // }
+  async getTestFileItems(runtime, testName) {
+    console.log(`[TestTreeDataProvider] Getting combined input and output files for ${runtime}/${testName}`);
+    try {
+      const [inputResponse, outputResponse] = await Promise.all([
+        fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`),
+        fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`)
+      ]);
+      let inputFiles = [];
+      let outputFiles = [];
+      if (inputResponse.ok) {
+        const inputData = await inputResponse.json();
+        if (Array.isArray(inputData.inputFiles)) {
+          inputFiles = inputData.inputFiles;
+        } else if (inputData.inputFiles && typeof inputData.inputFiles === "object") {
+          for (const key in inputData.inputFiles) {
+            if (Array.isArray(inputData.inputFiles[key])) {
+              inputFiles = inputData.inputFiles[key];
+              break;
+            }
+          }
+        } else {
+          for (const key in inputData) {
+            if (Array.isArray(inputData[key])) {
+              inputFiles = inputData[key];
+              break;
+            }
+          }
+        }
+      }
+      if (outputResponse.ok) {
+        const outputData = await outputResponse.json();
+        if (Array.isArray(outputData.outputFiles)) {
+          outputFiles = outputData.outputFiles;
+        } else if (outputData.outputFiles && typeof outputData.outputFiles === "object") {
+          for (const key in outputData.outputFiles) {
+            if (Array.isArray(outputData.outputFiles[key])) {
+              outputFiles = outputData.outputFiles[key];
+              break;
+            }
+          }
+        } else {
+          for (const key in outputData) {
+            if (Array.isArray(outputData[key])) {
+              outputFiles = outputData[key];
+              break;
+            }
+          }
+        }
+      }
+      const allFiles = [...inputFiles, ...outputFiles];
+      console.log(`[TestTreeDataProvider] Found ${inputFiles.length} input files and ${outputFiles.length} output files (total: ${allFiles.length})`);
+      if (allFiles.length === 0) {
+        return [
+          new TestTreeItem(
+            "No files available",
+            2 /* File */,
+            vscode3.TreeItemCollapsibleState.None,
+            {
+              description: "The test hasn't been built or generated output yet",
+              runtime,
+              testName
+            },
+            void 0,
+            new vscode3.ThemeIcon("info")
+          )
+        ];
+      }
+      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
+      for (const filePath of allFiles) {
+        const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
+        const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
+        if (parts.length === 0) continue;
+        let currentNode = treeRoot;
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          const isLast = i === parts.length - 1;
+          if (!currentNode.children.has(part)) {
+            currentNode.children.set(part, {
+              name: part,
+              children: /* @__PURE__ */ new Map(),
+              fullPath: parts.slice(0, i + 1).join("/"),
+              isFile: isLast
+            });
+          }
+          currentNode = currentNode.children.get(part);
+        }
+      }
+      return this.buildTreeItemsFromNode(treeRoot, runtime, testName);
+    } catch (error) {
+      console.error(`[TestTreeDataProvider] Failed to fetch combined files:`, error);
+      return [
+        new TestTreeItem(
+          "Failed to fetch files",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: error.message,
+            runtime,
+            testName
+          },
+          void 0,
+          new vscode3.ThemeIcon("error")
+        )
+      ];
+    }
+  }
   async getInputFileItems(runtime, testName) {
     console.log(`[TestTreeDataProvider] Fetching input files for ${runtime}/${testName}`);
     try {
@@ -518,7 +624,8 @@ var TestTreeDataProvider = class {
             {
               description: "Server returned error",
               runtime,
-              testName
+              testName,
+              fileType: "input"
             },
             void 0,
             new vscode3.ThemeIcon("warning")
@@ -554,7 +661,8 @@ var TestTreeDataProvider = class {
             {
               description: "The test hasn't been built yet",
               runtime,
-              testName
+              testName,
+              fileType: "input"
             },
             void 0,
             new vscode3.ThemeIcon("info")
@@ -564,7 +672,7 @@ var TestTreeDataProvider = class {
       const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
       for (const filePath of inputFiles) {
         const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
-        const parts = normalizedPath.split("/").filter((part) => part.length > 0);
+        const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
         if (parts.length === 0) continue;
         let currentNode = treeRoot;
         for (let i = 0; i < parts.length; i++) {
@@ -581,7 +689,7 @@ var TestTreeDataProvider = class {
           currentNode = currentNode.children.get(part);
         }
       }
-      return this.buildTreeItemsFromNode(treeRoot, runtime, testName);
+      return this.buildTreeItemsFromNode(treeRoot, runtime, testName, "input");
     } catch (error) {
       console.error(`[TestTreeDataProvider] Failed to fetch input files:`, error);
       return [
@@ -592,7 +700,108 @@ var TestTreeDataProvider = class {
           {
             description: error.message,
             runtime,
-            testName
+            testName,
+            fileType: "input"
+          },
+          void 0,
+          new vscode3.ThemeIcon("error")
+        )
+      ];
+    }
+  }
+  async getOutputFileItems(runtime, testName) {
+    console.log(`[TestTreeDataProvider] Fetching output files for ${runtime}/${testName}`);
+    try {
+      const response = await fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
+      if (!response.ok) {
+        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
+        return [
+          new TestTreeItem(
+            "No output files found",
+            2 /* File */,
+            vscode3.TreeItemCollapsibleState.None,
+            {
+              description: "Server returned error",
+              runtime,
+              testName,
+              fileType: "output"
+            },
+            void 0,
+            new vscode3.ThemeIcon("warning")
+          )
+        ];
+      }
+      const data = await response.json();
+      let outputFiles = [];
+      if (Array.isArray(data.outputFiles)) {
+        outputFiles = data.outputFiles;
+      } else if (data.outputFiles && typeof data.outputFiles === "object") {
+        for (const key in data.outputFiles) {
+          if (Array.isArray(data.outputFiles[key])) {
+            outputFiles = data.outputFiles[key];
+            break;
+          }
+        }
+      } else {
+        for (const key in data) {
+          if (Array.isArray(data[key])) {
+            outputFiles = data[key];
+            break;
+          }
+        }
+      }
+      console.log(`[TestTreeDataProvider] Found ${outputFiles.length} output files`);
+      if (outputFiles.length === 0) {
+        return [
+          new TestTreeItem(
+            "No output files available",
+            2 /* File */,
+            vscode3.TreeItemCollapsibleState.None,
+            {
+              description: "The test hasn't generated output yet",
+              runtime,
+              testName,
+              fileType: "output"
+            },
+            void 0,
+            new vscode3.ThemeIcon("info")
+          )
+        ];
+      }
+      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
+      for (const filePath of outputFiles) {
+        const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
+        const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
+        if (parts.length === 0) continue;
+        let currentNode = treeRoot;
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          const isLast = i === parts.length - 1;
+          if (!currentNode.children.has(part)) {
+            currentNode.children.set(part, {
+              name: part,
+              children: /* @__PURE__ */ new Map(),
+              // Reconstruct full path without leading '.'
+              fullPath: parts.slice(0, i + 1).join("/"),
+              isFile: isLast
+            });
+          }
+          currentNode = currentNode.children.get(part);
+        }
+      }
+      return this.buildTreeItemsFromNode(treeRoot, runtime, testName, "output");
+    } catch (error) {
+      console.error(`[TestTreeDataProvider] Failed to fetch output files:`, error);
+      return [
+        new TestTreeItem(
+          "Failed to fetch output files",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: error.message,
+            runtime,
+            testName,
+            fileType: "output"
           },
           void 0,
           new vscode3.ThemeIcon("error")
@@ -643,34 +852,59 @@ var TestTreeDataProvider = class {
   }
   async getDirectoryChildren(runtime, testName, dirPath) {
     try {
-      const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
-      if (!response.ok) {
-        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
-        return [];
+      const [inputResponse, outputResponse] = await Promise.all([
+        fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`),
+        fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`)
+      ]);
+      let allFiles = [];
+      if (inputResponse.ok) {
+        const inputData = await inputResponse.json();
+        let inputFiles = [];
+        if (Array.isArray(inputData.inputFiles)) {
+          inputFiles = inputData.inputFiles;
+        } else if (inputData.inputFiles && typeof inputData.inputFiles === "object") {
+          for (const key in inputData.inputFiles) {
+            if (Array.isArray(inputData.inputFiles[key])) {
+              inputFiles = inputData.inputFiles[key];
+              break;
+            }
+          }
+        } else {
+          for (const key in inputData) {
+            if (Array.isArray(inputData[key])) {
+              inputFiles = inputData[key];
+              break;
+            }
+          }
+        }
+        allFiles.push(...inputFiles);
       }
-      const data = await response.json();
-      let inputFiles = [];
-      if (Array.isArray(data.inputFiles)) {
-        inputFiles = data.inputFiles;
-      } else if (data.inputFiles && typeof data.inputFiles === "object") {
-        for (const key in data.inputFiles) {
-          if (Array.isArray(data.inputFiles[key])) {
-            inputFiles = data.inputFiles[key];
-            break;
+      if (outputResponse.ok) {
+        const outputData = await outputResponse.json();
+        let outputFiles = [];
+        if (Array.isArray(outputData.outputFiles)) {
+          outputFiles = outputData.outputFiles;
+        } else if (outputData.outputFiles && typeof outputData.outputFiles === "object") {
+          for (const key in outputData.outputFiles) {
+            if (Array.isArray(outputData.outputFiles[key])) {
+              outputFiles = outputData.outputFiles[key];
+              break;
+            }
+          }
+        } else {
+          for (const key in outputData) {
+            if (Array.isArray(outputData[key])) {
+              outputFiles = outputData[key];
+              break;
+            }
           }
         }
-      } else {
-        for (const key in data) {
-          if (Array.isArray(data[key])) {
-            inputFiles = data[key];
-            break;
-          }
-        }
+        allFiles.push(...outputFiles);
       }
       const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
-      for (const filePath of inputFiles) {
+      for (const filePath of allFiles) {
         const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
-        const parts = normalizedPath.split("/").filter((part) => part.length > 0);
+        const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
         if (parts.length === 0) continue;
         let currentNode2 = treeRoot;
         for (let i = 0; i < parts.length; i++) {
@@ -719,7 +953,7 @@ var TestTreeDataProvider = class {
         let currentNode = treeRoot;
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
-          if (!part || part.trim().length === 0) {
+          if (!part || part.trim().length === 0 || part === ".") {
             continue;
           }
           const isLast = i === parts.length - 1;

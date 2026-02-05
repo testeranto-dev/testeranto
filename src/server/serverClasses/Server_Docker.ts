@@ -28,6 +28,7 @@ export interface IDockerComposeResult {
 export class Server_Docker extends Server_WS {
   private logProcesses: Map<string, { process: any; serviceName: string }> = new Map();
   inputFiles = {};
+  outputFiles = {};
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
@@ -249,7 +250,6 @@ export class Server_Docker extends Server_WS {
 
         // iterate over checks to make services for each check
         checks.forEach((check: ICheck, ndx) => {
-          console.log("mark4", `${uid}-check-${ndx}`)
           // Call the check function to get the command string
           // We need to pass appropriate arguments - for now, pass an empty array
           const command = check([]);
@@ -371,7 +371,81 @@ export class Server_Docker extends Server_WS {
           this.inputFiles[configKey][testName] = [];
         }
         this.watchInputFile(runtime, testName);
+        
+        // Also watch for output files
+        this.watchOutputFile(runtime, testName, configKey);
       }
+    }
+  }
+
+  // Watch for output files in the reports directory
+  async watchOutputFile(runtime: IRunTime, testName: string, configKey: string) {
+    // Create the output directory path
+    const outputDir = path.join(
+      process.cwd(),
+      "testeranto",
+      "reports",
+      "allTests",
+      "example",
+      runtime
+    );
+    
+    // Initialize the output files structure
+    if (!this.outputFiles[configKey]) {
+      this.outputFiles[configKey] = {};
+    }
+    if (!this.outputFiles[configKey][testName]) {
+      this.outputFiles[configKey][testName] = [];
+    }
+    
+    console.log(`[Server_Docker] Setting up output file watcher for: ${outputDir} (configKey: ${configKey}, test: ${testName})`);
+    
+    // Read initial files if they exist
+    this.updateOutputFilesList(configKey, testName, outputDir);
+    
+    // Watch the directory for changes
+    fs.watch(outputDir, (eventType, filename) => {
+      if (filename) {
+        console.log(`[Server_Docker] Output directory changed: ${eventType} ${filename} in ${outputDir}`);
+        this.updateOutputFilesList(configKey, testName, outputDir);
+        
+        // Notify clients via WebSocket
+        this.resourceChanged('/~/outputfiles');
+      }
+    });
+  }
+  
+  // Update the list of output files for a test
+  private updateOutputFilesList(configKey: string, testName: string, outputDir: string) {
+    try {
+      const files = fs.readdirSync(outputDir);
+      // Filter files that belong to this test (e.g., contain test name in filename)
+      const testFiles = files.filter(file => 
+        file.includes(testName.replace('/', '_').replace('.', '-')) || 
+        file.includes(`${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`)
+      );
+      
+      // Store relative paths from the project root
+      const projectRoot = process.cwd();
+      const relativePaths = testFiles.map(file => {
+        const absolutePath = path.join(outputDir, file);
+        // Make path relative to project root
+        let relativePath = path.relative(projectRoot, absolutePath);
+        // Normalize to forward slashes for consistency
+        relativePath = relativePath.split(path.sep).join('/');
+        // Ensure it starts with './' to indicate it's relative
+        return relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
+      });
+      
+      this.outputFiles[configKey][testName] = relativePaths;
+      
+      console.log(`[Server_Docker] Updated output files for ${configKey}/${testName}: ${relativePaths.length} files`);
+      if (relativePaths.length > 0) {
+        console.log(`[Server_Docker] Sample output file: ${relativePaths[0]}`);
+      }
+    } catch (error: any) {
+      console.error(`[Server_Docker] Failed to read output directory ${outputDir}:`, error.message);
+      this.outputFiles[configKey][testName] = [];
     }
   }
 
@@ -594,40 +668,6 @@ export class Server_Docker extends Server_WS {
     }
   }
 
-  private async waitForContainerHealthy(containerName: string, timeoutMs: number): Promise<void> {
-    const startTime = Date.now();
-    const checkInterval = 2000; // Check every 2 seconds
-
-    // while (Date.now() - startTime < timeoutMs) {
-    //   try {
-    //     // Use docker inspect to check container health status
-    //     const cmd = `docker inspect --format="{{.State.Health.Status}}" ${containerName}`;
-    //     const { exec } = require('child_process');
-    //     const { promisify } = require('util');
-    //     const execAsync = promisify(exec);
-
-    //     const { stdout, stderr } = await execAsync(cmd);
-    //     const healthStatus = stdout.trim();
-
-    //     if (healthStatus === 'healthy') {
-    //       console.log(`[Server_Docker] Container ${containerName} is healthy`);
-    //       return;
-    //     } else if (healthStatus === 'unhealthy') {
-    //       throw new Error(`Container ${containerName} is unhealthy`);
-    //     } else {
-    //       console.log(`[Server_Docker] Container ${containerName} health status: ${healthStatus}`);
-    //     }
-    //   } catch (error: any) {
-    //     // Container might not exist yet or command failed
-    //     console.log(`[Server_Docker] Waiting for container ${containerName} to be healthy...`);
-    //   }
-
-    //   // Wait before checking again
-    //   await new Promise(resolve => setTimeout(resolve, checkInterval));
-    // }
-
-    // throw new Error(`Timeout waiting for container ${containerName} to become healthy`);
-  }
 
   public async stop(): Promise<void> {
 
@@ -847,6 +887,42 @@ export class Server_Docker extends Server_WS {
       console.log(`[Server_Docker] Tests in ${configKey}:`, Object.keys(this.inputFiles[configKey]));
     }
     return []
+  }
+
+  public getOutputFiles(runtime: string, testName: string): string[] {
+    console.log(`[Server_Docker] getOutputFiles called for ${runtime}/${testName}`);
+
+    // First, find the config key for this runtime and testName
+    let configKey: string | null = null;
+
+    // Search through configs to find which configKey this runtime/testName belongs to
+    for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
+      if (configValue.runtime === runtime && configValue.tests.includes(testName)) {
+        configKey = key;
+        break;
+      }
+    }
+
+    if (!configKey) {
+      console.log(`[Server_Docker] No config found for runtime ${runtime} and test ${testName}`);
+      return [];
+    }
+
+    console.log(`[Server_Docker] Found config key: ${configKey} for ${runtime}/${testName}`);
+
+    // Check if we have output files in memory under the configKey
+    if (this.outputFiles &&
+      typeof this.outputFiles === 'object' &&
+      this.outputFiles[configKey] &&
+      typeof this.outputFiles[configKey] === 'object' &&
+      this.outputFiles[configKey][testName]) {
+      const files = this.outputFiles[configKey][testName];
+      console.log(`[Server_Docker] Found ${files.length} output files in memory for ${configKey}/${testName}`);
+      return Array.isArray(files) ? files : [];
+    }
+
+    console.log(`[Server_Docker] No output files in memory for ${configKey}/${testName}`);
+    return [];
   }
 
   public getProcessSummary(): any {
@@ -1370,5 +1446,39 @@ ${x}
   //   return false;
   // }
 
+  private async waitForContainerHealthy(containerName: string, timeoutMs: number): Promise<void> {
+    const startTime = Date.now();
+    const checkInterval = 2000; // Check every 2 seconds
+
+    // while (Date.now() - startTime < timeoutMs) {
+    //   try {
+    //     // Use docker inspect to check container health status
+    //     const cmd = `docker inspect --format="{{.State.Health.Status}}" ${containerName}`;
+    //     const { exec } = require('child_process');
+    //     const { promisify } = require('util');
+    //     const execAsync = promisify(exec);
+
+    //     const { stdout, stderr } = await execAsync(cmd);
+    //     const healthStatus = stdout.trim();
+
+    //     if (healthStatus === 'healthy') {
+    //       console.log(`[Server_Docker] Container ${containerName} is healthy`);
+    //       return;
+    //     } else if (healthStatus === 'unhealthy') {
+    //       throw new Error(`Container ${containerName} is unhealthy`);
+    //     } else {
+    //       console.log(`[Server_Docker] Container ${containerName} health status: ${healthStatus}`);
+    //     }
+    //   } catch (error: any) {
+    //     // Container might not exist yet or command failed
+    //     console.log(`[Server_Docker] Waiting for container ${containerName} to be healthy...`);
+    //   }
+
+    //   // Wait before checking again
+    //   await new Promise(resolve => setTimeout(resolve, checkInterval));
+    // }
+
+    // throw new Error(`Timeout waiting for container ${containerName} to become healthy`);
+  }
 
 }

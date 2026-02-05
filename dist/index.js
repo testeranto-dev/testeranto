@@ -3623,6 +3623,87 @@ class Server_HTTP extends Server_Base {
       });
     }
   }
+  handleHttpGetOutputFiles(request, url) {
+    const runtime = url.searchParams.get("runtime");
+    const testName = url.searchParams.get("testName");
+    if (!runtime || !testName) {
+      return new Response(JSON.stringify({
+        error: "Missing runtime or testName query parameters",
+        timestamp: new Date().toISOString()
+      }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    }
+    console.log(`[HTTP] Getting output files for runtime: ${runtime}, testName: ${testName}`);
+    if (typeof this.getOutputFiles === "function") {
+      console.log(`[HTTP] getOutputFiles exists, calling it...`);
+      const outputFiles = this.getOutputFiles(runtime, testName);
+      console.log(`[HTTP] getOutputFiles returned:`, outputFiles ? `${outputFiles.length} files` : "null/undefined");
+      const responseData = {
+        runtime,
+        testName,
+        outputFiles: outputFiles || [],
+        timestamp: new Date().toISOString(),
+        message: "Success"
+      };
+      return new Response(JSON.stringify(responseData, null, 2), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    } else {
+      console.log(`[HTTP] getOutputFiles does not exist on this instance`);
+      const fs2 = __require("fs");
+      const path2 = __require("path");
+      const outputDir = path2.join(process.cwd(), "testeranto", "reports", "allTests", "example", runtime);
+      if (fs2.existsSync(outputDir)) {
+        const files = fs2.readdirSync(outputDir);
+        const testFiles = files.filter((file) => file.includes(testName.replace("/", "_").replace(".", "-")));
+        const projectRoot = process.cwd();
+        const relativePaths = testFiles.map((file) => {
+          const absolutePath = path2.join(outputDir, file);
+          let relativePath = path2.relative(projectRoot, absolutePath);
+          relativePath = relativePath.split(path2.sep).join("/");
+          return relativePath.startsWith(".") ? relativePath : `./${relativePath}`;
+        });
+        const responseData = {
+          runtime,
+          testName,
+          outputFiles: relativePaths || [],
+          timestamp: new Date().toISOString(),
+          message: "Success (from directory)"
+        };
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      } else {
+        return new Response(JSON.stringify({
+          error: "getOutputFiles method not available and directory not found",
+          runtime,
+          testName,
+          outputFiles: [],
+          timestamp: new Date().toISOString(),
+          message: "No output files found"
+        }), {
+          status: 404,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
+    }
+  }
   handleHttpGetInputFiles(request, url) {
     const runtime = url.searchParams.get("runtime");
     const testName = url.searchParams.get("testName");
@@ -3949,6 +4030,33 @@ class Server_HTTP extends Server_Base {
         });
       } else {
         console.log(`[HTTP] Method not allowed: ${request.method} for /~/configs`);
+        return new Response(`Method ${request.method} not allowed`, {
+          status: 405,
+          headers: {
+            Allow: "GET, OPTIONS",
+            "Content-Type": "text/plain"
+          }
+        });
+      }
+    }
+    if (routeName === "outputfiles") {
+      console.log(`[HTTP] Matched /outputfiles route`);
+      if (request.method === "GET") {
+        console.log(`[HTTP] Handling GET /~/outputfiles`);
+        return this.handleHttpGetOutputFiles(request, url);
+      } else if (request.method === "OPTIONS") {
+        console.log(`[HTTP] Handling OPTIONS /~/outputfiles`);
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400"
+          }
+        });
+      } else {
+        console.log(`[HTTP] Method not allowed: ${request.method} for /~/outputfiles`);
         return new Response(`Method ${request.method} not allowed`, {
           status: 405,
           headers: {
@@ -4304,6 +4412,7 @@ class Server_WS extends Server_HTTP {
 class Server_Docker extends Server_WS {
   logProcesses = new Map;
   inputFiles = {};
+  outputFiles = {};
   constructor(configs, mode) {
     super(configs, mode);
   }
@@ -4439,7 +4548,6 @@ class Server_Docker extends Server_WS {
         services[`${uid}-bdd`] = this.bddTestDockerComposeFile(runtime, `${uid}-bdd`, bddCommand);
         services[`${uid}-aider`] = this.aiderDockerComposeFile(`${uid}-aider`);
         checks.forEach((check, ndx) => {
-          console.log("mark4", `${uid}-check-${ndx}`);
           const command = check([]);
           services[`${uid}-check-${ndx}`] = this.staticTestDockerComposeFile(runtime, `${uid}-check-${ndx}`, command, this.configs, runtimeTestsName);
         });
@@ -4511,7 +4619,47 @@ class Server_Docker extends Server_WS {
           this.inputFiles[configKey][testName] = [];
         }
         this.watchInputFile(runtime, testName);
+        this.watchOutputFile(runtime, testName, configKey);
       }
+    }
+  }
+  async watchOutputFile(runtime, testName, configKey) {
+    const outputDir = path2.join(process.cwd(), "testeranto", "reports", "allTests", "example", runtime);
+    if (!this.outputFiles[configKey]) {
+      this.outputFiles[configKey] = {};
+    }
+    if (!this.outputFiles[configKey][testName]) {
+      this.outputFiles[configKey][testName] = [];
+    }
+    console.log(`[Server_Docker] Setting up output file watcher for: ${outputDir} (configKey: ${configKey}, test: ${testName})`);
+    this.updateOutputFilesList(configKey, testName, outputDir);
+    fs2.watch(outputDir, (eventType, filename) => {
+      if (filename) {
+        console.log(`[Server_Docker] Output directory changed: ${eventType} ${filename} in ${outputDir}`);
+        this.updateOutputFilesList(configKey, testName, outputDir);
+        this.resourceChanged("/~/outputfiles");
+      }
+    });
+  }
+  updateOutputFilesList(configKey, testName, outputDir) {
+    try {
+      const files = fs2.readdirSync(outputDir);
+      const testFiles = files.filter((file) => file.includes(testName.replace("/", "_").replace(".", "-")) || file.includes(`${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`));
+      const projectRoot = process.cwd();
+      const relativePaths = testFiles.map((file) => {
+        const absolutePath = path2.join(outputDir, file);
+        let relativePath = path2.relative(projectRoot, absolutePath);
+        relativePath = relativePath.split(path2.sep).join("/");
+        return relativePath.startsWith(".") ? relativePath : `./${relativePath}`;
+      });
+      this.outputFiles[configKey][testName] = relativePaths;
+      console.log(`[Server_Docker] Updated output files for ${configKey}/${testName}: ${relativePaths.length} files`);
+      if (relativePaths.length > 0) {
+        console.log(`[Server_Docker] Sample output file: ${relativePaths[0]}`);
+      }
+    } catch (error) {
+      console.error(`[Server_Docker] Failed to read output directory ${outputDir}:`, error.message);
+      this.outputFiles[configKey][testName] = [];
     }
   }
   async watchInputFile(runtime, testsName) {
@@ -4649,10 +4797,6 @@ class Server_Docker extends Server_WS {
     } catch (error) {
       console.debug(`[Server_Docker] No existing logs for ${serviceName}: ${error.message}`);
     }
-  }
-  async waitForContainerHealthy(containerName, timeoutMs) {
-    const startTime = Date.now();
-    const checkInterval = 2000;
   }
   async stop() {
     for (const [containerId, logProcess] of this.logProcesses.entries()) {
@@ -4801,6 +4945,28 @@ class Server_Docker extends Server_WS {
     if (this.inputFiles && this.inputFiles[configKey]) {
       console.log(`[Server_Docker] Tests in ${configKey}:`, Object.keys(this.inputFiles[configKey]));
     }
+    return [];
+  }
+  getOutputFiles(runtime, testName) {
+    console.log(`[Server_Docker] getOutputFiles called for ${runtime}/${testName}`);
+    let configKey = null;
+    for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
+      if (configValue.runtime === runtime && configValue.tests.includes(testName)) {
+        configKey = key;
+        break;
+      }
+    }
+    if (!configKey) {
+      console.log(`[Server_Docker] No config found for runtime ${runtime} and test ${testName}`);
+      return [];
+    }
+    console.log(`[Server_Docker] Found config key: ${configKey} for ${runtime}/${testName}`);
+    if (this.outputFiles && typeof this.outputFiles === "object" && this.outputFiles[configKey] && typeof this.outputFiles[configKey] === "object" && this.outputFiles[configKey][testName]) {
+      const files = this.outputFiles[configKey][testName];
+      console.log(`[Server_Docker] Found ${files.length} output files in memory for ${configKey}/${testName}`);
+      return Array.isArray(files) ? files : [];
+    }
+    console.log(`[Server_Docker] No output files in memory for ${configKey}/${testName}`);
     return [];
   }
   getProcessSummary() {
@@ -5179,6 +5345,10 @@ ${x}
   }
   getStartCommand() {
     return `docker compose -f "testeranto/docker-compose.yml" start`;
+  }
+  async waitForContainerHealthy(containerName, timeoutMs) {
+    const startTime = Date.now();
+    const checkInterval = 2000;
   }
 }
 

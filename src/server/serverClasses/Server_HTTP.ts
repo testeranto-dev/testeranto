@@ -107,6 +107,111 @@ export abstract class Server_HTTP extends Server_Base {
     }
   }
 
+  private handleHttpGetOutputFiles(request: Request, url: URL): Response {
+    // Extract runtime and testName from query parameters
+    const runtime = url.searchParams.get('runtime');
+    const testName = url.searchParams.get('testName');
+
+    if (!runtime || !testName) {
+      return new Response(JSON.stringify({
+        error: 'Missing runtime or testName query parameters',
+        timestamp: new Date().toISOString()
+      }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
+    }
+
+    console.log(`[HTTP] Getting output files for runtime: ${runtime}, testName: ${testName}`);
+
+    // Check if getOutputFiles method exists (available in Server_Docker)
+    if (typeof (this as any).getOutputFiles === 'function') {
+      console.log(`[HTTP] getOutputFiles exists, calling it...`);
+      const outputFiles = (this as any).getOutputFiles(runtime, testName);
+      console.log(`[HTTP] getOutputFiles returned:`, outputFiles ? `${outputFiles.length} files` : 'null/undefined');
+
+      const responseData = {
+        runtime,
+        testName,
+        outputFiles: outputFiles || [],
+        timestamp: new Date().toISOString(),
+        message: 'Success'
+      };
+
+      return new Response(JSON.stringify(responseData, null, 2), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
+    } else {
+      console.log(`[HTTP] getOutputFiles does not exist on this instance`);
+      // Try to read from file system as fallback
+      const fs = require('fs');
+      const path = require('path');
+      const outputDir = path.join(
+        process.cwd(),
+        'testeranto',
+        'reports',
+        'allTests',
+        'example',
+        runtime
+      );
+
+      if (fs.existsSync(outputDir)) {
+        const files = fs.readdirSync(outputDir);
+        // Filter files that belong to this test
+        const testFiles = files.filter(file => 
+          file.includes(testName.replace('/', '_').replace('.', '-'))
+        );
+        // Make paths relative to project root
+        const projectRoot = process.cwd();
+        const relativePaths = testFiles.map(file => {
+          const absolutePath = path.join(outputDir, file);
+          let relativePath = path.relative(projectRoot, absolutePath);
+          // Normalize to forward slashes for consistency
+          relativePath = relativePath.split(path.sep).join('/');
+          return relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
+        });
+
+        const responseData = {
+          runtime,
+          testName,
+          outputFiles: relativePaths || [],
+          timestamp: new Date().toISOString(),
+          message: 'Success (from directory)'
+        };
+
+        return new Response(JSON.stringify(responseData, null, 2), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      } else {
+        return new Response(JSON.stringify({
+          error: 'getOutputFiles method not available and directory not found',
+          runtime,
+          testName,
+          outputFiles: [],
+          timestamp: new Date().toISOString(),
+          message: 'No output files found'
+        }), {
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      }
+    }
+  }
+
   private handleHttpGetInputFiles(request: Request, url: URL): Response {
     // Extract runtime and testName from query parameters
     const runtime = url.searchParams.get('runtime');
@@ -499,6 +604,37 @@ export abstract class Server_HTTP extends Server_Base {
       } else {
         // Return 405 Method Not Allowed for other methods
         console.log(`[HTTP] Method not allowed: ${request.method} for /~/configs`);
+        return new Response(`Method ${request.method} not allowed`, {
+          status: 405,
+          headers: {
+            'Allow': 'GET, OPTIONS',
+            'Content-Type': 'text/plain'
+          }
+        });
+      }
+    }
+
+    // Special handling for /outputfiles route
+    if (routeName === 'outputfiles') {
+      console.log(`[HTTP] Matched /outputfiles route`);
+      if (request.method === 'GET') {
+        console.log(`[HTTP] Handling GET /~/outputfiles`);
+        return this.handleHttpGetOutputFiles(request, url);
+      } else if (request.method === 'OPTIONS') {
+        // Handle CORS preflight request
+        console.log(`[HTTP] Handling OPTIONS /~/outputfiles`);
+        return new Response(null, {
+          status: 204,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '86400'
+          }
+        });
+      } else {
+        // Return 405 Method Not Allowed for other methods
+        console.log(`[HTTP] Method not allowed: ${request.method} for /~/outputfiles`);
         return new Response(`Method ${request.method} not allowed`, {
           status: 405,
           headers: {

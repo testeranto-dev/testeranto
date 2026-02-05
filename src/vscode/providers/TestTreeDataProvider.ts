@@ -96,8 +96,8 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       return Promise.resolve(this.getTestItems(runtime));
     } else if (element.type === TreeItemType.Test) {
       const { runtime, testName } = element.data || {};
-      // First, show input files from server
-      return this.getInputFileItems(runtime, testName);
+      // Show combined input and output files
+      return this.getTestFileItems(runtime, testName);
     } else if (element.type === TreeItemType.File) {
       // Check if this is a directory (not a file)
       const { runtime, testName, path, isFile } = element.data || {};
@@ -108,7 +108,7 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       }
       
       // If it's a directory, we need to get its children
-      // We need to fetch the input files again and find the children for this path
+      // Fetch all files and find the children for this path
       return this.getDirectoryChildren(runtime, testName, path);
     }
     return Promise.resolve([]);
@@ -483,6 +483,135 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
   //   // }
   // }
 
+  private async getTestFileItems(runtime: string, testName: string): Promise<TestTreeItem[]> {
+    console.log(`[TestTreeDataProvider] Getting combined input and output files for ${runtime}/${testName}`);
+    
+    try {
+      // Fetch both input and output files in parallel
+      const [inputResponse, outputResponse] = await Promise.all([
+        fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`),
+        fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`)
+      ]);
+
+      let inputFiles: string[] = [];
+      let outputFiles: string[] = [];
+
+      // Process input files
+      if (inputResponse.ok) {
+        const inputData = await inputResponse.json();
+        if (Array.isArray(inputData.inputFiles)) {
+          inputFiles = inputData.inputFiles;
+        } else if (inputData.inputFiles && typeof inputData.inputFiles === 'object') {
+          for (const key in inputData.inputFiles) {
+            if (Array.isArray(inputData.inputFiles[key])) {
+              inputFiles = inputData.inputFiles[key];
+              break;
+            }
+          }
+        } else {
+          for (const key in inputData) {
+            if (Array.isArray(inputData[key])) {
+              inputFiles = inputData[key];
+              break;
+            }
+          }
+        }
+      }
+
+      // Process output files
+      if (outputResponse.ok) {
+        const outputData = await outputResponse.json();
+        if (Array.isArray(outputData.outputFiles)) {
+          outputFiles = outputData.outputFiles;
+        } else if (outputData.outputFiles && typeof outputData.outputFiles === 'object') {
+          for (const key in outputData.outputFiles) {
+            if (Array.isArray(outputData.outputFiles[key])) {
+              outputFiles = outputData.outputFiles[key];
+              break;
+            }
+          }
+        } else {
+          for (const key in outputData) {
+            if (Array.isArray(outputData[key])) {
+              outputFiles = outputData[key];
+              break;
+            }
+          }
+        }
+      }
+
+      // Combine all files
+      const allFiles = [...inputFiles, ...outputFiles];
+      console.log(`[TestTreeDataProvider] Found ${inputFiles.length} input files and ${outputFiles.length} output files (total: ${allFiles.length})`);
+
+      if (allFiles.length === 0) {
+        return [
+          new TestTreeItem(
+            "No files available",
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              description: "The test hasn't been built or generated output yet",
+              runtime,
+              testName
+            },
+            undefined,
+            new vscode.ThemeIcon("info")
+          )
+        ];
+      }
+
+      // Build a tree structure from all file paths
+      const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
+
+      for (const filePath of allFiles) {
+        // Normalize the path: remove leading '/' if present
+        const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+        // Split and filter out empty parts and '.' which represents current directory
+        const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
+        
+        if (parts.length === 0) continue;
+        
+        let currentNode = treeRoot;
+        
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          const isLast = i === parts.length - 1;
+          
+          if (!currentNode.children.has(part)) {
+            currentNode.children.set(part, {
+              name: part,
+              children: new Map(),
+              fullPath: parts.slice(0, i + 1).join('/'),
+              isFile: isLast
+            });
+          }
+          currentNode = currentNode.children.get(part)!;
+        }
+      }
+
+      // Convert the tree to TestTreeItems
+      return this.buildTreeItemsFromNode(treeRoot, runtime, testName);
+
+    } catch (error: any) {
+      console.error(`[TestTreeDataProvider] Failed to fetch combined files:`, error);
+      return [
+        new TestTreeItem(
+          "Failed to fetch files",
+          TreeItemType.File,
+          vscode.TreeItemCollapsibleState.None,
+          {
+            description: error.message,
+            runtime,
+            testName
+          },
+          undefined,
+          new vscode.ThemeIcon("error")
+        )
+      ];
+    }
+  }
+
   private async getInputFileItems(runtime: string, testName: string): Promise<TestTreeItem[]> {
     console.log(`[TestTreeDataProvider] Fetching input files for ${runtime}/${testName}`);
 
@@ -500,7 +629,8 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
             {
               description: "Server returned error",
               runtime,
-              testName
+              testName,
+              fileType: 'input'
             },
             undefined,
             new vscode.ThemeIcon("warning")
@@ -546,7 +676,8 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
             {
               description: "The test hasn't been built yet",
               runtime,
-              testName
+              testName,
+              fileType: 'input'
             },
             undefined,
             new vscode.ThemeIcon("info")
@@ -560,7 +691,8 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       for (const filePath of inputFiles) {
         // Normalize the path: remove leading '/' if present
         const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
-        const parts = normalizedPath.split('/').filter(part => part.length > 0);
+        // Split and filter out empty parts and '.' which represents current directory
+        const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
         
         if (parts.length === 0) continue;
         
@@ -583,7 +715,7 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
       }
 
       // Convert the tree to TestTreeItems
-      return this.buildTreeItemsFromNode(treeRoot, runtime, testName);
+      return this.buildTreeItemsFromNode(treeRoot, runtime, testName, 'input');
 
     } catch (error: any) {
       console.error(`[TestTreeDataProvider] Failed to fetch input files:`, error);
@@ -595,7 +727,130 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
           {
             description: error.message,
             runtime,
-            testName
+            testName,
+            fileType: 'input'
+          },
+          undefined,
+          new vscode.ThemeIcon("error")
+        )
+      ];
+    }
+  }
+
+  private async getOutputFileItems(runtime: string, testName: string): Promise<TestTreeItem[]> {
+    console.log(`[TestTreeDataProvider] Fetching output files for ${runtime}/${testName}`);
+
+    try {
+      // Fetch output files from server
+      const response = await fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
+
+      if (!response.ok) {
+        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
+        return [
+          new TestTreeItem(
+            "No output files found",
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              description: "Server returned error",
+              runtime,
+              testName,
+              fileType: 'output'
+            },
+            undefined,
+            new vscode.ThemeIcon("warning")
+          )
+        ];
+      }
+
+      const data = await response.json();
+      
+      // Extract the list of output files
+      let outputFiles: string[] = [];
+      
+      if (Array.isArray(data.outputFiles)) {
+        outputFiles = data.outputFiles;
+      } else if (data.outputFiles && typeof data.outputFiles === 'object') {
+        for (const key in data.outputFiles) {
+          if (Array.isArray(data.outputFiles[key])) {
+            outputFiles = data.outputFiles[key];
+            break;
+          }
+        }
+      } else {
+        for (const key in data) {
+          if (Array.isArray(data[key])) {
+            outputFiles = data[key];
+            break;
+          }
+        }
+      }
+
+      console.log(`[TestTreeDataProvider] Found ${outputFiles.length} output files`);
+
+      if (outputFiles.length === 0) {
+        return [
+          new TestTreeItem(
+            "No output files available",
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              description: "The test hasn't generated output yet",
+              runtime,
+              testName,
+              fileType: 'output'
+            },
+            undefined,
+            new vscode.ThemeIcon("info")
+          )
+        ];
+      }
+
+      // Build a tree structure from the file paths
+      const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
+
+      for (const filePath of outputFiles) {
+        // Normalize the path: remove leading '/' if present
+        const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+        // Split and filter out empty parts and '.' which represents current directory
+        const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
+        
+        if (parts.length === 0) continue;
+        
+        let currentNode = treeRoot;
+        
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          const isLast = i === parts.length - 1;
+          
+          if (!currentNode.children.has(part)) {
+            currentNode.children.set(part, {
+              name: part,
+              children: new Map(),
+              // Reconstruct full path without leading '.'
+              fullPath: parts.slice(0, i + 1).join('/'),
+              isFile: isLast
+            });
+          }
+          currentNode = currentNode.children.get(part)!;
+        }
+      }
+
+      // Convert the tree to TestTreeItems
+      return this.buildTreeItemsFromNode(treeRoot, runtime, testName, 'output');
+
+    } catch (error: any) {
+      console.error(`[TestTreeDataProvider] Failed to fetch output files:`, error);
+      return [
+        new TestTreeItem(
+          "Failed to fetch output files",
+          TreeItemType.File,
+          vscode.TreeItemCollapsibleState.None,
+          {
+            description: error.message,
+            runtime,
+            testName,
+            fileType: 'output'
           },
           undefined,
           new vscode.ThemeIcon("error")
@@ -670,44 +925,70 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
 
   private async getDirectoryChildren(runtime: string, testName: string, dirPath: string): Promise<TestTreeItem[]> {
     try {
-      // Fetch input files from server
-      const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
-      
-      if (!response.ok) {
-        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
-        return [];
-      }
+      // Fetch both input and output files
+      const [inputResponse, outputResponse] = await Promise.all([
+        fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`),
+        fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`)
+      ]);
 
-      const data = await response.json();
-      
-      // Extract the list of input files
-      let inputFiles: string[] = [];
-      
-      if (Array.isArray(data.inputFiles)) {
-        inputFiles = data.inputFiles;
-      } else if (data.inputFiles && typeof data.inputFiles === 'object') {
-        for (const key in data.inputFiles) {
-          if (Array.isArray(data.inputFiles[key])) {
-            inputFiles = data.inputFiles[key];
-            break;
+      let allFiles: string[] = [];
+
+      // Process input files
+      if (inputResponse.ok) {
+        const inputData = await inputResponse.json();
+        let inputFiles: string[] = [];
+        if (Array.isArray(inputData.inputFiles)) {
+          inputFiles = inputData.inputFiles;
+        } else if (inputData.inputFiles && typeof inputData.inputFiles === 'object') {
+          for (const key in inputData.inputFiles) {
+            if (Array.isArray(inputData.inputFiles[key])) {
+              inputFiles = inputData.inputFiles[key];
+              break;
+            }
+          }
+        } else {
+          for (const key in inputData) {
+            if (Array.isArray(inputData[key])) {
+              inputFiles = inputData[key];
+              break;
+            }
           }
         }
-      } else {
-        for (const key in data) {
-          if (Array.isArray(data[key])) {
-            inputFiles = data[key];
-            break;
-          }
-        }
+        allFiles.push(...inputFiles);
       }
 
-      // Build a tree structure from the file paths
+      // Process output files
+      if (outputResponse.ok) {
+        const outputData = await outputResponse.json();
+        let outputFiles: string[] = [];
+        if (Array.isArray(outputData.outputFiles)) {
+          outputFiles = outputData.outputFiles;
+        } else if (outputData.outputFiles && typeof outputData.outputFiles === 'object') {
+          for (const key in outputData.outputFiles) {
+            if (Array.isArray(outputData.outputFiles[key])) {
+              outputFiles = outputData.outputFiles[key];
+              break;
+            }
+          }
+        } else {
+          for (const key in outputData) {
+            if (Array.isArray(outputData[key])) {
+              outputFiles = outputData[key];
+              break;
+            }
+          }
+        }
+        allFiles.push(...outputFiles);
+      }
+
+      // Build a tree structure from all file paths
       const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
 
-      for (const filePath of inputFiles) {
+      for (const filePath of allFiles) {
         // Normalize the path: remove leading '/' if present
         const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
-        const parts = normalizedPath.split('/').filter(part => part.length > 0);
+        // Split and filter out empty parts and '.' which represents current directory
+        const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
         
         if (parts.length === 0) continue;
         
@@ -776,8 +1057,8 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
 
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
-          // Skip empty parts
-          if (!part || part.trim().length === 0) {
+          // Skip empty parts and '.' which represents current directory
+          if (!part || part.trim().length === 0 || part === '.') {
             continue;
           }
           const isLast = i === parts.length - 1;
