@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.224.1",
+  "version": "0.224.5",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -111,6 +111,7 @@
     "Other"
   ],
   "scripts": {
+    "dev": "yarn build:server && yarn link:server",
     "summarizeLicenses": "yarn licenses list > ALL_LICENSES.txt; yarn license-checker >> ALL_LICENSES.txt; yarn license-checker --summary >> ALL_LICENSES.txt",
     "compile-docs": "node scripts/compile-docs.js",
     "prepublish": "self-import",

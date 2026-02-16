@@ -59,7 +59,7 @@ bun run start
 bun run dev
 
 # Build for production
-bun run build
+bun build --target node --outdir dist src/index.ts
 
 # Install globally
 bun run link   # This builds first, then links

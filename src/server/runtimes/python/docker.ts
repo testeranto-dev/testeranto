@@ -16,7 +16,7 @@ export const pythonDockerComposeFile = (config: IConfig, container_name: string,
       `${process.cwd()}/src:/workspace/src`,
       `${process.cwd()}/example:/workspace/example`,
       `${process.cwd()}/dist:/workspace/dist`,
-      `${process.cwd()}/testeranto:/workspace/testeranto`,
+      // `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
     command: pythonBuildCommand(fpath),
   }

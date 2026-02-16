@@ -319,49 +319,49 @@ export class Server_Docker extends Server_WS {
     // await this.waitForContainerHealthy('browser-allTests', 60000); // 60 seconds max
 
     // Start aider services
-    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-      const runtime = configValue.runtime
-      // const testsObj = configValue[3];
-      const tests = configValue.tests
+    // for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+    //   const runtime = configValue.runtime
+    //   // const testsObj = configValue[3];
+    //   const tests = configValue.tests
 
-      for (const testName of tests) {
-        // Generate the UID exactly as DockerManager does
-        const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-        const aiderServiceName = `${uid}-aider`;
+    //   for (const testName of tests) {
+    //     // Generate the UID exactly as DockerManager does
+    //     const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    //     const aiderServiceName = `${uid}-aider`;
 
-        console.log(`[Server_Docker] Starting aider service: ${aiderServiceName} for test ${testName}`);
-        try {
-          await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${aiderServiceName}`);
-          // Capture any existing logs first (overwrites the file)
-          await this.captureExistingLogs(aiderServiceName, runtime);
-          // Then start logging new output (appends to the file)
-          this.startServiceLogging(aiderServiceName, runtime)
-            .catch(error => console.error(`[Server_Docker] Failed to start logging for ${aiderServiceName}:`, error));
+    //     console.log(`[Server_Docker] Starting aider service: ${aiderServiceName} for test ${testName}`);
+    //     try {
+    //       await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${aiderServiceName}`);
+    //       // Capture any existing logs first (overwrites the file)
+    //       await this.captureExistingLogs(aiderServiceName, runtime);
+    //       // Then start logging new output (appends to the file)
+    //       this.startServiceLogging(aiderServiceName, runtime)
+    //         .catch(error => console.error(`[Server_Docker] Failed to start logging for ${aiderServiceName}:`, error));
 
-          // Notify clients that processes resource has changed
-          this.resourceChanged('/~/processes');
-        } catch (error: any) {
-          console.error(`[Server_Docker] Failed to start ${aiderServiceName}: ${error.message}`);
-        }
-      }
-    }
+    //       // Notify clients that processes resource has changed
+    //       this.resourceChanged('/~/processes');
+    //     } catch (error: any) {
+    //       console.error(`[Server_Docker] Failed to start ${aiderServiceName}: ${error.message}`);
+    //     }
+    //   }
+    // }
 
     // Start BDD test services
+    // for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+    //   const runtime = configValue.runtime
+    //   const tests = configValue.tests
+
+    //   console.log(`[Server_Docker] Found tests for ${runtime}:`, (JSON.stringify(tests)));
+
+    //   for (const testName of tests) {
+    //     const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
+    //     const bddServiceName = `${uid}-bdd`;
+
+    //   }
+    // }
+
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-      const runtime = configValue.runtime
-      const tests = configValue.tests
-
-      console.log(`[Server_Docker] Found tests for ${runtime}:`, (JSON.stringify(tests)));
-
-      for (const testName of tests) {
-        const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-        const bddServiceName = `${uid}-bdd`;
-
-      }
-    }
-
-    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-      const runtime = configValue.runtime;
+      const runtime: IRunTime = configValue.runtime;
       const tests = configValue.tests;
 
       // Initialize the configKey in inputFiles if it doesn't exist
@@ -375,9 +375,15 @@ export class Server_Docker extends Server_WS {
           this.inputFiles[configKey][testName] = [];
         }
         this.watchInputFile(runtime, testName);
-        
+
         // Also watch for output files
         this.watchOutputFile(runtime, testName, configKey);
+
+
+        this.launchBddTest(runtime, testName, configKey, configValue);
+        this.launchChecks(runtime, testName, configKey, configValue);
+        // this.informAider(runtime, testName, ck, configValue, inputFiles);
+
       }
     }
   }
@@ -393,7 +399,7 @@ export class Server_Docker extends Server_WS {
       "example",
       runtime
     );
-    
+
     // Initialize the output files structure
     if (!this.outputFiles[configKey]) {
       this.outputFiles[configKey] = {};
@@ -401,34 +407,34 @@ export class Server_Docker extends Server_WS {
     if (!this.outputFiles[configKey][testName]) {
       this.outputFiles[configKey][testName] = [];
     }
-    
+
     console.log(`[Server_Docker] Setting up output file watcher for: ${outputDir} (configKey: ${configKey}, test: ${testName})`);
-    
+
     // Read initial files if they exist
     this.updateOutputFilesList(configKey, testName, outputDir);
-    
+
     // Watch the directory for changes
     fs.watch(outputDir, (eventType, filename) => {
       if (filename) {
         console.log(`[Server_Docker] Output directory changed: ${eventType} ${filename} in ${outputDir}`);
         this.updateOutputFilesList(configKey, testName, outputDir);
-        
+
         // Notify clients via WebSocket
         this.resourceChanged('/~/outputfiles');
       }
     });
   }
-  
+
   // Update the list of output files for a test
   private updateOutputFilesList(configKey: string, testName: string, outputDir: string) {
     try {
       const files = fs.readdirSync(outputDir);
       // Filter files that belong to this test (e.g., contain test name in filename)
-      const testFiles = files.filter(file => 
-        file.includes(testName.replace('/', '_').replace('.', '-')) || 
+      const testFiles = files.filter(file =>
+        file.includes(testName.replace('/', '_').replace('.', '-')) ||
         file.includes(`${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`)
       );
-      
+
       // Store relative paths from the project root
       const projectRoot = process.cwd();
       const relativePaths = testFiles.map(file => {
@@ -440,9 +446,9 @@ export class Server_Docker extends Server_WS {
         // Ensure it starts with './' to indicate it's relative
         return relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
       });
-      
+
       this.outputFiles[configKey][testName] = relativePaths;
-      
+
       console.log(`[Server_Docker] Updated output files for ${configKey}/${testName}: ${relativePaths.length} files`);
       if (relativePaths.length > 0) {
         console.log(`[Server_Docker] Sample output file: ${relativePaths[0]}`);
@@ -464,7 +470,16 @@ export class Server_Docker extends Server_WS {
       }
     }
 
-    const inputFilePath = `testeranto/bundles/allTests/${runtime}/${testsName.split('.').slice(0, -1).concat('mjs').join('.')}-inputFiles.json`;
+    let inputFilePath: string;
+    if (runtime == "node") {
+      inputFilePath = `testeranto/bundles/allTests/${runtime}/${testsName.split('.').slice(0, -1).concat('mjs').join('.')}-inputFiles.json`;
+    } else if (runtime == "ruby") {
+      inputFilePath = `testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json`;
+    } else {
+      throw 'not yet implemented'
+    }
+
+
 
     console.log(`[Server_Docker] Setting up file watcher for: ${inputFilePath} (configKey: ${configKey})`);
     // Initialize the structure if needed
@@ -933,17 +948,17 @@ export class Server_Docker extends Server_WS {
     try {
       const summary = this.getProcessSummary();
       // Filter for aider containers
-      const aiderProcesses = summary.processes.filter((process: any) => 
+      const aiderProcesses = summary.processes.filter((process: any) =>
         process.name && process.name.includes('-aider')
       );
-      
+
       // Enhance the aider processes with additional information
       return aiderProcesses.map((process: any) => {
         // Extract runtime and test name from container name
         let runtime = '';
         let testName = '';
         let configKey = '';
-        
+
         const name = process.name || process.containerName || '';
         if (name.includes('-aider')) {
           // Parse container name to extract runtime and test name
@@ -952,7 +967,7 @@ export class Server_Docker extends Server_WS {
           if (match) {
             configKey = match[1];
             const testPart = match[2];
-            
+
             // Try to find the runtime from configs
             for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
               if (key === configKey) {
@@ -973,10 +988,10 @@ export class Server_Docker extends Server_WS {
             }
           }
         }
-        
+
         // Create the connect command
         const connectCommand = `docker exec -it ${process.containerId} aider`;
-        
+
         return {
           ...process,
           name: name,

@@ -1,7 +1,7 @@
 require 'json'
 require 'fileutils'
 
-puts "hello ruby builder", ARGV
+puts "hello ruby builder", ARGV.inspect
 
 # config_file_path is a ruby file
 config_file_path = ARGV[0]
@@ -13,7 +13,7 @@ else
   exit(1)
 end
 
-test_name = ARGV[1] || "allTests"
+test_name = ARGV[1]
 
 # Create necessary directories
 input_files_path = "testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json"
@@ -25,7 +25,7 @@ FileUtils.mkdir_p(File.dirname(dummy_ruby_file_path))
 
 # Write input files JSON
 input_files_content = {
-  testName: test_name,
+  testName: "test_name",
   configFile: config_file_path,
   timestamp: Time.now.to_i
 }
@@ -40,14 +40,14 @@ dummy_ruby_content = <<-RUBY
 require 'json'
 
 # Build the test resource configuration
-config = {
-  name: 'calculator-test',
-  fs: '.',
-  ports: [],
-  timeout: 30000,
-  retries: 0,
-  environment: {}
-}.to_json
+# config = {
+#   name: "test_name",
+#   fs: '.',
+#   ports: [],
+#   timeout: 30000,
+#   retries: 0,
+#   environment: {}
+# }.to_json
 
 # Execute the test file directly with the configuration
 exec("ruby", "../../../../../example/Calculator-test.rb", config)
@@ -61,6 +61,6 @@ puts "  - #{input_files_path}"
 puts "  - #{dummy_ruby_file_path}"
 
 # Now execute the generated test file
-puts "Executing test..."
-system("ruby #{dummy_ruby_file_path}")
-exit($?.exitstatus)
+# puts "Executing test..."
+# system("ruby #{dummy_ruby_file_path}")
+# exit($?.exitstatus)

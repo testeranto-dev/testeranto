@@ -16,7 +16,7 @@ export const javaDockerComposeFile = (config: IConfig, container_name: string, f
       `${process.cwd()}/src:/workspace/src`,
       `${process.cwd()}/example:/workspace/example`,
       `${process.cwd()}/dist:/workspace/dist`,
-      `${process.cwd()}/testeranto:/workspace/testeranto`,
+      // `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
     command: javaBuildCommand(fpath),
   }

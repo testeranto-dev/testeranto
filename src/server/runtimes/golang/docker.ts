@@ -17,7 +17,7 @@ export const golangDockerComposeFile = (config: ITestconfigV2, container_name: s
       `${process.cwd()}/src:/workspace/src`,
       `${process.cwd()}/example:/workspace/example`,
       `${process.cwd()}/dist:/workspace/dist`,
-      `${process.cwd()}/testeranto:/workspace/testeranto`,
+      // `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
     command: golangBuildCommand(),
   }

@@ -18,4 +18,4 @@ server.start().catch((error) => {
   process.exit(1);
 });
 
-console.log("hello testeranto v0.222.9")
+console.log("hello testeranto v0.224.4")

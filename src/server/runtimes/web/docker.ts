@@ -17,7 +17,7 @@ export const webDockerComposeFile = (config: IConfig, container_name: string, fp
       `${process.cwd()}/src:/workspace/src`,
       `${process.cwd()}/example:/workspace/example`,
       `${process.cwd()}/dist:/workspace/dist`,
-      `${process.cwd()}/testeranto:/workspace/testeranto`,
+      // `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
     command: webBuildCommand(fpath),
 
