@@ -398,8 +398,6 @@ export class Server_Docker extends Server_WS {
 
         // Also watch for output files
         this.watchOutputFile(runtime, testName, configKey);
-
-
         this.launchBddTest(runtime, testName, configKey, configValue);
         this.launchChecks(runtime, testName, configKey, configValue);
         // this.informAider(runtime, testName, ck, configValue, inputFiles);
