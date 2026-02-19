@@ -76,22 +76,30 @@ func (pm *PM_Golang) WriteFileSync(
 	dir := filepath.Dir(filename)
 	if dir != "" && dir != "." {
 		if err := os.MkdirAll(dir, 0755); err != nil {
-			return false, err
+			return false, fmt.Errorf("failed to create directory %s: %w", dir, err)
 		}
 	}
 	
 	// If client is nil, write directly to file
 	if pm.client == nil {
 		err := os.WriteFile(filename, []byte(data), 0644)
-		return err == nil, err
+		if err != nil {
+			return false, fmt.Errorf("failed to write file %s: %w", filename, err)
+		}
+		return true, nil
 	}
 	
 	// Otherwise, use the WebSocket connection
 	result, err := pm.send("writeFileSync", filename, data, tr)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("failed to send writeFileSync command: %w", err)
 	}
-	return result.(bool), nil
+	
+	success, ok := result.(bool)
+	if !ok {
+		return false, fmt.Errorf("invalid response type for writeFileSync")
+	}
+	return success, nil
 }
 
 func (pm *PM_Golang) send(command string, args ...interface{}) (interface{}, error) {
@@ -124,8 +132,8 @@ func (pm *PM_Golang) send(command string, args ...interface{}) (interface{}, err
 		     "screencast", "screencastStop", "customScreenshot":
 			return nil, nil
 		default:
-			// For unknown commands, return nil
-			return nil, nil
+			// For unknown commands, return nil with an error
+			return nil, fmt.Errorf("unknown command: %s", command)
 		}
 	}
 
@@ -140,11 +148,8 @@ func (pm *PM_Golang) send(command string, args ...interface{}) (interface{}, err
 	// Convert to JSON
 	data, err := json.Marshal(message)
 	if err != nil {
-		fmt.Printf("JSON marshal error: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("JSON marshal error: %w", err)
 	}
-
-	fmt.Printf("Sending message: %s\n", string(data))
 
 	// Send the length first (4-byte big-endian)
 	length := uint32(len(data))
@@ -157,15 +162,13 @@ func (pm *PM_Golang) send(command string, args ...interface{}) (interface{}, err
 
 	_, err = pm.client.Write(lengthBytes)
 	if err != nil {
-		fmt.Printf("Error writing length: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("error writing length: %w", err)
 	}
 
 	// Send the actual data
 	_, err = pm.client.Write(data)
 	if err != nil {
-		fmt.Printf("Error writing data: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("error writing data: %w", err)
 	}
 
 	// Wait for response
@@ -173,39 +176,34 @@ func (pm *PM_Golang) send(command string, args ...interface{}) (interface{}, err
 	lengthBytes = make([]byte, 4)
 	_, err = pm.client.Read(lengthBytes)
 	if err != nil {
-		fmt.Printf("Error reading length: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("error reading length: %w", err)
 	}
 
 	length = uint32(lengthBytes[0])<<24 | uint32(lengthBytes[1])<<16 |
 		uint32(lengthBytes[2])<<8 | uint32(lengthBytes[3])
 
-	fmt.Printf("Response length: %d\n", length)
-
 	// Read the response data
 	responseData := make([]byte, length)
 	_, err = pm.client.Read(responseData)
 	if err != nil {
-		fmt.Printf("Error reading response data: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("error reading response data: %w", err)
 	}
-
-	fmt.Printf("Response data: %s\n", string(responseData))
 
 	// Parse the response
 	var response map[string]interface{}
 	err = json.Unmarshal(responseData, &response)
 	if err != nil {
-		fmt.Printf("JSON unmarshal error: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("JSON unmarshal error: %w", err)
 	}
 
 	// Check if the response key matches our request key
 	if responseKey, ok := response["key"].(string); ok && responseKey == key {
-		return response["payload"], nil
+		if payload, exists := response["payload"]; exists {
+			return payload, nil
+		}
+		return nil, nil
 	}
 
-	fmt.Printf("Key mismatch: expected %s, got %v\n", key, response["key"])
 	return nil, fmt.Errorf("key mismatch in response")
 }
 
@@ -664,54 +662,75 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 	totalFails := 0
 
 	// Parse the specs and actually execute the tests
-	if specs, ok := gv.Specs.([]interface{}); ok {
-		for _, suite := range specs {
-			if suiteMap, ok := suite.(map[string]interface{}); ok {
-				// Set the key from the suite
-				if suiteName, exists := suiteMap["key"].(string); exists {
-					results["key"] = suiteName
+	specs, ok := gv.Specs.([]interface{})
+	if !ok {
+		// Handle case where specs might not be a slice
+		if gv.Specs != nil {
+			// Wrap single spec in a slice
+			specs = []interface{}{gv.Specs}
+		} else {
+			specs = []interface{}{}
+		}
+	}
+
+	for _, suite := range specs {
+		suiteMap, ok := suite.(map[string]interface{})
+		if !ok {
+			// Skip non-map entries
+			continue
+		}
+		
+		// Set the key from the suite
+		if suiteName, exists := suiteMap["key"].(string); exists {
+			results["key"] = suiteName
+		}
+
+		// Process givens
+		givensMap, exists := suiteMap["givens"].(map[string]interface{})
+		if !exists {
+			continue
+		}
+		
+		for key, given := range givensMap {
+			givenObj, ok := given.(*BaseGiven)
+			if !ok {
+				// Try to handle other types if possible
+				continue
+			}
+			
+			// Execute the test and record actual results
+			processedGiven, testFailed, err := gv.executeTest(key, givenObj)
+			if err != nil {
+				return nil, err
+			}
+
+			if testFailed {
+				totalFails++
+			}
+
+			// Add to results
+			givensSlice := results["givens"].([]interface{})
+			results["givens"] = append(givensSlice, processedGiven)
+
+			// Add features to overall features (deduplicated)
+			features, exists := processedGiven["features"].([]string)
+			if exists {
+				existingFeatures := results["features"].([]string)
+				featureSet := make(map[string]bool)
+
+				// Add existing features to set
+				for _, feature := range existingFeatures {
+					featureSet[feature] = true
 				}
 
-				// Process givens
-				if givensMap, exists := suiteMap["givens"].(map[string]interface{}); exists {
-					for key, given := range givensMap {
-						if givenObj, ok := given.(*BaseGiven); ok {
-							// Execute the test and record actual results
-							processedGiven, testFailed, err := gv.executeTest(key, givenObj)
-							if err != nil {
-								return nil, err
-							}
-
-							if testFailed {
-								totalFails++
-							}
-
-							// Add to results
-							givensSlice := results["givens"].([]interface{})
-							results["givens"] = append(givensSlice, processedGiven)
-
-							// Add features to overall features (deduplicated)
-							if features, exists := processedGiven["features"].([]string); exists {
-								existingFeatures := results["features"].([]string)
-								featureSet := make(map[string]bool)
-
-								// Add existing features to set
-								for _, feature := range existingFeatures {
-									featureSet[feature] = true
-								}
-
-								// Add new features
-								for _, feature := range features {
-									if !featureSet[feature] {
-										existingFeatures = append(existingFeatures, feature)
-										featureSet[feature] = true
-									}
-								}
-								results["features"] = existingFeatures
-							}
-						}
+				// Add new features
+				for _, feature := range features {
+					if !featureSet[feature] {
+						existingFeatures = append(existingFeatures, feature)
+						featureSet[feature] = true
 					}
 				}
+				results["features"] = existingFeatures
 			}
 		}
 	}
@@ -726,11 +745,11 @@ func (gv *Golingvu) executeTest(key string, given *BaseGiven) (map[string]interf
 	// Create the test result structure that matches the Node.js format exactly
 	processedGiven := map[string]interface{}{
 		"key":       key,
-		"whens":     []map[string]interface{}{},
-		"thens":     []map[string]interface{}{},
+		"whens":     make([]map[string]interface{}, 0),
+		"thens":     make([]map[string]interface{}, 0),
 		"error":     nil,
 		"features":  given.Features,
-		"artifacts": []interface{}{},
+		"artifacts": make([]interface{}, 0),
 		"status":    true, // Default to true, will be set to false if any step fails
 	}
 
@@ -750,7 +769,7 @@ func (gv *Golingvu) executeTest(key string, given *BaseGiven) (map[string]interf
 	// Process whens - execute each when step
 	for _, when := range given.Whens {
 		var whenError error = nil
-		var whenName string = when.Key
+		whenName := when.Key
 
 		// Execute the when callback using the adapter's AndWhen
 		// The adapter's AndWhen will handle calling the actual whenCB
@@ -759,17 +778,14 @@ func (gv *Golingvu) executeTest(key string, given *BaseGiven) (map[string]interf
 			store = newStore
 		}
 
-		// Check for errors (if the whenCB panicked, it would have been caught by uberCatcher)
-		// For now, assume no error
-
 		// Record the when step according to the Node.js format
 		processedWhen := map[string]interface{}{
 			"key":       whenName,
 			"status":    whenError == nil,
 			"error":     whenError,
-			"artifacts": []interface{}{},
+			"artifacts": make([]interface{}, 0),
 		}
-		// Convert to the right type
+		// Append to whens
 		whensSlice := processedGiven["whens"].([]map[string]interface{})
 		processedGiven["whens"] = append(whensSlice, processedWhen)
 	}
@@ -777,8 +793,8 @@ func (gv *Golingvu) executeTest(key string, given *BaseGiven) (map[string]interf
 	// Process thens - execute each then step
 	for _, then := range given.Thens {
 		var thenError error = nil
-		var thenName string = then.Key
-		var thenStatus bool = true
+		thenName := then.Key
+		thenStatus := true
 
 		// Execute the then callback using the adapter's ButThen
 		result := gv.testAdapter.ButThen(store, then.ThenCB, testResource, nil)
@@ -800,10 +816,10 @@ func (gv *Golingvu) executeTest(key string, given *BaseGiven) (map[string]interf
 		processedThen := map[string]interface{}{
 			"key":       thenName,
 			"error":     thenError != nil,
-			"artifacts": []interface{}{},
+			"artifacts": make([]interface{}, 0),
 			"status":    thenStatus,
 		}
-		// Convert to the right type
+		// Append to thens
 		thensSlice := processedGiven["thens"].([]map[string]interface{})
 		processedGiven["thens"] = append(thensSlice, processedThen)
 	}

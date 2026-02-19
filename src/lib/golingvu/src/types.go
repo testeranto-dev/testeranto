@@ -1,6 +1,7 @@
 package golingvu
 
-// Ibdd_in_any represents the input types for BDD
+// Ibdd_in_any represents the input types for Behavior-Driven Development tests.
+// Implement this interface to define custom input types for your tests.
 type Ibdd_in_any interface {
 	Iinput() interface{}
 	Isubject() interface{}
@@ -10,13 +11,19 @@ type Ibdd_in_any interface {
 	Given() interface{}
 }
 
-// Ibdd_out_any represents the output types for BDD
+// Ibdd_out_any represents the output types for Behavior-Driven Development tests.
 type Ibdd_out_any interface{}
 
-// ITestSpecification defines the test specification function
+// ITestSpecification defines a function that creates test specifications.
+// It takes suites, givens, whens, and thens as parameters and returns
+// a test structure that can be executed by the test runner.
 type ITestSpecification func(suites, givens, whens, thens interface{}) interface{}
 
-// ITestImplementation defines the test implementation structure
+// ITestImplementation contains the concrete implementations of test components.
+// Suites: Map of suite names to their implementations
+// Givens: Map of given condition names to their implementations
+// Whens:  Map of when action names to their implementations
+// Thens:  Map of then assertion names to their implementations
 type ITestImplementation struct {
 	Suites map[string]interface{}
 	Givens map[string]interface{}
@@ -24,7 +31,8 @@ type ITestImplementation struct {
 	Thens  map[string]interface{}
 }
 
-// ITestAdapter defines the adapter interface
+// ITestAdapter defines the interface for adapting test execution to different environments.
+// Implement this interface to customize test setup, teardown, and execution.
 type ITestAdapter interface {
 	BeforeAll(input interface{}, tr ITTestResourceConfiguration, pm interface{}) interface{}
 	AfterAll(store interface{}, pm interface{}) interface{}
@@ -35,7 +43,13 @@ type ITestAdapter interface {
 	AssertThis(t interface{}) bool
 }
 
-// ITTestResourceConfiguration represents test resource configuration
+// ITTestResourceConfiguration holds configuration for test resources.
+// Name:              Resource name
+// Fs:                Filesystem path
+// BrowserWSEndpoint: WebSocket endpoint for browser automation (optional)
+// Timeout:           Timeout in seconds (optional)
+// Retries:           Number of retry attempts (optional)
+// Environment:       Environment variables (optional)
 type ITTestResourceConfiguration struct {
 	Name              string
 	Fs                string
@@ -45,20 +59,20 @@ type ITTestResourceConfiguration struct {
 	Environment       map[string]string
 }
 
-// ITTestResourceRequirement represents test resource requirements
+// ITTestResourceRequirement specifies requirements for test resources.
 type ITTestResourceRequirement struct {
 	Name string
 	Fs   string
 }
 
-// ITTestResourceRequest represents a test resource request
+// ITTestResourceRequest represents a request for test resources.
 type ITTestResourceRequest struct {
 }
 
-// DefaultTestResourceRequest provides a default request
+// DefaultTestResourceRequest provides a default test resource request.
 var DefaultTestResourceRequest = ITTestResourceRequest{}
 
-// DefaultTestResourceRequirement provides a default requirement
+// DefaultTestResourceRequirement provides default test resource requirements.
 var DefaultTestResourceRequirement = ITTestResourceRequirement{
 	Name: "default",
 	Fs:   "./",

@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+setup.py
+testeranto.pitono.egg-info/PKG-INFO
+testeranto.pitono.egg-info/SOURCES.txt
+testeranto.pitono.egg-info/dependency_links.txt
+testeranto.pitono.egg-info/entry_points.txt
+testeranto.pitono.egg-info/requires.txt
+testeranto.pitono.egg-info/top_level.txt
