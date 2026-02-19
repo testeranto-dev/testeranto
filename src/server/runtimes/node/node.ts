@@ -1,11 +1,9 @@
-
 import esbuild from "esbuild";
-
+import type { ITestconfigV2 } from "../../../Types";
 import {
   processMetafile
 } from "../common";
 import nodeConfiger from "./esbuild";
-import { ITestconfigV2 } from "../../types";
 
 console.log(`[NODE BUILDER] hello:  ${process.argv}`);
 

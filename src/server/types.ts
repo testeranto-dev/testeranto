@@ -1,4 +1,4 @@
-import { IBaseTestConfig, IRunTime } from "../Types";
+import type { IBaseTestConfig, IRunTime } from "../Types";
 
 export type IDockerSteps = "RUN" | "WORKDIR" | "COPY";
 

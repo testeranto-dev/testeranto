@@ -271,7 +271,7 @@ module Rubeno
       }
       
       # Create directory if it doesn't exist
-      dir_path = 'testeranto/reports/allTests/example'
+      dir_path = 'testeranto/reports/'
       FileUtils.mkdir_p(dir_path) unless Dir.exist?(dir_path)
       
       # Write to file

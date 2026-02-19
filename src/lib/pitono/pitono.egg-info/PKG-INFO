@@ -1,8 +1,8 @@
 Metadata-Version: 2.4
 Name: pitono
-Version: 0.1.0
+Version: 0.1.1
 Summary: Python implementation of Testeranto
-Author: Testeranto Team
+Author: Adam Wong
 Author-email: 
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Developers
@@ -14,6 +14,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
+Requires-Dist: websockets>=12.0
 Dynamic: requires-python
 
 # Pitono

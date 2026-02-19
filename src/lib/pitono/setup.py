@@ -10,7 +10,7 @@ if os.path.exists(readme_path):
 
 setup(
     name="pitono",
-    version="0.1.0",
+    version="0.1.1",
     packages=find_packages(where='.'),
     package_dir={'': '.'},
     entry_points={

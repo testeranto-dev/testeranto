@@ -1,4 +1,4 @@
-from .types import ITestAdapter, ITTestResourceConfiguration
+from .pitono_types import ITestAdapter, ITTestResourceConfiguration
 
 class SimpleTestAdapter(ITestAdapter):
     def before_all(self, input_val, tr, pm):

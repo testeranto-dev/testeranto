@@ -1,8 +1,6 @@
-import esbuild from "esbuild";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
-import { IBuiltConfig } from "../../Types";
 
 export interface BuildOptions {
   config: IBuiltConfig;
@@ -47,7 +45,7 @@ export async function sendSourceFilesUpdated(
 // Extract input files from metafile recursively
 export function extractInputFilesFromMetafile(metafile: any): string[] {
   const files: Set<string> = new Set();
-  
+
   if (!metafile || !metafile.inputs) {
     return Array.from(files);
   }
@@ -57,16 +55,16 @@ export function extractInputFilesFromMetafile(metafile: any): string[] {
     if (files.has(filePath)) {
       return;
     }
-    
+
     // Add the current file
     files.add(filePath);
-    
+
     // Get file info from metafile
     const fileInfo = metafile.inputs[filePath];
     if (!fileInfo) {
       return;
     }
-    
+
     // Recursively process each import
     if (fileInfo.imports) {
       for (const importInfo of fileInfo.imports) {
@@ -86,7 +84,7 @@ export function extractInputFilesFromMetafile(metafile: any): string[] {
   }
 
   // Convert to absolute paths
-  return Array.from(files).map(filePath => 
+  return Array.from(files).map(filePath =>
     path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath)
   );
 }
@@ -122,7 +120,7 @@ export async function processMetafile(
 
     // Get input files for this specific output
     const outputInputs = outputInfoTyped.inputs || {};
-    
+
     // Function to recursively collect dependencies for a file
     const collectedFiles = new Set<string>();
     function collectFileDependencies(filePath: string) {
@@ -130,7 +128,7 @@ export async function processMetafile(
         return;
       }
       collectedFiles.add(filePath);
-      
+
       const fileInfo = metafile.inputs?.[filePath];
       if (fileInfo?.imports) {
         for (const importInfo of fileInfo.imports) {
@@ -141,17 +139,17 @@ export async function processMetafile(
         }
       }
     }
-    
+
     // Start from all files listed in this output's inputs
     for (const inputFile of Object.keys(outputInputs)) {
       collectFileDependencies(inputFile);
     }
-    
+
     // Convert to absolute paths
-    const allInputFiles = Array.from(collectedFiles).map(filePath => 
+    const allInputFiles = Array.from(collectedFiles).map(filePath =>
       path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath)
     );
-    
+
     // Convert to relative paths from workspace root
     const workspaceRoot = '/workspace';
     const relativeFiles = allInputFiles.map(file => {
@@ -163,11 +161,11 @@ export async function processMetafile(
       // If not under workspace, use relative path from current directory
       return path.relative(process.cwd(), absolutePath);
     }).filter(Boolean);
-    
+
     // Write to file
     const outputBaseName = entryPoint.split('.').slice(0, -1).join('.');
     const inputFilesPath = `testeranto/bundles/allTests/${runtime}/${outputBaseName}.mjs-inputFiles.json`;
-    
+
     fs.writeFileSync(inputFilesPath, JSON.stringify(relativeFiles, null, 2));
     console.log(`[${runtime} Builder] Wrote ${relativeFiles.length} input files to ${inputFilesPath}`);
   }

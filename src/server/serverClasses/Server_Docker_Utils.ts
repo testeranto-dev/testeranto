@@ -1,6 +1,45 @@
 // Utility functions and constants for Server_Docker
 // This file contains repetitive code, constants, and boilerplate extracted from Server_Docker.ts
 
+import type { IRunTime, ITestconfigV2 } from "../../Types";
+import { golangDockerComposeFile, golangBuildCommand, golangBddCommand } from "../runtimes/golang/docker";
+import { javaDockerComposeFile, javaBuildCommand, javaBddCommand } from "../runtimes/java/docker";
+import { nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand } from "../runtimes/node/docker";
+import { pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand } from "../runtimes/python/docker";
+import { rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand } from "../runtimes/ruby/docker";
+import { rustDockerComposeFile, rustBuildCommand, rustBddCommand } from "../runtimes/rust/docker";
+import { webDockerComposeFile, webBuildCommand, webBddCommand } from "../runtimes/web/docker";
+
+export type IService = any;
+
+export interface IDockerComposeResult {
+  exitCode: number;
+  out: string;
+  err: string;
+  data: any;
+}
+
+export const runTimeToCompose: Record<IRunTime, [
+  (
+    config: ITestconfigV2,
+    container_name: string,
+    projectConfigPath: string,
+    nodeConfigPath: string,
+    testName: string
+  ) => object,
+
+  (projectConfig: string, nodeConfigPath: string, testname: string, c: string) => string,
+  (fpath: string, nodeConfigPath: string, c: string) => string,
+]> = {
+  'node': [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
+  'web': [webDockerComposeFile, webBuildCommand, webBddCommand],
+  'python': [pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand],
+  'golang': [golangDockerComposeFile, golangBuildCommand, golangBddCommand],
+  'ruby': [rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand],
+  'rust': [rustDockerComposeFile, rustBuildCommand, rustBddCommand],
+  "java": [javaDockerComposeFile, javaBuildCommand, javaBddCommand]
+};
+
 // Container name generation utilities
 export const generateContainerName = (configKey: string, testName: string, suffix: string): string => {
   const cleanTestName = testName.toLowerCase()
@@ -20,27 +59,27 @@ export const generateUid = (configKey: string, testName: string): string => {
 
 // Path construction utilities
 export const getReportDir = (runtime: string): string => {
-  return `testeranto/reports/allTests/example/${runtime}`;
+  return `testeranto/reports/${runtime}`;
 };
 
 export const getFullReportDir = (cwd: string, runtime: string): string => {
-  return `${cwd}/testeranto/reports/allTests/example/${runtime}`;
+  return `${cwd}/testeranto/reports/${runtime}`;
 };
 
 export const getLogFilePath = (cwd: string, runtime: string, serviceName: string): string => {
-  return `${cwd}/testeranto/reports/allTests/example/${runtime}/${serviceName}.log`;
+  return `${cwd}/testeranto/reports/${runtime}/${serviceName}.log`;
 };
 
 export const getExitCodeFilePath = (cwd: string, runtime: string, serviceName: string): string => {
-  return `${cwd}/testeranto/reports/allTests/example/${runtime}/${serviceName}.exitcode`;
+  return `${cwd}/testeranto/reports/${runtime}/${serviceName}.exitcode`;
 };
 
 export const getContainerExitCodeFilePath = (cwd: string, runtime: string, serviceName: string): string => {
-  return `${cwd}/testeranto/reports/allTests/example/${runtime}/${serviceName}.container.exitcode`;
+  return `${cwd}/testeranto/reports/${runtime}/${serviceName}.container.exitcode`;
 };
 
 export const getStatusFilePath = (cwd: string, runtime: string, serviceName: string): string => {
-  return `${cwd}/testeranto/reports/allTests/example/${runtime}/${serviceName}.container.status`;
+  return `${cwd}/testeranto/reports/${runtime}/${serviceName}.container.status`;
 };
 
 // Docker command templates
@@ -94,10 +133,10 @@ export const getCheckServiceName = (uid: string, index: number): string => {
 
 // File path patterns
 export const INPUT_FILE_PATTERNS: Record<string, (testName: string) => string> = {
-  'node': (testName: string) => 
-    `testeranto/bundles/allTests/node/${testName.split('.').slice(0, -1).concat('mjs').join('.')}-inputFiles.json`,
-  'ruby': () => 
-    `testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json`
+  'node': (testName: string) =>
+    `testeranto/bundles/node/${testName.split('.').slice(0, -1).concat('mjs').join('.')}-inputFiles.json`,
+  'ruby': () =>
+    `testeranto/bundles/ruby/Calculator.test.rb-inputFiles.json`
 };
 
 export const getInputFilePath = (runtime: string, testName: string): string => {
@@ -111,7 +150,7 @@ export const getInputFilePath = (runtime: string, testName: string): string => {
 // Common volume mounts
 export const COMMON_VOLUMES = [
   `${process.cwd()}/src:/workspace/src`,
-  `${process.cwd()}/example:/workspace/example`,
+
   `${process.cwd()}/dist:/workspace/dist`,
   `${process.cwd()}/testeranto:/workspace/testeranto`,
 ];
@@ -179,7 +218,7 @@ export const executeDockerComposeCommand = async (
       const { exec } = require('child_process');
       const { promisify } = require('util');
       const execAsync = promisify(exec);
-      
+
       const { stdout, stderr } = await execAsync(command, execOptions);
       return {
         exitCode: 0,

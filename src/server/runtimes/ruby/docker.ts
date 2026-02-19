@@ -3,6 +3,7 @@ import { join } from "node:path";
 import type { ITestconfigV2 } from "../../../Types";
 
 import rubyContent from "./ruby.rb" with { type: "text" };
+import { dockerComposeFile } from "../dockerComposeFile";
 
 // Write the Ruby script to a location that will be mounted in the container
 const rubyScriptPath = join(process.cwd(), "testeranto", "extracted_script.rb");
@@ -13,36 +14,25 @@ export const rubyDockerComposeFile = (
   config: ITestconfigV2,
   container_name: string,
   projectConfigPath: string,
-  rubyConfigPath: string,
+  nodeConfigPath: string,
   testName: string
 ) => {
-  return {
-    build: {
-      context: process.cwd(),
-      dockerfile: config[container_name].dockerfile,
-    },
+  return dockerComposeFile(
+    config,
     container_name,
-    environment: {
-      NODE_ENV: "production",
-      ...config.env,
-    },
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/testeranto:/workspace/testeranto`,
-      // No need to mount the temp file separately since it's already in testeranto
-    ],
-    command: rubyBuildCommand(projectConfigPath, rubyConfigPath, testName),
-  }
+    projectConfigPath,
+    nodeConfigPath,
+    testName,
+    rubyBuildCommand
+  )
 };
 
 export const rubyBuildCommand = (projectConfigPath: string, rubyConfigPath: string, testName: string) => {
-  // The Ruby script is now at /workspace/testeranto/extracted_script.rb
-  return `ruby /workspace/testeranto/extracted_script.rb /workspace/${rubyConfigPath}`
+  return `ruby /workspace/testeranto/extracted_script.rb /workspace/${projectConfigPath} /workspace/${rubyConfigPath} ${testName}`
 }
 
-export const rubyBddCommand = (fpath: string) => {
+export const rubyBddCommand = (fpath: string, nodeConfigPath: string, configKey: string) => {
   const jsonStr = JSON.stringify({ ports: [1111] });
-  return `ruby testeranto/bundles/allTests/ruby/example/Calculator.test.rb '${jsonStr}'`;
+  return `ruby testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 }
 

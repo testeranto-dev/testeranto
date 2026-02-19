@@ -1,15 +1,12 @@
-import { BuildOptions } from "esbuild";
+
+import type { BuildOptions } from "esbuild";
 import featuresPlugin from "../../../esbuildConfigs/featuresPlugin.js";
 import baseEsBuildConfig from "../../../esbuildConfigs/index.js";
 import inputFilesPlugin from "../../../esbuildConfigs/inputFilesPlugin.js";
 import rebuildPlugin from "../../../esbuildConfigs/rebuildPlugin.js";
-import { ITestconfig } from "../../../Types.js";
+import type { ITestconfigV2 } from "../../../Types.js";
 
-const absoluteBundlesDir = (c: ITestconfig): string => {
-  return "./testeranto/bundles/allTests/web/";
-};
-
-export default (config: ITestconfig, testName: string): BuildOptions => {
+export default (config: ITestconfigV2, testName: string): BuildOptions => {
   // Use the same entry points as node tests for consistency
   const entrypoints = ["./example/Calculator.test.ts"];
 
@@ -20,7 +17,7 @@ export default (config: ITestconfig, testName: string): BuildOptions => {
 
   return {
     ...baseEsBuildConfig(config),
-    outdir: absoluteBundlesDir(config),
+    outdir: `testeranto/bundles/${testName}`,
     outbase: ".",
     metafile: true,
     supported: {

@@ -1,14 +1,6 @@
 import BaseTiposkripto from "./BaseTiposkripto.js";
 import { defaultTestResourceRequirement } from "./types.js";
-const config = {
-    name: 'web',
-    fs: 'testeranto/reports/allTests/example/Calculator.test/web',
-    ports: [1111],
-    files: [],
-    timeout: 30000,
-    retries: 3,
-    environment: {}
-};
+const config = process.argv0[2];
 export class WebTiposkripto extends BaseTiposkripto {
     constructor(input, testSpecification, testImplementation, testResourceRequirement, testAdapter) {
         const urlParams = new URLSearchParams(window.location.search);

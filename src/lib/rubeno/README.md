@@ -71,7 +71,7 @@ ruby example/Calculator-test.rb '{"name":"test","fs":".","ports":[]}'
 Rubeno follows the same patterns as other Testeranto implementations:
 
 1. **Test Resource Configuration**: Passed as a JSON string argument
-2. **Results Output**: Writes to `testeranto/reports/allTests/example/ruby.Calculator.test.ts.json`
+2. **Results Output**: Writes to `testeranto/reports/example/ruby.Calculator.test.ts.json`
 3. **WebSocket Communication**: Supports communication via WebSocket (when configured)
 4. **Artifact Generation**: Supports test artifacts and reporting
 

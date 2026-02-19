@@ -89,6 +89,7 @@ export default class BaseTiposkripto {
                         timeout: 30000,
                         retries: 3,
                         environment: {},
+                        files: []
                     });
                     return x;
                 }
@@ -136,10 +137,7 @@ export default class BaseTiposkripto {
             return testJob;
         });
         this.testJobs[0].receiveTestResourceConfig(testResourceConfiguration).then((results) => {
-            // The actual path is determined by the concrete implementation (Node.ts or Web.ts)
-            // They will write to the correct pattern: testeranto/reports/allTests/example/${runtime}.Calculator.test.ts.json
-            // We just pass a placeholder filename webOrNode
-            this.writeFileSync(`testeranto/reports/allTests/example/${webOrNode}/Calculator.test.ts.json`, JSON.stringify(results));
+            this.writeFileSync(`testeranto/reports/${this.testResourceConfiguration.fs}`, JSON.stringify(results));
         });
     }
     async receiveTestResourceConfig(testResourceConfig) {

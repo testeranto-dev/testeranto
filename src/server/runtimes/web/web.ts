@@ -1,7 +1,6 @@
 
 import esbuild from "esbuild";
 import puppeteer from "puppeteer";
-import { IBuiltConfig } from "../../../Types";
 import configer from "./esbuild";
 import { processMetafile } from "../common";
 import * as fs from "fs";

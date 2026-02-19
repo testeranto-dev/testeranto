@@ -8,7 +8,7 @@ from .base_suite import BaseSuite
 from .base_given import BaseGiven
 from .base_when import BaseWhen
 from .base_then import BaseThen
-from .types import (
+from .pitono_types import (
     ITestSpecification, 
     ITestImplementation, 
     ITestAdapter, 

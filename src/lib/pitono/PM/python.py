@@ -2,7 +2,7 @@ import json
 import random
 import asyncio
 from typing import Any, List, Dict, Optional
-from ..types import ITTestResourceConfiguration
+from ..pitono_types import ITTestResourceConfiguration
 
 class PM_Python:
     def __init__(self, t: ITTestResourceConfiguration, websocket_port: str):

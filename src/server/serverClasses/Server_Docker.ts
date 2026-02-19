@@ -1,18 +1,10 @@
 import ansiColors from "ansi-colors";
-import { exec, execSync, spawn } from "child_process";
+import { execSync, spawn } from "child_process";
 import fs from "fs";
 import yaml from "js-yaml";
 import path from "path";
-import { promisify } from "util";
 import { RUN_TIMES } from "../../runtimes";
 import type { ICheck, IChecks, IRunTime, ITestconfigV2 } from "../../Types";
-import { golangBddCommand, golangBuildCommand, golangDockerComposeFile } from "../runtimes/golang/docker";
-import { javaBddCommand, javaBuildCommand, javaDockerComposeFile } from "../runtimes/java/docker";
-import { nodeBddCommand, nodeBuildCommand, nodeDockerComposeFile } from "../runtimes/node/docker";
-import { pythonBddCommand, pythonBuildCommand, pythonDockerComposeFile } from "../runtimes/python/docker";
-import { rubyBddCommand, rubyBuildCommand, rubyDockerComposeFile } from "../runtimes/ruby/docker";
-import { rustBddCommand, rustBuildCommand, rustDockerComposeFile } from "../runtimes/rust/docker";
-import { webBddCommand, webBuildCommand, webDockerComposeFile } from "../runtimes/web/docker";
 import type { IMode } from "../types";
 import {
   cleanTestName,
@@ -36,17 +28,9 @@ import {
   getRuntimeLabel,
   getStatusFilePath,
   isContainerActive,
+  runTimeToCompose,
 } from "./Server_Docker_Utils";
 import { Server_WS } from "./Server_WS";
-
-export type IService = any;
-
-export interface IDockerComposeResult {
-  exitCode: number;
-  out: string;
-  err: string;
-  data: any;
-}
 
 export class Server_Docker extends Server_WS {
   private logProcesses: Map<string, { process: any; serviceName: string }> = new Map();
@@ -120,7 +104,6 @@ export class Server_Docker extends Server_WS {
       working_dir: "/workspace",
       volumes: [
         `${process.cwd()}/src:/workspace/src`,
-        `${process.cwd()}/example:/workspace/example`,
         `${process.cwd()}/dist:/workspace/dist`,
         `${process.cwd()}/testeranto:/workspace/testeranto`,
       ],
@@ -176,26 +159,7 @@ export class Server_Docker extends Server_WS {
     //   networks: ["allTests_network"],
     // };
 
-    const runTimeToCompose: Record<IRunTime, [
-      (
-        config: ITestconfigV2,
-        container_name: string,
-        projectConfigPath: string,
-        nodeConfigPath: string,
-        testName: string
-      ) => object,
 
-      (projectConfig: string, nodeConfigPath: string, testname: string) => string,
-      (fpath: string, nodeConfigPath: string) => string,
-    ]> = {
-      'node': [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
-      'web': [webDockerComposeFile, webBuildCommand, webBddCommand],
-      'python': [pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand],
-      'golang': [golangDockerComposeFile, golangBuildCommand, golangBddCommand],
-      'ruby': [rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand],
-      'rust': [rustDockerComposeFile, rustBuildCommand, rustBddCommand],
-      "java": [javaDockerComposeFile, javaBuildCommand, javaBddCommand]
-    };
 
     // Track which runtimes we've already added builder services for
     const processedRuntimes = new Set<IRunTime>();
@@ -228,7 +192,9 @@ export class Server_Docker extends Server_WS {
         const buildCommand = runTimeToCompose[runtime][1](
           buildOptions,
           buildOptions,
+          runtimeTestsName,
           runtimeTestsName
+
         );
 
         console.log(`[Server_Docker] [generateServices] ${runtime} build command: "${buildCommand}"`);
@@ -243,7 +209,6 @@ export class Server_Docker extends Server_WS {
           working_dir: "/workspace",
           volumes: [
             `${process.cwd()}/src:/workspace/src`,
-            `${process.cwd()}/example:/workspace/example`,
             `${process.cwd()}/dist:/workspace/dist`,
             `${process.cwd()}/testeranto:/workspace/testeranto`,
           ],
@@ -265,7 +230,7 @@ export class Server_Docker extends Server_WS {
         // Add BDD service for this test
         const bddCommandFunc = runTimeToCompose[runtime][2];
         const filePath = `testeranto/bundles/allTests/${runtime}/${tName}`;
-        const bddCommand = bddCommandFunc(filePath, buildOptions);
+        const bddCommand = bddCommandFunc(filePath, buildOptions, runtimeTestsName);
 
         console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} BDD command: "${bddCommand}"`);
 
@@ -473,7 +438,7 @@ export class Server_Docker extends Server_WS {
   // when the input file changes, launch the tests
   async watchInputFile(runtime: IRunTime, testsName: string) {
     // Find the config key for this runtime and test
-    let configKey: string | null = null;
+    let configKey: string = "";
     for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
       if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
         configKey = key;
@@ -488,7 +453,7 @@ export class Server_Docker extends Server_WS {
       throw `not yet implemented: ${error.message}`;
     }
 
-
+    // if (!configKey) throw 'idk'
 
     console.log(`[Server_Docker] Setting up file watcher for: ${inputFilePath} (configKey: ${configKey})`);
     // Initialize the structure if needed
@@ -719,7 +684,6 @@ export class Server_Docker extends Server_WS {
       // Setup directories that are referenced in volume mounts
       const requiredDirs = [
         path.join(process.cwd(), "src"),
-        path.join(process.cwd(), "example"),
         path.join(process.cwd(), "dist"),
         path.join(process.cwd(), "testeranto"),
         composeDir
@@ -1133,11 +1097,7 @@ export class Server_Docker extends Server_WS {
     }
   }
 
-  autogenerateStamp(x: string) {
-    return `# This file is autogenerated. Do not edit it directly
-${x}
-    `
-  }
+
 
   private async startServiceLogging(serviceName: string, runtime: string): Promise<void> {
     // Create report directory
@@ -1278,11 +1238,6 @@ ${x}
     }
   }
 
-  private async exec(cmd: string, options: { cwd: string }): Promise<{ stdout: string; stderr: string }> {
-    const execAsync = promisify(exec);
-    return execAsync(cmd, { cwd: options.cwd });
-  }
-
   spawnPromise(command: string) {
     console.log(`[spawnPromise] Executing: ${command}`);
 
@@ -1407,9 +1362,20 @@ ${x}
     return result;
   }
 
+  autogenerateStamp(x: string) {
+    return `# This file is autogenerated. Do not edit it directly
+${x}
+    `
+  }
+
   public getLogsCommand(serviceName?: string, tail: number = 100): string {
     const base = `${DOCKER_COMPOSE_LOGS} --tail=${tail}`;
     return serviceName ? `${base} ${serviceName}` : base;
   }
+
+  // private async exec(cmd: string, options: { cwd: string }): Promise<{ stdout: string; stderr: string }> {
+  //   const execAsync = promisify(exec);
+  //   return execAsync(cmd, { cwd: options.cwd });
+  // }
 
 }

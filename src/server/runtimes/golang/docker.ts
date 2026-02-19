@@ -1,43 +1,21 @@
-import { ITestconfigV2 } from "../../../Types";
+import type { ITestconfigV2 } from "../../../Types";
+import { dockerComposeFile } from "../dockerComposeFile";
 
-export const golangDockerComposeFile = (config: ITestconfigV2, container_name: string): object => {
-
-  return {
-    build: {
-      context: process.cwd(),
-      dockerfile: config[container_name].dockerfile,
-    },
+export const golangDockerComposeFile = (
+  config: ITestconfigV2,
+  container_name: string,
+  projectConfigPath: string,
+  nodeConfigPath: string,
+  testName: string
+) => {
+  return dockerComposeFile(
+    config,
     container_name,
-    environment: {
-      // NODE_ENV: "production",
-      // ...config.env,
-    },
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/example:/workspace/example`,
-      `${process.cwd()}/dist:/workspace/dist`,
-      // `${process.cwd()}/testeranto:/workspace/testeranto`,
-    ],
-    command: golangBuildCommand(),
-  }
-
-  // return {
-  //   build: {
-  //     context: process.cwd(), // Use the project root as build context
-  //     dockerfile: config.golang.dockerfile,
-  //   },
-  //   container_name: `golang-builder-${projectName}`,
-  //   environment: {
-  //     ...config.env,
-  //   },
-  //   working_dir: "/workspace",
-  //   volumes: [
-  //     `${process.cwd()}:/workspace`,
-  //   ],
-  //   command: golangBuildCommand(),
-  // }
-
+    projectConfigPath,
+    nodeConfigPath,
+    testName,
+    golangBuildCommand
+  )
 };
 
 export const golangBuildCommand = () => {
@@ -51,12 +29,12 @@ export const golangBddCommand = () => {
   return `go run example/cmd/calculator-test`
 }
 
-export const golangTestCommand = (config: IBuiltConfig, inputfiles: string[]) => {
-  return `
-${config.golang.checks?.map((c) => {
-    return c(inputfiles);
-  }).join('\n') || ''}
+// export const golangTestCommand = (config: IBuiltConfig, inputfiles: string[]) => {
+//   return `
+// ${config.golang.checks?.map((c) => {
+//     return c(inputfiles);
+//   }).join('\n') || ''}
 
-    ${golangBddCommand()}
-  `;
-}
+//     ${golangBddCommand()}
+//   `;
+// }

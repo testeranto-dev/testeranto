@@ -13,6 +13,7 @@ import { Server_Base } from "./Server_Base";
 import { Server_WS } from "./Server_WS";
 import type { ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
+import type { WebSocketServer } from "ws";
 
 export abstract class Server_HTTP extends Server_Base {
   http: HttpManager;
@@ -157,20 +158,18 @@ export abstract class Server_HTTP extends Server_Base {
         process.cwd(),
         'testeranto',
         'reports',
-        'allTests',
-        'example',
         runtime
       );
 
       if (fs.existsSync(outputDir)) {
         const files = fs.readdirSync(outputDir);
         // Filter files that belong to this test
-        const testFiles = files.filter(file => 
+        const testFiles = files.filter((file: string) =>
           file.includes(testName.replace('/', '_').replace('.', '-'))
         );
         // Make paths relative to project root
         const projectRoot = process.cwd();
-        const relativePaths = testFiles.map(file => {
+        const relativePaths = testFiles.map((file: string) => {
           const absolutePath = path.join(outputDir, file);
           let relativePath = path.relative(projectRoot, absolutePath);
           // Normalize to forward slashes for consistency
@@ -254,54 +253,8 @@ export abstract class Server_HTTP extends Server_Base {
         }
       });
     } else {
-      console.log(`[HTTP] getInputFiles does not exist on this instance`);
-      // Try to read from file system as fallback
-      const fs = require('fs');
-      const path = require('path');
-      const inputFilePath = path.join(
-        process.cwd(),
-        'testeranto',
-        'bundles',
-        'allTests',
-        runtime,
-        `${testName}-inputFiles.json`
-      );
+      throw (`[HTTP] getInputFiles does not exist on this instance`);
 
-      if (fs.existsSync(inputFilePath)) {
-        const fileContent = fs.readFileSync(inputFilePath, 'utf-8');
-        const inputFiles = JSON.parse(fileContent);
-
-        const responseData = {
-          runtime,
-          testName,
-          inputFiles: inputFiles || [],
-          timestamp: new Date().toISOString(),
-          message: 'Success (from file)'
-        };
-
-        return new Response(JSON.stringify(responseData, null, 2), {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          }
-        });
-      } else {
-        return new Response(JSON.stringify({
-          error: 'getInputFiles method not available and file not found',
-          runtime,
-          testName,
-          inputFiles: [],
-          timestamp: new Date().toISOString(),
-          message: 'No input files found'
-        }), {
-          status: 404,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          }
-        });
-      }
     }
   }
 
@@ -498,7 +451,7 @@ export abstract class Server_HTTP extends Server_Base {
       if (this instanceof Server_WS) {
         console.log(`[Server_HTTP] Adding WebSocket configuration`);
         serverOptions.websocket = {
-          open: (ws) => {
+          open: (ws: WebSocket) => {
             console.log(`[WebSocket] New connection`);
             (this as Server_WS).wsClients.add(ws);
 
@@ -513,7 +466,7 @@ export abstract class Server_HTTP extends Server_Base {
             // The client will make an HTTP request when needed
             console.log("[WebSocket] Connection established, waiting for resource change notifications");
           },
-          message: (ws, message) => {
+          message: (ws: WebSocket, message: object) => {
             try {
               const data = typeof message === "string" ?
                 JSON.parse(message) :
@@ -534,11 +487,11 @@ export abstract class Server_HTTP extends Server_Base {
               }
             }
           },
-          close: (ws) => {
+          close: (ws: WebSocket) => {
             console.log("[WebSocket] Client disconnected");
             (this as Server_WS).wsClients.delete(ws);
           },
-          error: (ws, error) => {
+          error: (ws: WebSocket, error: Error) => {
             console.error("[WebSocket] Error:", error);
             (this as Server_WS).wsClients.delete(ws);
           },

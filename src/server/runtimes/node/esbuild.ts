@@ -1,14 +1,10 @@
-import { BuildOptions } from "esbuild";
+
+import type { BuildOptions } from "esbuild";
 import featuresPlugin from "../../../esbuildConfigs/featuresPlugin.js";
 import baseEsBuildConfig from "../../../esbuildConfigs/index.js";
 import inputFilesPlugin from "../../../esbuildConfigs/inputFilesPlugin.js";
 import rebuildPlugin from "../../../esbuildConfigs/rebuildPlugin.js";
-import { ITestconfigV2 } from "../../types.js";
-
-
-const absoluteBundlesDir = (): string => {
-  return "./testeranto/bundles/allTests/node/";
-};
+import type { ITestconfigV2 } from "../../../Types.js";
 
 export default (
   nodeConfig: object,
@@ -19,17 +15,6 @@ export default (
   console.log("esbuild", testName, projectConfig)
 
   const entryPoints = projectConfig.runtimes[testName].tests;
-  // Get entry points from config, or use a default
-  // let entrypoints: string[] = [];
-  // if (nodeConfig) {
-  //   entrypoints = (projectConfig.tests);
-  // } else {
-  //   // console.log(projectConfig)
-  //   throw "projectConfig.node.tests should exist"
-  //   // Fallback to a reasonable default
-  //   // entrypoints = ["./example/Calculator.test.ts"];
-  //   // console.warn(`No node.tests found in config, using default entry point: ${entrypoints[0]}`);
-  // }
 
   const { inputFilesPluginFactory, register } = inputFilesPlugin(
     "node",
@@ -39,7 +24,8 @@ export default (
   return {
     ...baseEsBuildConfig(nodeConfig),
 
-    outdir: absoluteBundlesDir(),
+    // outdir: absoluteBundlesDir(),
+    outdir: `testeranto/bundles/${testName}`,
     outbase: ".", // Preserve directory structure relative to outdir
     metafile: true,
     supported: {

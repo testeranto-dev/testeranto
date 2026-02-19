@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict, List, Optional
 import json
 import asyncio
-from .types import ITestSpecification, ITestImplementation, ITestAdapter, ITTestResourceRequest
+from .pitono_types import ITestSpecification, ITestImplementation, ITestAdapter, ITTestResourceRequest
 from .simple_adapter import SimpleTestAdapter
 from .base_suite import BaseSuite
 from .base_given import BaseGiven

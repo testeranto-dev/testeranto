@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.224.6",
+  "version": "0.225.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -124,7 +124,8 @@
     "compile:server": "bun compile ./src/index.ts --outfile testeranto-app",
     "prepublishOnly:server": "bun run build",
     "link:server": "bun run build:server && bun link",
-    "bundle": "node bundle.js"
+    "bundle": "node bundle.js",
+    "publish:ruby": "cd src/lib/rubeno/ && gem build rubeno.gemspec"
   },
   "keywords": [
     "testeranto",
