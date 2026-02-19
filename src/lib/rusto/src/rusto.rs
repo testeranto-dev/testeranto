@@ -1,8 +1,10 @@
 use crate::types::{
     IbddInAny, IbddOutAny, ITestSpecification, ITestImplementation, 
-    ITestAdapter, ITTestResourceRequest, ITTestResourceConfiguration, IFinalResults
+    ITestAdapter, ITTestResourceRequest, ITTestResourceConfiguration, IFinalResults,
+    SuiteFn, GivenFn, WhenFn, ThenFn
 };
 use std::collections::HashMap;
+use std::marker::PhantomData;
 use serde_json;
 use std::fs;
 use std::path::Path;
@@ -11,24 +13,26 @@ pub struct Rusto<I: IbddInAny, O: IbddOutAny, M> {
     test_resource_requirement: ITTestResourceRequest,
     artifacts: Vec<Box<dyn std::any::Any>>,
     test_jobs: Vec<Box<dyn std::any::Any>>,
-    test_specification: Box<ITestSpecification<I, O>>,
-    suites_overrides: HashMap<String, Box<dyn Fn(String, HashMap<String, Box<dyn std::any::Any>>) -> Box<dyn std::any::Any>>>,
-    given_overrides: HashMap<String, Box<dyn Fn(Vec<String>, Vec<Box<dyn std::any::Any>>, Vec<Box<dyn std::any::Any>>, Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>>,
-    when_overrides: HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>>,
-    then_overrides: HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>>,
+    test_specification: Box<dyn ITestSpecification<I, O>>,
+    suites_overrides: HashMap<String, SuiteFn>,
+    given_overrides: HashMap<String, GivenFn>,
+    when_overrides: HashMap<String, WhenFn>,
+    then_overrides: HashMap<String, ThenFn>,
     puppet_master: Option<Box<dyn std::any::Any>>,
     specs: Vec<Box<dyn std::any::Any>>,
     total_tests: i32,
     assert_this: Box<dyn Fn(I::Then) -> bool>,
     test_adapter: Box<dyn ITestAdapter<I>>,
     test_subject: I::Iinput,
+    _phantom_o: PhantomData<O>,
+    _phantom_m: PhantomData<M>,
 }
 
 impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M> {
     pub fn new(
-        input_val: I::Iinput,
-        test_specification: Box<ITestSpecification<I, O>>,
-        test_implementation: ITestImplementation<I, O, M>,
+        input_val: <I as IbddInAny>::Iinput,
+        test_specification: Box<dyn ITestSpecification<I, O>>,
+        _test_implementation: ITestImplementation<I, O, M>,
         test_resource_requirement: ITTestResourceRequest,
         test_adapter: Box<dyn ITestAdapter<I>>,
     ) -> Self {
@@ -56,6 +60,8 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
             assert_this: Box::new(|_| true),
             test_adapter,
             test_subject: input_val,
+            _phantom_o: PhantomData,
+            _phantom_m: PhantomData,
         }
     }
     
@@ -65,13 +71,13 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
         _websocket_port: &str,
     ) -> Result<IFinalResults, Box<dyn std::error::Error>> {
         // Parse test resource configuration
-        let test_resource_config: ITTestResourceConfiguration = 
+        let _test_resource_config: ITTestResourceConfiguration = 
             serde_json::from_str(partial_test_resource)?;
         
         // Run tests (simplified)
         let total_fails = 0;
         let all_features = Vec::new();
-        let all_artifacts: Vec<Box<dyn std::any::Any>> = Vec::new();
+        let all_artifacts: Vec<String> = Vec::new();
         
         // Write tests.json
         self.write_tests_json(total_fails, &all_features)?;
@@ -113,19 +119,19 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
     }
     
     // Helper methods for accessing overrides
-    pub fn suites(&self) -> &HashMap<String, Box<dyn Fn(String, HashMap<String, Box<dyn std::any::Any>>) -> Box<dyn std::any::Any>>> {
+    pub fn suites(&self) -> &HashMap<String, SuiteFn> {
         &self.suites_overrides
     }
     
-    pub fn given(&self) -> &HashMap<String, Box<dyn Fn(Vec<String>, Vec<Box<dyn std::any::Any>>, Vec<Box<dyn std::any::Any>>, Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>> {
+    pub fn given(&self) -> &HashMap<String, GivenFn> {
         &self.given_overrides
     }
     
-    pub fn when(&self) -> &HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>> {
+    pub fn when(&self) -> &HashMap<String, WhenFn> {
         &self.when_overrides
     }
     
-    pub fn then(&self) -> &HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>> {
+    pub fn then(&self) -> &HashMap<String, ThenFn> {
         &self.then_overrides
     }
 }

@@ -22,7 +22,7 @@ pub use rusto::Rusto;
 /// Main entry point for creating a Rusto instance
 pub fn rusto<I, O, M>(
     input: I::Iinput,
-    test_specification: impl ITestSpecification<I, O>,
+    test_specification: Box<dyn ITestSpecification<I, O>>,
     test_implementation: ITestImplementation<I, O, M>,
     test_adapter: Box<dyn ITestAdapter<I>>,
     test_resource_requirement: ITTestResourceRequest,
@@ -31,6 +31,11 @@ where
     I: IbddInAny + 'static,
     O: IbddOutAny + 'static,
     M: 'static,
+    I::Iinput: Send + 'static,
+    I::Isubject: Send + 'static,
+    I::Istore: Send + 'static,
+    I::Given: Send + 'static,
+    I::Then: Send + 'static,
 {
     Rusto::new(
         input,

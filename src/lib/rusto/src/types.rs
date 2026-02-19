@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::marker::PhantomData;
 use async_trait::async_trait;
 
 // Type variables for BDD input/output types
@@ -28,7 +29,14 @@ pub struct ITTestResourceConfiguration {
 
 // Test adapter interface
 #[async_trait]
-pub trait ITestAdapter<I: IbddInAny> {
+pub trait ITestAdapter<I: IbddInAny> 
+where
+    I::Iinput: Send + 'static,
+    I::Isubject: Send + 'static,
+    I::Istore: Send + 'static,
+    I::Given: Send + 'static,
+    I::Then: Send + 'static,
+{
     async fn before_all(
         &self,
         input_val: I::Iinput,
@@ -77,20 +85,36 @@ pub trait ITestAdapter<I: IbddInAny> {
     fn assert_this(&self, t: I::Then) -> bool;
 }
 
-// Test specification function type
-pub type ITestSpecification<I, O> = dyn Fn(
-    HashMap<String, Box<dyn Fn(String, HashMap<String, Box<dyn std::any::Any>>) -> Box<dyn std::any::Any>>>,
-    HashMap<String, Box<dyn Fn(Vec<String>, Vec<Box<dyn std::any::Any>>, Vec<Box<dyn std::any::Any>>, Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>>,
-    HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>>,
-    HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn std::any::Any>>>,
-) -> Vec<Box<dyn std::any::Any>>;
+// Type aliases to simplify complex types
+pub type SuiteFn = Box<dyn Fn(String, HashMap<String, Box<dyn std::any::Any>>) -> Box<dyn std::any::Any> + Send + Sync>;
+pub type GivenFn = Box<dyn Fn(Vec<String>, Vec<Box<dyn std::any::Any>>, Vec<Box<dyn std::any::Any>>, Box<dyn std::any::Any>) -> Box<dyn std::any::Any> + Send + Sync>;
+pub type WhenFn = Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn std::any::Any> + Send + Sync>;
+pub type ThenFn = Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn std::any::Any> + Send + Sync>;
+
+// Test specification function type - define as a trait
+pub trait ITestSpecification<I: IbddInAny, O: IbddOutAny> {
+    fn call(
+        &self,
+        suites: HashMap<String, SuiteFn>,
+        givens: HashMap<String, GivenFn>,
+        whens: HashMap<String, WhenFn>,
+        thens: HashMap<String, ThenFn>,
+    ) -> Vec<Box<dyn std::any::Any>>;
+}
+
+// Type aliases for implementation functions
+pub type GivenImplFn<I> = Box<dyn Fn(Box<dyn std::any::Any>) -> <I as IbddInAny>::Given + Send + Sync>;
+pub type WhenImplFn<I> = Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn Fn(<I as IbddInAny>::Iselection) -> <I as IbddInAny>::Then + Send + Sync> + Send + Sync>;
+pub type ThenImplFn<I> = Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn Fn(<I as IbddInAny>::Iselection) -> <I as IbddInAny>::Then + Send + Sync> + Send + Sync>;
 
 // Test implementation structure
 pub struct ITestImplementation<I: IbddInAny, O: IbddOutAny, M> {
     pub suites: HashMap<String, M>,
-    pub givens: HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> I::Given>>,
-    pub whens: HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn Fn(I::Iselection) -> I::Then>>>,
-    pub thens: HashMap<String, Box<dyn Fn(Box<dyn std::any::Any>) -> Box<dyn Fn(I::Iselection) -> I::Then>>>,
+    pub givens: HashMap<String, GivenImplFn<I>>,
+    pub whens: HashMap<String, WhenImplFn<I>>,
+    pub thens: HashMap<String, ThenImplFn<I>>,
+    pub _phantom_o: PhantomData<O>,
+    pub _phantom_m: PhantomData<M>,
 }
 
 // Test resource request
@@ -104,7 +128,7 @@ pub struct ITTestResourceRequest {
 pub struct IFinalResults {
     pub failed: bool,
     pub fails: i32,
-    pub artifacts: Vec<Box<dyn std::any::Any>>,
+    pub artifacts: Vec<String>,
     pub features: Vec<String>,
 }
 

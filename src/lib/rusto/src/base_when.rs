@@ -3,14 +3,14 @@ use std::collections::HashMap;
 
 pub struct BaseWhen<I: IbddInAny> {
     pub name: String,
-    pub when_cb: Box<dyn Fn(I::Iselection) -> I::Then>,
+    pub when_cb: Box<dyn Fn(<I as IbddInAny>::Iselection) -> <I as IbddInAny>::Then>,
     pub error: Option<String>,
     pub artifacts: Vec<String>,
     pub status: Option<bool>,
 }
 
 impl<I: IbddInAny> BaseWhen<I> {
-    pub fn new(name: String, when_cb: Box<dyn Fn(I::Iselection) -> I::Then>) -> Self {
+    pub fn new(name: String, when_cb: Box<dyn Fn(<I as IbddInAny>::Iselection) -> <I as IbddInAny>::Then>) -> Self {
         Self {
             name,
             when_cb,

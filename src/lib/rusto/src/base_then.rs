@@ -3,14 +3,14 @@ use std::collections::HashMap;
 
 pub struct BaseThen<I: IbddInAny> {
     pub name: String,
-    pub then_cb: Box<dyn Fn(I::Iselection) -> I::Then>,
+    pub then_cb: Box<dyn Fn(<I as IbddInAny>::Iselection) -> <I as IbddInAny>::Then>,
     pub error: bool,
     pub artifacts: Vec<String>,
     pub status: Option<bool>,
 }
 
 impl<I: IbddInAny> BaseThen<I> {
-    pub fn new(name: String, then_cb: Box<dyn Fn(I::Iselection) -> I::Then>) -> Self {
+    pub fn new(name: String, then_cb: Box<dyn Fn(<I as IbddInAny>::Iselection) -> <I as IbddInAny>::Then>) -> Self {
         Self {
             name,
             then_cb,
@@ -34,7 +34,7 @@ impl<I: IbddInAny> BaseThen<I> {
         obj
     }
     
-    pub async fn test(&mut self, store: I::Istore) -> Result<I::Then, String> {
+    pub async fn test(&mut self, _store: I::Istore) -> Result<I::Then, String> {
         // In a real implementation, this would execute the then callback
         // For now, return an error since we can't construct I::Then
         Err("Not implemented".to_string())

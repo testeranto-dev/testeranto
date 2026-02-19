@@ -1,10 +1,10 @@
-use crate::types::{IbddInAny, IbddOutAny, ITTestResourceConfiguration};
+use crate::types::{IbddInAny, ITTestResourceConfiguration};
 use std::collections::HashMap;
 
-pub struct BaseSuite<I: IbddInAny, O: IbddOutAny> {
+pub struct BaseSuite<I: IbddInAny> {
     pub name: String,
     pub givens: HashMap<String, Box<dyn std::any::Any>>,
-    pub store: Option<I::Istore>,
+    pub store: Option<<I as IbddInAny>::Istore>,
     pub test_resource_configuration: Option<ITTestResourceConfiguration>,
     pub index: usize,
     pub failed: bool,
@@ -12,7 +12,7 @@ pub struct BaseSuite<I: IbddInAny, O: IbddOutAny> {
     pub artifacts: Vec<String>,
 }
 
-impl<I: IbddInAny, O: IbddOutAny> BaseSuite<I, O> {
+impl<I: IbddInAny> BaseSuite<I> {
     pub fn new(name: String, givens: HashMap<String, Box<dyn std::any::Any>>) -> Self {
         Self {
             name,
@@ -32,14 +32,9 @@ impl<I: IbddInAny, O: IbddOutAny> BaseSuite<I, O> {
     }
     
     pub fn features(&self) -> Vec<String> {
-        let mut features = Vec::new();
-        let mut seen = std::collections::HashSet::new();
-        
-        for given in self.givens.values() {
-            // In a real implementation, we would extract features from the given
-            // For now, return empty vector
-        }
-        
+        let features = Vec::new();
+        // In a real implementation, we would extract features from the given
+        // For now, return empty vector
         features
     }
     
@@ -55,7 +50,7 @@ impl<I: IbddInAny, O: IbddOutAny> BaseSuite<I, O> {
     
     pub async fn run(
         &mut self,
-        input: I::Iinput,
+        _input: I::Iinput,
         test_resource_configuration: ITTestResourceConfiguration,
     ) -> &Self {
         self.test_resource_configuration = Some(test_resource_configuration);

@@ -6,12 +6,12 @@ pub struct BaseGiven<I: IbddInAny> {
     pub features: Vec<String>,
     pub whens: Vec<Box<dyn std::any::Any>>,
     pub thens: Vec<Box<dyn std::any::Any>>,
-    pub given_cb: I::Given,
+    pub given_cb: <I as IbddInAny>::Given,
     pub initial_values: Box<dyn std::any::Any>,
     pub artifacts: Vec<String>,
     pub error: Option<String>,
     pub failed: bool,
-    pub store: Option<I::Istore>,
+    pub store: Option<<I as IbddInAny>::Istore>,
     pub fails: i32,
 }
 
@@ -21,7 +21,7 @@ impl<I: IbddInAny> BaseGiven<I> {
         features: Vec<String>,
         whens: Vec<Box<dyn std::any::Any>>,
         thens: Vec<Box<dyn std::any::Any>>,
-        given_cb: I::Given,
+        given_cb: <I as IbddInAny>::Given,
         initial_values: Box<dyn std::any::Any>,
     ) -> Self {
         Self {
@@ -56,9 +56,9 @@ impl<I: IbddInAny> BaseGiven<I> {
     
     pub async fn give(
         &mut self,
-        subject: I::Isubject,
+        _subject: I::Isubject,
         key: &str,
-        test_resource_configuration: &ITTestResourceConfiguration,
+        _test_resource_configuration: &ITTestResourceConfiguration,
     ) -> Option<I::Istore> {
         self.key = key.to_string();
         self.failed = false;
