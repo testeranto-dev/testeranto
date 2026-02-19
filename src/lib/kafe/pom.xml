@@ -6,8 +6,8 @@
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>com.testeranto</groupId>
-    <artifactId>kafe</artifactId>
-    <version>0.1.2</version>
+    <artifactId>testeranto.kafe</artifactId>
+    <version>0.1.3</version>
     <packaging>jar</packaging>
     
     <properties>

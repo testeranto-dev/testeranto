@@ -1,6 +1,6 @@
 [package]
-name = "rusto"
-version = "0.1.2"
+name = "testeranto_rusto"
+version = "0.1.4"
 edition = "2021"
 description = "Rust implementation of Testeranto"
 authors = ["Testeranto Team"]

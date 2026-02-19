@@ -1,4 +1,4 @@
-module github.com/adamwong246/testeranto/src/golingvu
+module testeranto.golingvu
 
 go 1.20
 

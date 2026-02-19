@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.executables               = ["rubeno"] 
   s.files                     = Dir["Rakefile", "bin/rubeno", "lib/**/*.rb", "README.md", "rubeno.rb"]
   s.homepage                  = %q{http://rubygems.org/gems/rubeno}
-  s.name                      = "rubeno"
+  s.name                      = "testeranto.rubeno"
   s.require_paths             = ["lib"]
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.rubygems_version          = %q{1.6.2}
