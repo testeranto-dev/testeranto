@@ -83,12 +83,30 @@ Kafe follows the same patterns as other Testeranto implementations:
 
 ## Building
 
-Since this is a stub implementation, you'll need to compile the Java files:
+Kafe uses Maven for building. To compile and package:
 
 ```bash
 cd src/lib/kafe
-javac -d . *.java
+mvn clean compile
 ```
+
+To create a runnable JAR:
+
+```bash
+mvn package
+```
+
+The JAR file will be created in the `target/` directory.
+
+## Running Tests
+
+To run tests with Kafe:
+
+```bash
+java -jar target/kafe-0.1.2.jar '{"name":"test","fs":".","ports":[]}'
+```
+
+Note: Replace `0.1.2` with the actual version number of your build.
 
 ## Future Enhancements
 

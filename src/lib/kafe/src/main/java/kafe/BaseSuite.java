@@ -22,6 +22,7 @@ public abstract class BaseSuite {
         this.artifacts = new ArrayList<>();
         this.failed = false;
         this.fails = 0;
+        this.index = 0; // Default index
     }
     
     public void addArtifact(String path) {

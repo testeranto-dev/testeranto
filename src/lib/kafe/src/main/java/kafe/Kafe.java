@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class Kafe {
     public ITTestResourceRequest testResourceRequirement;
@@ -65,11 +66,14 @@ public class Kafe {
             // This would be implemented to handle suite calls
             // For now, return a placeholder
             public Object get(String suiteType) {
-                return (description, givensDict) -> {
-                    Map<String, Object> result = new HashMap<>();
-                    result.put("name", description);
-                    result.put("givens", givensDict);
-                    return result;
+                return new java.util.function.BiFunction<String, Object, Object>() {
+                    @Override
+                    public Object apply(String description, Object givensDict) {
+                        Map<String, Object> result = new HashMap<>();
+                        result.put("name", description);
+                        result.put("givens", givensDict);
+                        return result;
+                    }
                 };
             }
         };
@@ -79,10 +83,13 @@ public class Kafe {
         return new Object() {
             // Placeholder implementation
             public Object get(String givenType) {
-                return (features, whens, thens, initialValues) -> {
-                    // Create a BaseGiven instance
-                    // This would need to be more sophisticated
-                    return null;
+                return new java.util.function.Function<Object[], Object>() {
+                    @Override
+                    public Object apply(Object[] args) {
+                        // Create a BaseGiven instance
+                        // This would need to be more sophisticated
+                        return null;
+                    }
                 };
             }
         };
@@ -92,9 +99,12 @@ public class Kafe {
         return new Object() {
             // Placeholder implementation
             public Object get(String whenType) {
-                return (args) -> {
-                    // Create a BaseWhen instance
-                    return null;
+                return new java.util.function.Function<Object[], Object>() {
+                    @Override
+                    public Object apply(Object[] args) {
+                        // Create a BaseWhen instance
+                        return null;
+                    }
                 };
             }
         };
@@ -104,9 +114,12 @@ public class Kafe {
         return new Object() {
             // Placeholder implementation
             public Object get(String thenType) {
-                return (args) -> {
-                    // Create a BaseThen instance
-                    return null;
+                return new java.util.function.Function<Object[], Object>() {
+                    @Override
+                    public Object apply(Object[] args) {
+                        // Create a BaseThen instance
+                        return null;
+                    }
                 };
             }
         };

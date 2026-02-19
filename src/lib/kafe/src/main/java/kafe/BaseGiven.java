@@ -75,8 +75,11 @@ public abstract class BaseGiven {
                       Function<Object, Boolean> tester, Function<String, Object> artifactory,
                       Function<String, Void> tLog, Object pm, int suiteNdx) throws Exception {
         this.failed = false;
-        tLog.apply("\n " + key);
-        tLog.apply("\n Given: " + this.key);
+        if (tLog != null) {
+            Void v1 = tLog.apply("\n " + key);
+            Void v2 = tLog.apply("\n Given: " + this.key);
+            // Ignore the return values
+        }
         
         Function<String, Object> givenArtifactory = (fPath) -> {
             return artifactory.apply("given-" + key + "/" + fPath);

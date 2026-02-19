@@ -48,6 +48,7 @@ By packaging a piece of software first, we can correlate the output aritifacts t
 
 ## Development
 
+### TypeScript/JavaScript (Tiposkripto)
 ```bash
 # Install dependencies
 bun install
@@ -65,7 +66,21 @@ bun build --target node --outdir dist src/index.ts
 bun run link   # This builds first, then links
 
 Make sure `~/.bun/bin` is in your PATH:
-```bash
 export PATH="$HOME/.bun/bin:$PATH"
 # Add this line to your ~/.zshrc for permanent access
+```
+
+### Java (Kafe)
+```bash
+# Navigate to Kafe directory
+cd src/lib/kafe
+
+# Build with Maven
+mvn clean compile
+
+# Create executable JAR
+mvn package
+
+# Run tests
+java -jar target/kafe-0.1.2.jar '{"name":"test","fs":".","ports":[]}'
 ```
