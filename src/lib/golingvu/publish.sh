@@ -28,6 +28,12 @@ MODULE_PREFIX="src/lib/golingvu"
 LATEST_TAG=$(git tag -l "${MODULE_PREFIX}/v*" | sort -V | tail -n 1 || echo "")
 if [ -z "$LATEST_TAG" ]; then
     echo "No existing tags found for this module."
+    # Check if there are any root tags that might be relevant
+    ROOT_TAG=$(git tag -l "v*" | sort -V | tail -n 1 || echo "")
+    if [ -n "$ROOT_TAG" ]; then
+        echo "Found root tag: $ROOT_TAG. This may not be compatible with Go modules in subdirectories."
+        echo "Consider creating a proper tag with prefix ${MODULE_PREFIX}/"
+    fi
     LATEST_VERSION="v0.0.0"
 else
     LATEST_VERSION=${LATEST_TAG#${MODULE_PREFIX}/}
