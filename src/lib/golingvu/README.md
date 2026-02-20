@@ -3,13 +3,13 @@
 ## Installation
 
 ```bash
-go get github.com/testeranto-dev/golingvu
+go get github.com/testeranto-dev/testeranto/src/lib/golingvu@v0.1.9
 ```
 
 ## Import
 
 ```go
-import "github.com/testeranto-dev/golingvu"
+import "github.com/testeranto-dev/testeranto/src/lib/golingvu"
 ```
 
 ## Overview

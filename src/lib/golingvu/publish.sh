@@ -19,27 +19,42 @@ fi
 CURRENT_MODULE=$(grep -E '^module ' go.mod | sed -E 's/module //')
 echo "Module: $CURRENT_MODULE"
 
-# Get latest tag
-LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-echo "Latest tag: $LATEST_TAG"
+# Get the module subdirectory path relative to repository root
+# Since we're in src/lib/golingvu, and the module path includes this, we need to know the prefix
+MODULE_PREFIX="src/lib/golingvu"
+
+# Get latest tag for this module
+# Look for tags that start with the module prefix
+LATEST_TAG=$(git tag -l "${MODULE_PREFIX}/v*" | sort -V | tail -n 1 || echo "")
+if [ -z "$LATEST_TAG" ]; then
+    echo "No existing tags found for this module."
+    LATEST_VERSION="v0.0.0"
+else
+    LATEST_VERSION=${LATEST_TAG#${MODULE_PREFIX}/}
+    echo "Latest tag: $LATEST_TAG (version: $LATEST_VERSION)"
+fi
 
 # Prompt for new version
-read -p "Enter new version (e.g., v1.0.0, current is $LATEST_TAG): " NEW_TAG
+read -p "Enter new version (e.g., v1.0.0, current is $LATEST_VERSION): " NEW_VERSION
 
-if [[ -z "$NEW_TAG" ]]; then
+if [[ -z "$NEW_VERSION" ]]; then
     echo "Error: Version cannot be empty"
     exit 1
 fi
 
 # Basic semantic version validation
-if [[ ! $NEW_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9\.]+)?(\+[a-zA-Z0-9\.]+)?$ ]]; then
-    echo "Warning: Tag doesn't follow semantic versioning (vX.Y.Z[-pre][+build])"
+if [[ ! $NEW_VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9\.]+)?(\+[a-zA-Z0-9\.]+)?$ ]]; then
+    echo "Warning: Version doesn't follow semantic versioning (vX.Y.Z[-pre][+build])"
     read -p "Continue anyway? (y/n): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         exit 1
     fi
 fi
+
+# Full tag name
+NEW_TAG="${MODULE_PREFIX}/${NEW_VERSION}"
+echo "Will create tag: $NEW_TAG"
 
 echo "Building module..."
 if ! go build ./...; then
@@ -88,13 +103,16 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     fi
     
     echo ""
-    echo "✅ Successfully published $CURRENT_MODULE@$NEW_TAG"
+    echo "✅ Successfully published $CURRENT_MODULE@$NEW_VERSION"
     echo ""
     echo "Users can now install with:"
-    echo "  go get $CURRENT_MODULE@$NEW_TAG"
+    echo "  go get $CURRENT_MODULE@$NEW_VERSION"
     echo ""
     echo "Or add to go.mod:"
-    echo "  require $CURRENT_MODULE $NEW_TAG"
+    echo "  require $CURRENT_MODULE $NEW_VERSION"
+    echo ""
+    echo "Note: Go modules in subdirectories require tags with the full path."
+    echo "The tag '$NEW_TAG' has been created for this purpose."
 else
     echo "Skipping tag creation."
     echo "You can manually create and push the tag later:"
