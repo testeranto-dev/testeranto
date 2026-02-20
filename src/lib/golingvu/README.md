@@ -3,13 +3,13 @@
 ## Installation
 
 ```bash
-go get github.com/adamwong246/golingvu
+go get github.com/testeranto-dev/golingvu
 ```
 
 ## Import
 
 ```go
-import "github.com/adamwong246/golingvu"
+import "github.com/testeranto-dev/golingvu"
 ```
 
 ## Overview
@@ -40,7 +40,7 @@ package main
 
 import (
     "fmt"
-    "github.com/adamwong246/testeranto/src/lib/golingvu"
+    "github.com/testeranto-dev/testeranto/src/lib/golingvu"
 )
 
 func main() {

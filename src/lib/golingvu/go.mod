@@ -1,5 +1,5 @@
-// module github.com/adamwong246/testeranto-golingvu
-module github.com/adamwong246/testeranto/src/lib/golingvu
+// module github.com/testeranto-dev/testeranto-golingvu
+module github.com/testeranto-dev/testeranto/src/lib/golingvu
 
 go 1.20
 

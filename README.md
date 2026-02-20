@@ -19,7 +19,7 @@ Add a lib for you language of choice.
 - tiposkripto (ts) npm
 - rusto  (rust) cargo
 - pitono (python) pypi
-- golingvu (go) `go get github.com/adamwong246/golingvu`
+- golingvu (go) `go get github.com/testeranto-dev/golingvu`
 - kafe (java) TBD
 - rubeno (ruby ) rubygems 
 Run `testeranto`
