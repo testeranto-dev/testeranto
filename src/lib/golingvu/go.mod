@@ -1,6 +1,7 @@
-module github.com/adamwong246/testeranto-golingvu
+// module github.com/adamwong246/testeranto-golingvu
+module github.com/adamwong246/testeranto/src/lib/golingvu
 
 go 1.20
 
-// This is a standalone Go module for the Testeranto Go implementation
-// It doesn't have external dependencies
+// This module doesn't have external dependencies yet
+// Add any future dependencies here
