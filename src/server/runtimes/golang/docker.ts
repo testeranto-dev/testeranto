@@ -16,21 +16,39 @@ export const golangDockerComposeFile = (
   golangConfigPath: string,
   testName: string
 ) => {
+  const tests = config.runtimes[testName]?.tests || [];
   return dockerComposeFile(
     config,
     container_name,
     projectConfigPath,
     golangConfigPath,
     testName,
-    golangBuildCommand
+    golangBuildCommand,
+    tests
   )
 };
 
-export const golangBuildCommand = (projectConfigPath: string, golangConfigPath: string, testName: string) => {
-  return `go run /workspace/testeranto/golang_runtime.go /workspace/${projectConfigPath} /workspace/${golangConfigPath} ${testName}`
+export const golangBuildCommand = (projectConfigPath: string, golangConfigPath: string, testName: string, tests: string[]) => {
+  return `go run /workspace/testeranto/golang_runtime.go /workspace/${projectConfigPath} /workspace/${golangConfigPath} ${testName} ${tests.join(' ')}`
 }
 
 export const golangBddCommand = (fpath: string, golangConfigPath: string, configKey: string) => {
-  const jsonStr = JSON.stringify({ ports: [1111] });
-  return `go run testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
+  const jsonStr = JSON.stringify({ 
+    name: 'go-test',
+    ports: [1111], 
+    fs: "testeranto/reports/go",
+    timeout: 30000,
+    retries: 0,
+    environment: {}
+  });
+  
+  // For Go, we need to execute the compiled binary
+  // The binary is at: testeranto/bundles/${configKey}/${binary_name}
+  // where binary_name is the entry point without .go extension and with dots replaced by underscores
+  const pathParts = fpath.split('/');
+  const fileName = pathParts[pathParts.length - 1];
+  const binaryName = fileName.replace('.go', '').replace(/\./g, '_');
+  
+  // Execute the compiled binary in the bundle directory
+  return `testeranto/bundles/${configKey}/${binaryName} '${jsonStr}'`;
 }
