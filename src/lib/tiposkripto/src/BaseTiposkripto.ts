@@ -258,7 +258,11 @@ export default abstract class BaseTiposkripto<
     (this.testJobs[0].receiveTestResourceConfig(
       testResourceConfiguration
     ) as unknown as Promise<IFinalResults>).then((results) => {
-      this.writeFileSync(`testeranto/reports/${this.testResourceConfiguration.fs}`, JSON.stringify(results));
+
+      console.log("testResourceConfiguration", testResourceConfiguration)
+      const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+      // console.log("writing results to: ", reportJson)
+      this.writeFileSync(reportJson, JSON.stringify(results));
     })
 
 

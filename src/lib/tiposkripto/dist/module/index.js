@@ -533,7 +533,9 @@ var init_BaseTiposkripto = __esm({
         this.testJobs[0].receiveTestResourceConfig(
           testResourceConfiguration
         ).then((results) => {
-          this.writeFileSync(`testeranto/reports/${this.testResourceConfiguration.fs}`, JSON.stringify(results));
+          console.log("testResourceConfiguration", testResourceConfiguration);
+          const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+          this.writeFileSync(reportJson, JSON.stringify(results));
         });
       }
       async receiveTestResourceConfig(testResourceConfig) {
@@ -601,7 +603,7 @@ var init_Node = __esm({
     await init_BaseTiposkripto();
     init_types();
     console.log(`[NodeTiposkripto] ${process.argv}`);
-    config = process.argv0[2];
+    config = JSON.parse(process.argv[2]);
     NodeTiposkripto = class extends BaseTiposkripto {
       constructor(input, testSpecification, testImplementation, testResourceRequirement, testAdapter) {
         super(

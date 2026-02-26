@@ -1,9 +1,10 @@
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
+import type { ITestconfigV2 } from "../../Types";
 
 export interface BuildOptions {
-  config: IBuiltConfig;
+  config: ITestconfigV2;
   entryPoints: string[];
   configPath: string;
   bundlesDir: string;
@@ -30,17 +31,17 @@ export async function computeFilesHash(files: string[]): Promise<string> {
   return hash.digest('hex');
 }
 
-// WebSocket functionality removed - dead feature
-export async function sendSourceFilesUpdated(
-  config: IBuiltConfig,
-  hash: string,
-  files: string[],
-  testName: string,
-  runtime: 'node' | 'web'
-): Promise<void> {
-  console.log(`[${runtime} Builder] WebSocket feature removed - not sending sourceFilesUpdated for ${testName}`);
-  return Promise.resolve();
-}
+// // WebSocket functionality removed - dead feature
+// export async function sendSourceFilesUpdated(
+//   config: ITestconfigV2,
+//   hash: string,
+//   files: string[],
+//   testName: string,
+//   runtime: 'node' | 'web'
+// ): Promise<void> {
+//   console.log(`[${runtime} Builder] WebSocket feature removed - not sending sourceFilesUpdated for ${testName}`);
+//   return Promise.resolve();
+// }
 
 // Extract input files from metafile recursively
 export function extractInputFilesFromMetafile(metafile: any): string[] {
@@ -90,13 +91,14 @@ export function extractInputFilesFromMetafile(metafile: any): string[] {
 }
 
 export async function processMetafile(
-  config: IBuiltConfig,
+  config: ITestconfigV2,
   metafile: any,
-  runtime: 'node' | 'web'
+  runtime: 'node' | 'web',
+  configKey: string
 ): Promise<void> {
-  if (!metafile || !metafile.outputs) {
-    return;
-  }
+  // if (!metafile || !metafile.outputs) {
+  //   return;
+  // }
 
   for (const [outputFile, outputInfo] of Object.entries(metafile.outputs)) {
     const outputInfoTyped = outputInfo as any;
@@ -164,7 +166,7 @@ export async function processMetafile(
 
     // Write to file
     const outputBaseName = entryPoint.split('.').slice(0, -1).join('.');
-    const inputFilesPath = `testeranto/bundles/allTests/${runtime}/${outputBaseName}.mjs-inputFiles.json`;
+    const inputFilesPath = `testeranto/bundles/${configKey}/${outputBaseName}.mjs-inputFiles.json`;
 
     fs.writeFileSync(inputFilesPath, JSON.stringify(relativeFiles, null, 2));
     console.log(`[${runtime} Builder] Wrote ${relativeFiles.length} input files to ${inputFilesPath}`);

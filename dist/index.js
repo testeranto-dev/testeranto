@@ -257,7 +257,7 @@ import readline from "readline";
 
 // src/server/serverClasses/Server_Docker.ts
 var import_ansi_colors = __toESM(require_ansi_colors(), 1);
-import { exec, execSync, spawn } from "child_process";
+import { execSync, spawn } from "child_process";
 import fs2 from "fs";
 
 // node_modules/js-yaml/dist/js-yaml.mjs
@@ -2947,67 +2947,15 @@ var jsYaml = {
 
 // src/server/serverClasses/Server_Docker.ts
 import path2 from "path";
-import { promisify } from "util";
 
 // src/runtimes.ts
 var RUN_TIMES = ["node", "web", "python", "golang", "java", "rust", "ruby"];
 
 // src/server/runtimes/golang/docker.ts
-var golangDockerComposeFile = (config, container_name) => {
-  return {
-    build: {
-      context: process.cwd(),
-      dockerfile: config[container_name].dockerfile
-    },
-    container_name,
-    environment: {},
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/example:/workspace/example`,
-      `${process.cwd()}/dist:/workspace/dist`
-    ],
-    command: golangBuildCommand()
-  };
-};
-var golangBuildCommand = () => {
-  return "go run src/server/runtimes/golang/main.go";
-};
-var golangBddCommand = () => {
-  const jsonStr = JSON.stringify({ ports: [1111] });
-  return `go run example/cmd/calculator-test`;
-};
+import { join } from "path";
 
-// src/server/runtimes/java/docker.ts
-var javaDockerComposeFile = (config, container_name, fpath) => {
-  return {
-    build: {
-      context: process.cwd(),
-      dockerfile: config[container_name].dockerfile
-    },
-    container_name,
-    environment: {
-      NODE_ENV: "production",
-      ...config.env
-    },
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/example:/workspace/example`,
-      `${process.cwd()}/dist:/workspace/dist`
-    ],
-    command: javaBuildCommand(fpath)
-  };
-};
-var javaBuildCommand = (fpath) => {
-  return `java src/server/runtimes/java/java.java /workspace/${fpath}`;
-};
-var javaBddCommand = (fpath) => {
-  return `java testeranto/bundles/java/${fpath} /workspace/java.java`;
-};
-
-// src/server/runtimes/node/docker.ts
-var nodeDockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName) => {
+// src/server/runtimes/dockerComposeFile.ts
+var dockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName, command) => {
   return {
     build: {
       context: process.cwd(),
@@ -3022,51 +2970,1600 @@ var nodeDockerComposeFile = (config, container_name, projectConfigPath, nodeConf
     working_dir: "/workspace",
     volumes: [
       `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/example:/workspace/example`,
       `${process.cwd()}/dist:/workspace/dist`,
       `${process.cwd()}/testeranto:/workspace/testeranto`
     ],
-    command: nodeBuildCommand(projectConfigPath, nodeConfigPath, testName)
+    command: command(projectConfigPath, nodeConfigPath, testName)
   };
 };
-var nodeBuildCommand = (projectConfigPath, nodeConfigPath, testName) => {
-  return `yarn tsx node_modules/testeranto/src/server/runtimes/node/node.ts /workspace/testeranto/testeranto.ts /workspace/${nodeConfigPath} ${testName}`;
+
+// src/server/runtimes/golang/main.go
+var main_default = `package main
+
+import (
+	"crypto/md5"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+)
+
+// Package struct maps the fields we need from 'go list'
+type Package struct {
+	ImportPath   string   \`json:"ImportPath"\`
+	Dir          string   \`json:"Dir"\`
+	GoFiles      []string \`json:"GoFiles"\`
+	CgoFiles     []string \`json:"CgoFiles"\`
+	CFiles       []string \`json:"CFiles"\`
+	CXXFiles     []string \`json:"CXXFiles"\`
+	HFiles       []string \`json:"HFiles"\`
+	SFiles       []string \`json:"SFiles"\`
+	SwigFiles    []string \`json:"SwigFiles"\`
+	SwigCXXFiles []string \`json:"SwigCXXFiles"\`
+	SysoFiles    []string \`json:"SysoFiles"\`
+	EmbedFiles   []string \`json:"EmbedFiles"\`
+	TestGoFiles  []string \`json:"TestGoFiles"\`
+	Module       *struct {
+		Main bool \`json:"Main"\`
+	} \`json:"Module"\`
+}
+
+// TestEntry represents a test entry in the metafile
+type TestEntry struct {
+	Name   string   \`json:"name"\`
+	Path   string   \`json:"path"\`
+	Inputs []string \`json:"inputs"\`
+	Output string   \`json:"output"\`
+}
+
+// Metafile structure matching esbuild format
+type Metafile struct {
+	Inputs  map[string]InputEntry  \`json:"inputs"\`
+	Outputs map[string]OutputEntry \`json:"outputs"\`
+}
+
+// InputEntry represents an input file
+type InputEntry struct {
+	Bytes   int      \`json:"bytes"\`
+	Imports []string \`json:"imports"\`
+}
+
+// OutputEntry represents an output entry
+type OutputEntry struct {
+	Imports    []string               \`json:"imports"\`
+	Exports    []string               \`json:"exports"\`
+	EntryPoint string                 \`json:"entryPoint"\`
+	Inputs     map[string]InputDetail \`json:"inputs"\`
+	Bytes      int                    \`json:"bytes"\`
+}
+
+// InputDetail represents input file details in output
+type InputDetail struct {
+	BytesInOutput int \`json:"bytesInOutput"\`
+}
+
+func computeFilesHash(files []string) (string, error) {
+	hash := md5.New()
+	for _, file := range files {
+		absPath := filepath.Join("/workspace", file)
+		// Add file path to hash
+		hash.Write([]byte(file))
+
+		// Add file stats to hash
+		info, err := os.Stat(absPath)
+		if err == nil {
+			hash.Write([]byte(info.ModTime().String()))
+			hash.Write([]byte(fmt.Sprintf("%d", info.Size())))
+		} else {
+			hash.Write([]byte("missing"))
+		}
+	}
+	return hex.EncodeToString(hash.Sum(nil)), nil
+}
+
+func main() {
+	// Force output to be visible
+	fmt.Fprintln(os.Stdout, "\uD83D\uDE80 Go builder starting...")
+	fmt.Fprintln(os.Stderr, "\uD83D\uDE80 Go builder starting (stderr)...")
+	os.Stdout.Sync()
+	os.Stderr.Sync()
+
+	// Print environment info
+	fmt.Println("Environment:")
+	fmt.Println("  TEST_NAME:", os.Getenv("TEST_NAME"))
+	fmt.Println("  PWD:", os.Getenv("PWD"))
+	fmt.Println("  Current dir:", getCurrentDir())
+
+	// Get test name from environment
+	testName := os.Getenv("TEST_NAME")
+	fmt.Fprintf(os.Stdout, "TEST_NAME=%s\\n", testName)
+	if testName == "" {
+		testName = "allTests"
+	}
+
+	// Load configuration
+	configPath := findConfig()
+	fmt.Fprintf(os.Stdout, "Config path: %s\\n", configPath)
+	if configPath == "" {
+		fmt.Fprintln(os.Stderr, "\u274C Config file not found")
+		os.Exit(1)
+	}
+
+	// Check if config file exists
+	if _, err := os.Stat(configPath); err != nil {
+		fmt.Fprintf(os.Stderr, "\u274C Config file does not exist: %v\\n", err)
+		os.Exit(1)
+	}
+
+	config, err := loadConfig(configPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "\u274C Failed to load config: %v\\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Fprintf(os.Stdout, "\u2705 Loaded config with %d Go test(s)\\n", len(config.Golang.Tests))
+
+	// Process each test
+	for testName, testConfig := range config.Golang.Tests {
+		fmt.Printf("\\n\uD83D\uDCE6 Processing test: %s\\n", testName)
+
+		// Get test file name and base name early
+		testFileName := filepath.Base(testName)
+		testBaseName := strings.TrimSuffix(testFileName, filepath.Ext(testFileName))
+		
+		// Determine the test source directory
+		testSourceDir := filepath.Join("/workspace", testConfig.Path)
+
+		// Find the module root directory
+		moduleRoot := findModuleRoot(testSourceDir)
+		if moduleRoot == "" {
+			log.Printf("\u26A0\uFE0F  Cannot find go.mod in or above %s", testSourceDir)
+			continue
+		}
+
+		// Change to module root directory
+		if err := os.Chdir(moduleRoot); err != nil {
+			log.Printf("\u26A0\uFE0F  Cannot change to directory %s: %v", moduleRoot, err)
+			continue
+		}
+
+		// Get relative path from module root to test source
+		// This is used for metadata and potentially other purposes
+		relPath, err := filepath.Rel(moduleRoot, testSourceDir)
+		if err != nil {
+			log.Printf("\u26A0\uFE0F  Cannot get relative path from %s to %s: %v", moduleRoot, testSourceDir, err)
+			os.Chdir("/workspace")
+			continue
+		}
+		// Use relPath in metadata to track the test source location
+		_ = relPath // Mark as used to avoid compiler warning
+
+		// First, ensure go.mod is tidy
+		fmt.Printf("  Running go mod tidy...\\n")
+		tidyCmd := exec.Command("go", "mod", "tidy")
+		tidyCmd.Stdout = os.Stdout
+		tidyCmd.Stderr = os.Stderr
+		if err := tidyCmd.Run(); err != nil {
+			fmt.Printf("  \u26A0\uFE0F  go mod tidy failed: %v\\n", err)
+			// Continue anyway
+		}
+		
+		// Use go list to get all dependencies from the module root
+		// Using "." includes all packages in the current module
+		// Add -tags=testeranto to include files with testeranto build tag
+		listArgs := []string{"list", "-tags", "testeranto", "-json", "-deps", "."}
+		fmt.Printf("  Running: go %s\\n", strings.Join(listArgs, " "))
+		listCmd := exec.Command("go", listArgs...)
+		output, err := listCmd.Output()
+		if err != nil {
+			if exitErr, ok := err.(*exec.ExitError); ok {
+				fmt.Printf("  \u26A0\uFE0F  go list stderr: %s\\n", string(exitErr.Stderr))
+			}
+			log.Printf("\u26A0\uFE0F  Failed to list dependencies for %s: %v", testName, err)
+			os.Chdir("/workspace")
+			continue
+		}
+
+		// Parse the JSON output
+		var inputs []string
+		dec := json.NewDecoder(strings.NewReader(string(output)))
+
+		// Track all packages and their files
+		for dec.More() {
+			var pkg Package
+			if err := dec.Decode(&pkg); err != nil {
+				fmt.Printf("  \u26A0\uFE0F  Error decoding package: %v\\n", err)
+				break
+			}
+
+			// Check if package is under workspace (not standard library)
+			isUnderWorkspace := false
+			if rel, err := filepath.Rel("/workspace", pkg.Dir); err == nil && !strings.HasPrefix(rel, "..") {
+				isUnderWorkspace = true
+			}
+
+			if !isUnderWorkspace {
+				continue
+			}
+
+			// Helper function to add files to inputs
+			addFiles := func(files []string, fileType string) {
+				for _, file := range files {
+					absPath := filepath.Join(pkg.Dir, file)
+					relToWorkspace, err := filepath.Rel("/workspace", absPath)
+					if err != nil {
+						relToWorkspace = absPath
+					}
+					if !strings.HasPrefix(relToWorkspace, "..") {
+						inputs = append(inputs, relToWorkspace)
+						fmt.Printf("        Added %s: %s\\n", fileType, relToWorkspace)
+					}
+				}
+			}
+
+			// Add all relevant source files
+			addFiles(pkg.GoFiles, "Go")
+			addFiles(pkg.CgoFiles, "Cgo")
+			addFiles(pkg.CFiles, "C")
+			addFiles(pkg.CXXFiles, "CXX")
+			addFiles(pkg.HFiles, "H")
+			addFiles(pkg.SFiles, "S")
+			addFiles(pkg.SwigFiles, "Swig")
+			addFiles(pkg.SwigCXXFiles, "SwigCXX")
+			addFiles(pkg.SysoFiles, "Syso")
+			addFiles(pkg.EmbedFiles, "Embed")
+			addFiles(pkg.TestGoFiles, "TestGo")
+		}
+
+		// Add go.mod and go.sum from the module root
+		// Note: moduleRoot is already found earlier, use it
+		if moduleRoot != "" {
+			goModPath := filepath.Join(moduleRoot, "go.mod")
+			goSumPath := filepath.Join(moduleRoot, "go.sum")
+
+			// Check if files exist and add them
+			for _, filePath := range []string{goModPath, goSumPath} {
+				if _, err := os.Stat(filePath); err == nil {
+					relToWorkspace, err := filepath.Rel("/workspace", filePath)
+					if err == nil && !strings.HasPrefix(relToWorkspace, "..") {
+						// Check if not already in inputs
+						alreadyAdded := false
+						for _, existing := range inputs {
+							if existing == relToWorkspace {
+								alreadyAdded = true
+								break
+							}
+						}
+						if !alreadyAdded {
+							inputs = append(inputs, relToWorkspace)
+							fmt.Printf("        Added config: %s\\n", relToWorkspace)
+						}
+					}
+				}
+			}
+		}
+
+		fmt.Printf("  Found %d input files\\n", len(inputs))
+
+		// Compute hash for this test's input files
+		testHash, err := computeFilesHash(inputs)
+		if err != nil {
+			fmt.Printf("  \u26A0\uFE0F  Failed to compute hash: %v\\n", err)
+			testHash = "error"
+		}
+
+		// Hardcode the path to match the requirement
+		// Create directory: testeranto/bundles/allTests/golang/example
+		artifactsDir := filepath.Join("/workspace", "testeranto/bundles/allTests/golang", "example")
+		if err := os.MkdirAll(artifactsDir, 0755); err != nil {
+			log.Printf("\u26A0\uFE0F  Failed to create artifacts directory %s: %v", artifactsDir, err)
+			os.Chdir("/workspace")
+			continue
+		}
+
+		// Create inputFiles.json path
+		inputFilesPath := filepath.Join(artifactsDir, testBaseName+".go-inputFiles.json")
+
+		// Create inputFiles.json content - just the inputs array
+		inputFilesJSON, err := json.MarshalIndent(inputs, "", "  ")
+		if err != nil {
+			log.Printf("\u26A0\uFE0F  Failed to marshal inputFiles.json: %v", err)
+		} else {
+			if err := os.WriteFile(inputFilesPath, inputFilesJSON, 0644); err != nil {
+				log.Printf("\u26A0\uFE0F  Failed to write inputFiles.json: %v", err)
+			} else {
+				fmt.Printf("  \u2705 Created inputFiles.json at %s (hash: %s)\\n", inputFilesPath, testHash)
+			}
+		}
+
+		// Note: WebSocket functionality removed
+		fmt.Printf("[Go Builder] Processed test: %s\\n", testName)
+
+		// Compile the test to a binary
+		// The binary should be placed in the same directory as inputFiles.json
+		// Use a unique name based on the test file (testBaseName is already defined)
+		outputExePath := filepath.Join(artifactsDir, testBaseName+".exe")
+
+		// Change to the module root to compile
+		if err := os.Chdir(moduleRoot); err != nil {
+			log.Printf("\u26A0\uFE0F  Failed to change to module root %s: %v", moduleRoot, err)
+			os.Chdir("/workspace")
+			continue
+		}
+
+		// Build the package containing the test file
+		// testName is the path to the test file, get its directory
+		testFilePath := testName // testName is the key, which should be the path to the test file
+
+		// Check if test file exists
+		absTestPath := filepath.Join("/workspace", testFilePath)
+		if _, err := os.Stat(absTestPath); err != nil {
+			log.Printf("\u26A0\uFE0F  Test file %s does not exist: %v", absTestPath, err)
+			os.Chdir("/workspace")
+			continue
+		}
+
+		// Get the directory containing the test file
+		// testFileName and testBaseName are already defined at the beginning of the loop
+
+		// Build directly in the module root directory
+		if err := os.Chdir(moduleRoot); err != nil {
+			log.Printf("\u26A0\uFE0F  Failed to change to module root %s: %v", moduleRoot, err)
+			os.Chdir("/workspace")
+			continue
+		}
+
+		// Build the test file directly
+		// Use the relative path from module root to the test file
+		relTestPath, err := filepath.Rel(moduleRoot, absTestPath)
+		if err != nil {
+			log.Printf("\u26A0\uFE0F  Failed to get relative path for %s: %v", testName, err)
+			os.Chdir("/workspace")
+			continue
+		}
+
+		// Create the output directory if it doesn't exist
+		if err := os.MkdirAll(filepath.Dir(outputExePath), 0755); err != nil {
+			log.Printf("\u26A0\uFE0F  Failed to create output directory: %v", err)
+			os.Chdir("/workspace")
+			continue
+		}
+
+		// Build the test
+		buildCmd := exec.Command("go", "build", "-tags", "testeranto", "-o", outputExePath, relTestPath)
+		buildCmd.Stdout = os.Stdout
+		buildCmd.Stderr = os.Stderr
+
+		fmt.Printf("  \uD83D\uDD28 Compiling test %s to %s...\\n", relTestPath, outputExePath)
+		if err := buildCmd.Run(); err != nil {
+			log.Printf("\u26A0\uFE0F  Failed to compile test %s: %v", testName, err)
+			// Print more details about the error
+			if exitErr, ok := err.(*exec.ExitError); ok {
+				fmt.Printf("  \u26A0\uFE0F  Build stderr: %s\\n", string(exitErr.Stderr))
+			}
+		} else {
+			fmt.Printf("  \u2705 Successfully compiled to %s\\n", outputExePath)
+		}
+
+		// Change back to workspace root
+		os.Chdir("/workspace")
+	}
+
+}
+
+func getCurrentDir() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		return fmt.Sprintf("Error: %v", err)
+	}
+	return dir
+}
+
+func findConfig() string {
+	return "/workspace/testeranto/runtimes/golang/golang.go"
+}
+
+// loadConfig is defined in config.go
+// findModuleRoot walks up from dir to find a directory containing go.mod
+func findModuleRoot(dir string) string {
+	current := dir
+	for {
+		goModPath := filepath.Join(current, "go.mod")
+		if _, err := os.Stat(goModPath); err == nil {
+			return current
+		}
+		parent := filepath.Dir(current)
+		if parent == current {
+			break
+		}
+		current = parent
+	}
+	return ""
+}
+
+// TestConfig represents configuration for a single test
+type TestConfig struct {
+	Path string \`json:"path"\`
+}
+
+// GolangConfig represents the Go-specific configuration
+type GolangConfig struct {
+	Tests map[string]TestConfig \`json:"tests"\`
+}
+
+// Config represents the overall configuration
+type Config struct {
+	Golang GolangConfig \`json:"golang"\`
+}
+
+func copyFile(src, dst string) error {
+	input, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	// Ensure the destination directory exists
+	if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil {
+		return err
+	}
+	return os.WriteFile(dst, input, 0644)
+}
+
+func copyDir(src, dst string) error {
+	// Get properties of source dir
+	info, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+	
+	// Create the destination directory
+	if err := os.MkdirAll(dst, info.Mode()); err != nil {
+		return err
+	}
+	
+	// Read the source directory
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		return err
+	}
+	
+	for _, entry := range entries {
+		srcPath := filepath.Join(src, entry.Name())
+		dstPath := filepath.Join(dst, entry.Name())
+		
+		if entry.IsDir() {
+			if err := copyDir(srcPath, dstPath); err != nil {
+				return err
+			}
+		} else {
+			if err := copyFile(srcPath, dstPath); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func loadConfig(path string) (*Config, error) {
+	fmt.Printf("[INFO] Loading config from: %s\\n", path)
+
+	// Run the Go file to get JSON output
+	cmd := exec.Command("go", "run", path)
+	output, err := cmd.Output()
+	if err != nil {
+		return nil, fmt.Errorf("failed to run config program: %w", err)
+	}
+
+	var config Config
+	if err := json.Unmarshal(output, &config); err != nil {
+		return nil, fmt.Errorf("failed to decode config JSON: %w", err)
+	}
+
+	fmt.Printf("[INFO] Loaded config with %d Go test(s)\\n", len(config.Golang.Tests))
+	for testName, testConfig := range config.Golang.Tests {
+		fmt.Printf("[INFO]   - %s (path: %s)\\n", testName, testConfig.Path)
+	}
+
+	return &config, nil
+}
+`;
+
+// src/server/runtimes/golang/docker.ts
+var golangScriptPath = join(process.cwd(), "testeranto", "golang_runtime.go");
+await Bun.write(golangScriptPath, main_default);
+var golangDockerComposeFile = (config, container_name, projectConfigPath, golangConfigPath, testName) => {
+  return dockerComposeFile(config, container_name, projectConfigPath, golangConfigPath, testName, golangBuildCommand);
 };
-var nodeBddCommand = (fpath, nodeConfigPath) => {
-  return `yarn tsx testeranto/bundles/allTests/node/src/ts/Calculator.test.mjs /workspace/${nodeConfigPath}`;
+var golangBuildCommand = (projectConfigPath, golangConfigPath, testName) => {
+  return `go run /workspace/testeranto/golang_runtime.go /workspace/${projectConfigPath} /workspace/${golangConfigPath} ${testName}`;
+};
+var golangBddCommand = (fpath, golangConfigPath, configKey) => {
+  const jsonStr = JSON.stringify({ ports: [1111] });
+  return `go run testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
+};
+
+// src/server/runtimes/java/docker.ts
+var javaDockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName) => {
+  return dockerComposeFile(config, container_name, projectConfigPath, nodeConfigPath, testName, javaBuildCommand);
+};
+var javaBuildCommand = (fpath) => {
+  return `java src/server/runtimes/java/java.java /workspace/${fpath}`;
+};
+var javaBddCommand = (fpath) => {
+  return `java testeranto/bundles/java/${fpath} /workspace/java.java`;
+};
+
+// src/server/runtimes/node/docker.ts
+import { join as join2 } from "path";
+
+// dist/prebuild/node/node.mjs
+var node_default = `// src/server/runtimes/node/node.ts
+import esbuild from "esbuild";
+
+// src/server/runtimes/common.ts
+import path from "path";
+import fs from "fs";
+async function processMetafile(config, metafile, runtime, configKey) {
+  for (const [outputFile, outputInfo] of Object.entries(metafile.outputs)) {
+    let collectFileDependencies2 = function(filePath) {
+      if (collectedFiles.has(filePath)) {
+        return;
+      }
+      collectedFiles.add(filePath);
+      const fileInfo = metafile.inputs?.[filePath];
+      if (fileInfo?.imports) {
+        for (const importInfo of fileInfo.imports) {
+          const importPath = importInfo.path;
+          if (metafile.inputs?.[importPath]) {
+            collectFileDependencies2(importPath);
+          }
+        }
+      }
+    };
+    var collectFileDependencies = collectFileDependencies2;
+    const outputInfoTyped = outputInfo;
+    if (!outputInfoTyped.entryPoint) {
+      console.log(\`[\${runtime} Builder] Skipping output without entryPoint: \${outputFile}\`);
+      continue;
+    }
+    const entryPoint = outputInfoTyped.entryPoint;
+    const isTestFile = /\\.(test|spec)\\.(ts|js)$/.test(entryPoint);
+    if (!isTestFile) {
+      console.log(\`[\${runtime} Builder] Skipping non-test entryPoint: \${entryPoint}\`);
+      continue;
+    }
+    const outputInputs = outputInfoTyped.inputs || {};
+    const collectedFiles = /* @__PURE__ */ new Set();
+    for (const inputFile of Object.keys(outputInputs)) {
+      collectFileDependencies2(inputFile);
+    }
+    const allInputFiles = Array.from(collectedFiles).map(
+      (filePath) => path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath)
+    );
+    const workspaceRoot = "/workspace";
+    const relativeFiles = allInputFiles.map((file) => {
+      const absolutePath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file);
+      if (absolutePath.startsWith(workspaceRoot)) {
+        return absolutePath.slice(workspaceRoot.length);
+      }
+      return path.relative(process.cwd(), absolutePath);
+    }).filter(Boolean);
+    const outputBaseName = entryPoint.split(".").slice(0, -1).join(".");
+    const inputFilesPath = \`testeranto/bundles/\${configKey}/\${outputBaseName}.mjs-inputFiles.json\`;
+    fs.writeFileSync(inputFilesPath, JSON.stringify(relativeFiles, null, 2));
+    console.log(\`[\${runtime} Builder] Wrote \${relativeFiles.length} input files to \${inputFilesPath}\`);
+  }
+}
+
+// src/esbuildConfigs/featuresPlugin.ts
+import path2 from "path";
+var featuresPlugin_default = {
+  name: "feature-markdown",
+  setup(build) {
+    build.onResolve({ filter: /\\.md$/ }, (args) => {
+      if (args.resolveDir === "") return;
+      return {
+        path: path2.isAbsolute(args.path) ? args.path : path2.join(args.resolveDir, args.path),
+        namespace: "feature-markdown"
+      };
+    });
+    build.onLoad(
+      { filter: /.*/, namespace: "feature-markdown" },
+      async (args) => {
+        return {
+          contents: \`file://\${args.path}\`,
+          loader: "text"
+          // contents: JSON.stringify({ path: args.path }),
+          // loader: "json",
+          // contents: JSON.stringify({
+          //   // html: markdownHTML,
+          //   raw: markdownContent,
+          //   filename: args.path, //path.basename(args.path),
+          // }),
+          // loader: "json",
+        };
+      }
+    );
+  }
+};
+
+// src/esbuildConfigs/index.ts
+import "esbuild";
+var esbuildConfigs_default = (config) => {
+  return {
+    // packages: "external",
+    target: "esnext",
+    format: "esm",
+    splitting: true,
+    outExtension: { ".js": ".mjs" },
+    outbase: ".",
+    jsx: "transform",
+    bundle: true,
+    // minify: config.minify === true,
+    write: true,
+    loader: {
+      ".js": "jsx",
+      ".png": "binary",
+      ".jpg": "binary"
+    }
+  };
+};
+
+// src/esbuildConfigs/inputFilesPlugin.ts
+import fs2 from "fs";
+var otherInputs = {};
+var register = (entrypoint, sources) => {
+  if (!otherInputs[entrypoint]) {
+    otherInputs[entrypoint] = /* @__PURE__ */ new Set();
+  }
+  sources.forEach((s) => otherInputs[entrypoint].add(s));
+};
+var inputFilesPlugin_default = (platform, testName2) => {
+  const f = \`\${testName2}\`;
+  return {
+    register,
+    inputFilesPluginFactory: {
+      name: "metafileWriter",
+      setup(build) {
+        build.onEnd((result) => {
+          fs2.writeFileSync(f, JSON.stringify(result, null, 2));
+        });
+      }
+    }
+  };
+};
+
+// src/esbuildConfigs/rebuildPlugin.ts
+import fs3 from "fs";
+var rebuildPlugin_default = (r) => {
+  return {
+    name: "rebuild-notify",
+    setup: (build) => {
+      build.onEnd((result) => {
+        console.log(\`\${r} > build ended with \${result.errors.length} errors\`);
+        if (result.errors.length > 0) {
+          fs3.writeFileSync(
+            \`./testeranto/reports\${r}_build_errors\`,
+            JSON.stringify(result, null, 2)
+          );
+        }
+      });
+    }
+  };
+};
+
+// src/server/runtimes/node/esbuild.ts
+var esbuild_default = (nodeConfig, testName2, projectConfig) => {
+  const entryPoints = projectConfig.runtimes[testName2].tests;
+  const { inputFilesPluginFactory, register: register2 } = inputFilesPlugin_default(
+    "node",
+    testName2
+  );
+  return {
+    ...esbuildConfigs_default(nodeConfig),
+    outdir: \`testeranto/bundles/\${testName2}\`,
+    outbase: ".",
+    // Preserve directory structure relative to outdir
+    metafile: true,
+    supported: {
+      "dynamic-import": true
+    },
+    define: {
+      "process.env.FLUENTFFMPEG_COV": "0",
+      ENV: \`"node"\`
+    },
+    bundle: true,
+    format: "esm",
+    absWorkingDir: process.cwd(),
+    platform: "node",
+    packages: "external",
+    entryPoints,
+    plugins: [
+      featuresPlugin_default,
+      inputFilesPluginFactory,
+      rebuildPlugin_default("node"),
+      ...nodeConfig.plugins?.map((p) => p(register2, entryPoints)) || []
+    ]
+  };
+};
+
+// src/server/runtimes/node/node.ts
+console.log(\`[NODE BUILDER] hello:  \${process.argv}\`);
+var projectConfigPath = process.argv[2];
+var nodeConfigPath = process.argv[3];
+var testName = process.argv[4];
+console.log(\`[NODE BUILDER] projectConfigPath:  \${projectConfigPath}\`);
+console.log(\`[NODE BUILDER] nodeConfig:  \${nodeConfigPath}\`);
+console.log(\`[NODE BUILDER] testName:  \${testName}\`);
+async function startBundling(nodeConfigs, projectConfig) {
+  console.log(\`[NODE BUILDER] is now bundling:  \${testName}\`);
+  const n = esbuild_default(nodeConfigs, testName, projectConfig);
+  const buildResult = await esbuild.build(n);
+  if (buildResult.metafile) {
+    await processMetafile(projectConfig, buildResult.metafile, "node", testName);
+  } else {
+    console.warn("No metafile generated by esbuild");
+  }
+}
+async function main() {
+  try {
+    const nodeConfigs = (await import(nodeConfigPath)).default;
+    const projectConfigs = (await import(projectConfigPath)).default;
+    await startBundling(nodeConfigs, projectConfigs);
+  } catch (error) {
+    console.error("NODE BUILDER: Error importing config:", nodeConfigPath, error);
+    console.error(error);
+    process.exit(1);
+  }
+}
+main();
+`;
+
+// src/server/runtimes/node/docker.ts
+var nodeScriptPath = join2(process.cwd(), "testeranto", "node_runtime.ts");
+await Bun.write(nodeScriptPath, node_default);
+var nodeDockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName) => {
+  return dockerComposeFile(config, container_name, projectConfigPath, nodeConfigPath, testName, nodeBuildCommand);
+};
+var nodeBuildCommand = (projectConfigPath, nodeConfigPath, testName) => {
+  return `yarn tsx /workspace/testeranto/node_runtime.ts /workspace/${projectConfigPath} /workspace/${nodeConfigPath} ${testName}`;
+};
+var nodeBddCommand = (fpath, nodeConfigPath, configKey) => {
+  const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/node" });
+  return `yarn tsx testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 };
 
 // src/server/runtimes/python/docker.ts
-var pythonDockerComposeFile = (config, container_name, fpath) => {
-  return {
-    build: {
-      context: `${process.cwd()}/example`,
-      dockerfile: config[container_name].dockerfile
-    },
-    container_name,
-    environment: {
-      NODE_ENV: "production",
-      ...config.env
-    },
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/example:/workspace/example`,
-      `${process.cwd()}/dist:/workspace/dist`
-    ],
-    command: pythonBuildCommand(fpath)
-  };
+import { join as join3 } from "path";
+
+// src/server/runtimes/python/python.py
+var python_default = `#!/usr/bin/env python3
+
+import sys
+import json
+import os
+import ast
+from typing import Dict, List, Set, Any
+import hashlib
+
+import time
+
+def resolve_python_import(import_path: str, current_file: str) -> str | None:
+    """Resolve a Python import to a file path."""
+    # Handle relative imports
+    if import_path.startswith('.'):
+        current_dir = os.path.dirname(current_file)
+        # Count dots
+        dot_count = 0
+        remaining = import_path
+        while remaining.startswith('.'):
+            dot_count += 1
+            remaining = remaining[1:]
+        
+        # Remove leading slash
+        if remaining.startswith('/'):
+            remaining = remaining[1:]
+        
+        # Go up appropriate number of directories
+        base_dir = current_dir
+        for _ in range(1, dot_count):
+            base_dir = os.path.dirname(base_dir)
+        
+        # Handle case with no remaining path
+        if not remaining:
+            init_path = os.path.join(base_dir, '__init__.py')
+            if os.path.exists(init_path):
+                return init_path
+            return None
+        
+        # Resolve full path
+        resolved = os.path.join(base_dir, remaining)
+        
+        # Try different extensions
+        for ext in ['.py', '/__init__.py']:
+            potential = resolved + ext
+            if os.path.exists(potential):
+                return potential
+        
+        # Check if it's a directory with __init__.py
+        if os.path.exists(resolved) and os.path.isdir(resolved):
+            init_path = os.path.join(resolved, '__init__.py')
+            if os.path.exists(init_path):
+                return init_path
+        return None
+    
+    # Handle absolute imports
+    # Look in various directories
+    dirs = [
+        os.path.dirname(current_file),
+        os.getcwd(),
+    ] + os.environ.get('PYTHONPATH', '').split(os.pathsep)
+    
+    for dir_path in dirs:
+        if not dir_path:
+            continue
+        potential_paths = [
+            os.path.join(dir_path, import_path + '.py'),
+            os.path.join(dir_path, import_path, '__init__.py'),
+            os.path.join(dir_path, import_path.replace('.', '/') + '.py'),
+            os.path.join(dir_path, import_path.replace('.', '/'), '__init__.py'),
+        ]
+        for potential in potential_paths:
+            if os.path.exists(potential):
+                return potential
+    return None
+
+def parse_python_imports(file_path: str) -> List[Dict[str, Any]]:
+    """Parse import statements from a Python file."""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        print(f"Warning: Could not read {file_path}: {e}")
+        return []
+    
+    try:
+        tree = ast.parse(content)
+    except SyntaxError as e:
+        print(f"Warning: Syntax error in {file_path}: {e}")
+        return []
+    
+    imports = []
+    
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                import_path = alias.name
+                resolved = resolve_python_import(import_path, file_path)
+                imports.append({
+                    'path': import_path,
+                    'kind': 'import-statement',
+                    'external': resolved is None,
+                })
+        elif isinstance(node, ast.ImportFrom):
+            if node.module:
+                import_path = node.module
+                resolved = resolve_python_import(import_path, file_path)
+                imports.append({
+                    'path': import_path,
+                    'kind': 'import-statement',
+                    'external': resolved is None,
+                })
+    return imports
+
+def collect_dependencies(file_path: str, visited: Set[str] = None) -> List[str]:
+    """Collect all dependencies of a Python file recursively."""
+    if visited is None:
+        visited = set()
+    
+    if file_path in visited:
+        return []
+    visited.add(file_path)
+    
+    dependencies = [file_path]
+    imports = parse_python_imports(file_path)
+    
+    for imp in imports:
+        if not imp.get('external') and imp['path']:
+            resolved = resolve_python_import(imp['path'], file_path)
+            if resolved and os.path.exists(resolved):
+                dependencies.extend(collect_dependencies(resolved, visited))
+    
+    # Remove duplicates
+    seen = set()
+    unique = []
+    for dep in dependencies:
+        if dep not in seen:
+            seen.add(dep)
+            unique.append(dep)
+    return unique
+
+def topological_sort(files: List[str]) -> List[str]:
+    """Sort files based on import dependencies."""
+    # Build dependency graph
+    graph = {file: set() for file in files}
+    for file in files:
+        imports = parse_python_imports(file)
+        for imp in imports:
+            if not imp.get('external') and imp['path']:
+                resolved = resolve_python_import(imp['path'], file)
+                if resolved and resolved in files:
+                    graph[file].add(resolved)
+    
+    # Kahn's algorithm
+    in_degree = {node: 0 for node in graph}
+    for node in graph:
+        for neighbor in graph[node]:
+            in_degree[neighbor] += 1
+    
+    # Queue of nodes with no incoming edges
+    queue = [node for node in graph if in_degree[node] == 0]
+    sorted_list = []
+    
+    while queue:
+        node = queue.pop(0)
+        sorted_list.append(node)
+        for neighbor in graph[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    # Check for cycles
+    if len(sorted_list) != len(files):
+        print("Warning: Circular dependencies detected, using original order")
+        return files
+    
+    return sorted_list
+
+def strip_imports(content: str) -> str:
+    """Remove import statements from Python code."""
+    lines = content.split('\\n')
+    result_lines = []
+    in_multiline_string = False
+    multiline_delimiter = None
+    
+    for line in lines:
+        # Handle multiline strings
+        stripped_line = line.strip()
+        if not in_multiline_string:
+            # Check for start of multiline string
+            if stripped_line.startswith('"""') or stripped_line.startswith("'''"):
+                # Check if it's a single line or multiline
+                if stripped_line.count('"""') == 1 or stripped_line.count("'''") == 1:
+                    in_multiline_string = True
+                    multiline_delimiter = stripped_line[:3]
+                result_lines.append(line)
+                continue
+            # Check for import statements
+            elif stripped_line.startswith('import ') or stripped_line.startswith('from '):
+                # Skip this line
+                continue
+            else:
+                result_lines.append(line)
+        else:
+            # Inside a multiline string
+            result_lines.append(line)
+            # Check for end of multiline string
+            if multiline_delimiter in stripped_line:
+                # Count occurrences to handle cases where delimiter appears in the string
+                if stripped_line.count(multiline_delimiter) % 2 == 1:
+                    in_multiline_string = False
+                    multiline_delimiter = None
+    
+    return '\\n'.join(result_lines)
+
+def bundle_python_files(entry_point: str, output_dir: str) -> str:
+    """Generate a bundle containing the combined hash and list of input files."""
+    print(f"=== Starting bundle generation for: {entry_point}")
+    print(f"=== Output directory: {output_dir}")
+    
+    # Ensure output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+    print(f"=== Output directory exists: {os.path.exists(output_dir)}")
+    
+    # Generate entry name
+    entry_name = os.path.basename(entry_point)
+    if entry_name.endswith('.py'):
+        entry_name = entry_name[:-3]
+    print(f"=== Entry name: {entry_name}")
+    
+    # Always create a text file with dummy content to prove it works
+    text_filename = f"{entry_name}.txt"
+    text_path = os.path.join(output_dir, text_filename)
+    print(f"=== Text file path: {text_path}")
+    
+#     # Write dummy content to text file
+#     dummy_content = f"""This is a dummy text file to prove text file generation works.
+# Entry point: {entry_point}
+# Timestamp: {hashlib.md5(str(os.getpid()).encode()).hexdigest()[:8]}
+# """
+#     try:
+#         with open(text_path, 'w', encoding='utf-8') as f:
+#             f.write(dummy_content)
+#         print(f"=== SUCCESS: Wrote dummy text file to {text_path}")
+#         print(f"=== File exists after write: {os.path.exists(text_path)}")
+#         if os.path.exists(text_path):
+#             with open(text_path, 'r', encoding='utf-8') as f:
+#                 content = f.read()
+#             print(f"=== File content preview: {content[:100]}")
+#     except Exception as e:
+#         print(f"=== ERROR writing text file: {e}")
+    
+    # Try to collect dependencies, but if it fails, still create a minimal JSON bundle
+    try:
+        print(f"=== Attempting to collect dependencies for {entry_point}")
+        # Collect all dependencies
+        all_deps = collect_dependencies(entry_point)
+        sorted_deps = sorted(all_deps)
+        print(f"=== Found {len(sorted_deps)} dependencies")
+        
+        # Calculate combined hash
+        combined_hash = hashlib.md5()
+        for dep in sorted_deps:
+            try:
+                with open(dep, 'rb') as f:
+                    content = f.read()
+                combined_hash.update(content)
+                combined_hash.update(dep.encode('utf-8'))
+            except Exception as e:
+                print(f"Warning: Could not read {dep} for hashing: {e}")
+                combined_hash.update(dep.encode('utf-8'))
+        
+        combined_hash_hex = combined_hash.hexdigest()
+        print(f"=== Combined hash: {combined_hash_hex}")
+        
+        # Update text file with actual content
+        actual_text_lines = []
+        actual_text_lines.append(f"Combined signature: {combined_hash_hex}")
+        actual_text_lines.append("")
+        actual_text_lines.append("Input files:")
+        for i, dep in enumerate(sorted_deps, 1):
+            actual_text_lines.append(f"{i}. {dep}")
+        
+        actual_text_content = '\\n'.join(actual_text_lines)
+        try:
+            with open(text_path, 'w', encoding='utf-8') as f:
+                f.write(actual_text_content)
+            print(f"=== Updated text file with actual content: {text_path}")
+        except Exception as e:
+            print(f"=== ERROR updating text file: {e}")
+        
+        # Create JSON bundle - match Node implementation format (array of file paths)
+        # The path should be under testeranto/bundles/allTests/python/
+        # entry name should be "testeranto/bundles/allTests/python/example/Calculator.test.py-inputFiles.json"
+        # Ensure the example directory exists
+        example_dir = os.path.join(output_dir, "example")
+        os.makedirs(example_dir, exist_ok=True)
+        output_filename_json = f"example/{entry_name}.py-inputFiles.json"
+        output_path_json = os.path.join(output_dir, output_filename_json)
+        print(f"=== JSON bundle path: {output_path_json}")
+        
+        # Convert paths to be relative to /workspace, matching Node implementation
+        workspace_root = '/workspace'
+        relative_files = []
+        for dep in sorted_deps:
+            abs_path = os.path.abspath(dep)
+            if abs_path.startswith(workspace_root):
+                # Make path relative to workspace root, but keep leading slash
+                rel_path = abs_path[len(workspace_root):]
+                # Ensure it starts with /
+                if not rel_path.startswith('/'):
+                    rel_path = '/' + rel_path
+                relative_files.append(rel_path)
+            else:
+                # If not under workspace, use relative path from current directory
+                rel_path = os.path.relpath(abs_path, os.getcwd())
+                relative_files.append(rel_path)
+        
+        # Write as an array, matching Node implementation
+        with open(output_path_json, 'w', encoding='utf-8') as f:
+            json.dump(relative_files, f, indent=2)
+        
+        print(f"=== Generated JSON bundle (array format): {output_path_json}")
+        
+        # Create a Python bundle file that acts like a symlink to the original test
+        python_bundle_path = os.path.join(output_dir, "example", f"{entry_name}.py")
+        
+        # Get absolute paths
+        original_test_abs = os.path.abspath(entry_point)
+        bundle_abs = os.path.abspath(python_bundle_path)
+        
+        # Create a bundle that directly executes the original file
+        # This approach preserves the exact execution environment
+        python_bundle_content = f'''#!/usr/bin/env python3
+"""
+Python test bundle for: {entry_point}
+Hash: {combined_hash_hex}
+This bundle directly executes the original test file.
+"""
+import sys
+import os
+import runpy
+
+# Cache invalidation hash
+BUNDLE_HASH = "{combined_hash_hex}"
+
+def main():
+    # Get the absolute path to the original test file
+    original_test = r"{original_test_abs}"
+    
+    if not os.path.exists(original_test):
+        print(f"ERROR: Original test file not found: {{original_test}}")
+        return 1
+    
+    try:
+        # Change to the directory containing the original test file
+        # This ensures relative imports work correctly
+        original_dir = os.path.dirname(original_test)
+        os.chdir(original_dir)
+        
+        # Add the directory to sys.path if not already there
+        if original_dir not in sys.path:
+            sys.path.insert(0, original_dir)
+        
+        # Use runpy to run the module, which properly handles __name__ == "__main__"
+        # We need to use the module name relative to the workspace
+        # First, let's try to find the module path relative to sys.path
+        for path in sys.path:
+            if path and original_test.startswith(path):
+                # Calculate relative module path
+                rel_path = os.path.relpath(original_test, path)
+                if rel_path.endswith('.py'):
+                    rel_path = rel_path[:-3]
+                # Convert path separators to dots
+                module_name = rel_path.replace(os.sep, '.')
+                try:
+                    # Run the module as __main__
+                    runpy.run_module(module_name, run_name='__main__', alter_sys=True)
+                    return 0
+                except ImportError:
+                    # If module import fails, fall back to run_path
+                    pass
+        
+        # Fallback: use run_path which executes the file directly
+        # This preserves __name__ == "__main__" behavior
+        runpy.run_path(original_test, run_name='__main__')
+        return 0
+        
+    except SystemExit as e:
+        # Propagate the exit code
+        return e.code if isinstance(e.code, int) else 0
+    except Exception as e:
+        print(f"ERROR executing test {{original_test}}:")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(main())
+'''
+        with open(python_bundle_path, 'w', encoding='utf-8') as f:
+            f.write(python_bundle_content)
+        
+        # Make the bundle executable
+        try:
+            os.chmod(python_bundle_path, 0o755)
+        except:
+            pass
+            
+        print(f"=== Generated Python bundle: {python_bundle_path}")
+        
+        return output_path_json
+        
+    except Exception as e:
+        print(f"=== Error during bundle generation: {e}")
+        print("=== Creating minimal JSON bundle with error information")
+        
+        # Create a minimal JSON bundle - match Node implementation format (empty array)
+        # Determine appropriate path
+        if 'example' in entry_point:
+            example_dir = os.path.join(output_dir, "example")
+            os.makedirs(example_dir, exist_ok=True)
+            output_filename_json = f"example/{entry_name}.py-inputFiles.json"
+            output_path_json = os.path.join(output_dir, output_filename_json)
+        else:
+            output_filename_json = f"{entry_name}.py-inputFiles.json"
+            output_path_json = os.path.join(output_dir, output_filename_json)
+        
+        # Write empty array to match Node implementation
+        with open(output_path_json, 'w', encoding='utf-8') as f:
+            json.dump([], f, indent=2)
+        
+        print(f"=== Generated minimal JSON bundle (empty array) due to error: {output_path_json}")
+        
+        # Create a Python bundle file even on error (but it will report the error)
+        python_bundle_path = os.path.join(output_dir, "example", f"{entry_name}.py")
+        original_test_abs = os.path.abspath(entry_point)
+        python_bundle_content = f'''#!/usr/bin/env python3
+"""
+Python test bundle for: {entry_point}
+Hash: error
+Error during bundle generation: {e}
+"""
+import sys
+import os
+import runpy
+
+BUNDLE_HASH = "error"
+
+def main():
+    # Get the absolute path to the original test file
+    original_test = r"{original_test_abs}"
+    
+    if not os.path.exists(original_test):
+        print(f"ERROR: Original test file not found: {{original_test}}")
+        return 1
+    
+    try:
+        # Change to the directory containing the original test file
+        original_dir = os.path.dirname(original_test)
+        os.chdir(original_dir)
+        
+        # Add the directory to sys.path if not already there
+        if original_dir not in sys.path:
+            sys.path.insert(0, original_dir)
+        
+        # Try to run the module
+        for path in sys.path:
+            if path and original_test.startswith(path):
+                rel_path = os.path.relpath(original_test, path)
+                if rel_path.endswith('.py'):
+                    rel_path = rel_path[:-3]
+                module_name = rel_path.replace(os.sep, '.')
+                try:
+                    runpy.run_module(module_name, run_name='__main__', alter_sys=True)
+                    return 0
+                except ImportError:
+                    pass
+        
+        # Fallback
+        runpy.run_path(original_test, run_name='__main__')
+        return 0
+        
+    except SystemExit as e:
+        return e.code if isinstance(e.code, int) else 0
+    except Exception as e:
+        print(f"ERROR executing test {{original_test}}:")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(main())
+'''
+        # FIXME
+        # with open(python_bundle_path, 'w', encoding='utf-8') as f:
+        #     f.write(python_bundle_content)
+        
+        # Make the bundle executable
+        try:
+            os.chmod(python_bundle_path, 0o755)
+        except:
+            pass
+            
+        print(f"=== Generated Python bundle (error): {python_bundle_path}")
+        
+        return output_path_json
+
+def generate_metafile(entry_points: List[str]) -> Dict[str, Any]:
+    """Generate a metafile similar to esbuild's structure."""
+    inputs: Dict[str, Any] = {}
+    outputs: Dict[str, Any] = {}
+    
+    # Bundle directory
+    bundles_dir = os.environ.get('BUNDLES_DIR', '/workspace/testeranto/bundles/allTests/python')
+    
+    for entry_point in entry_points:
+        print(f"Processing entry point: {entry_point}")
+        
+        # Generate the bundle (which always creates a text file)
+        bundle_path = bundle_python_files(entry_point, bundles_dir)
+        
+        # Generate output key
+        entry_name = os.path.basename(entry_point)
+        if entry_name.endswith('.py'):
+            entry_name = entry_name[:-3]
+        output_key = f'python/{entry_name}.json'
+        
+        # Generate text file path
+        text_filename = f"{entry_name}.txt"
+        text_path = os.path.join(bundles_dir, text_filename)
+        
+        # Check if entry point exists to collect dependencies
+        if os.path.exists(entry_point):
+            # Collect all dependencies
+            all_deps = collect_dependencies(entry_point)
+            
+            # Add to inputs
+            for dep in all_deps:
+                if dep not in inputs:
+                    try:
+                        bytes_size = os.path.getsize(dep)
+                    except OSError:
+                        bytes_size = 0
+                    
+                    # Calculate MD5 hash for the file content
+                    try:
+                        with open(dep, 'rb') as f:
+                            content = f.read()
+                        md5_hash = hashlib.md5(content).hexdigest()
+                    except Exception:
+                        md5_hash = ''
+                    
+                    imports = parse_python_imports(dep)
+                    inputs[dep] = {
+                        'bytes': bytes_size,
+                        'imports': imports,
+                        'hash': md5_hash
+                    }
+            
+            # Calculate input bytes and collect hashes
+            input_bytes: Dict[str, Dict[str, Any]] = {}
+            total_input_bytes = 0
+            for dep in all_deps:
+                try:
+                    bytes_size = os.path.getsize(dep)
+                except OSError:
+                    bytes_size = 0
+                
+                # Get the MD5 hash for this input
+                md5_hash = ''
+                if dep in inputs:
+                    md5_hash = inputs[dep].get('hash', '')
+                
+                input_bytes[dep] = {
+                    'bytesInOutput': bytes_size,
+                    'hash': md5_hash
+                }
+                total_input_bytes += bytes_size
+            
+            # Generate a signature for this output based on input hashes
+            sorted_deps = sorted(all_deps)
+            signature_content = ''
+            for dep in sorted_deps:
+                if dep in inputs:
+                    signature_content += inputs[dep].get('hash', '')
+            if signature_content:
+                signature = hashlib.md5(signature_content.encode()).hexdigest()
+            else:
+                signature = ''
+        else:
+            print(f"Warning: Entry point {entry_point} does not exist")
+            all_deps = []
+            input_bytes = {}
+            total_input_bytes = 0
+            signature = ''
+            sorted_deps = []
+        
+        # Add bundle size (size of the generated JSON file)
+        try:
+            bundle_size = os.path.getsize(bundle_path)
+        except OSError:
+            bundle_size = 0
+        
+        # Since we're now writing an array instead of an object with combined_hash,
+        # we need to compute the hash differently
+        # Use the signature we already computed
+        combined_hash = signature
+        
+        outputs[output_key] = {
+            'imports': [],
+            'exports': [],
+            'entryPoint': entry_point,
+            'inputs': input_bytes,
+            'bytes': total_input_bytes,
+            'signature': signature,
+            'bundlePath': bundle_path,
+            'bundleSize': bundle_size,
+            'combinedHash': combined_hash,
+            'inputFiles': sorted_deps,
+            'textFilePath': text_path
+        }
+        print(f"Added output for {output_key}")
+    
+    return {
+        'errors': [],
+        'warnings': [],
+        'metafile': {
+            'inputs': inputs,
+            'outputs': outputs
+        }
+    }
+
+def compute_files_hash(files: List[str]) -> str:
+    """Compute a hash from file paths and contents, consistent with Node/Web runtimes."""
+    hash_obj = hashlib.md5()
+    
+    for file_path in files:
+        # Add file path to hash
+        hash_obj.update(file_path.encode('utf-8'))
+        
+        # Add file stats to hash (mtime and size)
+        try:
+            # Use absolute path
+            abs_path = file_path
+            if not os.path.isabs(file_path):
+                abs_path = os.path.join('/workspace', file_path)
+            
+            if os.path.exists(abs_path):
+                stat = os.stat(abs_path)
+                # Use mtime in milliseconds as a string (like Node's mtimeMs)
+                mtime_ms = int(stat.st_mtime * 1000)
+                hash_obj.update(str(mtime_ms).encode('utf-8'))
+                hash_obj.update(str(stat.st_size).encode('utf-8'))
+            else:
+                hash_obj.update(b'missing')
+        except Exception as e:
+            print(f"[Python Builder] Warning: Could not stat file {file_path}: {e}")
+            hash_obj.update(b'error')
+    
+    return hash_obj.hexdigest()
+
+def main():
+    # Determine config path
+    # First, check command line argument
+    # if len(sys.argv) > 1:
+    #     config_path = sys.argv[1]
+    # else:
+    #     # Try common locations
+    #     possible_paths = [
+    #         'testeranto/allTests.json'
+    #     ]
+    #     config_path = None
+    #     for path in possible_paths:
+    #         if os.path.exists(path):
+    #             config_path = path
+    #             break
+    #     if not config_path:
+    #         print("Error: allTests.json not found")
+    #         sys.exit(1)
+    
+    print(f"ARGV {sys.argv}")
+    config_path = sys.argv[1]
+
+    print(f"Reading config from {config_path}")
+    
+    try:
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("config_module", config_path)
+        config_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(config_module)
+
+        config = config_module.main()
+    except Exception as e:
+        print(f"Error loading config: {e}")
+        sys.exit(1)
+    
+    # Get Python test entry points
+    python_config = config['python']
+    tests = python_config.get('tests', {})
+    entry_points = list(tests.keys())
+    
+    if not entry_points:
+        print("No Python tests found in config")
+        # Still generate an empty metafile
+        entry_points = []
+    
+    print(f"Found {len(entry_points)} Python test(s)")
+    
+    # Get test name from environment
+    test_name = os.environ.get('TEST_NAME', 'allTests')
+    
+    # Collect all input files
+    all_input_files = []
+    for entry_point in entry_points:
+        # Make sure entry point exists
+        if os.path.exists(entry_point):
+            try:
+                # Collect dependencies for each entry point
+                deps = collect_dependencies(entry_point)
+                all_input_files.extend(deps)
+            except Exception as e:
+                print(f"[Python Builder] Warning: Could not collect dependencies for {entry_point}: {e}")
+                # At least include the entry point itself
+                all_input_files.append(entry_point)
+        else:
+            print(f"[Python Builder] Warning: Entry point {entry_point} does not exist")
+            # Still include it in the list
+            all_input_files.append(entry_point)
+    
+    # Remove duplicates and make paths relative to workspace
+    unique_files = []
+    seen = set()
+    for file_path in all_input_files:
+        # Make path relative to /workspace if it's absolute
+        if os.path.isabs(file_path):
+            try:
+                rel_path = os.path.relpath(file_path, '/workspace')
+                if rel_path not in seen:
+                    seen.add(rel_path)
+                    unique_files.append(rel_path)
+            except ValueError:
+                # If file_path is not under /workspace, use as is
+                if file_path not in seen:
+                    seen.add(file_path)
+                    unique_files.append(file_path)
+        else:
+            if file_path not in seen:
+                seen.add(file_path)
+                unique_files.append(file_path)
+    
+    all_input_files = unique_files
+    
+    # Compute hash
+    hash_value = compute_files_hash(all_input_files)
+    print(f"[Python Builder] Computed hash: {hash_value}")
+    print(f"[Python Builder] Found {len(all_input_files)} input files")
+    
+    # WebSocket feature removed - dead feature
+    print(f"[Python Builder] WebSocket feature removed - not sending sourceFilesUpdated messages")
+    
+    # Generate metafile (which also generates bundles)
+    metafile = generate_metafile(entry_points)
+    
+    # Write metafile
+    # metafiles_dir = os.environ.get('METAFILES_DIR', '/workspace/testeranto/metafiles/python')
+    # os.makedirs(metafiles_dir, exist_ok=True)
+    
+    # metafile_path = os.path.join(metafiles_dir, 'allTests.json')
+    # print(f"Writing metafile to: {metafile_path}")
+    # with open(metafile_path, 'w') as f:
+    #     json.dump(metafile, f, indent=2)
+    # print(f"Metafile written successfully")
+    
+    # print(f"Python metafile written to {metafile_path}")
+    
+    # Print bundle information
+    bundles_dir = os.environ.get('BUNDLES_DIR', '/workspace/testeranto/bundles/allTests/python')
+    print(f"Python bundles written to {bundles_dir}")
+    
+    # Print summary
+    num_inputs = len(metafile['metafile']['inputs'])
+    num_outputs = len(metafile['metafile']['outputs'])
+    print(f"Metafile contains {num_inputs} input files and {num_outputs} output bundles")
+    
+    # List all text files in bundles directory
+    print(f"\\n=== Checking for generated text files in {bundles_dir} ===")
+    if os.path.exists(bundles_dir):
+        text_files = [f for f in os.listdir(bundles_dir) if f.endswith('.txt')]
+        print(f"Found {len(text_files)} text files:")
+        for tf in text_files:
+            tf_path = os.path.join(bundles_dir, tf)
+            print(f"  - {tf_path}")
+            if os.path.exists(tf_path):
+                try:
+                    with open(tf_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    print(f"    Content preview: {content[:200]}")
+                except Exception as e:
+                    print(f"    Error reading file: {e}")
+    else:
+        print(f"Bundles directory does not exist: {bundles_dir}")
+
+if __name__ == "__main__":
+    main()
+`;
+
+// src/server/runtimes/python/docker.ts
+var pythonScriptPath = join3(process.cwd(), "testeranto", "python_runtime.py");
+await Bun.write(pythonScriptPath, python_default);
+var pythonDockerComposeFile = (config, container_name, projectConfigPath, pythonConfigPath, testName) => {
+  return dockerComposeFile(config, container_name, projectConfigPath, pythonConfigPath, testName, pythonBuildCommand);
 };
-var pythonBuildCommand = (fpath) => {
-  return `python src/server/runtimes/python/pitono.py /workspace/${fpath}`;
+var pythonBuildCommand = (projectConfigPath, pythonConfigPath, testName) => {
+  return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName}`;
 };
-var pythonBddCommand = (fpath) => {
+var pythonBddCommand = (fpath, pythonConfigPath, configKey) => {
   const jsonStr = JSON.stringify({ ports: [1111] });
-  return `python ${fpath} '${jsonStr}'`;
+  return `python testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 };
 
 // src/server/runtimes/ruby/docker.ts
-import { join } from "path";
+import { join as join4 } from "path";
 
 // src/server/runtimes/ruby/ruby.rb
 var ruby_default = `require 'json'
@@ -3075,38 +4572,45 @@ require 'pathname'
 require 'set'
 require 'digest'
 
-puts "hello ruby builder", ARGV.inspect
+puts "hello ruby builder!", ARGV.inspect
 
-# project_config_file_path is a ruby file
-project_config_file_path = ARGV[0]
+
+
 ruby_config_file_path = ARGV[1]
 test_name = ARGV[2]
+project_config_file_path = ARGV[0]
+entryPoints = ARGV[3..-1]
+
+# puts "ruby_config_file_path", ruby_config_file_path
+# puts "test_name", test_name
+# puts "project_config_file_path", project_config_file_path
+# puts "entryPoints", entryPoints
 
 # Ensure the config file path is valid before requiring
-if File.exist?(project_config_file_path)
-  require project_config_file_path
-else
-  puts "Config file not found: #{project_config_file_path}"
-  exit(1)
-end
+# if File.exist?(project_config_file_path)
+#   require project_config_file_path
+# else
+#   puts "Config file not found: #{project_config_file_path}"
+#   exit(1)
+# end
 
 # Load the ruby config to get test entry points
-ruby_config = nil
-if File.exist?(ruby_config_file_path)
-  require ruby_config_file_path
-  # Try to get the config constant; assuming it's named after the file
-  config_name = File.basename(ruby_config_file_path, '.rb').split('_').map(&:capitalize).join
-  if Object.const_defined?(config_name)
-    ruby_config = Object.const_get(config_name)
-  else
-    puts "Warning: Could not find constant #{config_name} in #{ruby_config_file_path}"
-    # Fallback: assume the config is assigned to a global variable or just loaded
-    # We'll rely on the config being set via some other means
-  end
-else
-  puts "Ruby config file not found: #{ruby_config_file_path}"
-  exit(1)
-end
+# ruby_config = nil
+# if File.exist?(ruby_config_file_path)
+#   require ruby_config_file_path
+#   # Try to get the config constant; assuming it's named after the file
+#   config_name = File.basename(ruby_config_file_path, '.rb').split('_').map(&:capitalize).join
+#   if Object.const_defined?(config_name)
+#     ruby_config = Object.const_get(config_name)
+#   else
+#     puts "Warning: Could not find constant #{config_name} in #{ruby_config_file_path}"
+#     # Fallback: assume the config is assigned to a global variable or just loaded
+#     # We'll rely on the config being set via some other means
+#   end
+# else
+#   puts "Ruby config file not found: #{ruby_config_file_path}"
+#   exit(1)
+# end
 
 # Function to extract dependencies from a Ruby file
 def extract_dependencies(file_path, base_dir = Dir.pwd)
@@ -3225,12 +4729,9 @@ def compute_files_hash(files)
   hash.hexdigest
 end
 
-# Process each test entry point from the config
-# Assuming ruby_config has an entryPoints or similar structure
-if ruby_config && ruby_config.respond_to?(:entryPoints)
-  ruby_config.entryPoints.each do |entry_point|
+entryPoints.each do |entry_point|
     # Only process test files (files ending with .test.rb, .spec.rb, etc.)
-    next unless entry_point =~ /\\.(test|spec)\\.rb$/
+    # next unless entry_point =~ /\\.(test|spec)\\.rb$/
     
     puts "Processing Ruby test: #{entry_point}"
     
@@ -3246,7 +4747,7 @@ if ruby_config && ruby_config.respond_to?(:entryPoints)
     
     # Create output directory structure similar to Node builder
     output_base_name = File.basename(entry_point_path, '.rb')
-    input_files_path = "testeranto/bundles/#{output_base_name}.rb-inputFiles.json"
+    input_files_path = "testeranto/bundles/#{test_name}/#{entry_point}-inputFiles.json"
     
     # Ensure directory exists
     FileUtils.mkdir_p(File.dirname(input_files_path))
@@ -3259,7 +4760,7 @@ if ruby_config && ruby_config.respond_to?(:entryPoints)
     files_hash = compute_files_hash(all_dependencies)
     
     # Create the dummy bundle file that requires the original test file
-    bundle_path = "testeranto/bundles/#{output_base_name}.rb"
+    bundle_path = "testeranto/bundles/#{test_name}/#{entry_point}"
     
     # Write a dummy file that loads and executes the original test file
     # Using load ensures the file is executed every time
@@ -3285,101 +4786,558 @@ if ruby_config && ruby_config.respond_to?(:entryPoints)
     File.write(bundle_path, dummy_content)
     puts "Created dummy bundle file at #{bundle_path}"
   end
-else
-  puts "Warning: Ruby config doesn't have entryPoints method or config not loaded", ruby_config
   
 
-end
+
 
 puts "Ruby builder completed"
 `;
 
 // src/server/runtimes/ruby/docker.ts
-var rubyScriptPath = join(process.cwd(), "testeranto", "extracted_script.rb");
-console.log("rubyScriptPath", rubyScriptPath);
+var rubyScriptPath = join4(process.cwd(), "testeranto", "ruby_runtime.rb");
 await Bun.write(rubyScriptPath, ruby_default);
-var rubyDockerComposeFile = (config, container_name, projectConfigPath, rubyConfigPath, testName) => {
-  return {
-    build: {
-      context: process.cwd(),
-      dockerfile: config[container_name].dockerfile
-    },
-    container_name,
-    environment: {
-      NODE_ENV: "production",
-      ...config.env
-    },
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/testeranto:/workspace/testeranto`
-    ],
-    command: rubyBuildCommand(projectConfigPath, rubyConfigPath, testName)
-  };
+var rubyDockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName) => {
+  return dockerComposeFile(config, container_name, projectConfigPath, nodeConfigPath, testName, rubyBuildCommand);
 };
-var rubyBuildCommand = (projectConfigPath, rubyConfigPath, testName) => {
-  return `ruby /workspace/testeranto/extracted_script.rb /workspace/${projectConfigPath} /workspace/${rubyConfigPath} ${testName}`;
+var rubyBuildCommand = (projectConfigPath, rubyConfigPath, testName, tests) => {
+  return `ruby /workspace/testeranto/ruby_runtime.rb /workspace/${projectConfigPath} /workspace/${rubyConfigPath} ${testName} ${tests.join(" ")}`;
 };
-var rubyBddCommand = (fpath) => {
-  const jsonStr = JSON.stringify({ ports: [1111] });
-  return `ruby testeranto/bundles/allTests/ruby/Calculator.test.rb '${jsonStr}'`;
+var rubyBddCommand = (fpath, nodeConfigPath, configKey) => {
+  const jsonStr = JSON.stringify({
+    name: "ruby-test",
+    ports: [1111],
+    fs: "testeranto/reports/ruby",
+    timeout: 30000,
+    retries: 0,
+    environment: {}
+  });
+  return `ruby testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 };
 
 // src/server/runtimes/rust/docker.ts
-var rustDockerComposeFile = (config, container_name, fpath) => {
-  return {
-    build: {
-      context: `${process.cwd()}`,
-      dockerfile: config[container_name].dockerfile
-    },
-    container_name,
-    environment: {
-      NODE_ENV: "production",
-      ...config.env
-    },
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/example:/workspace/example`,
-      `${process.cwd()}/dist:/workspace/dist`
-    ],
-    command: rustBuildCommand(fpath)
-  };
+import { join as join5 } from "path";
+
+// src/server/runtimes/rust/main.rs
+var main_default2 = `use std::collections::HashMap;
+use std::env;
+use std::fs;
+use std::path::Path;
+use std::process::Command;
+use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
+use serde_json;
+use md5;
+
+extern crate serde;
+
+include!(env!("CONFIG_PATH"));
+
+#[derive(Serialize, Deserialize)]
+struct TestConfig {
+    path: String,
+}
+
+#[derive(Serialize, Deserialize)]
+struct RustProjectConfig {
+    tests: HashMap<String, TestConfig>,
+}
+
+#[derive(Serialize, Deserialize)]
+struct ProjectConfig {
+    rust: RustProjectConfig,
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("\uD83D\uDE80 Rust builder starting...");
+    
+    // Get test name from environment
+    let test_name = env::var("TEST_NAME").unwrap_or_else(|_| "allTests".to_string());
+    println!("TEST_NAME={}", test_name);
+    
+    // Load master configuration yml files
+    let config_path = find_config();
+    println!("Config path: {}", config_path);
+    
+    if !Path::new(&config_path).exists() {
+        eprintln!("\u274C Config file not found");
+        std::process::exit(1);
+    }
+    
+    let config_content = fs::read_to_string(&config_path)?;
+    let config: ProjectConfig = serde_json::from_str(&config_content)?;
+    
+    println!("\u2705 Loaded config with {} Rust test(s)", config.rust_tests[3].tests.len());
+    
+    // Process each test
+    for (test_key, test_config) in &config.rust.tests {
+        println!("\\n\uD83D\uDCE6 Processing test: {}", test_key);
+        
+        // Get test file name and base name
+        let test_path = Path::new(&test_config.path);
+        let test_file_name = test_path.file_name().unwrap().to_str().unwrap();
+        let test_base_name = test_file_name.replace(".rs", "");
+        
+        // Collect input files
+        let input_files = collect_input_files(test_path);
+        
+        // Compute hash
+        let test_hash = compute_files_hash(&input_files);
+        
+        // Create artifacts directory
+        let artifacts_dir = Path::new("/workspace").join("testeranto/bundles/allTests/rust/example");
+        fs::create_dir_all(&artifacts_dir)?;
+        
+        // Create inputFiles.json
+        let input_files_path = artifacts_dir.join(format!("{}.rs-inputFiles.json", test_base_name));
+        let input_files_json = serde_json::to_string_pretty(&input_files)?;
+        fs::write(&input_files_path, input_files_json)?;
+        
+        println!("  \u2705 Created inputFiles.json at {:?} (hash: {})", input_files_path, test_hash);
+        
+        // Compile the test
+        let output_bin_path = artifacts_dir.join(format!("{}.bin", test_base_name));
+        println!("  \uD83D\uDD28 Compiling test to {:?}...", output_bin_path);
+        
+        // Change to workspace directory
+        let workspace = Path::new("/workspace");
+        env::set_current_dir(workspace)?;
+        
+        // Build with cargo
+        let status = Command::new("cargo")
+            .args(&["build", "--release", "--bin", &test_base_name])
+            .status()?;
+        
+        if status.success() {
+            // Copy the built binary
+            let target_bin = workspace.join("target/release").join(&test_base_name);
+            if target_bin.exists() {
+                fs::copy(&target_bin, &output_bin_path)?;
+                println!("  \u2705 Successfully compiled to {:?}", output_bin_path);
+            } else {
+                eprintln!("  \u26A0\uFE0F  Built binary not found at {:?}", target_bin);
+                // Create a placeholder
+                fs::write(&output_bin_path, b"Placeholder binary")?;
+            }
+        } else {
+            eprintln!("  \u26A0\uFE0F  Cargo build failed");
+            // Create a placeholder
+            fs::write(&output_bin_path, b"Placeholder binary")?;
+        }
+    }
+    
+    println!("\\n\uD83C\uDF89 Rust builder completed successfully");
+    Ok(())
+}
+
+fn find_config() -> String {
+    "/workspace/testeranto/runtimes/rust/rust.json".to_string()
+}
+
+fn collect_input_files(test_path: &Path) -> Vec<String> {
+    let mut files = Vec::new();
+    
+    // Add the test file itself
+    if let Ok(relative) = test_path.strip_prefix("/workspace") {
+        files.push(relative.to_string_lossy().to_string());
+    } else {
+        files.push(test_path.to_string_lossy().to_string());
+    }
+    
+    // Look for Rust files in the same directory
+    if let Some(parent) = test_path.parent() {
+        if let Ok(entries) = fs::read_dir(parent) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.extension().map(|e| e == "rs").unwrap_or(false) {
+                    if let Ok(relative) = path.strip_prefix("/workspace") {
+                        let rel_str = relative.to_string_lossy().to_string();
+                        if !files.contains(&rel_str) {
+                            files.push(rel_str);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Add Cargo.toml if present
+    let workspace = Path::new("/workspace");
+    let cargo_toml = workspace.join("Cargo.toml");
+    if cargo_toml.exists() {
+        files.push("Cargo.toml".to_string());
+    }
+    
+    // Add Cargo.lock if present
+    let cargo_lock = workspace.join("Cargo.lock");
+    if cargo_lock.exists() {
+        files.push("Cargo.lock".to_string());
+    }
+    
+    files
+}
+
+fn compute_files_hash(files: &[String]) -> String {
+    use md5::Context;
+    let mut context = Context::new();
+    
+    for file in files {
+        context.consume(file.as_bytes());
+        let file_path = Path::new("/workspace").join(file);
+        match fs::metadata(&file_path) {
+            Ok(metadata) => {
+                if let Ok(modified) = metadata.modified() {
+                    if let Ok(duration) = modified.elapsed() {
+                        context.consume(duration.as_millis().to_string().as_bytes());
+                    }
+                }
+                context.consume(metadata.len().to_string().as_bytes());
+            }
+            Err(_) => {
+                context.consume(b"missing");
+            }
+        }
+    }
+    
+    let digest = context.compute();
+    format!("{:x}", digest)
+}
+`;
+
+// src/server/runtimes/rust/docker.ts
+var rustScriptPath = join5(process.cwd(), "testeranto", "rust_runtime.rs");
+await Bun.write(rustScriptPath, main_default2);
+var rustDockerComposeFile = (config, container_name, projectConfigPath, rustConfigPath, testName) => {
+  return dockerComposeFile(config, container_name, projectConfigPath, rustConfigPath, testName, rustBuildCommand);
 };
-var rustBuildCommand = (fpath) => {
-  return `sh -c "CONFIG_PATH=/workspace/${fpath} cargo build --release && ./target/release/my_program"`;
+var rustBuildCommand = (projectConfigPath, rustConfigPath, testName) => {
+  return `cargo run /workspace/testeranto/rust_runtime.rs /workspace/${projectConfigPath} /workspace/${rustConfigPath} ${testName}`;
 };
-var rustBddCommand = (fpath) => {
-  return `rustc testeranto/bundles/rust/${fpath} /workspace/rust.rs`;
+var rustBddCommand = (fpath, rustConfigPath, configKey) => {
+  const jsonStr = JSON.stringify({ ports: [1111] });
+  return `cargo run testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 };
 
 // src/server/runtimes/web/docker.ts
-var webDockerComposeFile = (config, container_name, fpath) => {
+import { join as join6 } from "path";
+
+// dist/prebuild/web/web.mjs
+var web_default = `// src/server/runtimes/web/web.ts
+import esbuild from "esbuild";
+import puppeteer from "puppeteer";
+
+// src/esbuildConfigs/featuresPlugin.ts
+import path from "path";
+var featuresPlugin_default = {
+  name: "feature-markdown",
+  setup(build) {
+    build.onResolve({ filter: /\\.md$/ }, (args) => {
+      if (args.resolveDir === "") return;
+      return {
+        path: path.isAbsolute(args.path) ? args.path : path.join(args.resolveDir, args.path),
+        namespace: "feature-markdown"
+      };
+    });
+    build.onLoad(
+      { filter: /.*/, namespace: "feature-markdown" },
+      async (args) => {
+        return {
+          contents: \`file://\${args.path}\`,
+          loader: "text"
+          // contents: JSON.stringify({ path: args.path }),
+          // loader: "json",
+          // contents: JSON.stringify({
+          //   // html: markdownHTML,
+          //   raw: markdownContent,
+          //   filename: args.path, //path.basename(args.path),
+          // }),
+          // loader: "json",
+        };
+      }
+    );
+  }
+};
+
+// src/esbuildConfigs/index.ts
+import "esbuild";
+var esbuildConfigs_default = (config) => {
   return {
-    platform: "linux/arm64",
-    build: {
-      context: process.cwd(),
-      dockerfile: config[container_name].dockerfile
-    },
-    container_name,
-    environment: {},
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/example:/workspace/example`,
-      `${process.cwd()}/dist:/workspace/dist`
-    ],
-    command: webBuildCommand(fpath)
+    // packages: "external",
+    target: "esnext",
+    format: "esm",
+    splitting: true,
+    outExtension: { ".js": ".mjs" },
+    outbase: ".",
+    jsx: "transform",
+    bundle: true,
+    // minify: config.minify === true,
+    write: true,
+    loader: {
+      ".js": "jsx",
+      ".png": "binary",
+      ".jpg": "binary"
+    }
   };
 };
-var webBuildCommand = (fpath) => {
-  return `yarn tsx src/server/runtimes/web/web.ts /workspace/${fpath}`;
+
+// src/esbuildConfigs/inputFilesPlugin.ts
+import fs from "fs";
+var otherInputs = {};
+var register = (entrypoint, sources) => {
+  if (!otherInputs[entrypoint]) {
+    otherInputs[entrypoint] = /* @__PURE__ */ new Set();
+  }
+  sources.forEach((s) => otherInputs[entrypoint].add(s));
 };
-var webBddCommand = (fpath) => {
+var inputFilesPlugin_default = (platform, testName2) => {
+  const f = \`\${testName2}\`;
+  return {
+    register,
+    inputFilesPluginFactory: {
+      name: "metafileWriter",
+      setup(build) {
+        build.onEnd((result) => {
+          fs.writeFileSync(f, JSON.stringify(result, null, 2));
+        });
+      }
+    }
+  };
+};
+
+// src/esbuildConfigs/rebuildPlugin.ts
+import fs2 from "fs";
+var rebuildPlugin_default = (r) => {
+  return {
+    name: "rebuild-notify",
+    setup: (build) => {
+      build.onEnd((result) => {
+        console.log(\`\${r} > build ended with \${result.errors.length} errors\`);
+        if (result.errors.length > 0) {
+          fs2.writeFileSync(
+            \`./testeranto/reports\${r}_build_errors\`,
+            JSON.stringify(result, null, 2)
+          );
+        }
+      });
+    }
+  };
+};
+
+// src/server/runtimes/web/esbuild.ts
+var esbuild_default = (config, testName2, projectConfig) => {
+  const entryPoints = projectConfig.runtimes[testName2].tests;
+  const { inputFilesPluginFactory, register: register2 } = inputFilesPlugin_default(
+    "web",
+    testName2
+  );
+  return {
+    ...esbuildConfigs_default(config),
+    outdir: \`testeranto/bundles/\${testName2}\`,
+    outbase: ".",
+    metafile: true,
+    supported: {
+      "dynamic-import": true
+    },
+    define: {
+      "process.env.FLUENTFFMPEG_COV": "0",
+      ENV: \`"web"\`
+    },
+    bundle: true,
+    format: "esm",
+    absWorkingDir: process.cwd(),
+    platform: "browser",
+    packages: "external",
+    entryPoints,
+    plugins: [
+      featuresPlugin_default,
+      inputFilesPluginFactory,
+      rebuildPlugin_default("web"),
+      ...config.web?.plugins?.map((p) => p(register2, entryPoints)) || []
+    ]
+  };
+};
+
+// src/server/runtimes/common.ts
+import path2 from "path";
+import fs3 from "fs";
+async function processMetafile(config, metafile, runtime, configKey) {
+  for (const [outputFile, outputInfo] of Object.entries(metafile.outputs)) {
+    let collectFileDependencies2 = function(filePath) {
+      if (collectedFiles.has(filePath)) {
+        return;
+      }
+      collectedFiles.add(filePath);
+      const fileInfo = metafile.inputs?.[filePath];
+      if (fileInfo?.imports) {
+        for (const importInfo of fileInfo.imports) {
+          const importPath = importInfo.path;
+          if (metafile.inputs?.[importPath]) {
+            collectFileDependencies2(importPath);
+          }
+        }
+      }
+    };
+    var collectFileDependencies = collectFileDependencies2;
+    const outputInfoTyped = outputInfo;
+    if (!outputInfoTyped.entryPoint) {
+      console.log(\`[\${runtime} Builder] Skipping output without entryPoint: \${outputFile}\`);
+      continue;
+    }
+    const entryPoint = outputInfoTyped.entryPoint;
+    const isTestFile = /\\.(test|spec)\\.(ts|js)$/.test(entryPoint);
+    if (!isTestFile) {
+      console.log(\`[\${runtime} Builder] Skipping non-test entryPoint: \${entryPoint}\`);
+      continue;
+    }
+    const outputInputs = outputInfoTyped.inputs || {};
+    const collectedFiles = /* @__PURE__ */ new Set();
+    for (const inputFile of Object.keys(outputInputs)) {
+      collectFileDependencies2(inputFile);
+    }
+    const allInputFiles = Array.from(collectedFiles).map(
+      (filePath) => path2.isAbsolute(filePath) ? filePath : path2.resolve(process.cwd(), filePath)
+    );
+    const workspaceRoot = "/workspace";
+    const relativeFiles = allInputFiles.map((file) => {
+      const absolutePath = path2.isAbsolute(file) ? file : path2.resolve(process.cwd(), file);
+      if (absolutePath.startsWith(workspaceRoot)) {
+        return absolutePath.slice(workspaceRoot.length);
+      }
+      return path2.relative(process.cwd(), absolutePath);
+    }).filter(Boolean);
+    const outputBaseName = entryPoint.split(".").slice(0, -1).join(".");
+    const inputFilesPath = \`testeranto/bundles/\${configKey}/\${outputBaseName}.mjs-inputFiles.json\`;
+    fs3.writeFileSync(inputFilesPath, JSON.stringify(relativeFiles, null, 2));
+    console.log(\`[\${runtime} Builder] Wrote \${relativeFiles.length} input files to \${inputFilesPath}\`);
+  }
+}
+
+// src/server/runtimes/web/web.ts
+import * as fs4 from "fs";
+import * as path3 from "path";
+var projectConfigPath = process.argv[2];
+var nodeConfigPath = process.argv[3];
+var testName = process.argv[4];
+async function startBundling(webConfigs, projectConfig) {
+  console.log(\`[WEB BUILDER] is now bundling:  \${testName}\`);
+  const w = esbuild_default(webConfigs, testName, projectConfig);
+  const buildResult = await esbuild.build(w);
+  if (buildResult.metafile) {
+    await processMetafile(projectConfig, buildResult.metafile, "web", testName);
+    const outputFiles = Object.keys(buildResult.metafile.outputs);
+    for (const outputFile of outputFiles) {
+      if (true) {
+        const htmlPath = \`testeranto/bundles/allTests/web/example/Calculator.test.ts.html\`;
+        await fs4.promises.mkdir(path3.dirname(htmlPath), { recursive: true });
+        const htmlContent = \`<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Test Runner</title>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script src="testeranto/bundles/allTests/web/example/Calculator.test.mjs"></script>
+    </body>
+    </html>\`;
+        await fs4.promises.writeFile(htmlPath, htmlContent);
+        console.log(\`Created HTML file: \${htmlPath}\`);
+      }
+    }
+  } else {
+    console.warn("No metafile generated by esbuild");
+  }
+  console.log("WEB BUILDER: Metafiles have been generated");
+  if (true) {
+    console.log(
+      "WEB BUILDER: Running in dev mode, keeping builder alive..."
+    );
+    const ctx = await esbuild.context(w);
+    let { hosts, port } = await ctx.serve();
+    console.log(
+      \`[WEB BUILDER]: esbuild server \${hosts}, \${port}\`
+    );
+    process.on("SIGINT", async () => {
+      console.log("WEB BUILDER: Shutting down...");
+      process.exit(0);
+    });
+    try {
+      const browser = await puppeteer.launch({
+        // Flags required for Docker/Alpine compatibility
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          // Prevents crashes in low-memory Docker envs
+          "--disable-gpu",
+          "--single-process",
+          // Run in a single process
+          "--no-zygote",
+          // Disable zygote process
+          "--disable-background-timer-throttling",
+          // Disable throttling of timers in background pages
+          "--disable-backgrounding-occluded-windows",
+          // Disable backgrounding of occluded windows
+          "--disable-renderer-backgrounding",
+          // Disable backgrounding renders
+          "--remote-debugging-address=0.0.0.0",
+          // Allow remote debugging
+          "--remote-debugging-port=9222"
+          // Set remote debugging port
+        ],
+        // Automatically uses ENV PUPPETEER_EXECUTABLE_PATH
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser",
+        headless: true,
+        // Run in headless mode
+        timeout: 6e4
+        // Increase timeout to 60 seconds
+      });
+      console.log("Puppeteer launched successfully");
+    } catch (error) {
+      console.error("Failed to launch Puppeteer:", error);
+      process.exit(1);
+    }
+    await new Promise(() => {
+    });
+  }
+}
+async function main() {
+  try {
+    const nodeConfigs = (await import(nodeConfigPath)).default;
+    const projectConfigs = (await import(projectConfigPath)).default;
+    await startBundling(nodeConfigs, projectConfigs);
+  } catch (error) {
+    console.error("NODE BUILDER: Error importing config:", nodeConfigPath, error);
+    console.error(error);
+    process.exit(1);
+  }
+}
+main();
+`;
+
+// src/server/runtimes/web/docker.ts
+var webScriptPath = join6(process.cwd(), "testeranto", "web_runtime.ts");
+await Bun.write(webScriptPath, web_default);
+var webDockerComposeFile = (config, container_name, projectConfigPath, webConfigPath, testName) => {
+  return dockerComposeFile(config, container_name, projectConfigPath, webConfigPath, testName, webBuildCommand);
+};
+var webBuildCommand = (projectConfigPath, webConfigPath, testName) => {
+  return `yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName}`;
+};
+var webBddCommand = (fpath, webConfigPath, configKey) => {
+  const jsonStr = JSON.stringify({ ports: [1111] });
   return `node dist/prebuild/server/runtimes/web/hoist.mjs `;
 };
 
 // src/server/serverClasses/Server_Docker_Utils.ts
+var runTimeToCompose = {
+  node: [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
+  web: [webDockerComposeFile, webBuildCommand, webBddCommand],
+  python: [pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand],
+  golang: [golangDockerComposeFile, golangBuildCommand, golangBddCommand],
+  ruby: [rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand],
+  rust: [rustDockerComposeFile, rustBuildCommand, rustBddCommand],
+  java: [javaDockerComposeFile, javaBuildCommand, javaBddCommand]
+};
 var generateUid = (configKey, testName) => {
   const cleanTestName = testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-").replace(/[^a-z0-9_-]/g, "");
   return `${configKey}-${cleanTestName}`;
@@ -3438,8 +5396,13 @@ var getCheckServiceName = (uid, index) => {
   return `${uid}-${SERVICE_SUFFIXES.CHECK}-${index}`;
 };
 var INPUT_FILE_PATTERNS = {
-  node: (testName) => `testeranto/bundles/allTests/node/${testName.split(".").slice(0, -1).concat("mjs").join(".")}-inputFiles.json`,
-  ruby: () => `testeranto/bundles/allTests/ruby/Calculator.test.rb-inputFiles.json`
+  node: (testName) => `testeranto/bundles/node/${testName.split(".").slice(0, -1).concat("mjs").join(".")}-inputFiles.json`,
+  ruby: () => `testeranto/bundles/ruby/Calculator.test.rb-inputFiles.json`,
+  web: (testName) => `testeranto/bundles/web/${testName.split(".").slice(0, -1).concat("mjs").join(".")}-inputFiles.json`,
+  python: (testName) => `testeranto/bundles/python/${testName}-inputFiles.json`,
+  rust: (testName) => `testeranto/bundles/rust/${testName}-inputFiles.json`,
+  java: (testName) => `testeranto/bundles/java/${testName}-inputFiles.json`,
+  golang: (testName) => `testeranto/bundles/golang/${testName}-inputFiles.json`
 };
 var getInputFilePath = (runtime, testName) => {
   const pattern = INPUT_FILE_PATTERNS[runtime];
@@ -4082,43 +6045,7 @@ class Server_HTTP extends Server_Base {
         }
       });
     } else {
-      console.log(`[HTTP] getInputFiles does not exist on this instance`);
-      const fs2 = __require("fs");
-      const path2 = __require("path");
-      const inputFilePath = path2.join(process.cwd(), "testeranto", "bundles", "allTests", runtime, `${testName}-inputFiles.json`);
-      if (fs2.existsSync(inputFilePath)) {
-        const fileContent = fs2.readFileSync(inputFilePath, "utf-8");
-        const inputFiles = JSON.parse(fileContent);
-        const responseData = {
-          runtime,
-          testName,
-          inputFiles: inputFiles || [],
-          timestamp: new Date().toISOString(),
-          message: "Success (from file)"
-        };
-        return new Response(JSON.stringify(responseData, null, 2), {
-          status: 200,
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-          }
-        });
-      } else {
-        return new Response(JSON.stringify({
-          error: "getInputFiles method not available and file not found",
-          runtime,
-          testName,
-          inputFiles: [],
-          timestamp: new Date().toISOString(),
-          message: "No input files found"
-        }), {
-          status: 404,
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-          }
-        });
-      }
+      throw `[HTTP] getInputFiles does not exist on this instance`;
     }
   }
   handleHttpGetAiderProcesses() {
@@ -4933,15 +6860,6 @@ class Server_Docker extends Server_WS {
   }
   generateServices() {
     const services = {};
-    const runTimeToCompose = {
-      node: [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
-      web: [webDockerComposeFile, webBuildCommand, webBddCommand],
-      python: [pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand],
-      golang: [golangDockerComposeFile, golangBuildCommand, golangBddCommand],
-      ruby: [rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand],
-      rust: [rustDockerComposeFile, rustBuildCommand, rustBddCommand],
-      java: [javaDockerComposeFile, javaBuildCommand, javaBddCommand]
-    };
     const processedRuntimes = new Set;
     for (const [runtimeTestsName, runtimeTests] of Object.entries(this.configs.runtimes)) {
       const runtime = runtimeTests.runtime;
@@ -4958,7 +6876,7 @@ class Server_Docker extends Server_WS {
         if (!fs2.existsSync(fullDockerfilePath)) {
           throw `[Server_Docker] Dockerfile not found at ${fullDockerfilePath}`;
         }
-        const buildCommand = runTimeToCompose[runtime][1](buildOptions, buildOptions, runtimeTestsName);
+        const buildCommand = runTimeToCompose[runtime][1]("testeranto/testeranto.ts", buildOptions, runtimeTestsName, runtimeTests.tests);
         console.log(`[Server_Docker] [generateServices] ${runtime} build command: "${buildCommand}"`);
         services[builderServiceName] = {
           build: {
@@ -4982,8 +6900,15 @@ class Server_Docker extends Server_WS {
         const cleanedTestName = cleanTestName(tName);
         const uid = `${runtimeTestsName.toLowerCase()}-${cleanedTestName}`;
         const bddCommandFunc = runTimeToCompose[runtime][2];
-        const filePath = `testeranto/bundles/allTests/${runtime}/${tName}`;
-        const bddCommand = bddCommandFunc(filePath, buildOptions);
+        let f;
+        if (runtime === "node") {
+          f = tName.split(".").slice(0, -1).concat("mjs").join(".");
+        } else if (runtime === "web") {
+          f = tName.split(".").slice(0, -1).concat("mjs").join(".");
+        } else {
+          f = tName;
+        }
+        const bddCommand = bddCommandFunc(f, buildOptions, runtimeTestsName);
         console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} BDD command: "${bddCommand}"`);
         services[getBddServiceName(uid)] = this.bddTestDockerComposeFile(runtime, getBddServiceName(uid), bddCommand);
         services[getAiderServiceName(uid)] = this.aiderDockerComposeFile(getAiderServiceName(uid));
@@ -5079,7 +7004,7 @@ class Server_Docker extends Server_WS {
     }
   }
   async watchInputFile(runtime, testsName) {
-    let configKey = null;
+    let configKey = "";
     for (const [key, configValue] of Object.entries(this.configs.runtimes)) {
       if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
         configKey = key;
@@ -5102,22 +7027,26 @@ class Server_Docker extends Server_WS {
       this.inputFiles[configKey][testsName] = inputFiles;
       console.log(`[Server_Docker] Loaded ${inputFiles.length} input files from ${inputFilePath}`);
     }
-    fs2.watchFile(inputFilePath, (curr, prev) => {
-      console.log(`[Server_Docker] Input file changed: ${inputFilePath}`);
-      const fileContent = fs2.readFileSync(inputFilePath, "utf-8");
-      const inputFiles = JSON.parse(fileContent);
-      this.inputFiles[configKey][testsName] = inputFiles;
-      console.log(`[Server_Docker] Updated input files for ${configKey}/${testsName}: ${inputFiles.length} files`);
-      this.resourceChanged("/~/inputfiles");
-      for (const [ck, configValue] of Object.entries(this.configs.runtimes)) {
-        if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
-          this.launchBddTest(runtime, testsName, ck, configValue);
-          this.launchChecks(runtime, testsName, ck, configValue);
-          this.informAider(runtime, testsName, ck, configValue, inputFiles);
-          break;
+    try {
+      fs2.watchFile(inputFilePath, (curr, prev) => {
+        console.log(`[Server_Docker] Input file changed: ${inputFilePath}`);
+        const fileContent = fs2.readFileSync(inputFilePath, "utf-8");
+        const inputFiles = JSON.parse(fileContent);
+        this.inputFiles[configKey][testsName] = inputFiles;
+        console.log(`[Server_Docker] Updated input files for ${configKey}/${testsName}: ${inputFiles.length} files`);
+        this.resourceChanged("/~/inputfiles");
+        for (const [ck, configValue] of Object.entries(this.configs.runtimes)) {
+          if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
+            this.launchBddTest(runtime, testsName, ck, configValue);
+            this.launchChecks(runtime, testsName, ck, configValue);
+            this.informAider(runtime, testsName, ck, configValue, inputFiles);
+            break;
+          }
         }
-      }
-    });
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
   async informAider(runtime, testName, configKey, configValue, inputFiles) {
     const uid = generateUid(configKey, testName);
@@ -5133,7 +7062,7 @@ class Server_Docker extends Server_WS {
         return;
       }
       console.log(`[Server_Docker] Found container ID: ${containerId} for ${aiderServiceName}`);
-      const inputFilesPath = `testeranto/bundles/allTests/${runtime}/${testName}-inputFiles.json`;
+      const inputFilesPath = `testeranto/bundles/${runtime}/${testName}-inputFiles.json`;
       let inputContent = "";
       try {
         inputContent = fs2.readFileSync(inputFilesPath, "utf-8");
@@ -5542,11 +7471,6 @@ class Server_Docker extends Server_WS {
       };
     }
   }
-  autogenerateStamp(x) {
-    return `# This file is autogenerated. Do not edit it directly
-${x}
-    `;
-  }
   async startServiceLogging(serviceName, runtime) {
     const reportDir = getFullReportDir(process.cwd(), runtime);
     try {
@@ -5641,10 +7565,6 @@ ${x}
     } else {
       console.debug(`[Server_Docker] No container found for service ${serviceName}`);
     }
-  }
-  async exec(cmd, options) {
-    const execAsync = promisify(exec);
-    return execAsync(cmd, { cwd: options.cwd });
   }
   spawnPromise(command) {
     console.log(`[spawnPromise] Executing: ${command}`);
@@ -5754,6 +7674,11 @@ ${x}
       }
     }
     return result;
+  }
+  autogenerateStamp(x) {
+    return `# This file is autogenerated. Do not edit it directly
+${x}
+    `;
   }
   getLogsCommand(serviceName, tail = 100) {
     const base = `${DOCKER_COMPOSE_LOGS} --tail=${tail}`;

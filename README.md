@@ -37,12 +37,12 @@ The common pattern of testing and packaging software is
 Testeranto reverses this pattern
 
 1) Breakup the application into "slices"
-2) Package each
-3) static tests of input files
-4) unit tests of input files
-5) run testeranto tests of input files
-6) packaging 
-7) integration tests of entire codebase
+2) Package each test, producing a set of input files which correlate output artifacts to to the local files which they import.
+3) run all the tests
+4) the developer invokes the LLM and the results of the tests are passed to an LLM context, along with the input files, features, etc
+5) the LLM produces a change
+6) this change triggers the test runner to rebuild and relaunch the relevevant tests
+7) goto 4
 
 By packaging a piece of software first, we can correlate the output aritifacts to it's specific input source files. We can then run static tests and unit tests upon this set of input files. The results of all these tests, plus the BDD test results, are given to an LLM. This allows focus the LLM's context entirely around 1 slice of an application.
 

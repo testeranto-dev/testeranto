@@ -4,38 +4,45 @@ require 'pathname'
 require 'set'
 require 'digest'
 
-puts "hello ruby builder", ARGV.inspect
+puts "hello ruby builder!", ARGV.inspect
 
-# project_config_file_path is a ruby file
-project_config_file_path = ARGV[0]
+
+
 ruby_config_file_path = ARGV[1]
 test_name = ARGV[2]
+project_config_file_path = ARGV[0]
+entryPoints = ARGV[3..-1]
+
+# puts "ruby_config_file_path", ruby_config_file_path
+# puts "test_name", test_name
+# puts "project_config_file_path", project_config_file_path
+# puts "entryPoints", entryPoints
 
 # Ensure the config file path is valid before requiring
-if File.exist?(project_config_file_path)
-  require project_config_file_path
-else
-  puts "Config file not found: #{project_config_file_path}"
-  exit(1)
-end
+# if File.exist?(project_config_file_path)
+#   require project_config_file_path
+# else
+#   puts "Config file not found: #{project_config_file_path}"
+#   exit(1)
+# end
 
 # Load the ruby config to get test entry points
-ruby_config = nil
-if File.exist?(ruby_config_file_path)
-  require ruby_config_file_path
-  # Try to get the config constant; assuming it's named after the file
-  config_name = File.basename(ruby_config_file_path, '.rb').split('_').map(&:capitalize).join
-  if Object.const_defined?(config_name)
-    ruby_config = Object.const_get(config_name)
-  else
-    puts "Warning: Could not find constant #{config_name} in #{ruby_config_file_path}"
-    # Fallback: assume the config is assigned to a global variable or just loaded
-    # We'll rely on the config being set via some other means
-  end
-else
-  puts "Ruby config file not found: #{ruby_config_file_path}"
-  exit(1)
-end
+# ruby_config = nil
+# if File.exist?(ruby_config_file_path)
+#   require ruby_config_file_path
+#   # Try to get the config constant; assuming it's named after the file
+#   config_name = File.basename(ruby_config_file_path, '.rb').split('_').map(&:capitalize).join
+#   if Object.const_defined?(config_name)
+#     ruby_config = Object.const_get(config_name)
+#   else
+#     puts "Warning: Could not find constant #{config_name} in #{ruby_config_file_path}"
+#     # Fallback: assume the config is assigned to a global variable or just loaded
+#     # We'll rely on the config being set via some other means
+#   end
+# else
+#   puts "Ruby config file not found: #{ruby_config_file_path}"
+#   exit(1)
+# end
 
 # Function to extract dependencies from a Ruby file
 def extract_dependencies(file_path, base_dir = Dir.pwd)
@@ -154,12 +161,9 @@ def compute_files_hash(files)
   hash.hexdigest
 end
 
-# Process each test entry point from the config
-# Assuming ruby_config has an entryPoints or similar structure
-if ruby_config && ruby_config.respond_to?(:entryPoints)
-  ruby_config.entryPoints.each do |entry_point|
+entryPoints.each do |entry_point|
     # Only process test files (files ending with .test.rb, .spec.rb, etc.)
-    next unless entry_point =~ /\.(test|spec)\.rb$/
+    # next unless entry_point =~ /\.(test|spec)\.rb$/
     
     puts "Processing Ruby test: #{entry_point}"
     
@@ -175,7 +179,7 @@ if ruby_config && ruby_config.respond_to?(:entryPoints)
     
     # Create output directory structure similar to Node builder
     output_base_name = File.basename(entry_point_path, '.rb')
-    input_files_path = "testeranto/bundles/#{output_base_name}.rb-inputFiles.json"
+    input_files_path = "testeranto/bundles/#{test_name}/#{entry_point}-inputFiles.json"
     
     # Ensure directory exists
     FileUtils.mkdir_p(File.dirname(input_files_path))
@@ -188,7 +192,7 @@ if ruby_config && ruby_config.respond_to?(:entryPoints)
     files_hash = compute_files_hash(all_dependencies)
     
     # Create the dummy bundle file that requires the original test file
-    bundle_path = "testeranto/bundles/#{output_base_name}.rb"
+    bundle_path = "testeranto/bundles/#{test_name}/#{entry_point}"
     
     # Write a dummy file that loads and executes the original test file
     # Using load ensures the file is executed every time
@@ -214,10 +218,8 @@ if ruby_config && ruby_config.respond_to?(:entryPoints)
     File.write(bundle_path, dummy_content)
     puts "Created dummy bundle file at #{bundle_path}"
   end
-else
-  puts "Warning: Ruby config doesn't have entryPoints method or config not loaded", ruby_config
   
 
-end
+
 
 puts "Ruby builder completed"

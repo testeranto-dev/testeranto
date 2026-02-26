@@ -29,6 +29,8 @@ import {
   getStatusFilePath,
   isContainerActive,
   runTimeToCompose,
+  type IDockerComposeResult,
+  type IService,
 } from "./Server_Docker_Utils";
 import { Server_WS } from "./Server_WS";
 
@@ -190,10 +192,11 @@ export class Server_Docker extends Server_WS {
 
         // Get build command
         const buildCommand = runTimeToCompose[runtime][1](
-          buildOptions,
+          'testeranto/testeranto.ts',
           buildOptions,
           runtimeTestsName,
-          runtimeTestsName
+          runtimeTests.tests
+          // runtimeTestsName
 
         );
 
@@ -229,8 +232,22 @@ export class Server_Docker extends Server_WS {
 
         // Add BDD service for this test
         const bddCommandFunc = runTimeToCompose[runtime][2];
-        const filePath = `testeranto/bundles/allTests/${runtime}/${tName}`;
-        const bddCommand = bddCommandFunc(filePath, buildOptions, runtimeTestsName);
+
+        // v0
+        // const filePath = `testeranto/bundles/${runtime}/${tName}`;
+        // v1
+        // const filePath = `${runtime}/${tName}`;
+
+        let f;
+        if (runtime === "node") {
+          f = tName.split('.').slice(0, -1).concat('mjs').join('.')
+        } else if (runtime === "web") {
+          f = tName.split('.').slice(0, -1).concat('mjs').join('.')
+        } else {
+          f = tName
+        }
+
+        const bddCommand = bddCommandFunc(f, buildOptions, runtimeTestsName);
 
         console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} BDD command: "${bddCommand}"`);
 
@@ -297,54 +314,7 @@ export class Server_Docker extends Server_WS {
       this.resourceChanged('/~/processes');
     }
 
-    // await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d browser`);
-
-    // // Wait for browser service to be healthy before starting web BDD services
-    // console.log(`[Server_Docker] Waiting for browser container to be healthy...`);
-    // await this.waitForContainerHealthy('browser-allTests', 60000); // 60 seconds max
-
-    // Start aider services
-    // for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-    //   const runtime = configValue.runtime
-    //   // const testsObj = configValue[3];
-    //   const tests = configValue.tests
-
-    //   for (const testName of tests) {
-    //     // Generate the UID exactly as DockerManager does
-    //     const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-    //     const aiderServiceName = `${uid}-aider`;
-
-    //     console.log(`[Server_Docker] Starting aider service: ${aiderServiceName} for test ${testName}`);
-    //     try {
-    //       await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${aiderServiceName}`);
-    //       // Capture any existing logs first (overwrites the file)
-    //       await this.captureExistingLogs(aiderServiceName, runtime);
-    //       // Then start logging new output (appends to the file)
-    //       this.startServiceLogging(aiderServiceName, runtime)
-    //         .catch(error => console.error(`[Server_Docker] Failed to start logging for ${aiderServiceName}:`, error));
-
-    //       // Notify clients that processes resource has changed
-    //       this.resourceChanged('/~/processes');
-    //     } catch (error: any) {
-    //       console.error(`[Server_Docker] Failed to start ${aiderServiceName}: ${error.message}`);
-    //     }
-    //   }
-    // }
-
-    // Start BDD test services
-    // for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-    //   const runtime = configValue.runtime
-    //   const tests = configValue.tests
-
-    //   console.log(`[Server_Docker] Found tests for ${runtime}:`, (JSON.stringify(tests)));
-
-    //   for (const testName of tests) {
-    //     const uid = `${configKey}-${testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-")}`;
-    //     const bddServiceName = `${uid}-bdd`;
-
-    //   }
-    // }
-
+    // eumerate over runtimes and tests, running the bdd and static chekcks
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
       const runtime: IRunTime = configValue.runtime as IRunTime;
       const tests = configValue.tests;
@@ -469,26 +439,31 @@ export class Server_Docker extends Server_WS {
       console.log(`[Server_Docker] Loaded ${inputFiles.length} input files from ${inputFilePath}`);
     }
 
-    fs.watchFile(inputFilePath, (curr, prev) => {
-      console.log(`[Server_Docker] Input file changed: ${inputFilePath}`);
+    try {
+      fs.watchFile(inputFilePath, (curr, prev) => {
+        console.log(`[Server_Docker] Input file changed: ${inputFilePath}`);
 
-      const fileContent = fs.readFileSync(inputFilePath, 'utf-8');
-      const inputFiles = JSON.parse(fileContent);
-      this.inputFiles[configKey!][testsName] = inputFiles;
-      console.log(`[Server_Docker] Updated input files for ${configKey}/${testsName}: ${inputFiles.length} files`);
+        const fileContent = fs.readFileSync(inputFilePath, 'utf-8');
+        const inputFiles = JSON.parse(fileContent);
+        this.inputFiles[configKey!][testsName] = inputFiles;
+        console.log(`[Server_Docker] Updated input files for ${configKey}/${testsName}: ${inputFiles.length} files`);
 
-      this.resourceChanged('/~/inputfiles');
+        this.resourceChanged('/~/inputfiles');
 
-      // Find the configuration for this runtime and test
-      for (const [ck, configValue] of Object.entries(this.configs.runtimes)) {
-        if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
-          this.launchBddTest(runtime, testsName, ck, configValue);
-          this.launchChecks(runtime, testsName, ck, configValue);
-          this.informAider(runtime, testsName, ck, configValue, inputFiles);
-          break;
+        // Find the configuration for this runtime and test
+        for (const [ck, configValue] of Object.entries(this.configs.runtimes)) {
+          if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
+            this.launchBddTest(runtime, testsName, ck, configValue);
+            this.launchChecks(runtime, testsName, ck, configValue);
+            this.informAider(runtime, testsName, ck, configValue, inputFiles);
+            break;
+          }
         }
-      }
-    });
+      });
+    } catch (e) {
+      console.error(e)
+    }
+
   }
 
   // Alert the aider process that the context should be updated
@@ -514,7 +489,7 @@ export class Server_Docker extends Server_WS {
       console.log(`[Server_Docker] Found container ID: ${containerId} for ${aiderServiceName}`);
 
       // Read the input files content
-      const inputFilesPath = `testeranto/bundles/allTests/${runtime}/${testName}-inputFiles.json`;
+      const inputFilesPath = `testeranto/bundles/${runtime}/${testName}-inputFiles.json`;
       let inputContent = '';
       try {
         inputContent = fs.readFileSync(inputFilesPath, 'utf-8');

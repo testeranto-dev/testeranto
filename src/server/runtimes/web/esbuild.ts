@@ -1,4 +1,3 @@
-
 import type { BuildOptions } from "esbuild";
 import featuresPlugin from "../../../esbuildConfigs/featuresPlugin.js";
 import baseEsBuildConfig from "../../../esbuildConfigs/index.js";
@@ -6,9 +5,13 @@ import inputFilesPlugin from "../../../esbuildConfigs/inputFilesPlugin.js";
 import rebuildPlugin from "../../../esbuildConfigs/rebuildPlugin.js";
 import type { ITestconfigV2 } from "../../../Types.js";
 
-export default (config: ITestconfigV2, testName: string): BuildOptions => {
-  // Use the same entry points as node tests for consistency
-  const entrypoints = ["./example/Calculator.test.ts"];
+export default (
+  config: ITestconfigV2,
+  testName: string,
+  projectConfig: ITestconfigV2
+): BuildOptions => {
+
+  const entryPoints = projectConfig.runtimes[testName].tests;
 
   const { inputFilesPluginFactory, register } = inputFilesPlugin(
     "web",
@@ -27,17 +30,17 @@ export default (config: ITestconfigV2, testName: string): BuildOptions => {
       "process.env.FLUENTFFMPEG_COV": "0",
       ENV: `"web"`,
     },
+    bundle: true,
+    format: "esm",
     absWorkingDir: process.cwd(),
     platform: "browser",
     packages: "external",
-    entryPoints: entrypoints,
-    bundle: true,
-    format: "esm",
+    entryPoints,
     plugins: [
       featuresPlugin,
       inputFilesPluginFactory,
       rebuildPlugin("web"),
-      ...(config.web?.plugins?.map((p) => p(register, entrypoints)) || []),
+      ...(config.web?.plugins?.map((p) => p(register, entryPoints)) || []),
     ],
   };
 };

@@ -28,8 +28,8 @@ export const runTimeToCompose: Record<IRunTime, [
     testName: string
   ) => object,
 
-  (projectConfig: string, nodeConfigPath: string, testname: string, c: string) => string,
-  (fpath: string, nodeConfigPath: string, c: string) => string,
+  (projectConfig: string, nodeConfigPath: string, testname: string, tests: string[]) => string,
+  (fpath: string, nodeConfigPath: string, configKey: string) => string,
 ]> = {
   'node': [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
   'web': [webDockerComposeFile, webBuildCommand, webBddCommand],
@@ -131,12 +131,21 @@ export const getCheckServiceName = (uid: string, index: number): string => {
   return `${uid}-${SERVICE_SUFFIXES.CHECK}-${index}`;
 };
 
-// File path patterns
 export const INPUT_FILE_PATTERNS: Record<string, (testName: string) => string> = {
   'node': (testName: string) =>
     `testeranto/bundles/node/${testName.split('.').slice(0, -1).concat('mjs').join('.')}-inputFiles.json`,
   'ruby': () =>
-    `testeranto/bundles/ruby/Calculator.test.rb-inputFiles.json`
+    `testeranto/bundles/ruby/Calculator.test.rb-inputFiles.json`,
+  'web': (testName: string) =>
+    `testeranto/bundles/web/${testName.split('.').slice(0, -1).concat('mjs').join('.')}-inputFiles.json`,
+  'python': (testName) =>
+    `testeranto/bundles/python/${testName}-inputFiles.json`,
+  'rust': (testName) =>
+    `testeranto/bundles/rust/${testName}-inputFiles.json`,
+  'java': (testName) =>
+    `testeranto/bundles/java/${testName}-inputFiles.json`,
+  'golang': (testName) =>
+    `testeranto/bundles/golang/${testName}-inputFiles.json`,
 };
 
 export const getInputFilePath = (runtime: string, testName: string): string => {
@@ -150,7 +159,6 @@ export const getInputFilePath = (runtime: string, testName: string): string => {
 // Common volume mounts
 export const COMMON_VOLUMES = [
   `${process.cwd()}/src:/workspace/src`,
-
   `${process.cwd()}/dist:/workspace/dist`,
   `${process.cwd()}/testeranto:/workspace/testeranto`,
 ];

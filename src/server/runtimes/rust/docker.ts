@@ -1,37 +1,37 @@
-import { IConfig } from "../../../Types";
+import { join } from "node:path";
+import type { ITestconfigV2 } from "../../../Types";
+import { dockerComposeFile } from "../dockerComposeFile";
 
-export const rustDockerComposeFile = (config: IConfig, container_name: string, fpath: string) => {
-  return {
-    build: {
-      context: `${process.cwd()}`,
-      dockerfile: config[container_name].dockerfile,
-    },
+// Import the rust runtime file as text
+import rustContent from "./main.rs" with { type: "text" };
+
+// Write the rust file to a location that will be mounted in the container
+const rustScriptPath = join(process.cwd(), "testeranto", "rust_runtime.rs");
+await Bun.write(rustScriptPath, rustContent);
+
+export const rustDockerComposeFile = (
+  config: ITestconfigV2,
+  container_name: string,
+  projectConfigPath: string,
+  rustConfigPath: string,
+  testName: string
+) => {
+  return dockerComposeFile(
+    config,
     container_name,
-    environment: {
-      NODE_ENV: "production",
-      ...config.env,
-    },
-    working_dir: "/workspace",
-    volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/example:/workspace/example`,
-      `${process.cwd()}/dist:/workspace/dist`,
-      // `${process.cwd()}/testeranto:/workspace/testeranto`,
-    ],
-    command: rustBuildCommand(fpath),
-  }
-
+    projectConfigPath,
+    rustConfigPath,
+    testName,
+    rustBuildCommand
+  )
 };
 
-export const rustBuildCommand = (fpath: string) => {
-  // return `cat /workspace/testeranto/runtimes/rust/rust.rs`
-  // return `cat /workspace/${fpath}`
-  // return `echo "${fpath}"`
-  // return `CONFIG_PATH="/workspace/${fpath}"  rustc src/server/runtimes/rust/main.rs -o my_program`;
-  return `sh -c "CONFIG_PATH=/workspace/${fpath} cargo build --release && ./target/release/my_program"`
-  // return `tree`
+export const rustBuildCommand = (projectConfigPath: string, rustConfigPath: string, testName: string) => {
+  // return `sh -c "CONFIG_PATH=/workspace/${fpath} cargo build --release && ./target/release/my_program"`
+  return `cargo run /workspace/testeranto/rust_runtime.rs /workspace/${projectConfigPath} /workspace/${rustConfigPath} ${testName}`
 }
 
-export const rustBddCommand = (fpath: string) => {
-  return `rustc testeranto/bundles/rust/${fpath} /workspace/rust.rs`;
+export const rustBddCommand = (fpath: string, rustConfigPath: string, configKey: string) => {
+  const jsonStr = JSON.stringify({ ports: [1111] });
+  return `cargo run testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 }

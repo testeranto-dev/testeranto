@@ -3,7 +3,32 @@ import fs from "fs"
 import path from "path"
 import * as esbuild from 'esbuild'
 
-// Build main application
+await esbuild.build({
+  outExtension: { '.js': '.mjs' },
+  entryPoints: [
+    'src/server/runtimes/node/node.ts',
+    'src/server/runtimes/web/web.ts',
+    'src/server/runtimes/web/hoist.ts'
+  ],
+  bundle: true,
+  format: "esm",
+  splitting: false,
+  platform: "node",
+  target: "node20",
+  outdir: "dist/prebuild",
+  packages: "external",
+  // supported: {
+  //   "dynamic-import": true,
+  // },
+  // external: [
+  //   "fs", "path", "child_process", "util", "os", "events", "stream",
+  //   "http", "https", "zlib", "crypto", "buffer", "net", "dns", "tls",
+  //   "assert", "querystring", "punycode", "readline", "repl", "vm",
+  //   "perf_hooks", "async_hooks", "timers", "console", "module", "process",
+  //   "vscode"
+  // ],
+})
+
 await esbuild.build({
   outExtension: { '.js': '.mjs' },
   entryPoints: [

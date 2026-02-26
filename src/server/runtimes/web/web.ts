@@ -5,36 +5,45 @@ import configer from "./esbuild";
 import { processMetafile } from "../common";
 import * as fs from "fs";
 import * as path from "path";
+import type { ITestconfigV2 } from "../../../Types";
 
-const configFilePath = process.argv[2];
+// const configFilePath = process.argv[2];
 // const configFilePath = "/workspace/testeranto/runtimes/web/web.js";  //path.join(process.cwd(), 'testeranto/runtimes/web/web.js'); //process.argv[2];
-const testName = process.argv[3] || "allTests";
+// const testName = process.argv[3] || "allTests";
+
+const projectConfigPath = process.argv[2];
+const nodeConfigPath = process.argv[3];
+const testName = process.argv[4];
+
 
 // let browser: puppeteer.Browser;
 
-async function startBundling(config: IBuiltConfig) {
+async function startBundling(
+  webConfigs: any,
+  projectConfig: ITestconfigV2
+) {
   console.log(`[WEB BUILDER] is now bundling:  ${testName}`);
 
   // Validate config
-  if (!config) {
-    throw new Error('Config is undefined');
-  }
-  if (!config.buildDir) {
-    console.warn('config.buildDir is undefined, using default');
-    config.buildDir = '/workspace';
-  }
-  console.log(`Using build directory: ${config.buildDir}`);
+  // if (!config) {
+  //   throw new Error('Config is undefined');
+  // }
+  // if (!config.buildDir) {
+  //   console.warn('config.buildDir is undefined, using default');
+  //   config.buildDir = '/workspace';
+  // }
+  // console.log(`Using build directory: ${config.buildDir}`);
 
 
 
   // Proceed with bundling
-  const webConfig = configer(config, 'allTests');
+  const w = configer(webConfigs, testName, projectConfig);
 
   // Build the web bundle
-  const buildResult = await esbuild.build(webConfig);
+  const buildResult = await esbuild.build(w);
 
   if (buildResult.metafile) {
-    await processMetafile(config, buildResult.metafile, 'web');
+    await processMetafile(projectConfig, buildResult.metafile, 'web', testName);
 
     // Create HTML files for each output
     const outputFiles = Object.keys(buildResult.metafile.outputs);
@@ -77,7 +86,7 @@ async function startBundling(config: IBuiltConfig) {
     );
 
     // Watch for changes to rebuild metafiles
-    const ctx = await esbuild.context(webConfig);
+    const ctx = await esbuild.context(w);
     let { hosts, port } = await ctx.serve()
     console.log(
       `[WEB BUILDER]: esbuild server ${hosts}, ${port}`
@@ -127,19 +136,11 @@ async function startBundling(config: IBuiltConfig) {
 
 async function main() {
   try {
-    console.log(`[WEB BUILDER] Importing config from: ${configFilePath}`);
-    const imported = await import(configFilePath);
-    const config = imported.default;
-    if (!config) {
-      throw new Error(`Config not found in ${configFilePath}. Ensure the file exports a default object.`);
-    }
-    console.log('[WEB BUILDER] Config imported successfully:', Object.keys(config));
-    await startBundling(config);
-
-
-    console.log(`[WEB BUILDER] Puppeteer is running: ${puppeteer}`);
-
+    const nodeConfigs = (await import(nodeConfigPath)).default;
+    const projectConfigs = (await import(projectConfigPath)).default;
+    await startBundling(nodeConfigs, projectConfigs);
   } catch (error) {
+    console.error("NODE BUILDER: Error importing config:", nodeConfigPath, error);
     console.error(error);
     process.exit(1);
   }

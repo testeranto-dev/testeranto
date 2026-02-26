@@ -2,17 +2,12 @@ import fs from "fs";
 import BaseTiposkripto from "./BaseTiposkripto";
 import { defaultTestResourceRequirement } from "./types";
 console.log(`[NodeTiposkripto] ${process.argv}`);
-const config = process.argv0[2];
+const config = JSON.parse(process.argv[2]);
 export class NodeTiposkripto extends BaseTiposkripto {
     constructor(input, testSpecification, testImplementation, testResourceRequirement, testAdapter) {
         super("node", input, testSpecification, testImplementation, testResourceRequirement, testAdapter, config);
     }
     writeFileSync(filename, payload) {
-        // console.log('writeFileSync', filename)
-        // const dir = `testeranto/reports/${this.testResourceConfiguration.fs}`;
-        // if (!fs.existsSync(dir)) {
-        //   fs.mkdirSync(dir, { recursive: true });
-        // }
         fs.writeFileSync(filename, payload);
     }
 }

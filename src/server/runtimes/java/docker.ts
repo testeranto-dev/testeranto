@@ -1,7 +1,7 @@
 import type { ITestconfigV2 } from "../../../Types";
 import { dockerComposeFile } from "../dockerComposeFile";
 
-export const javaockerComposeFile = (
+export const javaDockerComposeFile = (
   config: ITestconfigV2,
   container_name: string,
   projectConfigPath: string,
