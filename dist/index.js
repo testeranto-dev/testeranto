@@ -3150,8 +3150,9 @@ func main() {
 			os.Exit(1)
 		}
 
-		// Skip go mod tidy to avoid dependency issues
-		fmt.Printf("  Note: Skipping go mod tidy (following rust builder pattern)\\n")
+		// Go modules handle dependencies automatically
+		// The build will succeed or fail based on go.mod correctness
+		fmt.Printf("  Building with Go modules...\\n")
 
 		// Collect input files in a simple way, similar to rust builder
 		var inputs []string
@@ -3168,12 +3169,16 @@ func main() {
 		// Add go.mod and go.sum if they exist
 		goModPath := filepath.Join(moduleRoot, "go.mod")
 		goSumPath := filepath.Join(moduleRoot, "go.sum")
+		fmt.Printf("  Module root: %s\\n", moduleRoot)
+		fmt.Printf("  go.mod path: %s\\n", goModPath)
 		for _, filePath := range []string{goModPath, goSumPath} {
 			if _, err := os.Stat(filePath); err == nil {
 				relToWorkspace, err := filepath.Rel(workspace, filePath)
 				if err == nil && !strings.HasPrefix(relToWorkspace, "..") {
 					inputs = append(inputs, relToWorkspace)
 				}
+			} else {
+				fmt.Printf("  \u26A0\uFE0F  File not found: %s\\n", filePath)
 			}
 		}
 		
@@ -3222,22 +3227,28 @@ func main() {
 		outputExePath := filepath.Join(bundlesDir, binaryName)
 		fmt.Printf("  \uD83D\uDD28 Compiling %s to %s...\\n", relEntryPath, outputExePath)
 
-		// Build without tags to avoid dependency issues
+		// Build directly using the project's go.mod
 		buildCmd := exec.Command("go", "build", "-o", outputExePath, relEntryPath)
 		buildCmd.Stdout = os.Stdout
 		buildCmd.Stderr = os.Stderr
 
 		if err := buildCmd.Run(); err != nil {
 			fmt.Fprintf(os.Stderr, "  \u274C Failed to compile: %v\\n", err)
+			fmt.Fprintf(os.Stderr, "  \uD83D\uDCA1 Go module dependency error.\\n")
+			fmt.Fprintf(os.Stderr, "  \uD83D\uDCA1 This could be due to:\\n")
+			fmt.Fprintf(os.Stderr, "  \uD83D\uDCA1 1. Missing or incorrect module structure\\n")
+			fmt.Fprintf(os.Stderr, "  \uD83D\uDCA1 2. Network issues downloading modules\\n")
+			fmt.Fprintf(os.Stderr, "  \uD83D\uDCA1 3. Version conflicts in go.mod\\n")
+			fmt.Fprintf(os.Stderr, "  \uD83D\uDCA1 Check that all imported packages exist and are correctly published.\\n")
 			os.Exit(1)
 		}
+		
+		fmt.Printf("  \u2705 Successfully compiled to %s\\n", outputExePath)
 
 		// Make executable
 		if err := os.Chmod(outputExePath, 0755); err != nil {
 			fmt.Printf("  \u26A0\uFE0F  Failed to make binary executable: %v\\n", err)
 		}
-
-		fmt.Printf("  \u2705 Successfully compiled to %s\\n", outputExePath)
 
 		// Create dummy bundle file (for consistency with other runtimes)
 		dummyPath := filepath.Join(bundlesDir, entryPoint)
