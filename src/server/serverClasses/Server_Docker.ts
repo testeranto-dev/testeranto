@@ -146,22 +146,6 @@ export class Server_Docker extends Server_WS {
 
     const services: IService = {};
 
-    // Add browser service (commented out until we have the Dockerfile)
-    // services['browser'] = {
-    //   build: {
-    //     context: process.cwd(),
-    //     dockerfile: 'src/server/runtimes/web/web.Dockerfile'
-    //   },
-    //   shm_size: '2gb',
-    //   container_name: 'browser-allTests',
-    //   ports: [
-    //     '3000:3000',
-    //     '9222:9222'
-    //   ],
-    //   networks: ["allTests_network"],
-    // };
-
-
 
     // Track which runtimes we've already added builder services for
     const processedRuntimes = new Set<IRunTime>();
@@ -184,11 +168,11 @@ export class Server_Docker extends Server_WS {
       if (!processedRuntimes.has(runtime)) {
         const builderServiceName = getBuilderServiceName(runtime);
 
-        // Ensure dockerfile path is valid and exists
-        const fullDockerfilePath = path.join(process.cwd(), dockerfile);
-        if (!fs.existsSync(fullDockerfilePath)) {
-          throw (`[Server_Docker] Dockerfile not found at ${fullDockerfilePath}`);
-        }
+        // // Ensure dockerfile path is valid and exists
+        // const fullDockerfilePath = path.join(process.cwd(), dockerfile);
+        // if (!fs.existsSync(fullDockerfilePath)) {
+        //   throw (`[Server_Docker] Dockerfile not found at ${fullDockerfilePath}`);
+        // }
 
         // Get build command
         const buildCommand = runTimeToCompose[runtime][1](
@@ -202,22 +186,35 @@ export class Server_Docker extends Server_WS {
 
         console.log(`[Server_Docker] [generateServices] ${runtime} build command: "${buildCommand}"`);
 
-        services[builderServiceName] = {
-          build: {
-            context: process.cwd(),
-            dockerfile: dockerfile,
-          },
-          container_name: builderServiceName,
-          environment: {},
-          working_dir: "/workspace",
-          volumes: [
-            `${process.cwd()}/src:/workspace/src`,
-            `${process.cwd()}/dist:/workspace/dist`,
-            `${process.cwd()}/testeranto:/workspace/testeranto`,
-          ],
-          command: buildCommand,
-          networks: ["allTests_network"],
-        };
+        console.log("mark1", runtimeTestsName, this.configs.runtimes[runtimeTestsName])
+        services[builderServiceName] = runTimeToCompose[runtime][0](
+          this.configs,
+          runtimeTestsName,
+          'testeranto/testeranto.ts',
+          this.configs.runtimes[runtimeTestsName].buildOptions,
+          runtimeTestsName,
+          // runtimeTestsName,
+          // runtimeTests.tests
+          // runtimeTestsName
+
+        );
+
+        // services[builderServiceName] = {
+        //   build: {
+        //     context: process.cwd(),
+        //     dockerfile: dockerfile,
+        //   },
+        //   container_name: builderServiceName,
+        //   environment: {},
+        //   working_dir: "/workspace",
+        //   volumes: [
+        //     `${process.cwd()}/src:/workspace/src`,
+        //     `${process.cwd()}/dist:/workspace/dist`,
+        //     `${process.cwd()}/testeranto:/workspace/testeranto`,
+        //   ],
+        //   command: buildCommand,
+        //   networks: ["allTests_network"],
+        // };
 
         processedRuntimes.add(runtime);
       }
@@ -253,6 +250,10 @@ export class Server_Docker extends Server_WS {
 
         services[getBddServiceName(uid)] = this.bddTestDockerComposeFile(runtime, getBddServiceName(uid), bddCommand);
         services[getAiderServiceName(uid)] = this.aiderDockerComposeFile(getAiderServiceName(uid));
+
+        if (runtime === "web") {
+          services[getBddServiceName(uid)].expose = ["9222"]
+        }
 
         // iterate over checks to make services for each check
         checks.forEach((check: ICheck, ndx) => {

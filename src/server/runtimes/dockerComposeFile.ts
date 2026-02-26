@@ -10,9 +10,10 @@ export const dockerComposeFile = (
   tests: string[]
 ) => {
   return {
+    // expose: ["9222"],
     build: {
       context: process.cwd(),
-      dockerfile: config[container_name].dockerfile,
+      dockerfile: config.runtimes[container_name].dockerfile,
     },
     container_name,
     environment: {

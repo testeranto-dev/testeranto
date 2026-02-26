@@ -1,6 +1,6 @@
 
 import esbuild from "esbuild";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import configer from "./esbuild";
 import { processMetafile } from "../common";
 import * as fs from "fs";
@@ -101,36 +101,28 @@ async function startBundling(
 
     try {
       const browser = await puppeteer.launch({
-        // Flags required for Docker/Alpine compatibility
         args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage', // Prevents crashes in low-memory Docker envs
+          '--disable-dev-shm-usage',
           '--disable-gpu',
-          '--single-process', // Run in a single process
-          '--no-zygote', // Disable zygote process
-          '--disable-background-timer-throttling', // Disable throttling of timers in background pages
-          '--disable-backgrounding-occluded-windows', // Disable backgrounding of occluded windows
-          '--disable-renderer-backgrounding', // Disable backgrounding renders
-          '--remote-debugging-address=0.0.0.0', // Allow remote debugging
-          '--remote-debugging-port=9222' // Set remote debugging port
+          '--disable-setuid-sandbox',
+          '--no-sandbox',
+          '--remote-allow-origins=*', // MANDATORY for cross-container access
+          '--remote-debugging-address=0.0.0.0',
+          '--remote-debugging-port=9222',
         ],
         // Automatically uses ENV PUPPETEER_EXECUTABLE_PATH
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
-        headless: true, // Run in headless mode
-        timeout: 60000 // Increase timeout to 60 seconds
+        headless: true,
+        pipe: false
+        // timeout: 60000 // Increase timeout to 60 seconds
       });
 
-      console.log("Puppeteer launched successfully");
+      console.log("Puppeteer launched successfully", browser);
     } catch (error) {
       console.error("Failed to launch Puppeteer:", error);
       process.exit(1);
     }
 
-    // Keep alive
-    await new Promise(() => {
-      // This promise never resolves, keeping the process alive
-    });
   }
 }
 
