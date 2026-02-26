@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "testeranto.pitono"
-version = "0.1.4"
+name = "testeranto-pitono"
+version = "0.1.24"
 description = "Python implementation of Testeranto"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -23,3 +23,9 @@ classifiers = [
 
 [project.scripts]
 pitono-core-generator = "core_generator:main"
+
+[tool.setuptools]
+packages = ["testeranto_pitono"]
+
+[tool.setuptools.package-dir]
+testeranto_pitono = "src"

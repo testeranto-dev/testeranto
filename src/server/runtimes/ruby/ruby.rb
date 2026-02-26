@@ -7,10 +7,10 @@ require 'digest'
 puts "hello ruby builder!", ARGV.inspect
 
 
-
+project_config_file_path = ARGV[0]
 ruby_config_file_path = ARGV[1]
 test_name = ARGV[2]
-project_config_file_path = ARGV[0]
+
 entryPoints = ARGV[3..-1]
 
 # puts "ruby_config_file_path", ruby_config_file_path

@@ -1,5 +1,5 @@
 from typing import List, Dict, Any, Callable, Optional
-from .types import Isubject, Istore, Iselection, Then, Given
+from .pitono_types import Isubject, Istore, Iselection, Then, Given
 
 class BaseGiven:
     def __init__(

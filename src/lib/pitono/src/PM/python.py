@@ -2,10 +2,17 @@ import json
 import random
 import asyncio
 from typing import Any, List, Dict, Optional
-from ..pitono_types import ITTestResourceConfiguration
+
+# We'll import ITTestResourceConfiguration locally in __init__ to avoid circular imports
 
 class PM_Python:
-    def __init__(self, t: ITTestResourceConfiguration, websocket_port: str):
+    def __init__(self, t, websocket_port: str):
+        # Import locally to avoid circular imports
+        try:
+            from testeranto_pitono.pitono_types import ITTestResourceConfiguration
+        except ImportError:
+            from ..pitono_types import ITTestResourceConfiguration
+        
         # Don't print the port to reduce noise in test output
         self.test_resource_configuration = t
         self.websocket_port = websocket_port

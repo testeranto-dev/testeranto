@@ -26,11 +26,11 @@ export const pythonDockerComposeFile = (
   )
 };
 
-export const pythonBuildCommand = (projectConfigPath: string, pythonConfigPath: string, testName: string) => {
-  return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName}`
+export const pythonBuildCommand = (projectConfigPath: string, pythonConfigPath: string, testName: string, tests: string[]) => {
+  return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName}  ${tests.join(' ')} `
 }
 
-export const pythonBddCommand = (fpath: string, pythonConfigPath: string, configKey: string) => {
-  const jsonStr = JSON.stringify({ ports: [1111] });
-  return `python testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
+export const pythonBddCommand = (fpath: string, pythonConfigPath: string, configKey: string, ts: string[]) => {
+  const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/pythontests" });
+  return `python testeranto/bundles/${configKey}/${fpath} '${jsonStr}' ${ts.join(' ')}`;
 }

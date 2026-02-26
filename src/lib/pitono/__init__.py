@@ -1,34 +1,8 @@
-"""
-Pitono - Python implementation of Testeranto
-"""
-
-from .Pitono import Pitono, set_default_instance, main, PitonoClass
-from .simple_adapter import SimpleTestAdapter
-from .base_suite import BaseSuite
-from .base_given import BaseGiven
-from .base_when import BaseWhen
-from .base_then import BaseThen
-from .pitono_types import (
-    ITestSpecification, 
-    ITestImplementation, 
-    ITestAdapter, 
-    ITTestResourceRequest,
-    ITTestResourceConfiguration
-)
-
-__all__ = [
-    'Pitono',
-    'set_default_instance',
-    'main',
-    'PitonoClass',
-    'SimpleTestAdapter',
-    'BaseSuite',
-    'BaseGiven',
-    'BaseWhen',
-    'BaseThen',
-    'ITestSpecification',
-    'ITestImplementation',
-    'ITestAdapter',
-    'ITTestResourceRequest',
-    'ITTestResourceConfiguration'
-]
+# For development, allow importing directly
+# In production, the package is installed as testeranto_pitono
+try:
+    from .src import *
+except ImportError:
+    # When installed as a package, .src doesn't exist
+    # because src/ is mapped to testeranto_pitono
+    pass
