@@ -30,7 +30,7 @@ export const pythonBuildCommand = (projectConfigPath: string, pythonConfigPath: 
   return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName}  ${tests.join(' ')} `
 }
 
-export const pythonBddCommand = (fpath: string, pythonConfigPath: string, configKey: string, ts: string[]) => {
+export const pythonBddCommand = (fpath: string, pythonConfigPath: string, configKey: string) => {
   const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/pythontests" });
-  return `python testeranto/bundles/${configKey}/${fpath} '${jsonStr}' ${ts.join(' ')}`;
+  return `python testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 }

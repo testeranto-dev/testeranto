@@ -26,12 +26,11 @@ export const rustDockerComposeFile = (
   )
 };
 
-export const rustBuildCommand = (projectConfigPath: string, rustConfigPath: string, testName: string) => {
-  // return `sh -c "CONFIG_PATH=/workspace/${fpath} cargo build --release && ./target/release/my_program"`
-  return `cargo run /workspace/testeranto/rust_runtime.rs /workspace/${projectConfigPath} /workspace/${rustConfigPath} ${testName}`
+export const rustBuildCommand = (projectConfigPath: string, rustConfigPath: string, testName: string, tests: string[]) => {
+  return `cargo run /workspace/testeranto/rust_runtime.rs /workspace/${projectConfigPath} /workspace/${rustConfigPath} ${testName} ${tests.join(' ')}`
 }
 
 export const rustBddCommand = (fpath: string, rustConfigPath: string, configKey: string) => {
-  const jsonStr = JSON.stringify({ ports: [1111] });
+  const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/rusttests" });
   return `cargo run testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 }

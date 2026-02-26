@@ -4628,7 +4628,7 @@ var rustBuildCommand = (projectConfigPath, rustConfigPath, testName) => {
   return `cargo run /workspace/testeranto/rust_runtime.rs /workspace/${projectConfigPath} /workspace/${rustConfigPath} ${testName}`;
 };
 var rustBddCommand = (fpath, rustConfigPath, configKey) => {
-  const jsonStr = JSON.stringify({ ports: [1111] });
+  const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/rusttests" });
   return `cargo run testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 };
 

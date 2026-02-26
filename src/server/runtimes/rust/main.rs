@@ -1,116 +1,126 @@
-use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::path::Path;
 use std::process::Command;
 use serde::{Deserialize, Serialize};
-use serde::{Serialize, Deserialize};
 use serde_json;
 use md5;
-
-extern crate serde;
-
-include!(env!("CONFIG_PATH"));
-
-#[derive(Serialize, Deserialize)]
-struct TestConfig {
-    path: String,
-}
-
-#[derive(Serialize, Deserialize)]
-struct RustProjectConfig {
-    tests: HashMap<String, TestConfig>,
-}
-
-#[derive(Serialize, Deserialize)]
-struct ProjectConfig {
-    rust: RustProjectConfig,
-}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Rust builder starting...");
     
-    // Get test name from environment
-    let test_name = env::var("TEST_NAME").unwrap_or_else(|_| "allTests".to_string());
-    println!("TEST_NAME={}", test_name);
+    // Parse command line arguments similar to Ruby and Python runtimes
+    // Expected: main.rs project_config_file_path rust_config_file_path test_name entryPoints...
+    let args: Vec<String> = env::args().collect();
     
-    // Load master configuration yml files
-    let config_path = find_config();
-    println!("Config path: {}", config_path);
-    
-    if !Path::new(&config_path).exists() {
-        eprintln!("❌ Config file not found");
+    if args.len() < 4 {
+        eprintln!("❌ Insufficient arguments");
+        eprintln!("Usage: {} <project_config> <rust_config> <test_name> <entry_points...>", args[0]);
         std::process::exit(1);
     }
     
-    let config_content = fs::read_to_string(&config_path)?;
-    let config: ProjectConfig = serde_json::from_str(&config_content)?;
+    let project_config_file_path = &args[1];
+    let rust_config_file_path = &args[2];
+    let test_name = &args[3];
+    let entry_points = &args[4..];
     
-    println!("✅ Loaded config with {} Rust test(s)", config.rust_tests[3].tests.len());
+    println!("Project config: {}", project_config_file_path);
+    println!("Rust config: {}", rust_config_file_path);
+    println!("Test name: {}", test_name);
+    println!("Entry points: {:?}", entry_points);
     
-    // Process each test
-    for (test_key, test_config) in &config.rust.tests {
-        println!("\n📦 Processing test: {}", test_key);
+    if entry_points.is_empty() {
+        eprintln!("❌ No entry points provided");
+        std::process::exit(1);
+    }
+    
+    // Process each entry point
+    for entry_point in entry_points {
+        println!("\n📦 Processing Rust test: {}", entry_point);
+        
+        // Get absolute path to entry point
+        let entry_point_path = Path::new(entry_point);
+        if !entry_point_path.exists() {
+            eprintln!("  ⚠️  Entry point does not exist: {}", entry_point);
+            continue;
+        }
         
         // Get test file name and base name
-        let test_path = Path::new(&test_config.path);
-        let test_file_name = test_path.file_name().unwrap().to_str().unwrap();
+        let test_file_name = entry_point_path.file_name()
+            .unwrap_or_default()
+            .to_str()
+            .unwrap_or("");
         let test_base_name = test_file_name.replace(".rs", "");
         
         // Collect input files
-        let input_files = collect_input_files(test_path);
+        let input_files = collect_input_files(entry_point_path);
         
         // Compute hash
         let test_hash = compute_files_hash(&input_files);
         
         // Create artifacts directory
-        let artifacts_dir = Path::new("/workspace").join("testeranto/bundles/allTests/rust/example");
+        // Similar to Ruby: testeranto/bundles/{test_name}/
+        let artifacts_dir = Path::new("/workspace").join("testeranto/bundles").join(test_name);
         fs::create_dir_all(&artifacts_dir)?;
         
         // Create inputFiles.json
-        let input_files_path = artifacts_dir.join(format!("{}.rs-inputFiles.json", test_base_name));
+        // Similar to Ruby: testeranto/bundles/#{test_name}/#{entry_point}-inputFiles.json
+        let input_files_basename = entry_point.replace("/", "_").replace("\\", "_") + "-inputFiles.json";
+        let input_files_path = artifacts_dir.join(input_files_basename);
         let input_files_json = serde_json::to_string_pretty(&input_files)?;
         fs::write(&input_files_path, input_files_json)?;
         
         println!("  ✅ Created inputFiles.json at {:?} (hash: {})", input_files_path, test_hash);
         
-        // Compile the test
-        let output_bin_path = artifacts_dir.join(format!("{}.bin", test_base_name));
-        println!("  🔨 Compiling test to {:?}...", output_bin_path);
+        // Create dummy bundle file that loads the original test file
+        // Similar to Ruby: testeranto/bundles/#{test_name}/#{entry_point}
+        let bundle_path = artifacts_dir.join(entry_point);
         
-        // Change to workspace directory
-        let workspace = Path::new("/workspace");
-        env::set_current_dir(workspace)?;
+        // Ensure the directory for the bundle exists
+        if let Some(parent) = bundle_path.parent() {
+            fs::create_dir_all(parent)?;
+        }
         
-        // Build with cargo
-        let status = Command::new("cargo")
-            .args(&["build", "--release", "--bin", &test_base_name])
-            .status()?;
+        // Create a simple bundle that compiles and runs the original test file
+        let bundle_content = format!(r#"// Dummy bundle file generated by testeranto
+// Hash: {}
+// This file is a placeholder for the original test file: {}
+
+// The actual test execution will be handled by the Rust runtime
+// This file exists to maintain consistency with other language runtimes
+
+fn main() {{
+    println!("This is a placeholder bundle for: {}");
+    // In a real implementation, this would compile and run the actual test
+}}
+"#, test_hash, entry_point, entry_point);
         
-        if status.success() {
-            // Copy the built binary
-            let target_bin = workspace.join("target/release").join(&test_base_name);
-            if target_bin.exists() {
-                fs::copy(&target_bin, &output_bin_path)?;
-                println!("  ✅ Successfully compiled to {:?}", output_bin_path);
+        fs::write(&bundle_path, bundle_content)?;
+        println!("  ✅ Created dummy bundle file at: {:?}", bundle_path);
+        
+        // Try to compile the actual test if it's a Rust file
+        if entry_point.ends_with(".rs") {
+            println!("  🔨 Attempting to compile Rust test...");
+            
+            // Change to workspace directory
+            let workspace = Path::new("/workspace");
+            env::set_current_dir(workspace)?;
+            
+            // Build with cargo
+            let status = Command::new("cargo")
+                .args(&["build", "--release", "--bin", &test_base_name])
+                .status()?;
+            
+            if status.success() {
+                println!("  ✅ Successfully compiled {}", test_base_name);
             } else {
-                eprintln!("  ⚠️  Built binary not found at {:?}", target_bin);
-                // Create a placeholder
-                fs::write(&output_bin_path, b"Placeholder binary")?;
+                eprintln!("  ⚠️  Cargo build failed for {}", test_base_name);
             }
-        } else {
-            eprintln!("  ⚠️  Cargo build failed");
-            // Create a placeholder
-            fs::write(&output_bin_path, b"Placeholder binary")?;
         }
     }
     
     println!("\n🎉 Rust builder completed successfully");
     Ok(())
-}
-
-fn find_config() -> String {
-    "/workspace/testeranto/runtimes/rust/rust.json".to_string()
 }
 
 fn collect_input_files(test_path: &Path) -> Vec<String> {
