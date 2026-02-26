@@ -5,7 +5,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"log"
+
+	// "log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -101,8 +102,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	projectConfigPath := args[1]
-	golangConfigPath := args[2]
+	// projectConfigPath := args[1]
+	// golangConfigPath := args[2]
 	testName := args[3]
 	entryPoints := args[4:]
 
@@ -169,99 +170,52 @@ func main() {
 			os.Exit(1)
 		}
 
-		// Run go mod tidy
-		fmt.Printf("  Running go mod tidy...\n")
-		tidyCmd := exec.Command("go", "mod", "tidy")
-		tidyCmd.Stdout = os.Stdout
-		tidyCmd.Stderr = os.Stderr
-		if err := tidyCmd.Run(); err != nil {
-			fmt.Printf("  ⚠️  go mod tidy failed: %v\n", err)
-			// Continue anyway
-		}
+		// Skip go mod tidy to avoid dependency issues
+		fmt.Printf("  Note: Skipping go mod tidy (following rust builder pattern)\n")
 
-		// Get all dependencies using go list
-		fmt.Printf("  Collecting dependencies...\n")
-		listArgs := []string{"list", "-tags", "testeranto", "-json", "-deps", relEntryPath}
-		listCmd := exec.Command("go", listArgs...)
-		output, err := listCmd.Output()
-		if err != nil {
-			if exitErr, ok := err.(*exec.ExitError); ok {
-				fmt.Printf("  ⚠️  go list stderr: %s\n", string(exitErr.Stderr))
-			}
-			fmt.Fprintf(os.Stderr, "  ❌ Failed to list dependencies: %v\n", err)
-			os.Exit(1)
-		}
-
-		// Parse dependencies and collect input files
+		// Collect input files in a simple way, similar to rust builder
 		var inputs []string
-		dec := json.NewDecoder(strings.NewReader(string(output)))
-		for dec.More() {
-			var pkg Package
-			if err := dec.Decode(&pkg); err != nil {
-				fmt.Printf("  ⚠️  Error decoding package: %v\n", err)
-				break
-			}
-
-			// Check if package is under workspace
-			isUnderWorkspace := false
-			if rel, err := filepath.Rel(workspace, pkg.Dir); err == nil && !strings.HasPrefix(rel, "..") {
-				isUnderWorkspace = true
-			}
-
-			if !isUnderWorkspace {
-				continue
-			}
-
-			// Add all relevant files
-			addFiles := func(files []string) {
-				for _, file := range files {
-					absPath := filepath.Join(pkg.Dir, file)
-					relToWorkspace, err := filepath.Rel(workspace, absPath)
-					if err != nil {
-						relToWorkspace = absPath
-					}
-					if !strings.HasPrefix(relToWorkspace, "..") {
-						inputs = append(inputs, relToWorkspace)
-					}
-				}
-			}
-
-			addFiles(pkg.GoFiles)
-			addFiles(pkg.CgoFiles)
-			addFiles(pkg.CFiles)
-			addFiles(pkg.CXXFiles)
-			addFiles(pkg.HFiles)
-			addFiles(pkg.SFiles)
-			addFiles(pkg.SwigFiles)
-			addFiles(pkg.SwigCXXFiles)
-			addFiles(pkg.SysoFiles)
-			addFiles(pkg.EmbedFiles)
-			addFiles(pkg.TestGoFiles)
+		
+		// Add the entry point file itself
+		relEntryToWorkspace, err := filepath.Rel(workspace, entryPointPath)
+		if err == nil && !strings.HasPrefix(relEntryToWorkspace, "..") {
+			inputs = append(inputs, relEntryToWorkspace)
+		} else {
+			// Fallback
+			inputs = append(inputs, entryPoint)
 		}
-
-		// Add go.mod and go.sum
+		
+		// Add go.mod and go.sum if they exist
 		goModPath := filepath.Join(moduleRoot, "go.mod")
 		goSumPath := filepath.Join(moduleRoot, "go.sum")
 		for _, filePath := range []string{goModPath, goSumPath} {
 			if _, err := os.Stat(filePath); err == nil {
 				relToWorkspace, err := filepath.Rel(workspace, filePath)
 				if err == nil && !strings.HasPrefix(relToWorkspace, "..") {
-					// Check if not already in inputs
-					alreadyAdded := false
-					for _, existing := range inputs {
-						if existing == relToWorkspace {
-							alreadyAdded = true
-							break
-						}
-					}
-					if !alreadyAdded {
-						inputs = append(inputs, relToWorkspace)
-					}
+					inputs = append(inputs, relToWorkspace)
 				}
 			}
 		}
-
-		fmt.Printf("  Found %d input files\n", len(inputs))
+		
+		// Add all .go files in the module root and subdirectories
+		// This is similar to rust builder which adds all .rs files in src/
+		err = filepath.Walk(moduleRoot, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return nil // skip errors
+			}
+			if !info.IsDir() && strings.HasSuffix(path, ".go") {
+				relToWorkspace, err := filepath.Rel(workspace, path)
+				if err == nil && !strings.HasPrefix(relToWorkspace, "..") {
+					inputs = append(inputs, relToWorkspace)
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			fmt.Printf("  ⚠️  Warning while walking directory: %v\n", err)
+		}
+		
+		fmt.Printf("  Found %d input files (simplified collection)\n", len(inputs))
 
 		// Compute hash
 		testHash, err := computeFilesHash(inputs)
@@ -287,11 +241,12 @@ func main() {
 		// Compile the binary
 		outputExePath := filepath.Join(bundlesDir, binaryName)
 		fmt.Printf("  🔨 Compiling %s to %s...\n", relEntryPath, outputExePath)
-		
-		buildCmd := exec.Command("go", "build", "-tags", "testeranto", "-o", outputExePath, relEntryPath)
+
+		// Build without tags to avoid dependency issues
+		buildCmd := exec.Command("go", "build", "-o", outputExePath, relEntryPath)
 		buildCmd.Stdout = os.Stdout
 		buildCmd.Stderr = os.Stderr
-		
+
 		if err := buildCmd.Run(); err != nil {
 			fmt.Fprintf(os.Stderr, "  ❌ Failed to compile: %v\n", err)
 			os.Exit(1)
@@ -398,22 +353,22 @@ func copyDir(src, dst string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	// Create the destination directory
 	if err := os.MkdirAll(dst, info.Mode()); err != nil {
 		return err
 	}
-	
+
 	// Read the source directory
 	entries, err := os.ReadDir(src)
 	if err != nil {
 		return err
 	}
-	
+
 	for _, entry := range entries {
 		srcPath := filepath.Join(src, entry.Name())
 		dstPath := filepath.Join(dst, entry.Name())
-		
+
 		if entry.IsDir() {
 			if err := copyDir(srcPath, dstPath); err != nil {
 				return err
