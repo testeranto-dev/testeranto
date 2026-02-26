@@ -33,6 +33,24 @@ export const rustBuildCommand = (projectConfigPath: string, rustConfigPath: stri
 }
 
 export const rustBddCommand = (fpath: string, rustConfigPath: string, configKey: string) => {
-  const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/rusttests" });
-  return `cargo run testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
+  const jsonStr = JSON.stringify({ 
+    name: 'rust-test',
+    ports: [1111], 
+    fs: "testeranto/reports/rust",
+    timeout: 30000,
+    retries: 0,
+    environment: {}
+  });
+  
+  // For Rust, we need to execute the compiled binary
+  // The binary is at: testeranto/bundles/${configKey}/${binary_name}
+  // where binary_name is the entry point without .rs extension
+  // fpath might be something like "src/tests/my_test.rs"
+  // We need to extract the base name
+  const pathParts = fpath.split('/');
+  const fileName = pathParts[pathParts.length - 1];
+  const binaryName = fileName.replace('.rs', '');
+  
+  // Execute the compiled binary in the bundle directory
+  return `testeranto/bundles/${configKey}/${binaryName} '${jsonStr}'`;
 }

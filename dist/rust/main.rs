@@ -1,3 +1,6 @@
+// The rust builder
+// runs in a docker image and produces built rust tests
+
 use std::env;
 use std::fs;
 use std::path::Path;

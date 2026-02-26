@@ -2955,7 +2955,7 @@ var RUN_TIMES = ["node", "web", "python", "golang", "java", "rust", "ruby"];
 import { join } from "path";
 
 // src/server/runtimes/dockerComposeFile.ts
-var dockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName, command) => {
+var dockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName, command, tests) => {
   return {
     build: {
       context: process.cwd(),
@@ -2973,7 +2973,7 @@ var dockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPa
       `${process.cwd()}/dist:/workspace/dist`,
       `${process.cwd()}/testeranto:/workspace/testeranto`
     ],
-    command: command(projectConfigPath, nodeConfigPath, testName)
+    command: command(projectConfigPath, nodeConfigPath, testName, tests)
   };
 };
 
@@ -3726,9 +3726,10 @@ main();
 var nodeScriptPath = join2(process.cwd(), "testeranto", "node_runtime.ts");
 await Bun.write(nodeScriptPath, node_default);
 var nodeDockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName) => {
-  return dockerComposeFile(config, container_name, projectConfigPath, nodeConfigPath, testName, nodeBuildCommand);
+  const tests = config.runtimes[testName]?.tests || [];
+  return dockerComposeFile(config, container_name, projectConfigPath, nodeConfigPath, testName, nodeBuildCommand, tests);
 };
-var nodeBuildCommand = (projectConfigPath, nodeConfigPath, testName) => {
+var nodeBuildCommand = (projectConfigPath, nodeConfigPath, testName, tests) => {
   return `yarn tsx /workspace/testeranto/node_runtime.ts /workspace/${projectConfigPath} /workspace/${nodeConfigPath} ${testName}`;
 };
 var nodeBddCommand = (fpath, nodeConfigPath, configKey) => {
@@ -4167,7 +4168,8 @@ if __name__ == "__main__":
 var pythonScriptPath = join3(process.cwd(), "testeranto", "python_runtime.py");
 await Bun.write(pythonScriptPath, python_default);
 var pythonDockerComposeFile = (config, container_name, projectConfigPath, pythonConfigPath, testName) => {
-  return dockerComposeFile(config, container_name, projectConfigPath, pythonConfigPath, testName, pythonBuildCommand);
+  const tests = config.runtimes[testName]?.tests || [];
+  return dockerComposeFile(config, container_name, projectConfigPath, pythonConfigPath, testName, pythonBuildCommand, tests);
 };
 var pythonBuildCommand = (projectConfigPath, pythonConfigPath, testName, tests) => {
   return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName}  ${tests.join(" ")} `;
@@ -4412,7 +4414,8 @@ puts "Ruby builder completed"
 var rubyScriptPath = join4(process.cwd(), "testeranto", "ruby_runtime.rb");
 await Bun.write(rubyScriptPath, ruby_default);
 var rubyDockerComposeFile = (config, container_name, projectConfigPath, nodeConfigPath, testName) => {
-  return dockerComposeFile(config, container_name, projectConfigPath, nodeConfigPath, testName, rubyBuildCommand);
+  const tests = config.runtimes[testName]?.tests || [];
+  return dockerComposeFile(config, container_name, projectConfigPath, nodeConfigPath, testName, rubyBuildCommand, tests);
 };
 var rubyBuildCommand = (projectConfigPath, rubyConfigPath, testName, tests) => {
   return `ruby /workspace/testeranto/ruby_runtime.rb /workspace/${projectConfigPath} /workspace/${rubyConfigPath} ${testName} ${tests.join(" ")}`;
@@ -4433,7 +4436,10 @@ var rubyBddCommand = (fpath, nodeConfigPath, configKey) => {
 import { join as join5 } from "path";
 
 // src/server/runtimes/rust/main.rs
-var main_default2 = `use std::env;
+var main_default2 = `// The rust builder
+// runs in a docker image and produces built rust tests
+
+use std::env;
 use std::fs;
 use std::path::Path;
 use std::process::Command;
@@ -4632,14 +4638,15 @@ fn compute_files_hash(files: &[String]) -> String {
 var rustScriptPath = join5(process.cwd(), "testeranto", "rust_runtime.rs");
 await Bun.write(rustScriptPath, main_default2);
 var rustDockerComposeFile = (config, container_name, projectConfigPath, rustConfigPath, testName) => {
-  return dockerComposeFile(config, container_name, projectConfigPath, rustConfigPath, testName, rustBuildCommand);
+  const tests = config.runtimes[testName]?.tests || [];
+  return dockerComposeFile(config, container_name, projectConfigPath, rustConfigPath, testName, rustBuildCommand, tests);
 };
 var rustBuildCommand = (projectConfigPath, rustConfigPath, testName, tests) => {
   return `cargo run /workspace/testeranto/rust_runtime.rs /workspace/${projectConfigPath} /workspace/${rustConfigPath} ${testName} ${tests.join(" ")}`;
 };
 var rustBddCommand = (fpath, rustConfigPath, configKey) => {
   const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/rusttests" });
-  return `cargo run testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
+  return `./target/debug/your_project_name '${jsonStr}'`;
 };
 
 // src/server/runtimes/web/docker.ts
