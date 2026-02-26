@@ -6,7 +6,8 @@ export const dockerComposeFile = (
   projectConfigPath: string,
   nodeConfigPath: string,
   testName: string,
-  command: (a: string, b: string, c: string) => string
+  command: (a: string, b: string, c: string, d: string[]) => string,
+  tests: string[]
 ) => {
   return {
     build: {
@@ -27,6 +28,6 @@ export const dockerComposeFile = (
 
     ],
     // command: nodeBuildCommand(projectConfigPath, nodeConfigPath, testName),
-    command: command(projectConfigPath, nodeConfigPath, testName)
+    command: command(projectConfigPath, nodeConfigPath, testName, tests)
   }
 };

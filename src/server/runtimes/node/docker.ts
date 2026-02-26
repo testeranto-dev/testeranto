@@ -16,17 +16,20 @@ export const nodeDockerComposeFile = (
   nodeConfigPath: string,
   testName: string
 ) => {
+  const tests = config.runtimes[testName]?.tests || [];
   return dockerComposeFile(
     config,
     container_name,
     projectConfigPath,
     nodeConfigPath,
     testName,
-    nodeBuildCommand
+    nodeBuildCommand,
+    tests
   )
 };
 
-export const nodeBuildCommand = (projectConfigPath: string, nodeConfigPath: string, testName: string) => {
+export const nodeBuildCommand = (projectConfigPath: string, nodeConfigPath: string, testName: string, tests: string[]) => {
+  // Node runtime doesn't need tests as arguments, but we keep the signature consistent
   return `yarn tsx /workspace/testeranto/node_runtime.ts /workspace/${projectConfigPath} /workspace/${nodeConfigPath} ${testName}`
 }
 

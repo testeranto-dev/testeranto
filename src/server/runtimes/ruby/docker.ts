@@ -17,13 +17,15 @@ export const rubyDockerComposeFile = (
   nodeConfigPath: string,
   testName: string
 ) => {
+  const tests = config.runtimes[testName]?.tests || [];
   return dockerComposeFile(
     config,
     container_name,
     projectConfigPath,
     nodeConfigPath,
     testName,
-    rubyBuildCommand
+    rubyBuildCommand,
+    tests
   )
 };
 

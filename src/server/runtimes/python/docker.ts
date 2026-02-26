@@ -16,13 +16,15 @@ export const pythonDockerComposeFile = (
   pythonConfigPath: string,
   testName: string
 ) => {
+  const tests = config.runtimes[testName]?.tests || [];
   return dockerComposeFile(
     config,
     container_name,
     projectConfigPath,
     pythonConfigPath,
     testName,
-    pythonBuildCommand
+    pythonBuildCommand,
+    tests
   )
 };
 

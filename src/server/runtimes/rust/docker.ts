@@ -16,13 +16,15 @@ export const rustDockerComposeFile = (
   rustConfigPath: string,
   testName: string
 ) => {
+  const tests = config.runtimes[testName]?.tests || [];
   return dockerComposeFile(
     config,
     container_name,
     projectConfigPath,
     rustConfigPath,
     testName,
-    rustBuildCommand
+    rustBuildCommand,
+    tests
   )
 };
 
