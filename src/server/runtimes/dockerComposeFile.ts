@@ -18,7 +18,7 @@ export const dockerComposeFile = (
     container_name,
     environment: {
       NODE_ENV: "production",
-      ENV: "node",  // <- important
+      // ENV: "node",  // <- important
       ...config.env,
     },
     working_dir: "/workspace",

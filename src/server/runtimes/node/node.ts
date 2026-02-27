@@ -5,8 +5,6 @@ import {
 } from "../common";
 import nodeConfiger from "./esbuild";
 
-console.log(`[NODE BUILDER] hello:  ${process.argv}`);
-
 const projectConfigPath = process.argv[2];
 const nodeConfigPath = process.argv[3];
 const testName = process.argv[4];

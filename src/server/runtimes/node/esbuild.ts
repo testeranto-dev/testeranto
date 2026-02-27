@@ -28,7 +28,7 @@ export default (
     },
     define: {
       "process.env.FLUENTFFMPEG_COV": "0",
-      ENV: `"node"`,
+      ENV: `node`,
     },
     bundle: true,
     format: "esm",

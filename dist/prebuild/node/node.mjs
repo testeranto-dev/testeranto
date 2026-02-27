@@ -171,7 +171,7 @@ var esbuild_default = (nodeConfig, testName2, projectConfig) => {
     },
     define: {
       "process.env.FLUENTFFMPEG_COV": "0",
-      ENV: `"node"`
+      ENV: `node`
     },
     bundle: true,
     format: "esm",
@@ -189,7 +189,6 @@ var esbuild_default = (nodeConfig, testName2, projectConfig) => {
 };
 
 // src/server/runtimes/node/node.ts
-console.log(`[NODE BUILDER] hello:  ${process.argv}`);
 var projectConfigPath = process.argv[2];
 var nodeConfigPath = process.argv[3];
 var testName = process.argv[4];

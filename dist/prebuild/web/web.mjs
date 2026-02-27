@@ -1,6 +1,6 @@
 // src/server/runtimes/web/web.ts
 import esbuild from "esbuild";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 
 // src/esbuildConfigs/featuresPlugin.ts
 import path from "path";
@@ -116,7 +116,7 @@ var esbuild_default = (config, testName2, projectConfig) => {
     },
     define: {
       "process.env.FLUENTFFMPEG_COV": "0",
-      ENV: `"web"`
+      ENV: `web`
     },
     bundle: true,
     format: "esm",
@@ -239,42 +239,27 @@ async function startBundling(webConfigs, projectConfig) {
     });
     try {
       const browser = await puppeteer.launch({
-        // Flags required for Docker/Alpine compatibility
         args: [
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
           "--disable-dev-shm-usage",
-          // Prevents crashes in low-memory Docker envs
           "--disable-gpu",
-          "--single-process",
-          // Run in a single process
-          "--no-zygote",
-          // Disable zygote process
-          "--disable-background-timer-throttling",
-          // Disable throttling of timers in background pages
-          "--disable-backgrounding-occluded-windows",
-          // Disable backgrounding of occluded windows
-          "--disable-renderer-backgrounding",
-          // Disable backgrounding renders
+          "--disable-setuid-sandbox",
+          "--no-sandbox",
+          "--remote-allow-origins=*",
+          // MANDATORY for cross-container access
           "--remote-debugging-address=0.0.0.0",
-          // Allow remote debugging
           "--remote-debugging-port=9222"
-          // Set remote debugging port
         ],
         // Automatically uses ENV PUPPETEER_EXECUTABLE_PATH
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser",
         headless: true,
-        // Run in headless mode
-        timeout: 6e4
-        // Increase timeout to 60 seconds
+        pipe: false
+        // timeout: 60000 // Increase timeout to 60 seconds
       });
-      console.log("Puppeteer launched successfully");
+      console.log("Puppeteer launched successfully", browser);
     } catch (error) {
       console.error("Failed to launch Puppeteer:", error);
       process.exit(1);
     }
-    await new Promise(() => {
-    });
   }
 }
 async function main() {

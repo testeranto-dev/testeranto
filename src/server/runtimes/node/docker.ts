@@ -17,15 +17,20 @@ export const nodeDockerComposeFile = (
   testName: string
 ) => {
   const tests = config.runtimes[testName]?.tests || [];
-  return dockerComposeFile(
-    config,
-    container_name,
-    projectConfigPath,
-    nodeConfigPath,
-    testName,
-    nodeBuildCommand,
-    tests
-  )
+  return {
+    ...dockerComposeFile(
+      config,
+      container_name,
+      projectConfigPath,
+      nodeConfigPath,
+      testName,
+      nodeBuildCommand,
+      tests
+    ),
+
+    environment: { ENV: "node" },
+
+  }
 };
 
 export const nodeBuildCommand = (projectConfigPath: string, nodeConfigPath: string, testName: string, tests: string[]) => {

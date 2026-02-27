@@ -34,6 +34,7 @@ export const webDockerComposeFile = (
 
 
     ...{
+      environment: { ENV: "web" },
       expose: ["9223"], // # Internal container - to - container port exposure
       // ports: "9222:9222" // # Mapping for your local machine access
     }
@@ -42,7 +43,7 @@ export const webDockerComposeFile = (
 
   }
 
-  console.log("wtf", x)
+  // console.log("wtf", x)
   return x
 };
 

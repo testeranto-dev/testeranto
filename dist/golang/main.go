@@ -173,6 +173,24 @@ func main() {
 		// Go modules handle dependencies automatically
 		// The build will succeed or fail based on go.mod correctness
 		fmt.Printf("  Building with Go modules...\n")
+		
+		// Ensure dependencies are up to date, especially for local modules
+		// First, remove go.sum to force fresh resolution
+		goSumPath := filepath.Join(moduleRoot, "go.sum")
+		if _, err := os.Stat(goSumPath); err == nil {
+			fmt.Printf("  Removing go.sum to force fresh dependency resolution...\n")
+			os.Remove(goSumPath)
+		}
+		
+		fmt.Printf("  Running go mod tidy...\n")
+		tidyCmd := exec.Command("go", "mod", "tidy")
+		tidyCmd.Stdout = os.Stdout
+		tidyCmd.Stderr = os.Stderr
+		tidyCmd.Dir = moduleRoot
+		if err := tidyCmd.Run(); err != nil {
+			fmt.Printf("  ⚠️  go mod tidy failed: %v\n", err)
+			// Continue anyway, as the build might still work
+		}
 
 		// Collect input files in a simple way, similar to rust builder
 		var inputs []string
@@ -247,10 +265,37 @@ func main() {
 		outputExePath := filepath.Join(bundlesDir, binaryName)
 		fmt.Printf("  🔨 Compiling %s to %s...\n", relEntryPath, outputExePath)
 
-		// Build directly using the project's go.mod
-		buildCmd := exec.Command("go", "build", "-o", outputExePath, relEntryPath)
+		// Build the entire package directory, not just the single file
+		// Get the directory containing the entry point
+		entryDir := filepath.Dir(relEntryPath)
+		if entryDir == "." {
+			entryDir = "./"
+		}
+		
+		// List all .go files in the entry directory for debugging
+		fmt.Printf("  📁 Building package in directory: %s\n", entryDir)
+		goFiles, _ := filepath.Glob(filepath.Join(entryDir, "*.go"))
+		fmt.Printf("  📄 Found %d .go files in package:\n", len(goFiles))
+		for _, f := range goFiles {
+			fmt.Printf("    - %s\n", filepath.Base(f))
+		}
+		
+		// Build the package in that directory
+		// Use ./... pattern to build all packages in the directory
+		// First, ensure all dependencies are built
+		buildDepsCmd := exec.Command("go", "build", "./...")
+		buildDepsCmd.Stdout = os.Stdout
+		buildDepsCmd.Stderr = os.Stderr
+		buildDepsCmd.Dir = moduleRoot
+		if err := buildDepsCmd.Run(); err != nil {
+			fmt.Printf("  ⚠️  Failed to build dependencies: %v\n", err)
+			// Continue anyway, as the main build might still work
+		}
+		
+		buildCmd := exec.Command("go", "build", "-o", outputExePath, "./"+entryDir)
 		buildCmd.Stdout = os.Stdout
 		buildCmd.Stderr = os.Stderr
+		buildCmd.Dir = moduleRoot
 
 		if err := buildCmd.Run(); err != nil {
 			fmt.Fprintf(os.Stderr, "  ❌ Failed to compile: %v\n", err)
@@ -259,6 +304,11 @@ func main() {
 			fmt.Fprintf(os.Stderr, "  💡 1. Missing or incorrect module structure\n")
 			fmt.Fprintf(os.Stderr, "  💡 2. Network issues downloading modules\n")
 			fmt.Fprintf(os.Stderr, "  💡 3. Version conflicts in go.mod\n")
+			fmt.Fprintf(os.Stderr, "  💡 4. Missing files in the package (trying to build single file instead of package)\n")
+			fmt.Fprintf(os.Stderr, "  💡 5. Inconsistent imports between files\n")
+			fmt.Fprintf(os.Stderr, "  💡 6. Local module replace directives not working\n")
+			fmt.Fprintf(os.Stderr, "  💡 7. Try running 'go mod tidy' manually\n")
+			fmt.Fprintf(os.Stderr, "  💡 8. Dependencies not built\n")
 			fmt.Fprintf(os.Stderr, "  💡 Check that all imported packages exist and are correctly published.\n")
 			os.Exit(1)
 		}
