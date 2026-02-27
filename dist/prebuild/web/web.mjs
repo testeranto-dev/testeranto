@@ -122,7 +122,7 @@ var esbuild_default = (config, testName2, projectConfig) => {
     format: "esm",
     absWorkingDir: process.cwd(),
     platform: "browser",
-    packages: "external",
+    // packages: "external",
     entryPoints,
     plugins: [
       featuresPlugin_default,
@@ -191,11 +191,12 @@ async function processMetafile(config, metafile, runtime, configKey) {
 // src/server/runtimes/web/web.ts
 import * as fs4 from "fs";
 import * as path3 from "path";
+console.log(process.cwd());
 var projectConfigPath = process.argv[2];
 var nodeConfigPath = process.argv[3];
 var testName = process.argv[4];
 async function startBundling(webConfigs, projectConfig) {
-  console.log(`[WEB BUILDER] is now bundling:  ${testName}`);
+  console.log(`[WEB BUILDER] is now bundling: ${testName}`);
   const w = esbuild_default(webConfigs, testName, projectConfig);
   const buildResult = await esbuild.build(w);
   if (buildResult.metafile) {
@@ -203,17 +204,18 @@ async function startBundling(webConfigs, projectConfig) {
     const outputFiles = Object.keys(buildResult.metafile.outputs);
     for (const outputFile of outputFiles) {
       if (true) {
-        const htmlPath = `testeranto/bundles/allTests/web/example/Calculator.test.ts.html`;
+        const htmlPath = `testeranto/bundles/webtests/src/ts/Calculator.test.ts.html`;
         await fs4.promises.mkdir(path3.dirname(htmlPath), { recursive: true });
         const htmlContent = `<!DOCTYPE html>
     <html>
     <head>
         <meta charset="UTF-8">
         <title>Test Runner</title>
+        <script type="module" src="Calculator.test.mjs"></script>
     </head>
     <body>
         <div id="root"></div>
-        <script src="testeranto/bundles/allTests/web/example/Calculator.test.mjs"></script>
+        
     </body>
     </html>`;
         await fs4.promises.writeFile(htmlPath, htmlContent);
@@ -229,7 +231,14 @@ async function startBundling(webConfigs, projectConfig) {
       "WEB BUILDER: Running in dev mode, keeping builder alive..."
     );
     const ctx = await esbuild.context(w);
-    let { hosts, port } = await ctx.serve();
+    let { hosts, port } = await ctx.serve({
+      host: "webtests",
+      // servedir: `testeranto/bundles/${testName}`,
+      servedir: ".",
+      onRequest: ({ method, path: path4, remoteAddress, status, timeInMS }) => {
+        console.log(`[esbuild] ${remoteAddress} - ${method} ${path4} -> ${status} [${timeInMS}ms]`);
+      }
+    });
     console.log(
       `[WEB BUILDER]: esbuild server ${hosts}, ${port}`
     );
