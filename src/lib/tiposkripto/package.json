@@ -1,6 +1,6 @@
 {
   "name": "testeranto.tiposkripto",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "the typescript implementation of testeranto",
   "author": "adamwong246@gmail.com",
   "license": "MIT",
@@ -23,10 +23,12 @@
       "types": "./dist/types/lib/tiposkripto/src/CoreTypes.d.ts"
     },
     "./node": {
-      "import": "./dist/module/Node.js"
+      "import": "./dist/module/Node.js",
+      "types": "./dist/types/lib/tiposkripto/src/Node.d.ts"
     },
     "./web": {
-      "import": "./dist/module/Web.js"
+      "import": "./dist/module/Web.js",
+      "types": "./dist/types/lib/tiposkripto/src/Web.d.ts"
     }
   },
   "dependencies": {
