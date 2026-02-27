@@ -1,6 +1,6 @@
 {
   "name": "testeranto.tiposkripto",
-  "version": "0.1.28",
+  "version": "0.1.29",
   "description": "the typescript implementation of testeranto",
   "author": "adamwong246@gmail.com",
   "license": "MIT",
@@ -18,25 +18,15 @@
     "README*",
     "LICENSE*"
   ],
-  "types": "./dist/types/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/module/index.js",
-      "require": "./dist/common/index.js"
-    },
-    "./types": {
-      "types": "./dist/types/CoreTypes.d.ts",
-      "import": "./dist/module/CoreTypes.js",
-      "require": "./dist/common/CoreTypes.js"
+    "./CoreTypes": {
+      "types": "./dist/types/lib/tiposkripto/src/CoreTypes.d.ts"
     },
     "./node": {
-      "types": "./dist/types/node.d.ts",
-      "import": "./node.js"
+      "import": "./dist/module/Node.js"
     },
     "./web": {
-      "types": "./dist/types/web.d.ts",
-      "import": "./web.js"
+      "import": "./dist/module/Web.js"
     }
   },
   "dependencies": {
