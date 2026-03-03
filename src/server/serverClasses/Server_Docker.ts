@@ -1,12 +1,15 @@
 import ansiColors from "ansi-colors";
 import { execSync, spawn } from "child_process";
 import fs from "fs";
-import yaml from "js-yaml";
 import path from "path";
 import { RUN_TIMES } from "../../runtimes";
 import type { ICheck, IChecks, IRunTime, ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
 import {
+  BaseCompose,
+  staticTestDockerComposeFile,
+  bddTestDockerComposeFile,
+  aiderDockerComposeFile,
   cleanTestName,
   DC_COMMANDS,
   DOCKER_COMPOSE_BASE,
@@ -31,121 +34,25 @@ import {
   runTimeToCompose,
   type IDockerComposeResult,
   type IService,
+  writeConfigForExtensionOnStop,
+  writeComposeFile,
 } from "./Server_Docker_Utils";
 import { Server_WS } from "./Server_WS";
 
 export class Server_Docker extends Server_WS {
   private logProcesses: Map<string, { process: any; serviceName: string }> = new Map();
-  inputFiles = {};
-  outputFiles = {};
+  inputFiles: any = {};
+  outputFiles: any = {};
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
   }
-
-  BaseCompose(services: any) {
-    return {
-      services,
-      volumes: {
-        node_modules: {
-          driver: "local",
-        },
-      },
-      networks: {
-        allTests_network: {
-          driver: "bridge",
-        },
-      },
-    };
-  }
-
-  staticTestDockerComposeFile(
-    runtime: IRunTime, container_name: string, command: string, config: ITestconfigV2, runtimeTestsName: string
-  ) {
-    return {
-      build: {
-        context: process.cwd(),
-        dockerfile: config.runtimes[runtimeTestsName].dockerfile,
-      },
-      container_name,
-      environment: {
-        // NODE_ENV: "production",
-        // ...config.env,
-      },
-      working_dir: "/workspace",
-      command: command,
-      networks: ["allTests_network"],
-    };
-  };
-
-  bddTestDockerComposeFile(runtime: IRunTime, container_name: string, command: string) {
-    // Find the dockerfile path from configs
-    let dockerfilePath = '';
-    for (const [key, value] of Object.entries(this.configs.runtimes)) {
-      if (value.runtime === runtime) {
-        dockerfilePath = value.dockerfile;
-        break;
-      }
-    }
-
-    // If no dockerfile found, use a default based on runtime
-    if (!dockerfilePath) {
-      throw (`[Docker] [bddTestDockerComposeFile] no dockerfile found for ${dockerfilePath}, ${Object.entries(this.configs)}`)
-    }
-
-    const service: any = {
-      build: {
-        context: process.cwd(),
-        dockerfile: dockerfilePath,
-      },
-      container_name,
-      environment: {
-        // NODE_ENV: "production",
-        // ...config.env,
-      },
-      working_dir: "/workspace",
-      volumes: [
-        `${process.cwd()}/src:/workspace/src`,
-        `${process.cwd()}/dist:/workspace/dist`,
-        `${process.cwd()}/testeranto:/workspace/testeranto`,
-      ],
-      command: command,
-      networks: ["allTests_network"],
-    };
-
-    return service;
-  };
-
-  aiderDockerComposeFile(container_name: string) {
-    return {
-      build: {
-        context: process.cwd(),
-        dockerfile: 'aider.Dockerfile',
-      },
-      container_name,
-      environment: {
-        // NODE_ENV: "production",
-        // ...config.env,
-      },
-      volumes: [
-        `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
-        // Mount the entire workspace to allow aider to access files
-        `${process.cwd()}:/workspace`,
-      ],
-      working_dir: "/workspace",
-      command: "tail -f /dev/null",  // Keep container running
-      networks: ["allTests_network"],
-      tty: true,           // Allocate a pseudo-TTY
-      stdin_open: true,    // Keep STDIN open even if not attached
-    };
-  };
 
   generateServices(
     // config: IBuiltConfig,
   ): Record<string, any> {
 
     const services: IService = {};
-
 
     // Track which runtimes we've already added builder services for
     const processedRuntimes = new Set<IRunTime>();
@@ -248,8 +155,8 @@ export class Server_Docker extends Server_WS {
 
         console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} BDD command: "${bddCommand}"`);
 
-        services[getBddServiceName(uid)] = this.bddTestDockerComposeFile(runtime, getBddServiceName(uid), bddCommand);
-        services[getAiderServiceName(uid)] = this.aiderDockerComposeFile(getAiderServiceName(uid));
+        services[getBddServiceName(uid)] = bddTestDockerComposeFile(this.configs, runtime, getBddServiceName(uid), bddCommand);
+        services[getAiderServiceName(uid)] = aiderDockerComposeFile(getAiderServiceName(uid));
 
         if (runtime === "web") {
           services[getBddServiceName(uid)].expose = ["9222"]
@@ -260,7 +167,7 @@ export class Server_Docker extends Server_WS {
           // Call the check function to get the command string
           // We need to pass appropriate arguments - for now, pass an empty array
           const command = check([]);
-          services[getCheckServiceName(uid, ndx)] = this.staticTestDockerComposeFile(
+          services[getCheckServiceName(uid, ndx)] = staticTestDockerComposeFile(
             runtime, getCheckServiceName(uid, ndx), command, this.configs, runtimeTestsName
           );
         })
@@ -646,7 +553,7 @@ export class Server_Docker extends Server_WS {
     // Notify clients that processes resource has changed
     this.resourceChanged('/~/processes');
     // Update the extension config to indicate server has stopped
-    this.writeConfigForExtensionOnStop();
+    writeConfigForExtensionOnStop();
 
     super.stop();
   }
@@ -669,7 +576,7 @@ export class Server_Docker extends Server_WS {
       const services = this.generateServices(
         // config,
       );
-      this.writeComposeFile(services);
+      writeComposeFile(services);
 
     } catch (err) {
       console.error(`Error in setupDockerCompose:`, err);
@@ -752,47 +659,6 @@ export class Server_Docker extends Server_WS {
 
   private getRuntimeLabel(runtime: string): string {
     return getRuntimeLabel(runtime);
-  }
-
-  private writeConfigForExtensionOnStop(): void {
-    try {
-      const configDir = path.join(process.cwd(), 'testeranto');
-      const configPath = path.join(configDir, 'extension-config.json');
-
-      // Ensure the directory exists
-      if (!fs.existsSync(configDir)) {
-        fs.mkdirSync(configDir, { recursive: true });
-        console.log(`[Server_Docker] Created directory: ${configDir}`);
-      }
-
-      const configData = {
-        runtimes: [],
-        timestamp: new Date().toISOString(),
-        source: 'testeranto.ts',
-        serverStarted: false
-      };
-
-      const configJson = JSON.stringify(configData, null, 2);
-      fs.writeFileSync(configPath, configJson);
-      console.log(`[Server_Docker] Updated extension config to indicate server stopped`);
-
-    } catch (error: any) {
-      console.error(`[Server_Docker] Failed to write extension config on stop:`, error);
-    }
-  }
-
-  writeComposeFile(
-    services: Record<string, IService>,
-  ) {
-    const dockerComposeFileContents = this.BaseCompose(services);
-
-    fs.writeFileSync(
-      'testeranto/docker-compose.yml',
-      yaml.dump(dockerComposeFileContents, {
-        lineWidth: -1,
-        noRefs: true,
-      })
-    );
   }
 
   public getInputFiles(runtime: string, testName: string): string[] {
@@ -1337,21 +1203,5 @@ export class Server_Docker extends Server_WS {
     }
     return result;
   }
-
-  autogenerateStamp(x: string) {
-    return `# This file is autogenerated. Do not edit it directly
-${x}
-    `
-  }
-
-  public getLogsCommand(serviceName?: string, tail: number = 100): string {
-    const base = `${DOCKER_COMPOSE_LOGS} --tail=${tail}`;
-    return serviceName ? `${base} ${serviceName}` : base;
-  }
-
-  // private async exec(cmd: string, options: { cwd: string }): Promise<{ stdout: string; stderr: string }> {
-  //   const execAsync = promisify(exec);
-  //   return execAsync(cmd, { cwd: options.cwd });
-  // }
 
 }

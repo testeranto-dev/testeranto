@@ -6,8 +6,8 @@ import {
   ITestImplementation,
   ITestSpecification,
 } from "./CoreTypes.js";
-import BaseTiposkripto from "./BaseTiposkripto.js";
-import { ITTestResourceRequest, defaultTestResourceRequirement } from "./types.js";
+import BaseTiposkripto from "./BaseTiposkripto";
+import { ITTestResourceRequest, defaultTestResourceRequirement } from "./types";
 
 const config = process.argv0[2];
 

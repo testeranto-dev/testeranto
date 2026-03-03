@@ -1,5 +1,12 @@
 import fs from "fs"
-import { Ibdd_in_any, Ibdd_out_any, ITestSpecification, ITestImplementation, ITestAdapter, Ibdd_out } from "./CoreTypes";
+import {
+  Ibdd_in_any,
+  Ibdd_out_any,
+  ITestSpecification,
+  ITestImplementation,
+  ITestAdapter,
+  Ibdd_out
+} from "./CoreTypes";
 import BaseTiposkripto from "./BaseTiposkripto";
 import { ITTestResourceRequest, defaultTestResourceRequirement } from "./types";
 

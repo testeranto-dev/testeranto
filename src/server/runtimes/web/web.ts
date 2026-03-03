@@ -7,22 +7,18 @@ import * as fs from "fs";
 import * as path from "path";
 import type { ITestconfigV2 } from "../../../Types";
 
-// const configFilePath = process.argv[2];
-// const configFilePath = "/workspace/testeranto/runtimes/web/web.js";  //path.join(process.cwd(), 'testeranto/runtimes/web/web.js'); //process.argv[2];
-// const testName = process.argv[3] || "allTests";
+console.log(process.cwd())
+const urlDomain = `http://webtests:8000/`;
 
 const projectConfigPath = process.argv[2];
 const nodeConfigPath = process.argv[3];
 const testName = process.argv[4];
 
-
-// let browser: puppeteer.Browser;
-
 async function startBundling(
   webConfigs: any,
   projectConfig: ITestconfigV2
 ) {
-  console.log(`[WEB BUILDER] is now bundling:  ${testName}`);
+  console.log(`[WEB BUILDER] is now bundling: ${testName}`);
 
   // Validate config
   // if (!config) {
@@ -50,7 +46,7 @@ async function startBundling(
     for (const outputFile of outputFiles) {
 
       if (true) {
-        const htmlPath = `testeranto/bundles/allTests/web/example/Calculator.test.ts.html`;
+        const htmlPath = `testeranto/bundles/webtests/src/ts/Calculator.test.ts.html`;
 
         // Ensure the directory exists
         await fs.promises.mkdir(path.dirname(htmlPath), { recursive: true });
@@ -61,10 +57,11 @@ async function startBundling(
     <head>
         <meta charset="UTF-8">
         <title>Test Runner</title>
+        <script type="module" src="Calculator.test.mjs"></script>
     </head>
     <body>
         <div id="root"></div>
-        <script src="testeranto/bundles/allTests/web/example/Calculator.test.mjs"></script>
+        
     </body>
     </html>`;
 
@@ -87,7 +84,14 @@ async function startBundling(
 
     // Watch for changes to rebuild metafiles
     const ctx = await esbuild.context(w);
-    let { hosts, port } = await ctx.serve()
+    let { hosts, port } = await ctx.serve({
+      host: 'webtests',
+      // servedir: `testeranto/bundles/${testName}`,
+      servedir: '.',
+      onRequest: ({ method, path, remoteAddress, status, timeInMS }) => {
+        console.log(`[esbuild] ${remoteAddress} - ${method} ${path} -> ${status} [${timeInMS}ms]`);
+      },
+    })
     console.log(
       `[WEB BUILDER]: esbuild server ${hosts}, ${port}`
     );

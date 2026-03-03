@@ -21,6 +21,7 @@ export default (
   return {
     ...baseEsBuildConfig(config),
     outdir: `testeranto/bundles/${testName}`,
+
     outbase: ".",
     metafile: true,
     supported: {
@@ -34,7 +35,7 @@ export default (
     format: "esm",
     absWorkingDir: process.cwd(),
     platform: "browser",
-    packages: "external",
+    // packages: "external",
     entryPoints,
     plugins: [
       featuresPlugin,

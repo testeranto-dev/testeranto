@@ -1,31 +1,27 @@
 import puppeteer, { ConsoleMessage } from 'puppeteer-core';
 import http from 'http';
-import dns from 'dns';
-import ansiColors from 'ansi-colors';
-import { url } from 'inspector';
-import path from 'path';
-import src from '../../../lib/tiposkripto/src';
-import type { IFinalResults } from '../../../lib/tiposkripto/src/types';
+// import dns from 'dns';
 
-console.log("mark2", process.argv)
-const relativePath = process.argv[2];
-const projectConfigPath = process.argv[3];
-const nodeConfigPath = process.argv[4];
-const testName = process.argv[5];
-const testResourceConfig = process.argv[6];
+const esbuildUrlDomain = `http://webtests:8000/`;
 
+// console.log("mark2", process.argv)
+// const relativePath = process.argv[2];
+// const projectConfigPath = process.argv[3];
+// const nodeConfigPath = process.argv[4];
+// const testName = process.argv[5];
+// const testResourceConfig = process.argv[5];
 
-const webEvaluator = (d, webArgz) => {
-  return `
-import('${d}').then(async (x) => {
-  try {
-    return await (await x.default).receiveTestResourceConfig(${webArgz})
-  } catch (e) {
-    console.log("web run failure", e.toString())
-  }
-})
-`;
-};
+// const webEvaluator = (d, webArgz) => {
+//   return `
+// import('${d}').then(async (x) => {
+//   try {
+//     return await (await x.default).receiveTestResourceConfig(${webArgz})
+//   } catch (e) {
+//     console.log("web run failure", e.toString())
+//   }
+// })
+// `;
+// };
 
 async function launchPuppeteer(browserWSEndpoint: string) {
 
@@ -94,49 +90,51 @@ async function launchPuppeteer(browserWSEndpoint: string) {
     // Log console messages for debugging
     page.on("console", (msg) => {
       const text = msg.text();
-      console.log(`Browser console [${msg.type()}]: ${text}`);
+      console.log(`Browser console [${msg.type()}]: ${text} ${JSON.stringify(msg.stackTrace())}`);
     });
 
-    const url = `http://localhost:9223/bundles/web/${relativePath}?config=${testResourceConfig}`;
+    // const url = `${urlDomain}/testeranto/bundles/web/${relativePath}?config=${testResourceConfig}`;
+    const htmlUrl = `${esbuildUrlDomain}testeranto/bundles/webtests/src/ts/Calculator.test.ts.html`;
+    console.log("htmlUrl", htmlUrl);
 
     // Navigate to the HTML page with the config in the query parameter
-    await page.goto(url, { waitUntil: "networkidle0" });
+    await page.goto(htmlUrl, { waitUntil: "networkidle0" });
 
     // The HTML page loads the JS bundle, but we need to actually run the test
     // Use webEvaluator to import and run the test module
     // First, get the JS file path from the dest
-    const jsPath = "testeranto/bundles/webtests/src/ts/Calculator.test.mjs";
-    // Convert to relative URL for the browser
-    let jsRelativePath: string;
-    const jsMatch = jsPath.match(/testeranto\/bundles\/web\/(.*)/);
-    if (jsMatch) {
-      jsRelativePath = jsMatch[1];
-    } else {
-      const jsAbsMatch = jsPath.match(/\/bundles\/web\/(.*)/);
-      if (jsAbsMatch) {
-        jsRelativePath = jsAbsMatch[1];
-      } else {
-        jsRelativePath = path.basename(jsPath);
-      }
-    }
-    const jsUrl = `/bundles/web/${jsRelativePath}?cacheBust=${Date.now()}`;
+    // const jsPath = `${esbuildUrlDomain}testeranto/bundles/webtests/src/ts/Calculator.test.mjs`;
+    // // Convert to relative URL for the browser
+    // let jsRelativePath: string;
+    // const jsMatch = jsPath.match(/testeranto\/bundles\/web\/(.*)/);
+    // if (jsMatch) {
+    //   jsRelativePath = jsMatch[1];
+    // } else {
+    //   const jsAbsMatch = jsPath.match(/\/bundles\/web\/(.*)/);
+    //   if (jsAbsMatch) {
+    //     jsRelativePath = jsAbsMatch[1];
+    //   } else {
+    //     jsRelativePath = path.basename(jsPath);
+    //   }
+    // }
+    // const jsUrl = `${esbuildUrlDomain}${jsRelativePath}?cacheBust=${Date.now()}`;
 
-    // Evaluate the test using webEvaluator
-    const evaluation = webEvaluator(jsUrl, testResourceConfig);
-    console.log("Evaluating web test with URL:", jsUrl);
+    // // Evaluate the test using webEvaluator
+    // const evaluation = webEvaluator(jsUrl, testResourceConfig);
+    // console.log("jsUrl", jsUrl);
 
-    try {
-      const results = (await page.evaluate(evaluation)) as IFinalResults;
-      const { fails, failed, features } = results;
-      // logs.info?.write("\n idk1");
-      // statusMessagePretty(fails, src, "web");
-      // this.bddTestIsNowDone(src, fails);
-    } catch (error) {
-      console.error("Error evaluating web test:", error);
-      // logs.info?.write("\n Error evaluating web test");
-      // statusMessagePretty(-1, src, "web");
-      // this.bddTestIsNowDone(src, -1);
-    }
+    // try {
+    //   const results = (await page.evaluate(evaluation)) as IFinalResults;
+    //   const { fails, failed, features } = results;
+    //   // logs.info?.write("\n idk1");
+    //   // statusMessagePretty(fails, src, "web");
+    //   // this.bddTestIsNowDone(src, fails);
+    // } catch (error) {
+    //   console.error("Error evaluating web test:", error);
+    //   // logs.info?.write("\n Error evaluating web test");
+    //   // statusMessagePretty(-1, src, "web");
+    //   // this.bddTestIsNowDone(src, -1);
+    // }
 
     // Generate prompt files for Web tests
     // generatePromptFiles(reportDest, src);
@@ -144,7 +142,7 @@ async function launchPuppeteer(browserWSEndpoint: string) {
     await page.close();
     close();
   } catch (error) {
-    console.error(`Error in web test ${src}:`, error);
+    console.error(`Error in web test:`, error);
     // this.bddTestIsNowDone(src, -1);
     throw error;
   }
@@ -152,17 +150,17 @@ async function launchPuppeteer(browserWSEndpoint: string) {
 }
 
 async function connect() {
-  const { address } = await dns.promises.lookup('webtests');
-  const url = `http://${address}:9223/json/version`;
-  const host = address;
+  // const { address } = await dns.promises.lookup('webtests');
+  const url = `http://webtests:9223/json/version`;
+  // const host = address;
 
   console.log(`[CLIENT] Attempting to reach ${url}...`);
 
   // 1. Log Network Info
 
-  dns.lookup(host, (err, address) => {
-    console.log(`[CLIENT] DNS Lookup for "${host}": ${address || 'FAILED'} (${err ? err.message : 'OK'})`);
-  });
+  // dns.lookup(host, (err, address) => {
+  //   console.log(`[CLIENT] DNS Lookup for "${host}": ${address || 'FAILED'} (${err ? err.message : 'OK'})`);
+  // });
 
   // 2. Try raw HTTP request to see exact error
   http.get(url, (res) => {

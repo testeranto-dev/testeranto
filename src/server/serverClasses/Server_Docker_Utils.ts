@@ -1,7 +1,7 @@
 // Utility functions and constants for Server_Docker
 // This file contains repetitive code, constants, and boilerplate extracted from Server_Docker.ts
 
-import type { IRunTime, ITestconfigV2 } from "../../Types";
+import type { IBaseTestConfig, IRunTime, ITestconfigV2 } from "../../Types";
 import { golangDockerComposeFile, golangBuildCommand, golangBddCommand } from "../runtimes/golang/docker";
 import { javaDockerComposeFile, javaBuildCommand, javaBddCommand } from "../runtimes/java/docker";
 import { nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand } from "../runtimes/node/docker";
@@ -9,6 +9,9 @@ import { pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand } from ".
 import { rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand } from "../runtimes/ruby/docker";
 import { rustDockerComposeFile, rustBuildCommand, rustBddCommand } from "../runtimes/rust/docker";
 import { webDockerComposeFile, webBuildCommand, webBddCommand } from "../runtimes/web/docker";
+import fs from "fs";
+import yaml from "js-yaml";
+import path from "path";
 
 export type IService = any;
 
@@ -199,6 +202,158 @@ export const getServiceType = (serviceName: string): string => {
   if (serviceName.includes('-check-')) return 'check';
   if (serviceName.includes('-builder')) return 'builder';
   return 'unknown';
+};
+
+export const writeConfigForExtensionOnStop = () => {
+  try {
+    const configDir = path.join(process.cwd(), 'testeranto');
+    const configPath = path.join(configDir, 'extension-config.json');
+
+    // Ensure the directory exists
+    if (!fs.existsSync(configDir)) {
+      fs.mkdirSync(configDir, { recursive: true });
+      console.log(`[Server_Docker] Created directory: ${configDir}`);
+    }
+
+    const configData = {
+      runtimes: [],
+      timestamp: new Date().toISOString(),
+      source: 'testeranto.ts',
+      serverStarted: false
+    };
+
+    const configJson = JSON.stringify(configData, null, 2);
+    fs.writeFileSync(configPath, configJson);
+    console.log(`[Server_Docker] Updated extension config to indicate server stopped`);
+
+  } catch (error: any) {
+    console.error(`[Server_Docker] Failed to write extension config on stop:`, error);
+  }
+}
+
+export const writeComposeFile = (
+  services: Record<string, IService>,
+) => {
+  const dockerComposeFileContents = BaseCompose(services);
+
+  fs.writeFileSync(
+    'testeranto/docker-compose.yml',
+    yaml.dump(dockerComposeFileContents, {
+      lineWidth: -1,
+      noRefs: true,
+    })
+  );
+}
+
+// Base compose configuration
+export const BaseCompose = (services: any) => {
+  return {
+    services,
+    volumes: {
+      node_modules: {
+        driver: "local",
+      },
+    },
+    networks: {
+      allTests_network: {
+        driver: "bridge",
+      },
+    },
+  };
+};
+
+// Static test docker compose file generator
+export const staticTestDockerComposeFile = (
+  runtime: string,
+  container_name: string,
+  command: string,
+  config: any,
+  runtimeTestsName: string
+) => {
+  return {
+    build: {
+      context: process.cwd(),
+      dockerfile: config.runtimes[runtimeTestsName].dockerfile,
+    },
+    container_name,
+    environment: {
+      // NODE_ENV: "production",
+      // ...config.env,
+    },
+    working_dir: "/workspace",
+    command: command,
+    networks: ["allTests_network"],
+  };
+};
+
+
+// BDD test docker compose file generator
+export const bddTestDockerComposeFile = (
+  configs: ITestconfigV2,
+  runtime: string,
+  container_name: string,
+  command: string
+) => {
+  // Find the dockerfile path from configs
+  let dockerfilePath = '';
+  for (const [key, value] of Object.entries(configs.runtimes)) {
+    if (value.runtime === runtime) {
+      dockerfilePath = value.dockerfile;
+      break;
+    }
+  }
+
+  // If no dockerfile found, use a default based on runtime
+  if (!dockerfilePath) {
+    throw (`[Docker] [bddTestDockerComposeFile] no dockerfile found for ${dockerfilePath}, ${Object.entries(configs)}`)
+  }
+
+  const service: any = {
+    build: {
+      context: process.cwd(),
+      dockerfile: dockerfilePath,
+    },
+    container_name,
+    environment: {
+      // NODE_ENV: "production",
+      // ...config.env,
+    },
+    working_dir: "/workspace",
+    volumes: [
+      `${process.cwd()}/src:/workspace/src`,
+      `${process.cwd()}/dist:/workspace/dist`,
+      `${process.cwd()}/testeranto:/workspace/testeranto`,
+    ],
+    command: command,
+    networks: ["allTests_network"],
+  };
+
+  return service;
+};
+
+// Aider docker compose file generator
+export const aiderDockerComposeFile = (container_name: string) => {
+  return {
+    build: {
+      context: process.cwd(),
+      dockerfile: 'aider.Dockerfile',
+    },
+    container_name,
+    environment: {
+      // NODE_ENV: "production",
+      // ...config.env,
+    },
+    volumes: [
+      `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
+      // Mount the entire workspace to allow aider to access files
+      `${process.cwd()}:/workspace`,
+    ],
+    working_dir: "/workspace",
+    command: "tail -f /dev/null",  // Keep container running
+    networks: ["allTests_network"],
+    tty: true,           // Allocate a pseudo-TTY
+    stdin_open: true,    // Keep STDIN open even if not attached
+  };
 };
 
 // Generic Docker Compose command execution helper

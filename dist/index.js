@@ -5166,6 +5166,82 @@ var getContainerInspectFormat = () => {
 var cleanTestName = (testName) => {
   return testName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-").replace(/[^a-z0-9_-]/g, "");
 };
+var BaseCompose = (services) => {
+  return {
+    services,
+    volumes: {
+      node_modules: {
+        driver: "local"
+      }
+    },
+    networks: {
+      allTests_network: {
+        driver: "bridge"
+      }
+    }
+  };
+};
+var staticTestDockerComposeFile = (runtime, container_name, command, config, runtimeTestsName) => {
+  return {
+    build: {
+      context: process.cwd(),
+      dockerfile: config.runtimes[runtimeTestsName].dockerfile
+    },
+    container_name,
+    environment: {},
+    working_dir: "/workspace",
+    command,
+    networks: ["allTests_network"]
+  };
+};
+var bddTestDockerComposeFile = (configs, runtime, container_name, command) => {
+  let dockerfilePath = "";
+  for (const [key, value] of Object.entries(configs.runtimes)) {
+    if (value.runtime === runtime) {
+      dockerfilePath = value.dockerfile;
+      break;
+    }
+  }
+  if (!dockerfilePath) {
+    throw `[Docker] [bddTestDockerComposeFile] no dockerfile found for ${dockerfilePath}, ${Object.entries(configs)}`;
+  }
+  const service = {
+    build: {
+      context: process.cwd(),
+      dockerfile: dockerfilePath
+    },
+    container_name,
+    environment: {},
+    working_dir: "/workspace",
+    volumes: [
+      `${process.cwd()}/src:/workspace/src`,
+      `${process.cwd()}/dist:/workspace/dist`,
+      `${process.cwd()}/testeranto:/workspace/testeranto`
+    ],
+    command,
+    networks: ["allTests_network"]
+  };
+  return service;
+};
+var aiderDockerComposeFile = (container_name) => {
+  return {
+    build: {
+      context: process.cwd(),
+      dockerfile: "aider.Dockerfile"
+    },
+    container_name,
+    environment: {},
+    volumes: [
+      `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
+      `${process.cwd()}:/workspace`
+    ],
+    working_dir: "/workspace",
+    command: "tail -f /dev/null",
+    networks: ["allTests_network"],
+    tty: true,
+    stdin_open: true
+  };
+};
 var executeDockerComposeCommand = async (command, options) => {
   const useExec = options?.useExec ?? false;
   const execOptions = options?.execOptions ?? { cwd: process.cwd() };
@@ -6523,82 +6599,6 @@ class Server_Docker extends Server_WS {
   constructor(configs, mode) {
     super(configs, mode);
   }
-  BaseCompose(services) {
-    return {
-      services,
-      volumes: {
-        node_modules: {
-          driver: "local"
-        }
-      },
-      networks: {
-        allTests_network: {
-          driver: "bridge"
-        }
-      }
-    };
-  }
-  staticTestDockerComposeFile(runtime, container_name, command, config, runtimeTestsName) {
-    return {
-      build: {
-        context: process.cwd(),
-        dockerfile: config.runtimes[runtimeTestsName].dockerfile
-      },
-      container_name,
-      environment: {},
-      working_dir: "/workspace",
-      command,
-      networks: ["allTests_network"]
-    };
-  }
-  bddTestDockerComposeFile(runtime, container_name, command) {
-    let dockerfilePath = "";
-    for (const [key, value] of Object.entries(this.configs.runtimes)) {
-      if (value.runtime === runtime) {
-        dockerfilePath = value.dockerfile;
-        break;
-      }
-    }
-    if (!dockerfilePath) {
-      throw `[Docker] [bddTestDockerComposeFile] no dockerfile found for ${dockerfilePath}, ${Object.entries(this.configs)}`;
-    }
-    const service = {
-      build: {
-        context: process.cwd(),
-        dockerfile: dockerfilePath
-      },
-      container_name,
-      environment: {},
-      working_dir: "/workspace",
-      volumes: [
-        `${process.cwd()}/src:/workspace/src`,
-        `${process.cwd()}/dist:/workspace/dist`,
-        `${process.cwd()}/testeranto:/workspace/testeranto`
-      ],
-      command,
-      networks: ["allTests_network"]
-    };
-    return service;
-  }
-  aiderDockerComposeFile(container_name) {
-    return {
-      build: {
-        context: process.cwd(),
-        dockerfile: "aider.Dockerfile"
-      },
-      container_name,
-      environment: {},
-      volumes: [
-        `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
-        `${process.cwd()}:/workspace`
-      ],
-      working_dir: "/workspace",
-      command: "tail -f /dev/null",
-      networks: ["allTests_network"],
-      tty: true,
-      stdin_open: true
-    };
-  }
   generateServices() {
     const services = {};
     const processedRuntimes = new Set;
@@ -6633,14 +6633,14 @@ class Server_Docker extends Server_WS {
         }
         const bddCommand = bddCommandFunc(f, buildOptions, runtimeTestsName);
         console.log(`[Server_Docker] [generateServices] ${runtimeTestsName} BDD command: "${bddCommand}"`);
-        services[getBddServiceName(uid)] = this.bddTestDockerComposeFile(runtime, getBddServiceName(uid), bddCommand);
-        services[getAiderServiceName(uid)] = this.aiderDockerComposeFile(getAiderServiceName(uid));
+        services[getBddServiceName(uid)] = bddTestDockerComposeFile(this.configs, runtime, getBddServiceName(uid), bddCommand);
+        services[getAiderServiceName(uid)] = aiderDockerComposeFile(getAiderServiceName(uid));
         if (runtime === "web") {
           services[getBddServiceName(uid)].expose = ["9222"];
         }
         checks.forEach((check, ndx) => {
           const command = check([]);
-          services[getCheckServiceName(uid, ndx)] = this.staticTestDockerComposeFile(runtime, getCheckServiceName(uid, ndx), command, this.configs, runtimeTestsName);
+          services[getCheckServiceName(uid, ndx)] = staticTestDockerComposeFile(runtime, getCheckServiceName(uid, ndx), command, this.configs, runtimeTestsName);
         });
       }
     }
@@ -6980,7 +6980,7 @@ class Server_Docker extends Server_WS {
     }
   }
   writeComposeFile(services) {
-    const dockerComposeFileContents = this.BaseCompose(services);
+    const dockerComposeFileContents = BaseCompose(services);
     fs2.writeFileSync("testeranto/docker-compose.yml", jsYaml.dump(dockerComposeFileContents, {
       lineWidth: -1,
       noRefs: true
