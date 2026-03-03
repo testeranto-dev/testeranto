@@ -1,0 +1,1 @@
+This folder is an example of the configs that a user will provide to testeranto

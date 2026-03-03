@@ -46,9 +46,8 @@ Testeranto reverses this pattern
 
 By packaging a piece of software first, we can correlate the output aritifacts to it's specific input source files. We can then run static tests and unit tests upon this set of input files. The results of all these tests, plus the BDD test results, are given to an LLM. This allows focus the LLM's context entirely around 1 slice of an application.
 
-## Development
 
-### TypeScript/JavaScript (Tiposkripto)
+## Running the server
 ```bash
 # Install dependencies
 bun install
@@ -68,19 +67,4 @@ bun run link   # This builds first, then links
 Make sure `~/.bun/bin` is in your PATH:
 export PATH="$HOME/.bun/bin:$PATH"
 # Add this line to your ~/.zshrc for permanent access
-```
-
-### Java (Kafe)
-```bash
-# Navigate to Kafe directory
-cd src/lib/kafe
-
-# Build with Maven
-mvn clean compile
-
-# Create executable JAR
-mvn package
-
-# Run tests
-java -jar target/kafe-0.1.2.jar '{"name":"test","fs":".","ports":[]}'
 ```
