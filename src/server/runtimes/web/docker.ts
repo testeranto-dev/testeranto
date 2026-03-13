@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import type { ITestconfigV2 } from "../../../Types";
-import { dockerComposeFile } from "../dockerComposeFile";
+import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 import webContent from "../../../../dist/prebuild/web/web.mjs" with { type: "text" };
 import hoistContent from "../../../../dist/prebuild/web/hoist.mjs" with { type: "text" };
@@ -19,40 +19,99 @@ export const webDockerComposeFile = (
   webConfigPath: string,
   testName: string
 ) => {
-  const x = {
-    ...dockerComposeFile(
-      config,
-      container_name,
-      projectConfigPath,
-      webConfigPath,
-      testName,
-      webBuildCommand
-    ),
+  // For web builder service, we need a proper build configuration
+  // Since this is a builder service (not BuildKit), it needs a build field
+  const service: any = {
+    build: {
+      context: process.cwd(),
+      dockerfile: config.runtimes[container_name]?.dockerfile || 'testeranto/runtimes/web/web.Dockerfile',
+    },
+    container_name,
+    environment: {
+      NODE_ENV: "production",
+      ENV: "web",
+    },
+    working_dir: "/workspace",
+    volumes: [
+      `${process.cwd()}/src:/workspace/src`,
+      `${process.cwd()}/dist:/workspace/dist`,
+      `${process.cwd()}/testeranto:/workspace/testeranto`,
+      // Note: node_modules is NOT mounted to avoid platform incompatibility
+    ],
+    command: webBuildCommand(projectConfigPath, webConfigPath, testName),
+    networks: ["allTests_network"],
+    expose: ["8000"],
+    depends_on: ["chrome-service"],
+  };
+  
+  return service;
+};
 
-
-
-
-
-    ...{
-      environment: { ENV: "web" },
-      expose: ["9223", "8000"], // # Internal container - to - container port exposure
-      // ports: "9222:9222" // # Mapping for your local machine access
-    }
-
-
-
-  }
-
-  // console.log("wtf", x)
-  return x
+// Chrome standalone service configuration
+export const chromeServiceConfig = () => {
+  return {
+    image: 'chromium/chromium:latest',
+    container_name: 'chrome-service',
+    command: [
+      'chromium-browser',
+      '--headless',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-setuid-sandbox',
+      '--no-sandbox',
+      '--remote-debugging-address=0.0.0.0',
+      '--remote-debugging-port=9222'
+    ].join(' '),
+    expose: ["9222"],
+    ports: ["9222:9222"],
+    networks: ["allTests_network"],
+  };
 };
 
 export const webBuildCommand = (projectConfigPath: string, webConfigPath: string, testName: string) => {
-  return `sh -c "socat TCP-LISTEN:9223,fork,reuseaddr TCP:127.0.0.1:9222 & yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName} "`
+  // Pass MODE environment variable to the builder
+  return `MODE=${process.env.MODE || 'once'} yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName}`
 }
 
 export const webBddCommand = (fpath: string, webConfigPath: string, configKey: string) => {
   const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/web" });
-  // return `node dist/prebuild/server/runtimes/web/hoist.mjs `;
-  return `yarn tsx  /workspace/testeranto/web_hoist testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
+  return `yarn tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 }
+
+// BuildKit-based building for web runtime
+export const webBuildKitBuild = async (
+  config: ITestconfigV2,
+  configKey: string
+): Promise<void> => {
+  const runtimeConfig = config.runtimes[configKey];
+  
+  if (!runtimeConfig) {
+    throw new Error(`Configuration not found for ${configKey}`);
+  }
+  
+  const buildKitConfig = runtimeConfig.buildKitOptions || {};
+  
+  const buildKitOptions = {
+    runtime: 'web',
+    configKey,
+    dockerfilePath: runtimeConfig.dockerfile,
+    buildContext: process.cwd(),
+    cacheMounts: ['/root/.npm', '/usr/local/share/.cache/yarn'],
+    targetStage: buildKitConfig.targetStage, // Don't default to 'runtime'
+    buildArgs: {
+      NODE_ENV: 'production',
+      ...(buildKitConfig.buildArgs || {})
+    }
+  };
+  
+  console.log(`[Web BuildKit] Building image for ${configKey}...`);
+  
+  const result = await BuildKitBuilder.buildImage(buildKitOptions);
+  
+  if (result.success) {
+    console.log(`[Web BuildKit] Successfully built image in ${result.duration}ms`);
+  } else {
+    console.error(`[Web BuildKit] Build failed: ${result.error}`);
+    throw new Error(`BuildKit build failed: ${result.error}`);
+  }
+};

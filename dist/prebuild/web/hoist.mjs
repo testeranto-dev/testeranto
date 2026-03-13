@@ -48,9 +48,9 @@ async function launchPuppeteer(browserWSEndpoint) {
   }
 }
 async function connect() {
-  const url = `http://webtests:9223/json/version`;
-  console.log(`[CLIENT] Attempting to reach ${url}...`);
-  http.get(url, (res) => {
+  const url = `http://chrome-service:9222/json/version`;
+  console.log(`[CLIENT] Attempting to reach Chrome service at ${url}...`);
+  const req = http.get(url, (res) => {
     let data = "";
     console.log(`[CLIENT] HTTP Status: ${res.statusCode}`);
     res.on("data", (chunk) => data += chunk);
@@ -58,19 +58,22 @@ async function connect() {
       try {
         const json = JSON.parse(data);
         console.log(`[CLIENT] Successfully fetched WS URL: ${json.webSocketDebuggerUrl}`);
-        launchPuppeteer(json.webSocketDebuggerUrl);
+        await launchPuppeteer(json.webSocketDebuggerUrl);
       } catch (e) {
         console.error("[CLIENT] Failed to parse JSON or connect:", e.message);
         console.log("[CLIENT] Raw Data received:", data);
+        throw e;
       }
     });
-  }).on("error", (err) => {
+  });
+  req.on("error", (err) => {
     console.error("[CLIENT] HTTP Request Failed:", err.message);
-    if (err.code === "ECONNREFUSED") {
-      console.error("[CLIENT] HINT: The port is closed or Chromium isn't binding to 0.0.0.0");
-    } else if (err.code === "ENOTFOUND") {
-      console.error('[CLIENT] HINT: Docker cannot find the service name "web-builder"');
-    }
+    throw err;
+  });
+  req.setTimeout(5e3, () => {
+    console.log("[CLIENT] Request timeout");
+    req.destroy();
+    throw new Error("Timeout");
   });
 }
 connect();

@@ -161,7 +161,7 @@ if (!fs.existsSync(rustDistDir)) {
 
 if (fs.existsSync(rustSrcPath)) {
   fs.copyFileSync(rustSrcPath, rustDestPath);
-  console.log(`Copied Golang artifact from ${rustSrcPath} to ${rustDestPath}`);
+  console.log(`Copied Rust artifact from ${rustSrcPath} to ${rustDestPath}`);
 } else {
   console.warn(`Golang source file not found: ${rustSrcPath}`);
 }

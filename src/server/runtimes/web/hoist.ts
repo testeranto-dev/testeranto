@@ -1,10 +1,8 @@
 import puppeteer, { ConsoleMessage } from 'puppeteer-core';
 import http from 'http';
-// import dns from 'dns';
 
 const esbuildUrlDomain = `http://webtests:8000/`;
 
-// console.log("mark2", process.argv)
 // const relativePath = process.argv[2];
 // const projectConfigPath = process.argv[3];
 // const nodeConfigPath = process.argv[4];
@@ -150,20 +148,11 @@ async function launchPuppeteer(browserWSEndpoint: string) {
 }
 
 async function connect() {
-  // const { address } = await dns.promises.lookup('webtests');
-  const url = `http://webtests:9223/json/version`;
-  // const host = address;
+  // Connect to Chrome standalone service
+  const url = `http://chrome-service:9222/json/version`;
+  console.log(`[CLIENT] Attempting to reach Chrome service at ${url}...`);
 
-  console.log(`[CLIENT] Attempting to reach ${url}...`);
-
-  // 1. Log Network Info
-
-  // dns.lookup(host, (err, address) => {
-  //   console.log(`[CLIENT] DNS Lookup for "${host}": ${address || 'FAILED'} (${err ? err.message : 'OK'})`);
-  // });
-
-  // 2. Try raw HTTP request to see exact error
-  http.get(url, (res) => {
+  const req = http.get(url, (res) => {
     let data = '';
     console.log(`[CLIENT] HTTP Status: ${res.statusCode}`);
 
@@ -172,20 +161,26 @@ async function connect() {
       try {
         const json = JSON.parse(data);
         console.log(`[CLIENT] Successfully fetched WS URL: ${json.webSocketDebuggerUrl}`);
-        launchPuppeteer(json.webSocketDebuggerUrl)
-      } catch (e) {
+        await launchPuppeteer(json.webSocketDebuggerUrl);
+      } catch (e: any) {
         console.error('[CLIENT] Failed to parse JSON or connect:', e.message);
         console.log('[CLIENT] Raw Data received:', data);
+        throw e;
       }
     });
-  }).on('error', (err) => {
+  });
+
+  req.on('error', (err) => {
     console.error('[CLIENT] HTTP Request Failed:', err.message);
-    if (err.code === 'ECONNREFUSED') {
-      console.error('[CLIENT] HINT: The port is closed or Chromium isn\'t binding to 0.0.0.0');
-    } else if (err.code === 'ENOTFOUND') {
-      console.error('[CLIENT] HINT: Docker cannot find the service name "web-builder"');
-    }
+    throw err;
+  });
+
+  req.setTimeout(5000, () => {
+    console.log('[CLIENT] Request timeout');
+    req.destroy();
+    throw new Error('Timeout');
   });
 }
 
+// Start connection
 connect();

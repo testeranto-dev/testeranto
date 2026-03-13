@@ -26,7 +26,7 @@ export const dockerComposeFile = (
       `${process.cwd()}/src:/workspace/src`,
       `${process.cwd()}/dist:/workspace/dist`,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
-
+      // Note: node_modules is NOT mounted to avoid platform incompatibility
     ],
     // command: nodeBuildCommand(projectConfigPath, nodeConfigPath, testName),
     command: command(projectConfigPath, nodeConfigPath, testName, tests)

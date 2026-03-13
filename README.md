@@ -26,6 +26,71 @@ Run `testeranto`
 ?
 Profit
 
+### Important Note for Cross-Platform Development
+When developing on macOS (especially Apple Silicon) and running tests in Docker containers (Linux x86_64):
+- **Node.js dependencies** are installed inside the container during build time
+- **Host `node_modules` is NOT mounted** into containers to avoid platform incompatibility
+- Ensure your `package.json` and lock files (`yarn.lock`, `package-lock.json`) are included in your Docker build context
+- Native addons will be compiled for the container's architecture, not the host's
+
+### Dockerfile Requirements and Common Errors
+
+#### 1. Stage Targeting Error
+**Error**: `"ERROR: failed to build: failed to solve: target stage "runtime" could not be found"`
+
+**Cause**: Your Dockerfile doesn't have a stage named "runtime", but the BuildKit configuration is trying to build with `targetStage: "runtime"`.
+
+**Solutions**:
+1. **Option A**: Remove `targetStage` from your configuration:
+   ```typescript
+   buildKitOptions: {
+     // Don't include targetStage
+     cacheMounts: [...]
+   }
+   ```
+2. **Option B**: Add a stage named "runtime" to your Dockerfile:
+   ```dockerfile
+   FROM node:20-alpine AS runtime
+   WORKDIR /workspace
+   # ... rest of your Dockerfile
+   ```
+3. **Option C**: Update your configuration to match your Dockerfile's stage names:
+   ```typescript
+   buildKitOptions: {
+     targetStage: "builder", // or whatever your stage is named
+     cacheMounts: [...]
+   }
+   ```
+
+#### 2. Single-Stage vs Multi-Stage Dockerfiles
+- **Single-stage**: Don't use `targetStage` in configuration
+- **Multi-stage**: Use `targetStage` only if you need to build a specific stage
+
+#### 3. Example Configurations
+**Single-stage Dockerfile**:
+```typescript
+buildKitOptions: {
+  cacheMounts: ["/root/.npm"]
+  // No targetStage
+}
+```
+
+**Multi-stage Dockerfile with "runtime" stage**:
+```typescript
+buildKitOptions: {
+  cacheMounts: ["/root/.npm"],
+  targetStage: "runtime"
+}
+```
+
+**Multi-stage Dockerfile with custom stage name**:
+```typescript
+buildKitOptions: {
+  cacheMounts: ["/root/.npm"],
+  targetStage: "production" // matches FROM ... AS production
+}
+```
+
 ## Philosophy
 
 The common pattern of testing and packaging software is 

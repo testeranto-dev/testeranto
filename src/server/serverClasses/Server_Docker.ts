@@ -1,3 +1,7 @@
+// Define __promiseAll to prevent ReferenceError in bundled code
+// This is a workaround for Bun bundler potentially transforming Promise.all
+const __promiseAll = Promise.all.bind(Promise);
+
 import ansiColors from "ansi-colors";
 import { execSync, spawn } from "child_process";
 import fs from "fs";
@@ -5,6 +9,14 @@ import path from "path";
 import { RUN_TIMES } from "../../runtimes";
 import type { ICheck, IChecks, IRunTime, ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
+import { BuildKitBuilder } from "../buildkit/BuildKit_Utils";
+import { nodeBuildKitBuild } from "../runtimes/node/docker";
+import { webBuildKitBuild, chromeServiceConfig } from "../runtimes/web/docker";
+import { golangBuildKitBuild } from "../runtimes/golang/docker";
+import { rubyBuildKitBuild } from "../runtimes/ruby/docker";
+import { rustBuildKitBuild } from "../runtimes/rust/docker";
+import { javaBuildKitBuild } from "../runtimes/java/docker";
+import { pythonBuildKitBuild } from "../runtimes/python/docker";
 import {
   BaseCompose,
   staticTestDockerComposeFile,
@@ -32,6 +44,9 @@ import {
   getStatusFilePath,
   isContainerActive,
   runTimeToCompose,
+  spawnPromise,
+  captureContainerExitCode,
+  captureExistingLogs,
   type IDockerComposeResult,
   type IService,
   writeConfigForExtensionOnStop,
@@ -43,9 +58,15 @@ export class Server_Docker extends Server_WS {
   private logProcesses: Map<string, { process: any; serviceName: string }> = new Map();
   inputFiles: any = {};
   outputFiles: any = {};
+  private mode: IMode;
+
+  // Store hashes for each test to detect which specific tests have changed
+  // Structure: hashs[configKey][testName] = hash
+  hashs: Record<string, Record<string, string>> = {}
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
+    this.mode = mode;
   }
 
   generateServices(
@@ -56,6 +77,9 @@ export class Server_Docker extends Server_WS {
 
     // Track which runtimes we've already added builder services for
     const processedRuntimes = new Set<IRunTime>();
+
+    // Check if web runtime is present to add Chrome service
+    let hasWebRuntime = false;
 
     // Iterate through each entry in the config Map
     for (const [runtimeTestsName, runtimeTests] of Object.entries(this.configs.runtimes)) {
@@ -71,59 +95,57 @@ export class Server_Docker extends Server_WS {
         throw `unknown runtime ${runtime}`;
       }
 
-      // Add builder service for this runtime if not already added
+      // Track if web runtime is present
+      if (runtime === 'web') {
+        hasWebRuntime = true;
+      }
+
+      // Check if BuildKit is configured for this runtime
+      const hasBuildKitOptions = runtimeTests.buildKitOptions !== undefined;
+
+      // We require BuildKit for all builds
+      if (!hasBuildKitOptions) {
+        console.warn(`[Server_Docker] Warning: No BuildKit options configured for ${runtimeTestsName}. ` +
+          `BuildKit is required for all builds.`);
+      }
+
+      // We need builder services to create test bundles
+      // They'll use either the build field (traditional) or image field (BuildKit)
       if (!processedRuntimes.has(runtime)) {
-        const builderServiceName = getBuilderServiceName(runtime);
-
-        // // Ensure dockerfile path is valid and exists
-        // const fullDockerfilePath = path.join(process.cwd(), dockerfile);
-        // if (!fs.existsSync(fullDockerfilePath)) {
-        //   throw (`[Server_Docker] Dockerfile not found at ${fullDockerfilePath}`);
-        // }
-
-        // Get build command
-        const buildCommand = runTimeToCompose[runtime][1](
-          'testeranto/testeranto.ts',
-          buildOptions,
-          runtimeTestsName,
-          runtimeTests.tests
-          // runtimeTestsName
-
-        );
-
-        console.log(`[Server_Docker] [generateServices] ${runtime} build command: "${buildCommand}"`);
-
-        console.log("mark1", runtimeTestsName, this.configs.runtimes[runtimeTestsName])
-        services[builderServiceName] = runTimeToCompose[runtime][0](
-          this.configs,
-          runtimeTestsName,
-          'testeranto/testeranto.ts',
-          this.configs.runtimes[runtimeTestsName].buildOptions,
-          runtimeTestsName,
-          // runtimeTestsName,
-          // runtimeTests.tests
-          // runtimeTestsName
-
-        );
-
-        // services[builderServiceName] = {
-        //   build: {
-        //     context: process.cwd(),
-        //     dockerfile: dockerfile,
-        //   },
-        //   container_name: builderServiceName,
-        //   environment: {},
-        //   working_dir: "/workspace",
-        //   volumes: [
-        //     `${process.cwd()}/src:/workspace/src`,
-        //     `${process.cwd()}/dist:/workspace/dist`,
-        //     `${process.cwd()}/testeranto:/workspace/testeranto`,
-        //   ],
-        //   command: buildCommand,
-        //   networks: ["allTests_network"],
-        // };
-
         processedRuntimes.add(runtime);
+
+        // Create builder service using the appropriate compose function
+        const builderServiceName = getBuilderServiceName(runtime);
+        const composeFunc = runTimeToCompose[runtime][0];
+
+        // We need to determine the config paths
+        // For now, use reasonable defaults
+        const projectConfigPath = 'testeranto/testeranto.ts';
+        const runtimeConfigPath = buildOptions;
+
+        // Create the service
+        services[builderServiceName] = composeFunc(
+          this.configs,
+          builderServiceName,
+          projectConfigPath,
+          runtimeConfigPath,
+          runtimeTestsName
+        );
+
+        // Pass the mode to builder containers
+        if (!services[builderServiceName].environment) {
+          services[builderServiceName].environment = {};
+        }
+        services[builderServiceName].environment.MODE = this.mode;
+
+        // If using BuildKit, replace build with image
+        if (runtimeTests.buildKitOptions) {
+          // Remove build field and add image field
+          delete services[builderServiceName].build;
+          services[builderServiceName].image = `testeranto-${runtime}-${runtimeTestsName}:latest`;
+        }
+
+        console.log(`[Server_Docker] Added builder service: ${builderServiceName} for ${runtime}`);
       }
 
       // Add BDD and aider services for each test
@@ -137,15 +159,8 @@ export class Server_Docker extends Server_WS {
         // Add BDD service for this test
         const bddCommandFunc = runTimeToCompose[runtime][2];
 
-        // v0
-        // const filePath = `testeranto/bundles/${runtime}/${tName}`;
-        // v1
-        // const filePath = `${runtime}/${tName}`;
-
         let f;
-        if (runtime === "node") {
-          f = tName.split('.').slice(0, -1).concat('mjs').join('.')
-        } else if (runtime === "web") {
+        if (runtime === "node" || runtime === "web") {
           f = tName.split('.').slice(0, -1).concat('mjs').join('.')
         } else {
           f = tName
@@ -158,9 +173,8 @@ export class Server_Docker extends Server_WS {
         services[getBddServiceName(uid)] = bddTestDockerComposeFile(this.configs, runtime, getBddServiceName(uid), bddCommand);
         services[getAiderServiceName(uid)] = aiderDockerComposeFile(getAiderServiceName(uid));
 
-        if (runtime === "web") {
-          services[getBddServiceName(uid)].expose = ["9222"]
-        }
+        // Remove expose for web BDD services since Chrome is separate
+        // Web BDD services don't need to expose Chrome ports anymore
 
         // iterate over checks to make services for each check
         checks.forEach((check: ICheck, ndx) => {
@@ -172,6 +186,11 @@ export class Server_Docker extends Server_WS {
           );
         })
       }
+    }
+
+    // Add Chrome service if web runtime is present
+    if (hasWebRuntime) {
+      services['chrome-service'] = chromeServiceConfig();
     }
 
     // Ensure all services use the same network configuration
@@ -201,28 +220,19 @@ export class Server_Docker extends Server_WS {
     }
 
     const downCmd = DOCKER_COMPOSE_DOWN;
-    await this.spawnPromise(downCmd);
-    const buildResult = await this.DC_build();
+    await spawnPromise(downCmd);
 
-    // Start builder services
-    for (const runtimeName in this.configs.runtimes) {
+    console.log('[Server_Docker] Building all runtimes with BuildKit');
+    await this.buildWithBuildKit();
 
-      const runtime = this.configs.runtimes[runtimeName].runtime;
+    // BuildKit builds images directly, but we still need builder services
+    // to create test bundles. The builder services will use the BuildKit-built images.
 
-      // Don't initialize this.inputFiles[runtime] here - we'll use config keys instead
-      const serviceName = getBuilderServiceName(runtime);
-      await this.spawnPromise(`${DOCKER_COMPOSE_UP} ${serviceName}`);
-      // Capture any existing logs first (overwrites the file)
-      await this.captureExistingLogs(serviceName, runtime);
-      // Then start logging new output (appends to the file)
-      this.startServiceLogging(serviceName, runtime)
-        .catch(error => console.error(`[Server_Docker] Failed to start logging for ${serviceName}:`, error));
+    // Start all builder services to create test bundles
+    console.log('[Server_Docker] Starting builder services to create test bundles');
+    await this.startBuilderServices();
 
-      // Notify clients that processes resource has changed
-      this.resourceChanged('/~/processes');
-    }
-
-    // eumerate over runtimes and tests, running the bdd and static chekcks
+    // enumerate over runtimes and tests, running the bdd and static checks
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
       const runtime: IRunTime = configValue.runtime as IRunTime;
       const tests = configValue.tests;
@@ -237,14 +247,37 @@ export class Server_Docker extends Server_WS {
         if (!this.inputFiles[configKey][testName]) {
           this.inputFiles[configKey][testName] = [];
         }
-        this.watchInputFile(runtime, testName);
 
-        // Also watch for output files
-        this.watchOutputFile(runtime, testName, configKey);
-        this.launchBddTest(runtime, testName, configKey, configValue);
-        this.launchChecks(runtime, testName, configKey, configValue);
-        // this.informAider(runtime, testName, ck, configValue, inputFiles);
+        // In dev mode, watch for input file changes
+        if (this.mode === 'dev') {
+          this.watchInputFile(runtime, testName);
+        } else {
+          // In once mode, just load the input files once
+          this.loadInputFileOnce(runtime, testName, configKey);
+        }
 
+        // Also watch for output files (only in dev mode)
+        if (this.mode === 'dev') {
+          this.watchOutputFile(runtime, testName, configKey);
+        }
+
+        // Launch tests and wait for them to start
+        await this.launchBddTest(runtime, testName, configKey, configValue);
+        await this.launchChecks(runtime, testName, configKey, configValue);
+      }
+    }
+
+    // In once mode, wait for all tests to complete and then shut down
+    if (this.mode === 'once') {
+      try {
+        console.log('[Server_Docker] Once mode: Waiting for tests to complete...');
+        await this.waitForAllTestsToComplete();
+
+        console.log('[Server_Docker] Once mode: All tests completed. Exiting now.');
+        process.exit(0);
+      } catch (error: any) {
+        console.error('[Server_Docker] Error in once mode shutdown:', error);
+        process.exit(1);
       }
     }
   }
@@ -267,16 +300,18 @@ export class Server_Docker extends Server_WS {
     // Read initial files if they exist
     this.updateOutputFilesList(configKey, testName, outputDir);
 
-    // Watch the directory for changes
-    fs.watch(outputDir, (eventType, filename) => {
-      if (filename) {
-        console.log(`[Server_Docker] Output directory changed: ${eventType} ${filename} in ${outputDir}`);
-        this.updateOutputFilesList(configKey, testName, outputDir);
+    // Only watch in dev mode
+    if (this.mode === 'dev') {
+      fs.watch(outputDir, (eventType, filename) => {
+        if (filename) {
+          console.log(`[Server_Docker] Output directory changed: ${eventType} ${filename} in ${outputDir}`);
+          this.updateOutputFilesList(configKey, testName, outputDir);
 
-        // Notify clients via WebSocket
-        this.resourceChanged('/~/outputfiles');
-      }
-    });
+          // Notify clients via WebSocket
+          this.resourceChanged('/~/outputfiles');
+        }
+      });
+    }
   }
 
   // Update the list of output files for a test
@@ -313,6 +348,55 @@ export class Server_Docker extends Server_WS {
     }
   }
 
+  // Load input file once without setting up a watcher
+  private loadInputFileOnce(runtime: IRunTime, testName: string, configKey: string): void {
+    let inputFilePath: string;
+    try {
+      inputFilePath = getInputFilePath(runtime, configKey);
+    } catch (error: any) {
+      console.warn(`[Server_Docker] Could not get input file path for ${runtime}/${configKey}: ${error.message}`);
+      return;
+    }
+
+    console.log(`[Server_Docker] Loading input file once: ${inputFilePath} (configKey: ${configKey})`);
+
+    // Initialize the structure if needed
+    if (!this.inputFiles[configKey]) {
+      this.inputFiles[configKey] = {};
+    }
+
+    // Read file content if it exists
+    if (fs.existsSync(inputFilePath)) {
+      try {
+        const fileContent = fs.readFileSync(inputFilePath, 'utf-8');
+        const allTestsInfo = JSON.parse(fileContent);
+        // Extract the specific test's information
+        if (allTestsInfo[testName]) {
+          const testInfo = allTestsInfo[testName];
+          this.inputFiles[configKey][testName] = testInfo.files || [];
+          // Store the hash
+          if (!this.hashs[configKey]) {
+            this.hashs[configKey] = {};
+          }
+          this.hashs[configKey][testName] = testInfo.hash || '';
+          console.log(`[Server_Docker] Loaded ${testInfo.files?.length || 0} input files for ${testName} from ${inputFilePath}, hash: ${testInfo.hash || 'none'}`);
+        } else {
+          console.warn(`[Server_Docker] Test ${testName} not found in ${inputFilePath}`);
+          this.inputFiles[configKey][testName] = [];
+          // Initialize hash if needed
+          if (!this.hashs[configKey]) {
+            this.hashs[configKey] = {};
+          }
+          this.hashs[configKey][testName] = '';
+        }
+      } catch (error: any) {
+        console.warn(`[Server_Docker] Failed to read input file ${inputFilePath}: ${error.message}`);
+      }
+    } else {
+      console.log(`[Server_Docker] Input file does not exist: ${inputFilePath}`);
+    }
+  }
+
   // when the input file changes, launch the tests
   async watchInputFile(runtime: IRunTime, testsName: string) {
     // Find the config key for this runtime and test
@@ -326,14 +410,16 @@ export class Server_Docker extends Server_WS {
 
     let inputFilePath: string;
     try {
-      inputFilePath = getInputFilePath(runtime, testsName);
+      inputFilePath = getInputFilePath(runtime, configKey);
     } catch (error: any) {
-      throw `not yet implemented: ${error.message}`;
+      console.warn(`[Server_Docker] Could not get input file path for ${runtime}/${configKey}: ${error.message}`);
+      return;
     }
 
-    // if (!configKey) throw 'idk'
+    console.log(`[Server_Docker] 👀 Setting up file watcher for: ${inputFilePath} (configKey: ${configKey})`);
+    console.log(`[Server_Docker]   Runtime: ${runtime}, Test: ${testsName}`);
+    console.log(`[Server_Docker]   Mode: ${this.mode}`);
 
-    console.log(`[Server_Docker] Setting up file watcher for: ${inputFilePath} (configKey: ${configKey})`);
     // Initialize the structure if needed
     if (!this.inputFiles[configKey]) {
       this.inputFiles[configKey] = {};
@@ -341,37 +427,107 @@ export class Server_Docker extends Server_WS {
 
     // Read initial file content if it exists
     if (fs.existsSync(inputFilePath)) {
-      const fileContent = fs.readFileSync(inputFilePath, 'utf-8');
-      const inputFiles = JSON.parse(fileContent);
-      this.inputFiles[configKey][testsName] = inputFiles;
-      console.log(`[Server_Docker] Loaded ${inputFiles.length} input files from ${inputFilePath}`);
-    }
-
-    try {
-      fs.watchFile(inputFilePath, (curr, prev) => {
-        console.log(`[Server_Docker] Input file changed: ${inputFilePath}`);
-
+      try {
         const fileContent = fs.readFileSync(inputFilePath, 'utf-8');
-        const inputFiles = JSON.parse(fileContent);
-        this.inputFiles[configKey!][testsName] = inputFiles;
-        console.log(`[Server_Docker] Updated input files for ${configKey}/${testsName}: ${inputFiles.length} files`);
-
-        this.resourceChanged('/~/inputfiles');
-
-        // Find the configuration for this runtime and test
-        for (const [ck, configValue] of Object.entries(this.configs.runtimes)) {
-          if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
-            this.launchBddTest(runtime, testsName, ck, configValue);
-            this.launchChecks(runtime, testsName, ck, configValue);
-            this.informAider(runtime, testsName, ck, configValue, inputFiles);
-            break;
+        const allTestsInfo = JSON.parse(fileContent);
+        // Extract the specific test's information
+        if (allTestsInfo[testsName]) {
+          const testInfo = allTestsInfo[testsName];
+          this.inputFiles[configKey][testsName] = testInfo.files || [];
+          // Store the hash
+          if (!this.hashs[configKey]) {
+            this.hashs[configKey] = {};
           }
+          this.hashs[configKey][testsName] = testInfo.hash || '';
+          console.log(`[Server_Docker] 📖 Loaded ${testInfo.files?.length || 0} input files for ${testsName} from ${inputFilePath}, hash: ${testInfo.hash || 'none'}`);
+          if (testInfo.files && testInfo.files.length > 0) {
+            console.log(`[Server_Docker]   Files: ${testInfo.files.slice(0, 3).map(f => path.basename(f)).join(', ')}${testInfo.files.length > 3 ? '...' : ''}`);
+          }
+        } else {
+          console.warn(`[Server_Docker] ⚠️ Test ${testsName} not found in ${inputFilePath}`);
+          this.inputFiles[configKey][testsName] = [];
+          // Initialize hash if needed
+          if (!this.hashs[configKey]) {
+            this.hashs[configKey] = {};
+          }
+          this.hashs[configKey][testsName] = '';
         }
-      });
-    } catch (e) {
-      console.error(e)
+      } catch (error: any) {
+        console.warn(`[Server_Docker] ⚠️ Failed to read input file ${inputFilePath}: ${error.message}`);
+      }
+    } else {
+      console.log(`[Server_Docker] 📭 Input file does not exist yet: ${inputFilePath}`);
+      console.log(`[Server_Docker]   Tests will be triggered when this file is created.`);
     }
 
+    // Only set up file watcher in dev mode
+    if (this.mode === 'dev') {
+      try {
+        fs.watchFile(inputFilePath, (curr, prev) => {
+          console.log(`[Server_Docker] 🔄 Input file changed: ${inputFilePath}`);
+          console.log(`[Server_Docker] 📊 Previous mtime: ${prev.mtime}, Current mtime: ${curr.mtime}`);
+
+          // Check if file exists before trying to read it
+          if (!fs.existsSync(inputFilePath)) {
+            console.log(`[Server_Docker] ⚠️ Input file no longer exists: ${inputFilePath}`);
+            return;
+          }
+
+          try {
+            const fileContent = fs.readFileSync(inputFilePath, 'utf-8');
+            const allTestsInfo = JSON.parse(fileContent);
+            // Extract the specific test's information
+            if (allTestsInfo[testsName]) {
+              const testInfo = allTestsInfo[testsName];
+              const newHash = testInfo.hash || '';
+              const oldHash = this.hashs[configKey!]?.[testsName] || '';
+              
+              // Update stored hash and input files
+              this.inputFiles[configKey!][testsName] = testInfo.files || [];
+              if (!this.hashs[configKey!]) {
+                this.hashs[configKey!] = {};
+              }
+              this.hashs[configKey!][testsName] = newHash;
+              
+              console.log(`[Server_Docker] 📄 Updated input files for ${configKey}/${testsName}: ${testInfo.files?.length || 0} files`);
+              console.log(`[Server_Docker]   Old hash: ${oldHash}, New hash: ${newHash}`);
+
+              this.resourceChanged('/~/inputfiles');
+
+              // Only trigger tests if the hash has changed
+              if (newHash !== oldHash) {
+                console.log(`[Server_Docker] 🔄 Hash changed for ${testsName}, triggering tests...`);
+                // Find the configuration for this runtime and test
+                for (const [ck, configValue] of Object.entries(this.configs.runtimes)) {
+                  if (configValue.runtime === runtime && configValue.tests.includes(testsName)) {
+                    console.log(`[Server_Docker] 🚀 Triggering tests for ${runtime}/${testsName} (config: ${ck})`);
+                    console.log(`[Server_Docker]   ↳ Launching BDD test...`);
+                    this.launchBddTest(runtime, testsName, ck, configValue);
+                    console.log(`[Server_Docker]   ↳ Launching checks...`);
+                    this.launchChecks(runtime, testsName, ck, configValue);
+                    console.log(`[Server_Docker]   ↳ Informing aider...`);
+                    this.informAider(runtime, testsName, ck, configValue, testInfo.files);
+                    console.log(`[Server_Docker] ✅ All tests triggered for ${runtime}/${testsName}`);
+                    break;
+                  }
+                }
+              } else {
+                console.log(`[Server_Docker] ⏭️ Hash unchanged for ${testsName}, skipping test execution`);
+              }
+            } else {
+              console.warn(`[Server_Docker] ⚠️ Test ${testsName} not found in ${inputFilePath}`);
+            }
+          } catch (error: any) {
+            console.error(`[Server_Docker] ❌ Failed to read or parse input file ${inputFilePath}: ${error.message}`);
+          }
+        });
+      } catch (e: any) {
+        console.error(`[Server_Docker] ❌ Failed to watch file ${inputFilePath}: ${e.message}`);
+      }
+    } else {
+      // In once mode, just load the file once
+      this.loadInputFileOnce(runtime, testsName, configKey!);
+    }
   }
 
   // Alert the aider process that the context should be updated
@@ -437,23 +593,33 @@ export class Server_Docker extends Server_WS {
     const uid = generateUid(configKey, testName);
     const bddServiceName = getBddServiceName(uid);
 
-    console.log(`[Server_Docker] Starting BDD service: ${bddServiceName}, ${configKey}, ${testName}`);
+    console.log(`[Server_Docker] 🚀 Launching BDD test: ${bddServiceName}`);
+    console.log(`[Server_Docker]   Config: ${configKey}, Test: ${testName}, Runtime: ${runtime}`);
+    console.log(`[Server_Docker]   UID: ${uid}`);
+
     try {
       // Start the service
-      await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`);
+      console.log(`[Server_Docker]   Starting Docker service...`);
+      await spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`);
+      console.log(`[Server_Docker]   ✅ Docker service started`);
 
       // Capture any existing logs first (overwrites the file)
+      console.log(`[Server_Docker]   Capturing existing logs...`);
       await this.captureExistingLogs(bddServiceName, runtime);
-      // Then start logging new output (appends to the file)
+
+      // Then start logging new output (overwrites the file)
+      console.log(`[Server_Docker]   Starting log capture...`);
       this.startServiceLogging(bddServiceName, runtime)
-        .catch(error => console.error(`[Server_Docker] Failed to start logging for ${bddServiceName}:`, error));
+        .catch(error => console.error(`[Server_Docker] ❌ Failed to start logging for ${bddServiceName}:`, error));
 
       // Notify clients that processes resource has changed
       this.resourceChanged('/~/processes');
       // Update the extension config to reflect the current state
       this.writeConfigForExtension();
+
+      console.log(`[Server_Docker] ✅ BDD test launched successfully: ${bddServiceName}`);
     } catch (error: any) {
-      console.error(`[Server_Docker] Failed to start ${bddServiceName}: ${error.message}`);
+      console.error(`[Server_Docker] ❌ Failed to start ${bddServiceName}: ${error.message}`);
       // Even if starting failed, try to capture any logs that might exist
       this.captureExistingLogs(bddServiceName, runtime)
         .catch(err => console.error(`[Server_Docker] Also failed to capture logs:`, err));
@@ -470,14 +636,14 @@ export class Server_Docker extends Server_WS {
       const checkServiceName = getCheckServiceName(uid, i);
       console.log(`[Server_Docker] Starting check service: ${checkServiceName}`);
       try {
-        await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${checkServiceName}`);
-        // Start logging for this service
-        this.startServiceLogging(checkServiceName, runtime)
-          .catch(error => console.error(`[Server_Docker] Failed to start logging for ${checkServiceName}:`, error));
-
-        // Also capture any existing logs
+        await spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${checkServiceName}`);
+        // Capture any existing logs first
         this.captureExistingLogs(checkServiceName, runtime)
           .catch(error => console.error(`[Server_Docker] Failed to capture existing logs for ${checkServiceName}:`, error));
+
+        // Then start logging fresh logs
+        this.startServiceLogging(checkServiceName, runtime)
+          .catch(error => console.error(`[Server_Docker] Failed to start logging for ${checkServiceName}:`, error));
 
         // Notify clients that processes resource has changed
         this.resourceChanged('/~/processes');
@@ -493,49 +659,11 @@ export class Server_Docker extends Server_WS {
   }
 
   private async captureExistingLogs(serviceName: string, runtime: string): Promise<void> {
-    // Create report directory
-    const reportDir = getFullReportDir(process.cwd(), runtime);
-    const logFilePath = getLogFilePath(process.cwd(), runtime, serviceName);
-
-    try {
-      // First, check if the container exists (including stopped ones)
-      const checkCmd = `${DOCKER_COMPOSE_BASE} ps -a -q ${serviceName}`;
-      const containerId = execSync(checkCmd, {
-        // cwd: this.dockerManager.cwd,
-        encoding: 'utf-8'
-      }).toString().trim();
-
-      if (!containerId) {
-        console.debug(`[Server_Docker] No container found for service ${serviceName}`);
-        return;
-      }
-
-      // Get existing logs from the container
-      const cmd = `${DOCKER_COMPOSE_LOGS} ${serviceName} 2>/dev/null || true`;
-      const existingLogs = execSync(cmd, {
-        // cwd: this.dockerManager.cwd,
-        encoding: 'utf-8',
-        maxBuffer: 10 * 1024 * 1024 // 10MB
-      });
-
-      if (existingLogs && existingLogs.trim().length > 0) {
-        // Overwrite the log file
-        fs.writeFileSync(logFilePath, existingLogs);
-        console.log(`[Server_Docker] Captured ${existingLogs.length} bytes of existing logs for ${serviceName}`);
-      } else {
-        // If no logs exist, create an empty file
-        fs.writeFileSync(logFilePath, '');
-      }
-
-      // Also try to capture the container exit code if it has exited
-      this.captureContainerExitCode(serviceName, runtime);
-    } catch (error: any) {
-      // It's okay if this fails - the container might not exist yet
-      console.debug(`[Server_Docker] No existing logs for ${serviceName}: ${error.message}`);
-    }
+    captureExistingLogs(serviceName, runtime, process.cwd());
   }
 
   public async stop(): Promise<void> {
+    console.log('[Server_Docker] Stopping server...');
 
     // Stop all log processes first
     for (const [containerId, logProcess] of this.logProcesses.entries()) {
@@ -548,14 +676,20 @@ export class Server_Docker extends Server_WS {
     }
     this.logProcesses.clear();
 
+    // Stop all docker containers
+    console.log('[Server_Docker] Stopping all docker containers...');
     const result = await this.DC_down();
+    console.log(`[Server_Docker] Docker down result: ${result.exitCode === 0 ? 'success' : 'failed'}`);
 
     // Notify clients that processes resource has changed
     this.resourceChanged('/~/processes');
     // Update the extension config to indicate server has stopped
     writeConfigForExtensionOnStop();
 
-    super.stop();
+    // Call parent stop
+    await super.stop();
+
+    console.log('[Server_Docker] Server stopped successfully');
   }
 
   async setupDockerCompose(
@@ -971,11 +1105,11 @@ export class Server_Docker extends Server_WS {
 
     console.log(`[Server_Docker] Starting log capture for ${serviceName} to ${logFilePath}`);
 
-    // Open in append mode since captureExistingLogs may have already written to the file
-    const logStream = fs.createWriteStream(logFilePath, { flags: 'a' });
+    // Open in overwrite mode to replace old logs
+    const logStream = fs.createWriteStream(logFilePath, { flags: 'w' });
     const timestamp = new Date().toISOString();
-    // Write a separator and header
-    logStream.write(`\n=== Log started at ${timestamp} for service ${serviceName} ===\n\n`);
+    // Write a header
+    logStream.write(`=== Log started at ${timestamp} for service ${serviceName} ===\n\n`);
 
     const child = spawn('bash', ['-c', logScript], {
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -1044,71 +1178,13 @@ export class Server_Docker extends Server_WS {
   }
 
   private async captureContainerExitCode(serviceName: string, runtime: string): Promise<void> {
-    // Get container ID including stopped containers
-    const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
-    const containerId = execSync(containerIdCmd, {
-      // cwd: this.dockerManager.cwd
-    }).toString().trim();
-
-    if (containerId) {
-      // Check if container exists and get its exit code
-      const inspectCmd = `docker inspect --format='{{.State.ExitCode}}' ${containerId}`;
-      const exitCode = execSync(inspectCmd, {
-        // cwd: this.dockerManager.cwd
-      }).toString().trim();
-
-      // Write container exit code to a separate file
-      const containerExitCodeFilePath = getContainerExitCodeFilePath(process.cwd(), runtime, serviceName);
-      fs.writeFileSync(containerExitCodeFilePath, exitCode);
-
-      console.log(`[Server_Docker] Container ${serviceName} (${containerId.substring(0, 12)}) exited with code ${exitCode}`);
-
-      // Also capture the container's status
-      const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
-      const status = execSync(statusCmd, {
-        // cwd: this.dockerManager.cwd
-      }).toString().trim();
-      const statusFilePath = getStatusFilePath(process.cwd(), runtime, serviceName);
-      fs.writeFileSync(statusFilePath, status);
-
-      // Notify clients that processes resource has changed
-      this.resourceChanged('/~/processes');
-      // Update the extension config to reflect the changed process state
-      this.writeConfigForExtension();
-    } else {
-      console.debug(`[Server_Docker] No container found for service ${serviceName}`);
-    }
+    captureContainerExitCode(serviceName, runtime, process.cwd());
+    // Notify clients that processes resource has changed
+    this.resourceChanged('/~/processes');
+    // Update the extension config to reflect the changed process state
+    this.writeConfigForExtension();
   }
 
-  spawnPromise(command: string) {
-    console.log(`[spawnPromise] Executing: ${command}`);
-
-    return new Promise<number>((resolve, reject) => {
-
-
-      // Use shell: true to let the shell handle command parsing (including quotes)
-      const child = spawn(command, {
-        stdio: 'inherit',
-        shell: true,
-        // cwd: this.dockerManager.cwd
-      });
-
-      child.on('error', (error) => {
-        console.error(`[spawnPromise] Failed to start process: ${error.message}`);
-        reject(error);
-      });
-
-      child.on('close', (code) => {
-        if (code === 0) {
-          console.log(`[spawnPromise] Process completed successfully`);
-          resolve(code);
-        } else {
-          console.error(`[spawnPromise] Process exited with code ${code}`);
-          reject(new Error(`Process exited with code ${code}`));
-        }
-      });
-    });
-  }
 
   public async DC_upAll(): Promise<IDockerComposeResult> {
     const result = await executeDockerComposeCommand(DC_COMMANDS.up, {
@@ -1116,7 +1192,7 @@ export class Server_Docker extends Server_WS {
     });
     if (result.exitCode === 0 && result.data?.spawn) {
       try {
-        await this.spawnPromise(DC_COMMANDS.up);
+        await spawnPromise(DC_COMMANDS.up);
         return { exitCode: 0, out: '', err: '', data: null };
       } catch (error: any) {
         console.error(`[Docker] docker compose up ❌ ${ansiColors.bgBlue(error.message.replaceAll('\\n', '\n'))}`);
@@ -1132,7 +1208,7 @@ export class Server_Docker extends Server_WS {
     });
     if (result.exitCode === 0 && result.data?.spawn) {
       try {
-        await this.spawnPromise(DC_COMMANDS.down);
+        await spawnPromise(DC_COMMANDS.down);
         return { exitCode: 0, out: '', err: '', data: null };
       } catch (error: any) {
         console.log(`[DC_down] Error during down: ${error.message}`);
@@ -1177,7 +1253,7 @@ export class Server_Docker extends Server_WS {
     });
     if (result.exitCode === 0 && result.data?.spawn) {
       try {
-        await this.spawnPromise(DC_COMMANDS.start);
+        await spawnPromise(DC_COMMANDS.start);
         return { exitCode: 0, out: '', err: '', data: null };
       } catch (error: any) {
         console.error(`[Docker] docker compose start ❌ ${ansiColors.bgBlue(error.message.replaceAll('\\n', '\n'))}`);
@@ -1187,21 +1263,270 @@ export class Server_Docker extends Server_WS {
     return result;
   }
 
-  public async DC_build(): Promise<IDockerComposeResult> {
-    const result = await executeDockerComposeCommand(DC_COMMANDS.build, {
-      errorMessage: 'docker-compose build'
-    });
-    if (result.exitCode === 0 && result.data?.spawn) {
+
+  private async buildWithBuildKit(): Promise<void> {
+    console.log('[Server_Docker] Starting BuildKit builds for all runtimes');
+
+    // Check if BuildKit is available
+    const buildKitAvailable = await BuildKitBuilder.checkBuildKitAvailable();
+    console.log(`[Server_Docker] BuildKit available: ${buildKitAvailable}`);
+
+    if (!buildKitAvailable) {
+      throw new Error('BuildKit is not available. Please ensure Docker BuildKit is enabled. ' +
+        'You can enable it by setting DOCKER_BUILDKIT=1 environment variable or ' +
+        'by configuring Docker Desktop to use BuildKit.');
+    }
+
+    console.log('[Server_Docker] BuildKit is available. Building all runtimes...');
+
+    const buildErrors: string[] = [];
+
+    // Build aider image first
+    console.log('[Server_Docker] Building aider image...');
+    try {
+      await this.buildAiderImage();
+      console.log('[Server_Docker] ✅ Aider image built successfully');
+    } catch (error: any) {
+      console.error(`[Server_Docker] ❌ Aider image build failed:`, error.message);
+      buildErrors.push(`aider: ${error.message}`);
+    }
+
+    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+      const runtime = configValue.runtime;
+
+      console.log(`[Server_Docker] Building ${runtime} runtime (${configKey})...`);
+
       try {
-        await this.spawnPromise(DC_COMMANDS.build);
-        console.log(`[DC_build] Build completed successfully`);
-        return { exitCode: 0, out: '', err: '', data: null };
+        // Build each runtime using BuildKit
+        switch (runtime) {
+          case 'node':
+            console.log(`[Server_Docker] Building node runtime: ${configKey}`);
+            await nodeBuildKitBuild(this.configs, configKey);
+            console.log(`[Server_Docker] ✅ BuildKit build successful for ${configKey} (node)`);
+            break;
+
+          case 'web':
+            console.log(`[Server_Docker] Building web runtime: ${configKey}`);
+            await webBuildKitBuild(this.configs, configKey);
+            console.log(`[Server_Docker] ✅ BuildKit build successful for ${configKey} (web)`);
+            break;
+
+          case 'golang':
+            console.log(`[Server_Docker] Building golang runtime: ${configKey}`);
+            await golangBuildKitBuild(this.configs, configKey);
+            console.log(`[Server_Docker] ✅ BuildKit build successful for ${configKey} (golang)`);
+            break;
+
+          case 'ruby':
+            console.log(`[Server_Docker] Building ruby runtime: ${configKey}`);
+            await rubyBuildKitBuild(this.configs, configKey);
+            console.log(`[Server_Docker] ✅ BuildKit build successful for ${configKey} (ruby)`);
+            break;
+
+          case 'rust':
+            console.log(`[Server_Docker] Building rust runtime: ${configKey}`);
+            await rustBuildKitBuild(this.configs, configKey);
+            console.log(`[Server_Docker] ✅ BuildKit build successful for ${configKey} (rust)`);
+            break;
+
+          case 'java':
+            console.log(`[Server_Docker] Building java runtime: ${configKey}`);
+            await javaBuildKitBuild(this.configs, configKey);
+            console.log(`[Server_Docker] ✅ BuildKit build successful for ${configKey} (java)`);
+            break;
+
+          case 'python':
+            console.log(`[Server_Docker] Building python runtime: ${configKey}`);
+            await pythonBuildKitBuild(this.configs, configKey);
+            console.log(`[Server_Docker] ✅ BuildKit build successful for ${configKey} (python)`);
+            break;
+
+          default:
+            throw new Error(`Unknown runtime: ${runtime} for ${configKey}`);
+        }
       } catch (error: any) {
-        console.error(`[Docker] docker-compose build ❌ ${ansiColors.bgBlue(error.message.replaceAll('\\n', '\n'))}`);
-        return { exitCode: 1, out: '', err: `Error building services: ${error.message}`, data: null };
+        console.error(`[Server_Docker] ❌ BuildKit build failed for ${configKey} (${runtime}):`, error.message);
+        buildErrors.push(`${configKey} (${runtime}): ${error.message}`);
       }
     }
-    return result;
+
+    // Check if any builds failed
+    if (buildErrors.length > 0) {
+      const errorMessage = `BuildKit builds failed for ${buildErrors.length} runtime(s):\n` +
+        buildErrors.map(error => `  - ${error}`).join('\n');
+      throw new Error(errorMessage);
+    } else {
+      console.log(`[Server_Docker] ✅ All BuildKit builds completed successfully!`);
+    }
+  }
+
+  private async startBuilderServices(): Promise<void> {
+    console.log('[Server_Docker] Starting all builder services...');
+
+    // Get all builder service names
+    const builderServices: string[] = [];
+    const processedRuntimes = new Set<string>();
+
+    for (const [runtimeTestsName, runtimeTests] of Object.entries(this.configs.runtimes)) {
+      const runtime = runtimeTests.runtime;
+
+      if (!processedRuntimes.has(runtime)) {
+        processedRuntimes.add(runtime);
+        const builderServiceName = getBuilderServiceName(runtime);
+        builderServices.push(builderServiceName);
+      }
+    }
+
+    // Start each builder service
+    for (const serviceName of builderServices) {
+      console.log(`[Server_Docker] Starting builder service: ${serviceName}`);
+      try {
+        await spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${serviceName}`);
+        console.log(`[Server_Docker] ✅ Builder service ${serviceName} started successfully`);
+
+        // Start logging for this service
+        // Find the runtime for this service
+        let runtimeForService = '';
+        for (const [runtimeTestsName, runtimeTests] of Object.entries(this.configs.runtimes)) {
+          const runtime = runtimeTests.runtime;
+          if (getBuilderServiceName(runtime) === serviceName) {
+            runtimeForService = runtime;
+            break;
+          }
+        }
+
+        if (runtimeForService) {
+          this.startServiceLogging(serviceName, runtimeForService)
+            .catch(error => console.error(`[Server_Docker] Failed to start logging for ${serviceName}:`, error));
+        }
+      } catch (error: any) {
+        console.error(`[Server_Docker] ❌ Failed to start builder service ${serviceName}:`, error.message);
+        // Continue with other services even if one fails
+      }
+    }
+
+    console.log('[Server_Docker] ✅ All builder services started');
+  }
+
+  private async buildAiderImage(): Promise<void> {
+    const dockerfilePath = 'aider.Dockerfile';
+
+    // Check if aider.Dockerfile exists
+    if (!fs.existsSync(dockerfilePath)) {
+      console.warn(`[Server_Docker] ⚠️ aider.Dockerfile not found at ${dockerfilePath}. Aider services may not work correctly.`);
+      // Create a simple aider.Dockerfile if it doesn't exist
+      const defaultAiderDockerfile = `FROM python:3.11-slim
+WORKDIR /workspace
+RUN pip install --no-cache-dir aider-chat
+USER 1000
+CMD ["tail", "-f", "/dev/null"]`;
+
+      try {
+        fs.writeFileSync(dockerfilePath, defaultAiderDockerfile);
+        console.log(`[Server_Docker] Created default ${dockerfilePath}`);
+      } catch (error: any) {
+        console.error(`[Server_Docker] Failed to create ${dockerfilePath}: ${error.message}`);
+        return;
+      }
+    }
+
+    const buildKitOptions = {
+      runtime: 'aider',
+      configKey: 'aider',
+      dockerfilePath: dockerfilePath,
+      buildContext: process.cwd(),
+      cacheMounts: [],
+      targetStage: undefined,
+      buildArgs: {}
+    };
+
+    console.log(`[Server_Docker] Building aider image with BuildKit...`);
+
+    const result = await BuildKitBuilder.buildImage({
+      ...buildKitOptions,
+      // Override the image name
+      runtime: 'aider',
+      configKey: 'aider'
+    });
+
+    if (result.success) {
+      console.log(`[Server_Docker] ✅ Aider image built successfully in ${result.duration}ms`);
+    } else {
+      console.error(`[Server_Docker] ❌ Aider image build failed: ${result.error}`);
+      // Don't throw here, just log the error
+      console.warn(`[Server_Docker] Aider services may not work, but continuing with other builds`);
+    }
+  }
+
+
+  private async waitForAllTestsToComplete(): Promise<void> {
+    console.log('[Server_Docker] Once mode: Waiting for all tests to complete...');
+
+    // Wait a bit for containers to start
+    console.log('[Server_Docker] Waiting 10 seconds for containers to start...');
+    await new Promise(resolve => setTimeout(resolve, 10000));
+
+    // We'll check periodically if all test containers have finished
+    const maxAttempts = 120; // 10 minutes (5 seconds per attempt)
+    const checkInterval = 5000; // 5 seconds
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      // Get all containers
+      const summary = this.getProcessSummary();
+
+      // Filter for test containers (bdd, check, and builder services)
+      const testContainers = summary.processes.filter((process: any) => {
+        const name = process.name || '';
+        // Include test-related containers
+        return name.includes('-bdd') ||
+          name.includes('-check-') ||
+          name.includes('-builder') ||
+          name.includes('-aider');
+      });
+
+      // Check if all test containers have finished (not running)
+      const runningContainers = testContainers.filter((process: any) => {
+        const state = (process.state || '').toLowerCase();
+        return state === 'running' || state === 'restarting' || state === 'created';
+      });
+
+      if (runningContainers.length === 0) {
+        console.log(`[Server_Docker] All ${testContainers.length} test containers have completed.`);
+
+        // Additional check: ensure all test containers have exit codes (not just stopped)
+        const containersWithoutExitCode = testContainers.filter((process: any) => {
+          // If exitCode is null or undefined, the container might have exited abnormally
+          // But we still consider it done
+          return process.exitCode === null || process.exitCode === undefined;
+        });
+
+        if (containersWithoutExitCode.length > 0) {
+          console.log(`[Server_Docker] Note: ${containersWithoutExitCode.length} containers don't have exit codes yet`);
+          // Wait a bit more for exit codes to be recorded
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          continue;
+        }
+
+        return;
+      }
+
+      // Log detailed information about running containers
+      console.log(`[Server_Docker] Waiting for ${runningContainers.length} test containers to finish... (attempt ${attempt + 1}/${maxAttempts})`);
+      runningContainers.forEach((container: any) => {
+        console.log(`  - ${container.name || container.containerId}: state=${container.state}, status=${container.status}, exitCode=${container.exitCode}`);
+      });
+
+      // Wait before checking again
+      await new Promise(resolve => setTimeout(resolve, checkInterval));
+    }
+
+    console.warn('[Server_Docker] Timeout waiting for all tests to complete. Some tests may still be running.');
+    // Force shutdown anyway
+    console.log('[Server_Docker] Forcing shutdown due to timeout...');
+  }
+
+  public async DC_build(): Promise<IDockerComposeResult> {
+    throw new Error('Traditional docker-compose build is not supported. Use BuildKit instead.');
   }
 
 }

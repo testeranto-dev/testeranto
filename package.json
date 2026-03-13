@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.225.1",
+  "version": "0.225.2",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -14,7 +14,7 @@
   "types": "./dist/index.d.mts",
   "module": "dist/module/index.js",
   "bin": {
-    "testeranto": "./dist/index.js"
+    "testeranto": "./dist/testeranto"
   },
   "activationEvents": [
     "onStartupFinished",
@@ -111,6 +111,7 @@
     "Other"
   ],
   "scripts": {
+    "dev2": "bun build ./src/index.ts --compile --outfile ./dist/testeranto && bun link",
     "dev": "yarn build:server && yarn link:server",
     "summarizeLicenses": "yarn licenses list > ALL_LICENSES.txt; yarn license-checker >> ALL_LICENSES.txt; yarn license-checker --summary >> ALL_LICENSES.txt",
     "compile-docs": "node scripts/compile-docs.js",
@@ -120,10 +121,10 @@
     "watch": "yarn run bundle --watch",
     "package:vsce": "npx vsce package",
     "package:full": "node scripts/package-extension.js",
-    "build:server": "bun build ./src/index.ts --outdir ./dist --target bun --banner=\"#!/usr/bin/env bun\"",
-    "compile:server": "bun compile ./src/index.ts --outfile testeranto-app",
+    "build:server": "bun build ./src/index.ts --compile --outfile ./dist/testeranto",
+    "compile:server": "bun compile ./src/index.ts --outfile testeranto-app --banner=\"#!/usr/bin/env bun\"",
     "prepublishOnly:server": "bun run build",
-    "link:server": "bun run build:server && bun link",
+    "make:server": "bun run build:server && bun link",
     "bundle": "node bundle.js",
     "publish:ruby": "cd src/lib/rubeno/ && gem build rubeno.gemspec"
   },

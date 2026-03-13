@@ -1,38 +1,25 @@
 # syntax=docker/dockerfile:1
+# Simple Dockerfile for Node runtime - user provides minimal setup
+# Dependencies are installed during build, not mounted from host
 
-# DO NOT DO THIS
-# COPY projects/testeranto/testeranto/src/lib/tiposkripto/ ./projects/testeranto/testeranto/src/lib/tiposkripto/
-
-
-FROM node:20.19.4-alpine as build
+FROM node:20.19.4-alpine
 WORKDIR /workspace
 
-RUN apk add --no-cache python3 libxml2-utils make build-base g++ git pkgconfig
-RUN ln -sf python3 /usr/bin/python
-ENV npm_config_python=/usr/bin/python3
-ENV PYTHON=/usr/bin/python3
-ENV ENV=node
+# User can add their own dependencies here if needed
+# For example:
+# RUN apk add --no-cache python3
 
+# Copy package files for dependency installation
 COPY ./tsconfig*.json ./
 COPY ./.yarnrc.yml ./
 COPY ./eslint.config.mjs ./
+COPY package.json ./
+COPY yarn.lock* package-lock.json* ./
 
-COPY package.json /workspace
+# Install dependencies during build (not from host)
+RUN yarn install --frozen-lockfile --production=false
 
-RUN yarn install 
-
-# --immutable
-
-# Resumbably, the user provides the but we ignore it
-CMD ls
-
-# FROM build as testeranto/lintcheck
-# CMD yarn eslint
-
-# FROM build as testeranto/typecheck
-# CMD yarn tsc
-
-# FROM build as testeranto
-# CMD builder runs here
+# The source code will be mounted at runtime, but node_modules stays in container
+CMD ["node", "--version"]
 
 

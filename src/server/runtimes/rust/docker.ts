@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import type { ITestconfigV2 } from "../../../Types";
-import { dockerComposeFile } from "../dockerComposeFile";
+import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the rust runtime file as text
 import rustContent from "./main.rs" with { type: "text" };
@@ -36,18 +36,33 @@ export const rustDockerComposeFile = (
   testName: string
 ) => {
   const tests = config.runtimes[testName]?.tests || [];
-  return dockerComposeFile(
-    config,
+  
+  // For rust builder service, we need a proper build configuration
+  const service: any = {
+    build: {
+      context: process.cwd(),
+      dockerfile: config.runtimes[container_name]?.dockerfile || 'testeranto/runtimes/rust/rust.Dockerfile',
+    },
     container_name,
-    projectConfigPath,
-    rustConfigPath,
-    testName,
-    rustBuildCommand,
-    tests
-  )
+    environment: {
+      ENV: "rust",
+      MODE: process.env.MODE || 'once',
+    },
+    working_dir: "/workspace",
+    volumes: [
+      `${process.cwd()}/src:/workspace/src`,
+      `${process.cwd()}/dist:/workspace/dist`,
+      `${process.cwd()}/testeranto:/workspace/testeranto`,
+    ],
+    command: rustBuildCommand(projectConfigPath, rustConfigPath, testName, tests),
+    networks: ["allTests_network"],
+  };
+  
+  return service;
 };
 
 export const rustBuildCommand = (projectConfigPath: string, rustConfigPath: string, testName: string, tests: string[]) => {
+  // MODE is now passed via environment in the service configuration
   return `cargo run --manifest-path /workspace/testeranto/rust_builder/Cargo.toml -- /workspace/${projectConfigPath} /workspace/${rustConfigPath} ${testName} ${tests.join(' ')}`
 }
 
@@ -73,3 +88,38 @@ export const rustBddCommand = (fpath: string, rustConfigPath: string, configKey:
   // Execute the compiled binary in the bundle directory
   return `testeranto/bundles/${configKey}/${binaryName} '${jsonStr}'`;
 }
+
+// BuildKit-based building for rust runtime
+export const rustBuildKitBuild = async (
+  config: ITestconfigV2,
+  configKey: string
+): Promise<void> => {
+  const runtimeConfig = config.runtimes[configKey];
+  
+  if (!runtimeConfig) {
+    throw new Error(`Configuration not found for ${configKey}`);
+  }
+  
+  const buildKitConfig = runtimeConfig.buildKitOptions || {};
+  
+  const buildKitOptions = {
+    runtime: 'rust',
+    configKey,
+    dockerfilePath: runtimeConfig.dockerfile,
+    buildContext: process.cwd(),
+    cacheMounts: buildKitConfig.cacheMounts || ['/usr/local/cargo/registry', '/usr/local/cargo/git'],
+    targetStage: buildKitConfig.targetStage, // Keep as is (undefined if not specified)
+    buildArgs: buildKitConfig.buildArgs || {}
+  };
+  
+  console.log(`[Rust BuildKit] Building image for ${configKey}...`);
+  
+  const result = await BuildKitBuilder.buildImage(buildKitOptions);
+  
+  if (result.success) {
+    console.log(`[Rust BuildKit] Successfully built image in ${result.duration}ms`);
+  } else {
+    console.error(`[Rust BuildKit] Build failed: ${result.error}`);
+    throw new Error(`BuildKit build failed: ${result.error}`);
+  }
+};

@@ -96,9 +96,12 @@ export async function processMetafile(
   runtime: 'node' | 'web',
   configKey: string
 ): Promise<void> {
-  // if (!metafile || !metafile.outputs) {
-  //   return;
-  // }
+  if (!metafile || !metafile.outputs) {
+    return;
+  }
+
+  // Create a map to store all tests' information
+  const allTestsInfo: Record<string, { hash: string; files: string[] }> = {};
 
   for (const [outputFile, outputInfo] of Object.entries(metafile.outputs)) {
     const outputInfoTyped = outputInfo as any;
@@ -164,11 +167,20 @@ export async function processMetafile(
       return path.relative(process.cwd(), absolutePath);
     }).filter(Boolean);
 
-    // Write to file
-    const outputBaseName = entryPoint.split('.').slice(0, -1).join('.');
-    const inputFilesPath = `testeranto/bundles/${configKey}/${outputBaseName}.mjs-inputFiles.json`;
+    // Compute hash
+    const hash = await computeFilesHash(allInputFiles);
 
-    fs.writeFileSync(inputFilesPath, JSON.stringify(relativeFiles, null, 2));
-    console.log(`[${runtime} Builder] Wrote ${relativeFiles.length} input files to ${inputFilesPath}`);
+    // Store test information
+    allTestsInfo[entryPoint] = {
+      hash,
+      files: relativeFiles
+    };
+
+    console.log(`[${runtime} Builder] Processed ${entryPoint}: ${relativeFiles.length} files, hash: ${hash}`);
   }
+
+  // Write single inputFiles.json for all tests
+  const inputFilesPath = `testeranto/bundles/${configKey}/inputFiles.json`;
+  fs.writeFileSync(inputFilesPath, JSON.stringify(allTestsInfo, null, 2));
+  console.log(`[${runtime} Builder] Wrote inputFiles.json for ${Object.keys(allTestsInfo).length} tests to ${inputFilesPath}`);
 }

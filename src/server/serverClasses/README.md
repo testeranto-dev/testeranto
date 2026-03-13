@@ -1,20 +1,28 @@
-The Server is a process run outside Docker. It's job is to docker-compose files and manage docker containers as procesess
+## Server Overview
 
-Each docker-compose files is built with several images
+The server manages Docker containers and orchestrates test execution. BuildKit integration is currently being implemented.
 
-these will always be present. Their job is to continuously create metafiles and bundles of tests
+### Key Responsibilities
+1. **Build Orchestration**: Currently uses docker-compose, migrating to BuildKit for on-demand builds
+2. **Container Management**: Manages test containers (BDD, static checks, aider)
+3. **Dependency Tracking**: Watches for bundle changes and schedules tests
+4. **Resource Optimization**: Working to implement BuildKit cache mounts for efficient builds
 
-- builder-node
-- builder-web
-- builder-golang
-- builder-python
-- builder-rust
-- builder-ruby
-- builder-java
+### BuildKit Integration 🚧 (In Progress)
+- **On-demand builds**: Goal to eliminate long-running builder containers
+- **Single watcher process**: Will monitor all runtimes efficiently once implemented
+- **Language-specific cache mounts**: Being implemented for optimized dependency caching
+- **Multi-stage support**: Optional for advanced optimization (planned)
 
-these are based on the tests runtime
+### Current Container Types
+- **Test Services**: BDD tests, static analysis checks, aider sessions
+- **Special Services**: Chrome service for web runtime
+- **Builder Services**: Currently still used, being migrated to BuildKit
 
-- zero or more static analysis
-- BDD test 
+### Target Performance Improvements
+- **Target: 70% reduction** in idle memory usage
+- **Target: 50-80% smaller** test containers
+- **Faster startup**: Smaller images should load quicker
+- **Better cache utilization**: Persistent caches across builds
 
-As the builder services produce bundles and set of input files, the server watches for those changes. When a bundle changes, a static analysis and BDD test should be scheduled. 
+The BuildKit migration is actively being worked on but not yet complete for all 7 runtimes.
