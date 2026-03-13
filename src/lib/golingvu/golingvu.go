@@ -79,7 +79,7 @@ func (pm *PM_Golang) WriteFileSync(
 			return false, fmt.Errorf("failed to create directory %s: %w", dir, err)
 		}
 	}
-	
+
 	// If client is nil, write directly to file
 	if pm.client == nil {
 		err := os.WriteFile(filename, []byte(data), 0644)
@@ -88,13 +88,13 @@ func (pm *PM_Golang) WriteFileSync(
 		}
 		return true, nil
 	}
-	
+
 	// Otherwise, use the WebSocket connection
 	result, err := pm.send("writeFileSync", filename, data, tr)
 	if err != nil {
 		return false, fmt.Errorf("failed to send writeFileSync command: %w", err)
 	}
-	
+
 	success, ok := result.(bool)
 	if !ok {
 		return false, fmt.Errorf("invalid response type for writeFileSync")
@@ -127,9 +127,9 @@ func (pm *PM_Golang) send(command string, args ...interface{}) (interface{}, err
 			return true, nil
 		case "customclose":
 			return nil, nil
-		case "waitForSelector", "closePage", "goto", "selector", "isDisabled", 
-		     "getAttribute", "getInnerHtml", "focusOn", "typeInto", "click",
-		     "screencast", "screencastStop", "customScreenshot":
+		case "waitForSelector", "closePage", "goto", "selector", "isDisabled",
+			"getAttribute", "getInnerHtml", "focusOn", "typeInto", "click",
+			"screencast", "screencastStop", "customScreenshot":
 			return nil, nil
 		default:
 			// For unknown commands, return nil with an error
@@ -606,16 +606,24 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm int
 		}, fmt.Errorf("failed to marshal tests.json: %v", err)
 	}
 
-	// Write to the correct path: testeranto/reports/allTests/example/golang.Calculator.test.ts.json
-	// The pattern is: testeranto/reports/allTests/example/${runtime}.Calculator.test.ts.json
-	// For Go, runtime is 'golang'
-	// Create the directory if it doesn't exist
-	dirPath := "testeranto/reports/allTests/example"
-	// Ensure the directory exists
-	os.MkdirAll(dirPath, 0755)
-	// The filename is fixed for this runtime
+	// Follow the same pattern as tiposkripto: write to ${testResourceConfig.Fs}/tests.json
+	filePath := testResourceConfig.Fs + "/tests.json"
 
-	filePath := "testeranto/reports/allTests/example/golang.Calculator.test.ts.json"
+	// Ensure the directory exists
+	dirPath := filepath.Dir(filePath)
+	if dirPath != "" && dirPath != "." {
+		if err := os.MkdirAll(dirPath, 0755); err != nil {
+			// TODO throw an error instead of fallback
+			// return IFinalResults{
+			// 	Failed:       true,
+			// 	Fails:        -1,
+			// 	Artifacts:    []interface{}{},
+			// 	Features:     []string{},
+			// 	Tests:        0,
+			// 	RunTimeTests: -1,
+			// }, fmt.Errorf("failed to create directory %s: %v", dirPath, err)
+		}
+	}
 
 	fmt.Printf("writing tests.json to ->: %s\n", filePath)
 
@@ -679,7 +687,7 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 			// Skip non-map entries
 			continue
 		}
-		
+
 		// Set the key from the suite
 		if suiteName, exists := suiteMap["key"].(string); exists {
 			results["key"] = suiteName
@@ -690,14 +698,14 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 		if !exists {
 			continue
 		}
-		
+
 		for key, given := range givensMap {
 			givenObj, ok := given.(*BaseGiven)
 			if !ok {
 				// Try to handle other types if possible
 				continue
 			}
-			
+
 			// Execute the test and record actual results
 			processedGiven, testFailed, err := gv.executeTest(key, givenObj)
 			if err != nil {
