@@ -17,6 +17,7 @@ export const javaDockerComposeFile = (
     container_name,
     environment: {
       ENV: "java",
+      MODE: process.env.MODE || 'once',
     },
     working_dir: "/workspace",
     volumes: [
@@ -32,8 +33,8 @@ export const javaDockerComposeFile = (
 };
 
 export const javaBuildCommand = (projectConfigPath: string, javaConfigPath: string, testName: string) => {
-  // Pass MODE environment variable to the builder
-  return `MODE=${process.env.MODE || 'once'} java src/server/runtimes/java/main.java /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}`;
+  // Compile and run the Java builder with arguments
+  return `sh -c "cd /workspace && javac -cp \\".:lib/*\\" src/server/runtimes/java/main.java && java -cp \\"src/server/runtimes/java:.\\" main /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}"`;
 }
 
 export const javaBddCommand = (fpath: string, javaConfigPath: string, configKey: string) => {

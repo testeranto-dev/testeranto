@@ -17,7 +17,7 @@ export const golangDockerComposeFile = (
   testName: string
 ) => {
   const tests = config.runtimes[testName]?.tests || [];
-  
+
   // For golang builder service, we need a proper build configuration
   const service: any = {
     build: {
@@ -38,7 +38,7 @@ export const golangDockerComposeFile = (
     command: golangBuildCommand(projectConfigPath, golangConfigPath, testName, tests),
     networks: ["allTests_network"],
   };
-  
+
   return service;
 };
 
@@ -48,22 +48,22 @@ export const golangBuildCommand = (projectConfigPath: string, golangConfigPath: 
 }
 
 export const golangBddCommand = (fpath: string, golangConfigPath: string, configKey: string) => {
-  const jsonStr = JSON.stringify({ 
+  const jsonStr = JSON.stringify({
     name: 'go-test',
-    ports: [1111], 
-    fs: "testeranto/reports/go",
+    ports: [1111],
+    fs: `testeranto/reports/${configKey}`,
     timeout: 30000,
     retries: 0,
     environment: {}
   });
-  
+
   // For Go, we need to execute the compiled binary
   // The binary is at: testeranto/bundles/${configKey}/${binary_name}
   // where binary_name is the entry point without .go extension and with dots replaced by underscores
   const pathParts = fpath.split('/');
   const fileName = pathParts[pathParts.length - 1];
   const binaryName = fileName.replace('.go', '').replace(/\./g, '_');
-  
+
   // Execute the compiled binary in the bundle directory
   // The binary is at /workspace/testeranto/bundles/${configKey}/${binaryName}
   // The container's working directory is /workspace
@@ -76,13 +76,13 @@ export const golangBuildKitBuild = async (
   configKey: string
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];
-  
+
   if (!runtimeConfig) {
     throw new Error(`Configuration not found for ${configKey}`);
   }
-  
+
   const buildKitConfig = runtimeConfig.buildKitOptions || {};
-  
+
   const buildKitOptions = {
     runtime: 'golang',
     configKey,
@@ -92,11 +92,11 @@ export const golangBuildKitBuild = async (
     targetStage: buildKitConfig.targetStage, // Keep as is (undefined if not specified)
     buildArgs: buildKitConfig.buildArgs || {}
   };
-  
+
   console.log(`[Golang BuildKit] Building image for ${configKey}...`);
-  
+
   const result = await BuildKitBuilder.buildImage(buildKitOptions);
-  
+
   if (result.success) {
     console.log(`[Golang BuildKit] Successfully built image in ${result.duration}ms`);
   } else {
