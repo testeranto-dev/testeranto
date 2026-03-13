@@ -223,7 +223,7 @@ dependencies = [
 
 [[package]]
 name = "testeranto_rusto"
-version = "0.1.10"
+version = "0.1.11"
 dependencies = [
  "async-trait",
  "serde",
