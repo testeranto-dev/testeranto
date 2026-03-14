@@ -105,13 +105,10 @@ class BaseGiven:
         test_resource_configuration,
         tester: Callable[[Any], bool],
         artifactory: Callable[[str, Any], None],
-        t_log: Callable[..., None],
-        pm: Any,
         suite_ndx: int
     ) -> Istore:
         self.failed = False
-        t_log(f"\n {key}")
-        t_log(f"\n Given: {self.key}")
+        self.key = key
 
         def given_artifactory(f_path: str, value: Any):
             artifactory(f"given-{key}/{f_path}", value)
@@ -124,7 +121,7 @@ class BaseGiven:
                 given_artifactory,
                 self.given_cb,
                 self.initial_values,
-                pm
+                None  # pm parameter removed to match TypeScript
             )
         except Exception as e:
             self.failed = True
@@ -139,9 +136,7 @@ class BaseGiven:
                     self.store = await when_step.test(
                         self.store,
                         test_resource_configuration,
-                        # t_log,  # Removed to match TypeScript BaseWhen.test signature
-                        # pm,     # Removed
-                        # f"suite-{suite_ndx}/given-{key}/when/{when_ndx}"  # Removed
+                        # Removed t_log, pm, and filepath to match TypeScript
                     )
                 except Exception as e:
                     self.failed = True
@@ -154,9 +149,7 @@ class BaseGiven:
                     result = await then_step.test(
                         self.store,
                         test_resource_configuration,
-                        # t_log,  # Removed to match TypeScript BaseThen.test signature
-                        # pm,     # Removed
-                        # f"suite-{suite_ndx}/given-{key}/then-{then_ndx}"  # Removed
+                        # Removed t_log, pm, and filepath to match TypeScript
                     )
                     # Test the result
                     if not tester(result):
@@ -170,7 +163,7 @@ class BaseGiven:
             self.failed = True
         finally:
             try:
-                await self.after_each(self.store, self.key, given_artifactory, pm)
+                await self.after_each(self.store, self.key, given_artifactory, None)
             except Exception as e:
                 self.failed = True
                 # Don't re-raise

@@ -80,7 +80,6 @@ class PitonoClass:
         test_adapter: ITestAdapter,
         uber_catcher: Callable[[Callable], None]
     ):
-
         print("hello PitonoClass")
         self.test_resource_requirement = test_resource_requirement
         self.artifacts: List[Any] = []

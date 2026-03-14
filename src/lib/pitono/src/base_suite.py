@@ -83,9 +83,7 @@ class BaseSuite:
                     test_resource_configuration,
                     self.assert_that,
                     suite_artifactory,
-                    t_log,
-                    pm,
-                    self.index
+                    self.index  # Only suite_ndx remains, matching TypeScript
                 )
                 # Add any failures from the given to the suite total
                 if hasattr(g, 'failed') and g.failed:

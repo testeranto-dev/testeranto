@@ -33,9 +33,6 @@ class BaseThen:
         self,
         store: Any,
         test_resource_configuration: Any,
-        # t_log: Any,  # Removed to match TypeScript
-        # pm: Any,     # Removed
-        # filepath: str # Removed
     ) -> Any:
         try:
             result = await self.but_then(

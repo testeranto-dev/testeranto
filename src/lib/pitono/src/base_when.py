@@ -40,9 +40,6 @@ class BaseWhen:
         self,
         store: Any,
         test_resource_configuration: Any,
-        # t_log: Any,  # Removed to match TypeScript
-        # pm: Any,     # Removed to match TypeScript
-        # filepath: str # Removed to match TypeScript
     ) -> Any:
         try:
             result = await self.and_when(
