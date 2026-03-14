@@ -78,6 +78,13 @@ class IFinalResults:
     fails: int
     artifacts: List[Any]
     features: List[str]
+    tests: int = 0
+    run_time_tests: int = 0
+    test_job: Dict[str, Any] = None
+    
+    def __post_init__(self):
+        if self.test_job is None:
+            self.test_job = {}
 
 # BDD input type interface - simplified version of Ibdd_in
 class Ibdd_in(Protocol):

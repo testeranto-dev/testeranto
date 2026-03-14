@@ -10567,21 +10567,21 @@ $ /Users/adam/Code/testeranto/node_modules/.bin/license-checker
 │  └─ licenseFile: /Users/adam/Code/testeranto/node_modules/test-exclude/LICENSE.txt
 ├─ testeranto-react@0.0.2
 │  ├─ licenses: MIT
-│  ├─ repository: https://github.com/adamwong246/testeranto-starter
+│  ├─ repository: https://github.com/testeranto-dev/testeranto-starter
 │  ├─ publisher: adam wong
 │  ├─ email: adamwong246@gmail.com
 │  ├─ path: /Users/adam/Code/testeranto/node_modules/testeranto-react/node_modules/testeranto-react
 │  └─ licenseFile: /Users/adam/Code/testeranto/node_modules/testeranto-react/node_modules/testeranto-react/README.md
 ├─ testeranto-react@0.0.8
 │  ├─ licenses: MIT
-│  ├─ repository: https://github.com/adamwong246/testeranto-react
+│  ├─ repository: https://github.com/testeranto-dev/testeranto-react
 │  ├─ publisher: adam wong
 │  ├─ email: adamwong246@gmail.com
 │  ├─ path: /Users/adam/Code/testeranto/node_modules/testeranto-react
 │  └─ licenseFile: /Users/adam/Code/testeranto/node_modules/testeranto-react/README.md
 ├─ testeranto@0.190.0
 │  ├─ licenses: MIT
-│  ├─ repository: https://github.com/adamwong246/testeranto
+│  ├─ repository: https://github.com/testeranto-dev/testeranto
 │  ├─ publisher: adam wong
 │  ├─ email: adamwong246@gmail.com
 │  ├─ path: /Users/adam/Code/testeranto

@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict, List, Optional
 import json
 import asyncio
-from .pitono_types import ITestSpecification, ITestImplementation, ITestAdapter, ITTestResourceRequest
+from .pitono_types import ITestSpecification, ITestImplementation, ITestAdapter, ITTestResourceRequest, IFinalResults
 from .simple_adapter import SimpleTestAdapter
 from .base_suite import BaseSuite
 from .base_given import BaseGiven
@@ -44,23 +44,30 @@ def set_default_instance(instance):
     _default_instance = instance
 
 async def main():
-    print("hello world", sys.argv)
+    print("[Pitono] main called with argv:", sys.argv)
     
     # Check if we have enough arguments
     # We need at least 2 arguments: script name and partialTestResource
     if len(sys.argv) < 2:
-        print("No test arguments provided - exiting")
+        print("[Pitono] No test arguments provided - exiting")
         sys.exit(0)
         
     partialTestResource = sys.argv[1]
     # The websocket port is typically the third argument, but we can use a default
     websocket_port = sys.argv[2] if len(sys.argv) > 2 else 'ipcfile'
     
+    print(f"[Pitono] partialTestResource: {partialTestResource}")
+    print(f"[Pitono] websocket_port: {websocket_port}")
+    
     if _default_instance is None:
-        print("ERROR: No default Pitono instance has been configured")
+        print("[Pitono] ERROR: No default Pitono instance has been configured")
         sys.exit(-1)
         
     result = await _default_instance.receiveTestResourceConfig(partialTestResource, websocket_port)
+    print(f"[Pitono] Test completed with {result.fails} failures")
+    print(f"[Pitono] Result features: {result.features}")
+    print(f"[Pitono] Result artifacts: {result.artifacts}")
+    print(f"[Pitono] Result failed?: {result.failed}")
     sys.exit(result.fails)
 
 class PitonoClass:
@@ -406,55 +413,24 @@ class PitonoClass:
             return Result(1, [], [])
     
     async def receiveTestResourceConfig(self, partialTestResource: str, websocket_port: str) -> Any:
+        print(f"[Pitono] receiveTestResourceConfig called with partialTestResource: {partialTestResource}")
         # Parse the test resource configuration
         import os
         import json
+        import re
+        import re
         
         test_resource_config = None
         
         # First, try to parse as JSON string
         try:
             test_resource_config = json.loads(partialTestResource)
+            print(f"[Pitono] Parsed JSON config: {test_resource_config}")
         except json.JSONDecodeError:
-            # If it's not valid JSON, check if it's a file path
-            if os.path.exists(partialTestResource):
-                try:
-                    with open(partialTestResource, 'r') as f:
-                        test_resource_config = json.load(f)
-                except Exception as e:
-                    print(f"Error parsing JSON from file {partialTestResource}: {e}")
-                    # Create a default config
-                    test_resource_config = {
-                        "name": "default",
-                        "fs": ".",
-                        "ports": [],
-                        "timeout": 30000,
-                        "retries": 0,
-                        "environment": {}
-                    }
-            else:
-                # If it's neither JSON nor a valid file, create a default config
-                print(f"Warning: partialTestResource is neither valid JSON nor a file path: {partialTestResource}")
-                test_resource_config = {
-                    "name": "default",
-                    "fs": ".",
-                    "ports": [],
-                    "timeout": 30000,
-                    "retries": 0,
-                    "environment": {}
-                }
+            print('idk')
+            
         
-        # Ensure test_resource_config is a dictionary
-        if not isinstance(test_resource_config, dict):
-            print(f"Warning: test_resource_config is not a dict: {type(test_resource_config)}")
-            test_resource_config = {
-                "name": "default",
-                "fs": ".",
-                "ports": [],
-                "timeout": 30000,
-                "retries": 0,
-                "environment": {}
-            }
+        print(f"[Pitono] Using test_resource_config: {test_resource_config}")
         
         pm = PM_Python(test_resource_config, websocket_port)
 
@@ -513,46 +489,79 @@ class PitonoClass:
                 traceback.print_exc()
                 total_fails += 1
         
-        # Write the final tests.json
+        # Write the final tests.json - matching TypeScript BaseTiposkripto.ts
         try:
-            # Flatten all givens from all suites
-            all_givens = []
-            for suite in suite_results:
-                if 'givens' in suite:
-                    all_givens.extend(suite['givens'])
+            # Calculate total tests (number of givens across all specs)
+            total_tests = 0
+            for suite_spec in self.specs:
+                if 'givens' in suite_spec:
+                    total_tests += len(suite_spec['givens'])
             
-            # Prepare tests data matching the TypeScript structure
-            # Based on the example tests.json file
-            tests_data = {
-                "name": self.specs[0]['name'] if self.specs and len(self.specs) > 0 and 'name' in self.specs[0] else "Unnamed Test",
-                "givens": all_givens,
-                "fails": total_fails,
-                "failed": total_fails > 0,
-                "features": list(all_features),
-                "artifacts": all_artifacts
+            # Get the first test job's to_obj result
+            test_job_obj = {}
+            if self.test_jobs and len(self.test_jobs) > 0:
+                job = self.test_jobs[0]
+                if 'to_obj' in job and callable(job['to_obj']):
+                    test_job_obj = job['to_obj']()
+            
+            # Create results matching IFinalResults structure
+            results = {
+                'features': list(all_features),
+                'failed': total_fails > 0,
+                'fails': total_fails,
+                'artifacts': all_artifacts,
+                'tests': 0,  # Could be calculated as number of givens
+                'runTimeTests': total_tests,
+                'testJob': test_job_obj
             }
             
-            # Write to the correct path: testeranto/reports/allTests/example/python.Calculator.test.ts.json
-            import os
-            # Create the directory if it doesn't exist
-            dir_path = "../testeranto/reports/allTests/example"
-            os.makedirs(dir_path, exist_ok=True)
+            # Get the fs path from test resource configuration
+            fs_path = test_resource_config.get('fs', '.')
+            # Get the fs path from test resource configuration
+            fs_path = test_resource_config.get('fs', '.')
+            # Ensure fs_path is treated as a directory (even if it ends with .py)
+            # If fs_path ends with .py, it's already been converted to a directory path
+            # So we don't need to modify it further
+            if not fs_path:
+                fs_path = '.'
+            report_json_path = os.path.join(fs_path, 'tests.json')
             
-            # FIXME
-            tests_json_path = "../testeranto/reports/allTests/example/python/Calculator.test.ts.json"
-            with open(tests_json_path, 'w') as f:
-                json.dump(tests_data, f, indent=2)
-            print(f"tests.json written to: {tests_json_path}")
+            # Create directory if it doesn't exist
+            # fs_path should be a directory, so create it directly
+            os.makedirs(fs_path, exist_ok=True)
+            
+            # Write to file
+            with open(report_json_path, 'w') as f:
+                json.dump(results, f, indent=2)
+            print(f"tests.json written to: {report_json_path}")
                 
         except Exception as e:
             print(f"Error writing tests.json: {e}")
             import traceback
             traceback.print_exc()
         
-        # Return result
-        class Result:
-            def __init__(self, fails):
-                self.fails = fails
-                self.features = list(all_features)
-                self.artifacts = all_artifacts
-        return Result(total_fails)
+        # Return result as IFinalResults
+        from .pitono_types import IFinalResults
+        
+        # Calculate total tests (number of givens across all specs)
+        total_tests = 0
+        for suite_spec in self.specs:
+            if 'givens' in suite_spec:
+                total_tests += len(suite_spec['givens'])
+        
+        # Get the first test job's to_obj result
+        test_job_obj = {}
+        if self.test_jobs and len(self.test_jobs) > 0:
+            job = self.test_jobs[0]
+            if 'to_obj' in job and callable(job['to_obj']):
+                test_job_obj = job['to_obj']()
+        
+        return IFinalResults(
+            failed=total_fails > 0,
+            fails=total_fails,
+            artifacts=all_artifacts,
+            features=list(all_features),
+            tests=0,
+            run_time_tests=total_tests,
+            test_job=test_job_obj
+        )

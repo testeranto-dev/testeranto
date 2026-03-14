@@ -4,7 +4,6 @@ import { BaseWhen } from "./lib/tiposkripto/src/BaseWhen";
 import type { Ibdd_in_any, Ibdd_out_any } from "./lib/tiposkripto/src/CoreTypes";
 import type { ITestResourceConfiguration } from "./lib/tiposkripto/src/types";
 
-
 export type ITestconfigV2 = {
   featureIngestor: (s: string) => Promise<string>;
   runtimes: Record<string, IBaseTestConfig>
@@ -17,8 +16,16 @@ export type IBaseTestConfig = {
   runtime: string;
   tests: string[];
   dockerfile: string;
-  buildOptions: string,
+  buildOptions: string;
   checks: IChecks;
+  outputs: string[];
+  // BuildKit specific options
+  buildKitOptions?: {
+    cacheMounts?: string[];
+    multiStage?: boolean;
+    targetStage?: string;
+    buildArgs?: Record<string, string>;
+  };
 }
 
 export type TestSummary = {

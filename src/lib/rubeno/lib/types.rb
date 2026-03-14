@@ -73,13 +73,16 @@ module Rubeno
   
   # Final results
   class IFinalResults
-    attr_accessor :failed, :fails, :artifacts, :features
+    attr_accessor :failed, :fails, :artifacts, :features, :tests, :run_time_tests, :test_job
     
-    def initialize(failed:, fails:, artifacts:, features:)
+    def initialize(failed:, fails:, artifacts:, features:, tests: 0, run_time_tests: 0, test_job: {})
       @failed = failed
       @fails = fails
       @artifacts = artifacts
       @features = features
+      @tests = tests
+      @run_time_tests = run_time_tests
+      @test_job = test_job
     end
   end
 end

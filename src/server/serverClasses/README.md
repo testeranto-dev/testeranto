@@ -1,26 +1,28 @@
-The Server is a process run outside Docker. It's job is to docker-compose files and manage docker containers as procesess
+## Server Overview
 
-Each docker-compose files is built with several images
+The server manages Docker containers and orchestrates test execution. BuildKit integration is currently being implemented.
 
-these will always be present. Their job is to continuously create metafiles and bundles of tests
+### Key Responsibilities
+1. **Build Orchestration**: Currently uses docker-compose, migrating to BuildKit for on-demand builds
+2. **Container Management**: Manages test containers (BDD, static checks, aider)
+3. **Dependency Tracking**: Watches for bundle changes and schedules tests
+4. **Resource Optimization**: Working to implement BuildKit cache mounts for efficient builds
 
-- builder-node
-- builder-web
-- builder-golang
-- builder-python
+### BuildKit Integration 🚧 (In Progress)
+- **On-demand builds**: Goal to eliminate long-running builder containers
+- **Single watcher process**: Will monitor all runtimes efficiently once implemented
+- **Language-specific cache mounts**: Being implemented for optimized dependency caching
+- **Multi-stage support**: Optional for advanced optimization (planned)
 
-For all 4 runtimes and for each test, there will be 2 more images to execute
+### Current Container Types
+- **Test Services**: BDD tests, static analysis checks, aider sessions
+- **Special Services**: Chrome service for web runtime
+- **Builder Services**: Currently still used, being migrated to BuildKit
 
-these are based on the tests runtime
+### Target Performance Improvements
+- **Target: 70% reduction** in idle memory usage
+- **Target: 50-80% smaller** test containers
+- **Faster startup**: Smaller images should load quicker
+- **Better cache utilization**: Persistent caches across builds
 
-- zero or more static analysis
-- BDD test 
-
-As the builder services produce bundles and set of input files, the server watches for those changes. When a bundle changes, a static analysis and BDD test should be scheduled. =
-
-Upon startup, the server should also create an aider process for each runtime and test. The will run an aider process for each test. it's context should be loaded with the results of the static analysis and BDD test results, as well as all the input files for that test pulled from the metafile.
-
-# processes
-The Process Manager models processes as docker containers. "Process" in this context refers to a running docker contianer, not a host machine process.
-
-The Process manager needs to account for docker container "processes" of the following "shape"
+The BuildKit migration is actively being worked on but not yet complete for all 7 runtimes.

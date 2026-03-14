@@ -43,6 +43,9 @@ public class main {
         
         System.out.println("✅ Loaded config with " + tests.length() + " Java test(s)");
         
+        // Create a JSON object to store all tests' information
+        JSONObject allTestsInfo = new JSONObject();
+        
         // Process each test
         for (String testKey : tests.keySet()) {
             System.out.println("\n📦 Processing test: " + testKey);
@@ -61,18 +64,20 @@ public class main {
             String testHash = computeFilesHash(inputFiles);
             
             // Create artifacts directory
-            Path artifactsDir = Paths.get("/workspace", "testeranto/bundles/allTests/java", "example");
+            Path artifactsDir = Paths.get("/workspace", "testeranto/bundles", testName, "java", "example");
             Files.createDirectories(artifactsDir);
             
-            // Create inputFiles.json
-            Path inputFilesPath = artifactsDir.resolve(testBaseName + ".java-inputFiles.json");
-            JSONArray inputFilesArray = new JSONArray();
+            // Create test info JSON
+            JSONObject testInfo = new JSONObject();
+            testInfo.put("hash", testHash);
+            JSONArray filesArray = new JSONArray();
             for (String file : inputFiles) {
-                inputFilesArray.put(file);
+                filesArray.put(file);
             }
-            Files.write(inputFilesPath, inputFilesArray.toString(2).getBytes());
+            testInfo.put("files", filesArray);
             
-            System.out.println("  ✅ Created inputFiles.json at " + inputFilesPath + " (hash: " + testHash + ")");
+            // Add to all tests info
+            allTestsInfo.put(testPath, testInfo);
             
             // Compile the test
             Path outputJarPath = artifactsDir.resolve(testBaseName + ".jar");
@@ -84,6 +89,12 @@ public class main {
             
             System.out.println("  ✅ Successfully created placeholder JAR");
         }
+        
+        // Write single inputFiles.json for all tests
+        Path inputFilesPath = Paths.get("/workspace", "testeranto/bundles", testName, "inputFiles.json");
+        Files.createDirectories(inputFilesPath.getParent());
+        Files.write(inputFilesPath, allTestsInfo.toString(2).getBytes());
+        System.out.println("\n✅ Created inputFiles.json at " + inputFilesPath + " with " + allTestsInfo.length() + " tests");
         
         System.out.println("\n🎉 Java builder completed successfully");
     }

@@ -1,6 +1,6 @@
 {
   "name": "testeranto.tiposkripto",
-  "version": "0.1.4",
+  "version": "0.1.32",
   "description": "the typescript implementation of testeranto",
   "author": "adamwong246@gmail.com",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "build-module": "tsc -p tsconfig.module.json",
     "build-common": "tsc -p tsconfig.common.json",
     "build-types": "tsc -p tsconfig.types.json",
-    "build": "sh prebuild.sh; cp ./cjs-shim.js ./cjs-shim.js; tsc -p tsconfig.module.json; tsc -p tsconfig.common.json; tsc -p tsconfig.types.json; sh postBuild.sh; node bundle.js",
+    "build": "sh prebuild.sh; cp ./cjs-shim.js ./cjs-shim.js; tsc -p tsconfig.types.json; sh postBuild.sh; node bundle.js",
     "prepack": "yarn run build"
   },
   "files": [
@@ -18,19 +18,17 @@
     "README*",
     "LICENSE*"
   ],
-  "main": "./dist/common/index.js",
-  "module": "./dist/module/index.js",
-  "types": "./dist/types/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/module/index.js",
-      "require": "./dist/common/index.js"
+    "./CoreTypes": {
+      "types": "./dist/types/lib/tiposkripto/src/CoreTypes.d.ts"
     },
-    "./types": {
-      "types": "./dist/types/CoreTypes.d.ts",
-      "import": "./dist/module/CoreTypes.js",
-      "require": "./dist/common/CoreTypes.js"
+    "./node": {
+      "import": "./dist/module/Node.js",
+      "types": "./dist/types/lib/tiposkripto/src/Node.d.ts"
+    },
+    "./web": {
+      "import": "./dist/module/Web.js",
+      "types": "./dist/types/lib/tiposkripto/src/Web.d.ts"
     }
   },
   "dependencies": {

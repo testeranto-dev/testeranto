@@ -3,13 +3,18 @@
 ## Installation
 
 ```bash
-go get github.com/adamwong246/golingvu
+go get github.com/testeranto-dev/testeranto/src/lib/golingvu@v0.1.10
+```
+
+Or for the latest commit:
+```bash
+go get github.com/testeranto-dev/testeranto/src/lib/golingvu@main
 ```
 
 ## Import
 
 ```go
-import "github.com/adamwong246/golingvu"
+import "github.com/testeranto-dev/testeranto/src/lib/golingvu"
 ```
 
 ## Overview
@@ -40,7 +45,7 @@ package main
 
 import (
     "fmt"
-    "github.com/adamwong246/testeranto/src/lib/golingvu"
+    "github.com/testeranto-dev/testeranto/src/lib/golingvu"
 )
 
 func main() {
@@ -135,7 +140,11 @@ The script will:
 1. Check the current module version
 2. Build and test the package
 3. Prompt for a new version tag (e.g., v1.0.0)
-4. Create and push the git tag
+4. Create and push the git tag with the correct prefix (src/lib/golingvu/)
+
+Note: Go modules in subdirectories require tags with the full path prefix. 
+Existing root-level tags (like v0.1.9) are not compatible with Go modules.
+Use the publish script to create properly formatted tags.
 
 ## Integration with Testeranto
 

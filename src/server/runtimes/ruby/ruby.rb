@@ -4,38 +4,45 @@ require 'pathname'
 require 'set'
 require 'digest'
 
-puts "hello ruby builder", ARGV.inspect
+puts "hello ruby builder!", ARGV.inspect
 
-# project_config_file_path is a ruby file
+
 project_config_file_path = ARGV[0]
 ruby_config_file_path = ARGV[1]
 test_name = ARGV[2]
 
+entryPoints = ARGV[3..-1]
+
+# puts "ruby_config_file_path", ruby_config_file_path
+# puts "test_name", test_name
+# puts "project_config_file_path", project_config_file_path
+# puts "entryPoints", entryPoints
+
 # Ensure the config file path is valid before requiring
-if File.exist?(project_config_file_path)
-  require project_config_file_path
-else
-  puts "Config file not found: #{project_config_file_path}"
-  exit(1)
-end
+# if File.exist?(project_config_file_path)
+#   require project_config_file_path
+# else
+#   puts "Config file not found: #{project_config_file_path}"
+#   exit(1)
+# end
 
 # Load the ruby config to get test entry points
-ruby_config = nil
-if File.exist?(ruby_config_file_path)
-  require ruby_config_file_path
-  # Try to get the config constant; assuming it's named after the file
-  config_name = File.basename(ruby_config_file_path, '.rb').split('_').map(&:capitalize).join
-  if Object.const_defined?(config_name)
-    ruby_config = Object.const_get(config_name)
-  else
-    puts "Warning: Could not find constant #{config_name} in #{ruby_config_file_path}"
-    # Fallback: assume the config is assigned to a global variable or just loaded
-    # We'll rely on the config being set via some other means
-  end
-else
-  puts "Ruby config file not found: #{ruby_config_file_path}"
-  exit(1)
-end
+# ruby_config = nil
+# if File.exist?(ruby_config_file_path)
+#   require ruby_config_file_path
+#   # Try to get the config constant; assuming it's named after the file
+#   config_name = File.basename(ruby_config_file_path, '.rb').split('_').map(&:capitalize).join
+#   if Object.const_defined?(config_name)
+#     ruby_config = Object.const_get(config_name)
+#   else
+#     puts "Warning: Could not find constant #{config_name} in #{ruby_config_file_path}"
+#     # Fallback: assume the config is assigned to a global variable or just loaded
+#     # We'll rely on the config being set via some other means
+#   end
+# else
+#   puts "Ruby config file not found: #{ruby_config_file_path}"
+#   exit(1)
+# end
 
 # Function to extract dependencies from a Ruby file
 def extract_dependencies(file_path, base_dir = Dir.pwd)
@@ -154,12 +161,12 @@ def compute_files_hash(files)
   hash.hexdigest
 end
 
-# Process each test entry point from the config
-# Assuming ruby_config has an entryPoints or similar structure
-if ruby_config && ruby_config.respond_to?(:entryPoints)
-  ruby_config.entryPoints.each do |entry_point|
+  # Create a hash to store all tests' information
+  all_tests_info = {}
+  
+  entryPoints.each do |entry_point|
     # Only process test files (files ending with .test.rb, .spec.rb, etc.)
-    next unless entry_point =~ /\.(test|spec)\.rb$/
+    # next unless entry_point =~ /\.(test|spec)\.rb$/
     
     puts "Processing Ruby test: #{entry_point}"
     
@@ -173,22 +180,20 @@ if ruby_config && ruby_config.respond_to?(:entryPoints)
     workspace_root = '/workspace'
     relative_files = to_workspace_relative_paths(all_dependencies, workspace_root)
     
-    # Create output directory structure similar to Node builder
-    output_base_name = File.basename(entry_point_path, '.rb')
-    input_files_path = "testeranto/bundles/#{output_base_name}.rb-inputFiles.json"
-    
-    # Ensure directory exists
-    FileUtils.mkdir_p(File.dirname(input_files_path))
-    
-    # Write the input files JSON
-    File.write(input_files_path, JSON.pretty_generate(relative_files))
-    puts "Wrote #{relative_files.length} input files to #{input_files_path}"
-    
     # Compute hash of input files
     files_hash = compute_files_hash(all_dependencies)
     
+    # Store test information
+    all_tests_info[entry_point] = {
+      "hash" => files_hash,
+      "files" => relative_files
+    }
+    
     # Create the dummy bundle file that requires the original test file
-    bundle_path = "testeranto/bundles/#{output_base_name}.rb"
+    bundle_path = "testeranto/bundles/#{test_name}/#{entry_point}"
+    
+    # Ensure directory exists
+    FileUtils.mkdir_p(File.dirname(bundle_path))
     
     # Write a dummy file that loads and executes the original test file
     # Using load ensures the file is executed every time
@@ -214,10 +219,14 @@ if ruby_config && ruby_config.respond_to?(:entryPoints)
     File.write(bundle_path, dummy_content)
     puts "Created dummy bundle file at #{bundle_path}"
   end
-else
-  puts "Warning: Ruby config doesn't have entryPoints method or config not loaded", ruby_config
+  
+  # Write single inputFiles.json for all tests
+  input_files_path = "testeranto/bundles/#{test_name}/inputFiles.json"
+  FileUtils.mkdir_p(File.dirname(input_files_path))
+  File.write(input_files_path, JSON.pretty_generate(all_tests_info))
+  puts "Wrote inputFiles.json for #{all_tests_info.size} tests to #{input_files_path}"
   
 
-end
+
 
 puts "Ruby builder completed"

@@ -1,147 +1,210 @@
-use std::collections::HashMap;
+// The rust builder
+// runs in a docker image and produces built rust tests
+
 use std::env;
 use std::fs;
 use std::path::Path;
 use std::process::Command;
-use serde::{Deserialize, Serialize};
-use serde::{Serialize, Deserialize};
 use serde_json;
-use md5;
-
-extern crate serde;
-
-include!(env!("CONFIG_PATH"));
-
-#[derive(Serialize, Deserialize)]
-struct TestConfig {
-    path: String,
-}
-
-#[derive(Serialize, Deserialize)]
-struct RustProjectConfig {
-    tests: HashMap<String, TestConfig>,
-}
-
-#[derive(Serialize, Deserialize)]
-struct ProjectConfig {
-    rust: RustProjectConfig,
-}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Rust builder starting...");
     
-    // Get test name from environment
-    let test_name = env::var("TEST_NAME").unwrap_or_else(|_| "allTests".to_string());
-    println!("TEST_NAME={}", test_name);
+    // Parse command line arguments
+    let args: Vec<String> = env::args().collect();
     
-    // Load master configuration yml files
-    let config_path = find_config();
-    println!("Config path: {}", config_path);
-    
-    if !Path::new(&config_path).exists() {
-        eprintln!("❌ Config file not found");
+    if args.len() < 4 {
+        eprintln!("❌ Insufficient arguments");
+        eprintln!("Usage: {} <project_config> <rust_config> <test_name> <entry_points...>", args[0]);
         std::process::exit(1);
     }
     
-    let config_content = fs::read_to_string(&config_path)?;
-    let config: ProjectConfig = serde_json::from_str(&config_content)?;
+    let project_config_file_path = &args[1];
+    let rust_config_file_path = &args[2];
+    let test_name = &args[3];
+    let entry_points = &args[4..];
     
-    println!("✅ Loaded config with {} Rust test(s)", config.rust_tests[3].tests.len());
+    println!("Test name: {}", test_name);
+    println!("Entry points: {:?}", entry_points);
     
-    // Process each test
-    for (test_key, test_config) in &config.rust.tests {
-        println!("\n📦 Processing test: {}", test_key);
+    if entry_points.is_empty() {
+        eprintln!("❌ No entry points provided");
+        std::process::exit(1);
+    }
+    
+    // Change to workspace directory
+    let workspace = Path::new("/workspace");
+    env::set_current_dir(workspace)?;
+    
+    // Check if we're in a Cargo project
+    let cargo_toml_path = workspace.join("Cargo.toml");
+    if !cargo_toml_path.exists() {
+        eprintln!("❌ Not a Cargo project: Cargo.toml not found");
+        std::process::exit(1);
+    }
+    
+    // Create bundles directory
+    let bundles_dir = workspace.join("testeranto/bundles").join(test_name);
+    fs::create_dir_all(&bundles_dir)?;
+    
+    // Create a map to store all tests' information
+    use std::collections::HashMap;
+    let mut all_tests_info: HashMap<String, serde_json::Value> = HashMap::new();
+    
+    // Process each entry point
+    for entry_point in entry_points {
+        println!("\n📦 Processing Rust test: {}", entry_point);
         
-        // Get test file name and base name
-        let test_path = Path::new(&test_config.path);
-        let test_file_name = test_path.file_name().unwrap().to_str().unwrap();
-        let test_base_name = test_file_name.replace(".rs", "");
+        // Get entry point path
+        let entry_point_path = Path::new(entry_point);
+        if !entry_point_path.exists() {
+            eprintln!("  ❌ Entry point does not exist: {}", entry_point);
+            std::process::exit(1);
+        }
+        
+        // Get base name (without .rs extension)
+        let file_name = entry_point_path.file_name()
+            .unwrap_or_default()
+            .to_str()
+            .unwrap_or("");
+        if !file_name.ends_with(".rs") {
+            eprintln!("  ❌ Entry point is not a Rust file: {}", entry_point);
+            std::process::exit(1);
+        }
+        let base_name_with_dots = &file_name[..file_name.len() - 3];
+        // Replace dots with underscores to make a valid Rust crate name
+        let base_name: String = base_name_with_dots.replace('.', "_");
         
         // Collect input files
-        let input_files = collect_input_files(test_path);
+        let input_files = collect_input_files(entry_point_path);
         
-        // Compute hash
-        let test_hash = compute_files_hash(&input_files);
+        // Compute hash (simplified)
+        use std::collections::hash_map::DefaultHasher;
+        use std::hash::{Hash, Hasher};
+        let mut hasher = DefaultHasher::new();
+        for file in &input_files {
+            file.hash(&mut hasher);
+        }
+        let hash = hasher.finish();
+        let hash_str = format!("{:x}", hash);
         
-        // Create artifacts directory
-        let artifacts_dir = Path::new("/workspace").join("testeranto/bundles/allTests/rust/example");
-        fs::create_dir_all(&artifacts_dir)?;
+        // Store test information
+        let test_info = serde_json::json!({
+            "hash": hash_str,
+            "files": input_files
+        });
+        all_tests_info.insert(entry_point.to_string(), test_info);
         
-        // Create inputFiles.json
-        let input_files_path = artifacts_dir.join(format!("{}.rs-inputFiles.json", test_base_name));
-        let input_files_json = serde_json::to_string_pretty(&input_files)?;
-        fs::write(&input_files_path, input_files_json)?;
+        // Create a temporary directory for this test
+        let temp_dir = workspace.join("target").join("testeranto_temp").join(&base_name);
+        fs::create_dir_all(&temp_dir)?;
         
-        println!("  ✅ Created inputFiles.json at {:?} (hash: {})", input_files_path, test_hash);
+        // Create Cargo.toml with necessary dependencies
+        let cargo_toml_content = format!(r#"[package]
+name = "{}"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+testeranto_rusto = "0.1"
+serde = {{ version = "1.0", features = ["derive"] }}
+tokio = {{ version = "1.0", features = ["full"] }}
+serde_json = "1.0"
+"#, base_name);
         
-        // Compile the test
-        let output_bin_path = artifacts_dir.join(format!("{}.bin", test_base_name));
-        println!("  🔨 Compiling test to {:?}...", output_bin_path);
+        fs::write(temp_dir.join("Cargo.toml"), cargo_toml_content)?;
         
-        // Change to workspace directory
-        let workspace = Path::new("/workspace");
-        env::set_current_dir(workspace)?;
+        // Create src directory and copy the test file as main.rs
+        let src_dir = temp_dir.join("src");
+        fs::create_dir_all(&src_dir)?;
+        fs::copy(entry_point_path, src_dir.join("main.rs"))?;
         
-        // Build with cargo
+        println!("  📝 Created temporary Cargo project");
+        
+        // Compile the binary
+        println!("  🔨 Compiling with cargo...");
         let status = Command::new("cargo")
-            .args(&["build", "--release", "--bin", &test_base_name])
+            .current_dir(&temp_dir)
+            .args(&["build", "--release"])
             .status()?;
         
-        if status.success() {
-            // Copy the built binary
-            let target_bin = workspace.join("target/release").join(&test_base_name);
-            if target_bin.exists() {
-                fs::copy(&target_bin, &output_bin_path)?;
-                println!("  ✅ Successfully compiled to {:?}", output_bin_path);
-            } else {
-                eprintln!("  ⚠️  Built binary not found at {:?}", target_bin);
-                // Create a placeholder
-                fs::write(&output_bin_path, b"Placeholder binary")?;
-            }
-        } else {
-            eprintln!("  ⚠️  Cargo build failed");
-            // Create a placeholder
-            fs::write(&output_bin_path, b"Placeholder binary")?;
+        if !status.success() {
+            eprintln!("  ❌ Cargo build failed for {}", base_name);
+            std::process::exit(1);
         }
+        
+        // Source binary path (cargo output)
+        let source_bin = temp_dir.join("target/release").join(&base_name);
+        if !source_bin.exists() {
+            eprintln!("  ❌ Compiled binary not found at {:?}", source_bin);
+            std::process::exit(1);
+        }
+        
+        // Destination binary path in bundle directory
+        let dest_bin = bundles_dir.join(&base_name);
+        fs::copy(&source_bin, &dest_bin)?;
+        
+        // Make executable
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mut perms = fs::metadata(&dest_bin)?.permissions();
+            perms.set_mode(0o755);
+            fs::set_permissions(&dest_bin, perms)?;
+        }
+        
+        println!("  ✅ Compiled binary at: {:?}", dest_bin);
+        
+        // Create dummy bundle file (for consistency with other runtimes)
+        let dummy_path = bundles_dir.join(entry_point);
+        if let Some(parent) = dummy_path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        
+        let dummy_content = format!(r#"#!/usr/bin/env bash
+# Dummy bundle file generated by testeranto
+# This file execs the compiled Rust binary
+
+exec "{}/{}" "$@"
+"#, bundles_dir.display(), &base_name);
+        
+        fs::write(&dummy_path, dummy_content)?;
+        
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mut perms = fs::metadata(&dummy_path)?.permissions();
+            perms.set_mode(0o755);
+            fs::set_permissions(&dummy_path, perms)?;
+        }
+        
+        println!("  ✅ Created dummy bundle file");
+        
+        // Clean up: remove temporary directory
+        let _ = fs::remove_dir_all(temp_dir);
     }
+    
+    // Write single inputFiles.json for all tests
+    let input_files_path = bundles_dir.join("inputFiles.json");
+    fs::write(&input_files_path, serde_json::to_string_pretty(&all_tests_info)?)?;
+    println!("\n✅ Created inputFiles.json at {:?} with {} tests", input_files_path, all_tests_info.len());
     
     println!("\n🎉 Rust builder completed successfully");
     Ok(())
 }
 
-fn find_config() -> String {
-    "/workspace/testeranto/runtimes/rust/rust.json".to_string()
-}
-
 fn collect_input_files(test_path: &Path) -> Vec<String> {
     let mut files = Vec::new();
+    let workspace = Path::new("/workspace");
     
     // Add the test file itself
-    if let Ok(relative) = test_path.strip_prefix("/workspace") {
+    if let Ok(relative) = test_path.strip_prefix(workspace) {
         files.push(relative.to_string_lossy().to_string());
     } else {
         files.push(test_path.to_string_lossy().to_string());
     }
     
-    // Look for Rust files in the same directory
-    if let Some(parent) = test_path.parent() {
-        if let Ok(entries) = fs::read_dir(parent) {
-            for entry in entries.flatten() {
-                let path = entry.path();
-                if path.extension().map(|e| e == "rs").unwrap_or(false) {
-                    if let Ok(relative) = path.strip_prefix("/workspace") {
-                        let rel_str = relative.to_string_lossy().to_string();
-                        if !files.contains(&rel_str) {
-                            files.push(rel_str);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    // Add Cargo.toml if present
-    let workspace = Path::new("/workspace");
+    // Add Cargo.toml
     let cargo_toml = workspace.join("Cargo.toml");
     if cargo_toml.exists() {
         files.push("Cargo.toml".to_string());
@@ -153,31 +216,20 @@ fn collect_input_files(test_path: &Path) -> Vec<String> {
         files.push("Cargo.lock".to_string());
     }
     
-    files
-}
-
-fn compute_files_hash(files: &[String]) -> String {
-    use md5::Context;
-    let mut context = Context::new();
-    
-    for file in files {
-        context.consume(file.as_bytes());
-        let file_path = Path::new("/workspace").join(file);
-        match fs::metadata(&file_path) {
-            Ok(metadata) => {
-                if let Ok(modified) = metadata.modified() {
-                    if let Ok(duration) = modified.elapsed() {
-                        context.consume(duration.as_millis().to_string().as_bytes());
+    // Add all .rs files in src/ directory
+    let src_dir = workspace.join("src");
+    if src_dir.exists() {
+        if let Ok(entries) = fs::read_dir(src_dir) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.extension().map(|e| e == "rs").unwrap_or(false) {
+                    if let Ok(relative) = path.strip_prefix(workspace) {
+                        files.push(relative.to_string_lossy().to_string());
                     }
                 }
-                context.consume(metadata.len().to_string().as_bytes());
-            }
-            Err(_) => {
-                context.consume(b"missing");
             }
         }
     }
     
-    let digest = context.compute();
-    format!("{:x}", digest)
+    files
 }

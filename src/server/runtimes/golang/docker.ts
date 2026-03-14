@@ -1,40 +1,106 @@
+import { join } from "node:path";
 import type { ITestconfigV2 } from "../../../Types";
-import { dockerComposeFile } from "../dockerComposeFile";
+import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
+
+// Import the golang runtime file as text
+import golangContent from "./main.go" with { type: "text" };
+
+// Write the golang file to a location that will be mounted in the container
+const golangScriptPath = join(process.cwd(), "testeranto", "golang_runtime.go");
+await Bun.write(golangScriptPath, golangContent);
 
 export const golangDockerComposeFile = (
   config: ITestconfigV2,
   container_name: string,
   projectConfigPath: string,
-  nodeConfigPath: string,
+  golangConfigPath: string,
   testName: string
 ) => {
-  return dockerComposeFile(
-    config,
+  const tests = config.runtimes[testName]?.tests || [];
+
+  // For golang builder service, we need a proper build configuration
+  const service: any = {
+    build: {
+      context: process.cwd(),
+      dockerfile: config.runtimes[container_name]?.dockerfile || 'testeranto/runtimes/golang/golang.Dockerfile',
+    },
     container_name,
-    projectConfigPath,
-    nodeConfigPath,
-    testName,
-    golangBuildCommand
-  )
+    environment: {
+      ENV: "golang",
+      MODE: process.env.MODE || 'once',
+    },
+    working_dir: "/workspace",
+    volumes: [
+      `${process.cwd()}/src:/workspace/src`,
+      `${process.cwd()}/dist:/workspace/dist`,
+      `${process.cwd()}/testeranto:/workspace/testeranto`,
+    ],
+    command: golangBuildCommand(projectConfigPath, golangConfigPath, testName, tests),
+    networks: ["allTests_network"],
+  };
+
+  return service;
 };
 
-export const golangBuildCommand = () => {
-  return "go run src/server/runtimes/golang/main.go";
-  // return `go run src/server/runtimes/golang/golang.go /workspace/testeranto/runtimes/golang/golang.go`;
+export const golangBuildCommand = (projectConfigPath: string, golangConfigPath: string, testName: string, tests: string[]) => {
+  // MODE is now passed via environment in the service configuration
+  return `go run /workspace/testeranto/golang_runtime.go /workspace/${projectConfigPath} /workspace/${golangConfigPath} ${testName} ${tests.join(' ')}`
 }
 
-// this image "builds" test bundles. it is not a "docker build" thing
-export const golangBddCommand = () => {
-  const jsonStr = JSON.stringify({ ports: [1111] });
-  return `go run example/cmd/calculator-test`
+export const golangBddCommand = (fpath: string, golangConfigPath: string, configKey: string) => {
+  const jsonStr = JSON.stringify({
+    name: 'go-test',
+    ports: [1111],
+    fs: `testeranto/reports/${configKey}`,
+    timeout: 30000,
+    retries: 0,
+    environment: {}
+  });
+
+  // For Go, we need to execute the compiled binary
+  // The binary is at: testeranto/bundles/${configKey}/${binary_name}
+  // where binary_name is the entry point without .go extension and with dots replaced by underscores
+  const pathParts = fpath.split('/');
+  const fileName = pathParts[pathParts.length - 1];
+  const binaryName = fileName.replace('.go', '').replace(/\./g, '_');
+
+  // Execute the compiled binary in the bundle directory
+  // The binary is at /workspace/testeranto/bundles/${configKey}/${binaryName}
+  // The container's working directory is /workspace
+  return `./testeranto/bundles/${configKey}/${binaryName} '${jsonStr}'`;
 }
 
-// export const golangTestCommand = (config: IBuiltConfig, inputfiles: string[]) => {
-//   return `
-// ${config.golang.checks?.map((c) => {
-//     return c(inputfiles);
-//   }).join('\n') || ''}
+// BuildKit-based building for golang runtime
+export const golangBuildKitBuild = async (
+  config: ITestconfigV2,
+  configKey: string
+): Promise<void> => {
+  const runtimeConfig = config.runtimes[configKey];
 
-//     ${golangBddCommand()}
-//   `;
-// }
+  if (!runtimeConfig) {
+    throw new Error(`Configuration not found for ${configKey}`);
+  }
+
+  const buildKitConfig = runtimeConfig.buildKitOptions || {};
+
+  const buildKitOptions = {
+    runtime: 'golang',
+    configKey,
+    dockerfilePath: runtimeConfig.dockerfile,
+    buildContext: process.cwd(),
+    cacheMounts: buildKitConfig.cacheMounts || ['/go/pkg/mod', '/root/.cache/go-build'],
+    targetStage: buildKitConfig.targetStage, // Keep as is (undefined if not specified)
+    buildArgs: buildKitConfig.buildArgs || {}
+  };
+
+  console.log(`[Golang BuildKit] Building image for ${configKey}...`);
+
+  const result = await BuildKitBuilder.buildImage(buildKitOptions);
+
+  if (result.success) {
+    console.log(`[Golang BuildKit] Successfully built image in ${result.duration}ms`);
+  } else {
+    console.error(`[Golang BuildKit] Build failed: ${result.error}`);
+    throw new Error(`BuildKit build failed: ${result.error}`);
+  }
+};

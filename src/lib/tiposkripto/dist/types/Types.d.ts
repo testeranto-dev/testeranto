@@ -15,6 +15,7 @@ export type IBaseTestConfig = {
     dockerfile: string;
     buildOptions: string;
     checks: IChecks;
+    outputs: string[];
 };
 export type TestSummary = {
     testName: string;
