@@ -1,5 +1,13 @@
+import { join } from "node:path";
 import type { ITestconfigV2 } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
+
+// Import the java runtime file as text
+import javaContent from "./main.java" with { type: "text" };
+
+// Write the java file to a location that will be mounted in the container
+const javaScriptPath = join(process.cwd(), "testeranto", "java_runtime.java");
+await Bun.write(javaScriptPath, javaContent);
 
 export const javaDockerComposeFile = (
   config: ITestconfigV2,
@@ -25,7 +33,11 @@ export const javaDockerComposeFile = (
       `${process.cwd()}/dist:/workspace/dist`,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
-    command: javaBuildCommand(projectConfigPath, javaConfigPath, testName),
+    command: [
+      "sh",
+      "-c",
+      `cd /workspace && javac -cp ".:lib/*" testeranto/java_runtime.java && java -cp "testeranto:." main /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}`
+    ],
     networks: ["allTests_network"],
   };
   
@@ -33,8 +45,10 @@ export const javaDockerComposeFile = (
 };
 
 export const javaBuildCommand = (projectConfigPath: string, javaConfigPath: string, testName: string) => {
-  // Compile and run the Java builder with arguments
-  return `sh -c "cd /workspace && javac -cp \\".:lib/*\\" src/server/runtimes/java/main.java && java -cp \\"src/server/runtimes/java:.\\" main /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}"`;
+  // This function is used elsewhere, so keep it consistent
+  // Return a string that can be used in shell contexts
+  // Note: This might not be used for the builder service anymore, but keep it for compatibility
+  return `sh -c "cd /workspace && javac -cp \\".:lib/*\\" testeranto/java_runtime.java && java -cp \\"testeranto:.\\" main /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}"`;
 }
 
 export const javaBddCommand = (fpath: string, javaConfigPath: string, configKey: string) => {
