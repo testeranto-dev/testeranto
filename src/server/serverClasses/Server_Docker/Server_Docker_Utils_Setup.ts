@@ -6,13 +6,11 @@ import { chromeServiceConfig } from "../../runtimes/web/docker";
 import type { IMode } from "../../types";
 import {
   cleanTestName,
-  generateUid,
   getAiderServiceName,
   getBddServiceName,
   getBuilderServiceName,
   getCheckServiceName,
   getRuntimeLabel,
-  RUNTIME_LABELS,
   runTimeToCompose,
 } from "./Server_Docker_Constants";
 import {
@@ -226,7 +224,6 @@ export const bddTestDockerComposeFile = (
     }
   }
 
-  // If no dockerfile found, use a default based on runtime
   if (!dockerfilePath) {
     throw `[Docker] [bddTestDockerComposeFile] no dockerfile found for ${dockerfilePath}, ${Object.entries(configs)}`;
   }

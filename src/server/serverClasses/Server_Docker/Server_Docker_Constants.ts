@@ -170,26 +170,38 @@ export const getLogFilePath = (
 
 export const getExitCodeFilePath = (
   cwd: string,
-  runtime: string,
-  serviceName: string,
+  runtimeConfigKey: string,
+  testName: string,
 ): string => {
-  return `${cwd}/testeranto/reports/${runtime}/${serviceName}.exitcode`;
+  return `${cwd}/testeranto/reports/${runtimeConfigKey}/${testName}.exitcode`;
 };
+
+// export const getExitCodeFilePath = (
+//   cwd: string,
+//   runtime: string,
+//   testName: string,
+//   runtimeConfigKey: string,
+// ): string => {
+//   return `${cwd}/testeranto/reports/${runtime}/${runtimeConfigKey}/${testName}.exitcode`;
+// };
+
 
 export const getContainerExitCodeFilePath = (
   cwd: string,
   runtime: string,
   serviceName: string,
+  runtimeConfigKey: string
 ): string => {
-  return `${cwd}/testeranto/reports/${runtime}/${serviceName}.container.exitcode`;
+  return `${cwd}/testeranto/reports/${runtimeConfigKey}/${serviceName}.container.exitcode`;
 };
 
 export const getStatusFilePath = (
   cwd: string,
   runtime: string,
   serviceName: string,
+  runtimeConfigKey: string
 ): string => {
-  return `${cwd}/testeranto/reports/${runtime}/${serviceName}.container.status`;
+  return `${cwd}/testeranto/reports/${runtimeConfigKey}/${serviceName}.container.status`;
 };
 
 export const getFullReportDir = (cwd: string, runtime: string): string => {

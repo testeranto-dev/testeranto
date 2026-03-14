@@ -208,7 +208,12 @@ async function processMetafile(config, metafile, runtime, configKey) {
     };
     console.log(`[${runtime} Builder] Processed ${entryPoint}: ${relativeFiles.length} files, hash: ${hash}`);
   }
-  const inputFilesPath = `testeranto/bundles/${configKey}/inputFiles.json`;
+  const bundlesDir = `testeranto/bundles/${configKey}`;
+  if (!fs3.existsSync(bundlesDir)) {
+    fs3.mkdirSync(bundlesDir, { recursive: true });
+    console.log(`[${runtime} Builder] Created directory: ${bundlesDir}`);
+  }
+  const inputFilesPath = path2.join(bundlesDir, "inputFiles.json");
   fs3.writeFileSync(inputFilesPath, JSON.stringify(allTestsInfo, null, 2));
   console.log(`[${runtime} Builder] Wrote inputFiles.json for ${Object.keys(allTestsInfo).length} tests to ${inputFilesPath}`);
 }
@@ -216,17 +221,99 @@ async function processMetafile(config, metafile, runtime, configKey) {
 // src/server/runtimes/web/web.ts
 import * as fs4 from "fs";
 import * as path3 from "path";
-console.log(process.cwd());
 var projectConfigPath = process.argv[2];
 var nodeConfigPath = process.argv[3];
 var testName = process.argv[4];
+var reportDir = path3.join(process.cwd(), "testeranto", "reports", testName);
+if (!fs4.existsSync(reportDir)) {
+  fs4.mkdirSync(reportDir, { recursive: true });
+}
+var logFilePath = path3.join(reportDir, "build.log");
+var logStream = fs4.createWriteStream(logFilePath, { flags: "a" });
+var originalConsoleLog = console.log;
+var originalConsoleError = console.error;
+var originalConsoleWarn = console.warn;
+function logToFile(message, ...optionalParams) {
+  const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+  const formattedMessage = typeof message === "string" ? message : JSON.stringify(message, null, 2);
+  const fullMessage = `[${timestamp}] ${formattedMessage}`;
+  logStream.write(fullMessage + "\n");
+  if (optionalParams.length > 0) {
+    optionalParams.forEach((param) => {
+      const paramStr = typeof param === "string" ? param : JSON.stringify(param, null, 2);
+      logStream.write(`  ${paramStr}
+`);
+    });
+  }
+  originalConsoleLog.apply(console, [message, ...optionalParams]);
+}
+console.log = (...args) => {
+  logToFile(...args);
+};
+console.error = (...args) => {
+  const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+  const message = args.map((arg) => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ");
+  logStream.write(`[${timestamp}] ERROR: ${message}
+`);
+  originalConsoleError.apply(console, args);
+};
+console.warn = (...args) => {
+  const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+  const message = args.map((arg) => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ");
+  logStream.write(`[${timestamp}] WARN: ${message}
+`);
+  originalConsoleWarn.apply(console, args);
+};
+console.log(`[WEB BUILDER] projectConfigPath:  ${projectConfigPath}`);
+console.log(`[WEB BUILDER] nodeConfig:  ${nodeConfigPath}`);
+console.log(`[WEB BUILDER] testName:  ${testName}`);
+console.log(`[WEB BUILDER] Log file: ${logFilePath}`);
+console.log(`[WEB BUILDER] CWD: ${process.cwd()}`);
+process.on("exit", () => {
+  console.log("[WEB BUILDER] Process exiting");
+  logStream.end();
+});
+process.on("SIGINT", () => {
+  console.log("[WEB BUILDER] Received SIGINT");
+  logStream.end();
+  process.exit(0);
+});
+process.on("uncaughtException", (error) => {
+  console.error("[WEB BUILDER] Uncaught exception:", error);
+  logStream.end();
+});
 async function startBundling(webConfigs, projectConfig) {
   console.log(`[WEB BUILDER] is now bundling: ${testName}`);
   const w = esbuild_default(webConfigs, testName, projectConfig);
   const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
   if (isDevMode) {
     console.log(`[WEB BUILDER] Running in dev mode - starting watch mode`);
-    const ctx = await esbuild.context(w);
+    const ctx = await esbuild.context({
+      ...w,
+      plugins: [
+        ...w.plugins || [],
+        {
+          name: "testeranto-web-rebuild-notifier",
+          setup(build) {
+            build.onEnd(async (result) => {
+              if (result.metafile) {
+                await processMetafile(projectConfig, result.metafile, "web", testName);
+                console.log(`[WEB BUILDER] Metafile updated`);
+                const outputBaseName = w.entryPoints?.[0]?.split(".").slice(0, -1).join(".") || testName;
+                const inputFilesPath = `testeranto/bundles/${testName}/${outputBaseName}.mjs-inputFiles.json`;
+                try {
+                  const stats = fs4.statSync(inputFilesPath);
+                  fs4.utimesSync(inputFilesPath, stats.atime, /* @__PURE__ */ new Date());
+                  console.log(`[WEB BUILDER] Triggered inputFiles.json update`);
+                } catch (error) {
+                  console.error(`[WEB BUILDER] Failed to trigger inputFiles.json update:`, error);
+                }
+              }
+            });
+          }
+        }
+      ]
+    });
     const buildResult = await ctx.rebuild();
     if (buildResult.metafile) {
       await processMetafile(projectConfig, buildResult.metafile, "web", testName);
@@ -261,22 +348,7 @@ async function startBundling(webConfigs, projectConfig) {
     console.log(`[WEB BUILDER]: esbuild server ${hosts}, ${port}`);
     await ctx.watch();
     console.log(`[WEB BUILDER] Watch mode active - waiting for file changes...`);
-    ctx.on("rebuild", async (result) => {
-      console.log(`[WEB BUILDER] Rebuilding due to file changes...`);
-      if (result.metafile) {
-        await processMetafile(projectConfig, result.metafile, "web", testName);
-        console.log(`[WEB BUILDER] Metafile updated`);
-        const outputBaseName = w.entryPoints?.[0]?.split(".").slice(0, -1).join(".") || testName;
-        const inputFilesPath = `testeranto/bundles/${testName}/${outputBaseName}.mjs-inputFiles.json`;
-        try {
-          const stats = fs4.statSync(inputFilesPath);
-          fs4.utimesSync(inputFilesPath, stats.atime, /* @__PURE__ */ new Date());
-          console.log(`[WEB BUILDER] Triggered inputFiles.json update`);
-        } catch (error) {
-          console.error(`[WEB BUILDER] Failed to trigger inputFiles.json update:`, error);
-        }
-      }
-    });
+    console.log(`[WEB BUILDER] Using onEnd plugin for rebuild detection`);
     process.on("SIGINT", async () => {
       console.log("WEB BUILDER: Shutting down...");
       await ctx.dispose();

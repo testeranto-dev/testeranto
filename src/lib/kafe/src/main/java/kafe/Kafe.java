@@ -29,13 +29,11 @@ public class Kafe {
     public Kafe(
         Object inputVal,
         ITestSpecification testSpecification,
-        ITestImplementation testImplementation,
-        ITTestResourceRequest testResourceRequirement,
+        Map<String, Object> testImplementation,
         ITestAdapter testAdapter,
-        Function<Runnable, Void> uberCatcher
+        Map<String, Object> testResourceRequirement
     ) {
         System.out.println("hello Kafe");
-        this.testResourceRequirement = testResourceRequirement;
         this.artifacts = new ArrayList<>();
         this.testJobs = new ArrayList<>();
         this.testSpecification = testSpecification;
@@ -46,16 +44,23 @@ public class Kafe {
         this.testSubject = inputVal;
         this.testAdapter = testAdapter;
         
-        // Initialize classy implementations
-        initializeClassyImplementations(testImplementation);
+        // Parse test implementation from map
+        if (testImplementation != null) {
+            this.suitesOverrides = (Map<String, Object>) testImplementation.getOrDefault("suites", new HashMap<>());
+            this.givenOverrides = (Map<String, Object>) testImplementation.getOrDefault("givens", new HashMap<>());
+            this.whenOverrides = (Map<String, Object>) testImplementation.getOrDefault("whens", new HashMap<>());
+            this.thenOverrides = (Map<String, Object>) testImplementation.getOrDefault("thens", new HashMap<>());
+        }
         
         // Generate specs
-        this.specs = testSpecification.apply(
-            suitesWrapper(),
-            givenWrapper(),
-            whenWrapper(),
-            thenWrapper()
-        );
+        if (testSpecification != null) {
+            this.specs = testSpecification.apply(
+                suitesWrapper(),
+                givenWrapper(),
+                whenWrapper(),
+                thenWrapper()
+            );
+        }
         
         // Initialize test jobs
         initializeTestJobs();
@@ -214,9 +219,22 @@ public class Kafe {
         String partialTestResource = args[0];
         String websocketPort = args.length > 1 ? args[1] : "ipcfile";
         
-        // In a real implementation, we would have a default instance
-        // For now, just exit
-        System.out.println("ERROR: No default Kafe instance has been configured");
-        System.exit(-1);
+        // Create a simple test instance
+        try {
+            Kafe kafe = new Kafe(
+                null,
+                null,
+                new HashMap<>(),
+                new SimpleTestAdapter(),
+                new HashMap<>()
+            );
+            
+            IFinalResults results = kafe.receiveTestResourceConfig(partialTestResource, websocketPort);
+            System.exit(results.fails > 0 ? 1 : 0);
+        } catch (Exception e) {
+            System.err.println("Error running tests: " + e.getMessage());
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 }

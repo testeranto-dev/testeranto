@@ -220,7 +220,8 @@ export class Server_Docker extends Server_WS {
       configValue,
       (serviceName, runtime) =>
         captureExistingLogs(serviceName, runtime, getCwdPure()),
-      (serviceName, runtime) => this.startServiceLogging(serviceName, runtime),
+      (serviceName, runtime) =>
+        this.startServiceLogging(serviceName, runtime, configKey),
       () => this.resourceChanged("/~/processes"),
       () => this.writeConfigForExtension(),
     );
@@ -240,7 +241,8 @@ export class Server_Docker extends Server_WS {
       configValue,
       (serviceName, runtime) =>
         captureExistingLogs(serviceName, runtime, getCwdPure()),
-      (serviceName, runtime) => this.startServiceLogging(serviceName, runtime),
+      (serviceName, runtime) =>
+        this.startServiceLogging(serviceName, runtime, configKey),
       () => this.resourceChanged("/~/processes"),
       () => this.writeConfigForExtension(),
     );
@@ -292,12 +294,14 @@ export class Server_Docker extends Server_WS {
   private async startServiceLogging(
     serviceName: string,
     runtime: string,
+    runtimeConfigKey: string,
   ): Promise<void> {
     this.logProcesses = startServiceLoggingPure(
       serviceName,
       runtime,
       getCwdPure(),
       this.logProcesses,
+      runtimeConfigKey,
     );
     this.writeConfigForExtension();
   }
@@ -410,8 +414,8 @@ export class Server_Docker extends Server_WS {
     await startBuilderServicesPure(
       this.configs,
       this.mode,
-      (serviceName: string, runtime: string) =>
-        this.startServiceLogging(serviceName, runtime),
+      (serviceName: string, runtime: string, runtimeConfigKey: string) =>
+        this.startServiceLogging(serviceName, runtime, runtimeConfigKey),
     );
   }
 

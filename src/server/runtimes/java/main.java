@@ -1,10 +1,11 @@
 import java.io.*;
 import java.nio.file.*;
+import java.nio.file.attribute.FileTime;
 import java.security.*;
 import java.util.*;
 import org.json.*;
 
-public class main {
+public class java_runtime {
     public static void main(String[] args) throws Exception {
         System.out.println("🚀 Java builder starting...");
         
@@ -202,7 +203,14 @@ public class main {
             
             ProcessBuilder pb = new ProcessBuilder(jarCommand);
             Process process = pb.start();
-            int exitCode = process.waitFor();
+            int exitCode;
+            try {
+                exitCode = process.waitFor();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("Warning: JAR creation interrupted");
+                exitCode = 1;
+            }
             
             if (exitCode != 0) {
                 System.err.println("Warning: jar command failed with exit code " + exitCode);

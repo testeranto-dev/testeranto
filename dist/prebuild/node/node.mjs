@@ -76,7 +76,12 @@ async function processMetafile(config, metafile, runtime, configKey) {
     };
     console.log(`[${runtime} Builder] Processed ${entryPoint}: ${relativeFiles.length} files, hash: ${hash}`);
   }
-  const inputFilesPath = `testeranto/bundles/${configKey}/inputFiles.json`;
+  const bundlesDir = `testeranto/bundles/${configKey}`;
+  if (!fs.existsSync(bundlesDir)) {
+    fs.mkdirSync(bundlesDir, { recursive: true });
+    console.log(`[${runtime} Builder] Created directory: ${bundlesDir}`);
+  }
+  const inputFilesPath = path.join(bundlesDir, "inputFiles.json");
   fs.writeFileSync(inputFilesPath, JSON.stringify(allTestsInfo, null, 2));
   console.log(`[${runtime} Builder] Wrote inputFiles.json for ${Object.keys(allTestsInfo).length} tests to ${inputFilesPath}`);
 }
@@ -178,6 +183,133 @@ var rebuildPlugin_default = (r) => {
   };
 };
 
+// src/server/runtimes/node/esbuildLoggingPlugin.ts
+import * as fs4 from "fs";
+import * as path3 from "path";
+function testLoggingPlugin(options) {
+  return {
+    name: "testeranto-test-logging",
+    setup(build) {
+      const { configKey, runtime } = options;
+      const testLogsDir = path3.join(
+        process.cwd(),
+        "testeranto",
+        "reports",
+        configKey,
+        "test-logs"
+      );
+      if (!fs4.existsSync(testLogsDir)) {
+        fs4.mkdirSync(testLogsDir, { recursive: true });
+        console.log(`[${runtime} Builder] Created test logs directory: ${testLogsDir}`);
+      }
+      const originalConsole = {
+        log: console.log,
+        error: console.error,
+        warn: console.warn,
+        info: console.info,
+        debug: console.debug
+      };
+      const allLogs = [];
+      const overrideConsole = (type) => {
+        return (...args) => {
+          const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+          const message = args.map(
+            (arg) => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)
+          ).join(" ");
+          allLogs.push({ type, message, timestamp });
+          switch (type) {
+            case "log":
+              originalConsole.log(...args);
+              break;
+            case "error":
+              originalConsole.error(...args);
+              break;
+            case "warn":
+              originalConsole.warn(...args);
+              break;
+            case "info":
+              originalConsole.info?.(...args);
+              break;
+            case "debug":
+              originalConsole.debug?.(...args);
+              break;
+          }
+        };
+      };
+      console.log = overrideConsole("log");
+      console.error = overrideConsole("error");
+      console.warn = overrideConsole("warn");
+      if (console.info) console.info = overrideConsole("info");
+      if (console.debug) console.debug = overrideConsole("debug");
+      build.onEnd(async (result) => {
+        console.log = originalConsole.log;
+        console.error = originalConsole.error;
+        console.warn = originalConsole.warn;
+        if (originalConsole.info) console.info = originalConsole.info;
+        if (originalConsole.debug) console.debug = originalConsole.debug;
+        const reportsDir = path3.join(
+          process.cwd(),
+          "testeranto",
+          "reports",
+          configKey
+        );
+        if (!fs4.existsSync(reportsDir)) {
+          fs4.mkdirSync(reportsDir, { recursive: true });
+        }
+        const generalLogPath = path3.join(reportsDir, "build.log");
+        const generalLogStream = fs4.createWriteStream(generalLogPath, { flags: "a" });
+        allLogs.forEach((log) => {
+          generalLogStream.write(`[${log.timestamp}] ${log.type.toUpperCase()}: ${log.message}
+`);
+        });
+        generalLogStream.end();
+        if (result.metafile && result.metafile.outputs) {
+          for (const [outputPath, outputInfo] of Object.entries(result.metafile.outputs)) {
+            const entryPoint = outputInfo.entryPoint;
+            if (entryPoint) {
+              const testName2 = path3.basename(entryPoint, path3.extname(entryPoint));
+              const testLogPath = path3.join(testLogsDir, `${testName2}.build.log`);
+              const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+              const header = `[${timestamp}] Build log for test: ${entryPoint}
+`;
+              const buildInfo = `Output: ${outputPath}
+Entry point: ${entryPoint}
+`;
+              const testLogStream = fs4.createWriteStream(testLogPath, { flags: "w" });
+              testLogStream.write(header + buildInfo + "\n");
+              allLogs.forEach((log) => {
+                testLogStream.write(`[${log.timestamp}] ${log.type.toUpperCase()}: ${log.message}
+`);
+              });
+              const footer = `
+[${timestamp}] Build completed for: ${entryPoint}
+`;
+              testLogStream.write(footer);
+              testLogStream.end();
+              originalConsole.log(
+                `[${runtime} Builder] Created build log for ${entryPoint} at ${testLogPath}`
+              );
+            }
+          }
+        } else {
+          const genericLogPath = path3.join(testLogsDir, `generic.build.log`);
+          const genericStream = fs4.createWriteStream(genericLogPath, { flags: "w" });
+          allLogs.forEach((log) => {
+            genericStream.write(`[${log.timestamp}] ${log.type.toUpperCase()}: ${log.message}
+`);
+          });
+          genericStream.end();
+        }
+      });
+      build.onStart(() => {
+        allLogs.length = 0;
+        const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+        allLogs.push({ type: "info", message: `Build started for ${configKey}`, timestamp });
+      });
+    }
+  };
+}
+
 // src/server/runtimes/node/esbuild.ts
 var esbuild_default = (nodeConfig, testName2, projectConfig) => {
   const entryPoints = projectConfig.runtimes[testName2].tests;
@@ -208,25 +340,112 @@ var esbuild_default = (nodeConfig, testName2, projectConfig) => {
       featuresPlugin_default,
       inputFilesPluginFactory,
       rebuildPlugin_default("node"),
+      testLoggingPlugin({ configKey: testName2, runtime: "node" }),
       ...nodeConfig.plugins?.map((p) => p(register2, entryPoints)) || []
     ]
   };
 };
 
 // src/server/runtimes/node/node.ts
+import * as fs5 from "fs";
+import * as path4 from "path";
 var projectConfigPath = process.argv[2];
 var nodeConfigPath = process.argv[3];
 var testName = process.argv[4];
+var reportDir = path4.join(process.cwd(), "testeranto", "reports", testName);
+if (!fs5.existsSync(reportDir)) {
+  fs5.mkdirSync(reportDir, { recursive: true });
+  console.log(`[NODE BUILDER] Created report directory: ${reportDir}`);
+}
+var logFilePath = path4.join(reportDir, "build.log");
+var logStream = fs5.createWriteStream(logFilePath, { flags: "a" });
+var originalConsoleLog = console.log;
+var originalConsoleError = console.error;
+var originalConsoleWarn = console.warn;
+function logToFile(message, ...optionalParams) {
+  const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+  const formattedMessage = typeof message === "string" ? message : JSON.stringify(message, null, 2);
+  const fullMessage = `[${timestamp}] ${formattedMessage}`;
+  logStream.write(fullMessage + "\n");
+  if (optionalParams.length > 0) {
+    optionalParams.forEach((param) => {
+      const paramStr = typeof param === "string" ? param : JSON.stringify(param, null, 2);
+      logStream.write(`  ${paramStr}
+`);
+    });
+  }
+  originalConsoleLog.apply(console, [message, ...optionalParams]);
+}
+console.log = (...args) => {
+  logToFile(...args);
+};
+console.error = (...args) => {
+  const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+  const message = args.map((arg) => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ");
+  logStream.write(`[${timestamp}] ERROR: ${message}
+`);
+  originalConsoleError.apply(console, args);
+};
+console.warn = (...args) => {
+  const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+  const message = args.map((arg) => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ");
+  logStream.write(`[${timestamp}] WARN: ${message}
+`);
+  originalConsoleWarn.apply(console, args);
+};
 console.log(`[NODE BUILDER] projectConfigPath:  ${projectConfigPath}`);
 console.log(`[NODE BUILDER] nodeConfig:  ${nodeConfigPath}`);
 console.log(`[NODE BUILDER] testName:  ${testName}`);
+console.log(`[NODE BUILDER] Log file: ${logFilePath}`);
+process.on("exit", () => {
+  console.log("[NODE BUILDER] Process exiting");
+  logStream.end();
+});
+process.on("SIGINT", () => {
+  console.log("[NODE BUILDER] Received SIGINT");
+  logStream.end();
+  process.exit(0);
+});
+process.on("uncaughtException", (error) => {
+  console.error("[NODE BUILDER] Uncaught exception:", error);
+  logStream.end();
+});
 async function startBundling(nodeConfigs, projectConfig) {
   console.log(`[NODE BUILDER] is now bundling:  ${testName}`);
   const n = esbuild_default(nodeConfigs, testName, projectConfig);
   const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
   if (isDevMode) {
     console.log(`[NODE BUILDER] Running in dev mode - starting watch mode`);
-    const ctx = await esbuild.context(n);
+    const ctx = await esbuild.context({
+      ...n,
+      plugins: [
+        ...n.plugins || [],
+        {
+          name: "testeranto-rebuild-notifier",
+          setup(build) {
+            build.onEnd(async (result) => {
+              if (result.metafile) {
+                await processMetafile(projectConfig, result.metafile, "node", testName);
+                console.log(`[NODE BUILDER] Metafile updated`);
+                const inputFilesPath = `testeranto/bundles/${testName}/inputFiles.json`;
+                try {
+                  const fs6 = await import("fs");
+                  if (fs6.existsSync(inputFilesPath)) {
+                    const stats = fs6.statSync(inputFilesPath);
+                    fs6.utimesSync(inputFilesPath, stats.atime, /* @__PURE__ */ new Date());
+                    console.log(`[NODE BUILDER] Triggered inputFiles.json update`);
+                  } else {
+                    console.log(`[NODE BUILDER] inputFiles.json doesn't exist yet at ${inputFilesPath}`);
+                  }
+                } catch (error) {
+                  console.error(`[NODE BUILDER] Failed to trigger inputFiles.json update:`, error);
+                }
+              }
+            });
+          }
+        }
+      ]
+    });
     const buildResult = await ctx.rebuild();
     if (buildResult.metafile) {
       await processMetafile(projectConfig, buildResult.metafile, "node", testName);
@@ -240,55 +459,7 @@ async function startBundling(nodeConfigs, projectConfig) {
       await ctx.dispose();
       process.exit(0);
     });
-    ctx.on("rebuild", async (result) => {
-      console.log(`[NODE BUILDER] Rebuilding due to file changes...`);
-      if (result.metafile) {
-        await processMetafile(projectConfig, result.metafile, "node", testName);
-        console.log(`[NODE BUILDER] Metafile updated`);
-        const outputBaseName = n.entryPoints?.[0]?.split(".").slice(0, -1).join(".") || testName;
-        const inputFilesPath = `testeranto/bundles/${testName}/${outputBaseName}.mjs-inputFiles.json`;
-        try {
-          const fs5 = await import("fs");
-          const stats = fs5.statSync(inputFilesPath);
-          fs5.utimesSync(inputFilesPath, stats.atime, /* @__PURE__ */ new Date());
-          console.log(`[NODE BUILDER] Triggered inputFiles.json update`);
-        } catch (error) {
-          console.error(`[NODE BUILDER] Failed to trigger inputFiles.json update:`, error);
-        }
-      }
-    });
-    const fs4 = await import("fs");
-    const path3 = await import("path");
-    const srcDir = path3.join(process.cwd(), "src");
-    if (fs4.existsSync(srcDir)) {
-      console.log(`[NODE BUILDER] Setting up additional file watcher for ${srcDir}`);
-      const watcher = fs4.watch(srcDir, { recursive: true }, (eventType, filename) => {
-        if (filename && (filename.endsWith(".ts") || filename.endsWith(".js") || filename.endsWith(".tsx") || filename.endsWith(".jsx"))) {
-          console.log(`[NODE BUILDER] File change detected: ${eventType} ${filename}`);
-          ctx.rebuild().then((result) => {
-            if (result.metafile) {
-              processMetafile(projectConfig, result.metafile, "node", testName).then(() => {
-                console.log(`[NODE BUILDER] Manual rebuild completed`);
-                const outputBaseName = n.entryPoints?.[0]?.split(".").slice(0, -1).join(".") || testName;
-                const inputFilesPath = `testeranto/bundles/${testName}/${outputBaseName}.mjs-inputFiles.json`;
-                try {
-                  const stats = fs4.statSync(inputFilesPath);
-                  fs4.utimesSync(inputFilesPath, stats.atime, /* @__PURE__ */ new Date());
-                  console.log(`[NODE BUILDER] Triggered inputFiles.json update from manual rebuild`);
-                } catch (error) {
-                  console.error(`[NODE BUILDER] Failed to trigger inputFiles.json update:`, error);
-                }
-              });
-            }
-          }).catch((error) => {
-            console.error(`[NODE BUILDER] Manual rebuild failed:`, error);
-          });
-        }
-      });
-      process.on("SIGINT", () => {
-        watcher.close();
-      });
-    }
+    console.log(`[NODE BUILDER] Using onEnd plugin for rebuild detection`);
     console.log(`[NODE BUILDER] Keeping process alive for continuous watching...`);
     const keepAliveInterval = setInterval(() => {
     }, 6e4);

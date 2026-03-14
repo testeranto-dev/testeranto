@@ -179,8 +179,15 @@ export async function processMetafile(
     console.log(`[${runtime} Builder] Processed ${entryPoint}: ${relativeFiles.length} files, hash: ${hash}`);
   }
 
+  // Ensure the bundles directory exists
+  const bundlesDir = `testeranto/bundles/${configKey}`;
+  if (!fs.existsSync(bundlesDir)) {
+    fs.mkdirSync(bundlesDir, { recursive: true });
+    console.log(`[${runtime} Builder] Created directory: ${bundlesDir}`);
+  }
+  
   // Write single inputFiles.json for all tests
-  const inputFilesPath = `testeranto/bundles/${configKey}/inputFiles.json`;
+  const inputFilesPath = path.join(bundlesDir, 'inputFiles.json');
   fs.writeFileSync(inputFilesPath, JSON.stringify(allTestsInfo, null, 2));
   console.log(`[${runtime} Builder] Wrote inputFiles.json for ${Object.keys(allTestsInfo).length} tests to ${inputFilesPath}`);
 }

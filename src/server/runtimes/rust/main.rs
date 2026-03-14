@@ -19,13 +19,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     }
     
-    let project_config_file_path = &args[1];
-    let rust_config_file_path = &args[2];
+    let _project_config_file_path = &args[1];
+    let _rust_config_file_path = &args[2];
     let test_name = &args[3];
-    let entry_points = &args[4..];
+    
+    // Fixed: map entry points to container paths
+    // ["src/rust/Calculator.rusto.test.rs"] -> ["/workspace/src/rust/Calculator.rusto.test.rs"]
+    let original_entry_points = &args[4..];
+    
+    // Map to container paths
+    let entry_points: Vec<String> = original_entry_points
+        .iter()
+        .map(|ep| {
+            // Prepend /workspace/ to each entry point (source code is at /workspace/src)
+            format!("/workspace/{}", ep)
+        })
+        .collect();
     
     println!("Test name: {}", test_name);
-    println!("Entry points: {:?}", entry_points);
+    println!("Original entry points: {:?}", original_entry_points);
+    println!("Container entry points: {:?}", entry_points);
     
     if entry_points.is_empty() {
         eprintln!("❌ No entry points provided");
@@ -52,8 +65,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut all_tests_info: HashMap<String, serde_json::Value> = HashMap::new();
     
     // Process each entry point
-    for entry_point in entry_points {
-        println!("\n📦 Processing Rust test: {}", entry_point);
+    for (i, entry_point) in entry_points.iter().enumerate() {
+        let original_entry_point = &original_entry_points[i];
+        println!("\n📦 Processing Rust test: {}", original_entry_point);
+        println!("  Container path: {}", entry_point);
         
         // Get entry point path
         let entry_point_path = Path::new(entry_point);
@@ -93,20 +108,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "hash": hash_str,
             "files": input_files
         });
-        all_tests_info.insert(entry_point.to_string(), test_info);
+        all_tests_info.insert(original_entry_point.to_string(), test_info);
         
         // Create a temporary directory for this test
         let temp_dir = workspace.join("target").join("testeranto_temp").join(&base_name);
         fs::create_dir_all(&temp_dir)?;
         
         // Create Cargo.toml with necessary dependencies
+        // Use path dependency for testeranto_rusto since it's in the workspace
         let cargo_toml_content = format!(r#"[package]
 name = "{}"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-testeranto_rusto = "0.1"
+testeranto_rusto = {{ path = "/workspace/testerantoV2/src/lib/rusto", version = "0.1.13" }}
 serde = {{ version = "1.0", features = ["derive"] }}
 tokio = {{ version = "1.0", features = ["full"] }}
 serde_json = "1.0"
@@ -156,7 +172,7 @@ serde_json = "1.0"
         println!("  ✅ Compiled binary at: {:?}", dest_bin);
         
         // Create dummy bundle file (for consistency with other runtimes)
-        let dummy_path = bundles_dir.join(entry_point);
+        let dummy_path = bundles_dir.join(original_entry_point);
         if let Some(parent) = dummy_path.parent() {
             fs::create_dir_all(parent)?;
         }

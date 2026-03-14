@@ -4,6 +4,7 @@ import baseEsBuildConfig from "../../../esbuildConfigs/index.js";
 import inputFilesPlugin from "../../../esbuildConfigs/inputFilesPlugin.js";
 import rebuildPlugin from "../../../esbuildConfigs/rebuildPlugin.js";
 import type { ITestconfigV2 } from "../../../Types.js";
+import { testLoggingPlugin } from "./esbuildLoggingPlugin.js";
 
 export default (
   nodeConfig: object,
@@ -40,6 +41,7 @@ export default (
       featuresPlugin,
       inputFilesPluginFactory,
       rebuildPlugin("node"),
+      testLoggingPlugin({ configKey: testName, runtime: 'node' }),
       ...(nodeConfig.plugins?.map((p) => p(register, entryPoints)) || []),
     ],
   };

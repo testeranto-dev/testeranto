@@ -96,6 +96,7 @@ export const captureContainerExitCode = (
   serviceName: string,
   runtime: string,
   cwd: string,
+  runTimeConfigKey: string
 ): void => {
   const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
   const containerId = execSyncWrapper(containerIdCmd, {
@@ -112,6 +113,7 @@ export const captureContainerExitCode = (
       cwd,
       runtime,
       serviceName,
+      runTimeConfigKey
     );
     writeFileSync(containerExitCodeFilePath, exitCode);
 
@@ -123,7 +125,7 @@ export const captureContainerExitCode = (
     const status = execSyncWrapper(statusCmd, {
       cwd: cwd,
     }).trim();
-    const statusFilePath = getStatusFilePath(cwd, runtime, serviceName);
+    const statusFilePath = getStatusFilePath(cwd, runtime, serviceName, runTimeConfigKey);
     writeFileSync(statusFilePath, status);
   } else {
     consoleLog(`[Server_Docker] No container found for service ${serviceName}`);
@@ -137,6 +139,18 @@ export const updateOutputFilesList = (
   outputDir: string,
   projectRoot: string,
 ): Record<string, Record<string, string[]>> => {
+  // Check if the output directory exists
+  if (!existsSync(outputDir)) {
+    consoleLog(`[Server_Docker] Output directory does not exist: ${outputDir}`);
+    // Create a new object to avoid mutating the input
+    const newOutputFiles = { ...outputFiles };
+    if (!newOutputFiles[configKey]) {
+      newOutputFiles[configKey] = {};
+    }
+    newOutputFiles[configKey][testName] = [];
+    return newOutputFiles;
+  }
+
   const files = readdirSync(outputDir);
 
   const testFiles = files.filter(
@@ -421,7 +435,7 @@ export const informAiderPure = async (
   testName: string,
   configKey: string,
   configValue: any,
-  inputFiles?: any,
+  inputFiles: any,
   captureExistingLogs: (serviceName: string, runtime: string) => void,
   writeConfigForExtension: () => void,
 ): Promise<void> => {
@@ -525,9 +539,10 @@ export const startServiceLoggingPure = (
   runtime: string,
   cwd: string,
   logProcesses: Map<string, { process: any; serviceName: string }>,
+  runtimeConfigKey: string
 ): Map<string, { process: any; serviceName: string }> => {
   const logFilePath = getLogFilePath(cwd, runtime, serviceName);
-  const exitCodeFilePath = getExitCodeFilePath(cwd, runtime, serviceName);
+  const exitCodeFilePath = getExitCodeFilePath(cwd, runtimeConfigKey, serviceName);
 
   // Start a process to capture logs - use a more robust approach
   // We'll use a shell script that handles waiting for the container
@@ -540,22 +555,22 @@ export const startServiceLoggingPure = (
         sleep 1
       done
       # Capture logs from the beginning
-      docker compose -f "testeranto/docker-compose.yml" logs --no-color -f ${serviceName}
+      docker compose -f "testeranto/docker-compose.yml" logs --no-color -f ${runtime}
     `;
 
   // Open in overwrite mode to replace old logs
   const logStream = createWriteStream(logFilePath, { flags: "w" });
   const timestamp = new Date().toISOString();
   logStream.write(
-    `=== Log started at ${timestamp} for service ${serviceName} ===\n\n`,
+    `=== Log started at ${timestamp} for service ${runtime} ===\n\n`,
   );
 
   const child = spawnWrapper("bash", ["-c", logScript], {
     stdio: ["ignore", "pipe", "pipe"],
   });
 
-  const containerIdCmd = `${DOCKER_COMPOSE_BASE} ps -q ${serviceName}`;
-  const containerId = execSyncWrapper(containerIdCmd, {
+
+  const containerId = execSyncWrapper(`${DOCKER_COMPOSE_BASE} ps -q ${runtime}`, {
     cwd: cwd,
   }).trim();
 
@@ -759,6 +774,12 @@ export const watchOutputFilePure = (
   const outputDir = getFullReportDir(cwd, runtime);
   const projectRoot = cwd;
 
+  // Ensure the output directory exists
+  if (!existsSync(outputDir)) {
+    consoleLog(`[Server_Docker] Creating output directory: ${outputDir}`);
+    mkdirSync(outputDir, { recursive: true });
+  }
+
   let newOutputFiles = { ...outputFiles };
   if (!newOutputFiles[configKey]) {
     newOutputFiles[configKey] = {};
@@ -813,7 +834,11 @@ export const handleAiderProcessesPure = (
 export const startBuilderServicesPure = async (
   configs: any,
   mode: IMode,
-  startServiceLogging: (serviceName: string, runtime: string) => Promise<void>,
+  startServiceLogging: (
+    serviceName: string,
+    runtime: string,
+    runtimeConfigKey: string
+  ) => Promise<void>,
 ): Promise<void> => {
   const builderServices: string[] = [];
   const processedRuntimes = new Set<string>();
@@ -952,7 +977,7 @@ export const captureExistingLogs = (
       encoding: "utf-8",
     }).trim();
 
-    const cmd = `${DOCKER_COMPOSE_LOGS} ${serviceName} 2>/dev/null || true`;
+    const cmd = `${DOCKER_COMPOSE_LOGS} ${runtime} 2>/dev/null || true`;
     const existingLogs = execSyncWrapper(cmd, {
       cwd: cwd,
       encoding: "utf-8",

@@ -36,7 +36,7 @@ export const javaDockerComposeFile = (
     command: [
       "sh",
       "-c",
-      `cd /workspace && javac -cp ".:lib/*" testeranto/java_runtime.java && java -cp "testeranto:." main /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}`
+      `cd /workspace && javac -cp ".:lib/*" testeranto/java_runtime.java && java -cp "testeranto:.:lib/*" java_runtime /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}`
     ],
     networks: ["allTests_network"],
   };
@@ -48,7 +48,7 @@ export const javaBuildCommand = (projectConfigPath: string, javaConfigPath: stri
   // This function is used elsewhere, so keep it consistent
   // Return a string that can be used in shell contexts
   // Note: This might not be used for the builder service anymore, but keep it for compatibility
-  return `sh -c "cd /workspace && javac -cp \\".:lib/*\\" testeranto/java_runtime.java && java -cp \\"testeranto:.\\" main /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}"`;
+  return `sh -c "cd /workspace && javac -cp \\".:lib/*\\" testeranto/java_runtime.java && java -cp \\"testeranto:.:lib/*\\" java_runtime /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}"`;
 }
 
 export const javaBddCommand = (fpath: string, javaConfigPath: string, configKey: string) => {
