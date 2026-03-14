@@ -53,12 +53,12 @@ export const javaBuildCommand = (projectConfigPath: string, javaConfigPath: stri
 
 export const javaBddCommand = (fpath: string, javaConfigPath: string, configKey: string) => {
   const jsonStr = JSON.stringify({
-    name: 'java-test',
+    // name: 'java-test',
     ports: [1111],
     fs: `testeranto/reports/${configKey}`,
-    timeout: 30000,
-    retries: 0,
-    environment: {}
+    // timeout: 30000,
+    // retries: 0,
+    // environment: {}
   });
   return `java -jar testeranto/bundles/${configKey}/${fpath.replace('.java', '.jar')} '${jsonStr}'`;
 }

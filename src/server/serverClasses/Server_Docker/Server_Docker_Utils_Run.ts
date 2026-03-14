@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 // Server_Docker_Utils_Run: Run-related pure functions for Server_Docker
 import type { ICheck, IChecks, IRunTime, ITestconfigV2 } from "../../../Types";
 import type { IMode } from "../../types";
@@ -95,22 +98,21 @@ export const spawnPromise = (
 export const captureContainerExitCode = (
   serviceName: string,
   runtime: string,
-  cwd: string,
   runTimeConfigKey: string
 ): void => {
   const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
   const containerId = execSyncWrapper(containerIdCmd, {
-    cwd: cwd,
+    cwd: getCwdPure(),
   }).trim();
 
   if (containerId) {
     const inspectCmd = `docker inspect --format='{{.State.ExitCode}}' ${containerId}`;
     const exitCode = execSyncWrapper(inspectCmd, {
-      cwd: cwd,
+      cwd: getCwdPure(),
     }).trim();
 
     const containerExitCodeFilePath = getContainerExitCodeFilePath(
-      cwd,
+      getCwdPure(),
       runtime,
       serviceName,
       runTimeConfigKey
@@ -123,9 +125,9 @@ export const captureContainerExitCode = (
 
     const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
     const status = execSyncWrapper(statusCmd, {
-      cwd: cwd,
+      cwd: getCwdPure(),
     }).trim();
-    const statusFilePath = getStatusFilePath(cwd, runtime, serviceName, runTimeConfigKey);
+    const statusFilePath = getStatusFilePath(getCwdPure(), runtime, serviceName, runTimeConfigKey);
     writeFileSync(statusFilePath, status);
   } else {
     consoleLog(`[Server_Docker] No container found for service ${serviceName}`);
@@ -509,7 +511,7 @@ export const launchChecksPure = async (
   testName: string,
   configKey: string,
   configValue: any,
-  captureExistingLogs: (serviceName: string, runtime: string) => void,
+  captureExistingLogs: IR,
   startServiceLogging: (serviceName: string, runtime: string) => Promise<void>,
   resourceChanged: () => void,
   writeConfigForExtension: () => void,
@@ -523,11 +525,11 @@ export const launchChecksPure = async (
         `docker compose -f "testeranto/docker-compose.yml" up -d ${checkServiceName}`,
       );
       // Capture any existing logs first
-      captureExistingLogs(checkServiceName, runtime);
+      captureExistingLogs(checkServiceName, runtime, configKey);
       await startServiceLogging(checkServiceName, runtime);
       resourceChanged();
     } catch (error: any) {
-      captureExistingLogs(checkServiceName, runtime);
+      captureExistingLogs(checkServiceName, runtime, configKey);
     }
   }
 
@@ -541,7 +543,7 @@ export const startServiceLoggingPure = (
   logProcesses: Map<string, { process: any; serviceName: string }>,
   runtimeConfigKey: string
 ): Map<string, { process: any; serviceName: string }> => {
-  const logFilePath = getLogFilePath(cwd, runtime, serviceName);
+  const logFilePath = getLogFilePath(cwd, runtime, serviceName, runtimeConfigKey);
   const exitCodeFilePath = getExitCodeFilePath(cwd, runtimeConfigKey, serviceName);
 
   // Start a process to capture logs - use a more robust approach
@@ -574,21 +576,21 @@ export const startServiceLoggingPure = (
     cwd: cwd,
   }).trim();
 
-  child.stdout?.on("data", (data) => {
+  child.stdout?.on("data", (data: any) => {
     logStream.write(data);
   });
 
-  child.stderr?.on("data", (data) => {
+  child.stderr?.on("data", (data: any) => {
     logStream.write(data);
   });
 
-  child.on("error", (error) => {
+  child.on("error", (error: { message: any; }) => {
     logStream.write(`\n=== Log process error: ${error.message} ===\n`);
     logStream.end();
     writeFileSync(exitCodeFilePath, "-1");
   });
 
-  child.on("close", (code) => {
+  child.on("close", (code: { toString: () => any; }) => {
     const endTimestamp = new Date().toISOString();
     logStream.write(
       `\n=== Log ended at ${endTimestamp}, process exited with code ${code} ===\n`,
@@ -961,25 +963,31 @@ export const waitForAllTestsToCompletePure = async (
   consoleLog("[Server_Docker] Forcing shutdown due to timeout...");
 };
 
-export const captureExistingLogs = (
+export type IR = (
   serviceName: string,
   runtime: string,
-  cwd: string,
+  runtimeConfigKey: string
+) => void;
+
+export const captureExistingLogs: IR = (
+  serviceName: string,
+  runtime: string,
+  runtimeConfigKey: string
 ): void => {
-  const reportDir = getFullReportDir(cwd, runtime);
-  const logFilePath = getLogFilePath(cwd, runtime, serviceName);
+  const reportDir = getFullReportDir(getCwdPure(), runtime);
+  const logFilePath = getLogFilePath(getCwdPure(), runtime, serviceName, runtimeConfigKey);
 
   try {
     // First, check if the container exists (including stopped ones)
     const checkCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
     const containerId = execSyncWrapper(checkCmd, {
-      cwd: cwd,
+      cwd: getCwdPure(),
       encoding: "utf-8",
     }).trim();
 
     const cmd = `${DOCKER_COMPOSE_LOGS} ${runtime} 2>/dev/null || true`;
     const existingLogs = execSyncWrapper(cmd, {
-      cwd: cwd,
+      cwd: getCwdPure(),
       encoding: "utf-8",
       maxBuffer: 10 * 1024 * 1024, // 10MB
     });
@@ -995,7 +1003,7 @@ export const captureExistingLogs = (
     }
 
     // Also try to capture the container exit code if it has exited
-    captureContainerExitCode(serviceName, runtime, cwd);
+    captureContainerExitCode(serviceName, runtime, runtimeConfigKey);
   } catch (error: any) {
     // It's okay if this fails - the container might not exist yet
     consoleLog(
