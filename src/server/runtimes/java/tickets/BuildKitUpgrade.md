@@ -1,6 +1,6 @@
 ---
 owner: adam
-status: Implemented, untested
+status: working
 due date: idk
-ETA: soon
+ETA: idk
 ---

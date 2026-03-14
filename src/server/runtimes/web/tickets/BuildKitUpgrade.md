@@ -1,13 +1,14 @@
 ---
 owner: adam
-status: in progress
-due date: Implemented, untested
-ETA: soon
+status: working
+due date: idk
+ETA: idk
 ---
 
 ### Web Runtime
 
 **Implementation Details**:
+
 - **Chrome Service**: Separated from builder (standalone `chrome-service` container)
 - **Cache Mounts**: npm/yarn caches (`/root/.npm`, `/usr/local/share/.cache/yarn`)
 - **Dockerfile Simplicity**: Users provide minimal Dockerfiles without Chrome/socat
@@ -15,6 +16,7 @@ ETA: soon
 - **Architecture**: Builder creates bundles, Chrome service handles browser execution
 
 **Example Configuration**:
+
 ```typescript
 webtests: {
   runtime: "web",
@@ -31,7 +33,8 @@ webtests: {
 
 **Migration Complete**: Web runtime uses BuildKit exclusively with separated Chrome service architecture.
 
-**Important Configuration Note**: 
+**Important Configuration Note**:
+
 - If your Dockerfile is single-stage, do not specify `targetStage` in `buildKitOptions`
 - If your Dockerfile has multi-stage builds, specify the correct target stage name
 - Default configuration no longer assumes `targetStage: 'runtime'`

@@ -1,13 +1,14 @@
 ---
 owner: adam
-status: in progress
-due date: Implemented, untested
-ETA: soon
+status: working
+due date: idk
+ETA: idk
 ---
 
 ### Ruby Runtime
 
 **Implementation Details**:
+
 - **Cache Mounts**: Gem caches (`/usr/local/bundle`)
 - **BuildKit Integration**: On-demand builds with `rubyBuildKitBuild` function
 - **Dependency Analysis**: Ruby file dependency tracking with require/require_relative
@@ -15,6 +16,7 @@ ETA: soon
 - **Gem Management**: Works with Bundler and Gemfile.lock
 
 **Example Configuration**:
+
 ```typescript
 rubytests: {
   runtime: "ruby",

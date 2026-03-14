@@ -1,13 +1,14 @@
 ---
 owner: adam
-status: Implemented, untested
+status: working
 due date: idk
-ETA: soon
+ETA: idk
 ---
 
 ### Golang Runtime
 
 **Implementation Details**:
+
 - **Cache Mounts**: `/go/pkg/mod`, `/root/.cache/go-build`
 - **BuildKit Integration**: On-demand builds with `golangBuildKitBuild` function
 - **Go Module Support**: Full Go module dependency management
@@ -15,6 +16,7 @@ ETA: soon
 - **Dependency Tracking**: Comprehensive input file collection
 
 **Example Configuration**:
+
 ```typescript
 golangtests: {
   runtime: "golang",

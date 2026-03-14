@@ -31,3 +31,5 @@ src/lib/rusto/target
 *.tgz
 *.vsix
 node_modules
+
+*.bun-build

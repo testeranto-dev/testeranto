@@ -1,19 +1,22 @@
 ---
 owner: adam
-status: in progress
-due date: Implemented, untested
-ETA: soon
+status: working
+due date: idk
+ETA: idk
 ---
 
 ### Rust Runtime (rusttests)
+
 **Status**: Fully Implemented and Tested ✅
 
 **Current User Provides**:
+
 - `rust.Dockerfile`: Rust 1.75 with build tools
 - `rust.rs`: Constants/structs
 - Tests: `src/rust/Calculator.rusto.test.rs`
 
 **Implementation Details**:
+
 - **Cache Mounts**: Cargo registry and git caches (`/usr/local/cargo/registry`, `/usr/local/cargo/git`)
 - **BuildKit Integration**: On-demand builds with `rustBuildKitBuild` function
 - **Cargo Support**: Full Cargo workspace and dependency management
@@ -21,6 +24,7 @@ ETA: soon
 - **Binary Production**: Creates standalone Rust executables
 
 **Example Configuration**:
+
 ```typescript
 rusttests: {
   runtime: "rust",

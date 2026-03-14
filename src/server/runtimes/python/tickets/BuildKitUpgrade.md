@@ -1,17 +1,20 @@
 ---
 owner: adam
-status: in progress
-due date: Implemented, untested
-ETA: soon
+status: working
+due date: idk
+ETA: idk
 ---
 
 ### Python Runtime (pythontests)
+
 **Current User Provides**:
+
 - `python.Dockerfile`: Python 3.11 with build tools
 - `python.py`: JSON config generator
 - Tests: `src/python/Calculator.pitono.test.py`
 
 **Implementation Details**:
+
 - **Dependency Analysis**: Python import tracking with ast module
 - **BuildKit Integration**: Follows Ruby pattern for consistency
 - **Pip Support**: Works with requirements.txt and virtual environments
@@ -19,6 +22,7 @@ ETA: soon
 - **Import Resolution**: Handles relative and absolute imports
 
 **Example Configuration**:
+
 ```typescript
 pythontests: {
   runtime: "python",
