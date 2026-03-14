@@ -8,7 +8,7 @@ type BaseWhen struct {
 }
 
 // Test executes the When condition
-func (bw *BaseWhen) Test(store interface{}, testResourceConfiguration ITTestResourceConfiguration, tLog func(...string), pm interface{}, path string) (interface{}, error) {
+func (bw *BaseWhen) Test(store interface{}, testResourceConfiguration ITTestResourceConfiguration) (interface{}, error) {
 	// Implementation would go here
 	return nil, nil
 }

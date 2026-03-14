@@ -41,14 +41,13 @@ class BaseSuite:
         s: Any,
         artifactory: Callable[[str, Any], None],
         tr: Any,
-        pm: Any
     ) -> Any:
         return s
     
     def assert_that(self, t: Any) -> bool:
         return bool(t)
     
-    def after_all(self, store: Any, artifactory: Callable[[str, Any], None], pm: Any) -> Any:
+    def after_all(self, store: Any, artifactory: Callable[[str, Any], None]) -> Any:
         return store
     
     async def run(
@@ -56,8 +55,6 @@ class BaseSuite:
         input_val: Any,
         test_resource_configuration,
         artifactory: Callable[[str, Any], None],
-        t_log: Callable[..., None],
-        pm: Any
     ) -> 'BaseSuite':
         self.test_resource_configuration = test_resource_configuration
         
@@ -68,7 +65,7 @@ class BaseSuite:
             input_val,
             suite_artifactory,
             test_resource_configuration,
-            pm
+            None  # pm parameter removed
         )
         
         # Reset fails counter
@@ -83,11 +80,14 @@ class BaseSuite:
                     test_resource_configuration,
                     self.assert_that,
                     suite_artifactory,
-                    self.index  # Only suite_ndx remains, matching TypeScript
+                    self.index  # suite_ndx
                 )
                 # Add any failures from the given to the suite total
                 if hasattr(g, 'failed') and g.failed:
                     self.fails += 1
+                # Also add the given's fails count
+                if hasattr(g, 'fails'):
+                    self.fails += g.fails
             except Exception as e:
                 self.failed = True
                 self.fails += 1
@@ -99,7 +99,7 @@ class BaseSuite:
             self.failed = True
         
         try:
-            self.after_all(self.store, artifactory, pm)
+            self.after_all(self.store, artifactory, None)  # pm parameter removed
         except Exception as e:
             print(f"Error in after_all: {e}")
         

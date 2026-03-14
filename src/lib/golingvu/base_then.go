@@ -8,7 +8,7 @@ type BaseThen struct {
 }
 
 // Test executes the Then condition
-func (bt *BaseThen) Test(store interface{}, testResourceConfiguration ITTestResourceConfiguration, tLog func(...string), pm interface{}, path string) (interface{}, error) {
+func (bt *BaseThen) Test(store interface{}, testResourceConfiguration ITTestResourceConfiguration) (interface{}, error) {
 	// Implementation would go here
 	return nil, nil
 }

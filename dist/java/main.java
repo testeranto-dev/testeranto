@@ -4,41 +4,108 @@ import java.nio.file.attribute.FileTime;
 import java.security.*;
 import java.util.*;
 import org.json.*;
+import org.json.JSONException;
 
 public class java_runtime {
     public static void main(String[] args) throws Exception {
         System.out.println("🚀 Java builder starting...");
         
-        // Get test name from environment
-        String testName = System.getenv("TEST_NAME");
-        if (testName == null || testName.isEmpty()) {
-            testName = "allTests";
-        }
-        System.out.println("TEST_NAME=" + testName);
-        
-        // Load configuration
-        String configPath = findConfig();
-        System.out.println("Config path: " + configPath);
-        
-        if (configPath == null || !Files.exists(Paths.get(configPath))) {
-            System.err.println("❌ Config file not found");
+        // Get arguments from command line
+        if (args.length < 3) {
+            System.err.println("❌ Usage: java java_runtime <projectConfigPath> <javaConfigPath> <testName>");
             System.exit(1);
         }
         
-        // Read and parse config
-        String configContent = new String(Files.readAllBytes(Paths.get(configPath)));
-        JSONObject config = new JSONObject(configContent);
+        String projectConfigPath = args[0];
+        String javaConfigPath = args[1];
+        String testName = args[2];
         
-        // Get Java tests
-        JSONObject javaConfig = config.optJSONObject("java");
-        if (javaConfig == null) {
-            System.out.println("No Java tests found in config");
+        System.out.println("projectConfigPath: " + projectConfigPath);
+        System.out.println("javaConfigPath: " + javaConfigPath);
+        System.out.println("testName: " + testName);
+        
+        // Load project configuration
+        Path projectConfigFile = Paths.get(projectConfigPath);
+        if (!Files.exists(projectConfigFile)) {
+            System.err.println("❌ Project config file not found: " + projectConfigPath);
+            System.exit(1);
+        }
+        
+        String projectConfigContent = new String(Files.readAllBytes(projectConfigFile));
+        JSONObject projectConfig;
+        try {
+            // Try to parse as JSON directly
+            projectConfig = new JSONObject(projectConfigContent);
+        } catch (JSONException e) {
+            // If it's not valid JSON, it might be a TypeScript/JavaScript file
+            // Try to extract JSON from the file
+            System.out.println("⚠️  Project config is not pure JSON, trying to extract JSON from file...");
+            String jsonStr = extractJsonFromFile(projectConfigContent, projectConfigPath);
+            if (jsonStr == null) {
+                System.err.println("❌ Failed to extract JSON from project config file: " + projectConfigPath);
+                System.err.println("   File type: " + (projectConfigPath.endsWith(".ts") ? "TypeScript" : 
+                                  projectConfigPath.endsWith(".js") ? "JavaScript" : "Unknown"));
+                System.err.println("   First 100 chars: " + projectConfigContent.substring(0, Math.min(100, projectConfigContent.length())));
+                System.exit(1);
+                return;
+            }
+            try {
+                projectConfig = new JSONObject(jsonStr);
+                System.out.println("✅ Successfully extracted JSON from config file");
+            } catch (JSONException e2) {
+                System.err.println("❌ Failed to parse extracted JSON from project config: " + e2.getMessage());
+                System.err.println("   Extracted content: " + jsonStr);
+                System.exit(1);
+                return;
+            }
+        }
+        
+        // Load Java configuration - this might not be needed, but we'll try to parse it
+        Path javaConfigFile = Paths.get(javaConfigPath);
+        if (!Files.exists(javaConfigFile)) {
+            System.err.println("❌ Java config file not found: " + javaConfigPath);
+            System.exit(1);
+        }
+        
+        String javaConfigContent = new String(Files.readAllBytes(javaConfigFile));
+        JSONObject javaConfig;
+        try {
+            javaConfig = new JSONObject(javaConfigContent);
+        } catch (JSONException e) {
+            // Java config might not be JSON either
+            // Try to extract JSON
+            System.out.println("⚠️  Java config is not pure JSON, trying to extract...");
+            String jsonStr = extractJsonFromFile(javaConfigContent, javaConfigPath);
+            if (jsonStr != null) {
+                try {
+                    javaConfig = new JSONObject(jsonStr);
+                    System.out.println("✅ Successfully extracted JSON from Java config");
+                } catch (JSONException e2) {
+                    System.out.println("⚠️  Failed to parse extracted JSON, using empty config");
+                    javaConfig = new JSONObject();
+                }
+            } else {
+                System.out.println("⚠️  Could not extract JSON from Java config, using empty config");
+                javaConfig = new JSONObject();
+            }
+        }
+        
+        // Get Java tests from project config
+        JSONObject runtimes = projectConfig.optJSONObject("runtimes");
+        if (runtimes == null) {
+            System.out.println("No runtimes found in project config");
             return;
         }
         
-        JSONObject tests = javaConfig.optJSONObject("tests");
-        if (tests == null) {
-            System.out.println("No tests in Java config");
+        JSONObject testRuntime = runtimes.optJSONObject(testName);
+        if (testRuntime == null) {
+            System.err.println("❌ Test runtime not found: " + testName);
+            System.exit(1);
+        }
+        
+        JSONArray tests = testRuntime.optJSONArray("tests");
+        if (tests == null || tests.length() == 0) {
+            System.out.println("No tests in Java config for " + testName);
             return;
         }
         
@@ -48,10 +115,9 @@ public class java_runtime {
         JSONObject allTestsInfo = new JSONObject();
         
         // Process each test
-        for (String testKey : tests.keySet()) {
-            System.out.println("\n📦 Processing test: " + testKey);
-            JSONObject testConfig = tests.getJSONObject(testKey);
-            String testPath = testConfig.getString("path");
+        for (int i = 0; i < tests.length(); i++) {
+            String testPath = tests.getString(i);
+            System.out.println("\n📦 Processing test: " + testPath);
             
             // Get test file name and base name
             Path testFilePath = Paths.get(testPath);
@@ -168,6 +234,65 @@ public class java_runtime {
         } catch (Exception e) {
             return "error";
         }
+    }
+    
+    private static String extractJsonFromFile(String content, String filePath) {
+        // If the file is TypeScript/JavaScript, look for export default
+        if (filePath.endsWith(".ts") || filePath.endsWith(".js")) {
+            // Look for export default followed by an object
+            int exportIndex = content.indexOf("export default");
+            if (exportIndex != -1) {
+                // Find the start of the object
+                int start = content.indexOf("{", exportIndex);
+                if (start != -1) {
+                    // Find matching braces
+                    int braceCount = 0;
+                    int end = start;
+                    for (int i = start; i < content.length(); i++) {
+                        char c = content.charAt(i);
+                        if (c == '{') {
+                            braceCount++;
+                        } else if (c == '}') {
+                            braceCount--;
+                            if (braceCount == 0) {
+                                end = i + 1;
+                                break;
+                            }
+                        }
+                    }
+                    if (end > start) {
+                        return content.substring(start, end);
+                    }
+                }
+            }
+            // Also look for module.exports
+            int moduleIndex = content.indexOf("module.exports");
+            if (moduleIndex != -1) {
+                int start = content.indexOf("{", moduleIndex);
+                if (start != -1) {
+                    int braceCount = 0;
+                    int end = start;
+                    for (int i = start; i < content.length(); i++) {
+                        char c = content.charAt(i);
+                        if (c == '{') {
+                            braceCount++;
+                        } else if (c == '}') {
+                            braceCount--;
+                            if (braceCount == 0) {
+                                end = i + 1;
+                                break;
+                            }
+                        }
+                    }
+                    if (end > start) {
+                        return content.substring(start, end);
+                    }
+                }
+            }
+        }
+        // If it's a Java file, it might not contain JSON at all
+        // In that case, return null
+        return null;
     }
     
     private static void createPlaceholderJar(Path jarPath, String testPath) throws IOException {

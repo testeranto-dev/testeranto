@@ -116,6 +116,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         
         // Create Cargo.toml with necessary dependencies
         // Use path dependency for testeranto_rusto since it's in the workspace
+        // Also include the calculator crate from the workspace
         let cargo_toml_content = format!(r#"[package]
 name = "{}"
 version = "0.1.0"
@@ -123,6 +124,7 @@ edition = "2021"
 
 [dependencies]
 testeranto_rusto = {{ path = "/workspace/testerantoV2/src/lib/rusto", version = "0.1.13" }}
+calculator = {{ path = "/workspace/src/rust" }}
 serde = {{ version = "1.0", features = ["derive"] }}
 tokio = {{ version = "1.0", features = ["full"] }}
 serde_json = "1.0"
@@ -133,7 +135,20 @@ serde_json = "1.0"
         // Create src directory and copy the test file as main.rs
         let src_dir = temp_dir.join("src");
         fs::create_dir_all(&src_dir)?;
-        fs::copy(entry_point_path, src_dir.join("main.rs"))?;
+        
+        // Read the test file content
+        let content = fs::read_to_string(entry_point_path)?;
+        println!("  Original content (first 200 chars): {}", &content[..content.len().min(200)]);
+        
+        // Since we're building this as a separate crate that depends on the calculator crate,
+        // we need to replace crate:: imports with calculator:: imports
+        // This is a simple approach: replace all crate:: with calculator::
+        // This should work for the example project
+        let modified_content = content.replace("crate::", "calculator::");
+        
+        println!("  Modified content (first 200 chars): {}", &modified_content[..modified_content.len().min(200)]);
+        
+        fs::write(src_dir.join("main.rs"), modified_content)?;
         
         println!("  📝 Created temporary Cargo project");
         

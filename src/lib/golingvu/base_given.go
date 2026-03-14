@@ -93,13 +93,10 @@ func (bg *BaseGiven) Give(
 	testResourceConfiguration ITTestResourceConfiguration,
 	tester func(interface{}) bool,
 	artifactory func(string, interface{}),
-	tLog func(...string),
-	pm interface{},
 	suiteNdx int,
 ) (interface{}, error) {
 	bg.Key = key
-	// tLog("\n " + bg.Key)
-	tLog("\n Given: " + bg.Key)
+	bg.Fails = 0
 
 	// Setup
 	store, err := bg.GivenThat(
@@ -108,10 +105,11 @@ func (bg *BaseGiven) Give(
 		artifactory,
 		bg.GivenCB,
 		bg.InitialValues,
-		pm,
+		nil, // pm parameter removed
 	)
 	if err != nil {
 		bg.Failed = true
+		bg.Fails++
 		bg.Error = err
 		return nil, err
 	}
@@ -122,14 +120,12 @@ func (bg *BaseGiven) Give(
 		_, err := when.Test(
 			bg.Store,
 			testResourceConfiguration,
-			tLog,
-			pm,
-			fmt.Sprintf("suite-%d/given-%s/when/%d", suiteNdx, key, whenNdx),
 		)
 		if err != nil {
 			bg.Failed = true
+			bg.Fails++
 			bg.Error = err
-			return nil, err
+			// Continue processing
 		}
 	}
 
@@ -138,24 +134,24 @@ func (bg *BaseGiven) Give(
 		result, err := then.Test(
 			bg.Store,
 			testResourceConfiguration,
-			tLog,
-			pm,
-			fmt.Sprintf("suite-%d/given-%s/then-%d", suiteNdx, key, thenNdx),
 		)
 		if err != nil {
 			bg.Failed = true
+			bg.Fails++
 			bg.Error = err
-			return nil, err
+			// Continue processing
+		} else if !tester(result) {
+			bg.Failed = true
+			bg.Fails++
 		}
-		tester(result)
 	}
 
 	// Cleanup
-	_, err = bg.AfterEach(bg.Store, bg.Key, artifactory, pm)
+	_, err = bg.AfterEach(bg.Store, bg.Key, artifactory, nil) // pm parameter removed
 	if err != nil {
 		bg.Failed = true
+		bg.Fails++
 		bg.Error = err
-		return nil, err
 	}
 
 	return bg.Store, nil

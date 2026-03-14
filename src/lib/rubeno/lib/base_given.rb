@@ -50,7 +50,7 @@ module Rubeno
       store
     end
     
-    def give(subject, key, test_resource_configuration, tester, artifactory, t_log, pm, suite_ndx)
+    def give(subject, key, test_resource_configuration, tester, artifactory, suite_ndx)
       @key = key
       @fails = 0
       @failed = false
@@ -68,8 +68,7 @@ module Rubeno
           test_resource_configuration,
           given_artifactory,
           @given_cb,
-          @initial_values,
-          pm
+          @initial_values
         )
         @status = true
       rescue => e
@@ -87,9 +86,6 @@ module Rubeno
             @store = when_step.test(
               @store,
               test_resource_configuration,
-              t_log,
-              pm,
-              "suite-#{suite_ndx}/given-#{key}/when/#{when_ndx}"
             )
           rescue => e
             @failed = true
@@ -104,9 +100,6 @@ module Rubeno
             result = then_step.test(
               @store,
               test_resource_configuration,
-              t_log,
-              pm,
-              "suite-#{suite_ndx}/given-#{key}/then-#{then_ndx}"
             )
             unless tester.call(result)
               @failed = true
@@ -124,7 +117,7 @@ module Rubeno
         @fails += 1
       ensure
         begin
-          after_each(@store, @key, given_artifactory, pm)
+          after_each(@store, @key, given_artifactory)
         rescue => e
           @failed = true
           @fails += 1

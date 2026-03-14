@@ -73,13 +73,9 @@ public abstract class BaseGiven {
     
     public Object give(Object subject, String key, ITTestResourceConfiguration testResourceConfiguration,
                       Function<Object, Boolean> tester, Function<String, Object> artifactory,
-                      Function<String, Void> tLog, Object pm, int suiteNdx) throws Exception {
+                      int suiteNdx) throws Exception {
         this.failed = false;
-        if (tLog != null) {
-            Void v1 = tLog.apply("\n " + key);
-            Void v2 = tLog.apply("\n Given: " + this.key);
-            // Ignore the return values
-        }
+        this.fails = 0;
         
         Function<String, Object> givenArtifactory = (fPath) -> {
             return artifactory.apply("given-" + key + "/" + fPath);
@@ -87,9 +83,10 @@ public abstract class BaseGiven {
         
         try {
             store = givenThat(subject, testResourceConfiguration, givenArtifactory, 
-                             givenCb, initialValues, pm);
+                             givenCb, initialValues, null); // pm parameter removed
         } catch (Exception e) {
             failed = true;
+            fails++;
             error = e;
             throw e;
         }
@@ -102,6 +99,7 @@ public abstract class BaseGiven {
                     store = whenStep.test(store, testResourceConfiguration);
                 } catch (Exception e) {
                     failed = true;
+                    fails++;
                     error = e;
                 }
             }
@@ -127,7 +125,7 @@ public abstract class BaseGiven {
             fails++;
         } finally {
             try {
-                afterEach(store, this.key, givenArtifactory, pm);
+                afterEach(store, this.key, givenArtifactory, null); // pm parameter removed
             } catch (Exception e) {
                 failed = true;
                 fails++;

@@ -10,21 +10,37 @@ use std::fs;
 use std::path::Path;
 
 pub struct Rusto<I: IbddInAny, O: IbddOutAny, M> {
+    #[allow(dead_code)]
     _test_resource_requirement: ITTestResourceRequest,
+    #[allow(dead_code)]
     _artifacts: Vec<Box<dyn std::any::Any>>,
+    #[allow(dead_code)]
     _test_jobs: Vec<Box<dyn std::any::Any>>,
-    test_specification: Box<dyn ITestSpecification<I, O>>,
-    suites_overrides: HashMap<String, SuiteFn>,
-    given_overrides: HashMap<String, GivenFn>,
-    when_overrides: HashMap<String, WhenFn>,
-    then_overrides: HashMap<String, ThenFn>,
+    #[allow(dead_code)]
+    _test_specification: Box<dyn ITestSpecification<I, O>>,
+    #[allow(dead_code)]
+    _suites_overrides: HashMap<String, SuiteFn>,
+    #[allow(dead_code)]
+    _given_overrides: HashMap<String, GivenFn>,
+    #[allow(dead_code)]
+    _when_overrides: HashMap<String, WhenFn>,
+    #[allow(dead_code)]
+    _then_overrides: HashMap<String, ThenFn>,
+    #[allow(dead_code)]
     _puppet_master: Option<Box<dyn std::any::Any>>,
+    #[allow(dead_code)]
     _specs: Vec<Box<dyn std::any::Any>>,
+    #[allow(dead_code)]
     _total_tests: i32,
+    #[allow(dead_code)]
     _assert_this: Box<dyn Fn(I::Then) -> bool>,
-    test_adapter: Box<dyn ITestAdapter<I>>,
+    #[allow(dead_code)]
+    _test_adapter: Box<dyn ITestAdapter<I>>,
+    #[allow(dead_code)]
     _test_subject: I::Iinput,
+    #[allow(dead_code)]
     _phantom_o: PhantomData<O>,
+    #[allow(dead_code)]
     _phantom_m: PhantomData<M>,
 }
 
@@ -49,16 +65,16 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
             _test_resource_requirement: test_resource_requirement,
             _artifacts: Vec::new(),
             _test_jobs: Vec::new(),
-            test_specification,
-            suites_overrides,
-            given_overrides,
-            when_overrides,
-            then_overrides,
+            _test_specification: test_specification,
+            _suites_overrides: suites_overrides,
+            _given_overrides: given_overrides,
+            _when_overrides: when_overrides,
+            _then_overrides: then_overrides,
             _puppet_master: None,
             _specs: specs,
             _total_tests: 0,
             _assert_this: Box::new(|_| true),
-            test_adapter,
+            _test_adapter: test_adapter,
             _test_subject: input_val,
             _phantom_o: PhantomData,
             _phantom_m: PhantomData,
@@ -120,18 +136,18 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
     
     // Helper methods for accessing overrides
     pub fn suites(&self) -> &HashMap<String, SuiteFn> {
-        &self.suites_overrides
+        &self._suites_overrides
     }
     
     pub fn given(&self) -> &HashMap<String, GivenFn> {
-        &self.given_overrides
+        &self._given_overrides
     }
     
     pub fn when(&self) -> &HashMap<String, WhenFn> {
-        &self.when_overrides
+        &self._when_overrides
     }
     
     pub fn then(&self) -> &HashMap<String, ThenFn> {
-        &self.then_overrides
+        &self._then_overrides
     }
 }

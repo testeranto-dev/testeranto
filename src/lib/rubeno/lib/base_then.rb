@@ -28,7 +28,7 @@ module Rubeno
       }
     end
     
-    def test(store, test_resource_configuration, t_log, pm, filepath)
+    def test(store, test_resource_configuration)
       begin
         # Call the then_cb with the store to get a boolean result
         result = @then_cb.call(store)

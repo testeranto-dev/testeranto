@@ -31,7 +31,7 @@ module Rubeno
       }
     end
     
-    def test(store, test_resource_configuration, t_log, pm, filepath)
+    def test(store, test_resource_configuration)
       begin
         # Call the when_cb with the store
         result = @when_cb.call(store)

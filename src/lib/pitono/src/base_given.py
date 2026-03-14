@@ -80,8 +80,7 @@ class BaseGiven:
         test_resource_configuration,
         artifactory: Callable[[str, Any], None],
         given_cb: Given,
-        initial_values: Any,
-        pm: Any
+        initial_values: Any
     ) -> Istore:
         # Default implementation - can be overridden by subclasses
         return {"initial": "store"}
@@ -90,8 +89,7 @@ class BaseGiven:
         self,
         store: Istore,
         key: str,
-        artifactory: Callable[[str, Any], None],
-        pm: Any
+        artifactory: Callable[[str, Any], None]
     ) -> Istore:
         return store
     
@@ -109,6 +107,7 @@ class BaseGiven:
     ) -> Istore:
         self.failed = False
         self.key = key
+        self.fails = 0  # Initialize fail count for this given
 
         def given_artifactory(f_path: str, value: Any):
             artifactory(f"given-{key}/{f_path}", value)
@@ -120,11 +119,13 @@ class BaseGiven:
                 test_resource_configuration,
                 given_artifactory,
                 self.given_cb,
-                self.initial_values,
-                None  # pm parameter removed to match TypeScript
+                self.initial_values
             )
+            self.status = True
         except Exception as e:
+            self.status = False
             self.failed = True
+            self.fails += 1
             self.error = e
             # Don't re-raise to allow processing of other givens
             return self.store
@@ -136,10 +137,10 @@ class BaseGiven:
                     self.store = await when_step.test(
                         self.store,
                         test_resource_configuration,
-                        # Removed t_log, pm, and filepath to match TypeScript
                     )
                 except Exception as e:
                     self.failed = True
+                    self.fails += 1
                     self.error = e
                     # Continue to process thens even if whens fail
             
@@ -149,23 +150,26 @@ class BaseGiven:
                     result = await then_step.test(
                         self.store,
                         test_resource_configuration,
-                        # Removed t_log, pm, and filepath to match TypeScript
                     )
                     # Test the result
                     if not tester(result):
                         self.failed = True
+                        self.fails += 1
                 except Exception as e:
                     self.failed = True
+                    self.fails += 1
                     self.error = e
                     # Continue processing other thens
         except Exception as e:
             self.error = e
             self.failed = True
+            self.fails += 1
         finally:
             try:
-                await self.after_each(self.store, self.key, given_artifactory, None)
+                await self.after_each(self.store, self.key, given_artifactory)
             except Exception as e:
                 self.failed = True
+                self.fails += 1
                 # Don't re-raise
 
         return self.store
