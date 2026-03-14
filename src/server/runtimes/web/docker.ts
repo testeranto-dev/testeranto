@@ -17,14 +17,16 @@ export const webDockerComposeFile = (
   container_name: string,
   projectConfigPath: string,
   webConfigPath: string,
-  testName: string
+  testName: string,
 ) => {
   // For web builder service, we need a proper build configuration
   // Since this is a builder service (not BuildKit), it needs a build field
   const service: any = {
     build: {
       context: process.cwd(),
-      dockerfile: config.runtimes[container_name]?.dockerfile || 'testeranto/runtimes/web/web.Dockerfile',
+      dockerfile:
+        config.runtimes[container_name]?.dockerfile ||
+        "testeranto/runtimes/web/web.Dockerfile",
     },
     container_name,
     environment: {
@@ -43,73 +45,86 @@ export const webDockerComposeFile = (
     expose: ["8000"],
     depends_on: ["chrome-service"],
   };
-  
+
   return service;
 };
 
 // Chrome standalone service configuration
 export const chromeServiceConfig = () => {
   return {
-    image: 'chromium/chromium:latest',
-    container_name: 'chrome-service',
+    image: "chromium/chromium:latest",
+    container_name: "chrome-service",
     command: [
-      'chromium-browser',
-      '--headless',
-      '--disable-gpu',
-      '--disable-dev-shm-usage',
-      '--disable-setuid-sandbox',
-      '--no-sandbox',
-      '--remote-debugging-address=0.0.0.0',
-      '--remote-debugging-port=9222'
-    ].join(' '),
+      "chromium-browser",
+      "--headless",
+      "--disable-gpu",
+      "--disable-dev-shm-usage",
+      "--disable-setuid-sandbox",
+      "--no-sandbox",
+      "--remote-debugging-address=0.0.0.0",
+      "--remote-debugging-port=9222",
+    ].join(" "),
     expose: ["9222"],
     ports: ["9222:9222"],
     networks: ["allTests_network"],
   };
 };
 
-export const webBuildCommand = (projectConfigPath: string, webConfigPath: string, testName: string) => {
+export const webBuildCommand = (
+  projectConfigPath: string,
+  webConfigPath: string,
+  testName: string,
+) => {
   // Pass MODE environment variable to the builder
-  return `MODE=${process.env.MODE || 'once'} yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName}`
-}
+  return `MODE=${process.env.MODE || "once"} yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName}`;
+};
 
-export const webBddCommand = (fpath: string, webConfigPath: string, configKey: string) => {
-  const jsonStr = JSON.stringify({ ports: [1111], fs: "testeranto/reports/web" });
+export const webBddCommand = (
+  fpath: string,
+  webConfigPath: string,
+  configKey: string,
+) => {
+  const jsonStr = JSON.stringify({
+    ports: [1111],
+    fs: `testeranto/reports/${configKey}`,
+  });
   return `yarn tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
-}
+};
 
 // BuildKit-based building for web runtime
 export const webBuildKitBuild = async (
   config: ITestconfigV2,
-  configKey: string
+  configKey: string,
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];
-  
+
   if (!runtimeConfig) {
     throw new Error(`Configuration not found for ${configKey}`);
   }
-  
+
   const buildKitConfig = runtimeConfig.buildKitOptions || {};
-  
+
   const buildKitOptions = {
-    runtime: 'web',
+    runtime: "web",
     configKey,
     dockerfilePath: runtimeConfig.dockerfile,
     buildContext: process.cwd(),
-    cacheMounts: ['/root/.npm', '/usr/local/share/.cache/yarn'],
+    cacheMounts: ["/root/.npm", "/usr/local/share/.cache/yarn"],
     targetStage: buildKitConfig.targetStage, // Don't default to 'runtime'
     buildArgs: {
-      NODE_ENV: 'production',
-      ...(buildKitConfig.buildArgs || {})
-    }
+      NODE_ENV: "production",
+      ...(buildKitConfig.buildArgs || {}),
+    },
   };
-  
+
   console.log(`[Web BuildKit] Building image for ${configKey}...`);
-  
+
   const result = await BuildKitBuilder.buildImage(buildKitOptions);
-  
+
   if (result.success) {
-    console.log(`[Web BuildKit] Successfully built image in ${result.duration}ms`);
+    console.log(
+      `[Web BuildKit] Successfully built image in ${result.duration}ms`,
+    );
   } else {
     console.error(`[Web BuildKit] Build failed: ${result.error}`);
     throw new Error(`BuildKit build failed: ${result.error}`);

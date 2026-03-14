@@ -40,7 +40,7 @@ export const javaDockerComposeFile = (
     ],
     networks: ["allTests_network"],
   };
-  
+
   return service;
 };
 
@@ -52,10 +52,10 @@ export const javaBuildCommand = (projectConfigPath: string, javaConfigPath: stri
 }
 
 export const javaBddCommand = (fpath: string, javaConfigPath: string, configKey: string) => {
-  const jsonStr = JSON.stringify({ 
+  const jsonStr = JSON.stringify({
     name: 'java-test',
-    ports: [1111], 
-    fs: "testeranto/reports/java",
+    ports: [1111],
+    fs: `testeranto/reports/${configKey}`,
     timeout: 30000,
     retries: 0,
     environment: {}
@@ -69,13 +69,13 @@ export const javaBuildKitBuild = async (
   configKey: string
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];
-  
+
   if (!runtimeConfig) {
     throw new Error(`Configuration not found for ${configKey}`);
   }
-  
+
   const buildKitConfig = runtimeConfig.buildKitOptions || {};
-  
+
   const buildKitOptions = {
     runtime: 'java',
     configKey,
@@ -85,11 +85,11 @@ export const javaBuildKitBuild = async (
     targetStage: buildKitConfig.targetStage, // Keep as is (undefined if not specified)
     buildArgs: buildKitConfig.buildArgs || {}
   };
-  
+
   console.log(`[Java BuildKit] Building image for ${configKey}...`);
-  
+
   const result = await BuildKitBuilder.buildImage(buildKitOptions);
-  
+
   if (result.success) {
     console.log(`[Java BuildKit] Successfully built image in ${result.duration}ms`);
   } else {
