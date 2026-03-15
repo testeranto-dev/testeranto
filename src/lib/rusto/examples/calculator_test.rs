@@ -1,6 +1,7 @@
 //! Example of using Rusto's flavored macros to test a Calculator.
 
-use rusto::flavored::{test_suite, given, when, then};
+// The macros are available at crate root
+use rusto::{test_suite, given, when, then};
 
 struct Calculator {
     value: i32,

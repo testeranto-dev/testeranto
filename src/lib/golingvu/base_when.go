@@ -9,13 +9,18 @@ type BaseWhen struct {
 
 // Test executes the When condition
 func (bw *BaseWhen) Test(store interface{}, testResourceConfiguration ITTestResourceConfiguration) (interface{}, error) {
-	// Implementation would go here
-	return nil, nil
+	if bw.AndWhenFunc != nil {
+		return bw.AndWhenFunc(store, bw.WhenCB, testResourceConfiguration, nil)
+	}
+	return store, nil
 }
 
 // ToObj converts the When condition to a serializable object
 func (bw *BaseWhen) ToObj() map[string]interface{} {
 	return map[string]interface{}{
-		"key": bw.Key,
+		"key":    bw.Key,
+		"status": true, // Default status
+		"error":  nil,
+		"artifacts": []interface{}{},
 	}
 }

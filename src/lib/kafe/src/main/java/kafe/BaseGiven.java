@@ -77,9 +77,14 @@ public abstract class BaseGiven {
         this.failed = false;
         this.fails = 0;
         
-        Function<String, Object> givenArtifactory = (fPath) -> {
-            return artifactory.apply("given-" + key + "/" + fPath);
-        };
+        Function<String, Object> givenArtifactory;
+        if (artifactory != null) {
+            givenArtifactory = (fPath) -> {
+                return artifactory.apply("given-" + key + "/" + fPath);
+            };
+        } else {
+            givenArtifactory = (fPath) -> null;
+        }
         
         try {
             store = givenThat(subject, testResourceConfiguration, givenArtifactory, 

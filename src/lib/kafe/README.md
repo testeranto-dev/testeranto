@@ -84,12 +84,11 @@ mvn test -Dtest=ExampleCalculatorTest
 
 #### Running the Example Test Programmatically
 
-You can also run tests using the DvipaTestRunner:
+For programmatic test execution, use the standard JUnit 5 APIs. The `DvipaTestRunner` is a placeholder and currently only provides usage instructions:
 
 ```bash
 cd src/lib/kafe
-mvn compile
-java -cp "target/classes:$(find ~/.m2/repository -name '*.jar' | tr '\n' ':')" kafe.dvipa.DvipaTestRunner kafe.dvipa.ExampleCalculatorTest
+mvn test -Dtest=ExampleCalculatorTest
 ```
 
 #### Running Baseline Kafe Tests
@@ -97,7 +96,9 @@ java -cp "target/classes:$(find ~/.m2/repository -name '*.jar' | tr '\n' ':')" k
 To run tests with the baseline Kafe implementation:
 
 ```bash
-java -cp "target/classes:$(find ~/.m2/repository -name '*.jar' | tr '\n' ':')" kafe.Kafe '{"name":"test","fs":".","ports":[]}'
+cd src/lib/kafe
+mvn compile
+java -cp "target/classes:$(find ~/.m2/repository -name 'jackson*.jar' | tr '\n' ':')" kafe.Kafe '{"name":"test","fs":".","ports":[]}'
 ```
 
 ## Integration with Testeranto
@@ -132,6 +133,7 @@ The Dvipa flavored API provides an idiomatic Java way to write BDD-style tests:
 1. **Annotations**: Use `@DvipaTest`, `@Given`, `@When`, `@Then` to define tests
 2. **JUnit 5 Integration**: Tests run with standard JUnit 5 runners
 3. **BDD Pattern**: Follows Given-When-Then structure
+4. **Maven Integration**: Works seamlessly with Maven Surefire plugin
 
 Example test structure:
 ```java
@@ -163,17 +165,33 @@ public class ExampleCalculatorTest {
 }
 ```
 
-## Future Enhancements
+## Current Status
 
-1. **Enhanced Parameter Injection**: Support for parameter placeholders in annotation values
-2. **Test Context Management**: Better state management between Given, When, Then steps
-3. **Spring Boot Integration**: Seamless integration with Spring Boot testing
-4. **Test Reporting**: Enhanced BDD-style test reports
+✅ **Implemented**:
+- JUnit 5 extension for BDD tests
+- Annotation-based API (`@DvipaTest`, `@Given`, `@When`, `@Then`)
+- Basic BDD test execution flow
+- Example tests demonstrating the pattern
+- Integration with Maven Surefire plugin
+
+✅ **Recently Fixed**:
+- Fixed compilation errors in DvipaRunner
+- Proper parameter handling for AnnotationSupport methods
+- Null safety for artifactory in BaseGiven
+- Simplified test runner to avoid dependency issues
+
+🔄 **In Progress**:
+- Enhanced parameter injection from annotation placeholders
+- Test context sharing between Given/When/Then steps
+- Better error reporting for BDD step failures
+
+📋 **Planned**:
+- Spring Boot test integration support
+- Test reporting integration with JUnit 5
+- Parallel test execution support
+- Maven plugin for test generation
 
 The Dvipa flavored API makes Testeranto tests feel native to Java developers while maintaining compatibility with the broader Testeranto ecosystem.
-3. **WebSocket Support**: Real-time test reporting
-4. **Annotation Support**: Java annotations for test definitions
-5. **JUnit Integration**: Compatibility with JUnit
 
 ## See Also
 

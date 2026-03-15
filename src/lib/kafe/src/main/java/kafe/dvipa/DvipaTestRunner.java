@@ -1,31 +1,18 @@
 package kafe.dvipa;
 
-import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.TestPlan;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
-import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-
 /**
  * Simple test runner for Dvipa tests.
  * This can be used to run tests programmatically.
+ * Note: This is a simplified version that doesn't use JUnit Platform launcher
+ * to avoid dependency issues. For full JUnit 5 integration, use Maven/Gradle.
  */
 public class DvipaTestRunner {
     
     public static void runTestClass(Class<?> testClass) {
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-            .selectors(DiscoverySelectors.selectClass(testClass))
-            .build();
-        
-        Launcher launcher = LauncherFactory.create();
-        TestPlan testPlan = launcher.discover(request);
-        
-        System.out.println("Running tests for: " + testClass.getName());
-        System.out.println("Found " + testPlan.countTestIdentifiers(
-            identifier -> identifier.isTest()) + " tests");
-        
-        launcher.execute(request);
+        System.out.println("DvipaTestRunner: To run tests, use Maven or Gradle:");
+        System.out.println("  mvn test -Dtest=" + testClass.getSimpleName());
+        System.out.println("Or run the tests directly via JUnit 5.");
+        System.out.println("This runner is a placeholder for future implementation.");
     }
     
     public static void main(String[] args) {
@@ -39,7 +26,8 @@ public class DvipaTestRunner {
             }
         } else {
             // Run the example test by default
-            runTestClass(ExampleCalculatorTest.class);
+            System.out.println("DvipaTestRunner: No test class specified.");
+            System.out.println("Usage: java kafe.dvipa.DvipaTestRunner <fully.qualified.TestClass>");
         }
     }
 }

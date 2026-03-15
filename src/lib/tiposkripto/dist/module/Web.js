@@ -28,12 +28,18 @@ var DefaultAdapter = (p) => {
 var BaseGiven = class {
   constructor(features, whens, thens, givenCB, initialValues) {
     this.artifacts = [];
+    this.fails = 0;
     this.features = features;
     this.whens = whens;
     this.thens = thens;
     this.givenCB = givenCB;
     this.initialValues = initialValues;
     this.fails = 0;
+    this.failed = false;
+    this.error = null;
+    this.store = null;
+    this.key = "";
+    this.status = void 0;
   }
   addArtifact(path) {
     if (typeof path !== "string") {
@@ -71,9 +77,10 @@ var BaseGiven = class {
   async give(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
     this.key = key;
     this.fails = 0;
-    const givenArtifactory = (fPath, value) => artifactory(`given-${key}/${fPath}`, value);
+    const actualArtifactory = artifactory || ((fPath, value) => {
+    });
+    const givenArtifactory = (fPath, value) => actualArtifactory(`given-${key}/${fPath}`, value);
     try {
-      const addArtifact = this.addArtifact.bind(this);
       this.store = await this.givenThat(
         subject,
         testResourceConfiguration,
@@ -86,35 +93,49 @@ var BaseGiven = class {
       this.status = false;
       this.failed = true;
       this.fails++;
-      this.error = e.stack;
+      this.error = e;
+      return this.store;
     }
     try {
       const whens = this.whens || [];
+      for (const [whenNdx, whenStep] of whens.entries()) {
+        try {
+          this.store = await whenStep.test(
+            this.store,
+            testResourceConfiguration
+          );
+        } catch (e) {
+          this.failed = true;
+          this.fails++;
+          this.error = e;
+        }
+      }
       for (const [thenNdx, thenStep] of this.thens.entries()) {
         try {
+          const filepath = suiteNdx !== void 0 ? `suite-${suiteNdx}/given-${key}/then-${thenNdx}` : `given-${key}/then-${thenNdx}`;
           const t = await thenStep.test(
             this.store,
             testResourceConfiguration,
-            `suite-${suiteNdx}/given-${key}/then-${thenNdx}`
+            filepath
           );
           tester(t);
         } catch (e) {
           this.failed = true;
           this.fails++;
-          throw e;
+          this.error = e;
         }
       }
     } catch (e) {
-      this.error = e.stack;
+      this.error = e;
       this.failed = true;
+      this.fails++;
     } finally {
       try {
-        const addArtifact = this.addArtifact.bind(this);
-        await this.afterEach(this.store, this.key);
+        await this.afterEach(this.store, this.key, givenArtifactory);
       } catch (e) {
         this.failed = true;
         this.fails++;
-        throw e;
+        this.error = e;
       }
     }
     return this.store;
@@ -194,9 +215,7 @@ var BaseSuite = class {
     const sNdx = this.index;
     const subject = await this.setup(
       input,
-      // suiteArtifactory,
       testResourceConfiguration
-      // proxiedPm
     );
     for (const [gKey, g] of Object.entries(this.givens)) {
       const giver = this.givens[gKey];
@@ -206,6 +225,8 @@ var BaseSuite = class {
           gKey,
           testResourceConfiguration,
           this.assertThat,
+          void 0,
+          // artifactory
           sNdx
         );
         this.fails += giver.fails || 0;

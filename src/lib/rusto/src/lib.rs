@@ -20,9 +20,11 @@ pub use base_then::BaseThen;
 pub use simple_adapter::SimpleTestAdapter;
 pub use rusto::Rusto;
 
-// Re-export flavored macros and types
-pub use flavored::{test_suite, given, when, then, __parse_test_body};
+// Re-export flavored types
 pub use flavored::{GivenStep, WhenStep, ThenStep, TestCase};
+
+// The macros are available at crate root due to #[macro_export]
+// No need to re-export them from flavored module
 
 /// Main entry point for creating a Rusto instance
 pub fn rusto<I, O, M>(

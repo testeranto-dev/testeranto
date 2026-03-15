@@ -167,10 +167,10 @@ cargo test
 
 This will run any unit tests in the library itself.
 
-**Note**: The current flavored macro implementation generates specific test functions. Future improvements will include:
-1. Parsing BDD syntax from the macro body
-2. Generating dynamic test functions based on the BDD structure
-3. Better error messages and type checking
+**Note**: The current implementation is being refined to fix compilation issues. Once resolved:
+1. The macros will generate proper test functions
+2. Examples will compile and run with `cargo test`
+3. Future improvements will include parsing BDD syntax from the macro body
 
 ### Future Work
 Each language implementation will follow a similar pattern:

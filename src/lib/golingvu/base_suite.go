@@ -4,9 +4,9 @@ package golingvu
 type BaseSuite struct {
 	Key                       string
 	Givens                    map[string]*BaseGiven
-	AfterAllFunc              func(store interface{}) interface{}
+	AfterAllFunc              func(store interface{}, artifactory func(string, interface{}), pm interface{}) interface{}
 	AssertThatFunc            func(t interface{}) bool
-	SetupFunc                 func(s interface{}, tr ITTestResourceConfiguration) interface{}
+	SetupFunc                 func(s interface{}, artifactory func(string, interface{}), tr ITTestResourceConfiguration, pm interface{}) interface{}
 	Store                     interface{}
 	TestResourceConfiguration ITTestResourceConfiguration
 	Index                     int
@@ -19,8 +19,8 @@ type BaseSuite struct {
 func (bs *BaseSuite) Run(input interface{}, testResourceConfiguration ITTestResourceConfiguration) (*BaseSuite, error) {
 	bs.TestResourceConfiguration = testResourceConfiguration
 
-	// Setup
-	subject := bs.SetupFunc(input, testResourceConfiguration)
+	// Setup - pass nil for artifactory and pm for now
+	subject := bs.SetupFunc(input, nil, testResourceConfiguration, nil)
 
 	// Run each given
 	for gKey, g := range bs.Givens {
@@ -39,8 +39,8 @@ func (bs *BaseSuite) Run(input interface{}, testResourceConfiguration ITTestReso
 		}
 	}
 
-	// After all
-	bs.AfterAllFunc(bs.Store)
+	// After all - pass nil for artifactory and pm
+	bs.AfterAllFunc(bs.Store, nil, nil)
 
 	return bs, nil
 }

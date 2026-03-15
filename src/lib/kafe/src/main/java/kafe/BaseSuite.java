@@ -82,8 +82,8 @@ public abstract class BaseSuite {
             BaseGiven g = entry.getValue();
             try {
                 store = g.give(subject, gKey, testResourceConfiguration, this::assertThat,
-                              null, // artifactory is not passed to match TypeScript
-                              index);
+                              0, // suiteNdx
+                              null); // artifactory is not passed to match TypeScript
                 if (g.failed) {
                     fails++;
                 }

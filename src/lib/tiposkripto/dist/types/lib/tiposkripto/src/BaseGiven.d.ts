@@ -22,6 +22,7 @@ export declare abstract class BaseGiven<I extends Ibdd_in_any> {
     key: string;
     failed: boolean;
     artifacts: string[];
+    fails: number;
     status: boolean | undefined;
     addArtifact(path: string): void;
     constructor(features: string[], whens: any[], thens: any[], givenCB: I["given"], initialValues: any);
@@ -38,5 +39,5 @@ export declare abstract class BaseGiven<I extends Ibdd_in_any> {
     };
     abstract givenThat(subject: I["isubject"], testResourceConfiguration: any, artifactory: ITestArtifactory, givenCB: I["given"], initialValues: any): Promise<I["istore"]>;
     afterEach(store: I["istore"], key: string, artifactory: ITestArtifactory): Promise<I["istore"]>;
-    give(subject: I["isubject"], key: string, testResourceConfiguration: ITestResourceConfiguration, tester: (t: Awaited<I["then"]> | undefined) => boolean, artifactory: ITestArtifactory, suiteNdx: number): Promise<I["istore"]>;
+    give(subject: I["isubject"], key: string, testResourceConfiguration: ITestResourceConfiguration, tester: (t: Awaited<I["then"]> | undefined) => boolean, artifactory?: ITestArtifactory, suiteNdx?: number): Promise<I["istore"]>;
 }

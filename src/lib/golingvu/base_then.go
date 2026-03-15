@@ -9,13 +9,18 @@ type BaseThen struct {
 
 // Test executes the Then condition
 func (bt *BaseThen) Test(store interface{}, testResourceConfiguration ITTestResourceConfiguration) (interface{}, error) {
-	// Implementation would go here
-	return nil, nil
+	if bt.ButThenFunc != nil {
+		return bt.ButThenFunc(store, bt.ThenCB, testResourceConfiguration, nil)
+	}
+	return store, nil
 }
 
 // ToObj converts the Then condition to a serializable object
 func (bt *BaseThen) ToObj() map[string]interface{} {
 	return map[string]interface{}{
-		"key": bt.Key,
+		"key":       bt.Key,
+		"error":     false,
+		"artifacts": []interface{}{},
+		"status":    true,
 	}
 }

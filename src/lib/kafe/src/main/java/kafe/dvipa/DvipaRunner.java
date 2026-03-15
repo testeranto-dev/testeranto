@@ -7,11 +7,12 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.platform.commons.support.AnnotationSupport;
-import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.commons.support.HierarchyTraversalMode;
 
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * JUnit 5 extension for running Dvipa flavored tests.
@@ -46,13 +47,6 @@ public class DvipaRunner implements
             // Initialize the test suite
             Object testInstance = context.getRequiredTestInstance();
             suiteInfo.testInstance = testInstance;
-            
-            // Execute @Given methods marked as setup
-            for (Method method : suiteInfo.givenMethods) {
-                if (method.getParameterCount() == 0) {
-                    method.invoke(testInstance);
-                }
-            }
         }
     }
     
@@ -92,6 +86,17 @@ public class DvipaRunner implements
                 execution.givenMethods = findAnnotatedMethods(testClass, Given.class);
                 execution.whenMethods = findAnnotatedMethods(testClass, When.class);
                 execution.thenMethods = findAnnotatedMethods(testClass, Then.class);
+                
+                // Execute @Given methods before the test
+                // These set up the initial state
+                if (execution.givenMethods != null) {
+                    for (Method givenMethod : execution.givenMethods) {
+                        // Only execute methods with no parameters
+                        if (givenMethod.getParameterCount() == 0) {
+                            givenMethod.invoke(testInstance);
+                        }
+                    }
+                }
             }
         }
     }
@@ -106,7 +111,6 @@ public class DvipaRunner implements
     public void afterEach(ExtensionContext context) throws Exception {
         TestExecution execution = currentExecution.get();
         if (execution != null) {
-            // Clean up execution state
             execution.reset();
         }
         currentExecution.remove();
@@ -124,15 +128,15 @@ public class DvipaRunner implements
         
         // Find all Given methods
         info.givenMethods = AnnotationSupport.findAnnotatedMethods(
-            testClass, Given.class, ReflectionSupport.HierarchyTraversalMode.TOP_DOWN);
+            testClass, Given.class, HierarchyTraversalMode.TOP_DOWN);
         
         // Find all When methods
         info.whenMethods = AnnotationSupport.findAnnotatedMethods(
-            testClass, When.class, ReflectionSupport.HierarchyTraversalMode.TOP_DOWN);
+            testClass, When.class, HierarchyTraversalMode.TOP_DOWN);
         
         // Find all Then methods
         info.thenMethods = AnnotationSupport.findAnnotatedMethods(
-            testClass, Then.class, ReflectionSupport.HierarchyTraversalMode.TOP_DOWN);
+            testClass, Then.class, HierarchyTraversalMode.TOP_DOWN);
         
         return info;
     }
@@ -191,32 +195,5 @@ public class DvipaRunner implements
             }
         }
         
-        // Run the BDD flow for a test
-        void runBDDFlow() throws Exception {
-            // First, execute all @Given methods to set up initial state
-            for (Method givenMethod : givenMethods) {
-                executeMethod(givenMethod);
-            }
-            
-            // Execute the test method itself (which should call When/Then methods)
-            if (currentMethod != null) {
-                executeMethod(currentMethod);
-            }
-        }
-    }
-    
-    @Override
-    public void afterEach(ExtensionContext context) throws Exception {
-        TestExecution execution = currentExecution.get();
-        if (execution != null && execution.isTest) {
-            try {
-                // Run the BDD flow
-                execution.runBDDFlow();
-            } catch (Exception e) {
-                // Mark the test as failed
-                throw new RuntimeException("BDD test failed: " + e.getMessage(), e);
-            }
-        }
-        currentExecution.remove();
     }
 }

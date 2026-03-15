@@ -15,8 +15,11 @@ This crate provides a Rust implementation of the Testeranto testing framework, f
 - `src/base_then.rs`: BaseThen struct for Then assertions
 - `src/simple_adapter.rs`: SimpleTestAdapter default implementation
 - `src/rusto.rs`: Main Rusto struct and entry point
+- `src/flavored.rs`: Idiomatic Rust macros for native test integration
 
 ## Usage
+
+### Baseline Pattern (Standard API)
 
 Add to your `Cargo.toml`:
 
@@ -52,12 +55,50 @@ let rusto = Rusto::new(
 let results = rusto.receive_test_resource_config(partial_test_resource).await;
 ```
 
+### Flavored Pattern (Idiomatic Rust Macros)
+
+The flavored pattern provides macros that integrate with `cargo test`:
+
+```rust
+use rusto::{test_suite, given, when, then};
+
+struct Calculator {
+    value: i32,
+}
+
+impl Calculator {
+    fn new() -> Self {
+        Calculator { value: 0 }
+    }
+    
+    fn add(&mut self, x: i32, y: i32) {
+        self.value = x + y;
+    }
+    
+    fn result(&self) -> i32 {
+        self.value
+    }
+}
+
+test_suite!("Calculator Tests", {
+    // The macro generates test functions automatically
+});
+```
+
+This will generate proper Rust test functions that can be run with `cargo test`.
+
 ## Testing
 
 Run tests with:
 
 ```bash
 cargo test
+```
+
+To run the example:
+
+```bash
+cargo test --example calculator_test
 ```
 
 ## Integration
@@ -68,6 +109,7 @@ Rusto follows the same patterns as other Testeranto implementations:
 2. **Results Output**: Writes to `testeranto/reports/allTests/example/rust.Calculator.test.ts.json`
 3. **Async Support**: Built on Tokio for async operations
 4. **Error Handling**: Uses `thiserror` for comprehensive error types
+5. **Native Integration**: Flavored macros generate `#[test]` functions compatible with `cargo test`
 
 ## Future Enhancements
 

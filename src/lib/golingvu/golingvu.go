@@ -550,7 +550,7 @@ func NewGolingvuFromFlavored(
 ) *Golingvu {
 	// Create a simple test adapter
 	adapter := &SimpleTestAdapter{}
-	
+
 	// Create a test implementation that matches the flavored structure
 	impl := ITestImplementation{
 		Suites: map[string]interface{}{
@@ -561,24 +561,24 @@ func NewGolingvuFromFlavored(
 				return setupFunc()
 			},
 		},
-		Whens:  make(map[string]interface{}),
-		Thens:  make(map[string]interface{}),
+		Whens: make(map[string]interface{}),
+		Thens: make(map[string]interface{}),
 	}
-	
+
 	// Add when steps - these functions should match ITestImplementation.Whens signature
 	for i := range whenSteps {
 		stepName := fmt.Sprintf("WhenStep%d", i)
 		// Store the step function directly
 		impl.Whens[stepName] = whenSteps[i]
 	}
-	
+
 	// Add then steps - these functions should match ITestImplementation.Thens signature
 	for i := range thenSteps {
 		stepName := fmt.Sprintf("ThenStep%d", i)
 		// Store the step function directly
 		impl.Thens[stepName] = thenSteps[i]
 	}
-	
+
 	// Create a test specification that matches the flavored structure
 	spec := func(suites, givens, whens, thens interface{}) interface{} {
 		// Convert whenSteps to a slice of step names
@@ -586,13 +586,13 @@ func NewGolingvuFromFlavored(
 		for i := range whenSteps {
 			whenNames[i] = fmt.Sprintf("WhenStep%d", i)
 		}
-		
+
 		// Convert thenSteps to a slice of step names
 		thenNames := make([]interface{}, len(thenSteps))
 		for i := range thenSteps {
 			thenNames[i] = fmt.Sprintf("ThenStep%d", i)
 		}
-		
+
 		return []interface{}{
 			map[string]interface{}{
 				"key": description,
@@ -606,7 +606,7 @@ func NewGolingvuFromFlavored(
 			},
 		}
 	}
-	
+
 	// Create the Golingvu instance
 	return NewGolingvu(
 		nil,
@@ -961,16 +961,16 @@ func (gv *Golingvu) GetTotalTests() int {
 func (gv *Golingvu) RunFlavoredTest(t *testing.T, description string, setupFunc func() interface{}) *Golingvu {
 	// This is a simple wrapper that creates a test chain and converts it
 	// For more complex tests, use the flavored package directly
-	chain := &struct{
-		t *testing.T
-		description string
-		setupFunc func() interface{}
-	}{
-		t: t,
-		description: description,
-		setupFunc: setupFunc,
-	}
-	
+	// chain := &struct{
+	// 	t *testing.T
+	// 	description string
+	// 	setupFunc func() interface{}
+	// }{
+	// 	t: t,
+	// 	description: description,
+	// 	setupFunc: setupFunc,
+	// }
+
 	// In a real implementation, this would create a proper test chain
 	// For now, return the current instance
 	return gv

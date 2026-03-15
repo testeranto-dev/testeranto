@@ -164,14 +164,18 @@ public class UserServiceTest {
 - Integration with Maven Surefire plugin
 
 ✅ **Recently Fixed**:
-- DvipaRunner now properly executes @Given methods before test methods
-- Test methods can call @When and @Then methods in sequence
-- Basic parameter placeholder detection in annotations
+- Fixed compilation errors in DvipaRunner (duplicate afterEach method)
+- Fixed parameter order in BaseSuite to match BaseGiven
+- Simplified DvipaTestRunner to avoid JUnit Platform launcher dependencies
+- Added null safety for artifactory in BaseGiven
+- Fixed AnnotationSupport.findAnnotatedMethods calls to include required HierarchyTraversalMode parameter
+- Added proper import for HierarchyTraversalMode
 
 🔄 **In Progress**:
 - Enhanced parameter injection from annotation placeholders
 - Test context sharing between Given/When/Then steps
 - Better error reporting for BDD step failures
+- Full JUnit 5 integration testing
 
 📋 **Planned**:
 - Spring Boot test integration support

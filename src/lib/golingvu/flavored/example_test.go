@@ -31,12 +31,16 @@ func TestCalculatorAddition(t *testing.T) {
 	flavored.Given(t, "a new calculator", func() interface{} {
 		return NewCalculator()
 	}).
-		When("adding %d and %d", func(calc interface{}, x, y int) interface{} {
-			calc.(*Calculator).Add(x, y)
-			return calc
-		}, 2, 3).
-		Then("result should be %d", func(calc interface{}, expected int) {
+		When("adding %d and %d", func(calc interface{}, args ...interface{}) interface{} {
 			c := calc.(*Calculator)
+			x := args[0].(int)
+			y := args[1].(int)
+			c.Add(x, y)
+			return c
+		}, 2, 3).
+		Then("result should be %d", func(calc interface{}, args ...interface{}) {
+			c := calc.(*Calculator)
+			expected := args[0].(int)
 			if c.Result() != expected {
 				t.Errorf("Expected %d, got %d", expected, c.Result())
 			}
@@ -50,12 +54,16 @@ func TestCalculatorSubtraction(t *testing.T) {
 		c.result = 20
 		return c
 	}).
-		When("subtracting %d from %d", func(calc interface{}, x, y int) interface{} {
-			calc.(*Calculator).Subtract(x, y)
-			return calc
-		}, 5, 3).
-		Then("result should be %d", func(calc interface{}, expected int) {
+		When("subtracting %d from %d", func(calc interface{}, args ...interface{}) interface{} {
 			c := calc.(*Calculator)
+			x := args[0].(int)
+			y := args[1].(int)
+			c.Subtract(x, y)
+			return c
+		}, 5, 3).
+		Then("result should be %d", func(calc interface{}, args ...interface{}) {
+			c := calc.(*Calculator)
+			expected := args[0].(int)
 			if c.Result() != expected {
 				t.Errorf("Expected %d, got %d", expected, c.Result())
 			}
@@ -69,13 +77,15 @@ func TestMultipleOperations(t *testing.T) {
 		c.result = 10
 		return c
 	}).
-		When("adding %d", func(calc interface{}, x int) interface{} {
+		When("adding %d", func(calc interface{}, args ...interface{}) interface{} {
 			c := calc.(*Calculator)
+			x := args[0].(int)
 			c.Add(c.result, x)
 			return c
 		}, 5).
-		Then("result should be %d", func(calc interface{}, expected int) {
+		Then("result should be %d", func(calc interface{}, args ...interface{}) {
 			c := calc.(*Calculator)
+			expected := args[0].(int)
 			if c.Result() != expected {
 				t.Errorf("Expected %d, got %d", expected, c.Result())
 			}
@@ -89,12 +99,12 @@ func TestGolingvuIntegration(t *testing.T) {
 	chain := flavored.Given(t, "integration test", func() interface{} {
 		return map[string]interface{}{"value": 0}
 	}).
-		When("incrementing value", func(data interface{}) interface{} {
+		When("incrementing value", func(data interface{}, args ...interface{}) interface{} {
 		m := data.(map[string]interface{})
 		m["value"] = m["value"].(int) + 1
 		return m
 	}).
-		Then("value should be 1", func(data interface{}) {
+		Then("value should be 1", func(data interface{}, args ...interface{}) {
 		m := data.(map[string]interface{})
 		if m["value"].(int) != 1 {
 			t.Errorf("Expected value to be 1, got %d", m["value"].(int))
@@ -131,10 +141,10 @@ func TestParallelExecution(t *testing.T) {
 	flavored.Given(t, "parallel test", func() interface{} {
 		return 0
 	}).
-	When("incrementing", func(n interface{}) interface{} {
+	When("incrementing", func(n interface{}, args ...interface{}) interface{} {
 		return n.(int) + 1
 	}).
-	Then("should be 1", func(n interface{}) {
+	Then("should be 1", func(n interface{}, args ...interface{}) {
 		if n.(int) != 1 {
 			t.Errorf("Expected 1, got %d", n.(int))
 		}

@@ -3,6 +3,8 @@ package kafe.dvipa;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Example test using the Dvipa flavored API.
@@ -17,8 +19,10 @@ public class ExampleCalculatorTest {
     
     @Given("a new calculator")
     public void givenNewCalculator() {
-        calculator = new Calculator();
-        lastResult = 0;
+        if (calculator == null) {
+            calculator = new Calculator();
+            lastResult = 0;
+        }
     }
     
     @Given("a calculator with initial value {initial}")
@@ -55,6 +59,7 @@ public class ExampleCalculatorTest {
     @Test
     public void testAddition() {
         // The DvipaRunner will execute @Given methods before this test
+        // So calculator should already be initialized
         // Then this test method will execute the When and Then steps
         whenAddingNumbers(2, 3);
         thenResultShouldBe(5);
@@ -68,6 +73,9 @@ public class ExampleCalculatorTest {
     
     @Test
     public void testSubtraction() {
+        // This test needs a specific initial value, so we need to call the Given method
+        // But the runner will have already executed givenNewCalculator()
+        // So we need to reinitialize with the specific value
         givenCalculatorWithInitialValue(10);
         whenSubtractingNumbers(10, 4);
         thenResultShouldBe(6);

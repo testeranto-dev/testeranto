@@ -1,7 +1,5 @@
 package golingvu
 
-import "fmt"
-
 // BaseGiven represents a base Given condition
 type BaseGiven struct {
 	Features          []string
@@ -15,6 +13,7 @@ type BaseGiven struct {
 	InitialValues     interface{}
 	Key               string
 	Failed            bool
+	Fails             int
 	Artifacts         []string
 	GivenThatFunc     func(subject, testResource, artifactory, initializer, initialValues, pm interface{}) (interface{}, error)
 	AfterEachFunc     func(store interface{}, key string, artifactory, pm interface{}) (interface{}, error)
@@ -60,26 +59,39 @@ func (bg *BaseGiven) ToObj() map[string]interface{} {
 		thenObjs[i] = t.ToObj()
 	}
 
-	return map[string]interface{}{
-		"key": bg.Key,
+	// Format error similar to TypeScript
+	var errorObj interface{}
+	if bg.Error != nil {
+		errorObj = []interface{}{bg.Error.Error(), bg.Error.Error()}
+	} else {
+		errorObj = nil
+	}
 
+	return map[string]interface{}{
+		"key":       bg.Key,
 		"whens":     whenObjs,
 		"thens":     thenObjs,
-		"error":     bg.Error,
+		"error":     errorObj,
 		"failed":    bg.Failed,
 		"features":  bg.Features,
 		"artifacts": bg.Artifacts,
+		"status":    !bg.Failed, // status is true if not failed
 	}
 }
 
-// GivenThat is an abstract method to be implemented
+// GivenThat executes the given condition
 func (bg *BaseGiven) GivenThat(subject, testResourceConfiguration, artifactory, givenCB, initialValues, pm interface{}) (interface{}, error) {
-	// To be implemented by concrete types
-	return nil, nil
+	if bg.GivenThatFunc != nil {
+		return bg.GivenThatFunc(subject, testResourceConfiguration, artifactory, givenCB, initialValues, pm)
+	}
+	return subject, nil
 }
 
 // AfterEach is called after each test
 func (bg *BaseGiven) AfterEach(store interface{}, key string, artifactory, pm interface{}) (interface{}, error) {
+	if bg.AfterEachFunc != nil {
+		return bg.AfterEachFunc(store, key, artifactory, pm)
+	}
 	return store, nil
 }
 
@@ -94,8 +106,8 @@ func (bg *BaseGiven) Give(
 	key string,
 	testResourceConfiguration ITTestResourceConfiguration,
 	tester func(interface{}) bool,
-	suiteNdx int,
 	artifactory func(string, interface{}),
+	suiteNdx int,
 ) (interface{}, error) {
 	bg.Key = key
 	bg.Fails = 0
@@ -118,7 +130,7 @@ func (bg *BaseGiven) Give(
 	bg.Store = store
 
 	// Process Whens
-	for whenNdx, when := range bg.Whens {
+	for _, when := range bg.Whens {
 		_, err := when.Test(
 			bg.Store,
 			testResourceConfiguration,
@@ -132,7 +144,7 @@ func (bg *BaseGiven) Give(
 	}
 
 	// Process Thens
-	for thenNdx, then := range bg.Thens {
+	for _, then := range bg.Thens {
 		result, err := then.Test(
 			bg.Store,
 			testResourceConfiguration,

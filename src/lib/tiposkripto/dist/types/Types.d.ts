@@ -16,6 +16,12 @@ export type IBaseTestConfig = {
     buildOptions: string;
     checks: IChecks;
     outputs: string[];
+    buildKitOptions?: {
+        cacheMounts?: string[];
+        multiStage?: boolean;
+        targetStage?: string;
+        buildArgs?: Record<string, string>;
+    };
 };
 export type TestSummary = {
     testName: string;
