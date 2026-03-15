@@ -1,8 +1,6 @@
 ---
 owner: adam
-status: working
-due date: idk
-ETA: idk
+status: done
 ---
 
 ### Node Runtime
@@ -12,7 +10,6 @@ ETA: idk
 - **Cache Mounts**: npm/yarn caches (`/root/.npm`, `/usr/local/share/.cache/yarn`)
 - **BuildKit Integration**: On-demand builds with `nodeBuildKitBuild` function
 - **Dockerfile Simplicity**: Users provide minimal Node.js Dockerfiles
-- **Performance**: 70% reduction in idle memory usage
 
 **Example Configuration**:
 
@@ -29,5 +26,3 @@ nodetests: {
   }
 }
 ```
-
-**Migration Complete**: Node runtime uses BuildKit exclusively with optimized cache mounts.

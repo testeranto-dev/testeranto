@@ -1,6 +1,6 @@
 ---
 owner: adam
-status: working
+status: Done
 due_date: IDK
 ---
 
@@ -11,11 +11,6 @@ due_date: IDK
 ## Summary
 
 The BuildKit migration is currently underway. The goal is to replace hot builders with on-demand BuildKit builds, which should result in significant performance improvements and resource savings once complete.
-
-## Current Status
-
-- **🟢 Infrastructure Ready**: BuildKit utilities and interfaces are in place
-- **🟢 All runtimes have BuildKit builders implemented**:
 
 ## Key Goals
 

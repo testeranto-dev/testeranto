@@ -1,3 +1,4 @@
+import readline from "readline";
 import { Server } from "./server/serverClasses/Server";
 
 const mode = process.argv[2] as "once" | "dev" | "-v";
@@ -17,6 +18,33 @@ if (mode === "-v") {
 const config = (await import(process.cwd() + '/testeranto/testeranto.ts')).default;
 
 const server = new Server(config, mode);
+
+// Set up keypress handling for graceful shutdown
+readline.emitKeypressEvents(process.stdin);
+if (process.stdin.isTTY) process.stdin.setRawMode(true);
+
+console.log(("[Server] Press 'q' to initiate a graceful shutdown."));
+console.log(("[Server] Press 'CTRL + c' to quit forcefully."));
+
+process.stdin.on("keypress", async (str, key) => {
+  if (key.name === "q") {
+    console.log("Testeranto is shutting down gracefully...");
+
+    await server.stop();
+
+    process.exit(0);
+  }
+  // Handle Ctrl+C through keypress when in raw mode
+  if (key.ctrl && key.name === "c") {
+    console.log("\nForce quitting...");
+    process.exit(1);
+  }
+});
+
+process.on("SIGINT", async () => {
+  console.log("\nForce quitting...");
+  process.exit(1);
+});
 
 server.start().catch((error) => {
   console.error("Failed to start server:", error);

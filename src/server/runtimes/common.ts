@@ -31,18 +31,6 @@ export async function computeFilesHash(files: string[]): Promise<string> {
   return hash.digest('hex');
 }
 
-// // WebSocket functionality removed - dead feature
-// export async function sendSourceFilesUpdated(
-//   config: ITestconfigV2,
-//   hash: string,
-//   files: string[],
-//   testName: string,
-//   runtime: 'node' | 'web'
-// ): Promise<void> {
-//   console.log(`[${runtime} Builder] WebSocket feature removed - not sending sourceFilesUpdated for ${testName}`);
-//   return Promise.resolve();
-// }
-
 // Extract input files from metafile recursively
 export function extractInputFilesFromMetafile(metafile: any): string[] {
   const files: Set<string> = new Set();
@@ -100,7 +88,6 @@ export async function processMetafile(
     return;
   }
 
-  // Create a map to store all tests' information
   const allTestsInfo: Record<string, { hash: string; files: string[] }> = {};
 
   for (const [outputFile, outputInfo] of Object.entries(metafile.outputs)) {
@@ -112,7 +99,6 @@ export async function processMetafile(
       continue;
     }
 
-    // Get the entry point path
     const entryPoint = outputInfoTyped.entryPoint;
 
     // Only process test files (files ending with .test.ts, .test.js, .spec.ts, .spec.js)
@@ -123,7 +109,6 @@ export async function processMetafile(
       continue;
     }
 
-    // Get input files for this specific output
     const outputInputs = outputInfoTyped.inputs || {};
 
     // Function to recursively collect dependencies for a file
@@ -145,7 +130,6 @@ export async function processMetafile(
       }
     }
 
-    // Start from all files listed in this output's inputs
     for (const inputFile of Object.keys(outputInputs)) {
       collectFileDependencies(inputFile);
     }
@@ -167,10 +151,7 @@ export async function processMetafile(
       return path.relative(process.cwd(), absolutePath);
     }).filter(Boolean);
 
-    // Compute hash
     const hash = await computeFilesHash(allInputFiles);
-
-    // Store test information
     allTestsInfo[entryPoint] = {
       hash,
       files: relativeFiles
@@ -185,7 +166,7 @@ export async function processMetafile(
     fs.mkdirSync(bundlesDir, { recursive: true });
     console.log(`[${runtime} Builder] Created directory: ${bundlesDir}`);
   }
-  
+
   // Write single inputFiles.json for all tests
   const inputFilesPath = path.join(bundlesDir, 'inputFiles.json');
   fs.writeFileSync(inputFilesPath, JSON.stringify(allTestsInfo, null, 2));

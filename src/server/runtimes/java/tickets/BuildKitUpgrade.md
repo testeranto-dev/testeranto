@@ -1,6 +1,6 @@
 ---
 owner: adam
-status: working
-due date: idk
-ETA: idk
+status: done
 ---
+
+Update the java runtime for buildKit.

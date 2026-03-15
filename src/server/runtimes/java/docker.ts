@@ -16,6 +16,8 @@ export const javaDockerComposeFile = (
   javaConfigPath: string,
   testName: string
 ) => {
+  const tests = config.runtimes[testName]?.tests || [];
+
   // For java builder service, we need a proper build configuration
   const service: any = {
     build: {
@@ -33,22 +35,22 @@ export const javaDockerComposeFile = (
       `${process.cwd()}/dist:/workspace/dist`,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
-    command: [
-      "sh",
-      "-c",
-      `cd /workspace && javac -cp ".:lib/*" testeranto/java_runtime.java && java -cp "testeranto:.:lib/*" java_runtime /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}`
-    ],
+    command: javaBuildCommand(
+      projectConfigPath,
+      javaConfigPath,
+      testName,
+      tests,
+    ),
     networks: ["allTests_network"],
   };
 
   return service;
 };
 
-export const javaBuildCommand = (projectConfigPath: string, javaConfigPath: string, testName: string) => {
+export const javaBuildCommand = (projectConfigPath: string, javaConfigPath: string, testName: string, tests: string[]) => {
   // This function is used elsewhere, so keep it consistent
   // Return a string that can be used in shell contexts
-  // Note: This might not be used for the builder service anymore, but keep it for compatibility
-  return `sh -c "cd /workspace && javac -cp \\".:lib/*\\" testeranto/java_runtime.java && java -cp \\"testeranto:.:lib/*\\" java_runtime /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName}"`;
+  return `sh -c "cd /workspace && javac -cp \\".:lib/*\\" testeranto/java_runtime.java && java -cp \\"testeranto:.:lib/*\\" java_runtime /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName} ${tests.join(" ")}"`;
 }
 
 export const javaBddCommand = (fpath: string, javaConfigPath: string, configKey: string) => {

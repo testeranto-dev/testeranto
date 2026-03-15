@@ -40,7 +40,7 @@ export const webDockerComposeFile = (
       `${process.cwd()}/testeranto:/workspace/testeranto`,
       // Note: node_modules is NOT mounted to avoid platform incompatibility
     ],
-    command: webBuildCommand(projectConfigPath, webConfigPath, testName),
+    command: webBuildCommand(projectConfigPath, webConfigPath, testName, config.runtimes[testName]?.tests || []),
     networks: ["allTests_network"],
     expose: ["8000"],
     depends_on: ["chrome-service"],
@@ -74,9 +74,11 @@ export const webBuildCommand = (
   projectConfigPath: string,
   webConfigPath: string,
   testName: string,
+  tests: string[],
 ) => {
   // Pass MODE environment variable to the builder
-  return `MODE=${process.env.MODE || "once"} yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName}`;
+  const entryPointsArg = tests.map(t => t.replace(/^\.\//, '')).join(' ');
+  return `MODE=${process.env.MODE || "once"} yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName} ${entryPointsArg}`;
 };
 
 export const webBddCommand = (

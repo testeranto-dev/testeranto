@@ -58,7 +58,8 @@ export const nodeBuildCommand = (
 ) => {
   // The MODE environment variable should be set in the container environment
   // We'll use the value from the environment, defaulting to 'once'
-  return `yarn tsx /workspace/testeranto/node_runtime.ts /workspace/${projectConfigPath} /workspace/${nodeConfigPath} ${testName}`;
+  const entryPointsArg = tests.map(t => t.replace(/^\.\//, '')).join(' ');
+  return `yarn tsx /workspace/testeranto/node_runtime.ts /workspace/${projectConfigPath} /workspace/${nodeConfigPath} ${testName} ${entryPointsArg}`;
 };
 
 export const nodeBddCommand = (

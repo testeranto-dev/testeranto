@@ -1,42 +1,42 @@
-import type { ITestconfigV2, IRunTime } from "../../Types";
+import type { IRunTime, ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
 import type { IDockerComposeResult } from "./Server_Docker/Server_Docker_Constants";
+import { consoleError } from "./Server_Docker/Server_Docker_Dependents";
 import {
-  getReportDirPure,
-  getDockerComposeDownPure,
   exitProcessPure,
   getCwdPure,
   getDockerComposeCommandsPure,
+  getDockerComposeDownPure,
+  getReportDirPure,
   logMessagePure,
 } from "./Server_Docker/Server_Docker_Utils";
 import {
-  spawnPromise,
-  watchOutputFilePure,
-  updateOutputFilesList,
-  loadInputFileOnce,
-  watchInputFilePure,
-  informAiderPure,
   captureExistingLogs,
-  launchBddTestPure,
-  launchChecksPure,
+  executeDockerComposeCommand,
+  getAiderProcessesPure,
   getInputFilesPure,
   getOutputFilesPure,
-  getAiderProcessesPure,
-  handleAiderProcessesPure,
   getProcessSummaryPure,
-  startServiceLoggingPure,
-  executeDockerComposeCommand,
+  handleAiderProcessesPure,
+  informAiderPure,
+  launchBddTestPure,
+  launchChecksPure,
+  loadInputFileOnce,
+  spawnPromise,
   startBuilderServicesPure,
+  startServiceLoggingPure,
+  updateOutputFilesList,
   waitForAllTestsToCompletePure,
+  watchInputFilePure,
+  watchOutputFilePure,
 } from "./Server_Docker/Server_Docker_Utils_Run";
-import { consoleError } from "./Server_Docker/Server_Docker_Dependents";
 import {
-  generateServicesPure,
-  writeConfigForExtensionOnStop,
-  writeComposeFile,
-  writeConfigForExtensionPure,
-  buildWithBuildKitPure,
   buildAiderImagePure,
+  buildWithBuildKitPure,
+  generateServicesPure,
+  writeComposeFile,
+  writeConfigForExtensionOnStop,
+  writeConfigForExtensionPure,
 } from "./Server_Docker/Server_Docker_Utils_Setup";
 import { Server_WS } from "./Server_WS";
 
@@ -419,9 +419,9 @@ export class Server_Docker extends Server_WS {
     );
   }
 
-  private async buildAiderImage(): Promise<void> {
-    await buildAiderImagePure();
-  }
+  // private async buildAiderImage(): Promise<void> {
+  //   await buildAiderImagePure();
+  // }
 
   private async waitForAllTestsToComplete(): Promise<void> {
     await waitForAllTestsToCompletePure(() => this.getProcessSummary());

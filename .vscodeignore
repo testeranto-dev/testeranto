@@ -29,3 +29,11 @@ dist/vscode/media/*
 .aider*
 testeranto/
 !dist/vscode/extension.mjs
+src
+!src/vscode
+.aider.*
+dist
+exampleProject/
+examples
+.aider.tags.cache.v4/
+.vscode/

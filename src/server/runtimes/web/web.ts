@@ -11,6 +11,7 @@ import type { ITestconfigV2 } from "../../../Types";
 const projectConfigPath = process.argv[2];
 const nodeConfigPath = process.argv[3];
 const testName = process.argv[4];
+const entryPoints = process.argv.slice(5);
 
 const reportDir = path.join(process.cwd(), 'testeranto', 'reports', testName);
 if (!fs.existsSync(reportDir)) {
@@ -86,11 +87,13 @@ process.on('uncaughtException', (error) => {
 
 async function startBundling(
   webConfigs: any,
-  projectConfig: ITestconfigV2
+  projectConfig: ITestconfigV2,
+  entryPoints: string[]
 ) {
   console.log(`[WEB BUILDER] is now bundling: ${testName}`);
+  console.log(`[WEB BUILDER] Entry points: ${entryPoints.join(', ')}`);
 
-  const w = configer(webConfigs, testName, projectConfig);
+  const w = configer(webConfigs, testName, projectConfig, entryPoints);
 
   // Check if we're in dev mode
   const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
@@ -220,7 +223,7 @@ async function main() {
   try {
     const nodeConfigs = (await import(nodeConfigPath)).default;
     const projectConfigs = (await import(projectConfigPath)).default;
-    await startBundling(nodeConfigs, projectConfigs);
+    await startBundling(nodeConfigs, projectConfigs, entryPoints);
   } catch (error) {
     console.error("NODE BUILDER: Error importing config:", nodeConfigPath, error);
     console.error(error);

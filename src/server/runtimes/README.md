@@ -3,27 +3,32 @@
 Each builder creates test artifacts and dependency metadata using BuildKit.
 
 ### Common Responsibilities
+
 1. **Import Configuration**: Process language-specific config files
 2. **Create Bundles**: Generate executable test artifacts
 3. **Generate Metadata**: Produce inputFiles.json listing all source dependencies
 
 ### BuildKit Only (No Fallbacks)
+
 - All builders use BuildKit exclusively
 - No traditional builds supported
 - BuildKit is the only option (no configuration flag needed)
 
 ### Dockerfile Simplicity
+
 - Users provide minimal Dockerfiles
 - No Chrome/socat in web Dockerfiles (handled by testeranto)
 - Single-stage Dockerfiles are sufficient
 - Cache mounts improve performance
 
 ### Language-Specific Build Approaches
+
 - **Node/Web**: esbuild bundles
 - **Python/Ruby**: Script files (no compilation)
 - **Go/Rust/Java**: Compiled executables
 
 ### BuildKit Configuration
+
 When using BuildKit, ensure your configuration includes:
 
 ```typescript
@@ -43,12 +48,12 @@ buildKitOptions: {
 **Important**: The `targetStage` option should only be used if your Dockerfile has multi-stage builds with a stage named "runtime". If you have a single-stage Dockerfile, omit this option or set it to `undefined`.
 
 ### Dockerfile Stage Requirements
+
 1. **Single-stage Dockerfiles**: Don't use `targetStage` in buildKitOptions
 2. **Multi-stage Dockerfiles**: Use `targetStage` only if you have a stage with that name
 3. **Default behavior**: If no targetStage is specified, BuildKit builds the final stage
 
 BuildKit will build your Dockerfile as specified. Cache mounts are optional but recommended for better performance.
-
 
 ### inputFiles.json
 
@@ -56,24 +61,11 @@ Every builder produces a single inputFiles.json file for all tests in a runtime,
 
 ```json
 {
-  "src/golang/cmd/calculator-test/main.go": {
-    "hash": "md5hash",
-    "files": [
-      "/src/golang/cmd/calculator-test/main.go",
-      "/go.mod",
-      "/go.sum"
-    ]
-  },
-  "src/golang/another-test/main.go": {
-    "hash": "anothermd5hash",
-    "files": [
-      "/src/golang/another-test/main.go",
-      "/go.mod",
-      "/go.sum"
-    ]
+  "src/ruby/Calculator-test.rb": {
+    "hash": "f2e42dab26fa96d70c56c03b26054f31",
+    "files": ["/src/ruby/Calculator-test.rb", "/src/ruby/Calculator.rb"]
   }
 }
 ```
 
 The hash is obtained by concatenating the contents of all the relevant input files and running it through MD5.
-```

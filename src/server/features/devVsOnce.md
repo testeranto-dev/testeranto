@@ -1,5 +1,5 @@
 ---
-status:  broken
+status: in progress, status unknown
 error description: changes to source code do not cause the tests to be re-scheduled.
 ---
 

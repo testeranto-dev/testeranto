@@ -311,8 +311,7 @@ Entry point: ${entryPoint}
 }
 
 // src/server/runtimes/node/esbuild.ts
-var esbuild_default = (nodeConfig, testName2, projectConfig) => {
-  const entryPoints = projectConfig.runtimes[testName2].tests;
+var esbuild_default = (nodeConfig, testName2, projectConfig, entryPoints2) => {
   const { inputFilesPluginFactory, register: register2 } = inputFilesPlugin_default(
     "node",
     testName2
@@ -335,13 +334,13 @@ var esbuild_default = (nodeConfig, testName2, projectConfig) => {
     absWorkingDir: process.cwd(),
     platform: "node",
     packages: "external",
-    entryPoints,
+    entryPoints: entryPoints2,
     plugins: [
       featuresPlugin_default,
       inputFilesPluginFactory,
       rebuildPlugin_default("node"),
       testLoggingPlugin({ configKey: testName2, runtime: "node" }),
-      ...nodeConfig.plugins?.map((p) => p(register2, entryPoints)) || []
+      ...nodeConfig.plugins?.map((p) => p(register2, entryPoints2)) || []
     ]
   };
 };
@@ -352,6 +351,7 @@ import * as path4 from "path";
 var projectConfigPath = process.argv[2];
 var nodeConfigPath = process.argv[3];
 var testName = process.argv[4];
+var entryPoints = process.argv.slice(5);
 var reportDir = path4.join(process.cwd(), "testeranto", "reports", testName);
 if (!fs5.existsSync(reportDir)) {
   fs5.mkdirSync(reportDir, { recursive: true });
@@ -410,9 +410,10 @@ process.on("uncaughtException", (error) => {
   console.error("[NODE BUILDER] Uncaught exception:", error);
   logStream.end();
 });
-async function startBundling(nodeConfigs, projectConfig) {
+async function startBundling(nodeConfigs, projectConfig, entryPoints2) {
   console.log(`[NODE BUILDER] is now bundling:  ${testName}`);
-  const n = esbuild_default(nodeConfigs, testName, projectConfig);
+  console.log(`[NODE BUILDER] Entry points: ${entryPoints2.join(", ")}`);
+  const n = esbuild_default(nodeConfigs, testName, projectConfig, entryPoints2);
   const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
   if (isDevMode) {
     console.log(`[NODE BUILDER] Running in dev mode - starting watch mode`);
@@ -479,7 +480,7 @@ async function main() {
   try {
     const nodeConfigs = (await import(nodeConfigPath)).default;
     const projectConfigs = (await import(projectConfigPath)).default;
-    await startBundling(nodeConfigs, projectConfigs);
+    await startBundling(nodeConfigs, projectConfigs, entryPoints);
     const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
     if (isDevMode) {
       process.on("unhandledRejection", (reason, promise) => {

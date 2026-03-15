@@ -6,7 +6,8 @@ import type { ITestResourceConfiguration } from "./lib/tiposkripto/src/types";
 
 export type ITestconfigV2 = {
   featureIngestor: (s: string) => Promise<string>;
-  runtimes: Record<string, IBaseTestConfig>
+  runtimes: Record<string, IBaseTestConfig>;
+  documentationGlob?: string; // New field: glob pattern to find documentation files
 };
 
 export type ICheck = ((x: any) => string);

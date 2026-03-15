@@ -1,6 +1,6 @@
 ---
 owner: adam
-status: working
+status: in progress
 ---
 
 # Better build logs

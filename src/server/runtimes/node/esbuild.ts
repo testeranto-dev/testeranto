@@ -9,10 +9,9 @@ import { testLoggingPlugin } from "./esbuildLoggingPlugin.js";
 export default (
   nodeConfig: object,
   testName: string,
-  projectConfig: ITestconfigV2
+  projectConfig: ITestconfigV2,
+  entryPoints: string[]
 ): BuildOptions => {
-
-  const entryPoints = projectConfig.runtimes[testName].tests;
 
   const { inputFilesPluginFactory, register } = inputFilesPlugin(
     "node",

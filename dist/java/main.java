@@ -3,135 +3,81 @@ import java.nio.file.*;
 import java.nio.file.attribute.FileTime;
 import java.security.*;
 import java.util.*;
+import javax.tools.*;
+import java.net.*;
 import org.json.*;
-import org.json.JSONException;
 
 public class java_runtime {
     public static void main(String[] args) throws Exception {
         System.out.println("🚀 Java builder starting...");
         
-        // Get arguments from command line
-        if (args.length < 3) {
-            System.err.println("❌ Usage: java java_runtime <projectConfigPath> <javaConfigPath> <testName>");
+        // Get arguments from command line - match Python pattern
+        // Expected: java java_runtime <projectConfigPath> <javaConfigPath> <testName> <entryPoints...>
+        if (args.length < 4) {
+            System.err.println("❌ Usage: java java_runtime <projectConfigPath> <javaConfigPath> <testName> <entryPoints...>");
+            System.err.println("   Note: projectConfigPath is kept for compatibility but may not be used");
             System.exit(1);
         }
         
         String projectConfigPath = args[0];
         String javaConfigPath = args[1];
         String testName = args[2];
+        String[] entryPoints = Arrays.copyOfRange(args, 3, args.length);
         
-        System.out.println("projectConfigPath: " + projectConfigPath);
-        System.out.println("javaConfigPath: " + javaConfigPath);
-        System.out.println("testName: " + testName);
+        System.out.println("Java config path: " + javaConfigPath);
+        System.out.println("Test name: " + testName);
+        System.out.println("Entry points: " + Arrays.toString(entryPoints));
         
-        // Load project configuration
-        Path projectConfigFile = Paths.get(projectConfigPath);
-        if (!Files.exists(projectConfigFile)) {
-            System.err.println("❌ Project config file not found: " + projectConfigPath);
-            System.exit(1);
-        }
-        
-        String projectConfigContent = new String(Files.readAllBytes(projectConfigFile));
-        JSONObject projectConfig;
-        try {
-            // Try to parse as JSON directly
-            projectConfig = new JSONObject(projectConfigContent);
-        } catch (JSONException e) {
-            // If it's not valid JSON, it might be a TypeScript/JavaScript file
-            // Try to extract JSON from the file
-            System.out.println("⚠️  Project config is not pure JSON, trying to extract JSON from file...");
-            String jsonStr = extractJsonFromFile(projectConfigContent, projectConfigPath);
-            if (jsonStr == null) {
-                System.err.println("❌ Failed to extract JSON from project config file: " + projectConfigPath);
-                System.err.println("   File type: " + (projectConfigPath.endsWith(".ts") ? "TypeScript" : 
-                                  projectConfigPath.endsWith(".js") ? "JavaScript" : "Unknown"));
-                System.err.println("   First 100 chars: " + projectConfigContent.substring(0, Math.min(100, projectConfigContent.length())));
-                System.exit(1);
-                return;
-            }
-            try {
-                projectConfig = new JSONObject(jsonStr);
-                System.out.println("✅ Successfully extracted JSON from config file");
-            } catch (JSONException e2) {
-                System.err.println("❌ Failed to parse extracted JSON from project config: " + e2.getMessage());
-                System.err.println("   Extracted content: " + jsonStr);
-                System.exit(1);
-                return;
-            }
-        }
-        
-        // Load Java configuration - this might not be needed, but we'll try to parse it
-        Path javaConfigFile = Paths.get(javaConfigPath);
-        if (!Files.exists(javaConfigFile)) {
-            System.err.println("❌ Java config file not found: " + javaConfigPath);
-            System.exit(1);
-        }
-        
-        String javaConfigContent = new String(Files.readAllBytes(javaConfigFile));
-        JSONObject javaConfig;
-        try {
-            javaConfig = new JSONObject(javaConfigContent);
-        } catch (JSONException e) {
-            // Java config might not be JSON either
-            // Try to extract JSON
-            System.out.println("⚠️  Java config is not pure JSON, trying to extract...");
-            String jsonStr = extractJsonFromFile(javaConfigContent, javaConfigPath);
-            if (jsonStr != null) {
-                try {
-                    javaConfig = new JSONObject(jsonStr);
-                    System.out.println("✅ Successfully extracted JSON from Java config");
-                } catch (JSONException e2) {
-                    System.out.println("⚠️  Failed to parse extracted JSON, using empty config");
-                    javaConfig = new JSONObject();
-                }
-            } else {
-                System.out.println("⚠️  Could not extract JSON from Java config, using empty config");
-                javaConfig = new JSONObject();
-            }
-        }
-        
-        // Get Java tests from project config
-        JSONObject runtimes = projectConfig.optJSONObject("runtimes");
-        if (runtimes == null) {
-            System.out.println("No runtimes found in project config");
-            return;
-        }
-        
-        JSONObject testRuntime = runtimes.optJSONObject(testName);
-        if (testRuntime == null) {
-            System.err.println("❌ Test runtime not found: " + testName);
-            System.exit(1);
-        }
-        
-        JSONArray tests = testRuntime.optJSONArray("tests");
-        if (tests == null || tests.length() == 0) {
-            System.out.println("No tests in Java config for " + testName);
-            return;
-        }
-        
-        System.out.println("✅ Loaded config with " + tests.length() + " Java test(s)");
+        // Load Java config file
+        JSONObject javaConfig = loadJavaConfig(Paths.get(javaConfigPath));
+        System.out.println("✅ Loaded Java config: " + javaConfig.toString(2));
         
         // Create a JSON object to store all tests' information
         JSONObject allTestsInfo = new JSONObject();
         
-        // Process each test
-        for (int i = 0; i < tests.length(); i++) {
-            String testPath = tests.getString(i);
-            System.out.println("\n📦 Processing test: " + testPath);
+        // Debug: list files in /workspace
+        System.out.println("\n🔍 Debug: Listing /workspace directory:");
+        try {
+            Files.list(Paths.get("/workspace"))
+                .forEach(path -> System.out.println("    " + path.getFileName()));
+        } catch (IOException e) {
+            System.err.println("  Could not list /workspace: " + e.getMessage());
+        }
+        
+        // Debug: list files in /workspace/src if it exists
+        Path srcPath = Paths.get("/workspace/src");
+        if (Files.exists(srcPath)) {
+            System.out.println("\n🔍 Debug: Listing /workspace/src directory:");
+            try {
+                Files.list(srcPath)
+                    .forEach(path -> System.out.println("    " + path.getFileName()));
+            } catch (IOException e) {
+                System.err.println("  Could not list /workspace/src: " + e.getMessage());
+            }
+        }
+        
+        // Process each entry point
+        for (String entryPoint : entryPoints) {
+            System.out.println("\n📦 Processing entry point: " + entryPoint);
             
-            // Get test file name and base name
-            Path testFilePath = Paths.get(testPath);
+            // Find the actual test file
+            Path testFilePath = findTestFile(entryPoint);
+            if (testFilePath == null) {
+                System.err.println("❌ Test file not found: " + entryPoint);
+                continue;
+            }
+            
             String testFileName = testFilePath.getFileName().toString();
-            String testBaseName = testFileName.replaceFirst("[.][^.]+$", "");
+            String testBaseName = testFileName.substring(0, testFileName.lastIndexOf('.'));
             
-            // Collect input files
-            List<String> inputFiles = collectInputFiles(testPath);
+            // Collect input files using the found path
+            List<String> inputFiles = collectInputFiles(entryPoint);
             
             // Compute hash
             String testHash = computeFilesHash(inputFiles);
             
             // Create artifacts directory
-            Path artifactsDir = Paths.get("/workspace", "testeranto/bundles", testName, "java", "example");
+            Path artifactsDir = Paths.get("/workspace", "testeranto/bundles", testName);
             Files.createDirectories(artifactsDir);
             
             // Create test info JSON
@@ -144,17 +90,16 @@ public class java_runtime {
             testInfo.put("files", filesArray);
             
             // Add to all tests info
-            allTestsInfo.put(testPath, testInfo);
+            allTestsInfo.put(entryPoint, testInfo);
             
             // Compile the test
             Path outputJarPath = artifactsDir.resolve(testBaseName + ".jar");
             System.out.println("  🔨 Compiling test to " + outputJarPath + "...");
             
-            // For now, just create a placeholder
-            // In a real implementation, we would compile with javac and package with jar
-            createPlaceholderJar(outputJarPath, testPath);
+            // Create JAR file using the found path
+            createJarFile(entryPoint, outputJarPath, javaConfig);
             
-            System.out.println("  ✅ Successfully created placeholder JAR");
+            System.out.println("  ✅ Successfully created JAR");
         }
         
         // Write single inputFiles.json for all tests
@@ -166,6 +111,72 @@ public class java_runtime {
         System.out.println("\n🎉 Java builder completed successfully");
     }
     
+    private static JSONObject loadJavaConfig(Path javaConfigFile) throws Exception {
+        // Read the Java source file
+        String source = new String(Files.readAllBytes(javaConfigFile));
+
+        // Extract the class name from the file name
+        String fileName = javaConfigFile.getFileName().toString();
+        String className = fileName.substring(0, fileName.lastIndexOf('.'));
+
+        // Compile the Java source
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        if (compiler == null) {
+            throw new RuntimeException("No Java compiler available. Make sure you're running with JDK, not JRE.");
+        }
+
+        // Create a temporary directory for compilation
+        Path tempDir = Files.createTempDirectory("java_config");
+        try {
+            // Write the source file
+            Path sourceFile = tempDir.resolve(fileName);
+            Files.write(sourceFile, source.getBytes());
+
+            // Compile with the same classpath used for the runtime
+            StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
+            Iterable<? extends JavaFileObject> compilationUnits =
+                fileManager.getJavaFileObjectsFromFiles(Arrays.asList(sourceFile.toFile()));
+
+            // Use current classpath
+            String classpath = System.getProperty("java.class.path");
+            List<String> options = Arrays.asList(
+                "-d", tempDir.toString(),
+                "-cp", classpath
+            );
+
+            JavaCompiler.CompilationTask task = compiler.getTask(
+                null, fileManager, null, options, null, compilationUnits);
+            boolean success = task.call();
+            fileManager.close();
+
+            if (!success) {
+                throw new RuntimeException("Failed to compile Java config file: " + javaConfigFile);
+            }
+
+            // Load the compiled class
+            URLClassLoader classLoader = new URLClassLoader(
+                new URL[]{tempDir.toUri().toURL()},
+                Thread.currentThread().getContextClassLoader()
+            );
+            Class<?> configClass = classLoader.loadClass(className);
+
+            // Look for a getConfig() method that returns JSONObject
+            java.lang.reflect.Method getConfigMethod = configClass.getMethod("getConfig");
+            Object result = getConfigMethod.invoke(null);
+            if (result instanceof JSONObject) {
+                return (JSONObject) result;
+            } else {
+                throw new RuntimeException("getConfig() method must return JSONObject");
+            }
+        } finally {
+            // Clean up
+            Files.walk(tempDir)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
+        }
+    }
+    
     private static String findConfig() {
         return "/workspace/testeranto/runtimes/java/java.json";
     }
@@ -173,19 +184,34 @@ public class java_runtime {
     private static List<String> collectInputFiles(String testPath) {
         List<String> files = new ArrayList<>();
         
-        // Add the test file itself
-        files.add(testPath);
+        // Find the actual test file location
+        Path testFilePath = findTestFile(testPath);
+        if (testFilePath == null) {
+            // If not found, just add the original path
+            files.add(testPath);
+            return files;
+        }
+        
+        // Add the test file itself (relative path)
+        // Convert to workspace-relative path if possible
+        String workspacePath = testFilePath.toString();
+        if (workspacePath.startsWith("/workspace/")) {
+            workspacePath = workspacePath.substring(10); // Remove "/workspace/"
+        }
+        files.add(workspacePath);
         
         // Look for Java files in the same directory
-        Path testDir = Paths.get(testPath).getParent();
+        Path testDir = testFilePath.getParent();
         if (testDir != null && Files.exists(testDir)) {
             try {
                 Files.walk(testDir)
                     .filter(path -> path.toString().endsWith(".java"))
                     .forEach(path -> {
-                        String relativePath = "/workspace".equals(path.toString().substring(0, Math.min(path.toString().length(), 9))) 
-                            ? path.toString().substring(10) // Remove /workspace/
-                            : path.toString();
+                        // Convert to workspace-relative path
+                        String relativePath = path.toString();
+                        if (relativePath.startsWith("/workspace/")) {
+                            relativePath = relativePath.substring(10); // Remove "/workspace/"
+                        }
                         if (!files.contains(relativePath)) {
                             files.add(relativePath);
                         }
@@ -195,7 +221,7 @@ public class java_runtime {
             }
         }
         
-        // Add pom.xml or build.gradle if present
+        // Add pom.xml or build.gradle if present (as relative paths)
         Path workspace = Paths.get("/workspace");
         if (Files.exists(workspace.resolve("pom.xml"))) {
             files.add("pom.xml");
@@ -214,7 +240,13 @@ public class java_runtime {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             for (String file : files) {
-                Path filePath = Paths.get("/workspace", file);
+                // Convert to absolute path
+                Path filePath;
+                if (file.startsWith("/")) {
+                    filePath = Paths.get(file);
+                } else {
+                    filePath = Paths.get("/workspace", file);
+                }
                 md.update(file.getBytes());
                 if (Files.exists(filePath)) {
                     FileTime lastModified = Files.getLastModifiedTime(filePath);
@@ -295,18 +327,57 @@ public class java_runtime {
         return null;
     }
     
-    private static void createPlaceholderJar(Path jarPath, String testPath) throws IOException {
-        // Create a simple manifest
-        String manifest = "Manifest-Version: 1.0\nMain-Class: TestRunner\n";
+    private static void createJarFile(String testPath, Path jarPath, JSONObject javaConfig) throws IOException {
+        // Try to find the test file
+        Path testFilePath = findTestFile(testPath);
+        if (testFilePath == null) {
+            throw new IOException("Test file not found: " + testPath + 
+                " (searched in current directory and /workspace)");
+        }
         
-        // Create a simple test runner
-        String testRunner = 
-            "public class TestRunner {\n" +
-            "    public static void main(String[] args) {\n" +
-            "        System.out.println(\"Java test runner for: " + testPath + "\");\n" +
-            "        System.out.println(\"This is a placeholder implementation.\");\n" +
+        String testFileName = testFilePath.getFileName().toString();
+        String testBaseName = testFileName.substring(0, testFileName.lastIndexOf('.'));
+        
+        // Read the test file to extract package name
+        String packageName = extractPackageName(testFilePath);
+        String fullyQualifiedClassName = packageName.isEmpty() ? testBaseName : packageName + "." + testBaseName;
+        
+        // Create a wrapper class that serves as the main entry point
+        String wrapperClassName = testBaseName + "Wrapper";
+        String wrapperContent = 
+            "public class " + wrapperClassName + " {\n" +
+            "    public static void main(String[] args) throws Exception {\n" +
+            "        // Dynamically load and run the test class\n" +
+            "        Class<?> testClass = Class.forName(\"" + fullyQualifiedClassName + "\");\n" +
+            "        // Look for a main method\n" +
+            "        try {\n" +
+            "            java.lang.reflect.Method mainMethod = testClass.getMethod(\"main\", String[].class);\n" +
+            "            mainMethod.invoke(null, (Object) args);\n" +
+            "        } catch (NoSuchMethodException e) {\n" +
+            "            // If no main method, try to instantiate and run test methods\n" +
+            "            Object instance = testClass.getDeclaredConstructor().newInstance();\n" +
+            "            // Look for methods annotated with @Test or similar\n" +
+            "            // For now, just print a message\n" +
+            "            System.out.println(\"Test class loaded: \" + testClass.getName());\n" +
+            "            System.out.println(\"No main method found. You may need to implement a test runner.\");\n" +
+            "        }\n" +
             "    }\n" +
             "}\n";
+        
+        // Create a manifest with the wrapper as main class
+        String manifest = "Manifest-Version: 1.0\n";
+        manifest += "Main-Class: " + wrapperClassName + "\n";
+        
+        // Add classpath if specified in config
+        if (javaConfig.has("classpath")) {
+            JSONArray classpathArray = javaConfig.getJSONArray("classpath");
+            StringBuilder classpathBuilder = new StringBuilder();
+            for (int i = 0; i < classpathArray.length(); i++) {
+                if (i > 0) classpathBuilder.append(" ");
+                classpathBuilder.append(classpathArray.getString(i));
+            }
+            manifest += "Class-Path: " + classpathBuilder.toString() + "\n";
+        }
         
         // Create a temporary directory
         Path tempDir = Files.createTempDirectory("java-builder");
@@ -316,8 +387,116 @@ public class java_runtime {
             Files.createDirectories(metaInfDir);
             Files.write(metaInfDir.resolve("MANIFEST.MF"), manifest.getBytes());
             
-            // Write test runner
-            Files.write(tempDir.resolve("TestRunner.java"), testRunner.getBytes());
+            // Copy test file
+            Path testFileInJar = tempDir.resolve(testFileName);
+            Files.copy(testFilePath, testFileInJar);
+            
+            // Write wrapper class
+            Path wrapperFileInJar = tempDir.resolve(wrapperClassName + ".java");
+            Files.write(wrapperFileInJar, wrapperContent.getBytes());
+            
+            // Compile if specified in config (default to true)
+            boolean shouldCompile = !javaConfig.has("compile") || javaConfig.getBoolean("compile");
+            if (shouldCompile) {
+                // Compile Java files
+                List<String> compileCommand = new ArrayList<>();
+                compileCommand.add("javac");
+                compileCommand.add("-cp");
+                
+                // Build classpath using wildcard for JARs
+                StringBuilder classpath = new StringBuilder();
+                classpath.append(".");
+                classpath.append(":/workspace/lib/*");
+                classpath.append(":/workspace/src/java/main/java");
+                classpath.append(":/workspace/src/java/test/java");
+                classpath.append(":").append(tempDir.toString());
+                
+                // Add specific entries from config that aren't wildcards
+                if (javaConfig.has("classpath")) {
+                    JSONArray cpArray = javaConfig.getJSONArray("classpath");
+                    for (int i = 0; i < cpArray.length(); i++) {
+                        String entry = cpArray.getString(i);
+                        // Skip entries that are already covered by wildcard
+                        if (entry.equals("lib/*") || entry.endsWith("/*")) {
+                            continue;
+                        }
+                        // Resolve relative paths
+                        if (!entry.startsWith("/")) {
+                            entry = "/workspace/" + entry;
+                        }
+                        // Check if not already in classpath
+                        if (!classpath.toString().contains(entry)) {
+                            classpath.append(":").append(entry);
+                        }
+                    }
+                }
+                
+                String cp = classpath.toString();
+                compileCommand.add(cp);
+                System.out.println("  Compilation classpath: " + cp);
+                
+                // Debug: list JARs in /workspace/lib
+                Path libDir = Paths.get("/workspace/lib");
+                if (Files.exists(libDir)) {
+                    System.out.println("  Debug: Listing JARs in " + libDir.toAbsolutePath());
+                    try (DirectoryStream<Path> stream = Files.newDirectoryStream(libDir, "*.jar")) {
+                        List<Path> jars = new ArrayList<>();
+                        for (Path jar : stream) {
+                            jars.add(jar);
+                        }
+                        jars.sort(Comparator.naturalOrder());
+                        for (Path jar : jars) {
+                            System.out.println("    JAR: " + jar.getFileName());
+                        }
+                        if (jars.isEmpty()) {
+                            System.err.println("    No JARs found!");
+                        }
+                    } catch (IOException e) {
+                        System.err.println("  Error listing JARs: " + e.getMessage());
+                    }
+                } else {
+                    System.err.println("  Lib directory does not exist!");
+                }
+                
+                // Find all Java files that need to be compiled
+                List<String> javaFilesToCompile = new ArrayList<>();
+                
+                // Add the test file
+                javaFilesToCompile.add(testFileInJar.toString());
+                
+                // Add the wrapper file
+                javaFilesToCompile.add(wrapperFileInJar.toString());
+                
+                // Add Calculator.java if it exists
+                Path calculatorSource = Paths.get("/workspace/src/java/main/java/com/example/calculator/Calculator.java");
+                if (Files.exists(calculatorSource)) {
+                    javaFilesToCompile.add(calculatorSource.toString());
+                }
+                
+                // Don't add other Java files from the original directory to avoid duplicate classes
+                // The temp directory already has the necessary files
+                
+                // Add all Java files to compile command
+                compileCommand.addAll(javaFilesToCompile);
+                
+                System.out.println("  Compilation classpath: " + cp);
+                
+                System.out.println("  Compiling " + javaFilesToCompile.size() + " Java files");
+                
+                ProcessBuilder pb = new ProcessBuilder(compileCommand);
+                Process process = pb.start();
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    // Capture error output
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            System.err.println("javac error: " + line);
+                        }
+                    }
+                    throw new IOException("javac failed with exit code " + exitCode);
+                }
+            }
             
             // Create JAR file
             List<String> jarCommand = Arrays.asList(
@@ -333,15 +512,15 @@ public class java_runtime {
                 exitCode = process.waitFor();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.err.println("Warning: JAR creation interrupted");
-                exitCode = 1;
+                throw new IOException("JAR creation interrupted", e);
             }
             
             if (exitCode != 0) {
-                System.err.println("Warning: jar command failed with exit code " + exitCode);
-                // Create a minimal JAR anyway
-                Files.write(jarPath, "Placeholder JAR".getBytes());
+                throw new IOException("jar command failed with exit code " + exitCode);
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Interrupted during JAR creation", e);
         } finally {
             // Clean up
             Files.walk(tempDir)
@@ -349,5 +528,40 @@ public class java_runtime {
                 .map(Path::toFile)
                 .forEach(File::delete);
         }
+    }
+    
+    private static String extractPackageName(Path javaFile) {
+        try {
+            String content = new String(Files.readAllBytes(javaFile));
+            // Simple regex to find package declaration
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("^\\s*package\\s+([^;]+);", java.util.regex.Pattern.MULTILINE);
+            java.util.regex.Matcher matcher = pattern.matcher(content);
+            if (matcher.find()) {
+                return matcher.group(1).trim();
+            }
+        } catch (IOException e) {
+            // Ignore
+        }
+        return "";
+    }
+    
+    private static Path findTestFile(String testPath) {
+        // Try the path as given (relative to current directory)
+        Path candidate = Paths.get(testPath);
+        if (Files.exists(candidate)) {
+            System.out.println("  Found test file at: " + candidate.toAbsolutePath());
+            return candidate;
+        }
+        
+        // Try relative to /workspace
+        candidate = Paths.get("/workspace", testPath);
+        if (Files.exists(candidate)) {
+            System.out.println("  Found test file at: " + candidate.toAbsolutePath());
+            return candidate;
+        }
+        
+        // Not found
+        System.err.println("  Could not find test file: " + testPath);
+        return null;
     }
 }

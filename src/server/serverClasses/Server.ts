@@ -1,49 +1,104 @@
 import fs from "fs";
-import readline from "readline";
+import path from "path";
+import chokidar from "chokidar";
 import { Server_Docker } from "./Server_Docker";
 import type { ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
 
-readline.emitKeypressEvents(process.stdin);
-if (process.stdin.isTTY) process.stdin.setRawMode(true);
-
 export class Server extends Server_Docker {
+  private documentationWatcher: chokidar.FSWatcher | null = null;
+  private documentationFiles: Set<string> = new Set();
+
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
-    console.log(("[Server] Press 'q' to initiate a graceful shutdown."));
-    console.log(("[Server] Press 'CTRL + c' to quit forcefully."));
-
-    process.stdin.on("keypress", async (str, key) => {
-      if (key.name === "q") {
-        console.log("Testeranto is shutting down gracefully...");
-
-        await this.stop();
-
-        process.exit(0);
-      }
-      // Handle Ctrl+C through keypress when in raw mode
-      if (key.ctrl && key.name === "c") {
-        console.log("\nForce quitting...");
-        process.exit(1);
-      }
-    });
-
-    process.on("SIGINT", async () => {
-      console.log("\nForce quitting...");
-      process.exit(1);
-    });
   }
 
   async start(): Promise<void> {
-    console.log(`[Server] start()`);
-
-    const runtimesDir = `testeranto/runtimes/`;
-    fs.mkdirSync(runtimesDir, { recursive: true });
     await super.start();
+    
+    // Start watching documentation files if glob pattern is provided
+    if (this.configs.documentationGlob) {
+      this.startDocumentationWatcher();
+    }
   }
 
   async stop(): Promise<void> {
-    console.log(`[Server] stop()`)
+    // Stop watching documentation files
+    if (this.documentationWatcher) {
+      await this.documentationWatcher.close();
+      this.documentationWatcher = null;
+    }
+    
     await super.stop();
+  }
+
+  private startDocumentationWatcher(): void {
+    const globPattern = this.configs.documentationGlob!;
+    const cwd = process.cwd();
+    
+    console.log(`[Server] Watching documentation files with pattern: ${globPattern}`);
+    
+    // Initialize watcher
+    this.documentationWatcher = chokidar.watch(globPattern, {
+      cwd,
+      ignoreInitial: false,
+      persistent: true,
+    });
+
+    // Add files that already exist
+    this.documentationWatcher.on('add', (filePath: string) => {
+      const absolutePath = path.join(cwd, filePath);
+      this.documentationFiles.add(absolutePath);
+      console.log(`[Server] Documentation file added: ${filePath}`);
+      this.emitDocumentationUpdate();
+    });
+
+    // Handle file changes
+    this.documentationWatcher.on('change', (filePath: string) => {
+      console.log(`[Server] Documentation file changed: ${filePath}`);
+      this.emitDocumentationUpdate();
+    });
+
+    // Handle file removal
+    this.documentationWatcher.on('unlink', (filePath: string) => {
+      const absolutePath = path.join(cwd, filePath);
+      this.documentationFiles.delete(absolutePath);
+      console.log(`[Server] Documentation file removed: ${filePath}`);
+      this.emitDocumentationUpdate();
+    });
+
+    // Handle errors
+    this.documentationWatcher.on('error', (error: Error) => {
+      console.error(`[Server] Documentation watcher error:`, error);
+    });
+
+    // Log when ready
+    this.documentationWatcher.on('ready', () => {
+      console.log(`[Server] Documentation watcher is ready`);
+    });
+  }
+
+  private emitDocumentationUpdate(): void {
+    // Convert Set to array for easier serialization
+    const files = Array.from(this.documentationFiles);
+    
+    // Here we would typically send this data to connected clients via WebSocket
+    // For now, we'll log it and store it in a file that the VS Code extension can read
+    const documentationData = {
+      files: files.map(file => path.relative(process.cwd(), file)),
+      timestamp: Date.now(),
+    };
+
+    // Write to a file that the VS Code extension can read
+    const outputPath = path.join(process.cwd(), 'testeranto', 'documentation.json');
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, JSON.stringify(documentationData, null, 2));
+    
+    console.log(`[Server] Updated documentation data (${files.length} files)`);
+  }
+
+  // Getter for documentation files (could be used by other parts of the system)
+  getDocumentationFiles(): string[] {
+    return Array.from(this.documentationFiles);
   }
 }

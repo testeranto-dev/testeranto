@@ -100,8 +100,7 @@ var rebuildPlugin_default = (r) => {
 };
 
 // src/server/runtimes/web/esbuild.ts
-var esbuild_default = (config, testName2, projectConfig) => {
-  const entryPoints = projectConfig.runtimes[testName2].tests;
+var esbuild_default = (config, testName2, projectConfig, entryPoints2) => {
   const { inputFilesPluginFactory, register: register2 } = inputFilesPlugin_default(
     "web",
     testName2
@@ -123,12 +122,12 @@ var esbuild_default = (config, testName2, projectConfig) => {
     absWorkingDir: process.cwd(),
     platform: "browser",
     // packages: "external",
-    entryPoints,
+    entryPoints: entryPoints2,
     plugins: [
       featuresPlugin_default,
       inputFilesPluginFactory,
       rebuildPlugin_default("web"),
-      ...config.web?.plugins?.map((p) => p(register2, entryPoints)) || []
+      ...config.web?.plugins?.map((p) => p(register2, entryPoints2)) || []
     ]
   };
 };
@@ -224,6 +223,7 @@ import * as path3 from "path";
 var projectConfigPath = process.argv[2];
 var nodeConfigPath = process.argv[3];
 var testName = process.argv[4];
+var entryPoints = process.argv.slice(5);
 var reportDir = path3.join(process.cwd(), "testeranto", "reports", testName);
 if (!fs4.existsSync(reportDir)) {
   fs4.mkdirSync(reportDir, { recursive: true });
@@ -282,9 +282,10 @@ process.on("uncaughtException", (error) => {
   console.error("[WEB BUILDER] Uncaught exception:", error);
   logStream.end();
 });
-async function startBundling(webConfigs, projectConfig) {
+async function startBundling(webConfigs, projectConfig, entryPoints2) {
   console.log(`[WEB BUILDER] is now bundling: ${testName}`);
-  const w = esbuild_default(webConfigs, testName, projectConfig);
+  console.log(`[WEB BUILDER] Entry points: ${entryPoints2.join(", ")}`);
+  const w = esbuild_default(webConfigs, testName, projectConfig, entryPoints2);
   const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
   if (isDevMode) {
     console.log(`[WEB BUILDER] Running in dev mode - starting watch mode`);
@@ -387,7 +388,7 @@ async function main() {
   try {
     const nodeConfigs = (await import(nodeConfigPath)).default;
     const projectConfigs = (await import(projectConfigPath)).default;
-    await startBundling(nodeConfigs, projectConfigs);
+    await startBundling(nodeConfigs, projectConfigs, entryPoints);
   } catch (error) {
     console.error("NODE BUILDER: Error importing config:", nodeConfigPath, error);
     console.error(error);

@@ -99,6 +99,8 @@ export function activate(context: vscode.ExtensionContext): void {
 
     // Watch for changes to the config file
     let configWatcher: vscode.FileSystemWatcher | undefined;
+    let documentationWatcher: vscode.FileSystemWatcher | undefined;
+    
     const setupConfigWatcher = () => {
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (workspaceFolders && workspaceFolders.length > 0) {
@@ -141,14 +143,50 @@ export function activate(context: vscode.ExtensionContext): void {
         }
     };
 
-    // Set up initial watcher
+    // Watch for changes to documentation.json
+    const setupDocumentationWatcher = () => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (workspaceFolders && workspaceFolders.length > 0) {
+            const workspaceRoot = workspaceFolders[0].uri;
+            const documentationPattern = new vscode.RelativePattern(workspaceRoot, 'testeranto/documentation.json');
+
+            // Dispose existing watcher if any
+            if (documentationWatcher) {
+                documentationWatcher.dispose();
+            }
+
+            documentationWatcher = vscode.workspace.createFileSystemWatcher(documentationPattern, false, false, false);
+
+            const handleDocumentationChange = (uri: vscode.Uri) => {
+                console.log('[Testeranto] Documentation file changed:', uri.fsPath);
+                // Refresh only the features tree view
+                setTimeout(() => {
+                    featuresTreeDataProvider.refresh();
+                }, 100);
+            };
+
+            documentationWatcher.onDidChange(handleDocumentationChange);
+            documentationWatcher.onDidCreate(handleDocumentationChange);
+            documentationWatcher.onDidDelete(() => {
+                console.log('[Testeranto] Documentation file deleted');
+                featuresTreeDataProvider.refresh();
+            });
+
+            context.subscriptions.push(documentationWatcher);
+            console.log('[Testeranto] Documentation file watcher set up');
+        }
+    };
+
+    // Set up initial watchers
     setupConfigWatcher();
+    setupDocumentationWatcher();
 
     // Also watch for workspace folder changes
     context.subscriptions.push(
         vscode.workspace.onDidChangeWorkspaceFolders(() => {
-            console.log('[Testeranto] Workspace folders changed, re-setting up config watcher');
+            console.log('[Testeranto] Workspace folders changed, re-setting up watchers');
             setupConfigWatcher();
+            setupDocumentationWatcher();
             updateServerStatus();
         })
     );
@@ -375,6 +413,8 @@ export function activate(context: vscode.ExtensionContext): void {
         // fileTreeDataProvider.refresh();
         processesTreeDataProvider.refresh();
         featuresTreeDataProvider.refresh();
+        // Also check for documentation updates
+        setupDocumentationWatcher();
     });
 
     const retryConnectionCommand = vscode.commands.registerCommand("testeranto.retryConnection", (provider: any) => {

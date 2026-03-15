@@ -8,10 +8,9 @@ import type { ITestconfigV2 } from "../../../Types.js";
 export default (
   config: ITestconfigV2,
   testName: string,
-  projectConfig: ITestconfigV2
+  projectConfig: ITestconfigV2,
+  entryPoints: string[]
 ): BuildOptions => {
-
-  const entryPoints = projectConfig.runtimes[testName].tests;
 
   const { inputFilesPluginFactory, register } = inputFilesPlugin(
     "web",

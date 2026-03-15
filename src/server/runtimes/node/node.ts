@@ -10,6 +10,7 @@ import * as path from 'path';
 const projectConfigPath = process.argv[2];
 const nodeConfigPath = process.argv[3];
 const testName = process.argv[4];
+const entryPoints = process.argv.slice(5);
 
 // Setup logging to file
 const reportDir = path.join(process.cwd(), 'testeranto', 'reports', testName);
@@ -85,10 +86,12 @@ process.on('uncaughtException', (error) => {
 // run esbuild in watch mode using esbuildConfigs. Write to fs the bundle and metafile
 async function startBundling(
   nodeConfigs: any,
-  projectConfig: ITestconfigV2
+  projectConfig: ITestconfigV2,
+  entryPoints: string[]
 ) {
   console.log(`[NODE BUILDER] is now bundling:  ${testName}`);
-  const n = nodeConfiger(nodeConfigs, testName, projectConfig);
+  console.log(`[NODE BUILDER] Entry points: ${entryPoints.join(', ')}`);
+  const n = nodeConfiger(nodeConfigs, testName, projectConfig, entryPoints);
 
   // Check if we're in dev mode (the server passes mode through environment)
   const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
@@ -183,7 +186,7 @@ async function main() {
   try {
     const nodeConfigs = (await import(nodeConfigPath)).default;
     const projectConfigs = (await import(projectConfigPath)).default;
-    await startBundling(nodeConfigs, projectConfigs);
+    await startBundling(nodeConfigs, projectConfigs, entryPoints);
     
     // In dev mode, keep the process running even if there's an error
     const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
