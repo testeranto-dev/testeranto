@@ -29,6 +29,8 @@ class BaseGiven:
         self.error: Optional[Exception] = None
         self.failed = False
         self.store: Optional[Istore] = None
+        self.status: Optional[bool] = None
+        self.fails: int = 0
     
     def add_artifact(self, path: str) -> None:
         # Normalize path separators
@@ -102,15 +104,22 @@ class BaseGiven:
         key: str,
         test_resource_configuration,
         tester: Callable[[Any], bool],
-        artifactory: Callable[[str, Any], None],
-        suite_ndx: int
+        artifactory: Optional[Callable[[str, Any], None]] = None,
+        suite_ndx: int = 0
     ) -> Istore:
-        self.failed = False
         self.key = key
         self.fails = 0  # Initialize fail count for this given
 
+        # Handle missing artifactory like TypeScript seems to do
+        if artifactory is None:
+            def default_artifactory(f_path: str, value: Any):
+                pass
+            actual_artifactory = default_artifactory
+        else:
+            actual_artifactory = artifactory
+        
         def given_artifactory(f_path: str, value: Any):
-            artifactory(f"given-{key}/{f_path}", value)
+            actual_artifactory(f"given-{key}/{f_path}", value)
 
         try:
             # Call given_that to set up the initial state
@@ -147,9 +156,13 @@ class BaseGiven:
             # Process thens
             for then_ndx, then_step in enumerate(self.thens):
                 try:
+                    filepath = f"given-{key}/then-{then_ndx}"
+                    if suite_ndx is not None:
+                        filepath = f"suite-{suite_ndx}/{filepath}"
                     result = await then_step.test(
                         self.store,
                         test_resource_configuration,
+                        filepath
                     )
                     # Test the result
                     if not tester(result):

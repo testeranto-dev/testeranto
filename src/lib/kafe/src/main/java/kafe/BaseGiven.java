@@ -72,8 +72,8 @@ public abstract class BaseGiven {
     }
     
     public Object give(Object subject, String key, ITTestResourceConfiguration testResourceConfiguration,
-                      Function<Object, Boolean> tester, Function<String, Object> artifactory,
-                      int suiteNdx) throws Exception {
+                      Function<Object, Boolean> tester, int suiteNdx,
+                      Function<String, Object> artifactory) throws Exception {
         this.failed = false;
         this.fails = 0;
         

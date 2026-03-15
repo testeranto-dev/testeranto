@@ -67,10 +67,37 @@ public class CalculatorTest {
 
 ### Running Tests
 
-To run tests with Kafe:
+#### Running Dvipa Flavored Tests (JUnit 5)
+
+Dvipa tests are regular JUnit 5 tests and can be run with standard Maven commands:
 
 ```bash
-java -cp ".:kafe/*" kafe.Kafe '{"name":"test","fs":".","ports":[]}'
+cd src/lib/kafe
+mvn test
+```
+
+To run a specific test class:
+
+```bash
+mvn test -Dtest=ExampleCalculatorTest
+```
+
+#### Running the Example Test Programmatically
+
+You can also run tests using the DvipaTestRunner:
+
+```bash
+cd src/lib/kafe
+mvn compile
+java -cp "target/classes:$(find ~/.m2/repository -name '*.jar' | tr '\n' ':')" kafe.dvipa.DvipaTestRunner kafe.dvipa.ExampleCalculatorTest
+```
+
+#### Running Baseline Kafe Tests
+
+To run tests with the baseline Kafe implementation:
+
+```bash
+java -cp "target/classes:$(find ~/.m2/repository -name '*.jar' | tr '\n' ':')" kafe.Kafe '{"name":"test","fs":".","ports":[]}'
 ```
 
 ## Integration with Testeranto
@@ -98,20 +125,52 @@ mvn package
 
 The JAR file will be created in the `target/` directory.
 
-## Running Tests
+## Testing the Dvipa Implementation
 
-To run tests with Kafe:
+The Dvipa flavored API provides an idiomatic Java way to write BDD-style tests:
 
-```bash
-java -jar target/kafe-0.1.2.jar '{"name":"test","fs":".","ports":[]}'
+1. **Annotations**: Use `@DvipaTest`, `@Given`, `@When`, `@Then` to define tests
+2. **JUnit 5 Integration**: Tests run with standard JUnit 5 runners
+3. **BDD Pattern**: Follows Given-When-Then structure
+
+Example test structure:
+```java
+@DvipaTest("Calculator Tests")
+@ExtendWith(DvipaRunner.class)
+public class ExampleCalculatorTest {
+    
+    @Given("a new calculator")
+    public void givenNewCalculator() {
+        // setup code
+    }
+    
+    @When("adding {x} and {y}")
+    public void whenAddingNumbers(int x, int y) {
+        // action code
+    }
+    
+    @Then("result should be {expected}")
+    public void thenResultShouldBe(int expected) {
+        // assertion code
+    }
+    
+    @Test
+    public void testAddition() {
+        givenNewCalculator();
+        whenAddingNumbers(2, 3);
+        thenResultShouldBe(5);
+    }
+}
 ```
-
-Note: Replace `0.1.2` with the actual version number of your build.
 
 ## Future Enhancements
 
-1. **Complete Implementation**: Fill in the placeholder methods
-2. **Dependency Management**: Add Maven/Gradle support
+1. **Enhanced Parameter Injection**: Support for parameter placeholders in annotation values
+2. **Test Context Management**: Better state management between Given, When, Then steps
+3. **Spring Boot Integration**: Seamless integration with Spring Boot testing
+4. **Test Reporting**: Enhanced BDD-style test reports
+
+The Dvipa flavored API makes Testeranto tests feel native to Java developers while maintaining compatibility with the broader Testeranto ecosystem.
 3. **WebSocket Support**: Real-time test reporting
 4. **Annotation Support**: Java annotations for test definitions
 5. **JUnit Integration**: Compatibility with JUnit

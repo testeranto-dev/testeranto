@@ -40,7 +40,7 @@ module Rubeno
       }
     end
     
-    def setup(s, artifactory, tr, pm)
+    def setup(s, tr)
       s
     end
     
@@ -48,14 +48,14 @@ module Rubeno
       !!t
     end
     
-    def after_all(store, artifactory, pm)
+    def after_all(store)
       store
     end
     
-    def run(input_val, test_resource_configuration, artifactory, t_log, pm)
+    def run(input_val, test_resource_configuration)
       @test_resource_configuration = test_resource_configuration
       
-      subject = setup(input_val, artifactory, test_resource_configuration, pm)
+      subject = setup(input_val, test_resource_configuration)
       
       @fails = 0
       @failed = false
@@ -67,9 +67,7 @@ module Rubeno
             g_key,
             test_resource_configuration,
             method(:assert_that),
-            artifactory,
-            t_log,
-            pm,
+            nil,  # artifactory is not passed to match TypeScript
             @index
           )
           @fails += g.fails if g.fails && g.fails > 0
@@ -83,7 +81,7 @@ module Rubeno
       @failed = true if @fails > 0
       
       begin
-        after_all(@store, artifactory, pm)
+        after_all(@store)
       rescue => e
         puts "Error in after_all: #{e.message}"
       end

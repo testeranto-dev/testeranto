@@ -28,6 +28,23 @@ func (a *SimpleTestAdapter) ButThen(store, thenCB interface{}, testResource inte
 }
 
 func (a *SimpleTestAdapter) AssertThis(t interface{}) bool {
-	// Simple implementation - always return true for now
+	// Handle different types of assertions
+	if t == nil {
+		return false
+	}
+	
+	// Check if it's a bool
+	if b, ok := t.(bool); ok {
+		return b
+	}
+	
+	// Check if it's an error
+	if err, ok := t.(error); ok {
+		return err == nil
+	}
+	
+	// For other types, check if they're truthy
+	// In Go, we can't easily check "truthiness" like in JavaScript
+	// So we'll return true for non-nil values
 	return true
 }

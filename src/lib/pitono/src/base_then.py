@@ -33,6 +33,7 @@ class BaseThen:
         self,
         store: Any,
         test_resource_configuration: Any,
+        filepath: Optional[str] = None,
     ) -> Any:
         try:
             result = await self.but_then(

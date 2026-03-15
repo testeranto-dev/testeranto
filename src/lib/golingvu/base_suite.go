@@ -4,9 +4,9 @@ package golingvu
 type BaseSuite struct {
 	Key                       string
 	Givens                    map[string]*BaseGiven
-	AfterAllFunc              func(store interface{}, artifactory func(string, interface{}), pm interface{}) interface{}
+	AfterAllFunc              func(store interface{}) interface{}
 	AssertThatFunc            func(t interface{}) bool
-	SetupFunc                 func(s interface{}, artifactory func(string, interface{}), tr ITTestResourceConfiguration, pm interface{}) interface{}
+	SetupFunc                 func(s interface{}, tr ITTestResourceConfiguration) interface{}
 	Store                     interface{}
 	TestResourceConfiguration ITTestResourceConfiguration
 	Index                     int
@@ -16,11 +16,11 @@ type BaseSuite struct {
 }
 
 // Run executes the test suite
-func (bs *BaseSuite) Run(input interface{}, testResourceConfiguration ITTestResourceConfiguration, artifactory func(string, interface{}), tLog func(...string), pm interface{}) (*BaseSuite, error) {
+func (bs *BaseSuite) Run(input interface{}, testResourceConfiguration ITTestResourceConfiguration) (*BaseSuite, error) {
 	bs.TestResourceConfiguration = testResourceConfiguration
 
 	// Setup
-	subject := bs.SetupFunc(input, artifactory, testResourceConfiguration, pm)
+	subject := bs.SetupFunc(input, testResourceConfiguration)
 
 	// Run each given
 	for gKey, g := range bs.Givens {
@@ -29,9 +29,7 @@ func (bs *BaseSuite) Run(input interface{}, testResourceConfiguration ITTestReso
 			gKey,
 			testResourceConfiguration,
 			bs.AssertThatFunc,
-			artifactory,
-			tLog,
-			pm,
+			nil, // artifactory is not passed, matching TypeScript
 			bs.Index,
 		)
 		if err != nil {
@@ -42,7 +40,7 @@ func (bs *BaseSuite) Run(input interface{}, testResourceConfiguration ITTestReso
 	}
 
 	// After all
-	bs.AfterAllFunc(bs.Store, artifactory, pm)
+	bs.AfterAllFunc(bs.Store)
 
 	return bs, nil
 }

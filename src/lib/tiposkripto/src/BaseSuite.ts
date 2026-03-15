@@ -135,9 +135,7 @@ export abstract class BaseSuite<I extends Ibdd_in_any, O extends Ibdd_out_any> {
 
     const subject = await this.setup(
       input,
-      // suiteArtifactory,
       testResourceConfiguration
-      // proxiedPm
     );
 
     for (const [gKey, g] of Object.entries(this.givens)) {
@@ -148,6 +146,7 @@ export abstract class BaseSuite<I extends Ibdd_in_any, O extends Ibdd_out_any> {
           gKey,
           testResourceConfiguration,
           this.assertThat,
+          undefined, // artifactory
           sNdx
         );
         // Add the number of failures from this given to the suite's total
@@ -171,13 +170,9 @@ export abstract class BaseSuite<I extends Ibdd_in_any, O extends Ibdd_out_any> {
     }
 
     try {
-      // Ensure addArtifact is properly bound to 'this'
-
       this.afterAll(this.store);
     } catch (e) {
       console.error(JSON.stringify(e));
-      // this.fails.push(this);
-      // return this;
     }
 
     return this;

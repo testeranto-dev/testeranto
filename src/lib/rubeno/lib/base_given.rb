@@ -50,7 +50,7 @@ module Rubeno
       store
     end
     
-    def give(subject, key, test_resource_configuration, tester, artifactory, suite_ndx)
+    def give(subject, key, test_resource_configuration, tester, artifactory = nil, suite_ndx = 0)
       @key = key
       @fails = 0
       @failed = false

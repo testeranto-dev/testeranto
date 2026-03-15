@@ -244,49 +244,6 @@ class PitonoClass:
     
     def _initialize_classy_implementations(self, test_implementation):
         # Create classy implementations similar to TypeScript
-        classyGivens = {}
-        for key in test_implementation.givens.keys():
-            def create_given_closure(given_key):
-                def given_func(features, whens, thens, initial_values=None):
-                    return BaseGiven(
-                        given_key,
-                        features,
-                        whens,
-                        thens,
-                        test_implementation.givens[given_key],
-                        initial_values
-                    )
-                return given_func
-            classyGivens[key] = create_given_closure(key)
-        
-        classyWhens = {}
-        for key in test_implementation.whens.keys():
-            def create_when_closure(when_key):
-                def when_func(*args):
-                    # Create a BaseWhen instance
-                    # name = f"{when_key}: {args}"
-                    when_cb = test_implementation.whens[when_key](*args)
-                    return BaseWhen(when_key, when_cb)
-                return when_func
-            classyWhens[key] = create_when_closure(key)
-        
-        classyThens = {}
-        for key in test_implementation.thens.keys():
-            def create_then_closure(then_key):
-                def then_func(*args):
-                    # Create a BaseThen instance
-                    # name = f"{then_key}: {args}"
-                    then_cb = test_implementation.thens[then_key](*args)
-                    return BaseThen(then_key, then_cb)
-                return then_func
-            classyThens[key] = create_then_closure(key)
-        
-        self.given_overrides = classyGivens
-        self.when_overrides = classyWhens
-        self.then_overrides = classyThens
-    
-    def _initialize_classy_implementations(self, test_implementation):
-        # Create classy implementations similar to TypeScript
         test_adapter = self.test_adapter
         
         classyGivens = {}
@@ -296,14 +253,13 @@ class PitonoClass:
                     # Create a subclass that uses the adapter's before_each
                     class AdapterGiven(BaseGiven):
                         async def given_that(self, subject, test_resource_configuration, 
-                                           artifactory, given_cb, initial_values, pm):
+                                           artifactory, given_cb, initial_values):
                             # Use the test adapter's before_each method
                             return await test_adapter.before_each(
                                 subject,
                                 given_cb,
                                 test_resource_configuration,
-                                initial_values,
-                                None  # pm parameter
+                                initial_values
                             )
                     
                     return AdapterGiven(

@@ -38,6 +38,8 @@ func NewBaseGiven(key string, features []string, whens []*BaseWhen, thens []*Bas
 		GivenCB:       givenCB,
 		InitialValues: initialValues,
 		Artifacts:     make([]string, 0),
+		Failed:        false,
+		Fails:         0,
 	}
 }
 
@@ -92,8 +94,8 @@ func (bg *BaseGiven) Give(
 	key string,
 	testResourceConfiguration ITTestResourceConfiguration,
 	tester func(interface{}) bool,
-	artifactory func(string, interface{}),
 	suiteNdx int,
+	artifactory func(string, interface{}),
 ) (interface{}, error) {
 	bg.Key = key
 	bg.Fails = 0

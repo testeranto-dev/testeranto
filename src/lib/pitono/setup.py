@@ -11,11 +11,11 @@ if os.path.exists(readme_path):
 setup(
     name="pitono",
     version="0.1.24",
-    packages=find_packages(where='.'),
-    package_dir={'': '.'},
+    packages=find_packages(where='src'),
+    package_dir={'': 'src'},
     entry_points={
         'console_scripts': [
-            'pitono-core-generator=core_generator:main',
+            # Removed reference to non-existent core_generator
         ],
     },
     python_requires='>=3.7',

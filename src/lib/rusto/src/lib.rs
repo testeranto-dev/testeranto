@@ -9,6 +9,7 @@ pub mod base_when;
 pub mod base_then;
 pub mod simple_adapter;
 pub mod rusto;
+pub mod flavored;
 
 // Re-export main types for convenience
 pub use types::*;
@@ -18,6 +19,10 @@ pub use base_when::BaseWhen;
 pub use base_then::BaseThen;
 pub use simple_adapter::SimpleTestAdapter;
 pub use rusto::Rusto;
+
+// Re-export flavored macros and types
+pub use flavored::{test_suite, given, when, then, __parse_test_body};
+pub use flavored::{GivenStep, WhenStep, ThenStep, TestCase};
 
 /// Main entry point for creating a Rusto instance
 pub fn rusto<I, O, M>(

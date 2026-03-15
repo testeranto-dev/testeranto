@@ -60,8 +60,8 @@ impl<I: IbddInAny> BaseGiven<I> {
         key: &str,
         _test_resource_configuration: &ITTestResourceConfiguration,
         _tester: fn(I::Then) -> bool,
-        _artifactory: fn(&str, &dyn std::any::Any),
         _suite_ndx: i32,
+        _artifactory: fn(&str, &dyn std::any::Any),
     ) -> Option<I::Istore> {
         self.key = key.to_string();
         self.failed = false;

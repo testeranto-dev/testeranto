@@ -23,23 +23,23 @@ class ITTestResourceConfiguration:
 
 # Test adapter interface - matches the TypeScript ITestAdapter
 class ITestAdapter(Protocol):
-    async def before_all(self, input_val: Any, tr: ITTestResourceConfiguration, pm: Any) -> Any:
+    async def before_all(self, input_val: Any, tr: ITTestResourceConfiguration) -> Any:
         ...
     
-    async def after_all(self, store: Any, pm: Any) -> Any:
+    async def after_all(self, store: Any) -> Any:
         ...
     
     async def before_each(self, subject: Any, initializer: Any, test_resource: ITTestResourceConfiguration, 
-                         initial_values: Any, pm: Any) -> Any:
+                         initial_values: Any) -> Any:
         ...
     
-    async def after_each(self, store: Any, key: str, pm: Any) -> Any:
+    async def after_each(self, store: Any, key: str) -> Any:
         ...
     
-    async def and_when(self, store: Any, when_cb: Any, test_resource: Any, pm: Any) -> Any:
+    async def and_when(self, store: Any, when_cb: Any, test_resource: Any) -> Any:
         ...
     
-    async def but_then(self, store: Any, then_cb: Any, test_resource: Any, pm: Any) -> Any:
+    async def but_then(self, store: Any, then_cb: Any, test_resource: Any) -> Any:
         ...
     
     def assert_this(self, t: Any) -> bool:

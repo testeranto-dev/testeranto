@@ -171,15 +171,10 @@ module Rubeno
     end
     
     def run_test_job(suite, pm, test_resource_config)
-      t_log = ->(*args) { puts args.join(' ') }
-      
       # Run the suite
       suite_done = suite.run(
         @test_subject,
-        test_resource_config,  # Use the actual test resource configuration
-        ->(f_path, value) { nil },  # Simple artifactory
-        t_log,
-        pm
+        test_resource_config  # Use the actual test resource configuration
       )
       
       # Create result object

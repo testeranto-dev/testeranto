@@ -16,3 +16,7 @@ thiserror = "1.0"
 
 [dev-dependencies]
 tokio = { version = "1.0", features = ["full"] }
+
+[[example]]
+name = "calculator_test"
+path = "examples/calculator_test.rs"

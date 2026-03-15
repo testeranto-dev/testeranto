@@ -39,7 +39,6 @@ class BaseSuite:
     async def setup(
         self,
         s: Any,
-        artifactory: Callable[[str, Any], None],
         tr: Any,
     ) -> Any:
         return s
@@ -47,25 +46,19 @@ class BaseSuite:
     def assert_that(self, t: Any) -> bool:
         return bool(t)
     
-    def after_all(self, store: Any, artifactory: Callable[[str, Any], None]) -> Any:
+    def after_all(self, store: Any) -> Any:
         return store
     
     async def run(
         self,
         input_val: Any,
         test_resource_configuration,
-        artifactory: Callable[[str, Any], None],
     ) -> 'BaseSuite':
         self.test_resource_configuration = test_resource_configuration
         
-        def suite_artifactory(f_path: str, value: Any):
-            artifactory(f'suite-{self.index}-{self.name}/{f_path}', value)
-        
         subject = await self.setup(
             input_val,
-            suite_artifactory,
             test_resource_configuration,
-            None  # pm parameter removed
         )
         
         # Reset fails counter
@@ -74,23 +67,25 @@ class BaseSuite:
         
         for g_key, g in self.givens.items():
             try:
+                # In TypeScript, BaseSuite.run() doesn't pass artifactory to give()
+                # So we pass None, and BaseGiven.give() handles it
                 self.store = await g.give(
                     subject,
                     g_key,
                     test_resource_configuration,
                     self.assert_that,
-                    suite_artifactory,
+                    None,  # artifactory is None to match TypeScript
                     self.index  # suite_ndx
                 )
-                # Add any failures from the given to the suite total
-                if hasattr(g, 'failed') and g.failed:
-                    self.fails += 1
-                # Also add the given's fails count
+                # Add the given's fails count to the suite total
                 if hasattr(g, 'fails'):
                     self.fails += g.fails
             except Exception as e:
                 self.failed = True
                 self.fails += 1
+                # Also add any failures from the given itself
+                if hasattr(g, 'fails'):
+                    self.fails += g.fails
                 # Log the error but continue with other givens
                 print(f"Error in given {g_key}:", str(e))
         
@@ -99,7 +94,7 @@ class BaseSuite:
             self.failed = True
         
         try:
-            self.after_all(self.store, artifactory, None)  # pm parameter removed
+            self.after_all(self.store)
         except Exception as e:
             print(f"Error in after_all: {e}")
         

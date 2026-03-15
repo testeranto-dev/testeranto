@@ -63,22 +63,16 @@ public abstract class BaseSuite {
         return obj;
     }
     
-    public abstract Object setup(Object s, Function<String, Object> artifactory, 
-                                ITTestResourceConfiguration tr, Object pm);
+    public abstract Object setup(Object s, ITTestResourceConfiguration tr);
     
     public abstract boolean assertThat(Object t);
     
-    public abstract Object afterAll(Object store, Function<String, Object> artifactory, Object pm);
+    public abstract Object afterAll(Object store);
     
-    public Object run(Object input, ITTestResourceConfiguration testResourceConfiguration,
-                     Function<String, Object> artifactory, Function<String, Void> tLog, Object pm) {
+    public Object run(Object input, ITTestResourceConfiguration testResourceConfiguration) {
         this.testResourceConfiguration = testResourceConfiguration;
         
-        Function<String, Object> suiteArtifactory = (fPath) -> {
-            return artifactory.apply("suite-" + index + "-" + name + "/" + fPath);
-        };
-        
-        Object subject = setup(input, suiteArtifactory, testResourceConfiguration, pm);
+        Object subject = setup(input, testResourceConfiguration);
         
         fails = 0;
         failed = false;
@@ -88,7 +82,8 @@ public abstract class BaseSuite {
             BaseGiven g = entry.getValue();
             try {
                 store = g.give(subject, gKey, testResourceConfiguration, this::assertThat,
-                              suiteArtifactory, tLog, pm, index);
+                              null, // artifactory is not passed to match TypeScript
+                              index);
                 if (g.failed) {
                     fails++;
                 }
@@ -104,7 +99,7 @@ public abstract class BaseSuite {
         }
         
         try {
-            afterAll(store, artifactory, pm);
+            afterAll(store);
         } catch (Exception e) {
             System.err.println("Error in after_all: " + e.getMessage());
         }

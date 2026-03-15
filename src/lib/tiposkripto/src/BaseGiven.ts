@@ -24,6 +24,7 @@ export abstract class BaseGiven<I extends Ibdd_in_any> {
   key: string;
   failed: boolean;
   artifacts: string[] = [];
+  fails: number = 0;
 
   status: boolean | undefined;
 
@@ -52,6 +53,11 @@ export abstract class BaseGiven<I extends Ibdd_in_any> {
     this.givenCB = givenCB;
     this.initialValues = initialValues;
     this.fails = 0; // Initialize fail count
+    this.failed = false;
+    this.error = null;
+    this.store = null;
+    this.key = "";
+    this.status = undefined;
   }
 
   beforeAll(store: I["istore"]) {
@@ -96,19 +102,18 @@ export abstract class BaseGiven<I extends Ibdd_in_any> {
     key: string,
     testResourceConfiguration: ITestResourceConfiguration,
     tester: (t: Awaited<I["then"]> | undefined) => boolean,
-    artifactory: ITestArtifactory,
-    suiteNdx: number
+    artifactory?: ITestArtifactory,
+    suiteNdx?: number
   ) {
     this.key = key;
     this.fails = 0; // Initialize fail count for this given
 
+    // Handle missing artifactory
+    const actualArtifactory = artifactory || ((fPath: string, value: unknown) => {});
     const givenArtifactory = (fPath: string, value: unknown) =>
-      artifactory(`given-${key}/${fPath}`, value);
+      actualArtifactory(`given-${key}/${fPath}`, value);
 
     try {
-      // Ensure addArtifact is properly bound to 'this'
-      const addArtifact = this.addArtifact.bind(this);
-
       this.store = await this.givenThat(
         subject,
         testResourceConfiguration,
@@ -117,45 +122,64 @@ export abstract class BaseGiven<I extends Ibdd_in_any> {
         this.initialValues
       );
       this.status = true;
-    } catch (e) {
+    } catch (e: any) {
       this.status = false;
-
       this.failed = true;
       this.fails++; // Increment fail count
-      this.error = e.stack;
+      this.error = e;
+      // Don't re-raise to allow processing of other givens
+      return this.store;
     }
 
     try {
+      // Process whens
       const whens = this.whens || [];
+      for (const [whenNdx, whenStep] of whens.entries()) {
+        try {
+          this.store = await whenStep.test(
+            this.store,
+            testResourceConfiguration,
+          );
+        } catch (e: any) {
+          this.failed = true;
+          this.fails++; // Increment fail count
+          this.error = e;
+          // Continue to process thens even if whens fail
+        }
+      }
+      
+      // Process thens
       for (const [thenNdx, thenStep] of this.thens.entries()) {
         try {
+          const filepath = suiteNdx !== undefined ? 
+            `suite-${suiteNdx}/given-${key}/then-${thenNdx}` : 
+            `given-${key}/then-${thenNdx}`;
           const t = await thenStep.test(
             this.store,
             testResourceConfiguration,
-            `suite-${suiteNdx}/given-${key}/then-${thenNdx}`
+            filepath
           );
           // If the test doesn't throw, it passed
           tester(t);
-        } catch (e) {
+        } catch (e: any) {
           // Mark the given as failed if any then step fails
           this.failed = true;
           this.fails++; // Increment fail count
-          // Re-throw to propagate the error
-          throw e;
+          this.error = e;
+          // Continue processing other thens
         }
       }
-    } catch (e) {
-      this.error = e.stack;
+    } catch (e: any) {
+      this.error = e;
       this.failed = true;
+      this.fails++; // Increment fail count
     } finally {
       try {
-        const addArtifact = this.addArtifact.bind(this);
-        await this.afterEach(this.store, this.key);
-      } catch (e) {
+        await this.afterEach(this.store, this.key, givenArtifactory);
+      } catch (e: any) {
         this.failed = true;
         this.fails++; // Increment fail count
-        throw e;
-        // this.error = e.message;
+        this.error = e;
       }
     }
 

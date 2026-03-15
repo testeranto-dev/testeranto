@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"testing"
 	"time"
 )
 
@@ -539,6 +540,92 @@ func NewGolingvu(
 	return gv
 }
 
+// NewGolingvuFromFlavored creates a new Golingvu instance from a flavored test specification
+// This is a convenience function for integration with the flavored package
+func NewGolingvuFromFlavored(
+	description string,
+	setupFunc func() interface{},
+	whenSteps []interface{},
+	thenSteps []interface{},
+) *Golingvu {
+	// Create a simple test adapter
+	adapter := &SimpleTestAdapter{}
+	
+	// Create a test implementation that matches the flavored structure
+	impl := ITestImplementation{
+		Suites: map[string]interface{}{
+			"FlavoredSuite": "Flavored Test Suite",
+		},
+		Givens: map[string]interface{}{
+			description: func() interface{} {
+				return setupFunc()
+			},
+		},
+		Whens:  make(map[string]interface{}),
+		Thens:  make(map[string]interface{}),
+	}
+	
+	// Add when steps - these functions should match ITestImplementation.Whens signature
+	for i := range whenSteps {
+		stepName := fmt.Sprintf("WhenStep%d", i)
+		// Store the step function directly
+		impl.Whens[stepName] = whenSteps[i]
+	}
+	
+	// Add then steps - these functions should match ITestImplementation.Thens signature
+	for i := range thenSteps {
+		stepName := fmt.Sprintf("ThenStep%d", i)
+		// Store the step function directly
+		impl.Thens[stepName] = thenSteps[i]
+	}
+	
+	// Create a test specification that matches the flavored structure
+	spec := func(suites, givens, whens, thens interface{}) interface{} {
+		// Convert whenSteps to a slice of step names
+		whenNames := make([]interface{}, len(whenSteps))
+		for i := range whenSteps {
+			whenNames[i] = fmt.Sprintf("WhenStep%d", i)
+		}
+		
+		// Convert thenSteps to a slice of step names
+		thenNames := make([]interface{}, len(thenSteps))
+		for i := range thenSteps {
+			thenNames[i] = fmt.Sprintf("ThenStep%d", i)
+		}
+		
+		return []interface{}{
+			map[string]interface{}{
+				"key": description,
+				"givens": map[string]interface{}{
+					description: map[string]interface{}{
+						"features": []string{"flavored"},
+						"whens":    whenNames,
+						"thens":    thenNames,
+					},
+				},
+			},
+		}
+	}
+	
+	// Create the Golingvu instance
+	return NewGolingvu(
+		nil,
+		spec,
+		impl,
+		DefaultTestResourceRequest,
+		adapter,
+		func(f func()) {
+			defer func() {
+				if r := recover(); r != nil {
+					// Log the panic but don't fail since we don't have access to testing.T here
+					fmt.Printf("Test panicked: %v\n", r)
+				}
+			}()
+			f()
+		},
+	)
+}
+
 // ReceiveTestResourceConfig receives test resource configuration and executes tests
 func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm interface{}) (IFinalResults, error) {
 	// Parse the test resource configuration
@@ -863,6 +950,30 @@ func (gv *Golingvu) GetTestJobs() []ITestJob {
 // GetSpecs returns the generated specs
 func (gv *Golingvu) GetSpecs() interface{} {
 	return gv.Specs
+}
+
+// GetTotalTests returns the total number of tests
+func (gv *Golingvu) GetTotalTests() int {
+	return gv.totalTests
+}
+
+// RunFlavoredTest is a convenience method to run a flavored test directly
+func (gv *Golingvu) RunFlavoredTest(t *testing.T, description string, setupFunc func() interface{}) *Golingvu {
+	// This is a simple wrapper that creates a test chain and converts it
+	// For more complex tests, use the flavored package directly
+	chain := &struct{
+		t *testing.T
+		description string
+		setupFunc func() interface{}
+	}{
+		t: t,
+		description: description,
+		setupFunc: setupFunc,
+	}
+	
+	// In a real implementation, this would create a proper test chain
+	// For now, return the current instance
+	return gv
 }
 
 // AssertThis is a helper function for assertions

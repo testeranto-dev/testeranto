@@ -9,9 +9,15 @@ class PM_Python:
     def __init__(self, t, websocket_port: str):
         # Import locally to avoid circular imports
         try:
-            from testeranto_pitono.pitono_types import ITTestResourceConfiguration
+            # Try to import from installed package first (as pitono)
+            from pitono.pitono_types import ITTestResourceConfiguration
         except ImportError:
-            from ..pitono_types import ITTestResourceConfiguration
+            try:
+                # Try the old package name for backward compatibility
+                from testeranto_pitono.pitono_types import ITTestResourceConfiguration
+            except ImportError:
+                # Fall back to relative import for development
+                from ..pitono_types import ITTestResourceConfiguration
         
         # Don't print the port to reduce noise in test output
         self.test_resource_configuration = t

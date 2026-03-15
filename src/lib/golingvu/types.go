@@ -14,6 +14,12 @@ type Ibdd_in_any interface {
 // Ibdd_out_any represents the output types for Behavior-Driven Development tests.
 type Ibdd_out_any interface{}
 
+// TestFunc is a function that can be used in flavored tests
+type TestFunc func(...interface{}) interface{}
+
+// AssertionFunc is a function that performs assertions
+type AssertionFunc func(...interface{})
+
 // ITestSpecification defines a function that creates test specifications.
 // It takes suites, givens, whens, and thens as parameters and returns
 // a test structure that can be executed by the test runner.
