@@ -48,9 +48,60 @@ export const javaDockerComposeFile = (
 };
 
 export const javaBuildCommand = (projectConfigPath: string, javaConfigPath: string, testName: string, tests: string[]) => {
-  // This function is used elsewhere, so keep it consistent
-  // Return a string that can be used in shell contexts
-  return `sh -c "cd /workspace && javac -cp \\".:lib/*\\" testeranto/java_runtime.java && java -cp \\"testeranto:.:lib/*\\" java_runtime /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName} ${tests.join(" ")}"`;
+  // First compile the project with Gradle (try ./gradlew first, fall back to global gradle), then compile and run java_runtime
+  // Use --no-daemon to avoid daemon issues, --stacktrace for debugging, and --refresh-dependencies for fresh downloads
+  // Add JVM arguments to fix Java 17 module access issues with Gradle
+  // Use both GRADLE_OPTS environment variable and -Dorg.gradle.jvmargs system property for maximum compatibility
+  // Always create a proper build.gradle with all necessary dependencies
+  return `sh -c "cd /workspace && echo '=== Creating proper build.gradle ===' && cat > build.gradle << 'EOF'
+plugins {
+    id 'java'
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    
+    // For JSON processing
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    
+    // Kafe library is included in source code, not from Maven
+    // implementation 'com.testeranto:testeranto.kafe:0.1.21'
+    
+    // Add JSON library for org.json
+    implementation 'org.json:json:20230227'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/java/main/java']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/java/test/java']
+        }
+    }
+}
+
+compileJava {
+    options.compilerArgs += ['-Xlint:unchecked']
+}
+EOF
+&& ls -la build.gradle && echo '=== Contents of build.gradle (first 20 lines) ===' && head -30 build.gradle && echo '=== Running gradle tasks to see available tasks ===' && export GRADLE_OPTS='--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED' && (if [ -f ./gradlew ]; then ./gradlew --no-daemon tasks --all; else gradle --no-daemon tasks --all; fi) && echo '=== Building with Gradle ===' && (if [ -f ./gradlew ]; then ./gradlew --no-daemon --stacktrace --refresh-dependencies -Dorg.gradle.jvmargs='--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED' build; else gradle --no-daemon --stacktrace --refresh-dependencies -Dorg.gradle.jvmargs='--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED' build; fi) && javac -cp \\".:lib/*\\" testeranto/java_runtime.java && java -cp \\"testeranto:.:lib/*\\" java_runtime /workspace/${projectConfigPath} /workspace/${javaConfigPath} ${testName} ${tests.join(" ")}"`;
 }
 
 export const javaBddCommand = (fpath: string, javaConfigPath: string, configKey: string) => {

@@ -94,16 +94,22 @@ export const rustBddCommand = (
   });
 
   // For Rust, we need to execute the compiled binary
-  // The binary is at: testeranto/bundles/${configKey}/${binary_name}
-  // where binary_name is the entry point without .rs extension
-  // fpath might be something like "src/tests/my_test.rs"
-  // We need to extract the base name and replace dots with underscores
-  const pathParts = fpath.split("/");
-  const fileName = pathParts[pathParts.length - 1];
-  const binaryName = fileName.replace(".rs", "").replace(/\./g, "_");
+  // The binary name is the entry point with special characters replaced
+  // fpath might be something like "src/rust/testeranto/Calculator.rusto.test.rs"
+  // We need to create a consistent binary name that matches what the Rust builder creates
+  const binaryName = fpath
+    .replace(/\//g, "_")
+    .replace(/\./g, "_")
+    .replace(/-/g, "_")
+    // Ensure only alphanumeric and underscores remain
+    .replace(/[^a-zA-Z0-9_]/g, "");
 
   // Execute the compiled binary in the bundle directory
-  return `testeranto/bundles/${configKey}/${binaryName} '${jsonStr}'`;
+  // Use a direct approach without complex variable handling
+  const fullPath = `/workspace/testeranto/bundles/${configKey}/${binaryName}`;
+  // Escape single quotes in JSON by replacing them with '"'"'
+  const escapedJson = jsonStr.replace(/'/g, "'\"'\"'");
+  return `sh -c 'cd /workspace && if [ -f "${fullPath}" ]; then "${fullPath}" '\''${escapedJson}'\''; elif [ -f "${fullPath}.exe" ]; then "${fullPath}.exe" '\''${escapedJson}'\''; else echo "Binary not found: ${fullPath} or ${fullPath}.exe"; ls -la "/workspace/testeranto/bundles/${configKey}/"; exit 1; fi'`;
 };
 
 // BuildKit-based building for rust runtime

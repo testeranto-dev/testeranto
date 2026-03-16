@@ -973,7 +973,7 @@ export const startBuilderServicesPure = async (
     runtimeConfigKey: string,
   ) => Promise<void>,
 ): Promise<void> => {
-  const builderServices: string[] = [];
+  const builderServices: Array<{serviceName: string, runtime: string, configKey: string}> = [];
   const processedRuntimes = new Set<string>();
 
   for (const [runtimeTestsName, runtimeTests] of Object.entries(
@@ -984,30 +984,42 @@ export const startBuilderServicesPure = async (
     if (!processedRuntimes.has(runtime)) {
       processedRuntimes.add(runtime);
       const builderServiceName = getBuilderServiceName(runtime);
-      builderServices.push(builderServiceName);
+      builderServices.push({
+        serviceName: builderServiceName,
+        runtime: runtime,
+        configKey: runtimeTestsName
+      });
     }
   }
 
-  for (const serviceName of builderServices) {
+  for (const {serviceName, runtime, configKey} of builderServices) {
     try {
+      // First, try to build the image locally if it doesn't exist
+      const imageName = `testeranto-${runtime}-${configKey}:latest`;
+      const imageExistsCmd = `docker image inspect ${imageName} > /dev/null 2>&1`;
+      
+      try {
+        execSyncWrapper(imageExistsCmd, { cwd: getCwdPure() });
+        consoleLog(`[Server_Docker] Image ${imageName} exists locally`);
+      } catch (imageError) {
+        consoleLog(`[Server_Docker] Image ${imageName} not found locally, trying to build...`);
+        // Try to build the image
+        const buildCmd = `docker build -f ${configs.runtimes[configKey].dockerfile} -t ${imageName} .`;
+        try {
+          execSyncWrapper(buildCmd, { cwd: getCwdPure() });
+          consoleLog(`[Server_Docker] Built image ${imageName}`);
+        } catch (buildError) {
+          consoleWarn(`[Server_Docker] Could not build image ${imageName}: ${buildError.message}`);
+          // Continue anyway - docker-compose will try to build it
+        }
+      }
+
+      // Start the service
       await spawnPromise(
         `docker compose -f "testeranto/docker-compose.yml" up -d ${serviceName}`,
       );
 
-      let runtimeForService = "";
-      for (const [runtimeTestsName, runtimeTests] of Object.entries(
-        configs.runtimes,
-      )) {
-        const runtime = runtimeTests.runtime;
-        if (getBuilderServiceName(runtime) === serviceName) {
-          runtimeForService = runtime;
-          break;
-        }
-      }
-
-      if (runtimeForService) {
-        await startServiceLogging(serviceName, runtimeForService);
-      }
+      await startServiceLogging(serviceName, runtime, configKey);
     } catch (error: any) {
       consoleError(
         `[Server_Docker] ❌ Failed to start builder service ${serviceName}:`,
@@ -1121,7 +1133,7 @@ export const captureExistingLogs: IR = (
       encoding: "utf-8",
     }).trim();
 
-    const cmd = `${DOCKER_COMPOSE_LOGS} ${runtime} 2>/dev/null || true`;
+    const cmd = `${DOCKER_COMPOSE_LOGS} ${serviceName} 2>/dev/null || true`;
     const existingLogs = execSyncWrapper(cmd, {
       cwd: getCwdPure(),
       encoding: "utf-8",

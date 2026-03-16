@@ -45,13 +45,10 @@ if __name__ == "__main__":
     # Create an instance and run tests
     tests = CalculatorTests()
     
-    # Note: In a real scenario, you would need to provide actual values
-    # for the parameters in when and then decorators
-    print("Test suite created successfully!")
-    print("To run tests, you would need to:")
-    print("1. Create an instance of CalculatorTests")
-    print("2. Call run_tests() method")
-    print("3. The decorators collect test specifications")
+    # Run tests
+    print("Running tests...")
+    instance = tests.run_tests()
+    print(f"Test instance created: {instance}")
     
     # Show what methods are available
     print(f"\nAvailable methods in CalculatorTests:")

@@ -1,6 +1,7 @@
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.FileTime;
+import java.nio.file.StandardCopyOption;
 import java.security.*;
 import java.util.*;
 import javax.tools.*;
@@ -137,11 +138,26 @@ public class java_runtime {
             Iterable<? extends JavaFileObject> compilationUnits =
                 fileManager.getJavaFileObjectsFromFiles(Arrays.asList(sourceFile.toFile()));
 
-            // Use current classpath
-            String classpath = System.getProperty("java.class.path");
+            // Build classpath: include current classpath and lib directory
+            String currentClasspath = System.getProperty("java.class.path");
+            Path libDir = Paths.get("/workspace/lib");
+            StringBuilder classpathBuilder = new StringBuilder();
+            classpathBuilder.append(currentClasspath);
+            
+            // Add all JARs from lib directory
+            if (Files.exists(libDir) && Files.isDirectory(libDir)) {
+                try (DirectoryStream<Path> jarStream = Files.newDirectoryStream(libDir, "*.jar")) {
+                    for (Path jarFile : jarStream) {
+                        classpathBuilder.append(":").append(jarFile.toString());
+                    }
+                } catch (IOException e) {
+                    System.err.println("Warning: Could not list JARs in lib directory: " + e.getMessage());
+                }
+            }
+            
             List<String> options = Arrays.asList(
                 "-d", tempDir.toString(),
-                "-cp", classpath
+                "-cp", classpathBuilder.toString()
             );
 
             JavaCompiler.CompilationTask task = compiler.getTask(
@@ -387,114 +403,132 @@ public class java_runtime {
             Files.createDirectories(metaInfDir);
             Files.write(metaInfDir.resolve("MANIFEST.MF"), manifest.getBytes());
             
-            // Copy test file
-            Path testFileInJar = tempDir.resolve(testFileName);
+            // Copy test file maintaining package structure
+            Path testFileInJar;
+            if (!packageName.isEmpty()) {
+                // Create directory structure for the package
+                String packagePath = packageName.replace('.', '/');
+                Path packageDir = tempDir.resolve(packagePath);
+                Files.createDirectories(packageDir);
+                testFileInJar = packageDir.resolve(testFileName);
+            } else {
+                testFileInJar = tempDir.resolve(testFileName);
+            }
             Files.copy(testFilePath, testFileInJar);
             
-            // Write wrapper class
+            // Write wrapper class (no package needed)
             Path wrapperFileInJar = tempDir.resolve(wrapperClassName + ".java");
             Files.write(wrapperFileInJar, wrapperContent.getBytes());
             
-            // Compile if specified in config (default to true)
-            boolean shouldCompile = !javaConfig.has("compile") || javaConfig.getBoolean("compile");
-            if (shouldCompile) {
-                // Compile Java files
-                List<String> compileCommand = new ArrayList<>();
-                compileCommand.add("javac");
-                compileCommand.add("-cp");
+            // Check if Gradle has already compiled the classes (should have been done before java_runtime runs)
+            Path workspace = Paths.get("/workspace");
+            Path buildDir = workspace.resolve("build");
+            Path classesDir = buildDir.resolve("classes/java/main");
+            Path testClassesDir = buildDir.resolve("classes/java/test");
+            
+            if (Files.exists(classesDir) && Files.exists(testClassesDir)) {
+                System.out.println("  Found compiled classes from Gradle build");
                 
-                // Build classpath using wildcard for JARs
-                StringBuilder classpath = new StringBuilder();
-                classpath.append(".");
-                classpath.append(":/workspace/lib/*");
-                classpath.append(":/workspace/src/java/main/java");
-                classpath.append(":/workspace/src/java/test/java");
-                classpath.append(":").append(tempDir.toString());
+                // Copy compiled classes to temp directory for JAR creation
+                Path tempClassesDir = tempDir.resolve("classes");
+                Files.createDirectories(tempClassesDir);
                 
-                // Add specific entries from config that aren't wildcards
-                if (javaConfig.has("classpath")) {
-                    JSONArray cpArray = javaConfig.getJSONArray("classpath");
-                    for (int i = 0; i < cpArray.length(); i++) {
-                        String entry = cpArray.getString(i);
-                        // Skip entries that are already covered by wildcard
-                        if (entry.equals("lib/*") || entry.endsWith("/*")) {
-                            continue;
+                // Copy main classes
+                copyDirectory(classesDir, tempClassesDir);
+                
+                // Copy test classes
+                copyDirectory(testClassesDir, tempClassesDir);
+                
+                // Clear the temp directory and add compiled classes
+                Files.walk(tempDir)
+                    .filter(path -> !path.equals(tempDir) && !path.startsWith(tempClassesDir))
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+                
+                // Move classes to root of tempDir
+                Files.walk(tempClassesDir)
+                    .forEach(source -> {
+                        try {
+                            Path relative = tempClassesDir.relativize(source);
+                            Path dest = tempDir.resolve(relative);
+                            if (Files.isDirectory(source)) {
+                                Files.createDirectories(dest);
+                            } else {
+                                Files.createDirectories(dest.getParent());
+                                Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
-                        // Resolve relative paths
-                        if (!entry.startsWith("/")) {
-                            entry = "/workspace/" + entry;
-                        }
-                        // Check if not already in classpath
-                        if (!classpath.toString().contains(entry)) {
-                            classpath.append(":").append(entry);
-                        }
-                    }
-                }
+                    });
                 
-                String cp = classpath.toString();
-                compileCommand.add(cp);
-                System.out.println("  Compilation classpath: " + cp);
+                // Clean up tempClassesDir
+                Files.walk(tempClassesDir)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            } else {
+                System.out.println("  WARNING: Compiled classes not found. Gradle build may have failed or not run.");
+                System.out.println("  Falling back to source files for JAR creation.");
                 
-                // Debug: list JARs in /workspace/lib
-                Path libDir = Paths.get("/workspace/lib");
-                if (Files.exists(libDir)) {
-                    System.out.println("  Debug: Listing JARs in " + libDir.toAbsolutePath());
-                    try (DirectoryStream<Path> stream = Files.newDirectoryStream(libDir, "*.jar")) {
-                        List<Path> jars = new ArrayList<>();
-                        for (Path jar : stream) {
-                            jars.add(jar);
-                        }
-                        jars.sort(Comparator.naturalOrder());
-                        for (Path jar : jars) {
-                            System.out.println("    JAR: " + jar.getFileName());
-                        }
-                        if (jars.isEmpty()) {
-                            System.err.println("    No JARs found!");
-                        }
-                    } catch (IOException e) {
-                        System.err.println("  Error listing JARs: " + e.getMessage());
-                    }
-                } else {
-                    System.err.println("  Lib directory does not exist!");
-                }
-                
-                // Find all Java files that need to be compiled
-                List<String> javaFilesToCompile = new ArrayList<>();
-                
-                // Add the test file
-                javaFilesToCompile.add(testFileInJar.toString());
-                
-                // Add the wrapper file
-                javaFilesToCompile.add(wrapperFileInJar.toString());
-                
-                // Add Calculator.java if it exists
+                // Copy Calculator.java source if it exists
                 Path calculatorSource = Paths.get("/workspace/src/java/main/java/com/example/calculator/Calculator.java");
                 if (Files.exists(calculatorSource)) {
-                    javaFilesToCompile.add(calculatorSource.toString());
+                    String calculatorPackage = "com.example.calculator";
+                    String packagePath = calculatorPackage.replace('.', '/');
+                    Path calculatorPackageDir = tempDir.resolve(packagePath);
+                    Files.createDirectories(calculatorPackageDir);
+                    Path calculatorInTemp = calculatorPackageDir.resolve("Calculator.java");
+                    Files.copy(calculatorSource, calculatorInTemp, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+            
+            // Compile the wrapper class if we have compiled classes from Gradle
+            // Build classpath from Gradle's build directory
+            Path workspace = Paths.get("/workspace");
+            Path buildDir = workspace.resolve("build");
+            Path classesDir = buildDir.resolve("classes/java/main");
+            Path testClassesDir = buildDir.resolve("classes/java/test");
+            
+            if (Files.exists(classesDir) && Files.exists(testClassesDir)) {
+                // Build classpath
+                StringBuilder classpath = new StringBuilder();
+                classpath.append(classesDir.toString());
+                classpath.append(":");
+                classpath.append(testClassesDir.toString());
+                
+                // Add JARs from /workspace/lib
+                Path libDir = Paths.get("/workspace/lib");
+                if (Files.exists(libDir) && Files.isDirectory(libDir)) {
+                    try (DirectoryStream<Path> jarStream = Files.newDirectoryStream(libDir, "*.jar")) {
+                        for (Path jarFile : jarStream) {
+                            classpath.append(":").append(jarFile.toString());
+                        }
+                    } catch (IOException e) {
+                        System.err.println("  Warning: Could not list JARs in lib directory: " + e.getMessage());
+                    }
                 }
                 
-                // Don't add other Java files from the original directory to avoid duplicate classes
-                // The temp directory already has the necessary files
+                // Compile wrapper class
+                List<String> compileCommand = Arrays.asList(
+                    "javac",
+                    "-cp", classpath.toString(),
+                    "-d", tempDir.toString(),
+                    wrapperFileInJar.toString()
+                );
                 
-                // Add all Java files to compile command
-                compileCommand.addAll(javaFilesToCompile);
-                
-                System.out.println("  Compilation classpath: " + cp);
-                
-                System.out.println("  Compiling " + javaFilesToCompile.size() + " Java files");
-                
-                ProcessBuilder pb = new ProcessBuilder(compileCommand);
-                Process process = pb.start();
-                int exitCode = process.waitFor();
-                if (exitCode != 0) {
-                    // Capture error output
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            System.err.println("javac error: " + line);
-                        }
-                    }
-                    throw new IOException("javac failed with exit code " + exitCode);
+                System.out.println("  Compiling wrapper class with classpath: " + classpath);
+                ProcessBuilder compilePb = new ProcessBuilder(compileCommand);
+                Process compileProcess = compilePb.start();
+                int compileExitCode = compileProcess.waitFor();
+                if (compileExitCode != 0) {
+                    System.err.println("  WARNING: Failed to compile wrapper class");
+                    // Continue anyway - the wrapper source will be included in JAR
+                } else {
+                    System.out.println("  Successfully compiled wrapper class");
+                    // Delete the source file since we have the compiled class
+                    Files.delete(wrapperFileInJar);
                 }
             }
             
@@ -543,6 +577,23 @@ public class java_runtime {
             // Ignore
         }
         return "";
+    }
+    
+    private static void copyDirectory(Path source, Path target) throws IOException {
+        Files.walk(source)
+            .forEach(sourcePath -> {
+                try {
+                    Path targetPath = target.resolve(source.relativize(sourcePath));
+                    if (Files.isDirectory(sourcePath)) {
+                        Files.createDirectories(targetPath);
+                    } else {
+                        Files.createDirectories(targetPath.getParent());
+                        Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
     }
     
     private static Path findTestFile(String testPath) {

@@ -30,6 +30,7 @@ export const generateServicesPure = (
   configs: ITestconfigV2,
   mode: IMode,
 ): Record<string, any> => {
+  consoleLog(`[generateServicesPure] Starting with ${Object.keys(configs.runtimes).length} runtimes`);
   const services: any = {};
   const processedRuntimes = new Set<IRunTime>();
   let hasWebRuntime = false;
@@ -37,6 +38,7 @@ export const generateServicesPure = (
   for (const [runtimeTestsName, runtimeTests] of Object.entries(
     configs.runtimes,
   )) {
+    consoleLog(`[generateServicesPure] Processing runtime: ${runtimeTestsName}, runtime type: ${runtimeTests.runtime}`);
     const runtime: IRunTime = runtimeTests.runtime as IRunTime;
     const buildOptions = runtimeTests.buildOptions;
     const testsObj = runtimeTests.tests;
@@ -59,6 +61,7 @@ export const generateServicesPure = (
     if (!processedRuntimes.has(runtime)) {
       processedRuntimes.add(runtime);
       const builderServiceName = getBuilderServiceName(runtime);
+      consoleLog(`[generateServicesPure] Adding builder service: ${builderServiceName} for runtime ${runtime}`);
       const composeFunc = runTimeToCompose[runtime][0];
       const projectConfigPath = "testeranto/testeranto.ts";
       const runtimeConfigPath = buildOptions;
@@ -77,12 +80,22 @@ export const generateServicesPure = (
       services[builderServiceName].environment.MODE = mode;
 
       if (runtimeTests.buildKitOptions) {
-        delete services[builderServiceName].build;
+        // Keep the build section, but also set the image name
+        // This way docker-compose can build if the image doesn't exist
         services[builderServiceName].image =
           `testeranto-${runtime}-${runtimeTestsName}:latest`;
+        // Ensure build section exists
+        if (!services[builderServiceName].build) {
+          services[builderServiceName].build = {
+            context: processCwd(),
+            dockerfile: runtimeTests.dockerfile,
+          };
+        }
       }
+      consoleLog(`[generateServicesPure] Builder service ${builderServiceName} configured`);
     }
 
+    consoleLog(`[generateServicesPure] Processing ${testsObj.length} tests for ${runtimeTestsName}`);
     for (const tName of testsObj) {
       const cleanedTestName = cleanTestName(tName);
       const uid = `${runtimeTestsName.toLowerCase()}-${cleanedTestName}`;
@@ -107,6 +120,8 @@ export const generateServicesPure = (
         getAiderServiceName(uid),
       );
 
+      consoleLog(`[generateServicesPure] Added BDD and aider services for test ${tName}`);
+      
       checks.forEach((check: ICheck, ndx) => {
         const command = check([]);
         services[getCheckServiceName(uid, ndx)] = staticTestDockerComposeFile(
@@ -116,11 +131,13 @@ export const generateServicesPure = (
           configs,
           runtimeTestsName,
         );
+        consoleLog(`[generateServicesPure] Added check service ${getCheckServiceName(uid, ndx)}`);
       });
     }
   }
 
   if (hasWebRuntime) {
+    consoleLog(`[generateServicesPure] Adding chrome-service for web runtime`);
     services["chrome-service"] = chromeServiceConfig();
   }
 
@@ -130,6 +147,7 @@ export const generateServicesPure = (
     }
   }
 
+  consoleLog(`[generateServicesPure] Generated ${Object.keys(services).length} services: ${Object.keys(services).join(', ')}`);
   return services;
 };
 
@@ -160,7 +178,10 @@ export const writeConfigForExtensionOnStop = () => {
 };
 
 export const writeComposeFile = (services: Record<string, any>) => {
+  consoleLog(`[writeComposeFile] Writing ${Object.keys(services).length} services to docker-compose.yml`);
   const dockerComposeFileContents = BaseCompose(services);
+  
+  consoleLog(`[writeComposeFile] Contents:`, JSON.stringify(dockerComposeFileContents, null, 2));
 
   writeFileSync(
     join(getCwdPure(), "testeranto/docker-compose.yml"),
@@ -169,6 +190,7 @@ export const writeComposeFile = (services: Record<string, any>) => {
       noRefs: true,
     }),
   );
+  consoleLog(`[writeComposeFile] docker-compose.yml written successfully`);
 };
 
 export const BaseCompose = (services: any) => {
@@ -389,21 +411,41 @@ export const buildWithBuildKitPure = async (
 
   for (const [configKey, configValue] of Object.entries(configs.runtimes)) {
     const runtime = configValue.runtime;
+    const buildKitOptions = configValue.buildKitOptions;
+
+    if (!buildKitOptions) {
+      consoleLog(
+        `[Server_Docker] No BuildKit options for ${configKey} (${runtime}), skipping BuildKit build`,
+      );
+      continue;
+    }
 
     try {
-      // Import runtime-specific build functions dynamically
-      // Since we can't import them directly in Server_Docker.ts
-      // We'll handle them here
-      const modulePath = `../runtimes/${runtime}/docker`;
-      // Note: This is a placeholder - actual implementation would need to be adjusted
-      // For now, we'll just log
       consoleLog(
         `[Server_Docker] Building ${configKey} (${runtime}) with BuildKit`,
       );
+      
+      // Build the image using BuildKitBuilder
+      const result = await BuildKitBuilder.buildImage({
+        runtime: runtime,
+        configKey: configKey,
+        dockerfilePath: configValue.dockerfile,
+        buildContext: processCwd(),
+        cacheMounts: buildKitOptions.cacheMounts || [],
+        targetStage: buildKitOptions.targetStage,
+        buildArgs: buildKitOptions.buildArgs || {},
+      });
+
+      if (result.success) {
+        consoleLog(
+          `[Server_Docker] ✅ BuildKit build successful for ${configKey} (${runtime}) in ${result.duration}ms`,
+        );
+      } else {
+        throw new Error(result.error || 'Build failed');
+      }
     } catch (error: any) {
-      logError(
-        `[Server_Docker] ❌ BuildKit build failed for ${configKey} (${runtime}): ${error.message}`,
-      );
+      const errorMsg = `[Server_Docker] ❌ BuildKit build failed for ${configKey} (${runtime}): ${error.message}`;
+      logError(errorMsg);
       buildErrors.push(`${configKey} (${runtime}): ${error.message}`);
     }
   }

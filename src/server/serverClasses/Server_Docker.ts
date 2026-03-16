@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
+import fs, { existsSync, mkdirSync, readFileSync } from "fs";
+import path, { join } from "path";
 import type { IRunTime, ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
-import type { IDockerComposeResult } from "./Server_Docker/Server_Docker_Constants";
+import { getInputFilePath, type IDockerComposeResult } from "./Server_Docker/Server_Docker_Constants";
 import { consoleError } from "./Server_Docker/Server_Docker_Dependents";
 import {
   exitProcessPure,
@@ -87,6 +87,22 @@ export class Server_Docker extends Server_WS {
         );
         if (!this.inputFiles[configKey][testName]) {
           this.inputFiles[configKey][testName] = [];
+        }
+
+        // Create directory for test reports based on the entrypoint
+        // Follow the pattern: testeranto/reports/{configKey}/{testName}/
+        // where testName is the entrypoint path (e.g., "src/ts/Calculator.test.node.ts")
+        // This ensures tests.json can be written to the correct location
+        const cwd = getCwdPure();
+        const cleanTestName = testName.replace(/^\.\//, '');
+        const reportDir = join(cwd, "testeranto", "reports", configKey, cleanTestName);
+        try {
+          if (!existsSync(reportDir)) {
+            mkdirSync(reportDir, { recursive: true });
+            console.log(`[Server_Docker] Created report directory: ${reportDir}`);
+          }
+        } catch (error: any) {
+          console.error(`[Server_Docker] Failed to create report directory ${reportDir}:`, error);
         }
 
         if (this.mode === "dev") {
