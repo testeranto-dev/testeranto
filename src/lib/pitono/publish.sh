@@ -50,7 +50,7 @@ python3 -m pip install --upgrade twine
 read -p "Publish $NEW_VERSION to PyPI? (y/n): " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    python3 -m twine upload dist/*
+    python3 -m twine upload dist/* --verbose --skip-existing
     echo "Published $NEW_VERSION to PyPI"
 else
     echo "Skipping publish. You can publish manually later with:"

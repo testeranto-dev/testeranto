@@ -788,35 +788,43 @@ export const watchInputFilePure = async (
 
     // Create directories for each test entrypoint to ensure test.json files can be placed correctly
     // According to the bug report, test.json files should follow the structure of the entrypoint
-    // For each test in the input JSON, create the appropriate directory under testeranto/reports/{configKey}/
+    // For each test in the input JSON, create the appropriate directory under testeranto/reports/{correctConfigKey}/
     const cwd = getCwdPure();
     for (const [currentTestName, testInfo] of Object.entries(allTestsInfo)) {
-      if (testInfo && testInfo.files && Array.isArray(testInfo.files)) {
-        for (const file of testInfo.files) {
-          // The file path is the entrypoint (e.g., "src/ts/Calculator.test.node.mjs")
-          // We need to create a directory structure under testeranto/reports/{configKey}/{filePath}/
-          // But actually, we want the parent directory of where the test.json will be placed
-          // According to the bug report, test.json should be at {entrypointPath}.tests.json
-          // So we need to create the directory for the entrypoint path
-          const entrypointPath = file;
-          // Remove leading "./" if present
-          const cleanPath = entrypointPath.replace(/^\.\//, '');
-          // Create directory path: testeranto/reports/{configKey}/{cleanPath}/
-          // According to the bug report, test.json should be placed at {entrypointPath}/tests.json
-          // So we need to create a directory for the entire cleanPath (including the filename as a directory)
-          const fullDirPath = join(cwd, "testeranto", "reports", configKey, cleanPath);
-          // We need to create the directory for fullDirPath, not remove the last component
-          // Because tests.json will be placed inside a directory named after the entrypoint file
-          const dirToCreate = fullDirPath;
-          try {
-            if (!existsSync(dirToCreate)) {
-              mkdirSync(dirToCreate, { recursive: true });
-              consoleLog(`[Server_Docker] Created directory for test reports: ${dirToCreate}`);
-            }
-          } catch (error: any) {
-            consoleWarn(`[Server_Docker] Failed to create directory ${dirToCreate}: ${error.message}`);
-          }
+      // Find which config this test belongs to
+      let testConfigKey: string | null = null;
+      for (const [ck, configValue] of Object.entries(configs.runtimes)) {
+        if (configValue.tests.includes(currentTestName)) {
+          testConfigKey = ck;
+          break;
         }
+      }
+      
+      // If we couldn't find a config for this test, skip it
+      if (!testConfigKey) {
+        consoleWarn(`[Server_Docker] Could not find config for test ${currentTestName}`);
+        continue;
+      }
+      
+      // The entrypoint path is currentTestName (e.g., "src/ts/Calculator.test.node.ts")
+      // We need to create a directory structure under testeranto/reports/{testConfigKey}/{entrypointPath}/
+      // According to the bug report, test.json should be placed at {entrypointPath}/tests.json
+      // So we need to create a directory for the entire entrypoint path (including the filename as a directory)
+      const entrypointPath = currentTestName;
+      // Remove leading "./" if present
+      const cleanPath = entrypointPath.replace(/^\.\//, '');
+      // Create directory path: testeranto/reports/{testConfigKey}/{cleanPath}/
+      const fullDirPath = join(cwd, "testeranto", "reports", testConfigKey, cleanPath);
+      // We need to create the directory for fullDirPath, not remove the last component
+      // Because tests.json will be placed inside a directory named after the entrypoint file
+      const dirToCreate = fullDirPath;
+      try {
+        if (!existsSync(dirToCreate)) {
+          mkdirSync(dirToCreate, { recursive: true });
+          consoleLog(`[Server_Docker] Created directory for test reports: ${dirToCreate}`);
+        }
+      } catch (error: any) {
+        consoleWarn(`[Server_Docker] Failed to create directory ${dirToCreate}: ${error.message}`);
       }
     }
 

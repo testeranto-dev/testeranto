@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 )
@@ -699,21 +700,20 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm int
 	if !strings.HasSuffix(filePath, "/") {
 		filePath = filePath + "/"
 	}
-	filePath = filePath + "tests.json"
+	filePath = filepath.Join(filePath, "tests.json")
 
 	// Ensure the directory exists
 	dirPath := filepath.Dir(filePath)
 	if dirPath != "" && dirPath != "." {
 		if err := os.MkdirAll(dirPath, 0755); err != nil {
-			// TODO throw an error instead of fallback
-			// return IFinalResults{
-			// 	Failed:       true,
-			// 	Fails:        -1,
-			// 	Artifacts:    []interface{}{},
-			// 	Features:     []string{},
-			// 	Tests:        0,
-			// 	RunTimeTests: -1,
-			// }, fmt.Errorf("failed to create directory %s: %v", dirPath, err)
+			return IFinalResults{
+				Failed:       true,
+				Fails:        -1,
+				Artifacts:    []interface{}{},
+				Features:     []string{},
+				Tests:        0,
+				RunTimeTests: -1,
+			}, fmt.Errorf("failed to create directory %s: %v", dirPath, err)
 		}
 	}
 

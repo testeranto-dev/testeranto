@@ -87,7 +87,7 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
         _websocket_port: &str,
     ) -> Result<IFinalResults, Box<dyn std::error::Error>> {
         // Parse test resource configuration
-        let _test_resource_config: ITTestResourceConfiguration = 
+        let test_resource_config: ITTestResourceConfiguration = 
             serde_json::from_str(partial_test_resource)?;
         
         // Run tests (simplified)
@@ -96,7 +96,7 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
         let all_artifacts: Vec<String> = Vec::new();
         
         // Write tests.json
-        self.write_tests_json(total_fails, &all_features)?;
+        self.write_tests_json(&test_resource_config, total_fails, &all_features)?;
         
         Ok(IFinalResults {
             failed: total_fails > 0,
@@ -108,6 +108,7 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
     
     fn write_tests_json(
         &self,
+        test_resource_config: &ITTestResourceConfiguration,
         total_fails: i32,
         features: &[String],
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -120,14 +121,20 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
             "artifacts": []
         });
         
+        // Get the fs path from test resource configuration
+        let mut fs_path = test_resource_config.fs.clone();
+        if !fs_path.ends_with('/') {
+            fs_path.push('/');
+        }
+        let file_path = format!("{}tests.json", fs_path);
+        
         // Create directory if it doesn't exist
-        let dir_path = "testeranto/reports/allTests/example";
-        if !Path::new(dir_path).exists() {
+        let dir_path = Path::new(&fs_path);
+        if !dir_path.exists() {
             fs::create_dir_all(dir_path)?;
         }
         
         // Write to file
-        let file_path = format!("{}/tests.json", dir_path);
         fs::write(&file_path, serde_json::to_string_pretty(&tests_data)?)?;
         
         println!("tests.json written to: {}", file_path);

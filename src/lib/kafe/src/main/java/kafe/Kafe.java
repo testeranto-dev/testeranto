@@ -149,7 +149,7 @@ public class Kafe {
         List<Object> allArtifacts = new ArrayList<>();
         
         // Write tests.json
-        writeTestsJson(totalFails, allFeatures, allArtifacts);
+        writeTestsJson(testResourceConfig, totalFails, allFeatures, allArtifacts);
         
         return new IFinalResults(
             totalFails > 0,
@@ -160,20 +160,43 @@ public class Kafe {
     }
     
     private ITTestResourceConfiguration parseTestResourceConfig(String partialTestResource) {
-        // Simple parsing - in reality would use JSON parsing
-        // For now, create a default config
-        return new ITTestResourceConfiguration(
-            "default",
-            ".",
-            new ArrayList<>(),
-            null,
-            30000,
-            0,
-            new HashMap<>()
-        );
+        try {
+            // Simple JSON parsing
+            // Look for "fs" field
+            String fs = ".";
+            // Find "fs": in the string
+            int fsIndex = partialTestResource.indexOf("\"fs\":");
+            if (fsIndex != -1) {
+                int start = partialTestResource.indexOf("\"", fsIndex + 5);
+                int end = partialTestResource.indexOf("\"", start + 1);
+                if (start != -1 && end != -1) {
+                    fs = partialTestResource.substring(start + 1, end);
+                }
+            }
+            return new ITTestResourceConfiguration(
+                "default",
+                fs,
+                new ArrayList<>(),
+                null,
+                30000,
+                0,
+                new HashMap<>()
+            );
+        } catch (Exception e) {
+            // If parsing fails, return a default config
+            return new ITTestResourceConfiguration(
+                "default",
+                ".",
+                new ArrayList<>(),
+                null,
+                30000,
+                0,
+                new HashMap<>()
+            );
+        }
     }
     
-    private void writeTestsJson(int totalFails, List<String> features, List<Object> artifacts) {
+    private void writeTestsJson(ITTestResourceConfiguration testResourceConfig, int totalFails, List<String> features, List<Object> artifacts) {
         Map<String, Object> testsData = new HashMap<>();
         testsData.put("name", "Java Test");
         testsData.put("givens", new ArrayList<>());
@@ -182,15 +205,24 @@ public class Kafe {
         testsData.put("features", features);
         testsData.put("artifacts", artifacts);
         
+        // Get the fs path from test resource configuration
+        String fsPath = testResourceConfig.fs;
+        if (fsPath == null || fsPath.isEmpty()) {
+            fsPath = ".";
+        }
+        // Ensure the path ends with a slash
+        if (!fsPath.endsWith("/")) {
+            fsPath = fsPath + "/";
+        }
+        String filePath = fsPath + "tests.json";
+        
         // Create directory if it doesn't exist
-        String dirPath = "testeranto/reports/allTests/example";
-        File dir = new File(dirPath);
+        File dir = new File(fsPath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
         
         // Write to file
-        String filePath = dirPath + "/tests.json";
         try (FileWriter writer = new FileWriter(filePath)) {
             // Simple JSON writing - in reality would use a JSON library
             writer.write("{\n");
