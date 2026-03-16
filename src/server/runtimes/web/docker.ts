@@ -88,7 +88,7 @@ export const webBddCommand = (
 ) => {
   const jsonStr = JSON.stringify({
     ports: [1111],
-    fs: `testeranto/reports/${configKey}`,
+    fs: `testeranto/reports/${configKey}/${fpath}/`,
   });
   return `yarn tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 };

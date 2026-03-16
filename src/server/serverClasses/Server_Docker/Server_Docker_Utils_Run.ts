@@ -98,7 +98,7 @@ export const spawnPromise = (
 export const captureContainerExitCode = (
   serviceName: string,
   runtime: string,
-  runTimeConfigKey: string
+  runTimeConfigKey: string,
 ): void => {
   const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
   const containerId = execSyncWrapper(containerIdCmd, {
@@ -115,7 +115,7 @@ export const captureContainerExitCode = (
       getCwdPure(),
       runtime,
       serviceName,
-      runTimeConfigKey
+      runTimeConfigKey,
     );
     writeFileSync(containerExitCodeFilePath, exitCode);
 
@@ -127,7 +127,12 @@ export const captureContainerExitCode = (
     const status = execSyncWrapper(statusCmd, {
       cwd: getCwdPure(),
     }).trim();
-    const statusFilePath = getStatusFilePath(getCwdPure(), runtime, serviceName, runTimeConfigKey);
+    const statusFilePath = getStatusFilePath(
+      getCwdPure(),
+      runtime,
+      serviceName,
+      runTimeConfigKey,
+    );
     writeFileSync(statusFilePath, status);
   } else {
     consoleLog(`[Server_Docker] No container found for service ${serviceName}`);
@@ -228,6 +233,7 @@ export const getInputFilesPure = (
 ): string[] => {
   let configKey: string | null = null;
 
+  // First, try to find config where configValue.runtime === runtime
   for (const [key, configValue] of Object.entries(configs.runtimes)) {
     if (
       configValue.runtime === runtime &&
@@ -238,10 +244,25 @@ export const getInputFilesPure = (
     }
   }
 
+  // If not found, try to find config where key === runtime (config key passed instead of runtime type)
   if (!configKey) {
-    throw `[Server_Docker] No config found for runtime ${runtime} and test ${testName}`;
+    for (const [key, configValue] of Object.entries(configs.runtimes)) {
+      if (key === runtime && configValue.tests.includes(testName)) {
+        configKey = key;
+        break;
+      }
+    }
   }
 
+  if (!configKey) {
+    consoleLog(
+      `[Server_Docker] No config found for runtime ${runtime} and test ${testName}`,
+    );
+    // Return empty array instead of throwing to prevent crashes
+    return [];
+  }
+
+  // First, try to get files from in-memory structure
   if (
     inputFiles &&
     typeof inputFiles === "object" &&
@@ -250,9 +271,47 @@ export const getInputFilesPure = (
     inputFiles[configKey][testName]
   ) {
     const files = inputFiles[configKey][testName];
-    return Array.isArray(files) ? files : [];
+    if (Array.isArray(files) && files.length > 0) {
+      consoleLog(
+        `[Server_Docker] Found ${files.length} files in memory for ${configKey}/${testName}`,
+      );
+      return files;
+    }
   }
 
+  // If no files in memory, try to load from the input file directly
+  consoleLog(
+    `[Server_Docker] No files in memory for ${configKey}/${testName}, trying to load from input file`,
+  );
+  try {
+    // Use the runtime type from the config, not the parameter
+    const configRuntime = configs.runtimes[configKey]?.runtime;
+    const inputFilePath = getInputFilePath(configRuntime || runtime, configKey);
+    if (existsSync(inputFilePath)) {
+      const fileContent = readFileSync(inputFilePath, "utf-8");
+      const allTestsInfo = JSON.parse(fileContent);
+      if (allTestsInfo[testName]) {
+        const testInfo = allTestsInfo[testName];
+        const files = testInfo.files || [];
+        consoleLog(
+          `[Server_Docker] Loaded ${files.length} files from ${inputFilePath} for test ${testName}`,
+        );
+        return files;
+      } else {
+        consoleLog(
+          `[Server_Docker] Test ${testName} not found in ${inputFilePath}`,
+        );
+      }
+    } else {
+      consoleLog(`[Server_Docker] Input file does not exist: ${inputFilePath}`);
+    }
+  } catch (error: any) {
+    consoleLog(`[Server_Docker] Error loading input file: ${error.message}`);
+  }
+
+  consoleLog(
+    `[Server_Docker] Returning empty array for ${configKey}/${testName}`,
+  );
   return [];
 };
 
@@ -264,6 +323,7 @@ export const getOutputFilesPure = (
 ): string[] => {
   let configKey: string | null = null;
 
+  // First, try to find config where configValue.runtime === runtime
   for (const [key, configValue] of Object.entries(configs.runtimes)) {
     if (
       configValue.runtime === runtime &&
@@ -274,8 +334,21 @@ export const getOutputFilesPure = (
     }
   }
 
+  // If not found, try to find config where key === runtime (config key passed instead of runtime type)
   if (!configKey) {
-    throw `[Server_Docker] No config found for runtime ${runtime} and test ${testName}`;
+    for (const [key, configValue] of Object.entries(configs.runtimes)) {
+      if (key === runtime && configValue.tests.includes(testName)) {
+        configKey = key;
+        break;
+      }
+    }
+  }
+
+  if (!configKey) {
+    consoleLog(
+      `[Server_Docker] No config found for runtime ${runtime} and test ${testName}`,
+    );
+    return [];
   }
 
   // Check if we have output files in memory under the configKey
@@ -541,10 +614,19 @@ export const startServiceLoggingPure = (
   runtime: string,
   cwd: string,
   logProcesses: Map<string, { process: any; serviceName: string }>,
-  runtimeConfigKey: string
+  runtimeConfigKey: string,
 ): Map<string, { process: any; serviceName: string }> => {
-  const logFilePath = getLogFilePath(cwd, runtime, serviceName, runtimeConfigKey);
-  const exitCodeFilePath = getExitCodeFilePath(cwd, runtimeConfigKey, serviceName);
+  const logFilePath = getLogFilePath(
+    cwd,
+    runtime,
+    serviceName,
+    runtimeConfigKey,
+  );
+  const exitCodeFilePath = getExitCodeFilePath(
+    cwd,
+    runtimeConfigKey,
+    serviceName,
+  );
 
   // Start a process to capture logs - use a more robust approach
   // We'll use a shell script that handles waiting for the container
@@ -571,10 +653,12 @@ export const startServiceLoggingPure = (
     stdio: ["ignore", "pipe", "pipe"],
   });
 
-
-  const containerId = execSyncWrapper(`${DOCKER_COMPOSE_BASE} ps -q ${runtime}`, {
-    cwd: cwd,
-  }).trim();
+  const containerId = execSyncWrapper(
+    `${DOCKER_COMPOSE_BASE} ps -q ${runtime}`,
+    {
+      cwd: cwd,
+    },
+  ).trim();
 
   child.stdout?.on("data", (data: any) => {
     logStream.write(data);
@@ -584,13 +668,13 @@ export const startServiceLoggingPure = (
     logStream.write(data);
   });
 
-  child.on("error", (error: { message: any; }) => {
+  child.on("error", (error: { message: any }) => {
     logStream.write(`\n=== Log process error: ${error.message} ===\n`);
     logStream.end();
     writeFileSync(exitCodeFilePath, "-1");
   });
 
-  child.on("close", (code: { toString: () => any; }) => {
+  child.on("close", (code: { toString: () => any }) => {
     const endTimestamp = new Date().toISOString();
     logStream.write(
       `\n=== Log ended at ${endTimestamp}, process exited with code ${code} ===\n`,
@@ -690,6 +774,10 @@ export const watchInputFilePure = async (
 
   const fileContent = readFileSync(inputFilePath, "utf-8");
   const allTestsInfo = JSON.parse(fileContent);
+
+
+
+
   if (allTestsInfo[testsName]) {
     const testInfo = allTestsInfo[testsName];
     newInputFiles[configKey][testsName] = testInfo.files || [];
@@ -697,6 +785,41 @@ export const watchInputFilePure = async (
       newHashs[configKey] = {};
     }
     newHashs[configKey][testsName] = testInfo.hash || "";
+
+    // Create directories for each test entrypoint to ensure test.json files can be placed correctly
+    // According to the bug report, test.json files should follow the structure of the entrypoint
+    // For each test in the input JSON, create the appropriate directory under testeranto/reports/{configKey}/
+    const cwd = getCwdPure();
+    for (const [currentTestName, testInfo] of Object.entries(allTestsInfo)) {
+      if (testInfo && testInfo.files && Array.isArray(testInfo.files)) {
+        for (const file of testInfo.files) {
+          // The file path is the entrypoint (e.g., "src/ts/Calculator.test.node.mjs")
+          // We need to create a directory structure under testeranto/reports/{configKey}/{filePath}/
+          // But actually, we want the parent directory of where the test.json will be placed
+          // According to the bug report, test.json should be at {entrypointPath}.tests.json
+          // So we need to create the directory for the entrypoint path
+          const entrypointPath = file;
+          // Remove leading "./" if present
+          const cleanPath = entrypointPath.replace(/^\.\//, '');
+          // Create directory path: testeranto/reports/{configKey}/{cleanPath}/
+          // According to the bug report, test.json should be placed at {entrypointPath}/tests.json
+          // So we need to create a directory for the entire cleanPath (including the filename as a directory)
+          const fullDirPath = join(cwd, "testeranto", "reports", configKey, cleanPath);
+          // We need to create the directory for fullDirPath, not remove the last component
+          // Because tests.json will be placed inside a directory named after the entrypoint file
+          const dirToCreate = fullDirPath;
+          try {
+            if (!existsSync(dirToCreate)) {
+              mkdirSync(dirToCreate, { recursive: true });
+              consoleLog(`[Server_Docker] Created directory for test reports: ${dirToCreate}`);
+            }
+          } catch (error: any) {
+            consoleWarn(`[Server_Docker] Failed to create directory ${dirToCreate}: ${error.message}`);
+          }
+        }
+      }
+    }
+
   } else {
     newInputFiles[configKey][testsName] = [];
     if (!newHashs[configKey]) {
@@ -839,7 +962,7 @@ export const startBuilderServicesPure = async (
   startServiceLogging: (
     serviceName: string,
     runtime: string,
-    runtimeConfigKey: string
+    runtimeConfigKey: string,
   ) => Promise<void>,
 ): Promise<void> => {
   const builderServices: string[] = [];
@@ -966,16 +1089,21 @@ export const waitForAllTestsToCompletePure = async (
 export type IR = (
   serviceName: string,
   runtime: string,
-  runtimeConfigKey: string
+  runtimeConfigKey: string,
 ) => void;
 
 export const captureExistingLogs: IR = (
   serviceName: string,
   runtime: string,
-  runtimeConfigKey: string
+  runtimeConfigKey: string,
 ): void => {
   const reportDir = getFullReportDir(getCwdPure(), runtime);
-  const logFilePath = getLogFilePath(getCwdPure(), runtime, serviceName, runtimeConfigKey);
+  const logFilePath = getLogFilePath(
+    getCwdPure(),
+    runtime,
+    serviceName,
+    runtimeConfigKey,
+  );
 
   try {
     // First, check if the container exists (including stopped ones)

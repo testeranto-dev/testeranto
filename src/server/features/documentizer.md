@@ -20,3 +20,5 @@ We want to enhance the project wide configs with a new field, which glob pattern
 [ ] expose the document-ized data to the vs code extension, probably with websockets
 [ ] show the tree of documentation files via `FeaturesTreeDataProvider`. This should appears as simiar to the code base, but only includes the document-ized files. The use can see only the documentaion in the repository, not the code or any other files that don't match the glob pattern.
 [ ] refactor FeaturesTreeDataProvider. Move the pure funtions into the `FeaturesTreeDataProviderUtils` file
+
+see [testsJson.md](./../../features/testsJson.md)

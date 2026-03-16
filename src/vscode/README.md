@@ -1,3 +1,5 @@
+## version 1
+
 in the primary activity bar, there are four sections:
 
 1. "Tests"
@@ -18,10 +20,6 @@ in the primary activity bar, there are four sections:
 - This section integrates testeranto/bundles/allTests/node/example/Calculator.test.mjs-inputFiles.json and testeranto/reports/allTests/example/node.Calculator.test.ts.json
 - Overall it is a tree structure, first breaking down the files matching the source code structure. The test.json should then be further broken folling the given-when-then structure.
 
-## Future design
+## version 2
 
-We need to show the data from 2 different angles
-
-1. broken down by features, then test
-
-2) broken down by tests, then test
+see [v2.md](./tickets/v2.md)

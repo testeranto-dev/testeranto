@@ -87,7 +87,7 @@ export const rustBddCommand = (
   const jsonStr = JSON.stringify({
     name: "rust-test",
     ports: [1111],
-    fs: `testeranto/reports/${configKey}`,
+    fs: `testeranto/reports/${configKey}/${fpath}/`,
     timeout: 30000,
     retries: 0,
     environment: {},

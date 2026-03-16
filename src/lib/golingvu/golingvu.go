@@ -694,7 +694,12 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm int
 	}
 
 	// Follow the same pattern as tiposkripto: write to ${testResourceConfig.Fs}/tests.json
-	filePath := testResourceConfig.Fs + "/tests.json"
+	// Ensure the path ends with /tests.json
+	filePath := testResourceConfig.Fs
+	if !strings.HasSuffix(filePath, "/") {
+		filePath = filePath + "/"
+	}
+	filePath = filePath + "tests.json"
 
 	// Ensure the directory exists
 	dirPath := filepath.Dir(filePath)

@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
-import type { IRunTime } from '../../Types';
 import { TreeItemType } from '../types';
+import { TestTreeDataProviderUtils } from './TestTreeDataProviderUtils';
+import type { IRunTime } from '../../Types';
 
 interface TreeNode {
   name: string;
@@ -307,65 +308,33 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
 
   public connectWebSocket(): void {
     if (this.ws) {
-      // Close existing connection
       this.ws.close();
-      this.ws = null;
     }
 
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-      this.reconnectTimeout = null;
-    }
+    this.ws = new WebSocket('ws://localhost:3000');
 
-    console.log('[TestTreeDataProvider] Connecting to WebSocket at ws://localhost:3000');
+    this.ws.onopen = () => {
+      this.isConnected = true;
+      this._onDidChangeTreeData.fire();
+    };
 
-    try {
-      this.ws = new WebSocket('ws://localhost:3000');
+    this.ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type === 'resourceChanged' && message.url === '/~/configs') {
+        this.fetchConfigsViaHttp();
+      }
+    };
 
-      this.ws.onopen = () => {
-        console.log('[TestTreeDataProvider] WebSocket connected');
-        this.isConnected = true;
-        this.connectionAttempts = 0;
-        this._onDidChangeTreeData.fire();
-      };
-
-      this.ws.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          this.handleWebSocketMessage(message);
-        } catch (error) {
-          console.error('[TestTreeDataProvider] Error parsing WebSocket message:', error);
-        }
-      };
-
-      this.ws.onerror = (error) => {
-        console.error('[TestTreeDataProvider] WebSocket error:', error);
-        this.isConnected = false;
-        this._onDidChangeTreeData.fire();
-      };
-
-      this.ws.onclose = (event) => {
-        console.log(`[TestTreeDataProvider] WebSocket closed: ${event.code} ${event.reason}`);
-        this.isConnected = false;
-        this.ws = null;
-        this._onDidChangeTreeData.fire();
-
-        // Attempt to reconnect after 5 seconds
-        if (this.connectionAttempts < this.maxConnectionAttempts) {
-          this.connectionAttempts++;
-          console.log(`[TestTreeDataProvider] Attempting to reconnect (${this.connectionAttempts}/${this.maxConnectionAttempts}) in 5 seconds...`);
-          this.reconnectTimeout = setTimeout(() => {
-            this.connectWebSocket();
-          }, 5000);
-        } else {
-          console.log('[TestTreeDataProvider] Max reconnection attempts reached');
-        }
-      };
-    } catch (error) {
-      console.error('[TestTreeDataProvider] Failed to create WebSocket:', error);
+    this.ws.onerror = () => {
       this.isConnected = false;
       this._onDidChangeTreeData.fire();
-    }
+    };
+
+    this.ws.onclose = () => {
+      this.isConnected = false;
+      this.ws = null;
+      this._onDidChangeTreeData.fire();
+    };
   }
 
   private handleWebSocketMessage(message: any): void {
@@ -390,246 +359,64 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
   }
 
   private async fetchConfigsViaHttp(): Promise<void> {
-    console.log('[TestTreeDataProvider] Fetching configs via HTTP from http://localhost:3000/~/configs');
-    try {
-      const response = await fetch('http://localhost:3000/~/configs');
-
-      if (!response.ok) {
-        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
-        this.configData = null;
-        this._onDidChangeTreeData.fire();
-        return;
-      }
-
-      const data = await response.json();
-      console.log(`[TestTreeDataProvider] HTTP fetch returned config data`);
-
-      this.configData = data;
-      console.log(`[TestTreeDataProvider] Updated config data`);
-      this._onDidChangeTreeData.fire();
-    } catch (error: any) {
-      console.error('[TestTreeDataProvider] HTTP fetch failed:', error.message || error);
-      this.configData = null;
-      this._onDidChangeTreeData.fire();
-    }
+    const response = await fetch('http://localhost:3000/~/configs');
+    this.configData = await response.json();
+    this._onDidChangeTreeData.fire();
   }
 
-  // The rest of the methods remain the same as before...
-  // private async getFileItems(runtime: IRunTime, testName: string): Promise<TestTreeItem[]> {
-  //   console.log("getFileItems");
-  //   if (!runtime || !testName) {
-  //     return [];
-  //   }
-
-  //   // return this.buildTreeItems(treeRoot, runtime, testName, workspaceRoot);
-
-  //   // // Determine which JSON file to read based on runtime and testName
-  //   // let jsonFilePath: string;
-  //   // switch (runtime) {
-  //   //   case "golang":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/golang/example/Calculator.test.go-inputFiles.json";
-  //   //     break;
-  //   //   case "python":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/python/example/Calculator.test.py-inputFiles.json";
-  //   //     break;
-  //   //   case "node":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/node/example/Calculator.test.mjs-inputFiles.json";
-  //   //     break;
-  //   //   case "web":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/web/example/Calculator.test.mjs-inputFiles.json";
-  //   //     break;
-  //   //   case "ruby":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json";
-  //   //     break;
-  //   //   case "rust":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/rust/example/Calculator.test.rs-inputFiles.json";
-  //   //     break;
-  //   //   case "java":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/java/example/Calculator.test.java-inputFiles.json";
-  //   //     break;
-  //   //   default:
-  //   //     return [];
-  //   // }
-
-  //   // try {
-  //   //   // Get the workspace root
-  //   //   const workspaceFolders = vscode.workspace.workspaceFolders;
-  //   //   if (!workspaceFolders || workspaceFolders.length === 0) {
-  //   //     throw new Error("No workspace folder open");
-  //   //   }
-  //   //   const workspaceRoot = workspaceFolders[0].uri;
-
-  //   //   // Build the full URI to the JSON file
-  //   //   const jsonFileUri = vscode.Uri.joinPath(workspaceRoot, jsonFilePath);
-  //   //   console.log(`Reading JSON from: ${jsonFileUri.fsPath}`);
-
-  //   //   // Read the JSON file
-  //   //   const fileContent = await vscode.workspace.fs.readFile(jsonFileUri);
-  //   //   const files: string[] = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
-  //   //   console.log(`Found ${files.length} files in JSON`);
-
-  //   //   // Build a tree structure
-  //   //   const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
-
-  //   //   for (const rawFileName of files) {
-  //   //     // Remove leading '/' if present to make paths relative to workspace root
-  //   //     const fileName = rawFileName.startsWith('/') ? rawFileName.substring(1) : rawFileName;
-  //   //     const parts = fileName.split('/');
-  //   //     let currentNode = treeRoot;
-
-  //   //     for (let i = 0; i < parts.length; i++) {
-  //   //       const part = parts[i];
-  //   //       const isLast = i === parts.length - 1;
-
-  //   //       if (!currentNode.children.has(part)) {
-  //   //         currentNode.children.set(part, {
-  //   //           name: part,
-  //   //           children: new Map(),
-  //   //           fullPath: parts.slice(0, i + 1).join('/'),
-  //   //           isFile: isLast
-  //   //         });
-  //   //       }
-  //   //       currentNode = currentNode.children.get(part)!;
-  //   //     }
-  //   //   }
-
-  //   //   // Convert tree to TestTreeItems
-  //   //   return this.buildTreeItems(treeRoot, runtime, testName, workspaceRoot);
-  //   // } catch (error) {
-  //   //   console.error(`Failed to read file list from ${jsonFilePath}:`, error);
-  //   //   vscode.window.showErrorMessage(`Could not load file list for ${testName}: ${error}`);
-  //   //   // Return empty array to prevent tree view from crashing
-  //   //   return [];
-  //   // }
-  // }
-
   private async getTestFileItems(runtime: string, testName: string): Promise<TestTreeItem[]> {
-    console.log(`[TestTreeDataProvider] Getting combined input and output files for ${runtime}/${testName}`);
+    const [inputResponse, outputResponse] = await Promise.all([
+      fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`),
+      fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`)
+    ]);
 
-    try {
-      // Fetch both input and output files in parallel
-      const [inputResponse, outputResponse] = await Promise.all([
-        fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`),
-        fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`)
-      ]);
+    const inputData = await inputResponse.json();
+    const outputData = await outputResponse.json();
 
-      let inputFiles: string[] = [];
-      let outputFiles: string[] = [];
+    const inputFiles = inputData.inputFiles || [];
+    const outputFiles = outputData.outputFiles || [];
+    const allFiles = [...inputFiles, ...outputFiles];
 
-      // Process input files
-      if (inputResponse.ok) {
-        const inputData = await inputResponse.json();
-        if (Array.isArray(inputData.inputFiles)) {
-          inputFiles = inputData.inputFiles;
-        } else if (inputData.inputFiles && typeof inputData.inputFiles === 'object') {
-          for (const key in inputData.inputFiles) {
-            if (Array.isArray(inputData.inputFiles[key])) {
-              inputFiles = inputData.inputFiles[key];
-              break;
-            }
-          }
-        } else {
-          for (const key in inputData) {
-            if (Array.isArray(inputData[key])) {
-              inputFiles = inputData[key];
-              break;
-            }
-          }
-        }
-      }
-
-      // Process output files
-      if (outputResponse.ok) {
-        const outputData = await outputResponse.json();
-        if (Array.isArray(outputData.outputFiles)) {
-          outputFiles = outputData.outputFiles;
-        } else if (outputData.outputFiles && typeof outputData.outputFiles === 'object') {
-          for (const key in outputData.outputFiles) {
-            if (Array.isArray(outputData.outputFiles[key])) {
-              outputFiles = outputData.outputFiles[key];
-              break;
-            }
-          }
-        } else {
-          for (const key in outputData) {
-            if (Array.isArray(outputData[key])) {
-              outputFiles = outputData[key];
-              break;
-            }
-          }
-        }
-      }
-
-      // Combine all files
-      const allFiles = [...inputFiles, ...outputFiles];
-      console.log(`[TestTreeDataProvider] Found ${inputFiles.length} input files and ${outputFiles.length} output files (total: ${allFiles.length})`);
-
-      if (allFiles.length === 0) {
-        return [
-          new TestTreeItem(
-            "No files available",
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            {
-              description: "The test hasn't been built or generated output yet",
-              runtime,
-              testName
-            },
-            undefined,
-            new vscode.ThemeIcon("info")
-          )
-        ];
-      }
-
-      // Build a tree structure from all file paths
-      const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
-
-      for (const filePath of allFiles) {
-        // Normalize the path: remove leading '/' if present
-        const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
-        // Split and filter out empty parts and '.' which represents current directory
-        const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-
-        if (parts.length === 0) continue;
-
-        let currentNode = treeRoot;
-
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const isLast = i === parts.length - 1;
-
-          if (!currentNode.children.has(part)) {
-            currentNode.children.set(part, {
-              name: part,
-              children: new Map(),
-              fullPath: parts.slice(0, i + 1).join('/'),
-              isFile: isLast
-            });
-          }
-          currentNode = currentNode.children.get(part)!;
-        }
-      }
-
-      // Convert the tree to TestTreeItems
-      return this.buildTreeItemsFromNode(treeRoot, runtime, testName);
-
-    } catch (error: any) {
-      console.error(`[TestTreeDataProvider] Failed to fetch combined files:`, error);
+    if (allFiles.length === 0) {
       return [
         new TestTreeItem(
-          "Failed to fetch files",
+          "No files available",
           TreeItemType.File,
           vscode.TreeItemCollapsibleState.None,
-          {
-            description: error.message,
-            runtime,
-            testName
-          },
+          { runtime, testName },
           undefined,
-          new vscode.ThemeIcon("error")
+          new vscode.ThemeIcon("info")
         )
       ];
     }
+
+    const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
+
+    for (const filePath of allFiles) {
+      const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+      const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
+
+      if (parts.length === 0) continue;
+
+      let currentNode = treeRoot;
+
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const isLast = i === parts.length - 1;
+
+        if (!currentNode.children.has(part)) {
+          currentNode.children.set(part, {
+            name: part,
+            children: new Map(),
+            fullPath: parts.slice(0, i + 1).join('/'),
+            isFile: isLast
+          });
+        }
+        currentNode = currentNode.children.get(part)!;
+      }
+    }
+
+    return TestTreeDataProviderUtils.buildTreeItemsFromNode(treeRoot, runtime, testName);
   }
 
   private async getInputFileItems(runtime: string, testName: string): Promise<TestTreeItem[]> {
@@ -1149,24 +936,3 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
 
     return items;
   }
-
-  // private async getDirectoryItems(runtime: IRunTime, testName: string, path: string): Promise<TestTreeItem[]> {
-  //   const tree = await this.buildFileTree(runtime, testName);
-  //   if (!tree) {
-  //     return [];
-  //   }
-
-  //   // Find the node corresponding to the path
-  //   const parts = path.split('/').filter(p => p.length > 0);
-  //   let currentNode = tree;
-  //   for (const part of parts) {
-  //     if (currentNode.children.has(part)) {
-  //       currentNode = currentNode.children.get(part)!;
-  //     } else {
-  //       return [];
-  //     }
-  //   }
-
-  //   return this.buildTreeItems(currentNode, runtime, testName);
-  // }
-}

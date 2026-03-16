@@ -67,7 +67,7 @@ export const pythonBddCommand = (
 ) => {
   const jsonStr = JSON.stringify({
     ports: [1111],
-    fs: `testeranto/reports/${configKey}`,
+    fs: `testeranto/reports/${configKey}/${fpath}/`,
   });
   return `python testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 };

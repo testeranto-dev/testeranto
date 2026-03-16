@@ -1,5 +1,6 @@
 // src/vscode/extension.ts
-import * as vscode7 from "vscode";
+import * as vscode4 from "vscode";
+import * as path2 from "path";
 
 // src/vscode/TerminalManager.ts
 import * as vscode from "vscode";
@@ -85,18 +86,18 @@ var TerminalManager = class {
       }
       return String(value || "unknown");
     };
-    const runtimeStr2 = runtimeKey;
-    const testNameStr2 = extractString(testName, false);
-    console.log(`[TerminalManager] createAiderTerminal called with runtime: "${runtimeStr2}", testName: "${testNameStr2}"`);
+    const runtimeStr = runtimeKey;
+    const testNameStr = extractString(testName, false);
+    console.log(`[TerminalManager] createAiderTerminal called with runtime: "${runtimeStr}", testName: "${testNameStr}"`);
     console.log(`[TerminalManager] Original runtime:`, runtimeKey);
     console.log(`[TerminalManager] Original testName:`, testName);
-    const key = this.getTerminalKey(runtimeStr2, testNameStr2);
+    const key = this.getTerminalKey(runtimeStr, testNameStr);
     let terminal = this.terminals.get(key);
     if (terminal && terminal.exitStatus === void 0) {
       terminal.show();
       return terminal;
     }
-    terminal = vscode.window.createTerminal(`Aider: ${testNameStr2} (${runtimeStr2})`);
+    terminal = vscode.window.createTerminal(`Aider: ${testNameStr} (${runtimeStr})`);
     this.terminals.set(key, terminal);
     terminal.sendText(`cd Code/testeranto-example-project`);
     const tname = `nodetests-src_ts_calculator-test-ts-aider`;
@@ -136,8 +137,10 @@ var TerminalManager = class {
   }
 };
 
-// src/vscode/providers/TestTreeDataProvider.ts
+// src/vscode/providers/TesterantoTreeDataProvider.ts
 import * as vscode3 from "vscode";
+import * as path from "path";
+import * as fs from "fs";
 
 // src/vscode/TestTreeItem.ts
 import * as vscode2 from "vscode";
@@ -187,1637 +190,34 @@ var TestTreeItem = class extends vscode2.TreeItem {
   }
 };
 
-// src/vscode/providers/TestTreeDataProvider.ts
-var TestTreeDataProvider = class {
+// src/vscode/providers/TesterantoTreeDataProviderUtils.ts
+var TesterantoTreeDataProviderUtils = class {
+  static async loadDocumentationFiles() {
+    const response = await fetch("http://localhost:3000/~/documentation");
+    const data = await response.json();
+    return data.files || [];
+  }
+};
+
+// src/vscode/providers/TesterantoTreeDataProvider.ts
+var TesterantoTreeDataProvider = class {
   _onDidChangeTreeData = new vscode3.EventEmitter();
   onDidChangeTreeData = this._onDidChangeTreeData.event;
-  ws = null;
-  isConnected = false;
-  connectionAttempts = 0;
-  maxConnectionAttempts = 5;
-  reconnectTimeout = null;
-  configData = null;
-  configWatcher;
-  constructor() {
-    this.fetchConfigsViaHttp().catch((error) => {
-      console.log("[TestTreeDataProvider] Initial HTTP fetch failed:", error);
-    });
-    this.connectWebSocket();
-    this.setupConfigWatcher();
-  }
-  refresh() {
-    console.log("[TestTreeDataProvider] Manual refresh requested");
-    this.fetchConfigsViaHttp().catch((error) => {
-      console.log("[TestTreeDataProvider] HTTP refresh failed:", error);
-    });
-  }
-  setupConfigWatcher() {
-    const workspaceFolders = vscode3.workspace.workspaceFolders;
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-      return;
-    }
-    const workspaceRoot = workspaceFolders[0].uri;
-    const configPattern = new vscode3.RelativePattern(workspaceRoot, "testeranto/extension-config.json");
-    this.configWatcher = vscode3.workspace.createFileSystemWatcher(configPattern);
-    this.configWatcher.onDidChange(() => {
-      console.log("[TestTreeDataProvider] Config file changed, refreshing tree");
-      this.refresh();
-    });
-    this.configWatcher.onDidCreate(() => {
-      console.log("[TestTreeDataProvider] Config file created, refreshing tree");
-      this.refresh();
-    });
-    this.configWatcher.onDidDelete(() => {
-      console.log("[TestTreeDataProvider] Config file deleted, refreshing tree");
-      this.refresh();
-    });
-  }
-  dispose() {
-    if (this.configWatcher) {
-      this.configWatcher.dispose();
-    }
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-      this.reconnectTimeout = null;
-    }
-  }
-  getTreeItem(element) {
-    return element;
-  }
-  getChildren(element) {
-    if (!element) {
-      return this.getRuntimeItems();
-    } else if (element.type === 0 /* Runtime */) {
-      const runtime = element.data?.runtime;
-      return Promise.resolve(this.getTestItems(runtime));
-    } else if (element.type === 1 /* Test */) {
-      const { runtime, testName } = element.data || {};
-      return this.getTestFileItems(runtime, testName);
-    } else if (element.type === 2 /* File */) {
-      const { runtime, testName, path: path3, isFile } = element.data || {};
-      if (isFile) {
-        return Promise.resolve([]);
-      }
-      return this.getDirectoryChildren(runtime, testName, path3);
-    }
-    return Promise.resolve([]);
-  }
-  async getRuntimeItems() {
-    const items = [];
-    items.push(
-      new TestTreeItem(
-        "Refresh now",
-        3 /* Info */,
-        vscode3.TreeItemCollapsibleState.None,
-        {
-          description: "Update configuration from server",
-          refresh: true
-        },
-        {
-          command: "testeranto.refresh",
-          title: "Refresh",
-          arguments: []
-        },
-        new vscode3.ThemeIcon("refresh", new vscode3.ThemeColor("testing.iconQueued"))
-      )
-    );
-    if (this.configData && this.configData.configs && this.configData.configs.runtimes) {
-      const runtimes = this.configData.configs.runtimes;
-      console.log(`[TestTreeDataProvider] Found ${Object.keys(runtimes).length} runtimes in config endpoint`);
-      const runtimeEntries = Object.entries(runtimes);
-      if (runtimeEntries.length > 0) {
-        items.push(
-          new TestTreeItem(
-            `\u{1F4CA} ${runtimeEntries.length} Runtime(s)`,
-            3 /* Info */,
-            vscode3.TreeItemCollapsibleState.None,
-            {
-              description: "From HTTP /~/configs endpoint",
-              count: runtimeEntries.length
-            },
-            void 0,
-            new vscode3.ThemeIcon("server", new vscode3.ThemeColor("testing.iconUnset"))
-          )
-        );
-        for (const [runtimeKey, runtimeConfig] of runtimeEntries) {
-          const config = runtimeConfig;
-          if (config.runtime) {
-            items.push(
-              new TestTreeItem(
-                // config.runtime.charAt(0).toUpperCase() + config.runtime.slice(1),
-                `${runtimeKey} (${config.runtime})`,
-                0 /* Runtime */,
-                vscode3.TreeItemCollapsibleState.Collapsed,
-                {
-                  runtime: config.runtime,
-                  runtimeKey,
-                  testsCount: config.tests?.length || 0
-                },
-                void 0,
-                new vscode3.ThemeIcon("symbol-namespace")
-              )
-            );
-          }
-        }
-        return items;
-      }
-    }
-  }
-  getTestItems(runtime) {
-    if (!runtime) {
-      return [];
-    }
-    if (this.configData && this.configData.configs && this.configData.configs.runtimes) {
-      const runtimes = this.configData.configs.runtimes;
-      for (const [runtimeKey, runtimeConfig] of Object.entries(runtimes)) {
-        const config = runtimeConfig;
-        if (config.runtime === runtime) {
-          const tests = config.tests || [];
-          console.log(`[TestTreeDataProvider] Found ${tests.length} tests for ${runtime} from HTTP endpoint`);
-          return tests.map((testName) => {
-            const item = new TestTreeItem(
-              testName,
-              1 /* Test */,
-              vscode3.TreeItemCollapsibleState.Collapsed,
-              { runtimeKey, testName },
-              {
-                command: "testeranto.launchAiderTerminal",
-                title: "Launch Aider Terminal",
-                arguments: [runtimeKey, testName]
-              },
-              new vscode3.ThemeIcon("terminal"),
-              "testWithAider"
-            );
-            item.tooltip = `Click to launch aider terminal for ${testName}`;
-            return item;
-          });
-        }
-      }
-    }
-  }
-  connectWebSocket() {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-      this.reconnectTimeout = null;
-    }
-    console.log("[TestTreeDataProvider] Connecting to WebSocket at ws://localhost:3000");
-    try {
-      this.ws = new WebSocket("ws://localhost:3000");
-      this.ws.onopen = () => {
-        console.log("[TestTreeDataProvider] WebSocket connected");
-        this.isConnected = true;
-        this.connectionAttempts = 0;
-        this._onDidChangeTreeData.fire();
-      };
-      this.ws.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          this.handleWebSocketMessage(message);
-        } catch (error) {
-          console.error("[TestTreeDataProvider] Error parsing WebSocket message:", error);
-        }
-      };
-      this.ws.onerror = (error) => {
-        console.error("[TestTreeDataProvider] WebSocket error:", error);
-        this.isConnected = false;
-        this._onDidChangeTreeData.fire();
-      };
-      this.ws.onclose = (event) => {
-        console.log(`[TestTreeDataProvider] WebSocket closed: ${event.code} ${event.reason}`);
-        this.isConnected = false;
-        this.ws = null;
-        this._onDidChangeTreeData.fire();
-        if (this.connectionAttempts < this.maxConnectionAttempts) {
-          this.connectionAttempts++;
-          console.log(`[TestTreeDataProvider] Attempting to reconnect (${this.connectionAttempts}/${this.maxConnectionAttempts}) in 5 seconds...`);
-          this.reconnectTimeout = setTimeout(() => {
-            this.connectWebSocket();
-          }, 5e3);
-        } else {
-          console.log("[TestTreeDataProvider] Max reconnection attempts reached");
-        }
-      };
-    } catch (error) {
-      console.error("[TestTreeDataProvider] Failed to create WebSocket:", error);
-      this.isConnected = false;
-      this._onDidChangeTreeData.fire();
-    }
-  }
-  handleWebSocketMessage(message) {
-    console.log("[TestTreeDataProvider] Received WebSocket message:", message.type);
-    switch (message.type) {
-      case "connected":
-        console.log("[TestTreeDataProvider] WebSocket connection confirmed");
-        break;
-      case "resourceChanged":
-        console.log("[TestTreeDataProvider] Resource changed, fetching updated configs:", message.url);
-        if (message.url === "/~/configs") {
-          this.fetchConfigsViaHttp().catch((error) => {
-            console.log("[TestTreeDataProvider] HTTP fetch after resource change failed:", error);
-          });
-        }
-        break;
-      default:
-        console.log("[TestTreeDataProvider] Unhandled message type:", message.type);
-    }
-  }
-  async fetchConfigsViaHttp() {
-    console.log("[TestTreeDataProvider] Fetching configs via HTTP from http://localhost:3000/~/configs");
-    try {
-      const response = await fetch("http://localhost:3000/~/configs");
-      if (!response.ok) {
-        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
-        this.configData = null;
-        this._onDidChangeTreeData.fire();
-        return;
-      }
-      const data = await response.json();
-      console.log(`[TestTreeDataProvider] HTTP fetch returned config data`);
-      this.configData = data;
-      console.log(`[TestTreeDataProvider] Updated config data`);
-      this._onDidChangeTreeData.fire();
-    } catch (error) {
-      console.error("[TestTreeDataProvider] HTTP fetch failed:", error.message || error);
-      this.configData = null;
-      this._onDidChangeTreeData.fire();
-    }
-  }
-  // The rest of the methods remain the same as before...
-  // private async getFileItems(runtime: IRunTime, testName: string): Promise<TestTreeItem[]> {
-  //   console.log("getFileItems");
-  //   if (!runtime || !testName) {
-  //     return [];
-  //   }
-  //   // return this.buildTreeItems(treeRoot, runtime, testName, workspaceRoot);
-  //   // // Determine which JSON file to read based on runtime and testName
-  //   // let jsonFilePath: string;
-  //   // switch (runtime) {
-  //   //   case "golang":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/golang/example/Calculator.test.go-inputFiles.json";
-  //   //     break;
-  //   //   case "python":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/python/example/Calculator.test.py-inputFiles.json";
-  //   //     break;
-  //   //   case "node":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/node/example/Calculator.test.mjs-inputFiles.json";
-  //   //     break;
-  //   //   case "web":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/web/example/Calculator.test.mjs-inputFiles.json";
-  //   //     break;
-  //   //   case "ruby":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/ruby/example/Calculator.test.rb-inputFiles.json";
-  //   //     break;
-  //   //   case "rust":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/rust/example/Calculator.test.rs-inputFiles.json";
-  //   //     break;
-  //   //   case "java":
-  //   //     jsonFilePath = "testeranto/bundles/allTests/java/example/Calculator.test.java-inputFiles.json";
-  //   //     break;
-  //   //   default:
-  //   //     return [];
-  //   // }
-  //   // try {
-  //   //   // Get the workspace root
-  //   //   const workspaceFolders = vscode.workspace.workspaceFolders;
-  //   //   if (!workspaceFolders || workspaceFolders.length === 0) {
-  //   //     throw new Error("No workspace folder open");
-  //   //   }
-  //   //   const workspaceRoot = workspaceFolders[0].uri;
-  //   //   // Build the full URI to the JSON file
-  //   //   const jsonFileUri = vscode.Uri.joinPath(workspaceRoot, jsonFilePath);
-  //   //   console.log(`Reading JSON from: ${jsonFileUri.fsPath}`);
-  //   //   // Read the JSON file
-  //   //   const fileContent = await vscode.workspace.fs.readFile(jsonFileUri);
-  //   //   const files: string[] = JSON.parse(Buffer.from(fileContent).toString('utf-8'));
-  //   //   console.log(`Found ${files.length} files in JSON`);
-  //   //   // Build a tree structure
-  //   //   const treeRoot: TreeNode = { name: '', children: new Map(), fullPath: '', isFile: false };
-  //   //   for (const rawFileName of files) {
-  //   //     // Remove leading '/' if present to make paths relative to workspace root
-  //   //     const fileName = rawFileName.startsWith('/') ? rawFileName.substring(1) : rawFileName;
-  //   //     const parts = fileName.split('/');
-  //   //     let currentNode = treeRoot;
-  //   //     for (let i = 0; i < parts.length; i++) {
-  //   //       const part = parts[i];
-  //   //       const isLast = i === parts.length - 1;
-  //   //       if (!currentNode.children.has(part)) {
-  //   //         currentNode.children.set(part, {
-  //   //           name: part,
-  //   //           children: new Map(),
-  //   //           fullPath: parts.slice(0, i + 1).join('/'),
-  //   //           isFile: isLast
-  //   //         });
-  //   //       }
-  //   //       currentNode = currentNode.children.get(part)!;
-  //   //     }
-  //   //   }
-  //   //   // Convert tree to TestTreeItems
-  //   //   return this.buildTreeItems(treeRoot, runtime, testName, workspaceRoot);
-  //   // } catch (error) {
-  //   //   console.error(`Failed to read file list from ${jsonFilePath}:`, error);
-  //   //   vscode.window.showErrorMessage(`Could not load file list for ${testName}: ${error}`);
-  //   //   // Return empty array to prevent tree view from crashing
-  //   //   return [];
-  //   // }
-  // }
-  async getTestFileItems(runtime, testName) {
-    console.log(`[TestTreeDataProvider] Getting combined input and output files for ${runtime}/${testName}`);
-    try {
-      const [inputResponse, outputResponse] = await Promise.all([
-        fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`),
-        fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`)
-      ]);
-      let inputFiles = [];
-      let outputFiles = [];
-      if (inputResponse.ok) {
-        const inputData = await inputResponse.json();
-        if (Array.isArray(inputData.inputFiles)) {
-          inputFiles = inputData.inputFiles;
-        } else if (inputData.inputFiles && typeof inputData.inputFiles === "object") {
-          for (const key in inputData.inputFiles) {
-            if (Array.isArray(inputData.inputFiles[key])) {
-              inputFiles = inputData.inputFiles[key];
-              break;
-            }
-          }
-        } else {
-          for (const key in inputData) {
-            if (Array.isArray(inputData[key])) {
-              inputFiles = inputData[key];
-              break;
-            }
-          }
-        }
-      }
-      if (outputResponse.ok) {
-        const outputData = await outputResponse.json();
-        if (Array.isArray(outputData.outputFiles)) {
-          outputFiles = outputData.outputFiles;
-        } else if (outputData.outputFiles && typeof outputData.outputFiles === "object") {
-          for (const key in outputData.outputFiles) {
-            if (Array.isArray(outputData.outputFiles[key])) {
-              outputFiles = outputData.outputFiles[key];
-              break;
-            }
-          }
-        } else {
-          for (const key in outputData) {
-            if (Array.isArray(outputData[key])) {
-              outputFiles = outputData[key];
-              break;
-            }
-          }
-        }
-      }
-      const allFiles = [...inputFiles, ...outputFiles];
-      console.log(`[TestTreeDataProvider] Found ${inputFiles.length} input files and ${outputFiles.length} output files (total: ${allFiles.length})`);
-      if (allFiles.length === 0) {
-        return [
-          new TestTreeItem(
-            "No files available",
-            2 /* File */,
-            vscode3.TreeItemCollapsibleState.None,
-            {
-              description: "The test hasn't been built or generated output yet",
-              runtime,
-              testName
-            },
-            void 0,
-            new vscode3.ThemeIcon("info")
-          )
-        ];
-      }
-      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
-      for (const filePath of allFiles) {
-        const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
-        const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
-        if (parts.length === 0) continue;
-        let currentNode = treeRoot;
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const isLast = i === parts.length - 1;
-          if (!currentNode.children.has(part)) {
-            currentNode.children.set(part, {
-              name: part,
-              children: /* @__PURE__ */ new Map(),
-              fullPath: parts.slice(0, i + 1).join("/"),
-              isFile: isLast
-            });
-          }
-          currentNode = currentNode.children.get(part);
-        }
-      }
-      return this.buildTreeItemsFromNode(treeRoot, runtime, testName);
-    } catch (error) {
-      console.error(`[TestTreeDataProvider] Failed to fetch combined files:`, error);
-      return [
-        new TestTreeItem(
-          "Failed to fetch files",
-          2 /* File */,
-          vscode3.TreeItemCollapsibleState.None,
-          {
-            description: error.message,
-            runtime,
-            testName
-          },
-          void 0,
-          new vscode3.ThemeIcon("error")
-        )
-      ];
-    }
-  }
-  async getInputFileItems(runtime, testName) {
-    console.log(`[TestTreeDataProvider] Fetching input files for ${runtime}/${testName}`);
-    try {
-      const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
-      if (!response.ok) {
-        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
-        return [
-          new TestTreeItem(
-            "No input files found",
-            2 /* File */,
-            vscode3.TreeItemCollapsibleState.None,
-            {
-              description: "Server returned error",
-              runtime,
-              testName,
-              fileType: "input"
-            },
-            void 0,
-            new vscode3.ThemeIcon("warning")
-          )
-        ];
-      }
-      const data = await response.json();
-      let inputFiles = [];
-      if (Array.isArray(data.inputFiles)) {
-        inputFiles = data.inputFiles;
-      } else if (data.inputFiles && typeof data.inputFiles === "object") {
-        for (const key in data.inputFiles) {
-          if (Array.isArray(data.inputFiles[key])) {
-            inputFiles = data.inputFiles[key];
-            break;
-          }
-        }
-      } else {
-        for (const key in data) {
-          if (Array.isArray(data[key])) {
-            inputFiles = data[key];
-            break;
-          }
-        }
-      }
-      console.log(`[TestTreeDataProvider] Found ${inputFiles.length} input files`);
-      if (inputFiles.length === 0) {
-        return [
-          new TestTreeItem(
-            "No input files available",
-            2 /* File */,
-            vscode3.TreeItemCollapsibleState.None,
-            {
-              description: "The test hasn't been built yet",
-              runtime,
-              testName,
-              fileType: "input"
-            },
-            void 0,
-            new vscode3.ThemeIcon("info")
-          )
-        ];
-      }
-      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
-      for (const filePath of inputFiles) {
-        const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
-        const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
-        if (parts.length === 0) continue;
-        let currentNode = treeRoot;
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const isLast = i === parts.length - 1;
-          if (!currentNode.children.has(part)) {
-            currentNode.children.set(part, {
-              name: part,
-              children: /* @__PURE__ */ new Map(),
-              fullPath: parts.slice(0, i + 1).join("/"),
-              isFile: isLast
-            });
-          }
-          currentNode = currentNode.children.get(part);
-        }
-      }
-      return this.buildTreeItemsFromNode(treeRoot, runtime, testName, "input");
-    } catch (error) {
-      console.error(`[TestTreeDataProvider] Failed to fetch input files:`, error);
-      return [
-        new TestTreeItem(
-          "Failed to fetch input files",
-          2 /* File */,
-          vscode3.TreeItemCollapsibleState.None,
-          {
-            description: error.message,
-            runtime,
-            testName,
-            fileType: "input"
-          },
-          void 0,
-          new vscode3.ThemeIcon("error")
-        )
-      ];
-    }
-  }
-  async getOutputFileItems(runtime, testName) {
-    console.log(`[TestTreeDataProvider] Fetching output files for ${runtime}/${testName}`);
-    try {
-      const response = await fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
-      if (!response.ok) {
-        console.error(`[TestTreeDataProvider] HTTP error! status: ${response.status}`);
-        return [
-          new TestTreeItem(
-            "No output files found",
-            2 /* File */,
-            vscode3.TreeItemCollapsibleState.None,
-            {
-              description: "Server returned error",
-              runtime,
-              testName,
-              fileType: "output"
-            },
-            void 0,
-            new vscode3.ThemeIcon("warning")
-          )
-        ];
-      }
-      const data = await response.json();
-      let outputFiles = [];
-      if (Array.isArray(data.outputFiles)) {
-        outputFiles = data.outputFiles;
-      } else if (data.outputFiles && typeof data.outputFiles === "object") {
-        for (const key in data.outputFiles) {
-          if (Array.isArray(data.outputFiles[key])) {
-            outputFiles = data.outputFiles[key];
-            break;
-          }
-        }
-      } else {
-        for (const key in data) {
-          if (Array.isArray(data[key])) {
-            outputFiles = data[key];
-            break;
-          }
-        }
-      }
-      console.log(`[TestTreeDataProvider] Found ${outputFiles.length} output files`);
-      if (outputFiles.length === 0) {
-        return [
-          new TestTreeItem(
-            "No output files available",
-            2 /* File */,
-            vscode3.TreeItemCollapsibleState.None,
-            {
-              description: "The test hasn't generated output yet",
-              runtime,
-              testName,
-              fileType: "output"
-            },
-            void 0,
-            new vscode3.ThemeIcon("info")
-          )
-        ];
-      }
-      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
-      for (const filePath of outputFiles) {
-        const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
-        const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
-        if (parts.length === 0) continue;
-        let currentNode = treeRoot;
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const isLast = i === parts.length - 1;
-          if (!currentNode.children.has(part)) {
-            currentNode.children.set(part, {
-              name: part,
-              children: /* @__PURE__ */ new Map(),
-              // Reconstruct full path without leading '.'
-              fullPath: parts.slice(0, i + 1).join("/"),
-              isFile: isLast
-            });
-          }
-          currentNode = currentNode.children.get(part);
-        }
-      }
-      return this.buildTreeItemsFromNode(treeRoot, runtime, testName, "output");
-    } catch (error) {
-      console.error(`[TestTreeDataProvider] Failed to fetch output files:`, error);
-      return [
-        new TestTreeItem(
-          "Failed to fetch output files",
-          2 /* File */,
-          vscode3.TreeItemCollapsibleState.None,
-          {
-            description: error.message,
-            runtime,
-            testName,
-            fileType: "output"
-          },
-          void 0,
-          new vscode3.ThemeIcon("error")
-        )
-      ];
-    }
-  }
-  buildTreeItemsFromNode(node, runtime, testName) {
-    const items = [];
-    const sortedChildren = Array.from(node.children.values()).sort((a, b) => {
-      if (!a.isFile && b.isFile) return -1;
-      if (a.isFile && !b.isFile) return 1;
-      return a.name.localeCompare(b.name);
-    });
-    for (const child of sortedChildren) {
-      const collapsibleState = child.isFile ? vscode3.TreeItemCollapsibleState.None : vscode3.TreeItemCollapsibleState.Collapsed;
-      const workspaceFolders = vscode3.workspace.workspaceFolders;
-      let fileUri;
-      if (child.isFile && workspaceFolders && workspaceFolders.length > 0) {
-        const workspaceRoot = workspaceFolders[0].uri;
-        if (child.fullPath.startsWith("/")) {
-          fileUri = vscode3.Uri.file(child.fullPath);
-        } else {
-          fileUri = vscode3.Uri.joinPath(workspaceRoot, child.fullPath);
-        }
-      }
-      const treeItem = new TestTreeItem(
-        child.name,
-        2 /* File */,
-        collapsibleState,
-        {
-          runtime,
-          testName,
-          fileName: child.fullPath,
-          path: child.fullPath,
-          isFile: child.isFile
-        },
-        child.isFile && fileUri ? {
-          command: "vscode.open",
-          title: "Open File",
-          arguments: [fileUri]
-        } : void 0,
-        child.isFile ? new vscode3.ThemeIcon("file-text") : new vscode3.ThemeIcon("folder")
-      );
-      items.push(treeItem);
-    }
-    return items;
-  }
-  async getDirectoryChildren(runtime, testName, dirPath) {
-    try {
-      const [inputResponse, outputResponse] = await Promise.all([
-        fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`),
-        fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`)
-      ]);
-      let allFiles = [];
-      if (inputResponse.ok) {
-        const inputData = await inputResponse.json();
-        let inputFiles = [];
-        if (Array.isArray(inputData.inputFiles)) {
-          inputFiles = inputData.inputFiles;
-        } else if (inputData.inputFiles && typeof inputData.inputFiles === "object") {
-          for (const key in inputData.inputFiles) {
-            if (Array.isArray(inputData.inputFiles[key])) {
-              inputFiles = inputData.inputFiles[key];
-              break;
-            }
-          }
-        } else {
-          for (const key in inputData) {
-            if (Array.isArray(inputData[key])) {
-              inputFiles = inputData[key];
-              break;
-            }
-          }
-        }
-        allFiles.push(...inputFiles);
-      }
-      if (outputResponse.ok) {
-        const outputData = await outputResponse.json();
-        let outputFiles = [];
-        if (Array.isArray(outputData.outputFiles)) {
-          outputFiles = outputData.outputFiles;
-        } else if (outputData.outputFiles && typeof outputData.outputFiles === "object") {
-          for (const key in outputData.outputFiles) {
-            if (Array.isArray(outputData.outputFiles[key])) {
-              outputFiles = outputData.outputFiles[key];
-              break;
-            }
-          }
-        } else {
-          for (const key in outputData) {
-            if (Array.isArray(outputData[key])) {
-              outputFiles = outputData[key];
-              break;
-            }
-          }
-        }
-        allFiles.push(...outputFiles);
-      }
-      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
-      for (const filePath of allFiles) {
-        const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
-        const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
-        if (parts.length === 0) continue;
-        let currentNode2 = treeRoot;
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const isLast = i === parts.length - 1;
-          if (!currentNode2.children.has(part)) {
-            currentNode2.children.set(part, {
-              name: part,
-              children: /* @__PURE__ */ new Map(),
-              fullPath: parts.slice(0, i + 1).join("/"),
-              isFile: isLast
-            });
-          }
-          currentNode2 = currentNode2.children.get(part);
-        }
-      }
-      const normalizedDirPath = dirPath.startsWith("/") ? dirPath.substring(1) : dirPath;
-      const dirParts = normalizedDirPath.split("/").filter((part) => part.length > 0);
-      let currentNode = treeRoot;
-      for (const part of dirParts) {
-        if (currentNode.children.has(part)) {
-          currentNode = currentNode.children.get(part);
-        } else {
-          return [];
-        }
-      }
-      return this.buildTreeItemsFromNode(currentNode, runtime, testName);
-    } catch (error) {
-      console.error(`[TestTreeDataProvider] Failed to get directory children:`, error);
-      return [];
-    }
-  }
-  async getFileTreeItems(runtime, testName) {
-    try {
-      const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
-      if (!response.ok) {
-        console.error(`[TestTreeDataProvider] HTTP error getting input files for tree: ${response.status}`);
-        return [];
-      }
-      const data = await response.json();
-      const inputFiles = data.inputFiles || [];
-      const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
-      for (const filePath of inputFiles) {
-        const fileName = filePath.startsWith("/") ? filePath.substring(1) : filePath;
-        const parts = fileName.split("/");
-        let currentNode = treeRoot;
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          if (!part || part.trim().length === 0 || part === ".") {
-            continue;
-          }
-          const isLast = i === parts.length - 1;
-          if (!currentNode.children.has(part)) {
-            currentNode.children.set(part, {
-              name: part,
-              children: /* @__PURE__ */ new Map(),
-              fullPath: parts.slice(0, i + 1).join("/"),
-              isFile: isLast
-            });
-          }
-          currentNode = currentNode.children.get(part);
-        }
-      }
-      return this.buildTreeItems(treeRoot, runtime, testName);
-    } catch (error) {
-      console.error(`[TestTreeDataProvider] Failed to get file tree items:`, error);
-      return [];
-    }
-  }
-  buildTreeItems(node, runtime, testName, workspaceRoot) {
-    const items = [];
-    const sortedChildren = Array.from(node.children.values()).sort((a, b) => {
-      if (a.isFile && !b.isFile) return 1;
-      if (!a.isFile && b.isFile) return -1;
-      return a.name.localeCompare(b.name);
-    });
-    for (const child of sortedChildren) {
-      const collapsibleState = child.isFile ? vscode3.TreeItemCollapsibleState.None : vscode3.TreeItemCollapsibleState.Collapsed;
-      const fullPath = workspaceRoot ? vscode3.Uri.joinPath(workspaceRoot, child.fullPath).fsPath : child.fullPath;
-      const treeItem = new TestTreeItem(
-        child.name,
-        2 /* File */,
-        collapsibleState,
-        {
-          runtime,
-          testName,
-          fileName: child.fullPath,
-          path: child.fullPath
-        },
-        child.isFile ? {
-          command: "vscode.open",
-          title: "Open File",
-          arguments: [vscode3.Uri.file(fullPath)]
-        } : void 0,
-        child.isFile ? new vscode3.ThemeIcon("file") : new vscode3.ThemeIcon("folder")
-      );
-      items.push(treeItem);
-    }
-    return items;
-  }
-  // private async getDirectoryItems(runtime: IRunTime, testName: string, path: string): Promise<TestTreeItem[]> {
-  //   const tree = await this.buildFileTree(runtime, testName);
-  //   if (!tree) {
-  //     return [];
-  //   }
-  //   // Find the node corresponding to the path
-  //   const parts = path.split('/').filter(p => p.length > 0);
-  //   let currentNode = tree;
-  //   for (const part of parts) {
-  //     if (currentNode.children.has(part)) {
-  //       currentNode = currentNode.children.get(part)!;
-  //     } else {
-  //       return [];
-  //     }
-  //   }
-  //   return this.buildTreeItems(currentNode, runtime, testName);
-  // }
-};
-
-// src/vscode/providers/ProcessesTreeDataProvider.ts
-import * as vscode4 from "vscode";
-var ProcessesTreeDataProvider = class {
-  _onDidChangeTreeData = new vscode4.EventEmitter();
-  onDidChangeTreeData = this._onDidChangeTreeData.event;
+  documentationFiles = [];
+  testInputFiles = /* @__PURE__ */ new Map();
+  testResults = /* @__PURE__ */ new Map();
   processes = [];
   ws = null;
-  isConnected = false;
-  connectionAttempts = 0;
-  maxConnectionAttempts = 5;
-  reconnectTimeout = null;
   constructor() {
-    this.fetchProcessesViaHttp().catch((error) => {
-      console.log("[ProcessesTreeDataProvider] Initial HTTP fetch failed:", error);
-    });
-    this.connectWebSocket();
-  }
-  refresh() {
-    console.log("[ProcessesTreeDataProvider] Manual refresh requested");
-    this.fetchProcessesViaHttp().catch((error) => {
-      console.log("[ProcessesTreeDataProvider] HTTP refresh failed:", error);
-    });
-  }
-  getTreeItem(element) {
-    return element;
-  }
-  getChildren(element) {
-    if (!element) {
-      return Promise.resolve(this.getProcessItems());
-    }
-    return Promise.resolve([]);
-  }
-  getProcessItems() {
-    const items = [];
-    if (this.isConnected) {
-      items.push(
-        new TestTreeItem(
-          "\u2705 Connected via WebSocket",
-          2 /* File */,
-          vscode4.TreeItemCollapsibleState.None,
-          {
-            description: "Receiving real-time updates",
-            connected: true
-          },
-          void 0,
-          new vscode4.ThemeIcon("radio-tower", new vscode4.ThemeColor("testing.iconPassed"))
-        )
-      );
-    } else {
-      items.push(
-        new TestTreeItem(
-          "\u26A0\uFE0F Not connected",
-          2 /* File */,
-          vscode4.TreeItemCollapsibleState.None,
-          {
-            description: "Click to retry WebSocket connection",
-            disconnected: true
-          },
-          {
-            command: "testeranto.retryConnection",
-            title: "Retry Connection",
-            arguments: [this]
-          },
-          new vscode4.ThemeIcon("warning", new vscode4.ThemeColor("testing.iconFailed"))
-        )
-      );
-    }
-    items.push(
-      new TestTreeItem(
-        "Refresh now",
-        2 /* File */,
-        vscode4.TreeItemCollapsibleState.None,
-        {
-          description: "Update Docker container list",
-          refresh: true
-        },
-        {
-          command: "testeranto.refresh",
-          title: "Refresh",
-          arguments: []
-        },
-        new vscode4.ThemeIcon("refresh", new vscode4.ThemeColor("testing.iconQueued"))
-      )
-    );
-    if (this.processes.length > 0) {
-      items.push(
-        new TestTreeItem(
-          `\u{1F4E6} ${this.processes.length} Docker container(s)`,
-          2 /* File */,
-          vscode4.TreeItemCollapsibleState.None,
-          {
-            description: "Active and stopped containers",
-            count: this.processes.length
-          },
-          void 0,
-          new vscode4.ThemeIcon("package", new vscode4.ThemeColor("testing.iconUnset"))
-        )
-      );
-      for (const process2 of this.processes) {
-        let icon;
-        let labelPrefix = "";
-        let statusColor;
-        let status = process2.status || "";
-        const state = process2.state || "";
-        const isActive = process2.isActive === true;
-        const runtime = process2.runtime || "unknown";
-        if (isActive) {
-          icon = new vscode4.ThemeIcon("play", new vscode4.ThemeColor("testing.iconPassed"));
-          labelPrefix = "\u25B6 ";
-          statusColor = new vscode4.ThemeColor("testing.iconPassed");
-        } else {
-          icon = new vscode4.ThemeIcon("stop", new vscode4.ThemeColor("testing.iconFailed"));
-          labelPrefix = "\u25A0 ";
-          statusColor = new vscode4.ThemeColor("testing.iconFailed");
-          if (process2.exitCode !== null && process2.exitCode !== void 0) {
-            status = `${status} (exit: ${process2.exitCode})`;
-          }
-        }
-        const containerName = process2.processId || process2.name || "Unknown";
-        const label = `${labelPrefix}${containerName}`;
-        let description = "";
-        if (process2.command) {
-          description = process2.command;
-        } else if (process2.image) {
-          description = process2.image;
-        }
-        if (status) {
-          description = `${description} - ${status}`;
-        }
-        description = `${description} [${runtime}]`;
-        items.push(
-          new TestTreeItem(
-            label,
-            2 /* File */,
-            vscode4.TreeItemCollapsibleState.None,
-            {
-              description,
-              status,
-              state,
-              isActive,
-              processId: process2.processId,
-              runtime,
-              ports: process2.ports,
-              exitCode: process2.exitCode,
-              containerName,
-              startedAt: process2.startedAt,
-              finishedAt: process2.finishedAt
-            },
-            void 0,
-            icon
-          )
-        );
-      }
-    } else {
-      items.push(
-        new TestTreeItem(
-          "No Docker containers found",
-          2 /* File */,
-          vscode4.TreeItemCollapsibleState.None,
-          {
-            description: "Make sure the Testeranto server is running on port 3000",
-            noProcesses: true
-          },
-          void 0,
-          new vscode4.ThemeIcon("info", new vscode4.ThemeColor("testing.iconUnset"))
-        )
-      );
-      items.push(
-        new TestTreeItem(
-          "Start Testeranto Server",
-          2 /* File */,
-          vscode4.TreeItemCollapsibleState.None,
-          {
-            description: "Launch the server in a terminal",
-            startServer: true
-          },
-          {
-            command: "testeranto.startServer",
-            title: "Start Server",
-            arguments: []
-          },
-          new vscode4.ThemeIcon("play", new vscode4.ThemeColor("testing.iconPassed"))
-        )
-      );
-    }
-    return items;
-  }
-  connectWebSocket() {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-      this.reconnectTimeout = null;
-    }
-    console.log("[ProcessesTreeDataProvider] Connecting to WebSocket at ws://localhost:3000");
-    try {
-      this.ws = new WebSocket("ws://localhost:3000");
-      this.ws.onopen = () => {
-        console.log("[ProcessesTreeDataProvider] WebSocket connected");
-        this.isConnected = true;
-        this.connectionAttempts = 0;
-        this._onDidChangeTreeData.fire();
-      };
-      this.ws.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          this.handleWebSocketMessage(message);
-        } catch (error) {
-          console.error("[ProcessesTreeDataProvider] Error parsing WebSocket message:", error);
-        }
-      };
-      this.ws.onerror = (error) => {
-        console.error("[ProcessesTreeDataProvider] WebSocket error:", error);
-        this.isConnected = false;
-        this._onDidChangeTreeData.fire();
-      };
-      this.ws.onclose = (event) => {
-        console.log(`[ProcessesTreeDataProvider] WebSocket closed: ${event.code} ${event.reason}`);
-        this.isConnected = false;
-        this.ws = null;
-        this._onDidChangeTreeData.fire();
-        if (this.connectionAttempts < this.maxConnectionAttempts) {
-          this.connectionAttempts++;
-          console.log(`[ProcessesTreeDataProvider] Attempting to reconnect (${this.connectionAttempts}/${this.maxConnectionAttempts}) in 5 seconds...`);
-          this.reconnectTimeout = setTimeout(() => {
-            this.connectWebSocket();
-          }, 5e3);
-        } else {
-          console.log("[ProcessesTreeDataProvider] Max reconnection attempts reached");
-        }
-      };
-    } catch (error) {
-      console.error("[ProcessesTreeDataProvider] Failed to create WebSocket:", error);
-      this.isConnected = false;
-      this._onDidChangeTreeData.fire();
-    }
-  }
-  handleWebSocketMessage(message) {
-    console.log("[ProcessesTreeDataProvider] Received WebSocket message:", message.type);
-    switch (message.type) {
-      case "connected":
-        console.log("[ProcessesTreeDataProvider] WebSocket connection confirmed");
-        break;
-      case "resourceChanged":
-        console.log("[ProcessesTreeDataProvider] Resource changed, fetching updated processes:", message.url);
-        if (message.url === "/~/processes") {
-          this.fetchProcessesViaHttp().catch((error) => {
-            console.log("[ProcessesTreeDataProvider] HTTP fetch after resource change failed:", error);
-          });
-        }
-        break;
-      case "useHttp":
-        console.log("[ProcessesTreeDataProvider] Server requested HTTP for processes");
-        this.fetchProcessesViaHttp().catch((error) => {
-          console.log("[ProcessesTreeDataProvider] HTTP fetch failed:", error);
-        });
-        break;
-      default:
-        console.log("[ProcessesTreeDataProvider] Unhandled message type:", message.type);
-    }
-  }
-  async fetchProcessesViaHttp() {
-    console.log("[ProcessesTreeDataProvider] Fetching processes via HTTP from http://localhost:3000/~/processes");
-    try {
-      const response = await fetch("http://localhost:3000/~/processes");
-      if (!response.ok) {
-        console.error(`[ProcessesTreeDataProvider] HTTP error! status: ${response.status}`);
-        this.processes = [];
-        this._onDidChangeTreeData.fire();
-        return;
-      }
-      const data = await response.json();
-      console.log(`[ProcessesTreeDataProvider] HTTP fetch returned ${data.processes?.length || 0} processes`);
-      this.processes = data.processes || [];
-      console.log(`[ProcessesTreeDataProvider] Updated processes array to have ${this.processes.length} items`);
-      this._onDidChangeTreeData.fire();
-    } catch (error) {
-      console.error("[ProcessesTreeDataProvider] HTTP fetch failed:", error.message || error);
-      this.processes = [];
-      this._onDidChangeTreeData.fire();
-    }
-  }
-  dispose() {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-      this.reconnectTimeout = null;
-    }
-  }
-};
-
-// src/vscode/providers/FeaturesTreeDataProvider.ts
-import * as vscode6 from "vscode";
-import * as fs2 from "fs";
-import * as path2 from "path";
-
-// src/vscode/providers/FeaturesTreeDataProviderUtils.ts
-import * as vscode5 from "vscode";
-import * as fs from "fs";
-import * as path from "path";
-var FeaturesTreeDataProviderUtils = class {
-  static buildSourceTreeItems(node) {
-    const items = [];
-    const sortedChildren = Array.from(node.children.values()).sort((a, b) => {
-      if (a.isFile && !b.isFile) return 1;
-      if (!a.isFile && b.isFile) return -1;
-      return a.name.localeCompare(b.name);
-    });
-    for (const child of sortedChildren) {
-      const collapsibleState = vscode5.TreeItemCollapsibleState.Collapsed;
-      const treeItem = new TestTreeItem(
-        child.name,
-        2 /* File */,
-        collapsibleState,
-        {
-          sourcePath: child.fullPath,
-          testFile: child.fileName,
-          fileName: child.fileName,
-          // Add a flag to indicate if it's a file or directory
-          isFile: child.isFile
-        },
-        void 0,
-        child.isFile ? new vscode5.ThemeIcon("file-code") : new vscode5.ThemeIcon("folder")
-      );
-      items.push(treeItem);
-    }
-    return items;
-  }
-  static getDocumentationFiles(documentationDir) {
-    const documentationPath = path.join(documentationDir, "documentation.json");
-    if (!fs.existsSync(documentationPath)) {
-      return [
-        new TestTreeItem(
-          "Documentation not available",
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          {
-            description: "Start server with documentationGlob configured"
-          },
-          void 0,
-          new vscode5.ThemeIcon("info")
-        ),
-        new TestTreeItem(
-          "How to configure",
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          {
-            description: "Add documentationGlob to testeranto config"
-          },
-          {
-            command: "vscode.open",
-            title: "Open Config",
-            arguments: [vscode5.Uri.file(path.join(process.cwd(), "testeranto", "testeranto.ts"))]
-          },
-          new vscode5.ThemeIcon("settings-gear")
-        )
-      ];
-    }
-    try {
-      const documentationContent = fs.readFileSync(documentationPath, "utf-8");
-      const documentationData = JSON.parse(documentationContent);
-      const files = documentationData.files || [];
-      if (files.length === 0) {
-        return [
-          new TestTreeItem(
-            "No documentation files match the glob pattern",
-            2 /* File */,
-            vscode5.TreeItemCollapsibleState.None,
-            {
-              description: "Check your documentationGlob pattern"
-            },
-            void 0,
-            new vscode5.ThemeIcon("search")
-          )
-        ];
-      }
-      return files.map((file) => {
-        return new TestTreeItem(
-          file,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          {
-            fileName: file,
-            isFile: true,
-            description: "Documentation file"
-          },
-          {
-            command: "vscode.open",
-            title: "Open File",
-            arguments: [vscode5.Uri.file(path.join(process.cwd(), file))]
-          },
-          new vscode5.ThemeIcon("markdown")
-        );
-      });
-    } catch (error) {
-      return [
-        new TestTreeItem(
-          "Error reading documentation",
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          {
-            description: String(error)
-          },
-          void 0,
-          new vscode5.ThemeIcon("error")
-        )
-      ];
-    }
-  }
-  static getTestResultsRoot(resultsDir) {
-    if (!fs.existsSync(resultsDir)) {
-      return [
-        new TestTreeItem(
-          "No test results found",
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          {
-            description: "Run tests to generate results"
-          },
-          void 0,
-          new vscode5.ThemeIcon("info")
-        )
-      ];
-    }
-    const files = fs.readdirSync(resultsDir).filter((file) => file.endsWith(".json"));
-    if (files.length === 0) {
-      return [
-        new TestTreeItem(
-          "No test results found",
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          {
-            description: "Run tests to generate results"
-          },
-          void 0,
-          new vscode5.ThemeIcon("info")
-        )
-      ];
-    }
-    const testFiles = /* @__PURE__ */ new Map();
-    for (const file of files) {
-      const match = file.match(/^(\w+)\.(.+)\.json$/);
-      if (match) {
-        const runtime = match[1];
-        const testName = match[2];
-        if (!testFiles.has(testName)) {
-          testFiles.set(testName, []);
-        }
-        testFiles.get(testName).push(file);
-      }
-    }
-    const items = [];
-    for (const [testName, runtimeFiles] of testFiles) {
-      let passedCount = 0;
-      let failedCount = 0;
-      for (const file of runtimeFiles) {
-        try {
-          const filePath = path.join(resultsDir, file);
-          const content = fs.readFileSync(filePath, "utf-8");
-          const result = JSON.parse(content);
-          if (result.status === true || result.failed === false) {
-            passedCount++;
-          } else {
-            failedCount++;
-          }
-        } catch {
-        }
-      }
-      const description = `${passedCount} passed, ${failedCount} failed`;
-      items.push(
-        new TestTreeItem(
-          testName,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.Collapsed,
-          {
-            sourcePath: `test-results/${testName}`,
-            testName,
-            isFile: true,
-            description
-          },
-          void 0,
-          failedCount === 0 ? new vscode5.ThemeIcon("file-code", new vscode5.ThemeColor("testing.iconPassed")) : new vscode5.ThemeIcon("file-code", new vscode5.ThemeColor("testing.iconFailed"))
-        )
-      );
-    }
-    return items.sort((a, b) => a.label.localeCompare(b.label));
-  }
-  static getTestResultsChildren(resultsDir, testName) {
-    if (!fs.existsSync(resultsDir)) {
-      return [];
-    }
-    const files = fs.readdirSync(resultsDir).filter((file) => file.endsWith(".json"));
-    const runtimeFiles = files.filter((file) => {
-      const match = file.match(/^(\w+)\.(.+)\.json$/);
-      return match && match[2] === testName;
-    });
-    return runtimeFiles.map((file) => {
-      const match = file.match(/^(\w+)\.(.+)\.json$/);
-      const runtime = match ? match[1] : "unknown";
-      let icon = new vscode5.ThemeIcon("file-code");
-      let description = "";
-      try {
-        const filePath = path.join(resultsDir, file);
-        const content = fs.readFileSync(filePath, "utf-8");
-        const result = JSON.parse(content);
-        if (result.status === true || result.failed === false) {
-          icon = new vscode5.ThemeIcon("check", new vscode5.ThemeColor("testing.iconPassed"));
-          description = "PASSED";
-        } else {
-          icon = new vscode5.ThemeIcon("error", new vscode5.ThemeColor("testing.iconFailed"));
-          description = `FAILED: ${result.fails || 0} failures`;
-        }
-      } catch {
-        description = "Error reading file";
-        icon = new vscode5.ThemeIcon("warning");
-      }
-      return new TestTreeItem(
-        runtime,
-        2 /* File */,
-        vscode5.TreeItemCollapsibleState.Collapsed,
-        {
-          sourcePath: `test-results/${testName}/${runtime}`,
-          testFile: file,
-          fileName: file,
-          isFile: true,
-          description
-        },
-        void 0,
-        icon
-      );
-    }).sort((a, b) => a.label.localeCompare(b.label));
-  }
-  static getTestResults(resultsDir, testFile) {
-    const filePath = path.join(resultsDir, testFile);
-    try {
-      const content = fs.readFileSync(filePath, "utf-8");
-      const result = JSON.parse(content);
-      const items = [];
-      const overallPassed = result.status === true || result.failed === false;
-      items.push(
-        new TestTreeItem(
-          `Overall: ${overallPassed ? "PASSED" : "FAILED"}`,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          {
-            description: `Fails: ${result.fails || 0} | Features: ${result.features?.length || 0}`
-          },
-          void 0,
-          overallPassed ? new vscode5.ThemeIcon("check", new vscode5.ThemeColor("testing.iconPassed")) : new vscode5.ThemeIcon("error", new vscode5.ThemeColor("testing.iconFailed"))
-        )
-      );
-      if (result.features && result.features.length > 0) {
-        const featuresItem = new TestTreeItem(
-          `Features (${result.features.length})`,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.Collapsed,
-          {
-            description: "All test features"
-          },
-          void 0,
-          new vscode5.ThemeIcon("symbol-array")
-        );
-        items.push(featuresItem);
-      }
-      if (result.givens && result.givens.length > 0) {
-        const givensItem = new TestTreeItem(
-          `Test Scenarios (${result.givens.length})`,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.Collapsed,
-          {
-            description: "Given-When-Then test cases"
-          },
-          void 0,
-          new vscode5.ThemeIcon("list-tree")
-        );
-        items.push(givensItem);
-        for (let i = 0; i < result.givens.length; i++) {
-          const given = result.givens[i];
-          const givenPassed = given.status === true || given.failed === false;
-          const givenItem = new TestTreeItem(
-            `Scenario ${i + 1}: ${given.key || "Unnamed"}`,
-            2 /* File */,
-            vscode5.TreeItemCollapsibleState.Collapsed,
-            {
-              testFile,
-              testResultIndex: i,
-              description: givenPassed ? "PASSED" : "FAILED"
-            },
-            void 0,
-            givenPassed ? new vscode5.ThemeIcon("check", new vscode5.ThemeColor("testing.iconPassed")) : new vscode5.ThemeIcon("error", new vscode5.ThemeColor("testing.iconFailed"))
-          );
-          items.push(givenItem);
-        }
-      }
-      return items;
-    } catch (error) {
-      return [
-        new TestTreeItem(
-          "Error reading test results",
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          {
-            description: String(error)
-          },
-          void 0,
-          new vscode5.ThemeIcon("error")
-        )
-      ];
-    }
-  }
-  static getTestDetails(resultsDir, testFile, index) {
-    const filePath = path.join(resultsDir, testFile);
-    try {
-      const content = fs.readFileSync(filePath, "utf-8");
-      const result = JSON.parse(content);
-      if (!result.givens || index >= result.givens.length) {
-        return [
-          new TestTreeItem(
-            "Test scenario not found",
-            2 /* File */,
-            vscode5.TreeItemCollapsibleState.None,
-            { description: "Invalid test scenario index" },
-            void 0,
-            new vscode5.ThemeIcon("warning")
-          )
-        ];
-      }
-      const given = result.givens[index];
-      const items = [];
-      const givenPassed = given.status === true || given.failed === false;
-      items.push(
-        new TestTreeItem(
-          `GIVEN: ${given.key || "Test Scenario"}`,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          { description: givenPassed ? "PASSED" : "FAILED" },
-          void 0,
-          givenPassed ? new vscode5.ThemeIcon("check") : new vscode5.ThemeIcon("error")
-        )
-      );
-      if (given.features && given.features.length > 0) {
-        const featuresItem = new TestTreeItem(
-          `Features (${given.features.length})`,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.Collapsed,
-          { description: "Features tested in this scenario" },
-          void 0,
-          new vscode5.ThemeIcon("symbol-array")
-        );
-        items.push(featuresItem);
-        for (const feature of given.features) {
-          items.push(
-            new TestTreeItem(
-              feature,
-              2 /* File */,
-              vscode5.TreeItemCollapsibleState.None,
-              { description: "Feature" },
-              void 0,
-              new vscode5.ThemeIcon("symbol-string")
-            )
-          );
-        }
-      }
-      if (given.whens && given.whens.length > 0) {
-        const whensItem = new TestTreeItem(
-          `WHEN Steps (${given.whens.length})`,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.Collapsed,
-          { description: "Actions performed" },
-          void 0,
-          new vscode5.ThemeIcon("list-ordered")
-        );
-        items.push(whensItem);
-        for (let i = 0; i < given.whens.length; i++) {
-          const when = given.whens[i];
-          items.push(
-            new TestTreeItem(
-              `Step ${i + 1}: ${when.name || "Action"}`,
-              2 /* File */,
-              vscode5.TreeItemCollapsibleState.None,
-              {
-                description: when.status || "No status",
-                tooltip: when.error ? `Error: ${when.error}` : void 0
-              },
-              void 0,
-              when.error ? new vscode5.ThemeIcon("error") : new vscode5.ThemeIcon("circle")
-            )
-          );
-        }
-      }
-      if (given.thens && given.thens.length > 0) {
-        const thensItem = new TestTreeItem(
-          `THEN Assertions (${given.thens.length})`,
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.Collapsed,
-          { description: "Expected outcomes" },
-          void 0,
-          new vscode5.ThemeIcon("checklist")
-        );
-        items.push(thensItem);
-        for (let i = 0; i < given.thens.length; i++) {
-          const then = given.thens[i];
-          const assertionPassed = !then.error;
-          items.push(
-            new TestTreeItem(
-              `Assertion ${i + 1}: ${then.name || "Check"}`,
-              2 /* File */,
-              vscode5.TreeItemCollapsibleState.None,
-              {
-                description: assertionPassed ? "PASSED" : "FAILED",
-                tooltip: then.error ? `Error: ${then.error}` : void 0
-              },
-              void 0,
-              assertionPassed ? new vscode5.ThemeIcon("check") : new vscode5.ThemeIcon("error")
-            )
-          );
-        }
-      }
-      if (given.error) {
-        items.push(
-          new TestTreeItem(
-            "Error Details",
-            2 /* File */,
-            vscode5.TreeItemCollapsibleState.None,
-            { description: given.error },
-            void 0,
-            new vscode5.ThemeIcon("warning")
-          )
-        );
-      }
-      return items;
-    } catch (error) {
-      return [
-        new TestTreeItem(
-          "Error reading test details",
-          2 /* File */,
-          vscode5.TreeItemCollapsibleState.None,
-          { description: String(error) },
-          void 0,
-          new vscode5.ThemeIcon("error")
-        )
-      ];
-    }
-  }
-};
-
-// src/vscode/providers/FeaturesTreeDataProvider.ts
-var FeaturesTreeDataProvider = class {
-  _onDidChangeTreeData = new vscode6.EventEmitter();
-  onDidChangeTreeData = this._onDidChangeTreeData.event;
-  resultsDir;
-  documentationDir;
-  constructor() {
-    const workspaceFolders = vscode6.workspace.workspaceFolders;
+    const workspaceFolders = vscode3.workspace.workspaceFolders;
     if (workspaceFolders && workspaceFolders.length > 0) {
-      const workspaceRoot = workspaceFolders[0].uri.fsPath;
-      this.resultsDir = path2.join(workspaceRoot, "testeranto", "reports", "allTests", "example");
-      this.documentationDir = path2.join(workspaceRoot, "testeranto");
-    } else {
-      const cwd = process.cwd();
-      this.resultsDir = path2.join(cwd, "testeranto", "reports", "allTests", "example");
-      this.documentationDir = path2.join(cwd, "testeranto");
+      this.loadInitialData();
+      this.connectWebSocket();
     }
+    this.setupWorkspaceWatcher();
   }
   refresh() {
+    this.loadInitialData();
     this._onDidChangeTreeData.fire();
   }
   getTreeItem(element) {
@@ -1825,99 +225,691 @@ var FeaturesTreeDataProvider = class {
   }
   getChildren(element) {
     if (!element) {
-      return Promise.resolve(this.getSourceStructure());
-    } else {
-      const data = element.data;
-      if (data?.sourcePath) {
-        return Promise.resolve(this.getSourceChildren(data.sourcePath));
-      } else if (data?.testFile && data.testResultIndex === void 0) {
-        return Promise.resolve(this.getTestResults(data.testFile));
-      } else if (data?.testResultIndex !== void 0) {
-        return Promise.resolve(this.getTestDetails(data.testFile, data.testResultIndex));
-      }
+      return Promise.resolve(this.getRootItems());
+    }
+    const data = element.data;
+    if (data?.section === "documentation") {
+      return Promise.resolve(this.getDocumentationItems());
+    } else if (data?.section === "test-inputs") {
+      return Promise.resolve(this.getTestInputItems());
+    } else if (data?.section === "test-inputs-runtime") {
+      return Promise.resolve(this.getTestInputRuntimeItems(data.runtime));
+    } else if (data?.section === "test-inputs-test") {
+      return Promise.resolve(this.getTestInputTestItems(data.runtime, data.testName));
+    } else if (data?.section === "test-results") {
+      return Promise.resolve(this.getTestResultItems());
+    } else if (data?.testName && data?.section === void 0) {
+      return Promise.resolve(this.getTestResultChildren(data.testName));
+    } else if (data?.testName && data?.runtime && data?.section === void 0) {
+      return Promise.resolve(this.getTestResultRuntimeChildren(data.testName, data.runtime));
+    } else if (data?.section === "processes") {
+      return Promise.resolve(this.getProcessItems());
+    } else if (data?.section === "reports") {
+      return Promise.resolve(this.getReportItems());
+    } else if (data?.filePath) {
+      return Promise.resolve(this.getFileChildren(data.filePath));
     }
     return Promise.resolve([]);
   }
-  getSourceStructure() {
-    const items = [];
-    const documentationPath = path2.join(this.documentationDir, "documentation.json");
-    let docDescription = "No documentation files found";
-    let hasDocumentation = false;
-    if (fs2.existsSync(documentationPath)) {
-      try {
-        const documentationContent = fs2.readFileSync(documentationPath, "utf-8");
-        const documentationData = JSON.parse(documentationContent);
-        if (documentationData.files && Array.isArray(documentationData.files)) {
-          docDescription = `${documentationData.files.length} files`;
-          hasDocumentation = true;
+  async loadInitialData() {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    await Promise.all([
+      this.loadDocumentationFiles(),
+      this.loadTestInputFiles(),
+      this.loadTestResults(),
+      this.loadProcesses()
+    ]);
+  }
+  async loadDocumentationFiles() {
+    console.log("[TesterantoTreeDataProvider] Loading documentation files...");
+    const files = await TesterantoTreeDataProviderUtils.loadDocumentationFiles();
+    console.log(`[TesterantoTreeDataProvider] Loaded ${files.length} documentation files:`, files);
+    this.documentationFiles = files;
+  }
+  async loadTestInputFiles() {
+    console.log("[TesterantoTreeDataProvider] Loading test input files...");
+    try {
+      const response = await fetch("http://localhost:3000/~/configs");
+      const data = await response.json();
+      const configs = data.configs;
+      if (configs?.runtimes) {
+        console.log(`[TesterantoTreeDataProvider] Found ${Object.keys(configs.runtimes).length} runtimes`);
+        this.testInputFiles.clear();
+        for (const [runtimeKey, runtimeConfig] of Object.entries(configs.runtimes)) {
+          const config = runtimeConfig;
+          const tests = config.tests || [];
+          console.log(`[TesterantoTreeDataProvider] Runtime ${runtimeKey} has ${tests.length} tests`);
+          for (const testName of tests) {
+            console.log(`[TesterantoTreeDataProvider] Fetching input files for ${runtimeKey}/${testName}`);
+            try {
+              const inputResponse = await fetch(
+                `http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtimeKey)}&testName=${encodeURIComponent(testName)}`
+              );
+              const inputData = await inputResponse.json();
+              const files = inputData.inputFiles || [];
+              console.log(`[TesterantoTreeDataProvider] Found ${files.length} input files for ${runtimeKey}/${testName}`);
+              if (!this.testInputFiles.has(runtimeKey)) {
+                this.testInputFiles.set(runtimeKey, []);
+              }
+              this.testInputFiles.get(runtimeKey).push({
+                testName,
+                files
+              });
+            } catch (error) {
+              console.error(`[TesterantoTreeDataProvider] Failed to fetch input files for ${runtimeKey}/${testName}:`, error);
+            }
+          }
         }
-      } catch (error) {
-        console.error("Error reading documentation.json:", error);
-        docDescription = "Error reading documentation";
+      }
+    } catch (error) {
+      console.error("[TesterantoTreeDataProvider] Error loading test input files:", error);
+    }
+  }
+  async loadTestResults() {
+    try {
+      console.log("[TesterantoTreeDataProvider] Loading test results...");
+      const response = await fetch("http://localhost:3000/~/testresults");
+      if (!response.ok) {
+        console.error(`[TesterantoTreeDataProvider] Failed to fetch test results: ${response.status} ${response.statusText}`);
+        const allResponse = await fetch("http://localhost:3000/~/testresults");
+        if (allResponse.ok) {
+          const allData = await allResponse.json();
+          this.processTestResults(allData);
+        }
+        return;
+      }
+      const data = await response.json();
+      console.log(`[TesterantoTreeDataProvider] Received test results data:`, data);
+      this.processTestResults(data);
+    } catch (error) {
+      console.error("[TesterantoTreeDataProvider] Error loading test results:", error);
+    }
+  }
+  processTestResults(data) {
+    this.testResults.clear();
+    if (data.testResults && Array.isArray(data.testResults)) {
+      console.log(`[TesterantoTreeDataProvider] Processing ${data.testResults.length} test results`);
+      for (const testResult of data.testResults) {
+        let testName = testResult.testName || testResult.result?.name || testResult.file?.replace(".json", "") || "Unknown";
+        if (testResult.runtime && testName.startsWith(`${testResult.runtime}.`)) {
+          testName = testName.substring(testResult.runtime.length + 1);
+        }
+        if (testName === "Unknown" && testResult.file) {
+          const fileName = testResult.file;
+          const patterns = [
+            /^[^\.]+\.(.+)\.json$/,
+            // runtime.testname.json
+            /^(.+)\.json$/
+            // testname.json
+          ];
+          for (const pattern of patterns) {
+            const match = fileName.match(pattern);
+            if (match && match[1]) {
+              testName = match[1];
+              break;
+            }
+          }
+        }
+        console.log(`[TesterantoTreeDataProvider] Processing test result for: ${testName}`);
+        if (!this.testResults.has(testName)) {
+          this.testResults.set(testName, []);
+        }
+        this.testResults.get(testName).push(testResult);
       }
     } else {
-      docDescription = "Server not running or no documentation configured";
+      console.log("[TesterantoTreeDataProvider] No testResults array found in response");
     }
-    const docItem = new TestTreeItem(
-      "Documentation",
-      2 /* File */,
-      hasDocumentation ? vscode6.TreeItemCollapsibleState.Collapsed : vscode6.TreeItemCollapsibleState.None,
-      {
-        sourcePath: "documentation",
-        isFile: false,
-        description: docDescription
-      },
-      void 0,
-      new vscode6.ThemeIcon("book")
-    );
-    items.push(docItem);
-    const testResultsItem = new TestTreeItem(
-      "Test Results",
-      2 /* File */,
-      vscode6.TreeItemCollapsibleState.Collapsed,
-      {
-        sourcePath: "test-results",
-        isFile: false,
-        description: "Test execution results"
-      },
-      void 0,
-      new vscode6.ThemeIcon("beaker")
-    );
-    items.push(testResultsItem);
+    console.log(`[TesterantoTreeDataProvider] Loaded ${this.testResults.size} unique tests`);
+  }
+  async loadProcesses() {
+    const response = await fetch("http://localhost:3000/~/processes");
+    const data = await response.json();
+    this.processes = data.processes;
+  }
+  getRootItems() {
+    const items = [
+      new TestTreeItem(
+        "\u{1F4DA} Documentation",
+        2 /* File */,
+        vscode3.TreeItemCollapsibleState.Collapsed,
+        {
+          section: "documentation",
+          description: `${this.documentationFiles.length} files`
+        },
+        void 0,
+        new vscode3.ThemeIcon("book")
+      ),
+      new TestTreeItem(
+        "\u{1F9EA} Test Inputs",
+        2 /* File */,
+        vscode3.TreeItemCollapsibleState.Collapsed,
+        {
+          section: "test-inputs",
+          description: "Source files for tests"
+        },
+        void 0,
+        new vscode3.ThemeIcon("beaker")
+      ),
+      new TestTreeItem(
+        "\u{1F4CA} Test Results",
+        2 /* File */,
+        vscode3.TreeItemCollapsibleState.Collapsed,
+        {
+          section: "test-results",
+          description: `${this.testResults.size} tests`
+        },
+        void 0,
+        new vscode3.ThemeIcon("graph")
+      ),
+      new TestTreeItem(
+        "\u{1F433} Docker Processes",
+        2 /* File */,
+        vscode3.TreeItemCollapsibleState.Collapsed,
+        {
+          section: "processes",
+          description: `${this.processes.length} containers`
+        },
+        void 0,
+        new vscode3.ThemeIcon("server")
+      ),
+      new TestTreeItem(
+        "\u{1F310} HTML Report",
+        2 /* File */,
+        vscode3.TreeItemCollapsibleState.None,
+        {
+          section: "reports",
+          description: "Static report for stakeholders"
+        },
+        {
+          command: "testeranto.generateHtmlReport",
+          title: "Generate and Open HTML Report"
+        },
+        new vscode3.ThemeIcon("globe")
+      )
+    ];
     return items;
   }
-  getSourceChildren(sourcePath) {
-    const parts = sourcePath.split("/").filter((p) => p.length > 0);
-    if (parts.length === 0) {
-      return this.getSourceStructure();
+  getDocumentationItems() {
+    if (this.documentationFiles.length === 0) {
+      return [
+        new TestTreeItem(
+          "No documentation files found",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "Configure documentationGlob in testeranto config"
+          },
+          void 0,
+          new vscode3.ThemeIcon("info")
+        )
+      ];
     }
-    if (parts.length === 1) {
-      if (parts[0] === "documentation") {
-        return FeaturesTreeDataProviderUtils.getDocumentationFiles(this.documentationDir);
-      } else if (parts[0] === "test-results") {
-        return FeaturesTreeDataProviderUtils.getTestResultsRoot(this.resultsDir);
+    const workspaceFolders = vscode3.workspace.workspaceFolders;
+    if (!workspaceFolders || workspaceFolders.length === 0) {
+      return [
+        new TestTreeItem(
+          "No workspace folder open",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "Open a workspace to view documentation"
+          },
+          void 0,
+          new vscode3.ThemeIcon("warning")
+        )
+      ];
+    }
+    const workspaceRoot = workspaceFolders[0].uri.fsPath;
+    const cwd = process.cwd();
+    return this.documentationFiles.map((file) => {
+      const fileName = path.basename(file);
+      let fullPath;
+      if (path.isAbsolute(file)) {
+        fullPath = file;
+      } else {
+        fullPath = path.join(workspaceRoot, file);
+        if (!fs.existsSync(fullPath)) {
+          fullPath = path.join(cwd, file);
+        }
+      }
+      const description = path.dirname(file);
+      return new TestTreeItem(
+        fileName,
+        2 /* File */,
+        vscode3.TreeItemCollapsibleState.None,
+        {
+          filePath: file,
+          description: description !== "." ? description : ""
+        },
+        {
+          command: "vscode.open",
+          title: "Open File",
+          arguments: [vscode3.Uri.file(fullPath)]
+        },
+        new vscode3.ThemeIcon("markdown")
+      );
+    });
+  }
+  getTestInputItems() {
+    const items = [];
+    if (this.testInputFiles.size === 0) {
+      items.push(
+        new TestTreeItem(
+          "No test input files found",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "Run tests to generate input files"
+          },
+          void 0,
+          new vscode3.ThemeIcon("info")
+        )
+      );
+      return items;
+    }
+    for (const [runtime, testEntries] of this.testInputFiles.entries()) {
+      let totalFiles = 0;
+      for (const entry of testEntries) {
+        totalFiles += entry.files.length;
+      }
+      items.push(
+        new TestTreeItem(
+          runtime,
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.Collapsed,
+          {
+            section: "test-inputs-runtime",
+            runtime,
+            description: `${testEntries.length} tests, ${totalFiles} files`
+          },
+          void 0,
+          new vscode3.ThemeIcon("symbol-namespace")
+        )
+      );
+    }
+    return items;
+  }
+  getTestResultItems() {
+    const items = [];
+    if (this.testResults.size === 0) {
+      items.push(
+        new TestTreeItem(
+          "No test results found",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "Run tests to generate results"
+          },
+          void 0,
+          new vscode3.ThemeIcon("info")
+        )
+      );
+      items.push(
+        new TestTreeItem(
+          "Refresh Test Results",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "Check for new test results"
+          },
+          {
+            command: "testeranto.refresh",
+            title: "Refresh Test Results"
+          },
+          new vscode3.ThemeIcon("refresh")
+        )
+      );
+      return items;
+    }
+    for (const [testName, results] of this.testResults.entries()) {
+      let passed = 0;
+      let failed = 0;
+      let total = results.length;
+      for (const result of results) {
+        const status = result.result?.status;
+        const failedFlag = result.result?.failed;
+        if (status === true || failedFlag === false) {
+          passed++;
+        } else {
+          failed++;
+        }
+      }
+      const description = `${passed} passed, ${failed} failed (${total} total)`;
+      const icon = failed === 0 ? new vscode3.ThemeIcon("check", new vscode3.ThemeColor("testing.iconPassed")) : new vscode3.ThemeIcon("error", new vscode3.ThemeColor("testing.iconFailed"));
+      items.push(
+        new TestTreeItem(
+          testName,
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.Collapsed,
+          {
+            testName,
+            description,
+            passed,
+            failed,
+            total
+          },
+          void 0,
+          icon
+        )
+      );
+    }
+    items.sort((a, b) => {
+      const aFailed = a.data?.failed || 0;
+      const bFailed = b.data?.failed || 0;
+      if (aFailed === 0 && bFailed > 0) return -1;
+      if (aFailed > 0 && bFailed === 0) return 1;
+      return a.label.localeCompare(b.label);
+    });
+    return items;
+  }
+  getProcessItems() {
+    if (this.processes.length === 0) {
+      return [
+        new TestTreeItem(
+          "No Docker processes found",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "Start the Testeranto server"
+          },
+          void 0,
+          new vscode3.ThemeIcon("info")
+        )
+      ];
+    }
+    return this.processes.map((process2) => {
+      const isActive = process2.isActive === true;
+      return new TestTreeItem(
+        process2.name || process2.containerId,
+        2 /* File */,
+        vscode3.TreeItemCollapsibleState.None,
+        {
+          processId: process2.containerId,
+          status: process2.status,
+          isActive,
+          runtime: process2.runtime,
+          description: `${process2.status} - ${process2.runtime}`
+        },
+        void 0,
+        isActive ? new vscode3.ThemeIcon("play", new vscode3.ThemeColor("testing.iconPassed")) : new vscode3.ThemeIcon("stop", new vscode3.ThemeColor("testing.iconFailed"))
+      );
+    });
+  }
+  getReportItems() {
+    return [
+      new TestTreeItem(
+        "Generate HTML Report",
+        2 /* File */,
+        vscode3.TreeItemCollapsibleState.None,
+        {
+          description: "Create static report for stakeholders"
+        },
+        {
+          command: "testeranto.generateHtmlReport",
+          title: "Generate Report"
+        },
+        new vscode3.ThemeIcon("file-code")
+      )
+    ];
+  }
+  getTestInputRuntimeItems(runtime) {
+    const items = [];
+    const testEntries = this.testInputFiles.get(runtime);
+    if (!testEntries || testEntries.length === 0) {
+      items.push(
+        new TestTreeItem(
+          "No tests found",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "This runtime has no tests configured"
+          },
+          void 0,
+          new vscode3.ThemeIcon("info")
+        )
+      );
+      return items;
+    }
+    for (const entry of testEntries) {
+      items.push(
+        new TestTreeItem(
+          entry.testName,
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.Collapsed,
+          {
+            section: "test-inputs-test",
+            runtime,
+            testName: entry.testName,
+            description: `${entry.files.length} files`
+          },
+          void 0,
+          new vscode3.ThemeIcon("beaker")
+        )
+      );
+    }
+    return items;
+  }
+  getTestInputTestItems(runtime, testName) {
+    const items = [];
+    const testEntries = this.testInputFiles.get(runtime);
+    if (!testEntries) {
+      return items;
+    }
+    const entry = testEntries.find((e) => e.testName === testName);
+    if (!entry || entry.files.length === 0) {
+      items.push(
+        new TestTreeItem(
+          "No files found",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "This test has no input files"
+          },
+          void 0,
+          new vscode3.ThemeIcon("info")
+        )
+      );
+      return items;
+    }
+    const treeRoot = { name: "", children: /* @__PURE__ */ new Map(), fullPath: "", isFile: false };
+    for (const filePath of entry.files) {
+      const normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
+      const parts = normalizedPath.split("/").filter((part) => part.length > 0 && part !== ".");
+      if (parts.length === 0) continue;
+      let currentNode = treeRoot;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const isLast = i === parts.length - 1;
+        if (!currentNode.children.has(part)) {
+          currentNode.children.set(part, {
+            name: part,
+            children: /* @__PURE__ */ new Map(),
+            fullPath: parts.slice(0, i + 1).join("/"),
+            isFile: isLast
+          });
+        }
+        currentNode = currentNode.children.get(part);
       }
     }
-    if (parts.length === 2 && parts[0] === "test-results") {
-      return FeaturesTreeDataProviderUtils.getTestResultsChildren(this.resultsDir, parts[1]);
-    }
-    return this.getLegacySourceChildren(sourcePath);
+    const workspaceFolders = vscode3.workspace.workspaceFolders;
+    const workspaceRoot = workspaceFolders && workspaceFolders.length > 0 ? workspaceFolders[0].uri.fsPath : process.cwd();
+    const buildItems = (node) => {
+      const items2 = [];
+      const sortedChildren = Array.from(node.children.values()).sort((a, b) => {
+        if (!a.isFile && b.isFile) return -1;
+        if (a.isFile && !b.isFile) return 1;
+        return a.name.localeCompare(b.name);
+      });
+      for (const child of sortedChildren) {
+        const collapsibleState = child.isFile ? vscode3.TreeItemCollapsibleState.None : vscode3.TreeItemCollapsibleState.Collapsed;
+        let fileUri;
+        if (child.isFile) {
+          const fullPath = path.isAbsolute(child.fullPath) ? child.fullPath : path.join(workspaceRoot, child.fullPath);
+          fileUri = vscode3.Uri.file(fullPath);
+        }
+        const treeItem = new TestTreeItem(
+          child.name,
+          2 /* File */,
+          collapsibleState,
+          {
+            filePath: child.fullPath,
+            isFile: child.isFile,
+            runtime,
+            testName
+          },
+          child.isFile && fileUri ? {
+            command: "vscode.open",
+            title: "Open File",
+            arguments: [fileUri]
+          } : void 0,
+          child.isFile ? new vscode3.ThemeIcon("file-text") : new vscode3.ThemeIcon("folder")
+        );
+        items2.push(treeItem);
+      }
+      return items2;
+    };
+    return buildItems(treeRoot);
   }
-  getLegacySourceChildren(sourcePath) {
-    const parts = sourcePath.split("/").filter((p) => p.length > 0);
-    if (parts.length === 3 && parts[0] === "test-results") {
-      const testName = parts[1];
-      const runtime = parts[2];
-      const fileName = `${runtime}.${testName}.json`;
-      return FeaturesTreeDataProviderUtils.getTestResults(this.resultsDir, fileName);
+  getTestResultChildren(testName) {
+    const items = [];
+    const results = this.testResults.get(testName);
+    if (!results || results.length === 0) {
+      items.push(
+        new TestTreeItem(
+          "No detailed results available",
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            description: "Test result details not found"
+          },
+          void 0,
+          new vscode3.ThemeIcon("info")
+        )
+      );
+      return items;
     }
+    const resultsByRuntime = /* @__PURE__ */ new Map();
+    for (const result of results) {
+      const runtime = result.runtime || "unknown";
+      if (!resultsByRuntime.has(runtime)) {
+        resultsByRuntime.set(runtime, []);
+      }
+      resultsByRuntime.get(runtime).push(result);
+    }
+    for (const [runtime, runtimeResults] of resultsByRuntime.entries()) {
+      let passed = 0;
+      let failed = 0;
+      for (const result of runtimeResults) {
+        const status = result.result?.status;
+        const failedFlag = result.result?.failed;
+        if (status === true || failedFlag === false) {
+          passed++;
+        } else {
+          failed++;
+        }
+      }
+      const description = `${passed} passed, ${failed} failed`;
+      const icon = failed === 0 ? new vscode3.ThemeIcon("check", new vscode3.ThemeColor("testing.iconPassed")) : new vscode3.ThemeIcon("error", new vscode3.ThemeColor("testing.iconFailed"));
+      items.push(
+        new TestTreeItem(
+          runtime,
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.Collapsed,
+          {
+            testName,
+            runtime,
+            description,
+            passed,
+            failed,
+            total: runtimeResults.length
+          },
+          void 0,
+          icon
+        )
+      );
+    }
+    return items;
+  }
+  getTestResultRuntimeChildren(testName, runtime) {
+    const items = [];
+    const results = this.testResults.get(testName);
+    if (!results) {
+      return items;
+    }
+    const runtimeResults = results.filter((r) => r.runtime === runtime);
+    for (const result of runtimeResults) {
+      const status = result.result?.status;
+      const failedFlag = result.result?.failed;
+      const isPassed = status === true || failedFlag === false;
+      const fileName = result.file || "Unknown file";
+      const description = isPassed ? "PASSED" : "FAILED";
+      const icon = isPassed ? new vscode3.ThemeIcon("check", new vscode3.ThemeColor("testing.iconPassed")) : new vscode3.ThemeIcon("error", new vscode3.ThemeColor("testing.iconFailed"));
+      items.push(
+        new TestTreeItem(
+          fileName,
+          2 /* File */,
+          vscode3.TreeItemCollapsibleState.None,
+          {
+            testName,
+            runtime,
+            fileName,
+            description,
+            isPassed,
+            result: result.result
+          },
+          void 0,
+          icon
+        )
+      );
+    }
+    return items;
+  }
+  getFileChildren(filePath) {
     return [];
   }
-  getTestResults(testFile) {
-    return FeaturesTreeDataProviderUtils.getTestResults(this.resultsDir, testFile);
+  connectWebSocket() {
+    this.ws = new WebSocket("ws://localhost:3000");
+    this.ws.onopen = () => {
+      console.log("[TesterantoTreeDataProvider] WebSocket connected");
+    };
+    this.ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === "resourceChanged") {
+          console.log(`[TesterantoTreeDataProvider] Resource changed: ${message.url}`);
+          this.loadInitialData().then(() => {
+            this._onDidChangeTreeData.fire();
+          });
+        }
+      } catch (error) {
+        console.error("[TesterantoTreeDataProvider] Error handling WebSocket message:", error);
+      }
+    };
+    this.ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+    this.ws.onclose = () => {
+      console.log("WebSocket closed");
+    };
   }
-  getTestDetails(testFile, index) {
-    return FeaturesTreeDataProviderUtils.getTestDetails(this.resultsDir, testFile, index);
+  dispose() {
+    if (this.ws) {
+      this.ws.close();
+    }
+  }
+  setupWorkspaceWatcher() {
+    vscode3.workspace.onDidChangeWorkspaceFolders((event) => {
+      if (event.added.length > 0) {
+        this.loadInitialData();
+        this.connectWebSocket();
+      } else if (event.removed.length > 0) {
+        this.documentationFiles = [];
+        this.testInputFiles.clear();
+        this.testResults.clear();
+        this.processes = [];
+        this._onDidChangeTreeData.fire();
+      }
+    });
   }
 };
 
@@ -1927,25 +919,25 @@ function activate(context) {
   const terminalManager = new TerminalManager();
   terminalManager.createAllTerminals();
   console.log("[Testeranto] Created terminals for all tests");
-  const mainStatusBarItem = vscode7.window.createStatusBarItem(vscode7.StatusBarAlignment.Right, 100);
+  const mainStatusBarItem = vscode4.window.createStatusBarItem(vscode4.StatusBarAlignment.Right, 100);
   mainStatusBarItem.text = "$(beaker) Testeranto";
   mainStatusBarItem.tooltip = "Testeranto: Dockerized, AI powered BDD test framework";
   mainStatusBarItem.command = "testeranto.showTests";
   mainStatusBarItem.show();
-  const serverStatusBarItem = vscode7.window.createStatusBarItem(vscode7.StatusBarAlignment.Right, 99);
+  const serverStatusBarItem = vscode4.window.createStatusBarItem(vscode4.StatusBarAlignment.Right, 99);
   serverStatusBarItem.text = "$(circle-slash) Server";
   serverStatusBarItem.tooltip = "Testeranto server not running. Click to start.";
   serverStatusBarItem.command = "testeranto.startServer";
-  serverStatusBarItem.backgroundColor = new vscode7.ThemeColor("statusBarItem.warningBackground");
+  serverStatusBarItem.backgroundColor = new vscode4.ThemeColor("statusBarItem.warningBackground");
   serverStatusBarItem.show();
   const updateServerStatus = async () => {
     try {
-      const workspaceFolders = vscode7.workspace.workspaceFolders;
+      const workspaceFolders = vscode4.workspace.workspaceFolders;
       if (workspaceFolders && workspaceFolders.length > 0) {
         const workspaceRoot = workspaceFolders[0].uri;
-        const configUri = vscode7.Uri.joinPath(workspaceRoot, "testeranto", "extension-config.json");
+        const configUri = vscode4.Uri.joinPath(workspaceRoot, "testeranto", "extension-config.json");
         try {
-          const fileContent = await vscode7.workspace.fs.readFile(configUri);
+          const fileContent = await vscode4.workspace.fs.readFile(configUri);
           const configText = Buffer.from(fileContent).toString("utf-8");
           const config = JSON.parse(configText);
           if (config.serverStarted === true) {
@@ -1971,130 +963,60 @@ function activate(context) {
           } else {
             serverStatusBarItem.text = "$(circle-slash) Server";
             serverStatusBarItem.tooltip = "Testeranto server not running. Click to start.";
-            serverStatusBarItem.backgroundColor = new vscode7.ThemeColor("statusBarItem.warningBackground");
+            serverStatusBarItem.backgroundColor = new vscode4.ThemeColor("statusBarItem.warningBackground");
             console.log("[Testeranto] Server status: Not running (config indicates server is stopped)");
           }
         } catch (error) {
           serverStatusBarItem.text = "$(circle-slash) Server";
           serverStatusBarItem.tooltip = "Testeranto server not running. Click to start.";
-          serverStatusBarItem.backgroundColor = new vscode7.ThemeColor("statusBarItem.warningBackground");
+          serverStatusBarItem.backgroundColor = new vscode4.ThemeColor("statusBarItem.warningBackground");
           console.log("[Testeranto] Server status: Not running (config file not found or invalid):", error);
         }
       } else {
         console.log("[Testeranto] No workspace folder open");
         serverStatusBarItem.text = "$(circle-slash) Server";
         serverStatusBarItem.tooltip = "No workspace folder open";
-        serverStatusBarItem.backgroundColor = new vscode7.ThemeColor("statusBarItem.warningBackground");
+        serverStatusBarItem.backgroundColor = new vscode4.ThemeColor("statusBarItem.warningBackground");
       }
     } catch (error) {
       console.error("[Testeranto] Error checking server status:", error);
       serverStatusBarItem.text = "$(error) Server Error";
       serverStatusBarItem.tooltip = "Error checking server status";
-      serverStatusBarItem.backgroundColor = new vscode7.ThemeColor("statusBarItem.errorBackground");
+      serverStatusBarItem.backgroundColor = new vscode4.ThemeColor("statusBarItem.errorBackground");
     }
   };
   updateServerStatus();
-  let configWatcher;
-  let documentationWatcher;
-  const setupConfigWatcher = () => {
-    const workspaceFolders = vscode7.workspace.workspaceFolders;
-    if (workspaceFolders && workspaceFolders.length > 0) {
-      const workspaceRoot = workspaceFolders[0].uri;
-      const configPattern = new vscode7.RelativePattern(workspaceRoot, "testeranto/extension-config.json");
-      if (configWatcher) {
-        configWatcher.dispose();
-      }
-      configWatcher = vscode7.workspace.createFileSystemWatcher(configPattern, false, false, false);
-      const handleConfigChange = (uri) => {
-        console.log("[Testeranto] Config file changed:", uri.fsPath);
-        setTimeout(() => {
-          updateServerStatus();
-          testTreeDataProvider.refresh();
-          processesTreeDataProvider.refresh();
-          featuresTreeDataProvider.refresh();
-        }, 100);
-      };
-      configWatcher.onDidChange(handleConfigChange);
-      configWatcher.onDidCreate(handleConfigChange);
-      configWatcher.onDidDelete(() => {
-        console.log("[Testeranto] Config file deleted");
-        updateServerStatus();
-        testTreeDataProvider.refresh();
-        processesTreeDataProvider.refresh();
-        featuresTreeDataProvider.refresh();
-      });
-      context.subscriptions.push(configWatcher);
-      console.log("[Testeranto] Config file watcher set up");
-    }
-  };
-  const setupDocumentationWatcher = () => {
-    const workspaceFolders = vscode7.workspace.workspaceFolders;
-    if (workspaceFolders && workspaceFolders.length > 0) {
-      const workspaceRoot = workspaceFolders[0].uri;
-      const documentationPattern = new vscode7.RelativePattern(workspaceRoot, "testeranto/documentation.json");
-      if (documentationWatcher) {
-        documentationWatcher.dispose();
-      }
-      documentationWatcher = vscode7.workspace.createFileSystemWatcher(documentationPattern, false, false, false);
-      const handleDocumentationChange = (uri) => {
-        console.log("[Testeranto] Documentation file changed:", uri.fsPath);
-        setTimeout(() => {
-          featuresTreeDataProvider.refresh();
-        }, 100);
-      };
-      documentationWatcher.onDidChange(handleDocumentationChange);
-      documentationWatcher.onDidCreate(handleDocumentationChange);
-      documentationWatcher.onDidDelete(() => {
-        console.log("[Testeranto] Documentation file deleted");
-        featuresTreeDataProvider.refresh();
-      });
-      context.subscriptions.push(documentationWatcher);
-      console.log("[Testeranto] Documentation file watcher set up");
-    }
-  };
-  setupConfigWatcher();
-  setupDocumentationWatcher();
-  context.subscriptions.push(
-    vscode7.workspace.onDidChangeWorkspaceFolders(() => {
-      console.log("[Testeranto] Workspace folders changed, re-setting up watchers");
-      setupConfigWatcher();
-      setupDocumentationWatcher();
-      updateServerStatus();
-    })
-  );
-  const testTreeDataProvider = new TestTreeDataProvider();
-  const processesTreeDataProvider = new ProcessesTreeDataProvider();
-  const featuresTreeDataProvider = new FeaturesTreeDataProvider();
-  const showTestsCommand = vscode7.commands.registerCommand(
+  const testerantoTreeDataProvider = new TesterantoTreeDataProvider();
+  const showTestsCommand = vscode4.commands.registerCommand(
     "testeranto.showTests",
     () => {
-      vscode7.window.showInformationMessage("Showing Testeranto tests");
-      vscode7.commands.executeCommand("testerantoTestsView.focus");
+      vscode4.window.showInformationMessage("Showing Testeranto");
+      vscode4.commands.executeCommand("testerantoView.focus");
     }
   );
-  const runTestCommand = vscode7.commands.registerCommand(
+  const runTestCommand = vscode4.commands.registerCommand(
     "testeranto.runTest",
     async (item) => {
       if (item.type === 1 /* Test */) {
         const { runtime, testName } = item.data || {};
-        vscode7.window.showInformationMessage(`Running ${testName} for ${runtime}...`);
+        vscode4.window.showInformationMessage(`Running ${testName} for ${runtime}...`);
         const terminal = terminalManager.showTerminal(runtime, testName);
         if (terminal) {
-          vscode7.window.showInformationMessage(`Terminal for ${testName} is ready`, { modal: false });
+          vscode4.window.showInformationMessage(`Terminal for ${testName} is ready`, { modal: false });
         } else {
-          vscode7.window.showWarningMessage(`Terminal for ${testName} not found`);
+          vscode4.window.showWarningMessage(`Terminal for ${testName} not found`);
         }
       }
     }
   );
-  const aiderCommand = vscode7.commands.registerCommand(
+  const aiderCommand = vscode4.commands.registerCommand(
     "testeranto.aider",
     async (...args) => {
       console.log("[Testeranto] Aider command triggered with args:", args);
       let runtime;
       let testName;
       if (args.length === 0) {
-        vscode7.window.showErrorMessage("Cannot connect to aider: No arguments provided");
+        vscode4.window.showErrorMessage("Cannot connect to aider: No arguments provided");
         return;
       }
       const firstArg = args[0];
@@ -2111,7 +1033,7 @@ function activate(context) {
             testName = firstArg.label;
           }
         } else {
-          vscode7.window.showErrorMessage(`Cannot connect to aider: Item is not a test (type: ${firstArg.type})`);
+          vscode4.window.showErrorMessage(`Cannot connect to aider: Item is not a test (type: ${firstArg.type})`);
           return;
         }
       } else if (args.length >= 2) {
@@ -2126,39 +1048,39 @@ function activate(context) {
       console.log("[Testeranto] Extracted runtime:", runtime, "type:", typeof runtime);
       console.log("[Testeranto] Extracted testName:", testName, "type:", typeof testName);
       if (!runtime || !testName) {
-        vscode7.window.showErrorMessage(`Cannot connect to aider: Missing runtime or test name. Runtime: ${runtime}, Test: ${testName}`);
+        vscode4.window.showErrorMessage(`Cannot connect to aider: Missing runtime or test name. Runtime: ${runtime}, Test: ${testName}`);
         return;
       }
       console.log("[Testeranto] Calling createAiderTerminal with raw values");
-      vscode7.window.showInformationMessage(`Connecting to aider process for ${testName || "unknown"} (${runtime || "unknown"})...`);
+      vscode4.window.showInformationMessage(`Connecting to aider process for ${testName || "unknown"} (${runtime || "unknown"})...`);
       try {
         const aiderTerminal = await terminalManager.createAiderTerminal(runtime, testName);
         aiderTerminal.show();
-        let processedTestName = testNameStr || "";
+        let processedTestName = testName || "";
         processedTestName = processedTestName?.replace(/\.[^/.]+$/, "") || "";
         processedTestName = processedTestName.replace(/^example\//, "");
         const sanitizedTestName = processedTestName ? processedTestName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-") : "";
-        const containerName = `${runtimeStr}-${sanitizedTestName}-aider`;
+        const containerName = `${runtime}-${sanitizedTestName}-aider`;
         aiderTerminal.sendText("clear");
         setTimeout(() => {
           aiderTerminal.sendText(`echo "Connecting to aider container: ${containerName}"`);
           aiderTerminal.sendText(`docker exec -it ${containerName} /bin/bash`);
         }, 500);
       } catch (error) {
-        vscode7.window.showErrorMessage(`Failed to create aider terminal: ${error.message}`);
+        vscode4.window.showErrorMessage(`Failed to create aider terminal: ${error.message}`);
         console.error("[Testeranto] Error creating aider terminal:", error);
         return;
       }
     }
   );
-  const launchAiderTerminalCommand = vscode7.commands.registerCommand(
+  const launchAiderTerminalCommand = vscode4.commands.registerCommand(
     "testeranto.launchAiderTerminal",
     async (...args) => {
       console.log("[Testeranto] launchAiderTerminal called with args:", args);
       let runtime;
       let testName;
       if (args.length === 0) {
-        vscode7.window.showErrorMessage("Cannot launch aider terminal: No arguments provided");
+        vscode4.window.showErrorMessage("Cannot launch aider terminal: No arguments provided");
         return;
       }
       const firstArg = args[0];
@@ -2179,60 +1101,57 @@ function activate(context) {
       }
       console.log("[Testeranto] Raw values - runtime:", runtime, "type:", typeof runtime);
       console.log("[Testeranto] Raw values - testName:", testName, "type:", typeof testName);
-      vscode7.window.showInformationMessage(`Launching aider terminal for ${testName || "unknown"} (${runtime || "unknown"})...`);
+      vscode4.window.showInformationMessage(`Launching aider terminal for ${testName || "unknown"} (${runtime || "unknown"})...`);
       try {
         const terminal = await terminalManager.createAiderTerminal(runtime, testName);
         terminal.show();
-        vscode7.window.showInformationMessage(`Aider terminal launched for ${testName || "unknown"} (${runtime || "unknown"})`);
+        vscode4.window.showInformationMessage(`Aider terminal launched for ${testName || "unknown"} (${runtime || "unknown"})`);
       } catch (error) {
         console.error("Failed to launch aider terminal:", error);
-        vscode7.window.showErrorMessage(`Failed to launch aider terminal: ${error}`);
+        vscode4.window.showErrorMessage(`Failed to launch aider terminal: ${error}`);
       }
     }
   );
-  const openConfigCommand = vscode7.commands.registerCommand(
+  const openConfigCommand = vscode4.commands.registerCommand(
     "testeranto.openConfig",
     async () => {
       try {
-        const uri = vscode7.Uri.file("allTests.ts");
-        const doc = await vscode7.workspace.openTextDocument(uri);
-        await vscode7.window.showTextDocument(doc);
+        const uri = vscode4.Uri.file("allTests.ts");
+        const doc = await vscode4.workspace.openTextDocument(uri);
+        await vscode4.window.showTextDocument(doc);
       } catch (err) {
-        vscode7.window.showWarningMessage("Could not open allTests.ts configuration file");
+        vscode4.window.showWarningMessage("Could not open allTests.ts configuration file");
       }
     }
   );
-  const openFileCommand = vscode7.commands.registerCommand(
+  const openFileCommand = vscode4.commands.registerCommand(
     "testeranto.openFile",
     async (item) => {
       if (item.type === 2 /* File */) {
         const fileName = item.data?.fileName || item.label;
-        const uri = vscode7.Uri.file(fileName);
+        const uri = vscode4.Uri.file(fileName);
         try {
-          const doc = await vscode7.workspace.openTextDocument(uri);
-          await vscode7.window.showTextDocument(doc);
+          const doc = await vscode4.workspace.openTextDocument(uri);
+          await vscode4.window.showTextDocument(doc);
         } catch (err) {
-          const files = await vscode7.workspace.findFiles(`**/${fileName}`, null, 1);
+          const files = await vscode4.workspace.findFiles(`**/${fileName}`, null, 1);
           if (files.length > 0) {
-            const doc = await vscode7.workspace.openTextDocument(files[0]);
-            await vscode7.window.showTextDocument(doc);
+            const doc = await vscode4.workspace.openTextDocument(files[0]);
+            await vscode4.window.showTextDocument(doc);
           } else {
-            vscode7.window.showWarningMessage(`Could not open file: ${fileName}`);
+            vscode4.window.showWarningMessage(`Could not open file: ${fileName}`);
           }
         }
       }
     }
   );
-  const refreshCommand = vscode7.commands.registerCommand("testeranto.refresh", async () => {
-    vscode7.window.showInformationMessage("Refreshing all Testeranto views...");
+  const refreshCommand = vscode4.commands.registerCommand("testeranto.refresh", async () => {
+    vscode4.window.showInformationMessage("Refreshing Testeranto view...");
     await updateServerStatus();
-    testTreeDataProvider.refresh();
-    processesTreeDataProvider.refresh();
-    featuresTreeDataProvider.refresh();
-    setupDocumentationWatcher();
+    testerantoTreeDataProvider.refresh();
   });
-  const retryConnectionCommand = vscode7.commands.registerCommand("testeranto.retryConnection", (provider) => {
-    vscode7.window.showInformationMessage("Retrying connection to server...");
+  const retryConnectionCommand = vscode4.commands.registerCommand("testeranto.retryConnection", (provider) => {
+    vscode4.window.showInformationMessage("Retrying connection to server...");
     if (provider && typeof provider.connectWebSocket === "function") {
       if (provider.connectionAttempts !== void 0) {
         provider.connectionAttempts = 0;
@@ -2245,45 +1164,58 @@ function activate(context) {
         provider.refresh();
       }
     } else {
-      vscode7.window.showWarningMessage("Provider does not support WebSocket reconnection");
+      vscode4.window.showWarningMessage("Provider does not support WebSocket reconnection");
     }
   });
-  const startServerCommand = vscode7.commands.registerCommand("testeranto.startServer", async () => {
-    vscode7.window.showInformationMessage("Starting Testeranto server...");
-    const terminal = vscode7.window.createTerminal("Testeranto Server");
+  const startServerCommand = vscode4.commands.registerCommand("testeranto.startServer", async () => {
+    vscode4.window.showInformationMessage("Starting Testeranto server...");
+    const terminal = vscode4.window.createTerminal("Testeranto Server");
     terminal.show();
-    const workspaceFolders = vscode7.workspace.workspaceFolders;
+    const workspaceFolders = vscode4.workspace.workspaceFolders;
     if (workspaceFolders && workspaceFolders.length > 0) {
       const workspacePath = workspaceFolders[0].uri.fsPath;
       terminal.sendText(`cd "${workspacePath}" && npm start`);
     } else {
       terminal.sendText("npm start");
     }
-    vscode7.window.showInformationMessage("Server starting in terminal. It may take a few moments...");
+    vscode4.window.showInformationMessage("Server starting in terminal. It may take a few moments...");
     setTimeout(async () => {
       await updateServerStatus();
-      testTreeDataProvider.refresh();
-      processesTreeDataProvider.refresh();
+      testerantoTreeDataProvider.refresh();
     }, 5e3);
   });
-  const testTreeView = vscode7.window.createTreeView("testerantoTestsView", {
-    treeDataProvider: testTreeDataProvider,
-    showCollapseAll: true
-  });
-  const processesTreeView = vscode7.window.createTreeView("testerantoResultsView", {
-    treeDataProvider: processesTreeDataProvider,
-    showCollapseAll: true
-  });
-  const featuresTreeView = vscode7.window.createTreeView("testerantoFeaturesView", {
-    treeDataProvider: featuresTreeDataProvider,
+  const generateHtmlReportCommand = vscode4.commands.registerCommand(
+    "testeranto.generateHtmlReport",
+    async () => {
+      vscode4.window.showInformationMessage("Generating HTML report via server...");
+      try {
+        const response = await fetch("http://localhost:3000/~/html-report");
+        if (!response.ok) {
+          throw new Error(`Server returned ${response.status}`);
+        }
+        const data = await response.json();
+        vscode4.window.showInformationMessage(`HTML report generated: ${data.message}`);
+        const workspaceFolders = vscode4.workspace.workspaceFolders;
+        if (workspaceFolders && workspaceFolders.length > 0) {
+          const workspaceRoot = workspaceFolders[0].uri.fsPath;
+          const reportPath = path2.join(workspaceRoot, "testeranto", "reports", "index.html");
+          const uri = vscode4.Uri.file(reportPath);
+          const doc = await vscode4.workspace.openTextDocument(uri);
+          await vscode4.window.showTextDocument(doc);
+        }
+      } catch (error) {
+        vscode4.window.showErrorMessage(`Failed to generate HTML report: ${error.message}`);
+      }
+    }
+  );
+  const testerantoTreeView = vscode4.window.createTreeView("testerantoView", {
+    treeDataProvider: testerantoTreeDataProvider,
     showCollapseAll: true
   });
   context.subscriptions.push({
     dispose: () => {
       terminalManager.disposeAll();
-      processesTreeDataProvider.dispose();
-      testTreeDataProvider.dispose();
-      featuresTreeDataProvider.dispose();
+      testerantoTreeDataProvider.dispose();
     }
   });
   context.subscriptions.push(
@@ -2296,16 +1228,14 @@ function activate(context) {
     refreshCommand,
     retryConnectionCommand,
     startServerCommand,
-    testTreeView,
-    // fileTreeView,
-    processesTreeView,
-    featuresTreeView,
+    generateHtmlReportCommand,
+    testerantoTreeView,
     mainStatusBarItem,
     serverStatusBarItem
   );
   console.log("[Testeranto] Commands registered");
-  console.log("[Testeranto] Four tree views registered");
-  vscode7.commands.getCommands().then((commands2) => {
+  console.log("[Testeranto] Unified tree view registered");
+  vscode4.commands.getCommands().then((commands2) => {
     const hasCommand = commands2.includes("testeranto.showTests");
     console.log(`[Testeranto] Command available in palette: ${hasCommand}`);
   });

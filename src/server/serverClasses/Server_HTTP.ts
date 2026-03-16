@@ -35,7 +35,7 @@ export abstract class Server_HTTP extends Server_Base {
     }
 
     const processSummary = getProcessSummary();
-    
+
     if (processSummary?.error) {
       return this.jsonResponse({
         error: processSummary.error,
@@ -69,7 +69,10 @@ export abstract class Server_HTTP extends Server_Base {
     const runtime = url.searchParams.get('runtime');
     const testName = url.searchParams.get('testName');
 
+    console.log(`[Server_HTTP] handleHttpGetOutputFiles: runtime=${runtime}, testName=${testName}`);
+
     if (!runtime || !testName) {
+      console.log(`[Server_HTTP] Missing runtime or testName parameters`);
       return this.jsonResponse({
         error: 'Missing runtime or testName query parameters'
       }, 400);
@@ -77,7 +80,9 @@ export abstract class Server_HTTP extends Server_Base {
 
     const getOutputFiles = (this as any).getOutputFiles;
     if (typeof getOutputFiles === 'function') {
-      const outputFiles = getOutputFiles(runtime, testName); 
+      console.log(`[Server_HTTP] Using getOutputFiles method`);
+      const outputFiles = getOutputFiles(runtime, testName);
+      console.log(`[Server_HTTP] Found ${outputFiles?.length || 0} output files via method`);
       return this.jsonResponse({
         runtime,
         testName,
@@ -86,9 +91,12 @@ export abstract class Server_HTTP extends Server_Base {
       });
     }
 
+    console.log(`[Server_HTTP] getOutputFiles method not available, falling back to directory scan`);
     const outputDir = path.join(process.cwd(), 'testeranto', 'reports', runtime);
-    
+    console.log(`[Server_HTTP] Looking in directory: ${outputDir}`);
+
     if (!fs.existsSync(outputDir)) {
+      console.log(`[Server_HTTP] Output directory does not exist`);
       return this.jsonResponse({
         error: 'getOutputFiles method not available and directory not found',
         runtime,
@@ -99,10 +107,17 @@ export abstract class Server_HTTP extends Server_Base {
     }
 
     const files = fs.readdirSync(outputDir);
+    console.log(`[Server_HTTP] Found ${files.length} files in output directory`);
+
+    const searchPattern = testName.replace('/', '_').replace('.', '-');
+    console.log(`[Server_HTTP] Looking for files containing: ${searchPattern}`);
+
     const testFiles = files.filter((file: string) =>
-      file.includes(testName.replace('/', '_').replace('.', '-'))
+      file.includes(searchPattern)
     );
-    
+
+    console.log(`[Server_HTTP] Found ${testFiles.length} matching files`);
+
     const projectRoot = process.cwd();
     const relativePaths = testFiles.map((file: string) => {
       const absolutePath = path.join(outputDir, file);
@@ -111,6 +126,7 @@ export abstract class Server_HTTP extends Server_Base {
       return relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
     });
 
+    console.log(`[Server_HTTP] Returning ${relativePaths.length} output files`);
     return this.jsonResponse({
       runtime,
       testName,
@@ -119,11 +135,84 @@ export abstract class Server_HTTP extends Server_Base {
     });
   }
 
+  private handleHttpGetTestResults(request: Request, url: URL): Response {
+    const runtime = url.searchParams.get('runtime');
+    const testName = url.searchParams.get('testName');
+
+    console.log(`[Server_HTTP] handleHttpGetTestResults: runtime=${runtime}, testName=${testName}`);
+
+    const getTestResults = (this as any).getTestResults;
+    if (typeof getTestResults !== 'function') {
+      console.log(`[Server_HTTP] getTestResults method not available`);
+      return this.jsonResponse({
+        error: 'Test results functionality not available',
+        testResults: [],
+        message: 'Server does not support test results'
+      }, 503);
+    }
+
+    // If runtime and testName are provided, return specific test results
+    if (runtime && testName) {
+      console.log(`[Server_HTTP] Looking for specific test results for ${runtime}/${testName}`);
+      const testResults = getTestResults(runtime, testName);
+      console.log(`[Server_HTTP] Found ${testResults?.length || 0} test results`);
+      return this.jsonResponse({
+        runtime,
+        testName,
+        testResults: testResults || [],
+        message: 'Success'
+      });
+    }
+
+    // If no parameters, we need to get all test results
+    // Since getTestResults requires runtime and testName, we need to get all runtimes and tests
+    console.log(`[Server_HTTP] No parameters provided, returning all test results`);
+    
+    // Get all runtimes from configs
+    const configs = this.configs;
+    if (!configs || !configs.runtimes) {
+      console.log(`[Server_HTTP] No runtimes configured`);
+      return this.jsonResponse({
+        testResults: [],
+        message: 'No runtimes configured'
+      });
+    }
+
+    const allTestResults: any[] = [];
+
+    // For each runtime and test, call getTestResults
+    for (const [runtimeKey, runtimeConfig] of Object.entries(configs.runtimes)) {
+      const runtime = (runtimeConfig as any).runtime;
+      const tests = (runtimeConfig as any).tests || [];
+      
+      for (const testName of tests) {
+        console.log(`[Server_HTTP] Getting test results for ${runtime}/${testName}`);
+        try {
+          const testResults = getTestResults(runtime, testName);
+          if (testResults && Array.isArray(testResults)) {
+            allTestResults.push(...testResults);
+          }
+        } catch (error) {
+          console.error(`[Server_HTTP] Error getting test results for ${runtime}/${testName}:`, error);
+        }
+      }
+    }
+
+    console.log(`[Server_HTTP] Returning ${allTestResults.length} total test results`);
+    return this.jsonResponse({
+      testResults: allTestResults,
+      message: 'Success (all test results)'
+    });
+  }
+
   private handleHttpGetInputFiles(request: Request, url: URL): Response {
     const runtime = url.searchParams.get('runtime');
     const testName = url.searchParams.get('testName');
 
+    console.log(`[Server_HTTP] handleHttpGetInputFiles: runtime="${runtime}", testName="${testName}"`);
+
     if (!runtime || !testName) {
+      console.log(`[Server_HTTP] Missing runtime or testName parameters`);
       return this.jsonResponse({
         error: 'Missing runtime or testName query parameters'
       }, 400);
@@ -131,10 +220,14 @@ export abstract class Server_HTTP extends Server_Base {
 
     const getInputFiles = (this as any).getInputFiles;
     if (typeof getInputFiles !== 'function') {
+      console.log(`[Server_HTTP] getInputFiles method not available`);
       throw new Error('getInputFiles does not exist on this instance');
     }
 
+    console.log(`[Server_HTTP] Calling getInputFiles with runtime="${runtime}", testName="${testName}"`);
     const inputFiles = getInputFiles(runtime, testName);
+    console.log(`[Server_HTTP] Found ${inputFiles?.length || 0} input files for runtime="${runtime}", testName="${testName}"`);
+    
     return this.jsonResponse({
       runtime,
       testName,
@@ -146,7 +239,7 @@ export abstract class Server_HTTP extends Server_Base {
   private handleHttpGetAiderProcesses(): Response {
     const handleAiderProcesses = (this as any).handleAiderProcesses;
     const getAiderProcesses = (this as any).getAiderProcesses;
-    
+
     if (typeof handleAiderProcesses === 'function') {
       const result = handleAiderProcesses();
       return this.jsonResponse({
@@ -181,12 +274,98 @@ export abstract class Server_HTTP extends Server_Base {
     });
   }
 
+  private handleHttpGetDocumentation(): Response {
+    const server = this as any;
+    if (typeof server.getDocumentationFiles === 'function') {
+      const files = server.getDocumentationFiles();
+      console.log(`[Server_HTTP] handleHttpGetDocumentation returning ${files.length} files`);
+      return this.jsonResponse({
+        files: files || [],
+        message: 'Success',
+        count: files.length
+      });
+    }
+
+    const docPath = path.join(process.cwd(), 'testeranto', 'documentation.json');
+    if (fs.existsSync(docPath)) {
+      try {
+        const content = fs.readFileSync(docPath, 'utf-8');
+        const data = JSON.parse(content);
+        console.log(`[Server_HTTP] handleHttpGetDocumentation read ${data.files?.length || 0} files from file`);
+        return this.jsonResponse({
+          files: data.files || [],
+          message: 'Success (from file)',
+          count: data.files?.length || 0
+        });
+      } catch (error) {
+        console.error(`[Server_HTTP] Failed to read documentation file: ${error}`);
+        return this.jsonResponse({
+          error: 'Failed to read documentation file',
+          message: String(error)
+        }, 500);
+      }
+    }
+
+    console.log('[Server_HTTP] No documentation configured or server not ready');
+    return this.jsonResponse({
+      files: [],
+      message: 'No documentation configured or server not ready'
+    });
+  }
+
+  private handleHttpGetHtmlReport(): Response {
+    const workspaceRoot = process.cwd();
+    const reportsDir = path.join(workspaceRoot, 'testeranto', 'reports');
+    const reportPath = path.join(reportsDir, 'index.html');
+
+    if (!fs.existsSync(reportsDir)) {
+      fs.mkdirSync(reportsDir, { recursive: true });
+    }
+
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Testeranto Test Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test { margin: 20px 0; padding: 10px; border-left: 4px solid #ccc; }
+        .passed { border-left-color: #4CAF50; }
+        .failed { border-left-color: #f44336; }
+        .feature { background: #f5f5f5; padding: 5px; margin: 5px 0; }
+        .documentation { margin: 10px 0; padding: 10px; background: #f0f8ff; }
+    </style>
+</head>
+<body>
+    <h1>Testeranto Test Report</h1>
+    <p>Generated on ${new Date().toLocaleString()}</p>
+    <div id="content">
+        <div class="documentation">
+            <h2>Documentation</h2>
+            <p>Documentation files are shown here for stakeholders.</p>
+        </div>
+        <div class="test">
+            <h3>Test Results</h3>
+            <p>Test results will be displayed here in a future update.</p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+    fs.writeFileSync(reportPath, html);
+
+    return this.jsonResponse({
+      message: 'HTML report generated successfully',
+      path: reportPath,
+      url: `/testeranto/reports/index.html`
+    });
+  }
+
   private jsonResponse(data: any, status = 200): Response {
     const responseData = {
       ...data,
       timestamp: new Date().toISOString()
     };
-    
+
     return new Response(JSON.stringify(responseData, null, 2), {
       status,
       headers: {
@@ -215,9 +394,10 @@ export abstract class Server_HTTP extends Server_Base {
 
     const serverOptions: any = {
       port,
+      idleTimeout: 60, // Increase from default 10 seconds to 60 seconds
       fetch: async (request: Request, server: any) => {
         const response = this.handleRequest(request, server);
-        
+
         if (response instanceof Response) {
           return response;
         } else if (response && typeof response.then === 'function') {
@@ -301,7 +481,7 @@ export abstract class Server_HTTP extends Server_Base {
 
   private handleRouteRequest(request: Request, url: URL): Response {
     const routeName = url.pathname.slice(3);
-    
+
     if (request.method === 'OPTIONS') {
       return this.handleOptions();
     }
@@ -309,9 +489,12 @@ export abstract class Server_HTTP extends Server_Base {
     const routeHandlers: Record<string, () => Response> = {
       'processes': () => this.handleHttpGetProcesses(),
       'configs': () => this.handleHttpGetConfigs(),
+      'documentation': () => this.handleHttpGetDocumentation(),
       'aider-processes': () => this.handleHttpGetAiderProcesses(),
       'outputfiles': () => this.handleHttpGetOutputFiles(request, url),
       'inputfiles': () => this.handleHttpGetInputFiles(request, url),
+      'testresults': () => this.handleHttpGetTestResults(request, url),
+      'html-report': () => this.handleHttpGetHtmlReport(),
     };
 
     const handler = routeHandlers[routeName];

@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.227.0",
+  "version": "0.228.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -26,31 +26,16 @@
     "onCommand:testeranto.refresh",
     "onCommand:testeranto.retryConnection",
     "onCommand:testeranto.startServer",
-    "onView:testerantoTestsView",
-    "onView:testerantoFilesView",
-    "onView:testerantoResultsView",
-    "onView:testerantoFeaturesView",
+    "onView:testerantoView",
     "workspaceContains:**/testeranto/extension-config.json",
     "workspaceContains:**/testeranto/reports/**/*.json"
   ],
   "contributes": {
     "views": {
-      "explorer": [
+      "testeranto": [
         {
-          "id": "testerantoTestsView",
-          "name": "Tests"
-        },
-        {
-          "id": "testerantoFilesView",
-          "name": "Files"
-        },
-        {
-          "id": "testerantoResultsView",
-          "name": "Processes"
-        },
-        {
-          "id": "testerantoFeaturesView",
-          "name": "Features"
+          "id": "testerantoView",
+          "name": "Testeranto"
         }
       ]
     },
@@ -285,6 +270,7 @@
     "@types/dockerode": "3.3.40",
     "@types/eslint": "^9.6.1",
     "@types/file-saver": "^2.0.7",
+    "@types/glob": "^9.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node-static": "^0.7.11",
     "@types/xmldom": "^0.1.34",

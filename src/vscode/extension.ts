@@ -1,9 +1,8 @@
 import * as vscode from "vscode";
+import * as fs from "fs";
+import * as path from "path";
 import { TerminalManager } from "./TerminalManager";
-import { TestTreeDataProvider } from "./providers/TestTreeDataProvider";
-// import { FileTreeDataProvider } from "./providers/FileTreeDataProvider";
-import { ProcessesTreeDataProvider } from "./providers/ProcessesTreeDataProvider";
-import { FeaturesTreeDataProvider } from "./providers/FeaturesTreeDataProvider";
+import { TesterantoTreeDataProvider } from "./providers/TesterantoTreeDataProvider";
 import { TestTreeItem } from "./TestTreeItem";
 import { TreeItemType } from "./types";
 
@@ -97,115 +96,15 @@ export function activate(context: vscode.ExtensionContext): void {
     // Initial status check
     updateServerStatus();
 
-    // Watch for changes to the config file
-    let configWatcher: vscode.FileSystemWatcher | undefined;
-    let documentationWatcher: vscode.FileSystemWatcher | undefined;
-    
-    const setupConfigWatcher = () => {
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-        if (workspaceFolders && workspaceFolders.length > 0) {
-            const workspaceRoot = workspaceFolders[0].uri;
-            const configPattern = new vscode.RelativePattern(workspaceRoot, 'testeranto/extension-config.json');
-
-            // Dispose existing watcher if any
-            if (configWatcher) {
-                configWatcher.dispose();
-            }
-
-            configWatcher = vscode.workspace.createFileSystemWatcher(configPattern, false, false, false);
-
-            const handleConfigChange = (uri: vscode.Uri) => {
-                console.log('[Testeranto] Config file changed:', uri.fsPath);
-                // Debounce to avoid multiple rapid updates
-                setTimeout(() => {
-                    updateServerStatus();
-                    // Also refresh tree views
-                    testTreeDataProvider.refresh();
-                    processesTreeDataProvider.refresh();
-                    featuresTreeDataProvider.refresh();
-                    // fileTreeDataProvider.refresh();
-                }, 100);
-            };
-
-            configWatcher.onDidChange(handleConfigChange);
-            configWatcher.onDidCreate(handleConfigChange);
-            configWatcher.onDidDelete(() => {
-                console.log('[Testeranto] Config file deleted');
-                updateServerStatus();
-                testTreeDataProvider.refresh();
-                processesTreeDataProvider.refresh();
-                featuresTreeDataProvider.refresh();
-                // fileTreeDataProvider.refresh();
-            });
-
-            context.subscriptions.push(configWatcher);
-            console.log('[Testeranto] Config file watcher set up');
-        }
-    };
-
-    // Watch for changes to documentation.json
-    const setupDocumentationWatcher = () => {
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-        if (workspaceFolders && workspaceFolders.length > 0) {
-            const workspaceRoot = workspaceFolders[0].uri;
-            const documentationPattern = new vscode.RelativePattern(workspaceRoot, 'testeranto/documentation.json');
-
-            // Dispose existing watcher if any
-            if (documentationWatcher) {
-                documentationWatcher.dispose();
-            }
-
-            documentationWatcher = vscode.workspace.createFileSystemWatcher(documentationPattern, false, false, false);
-
-            const handleDocumentationChange = (uri: vscode.Uri) => {
-                console.log('[Testeranto] Documentation file changed:', uri.fsPath);
-                // Refresh only the features tree view
-                setTimeout(() => {
-                    featuresTreeDataProvider.refresh();
-                }, 100);
-            };
-
-            documentationWatcher.onDidChange(handleDocumentationChange);
-            documentationWatcher.onDidCreate(handleDocumentationChange);
-            documentationWatcher.onDidDelete(() => {
-                console.log('[Testeranto] Documentation file deleted');
-                featuresTreeDataProvider.refresh();
-            });
-
-            context.subscriptions.push(documentationWatcher);
-            console.log('[Testeranto] Documentation file watcher set up');
-        }
-    };
-
-    // Set up initial watchers
-    setupConfigWatcher();
-    setupDocumentationWatcher();
-
-    // Also watch for workspace folder changes
-    context.subscriptions.push(
-        vscode.workspace.onDidChangeWorkspaceFolders(() => {
-            console.log('[Testeranto] Workspace folders changed, re-setting up watchers');
-            setupConfigWatcher();
-            setupDocumentationWatcher();
-            updateServerStatus();
-        })
-    );
-
-    // No periodic HTTP polling - rely on WebSocket messages and config file watcher
-    // The config file watcher will update status when the config file changes
-
-    // Create tree data providers
-    const testTreeDataProvider = new TestTreeDataProvider();
-    // const fileTreeDataProvider = new FileTreeDataProvider();
-    const processesTreeDataProvider = new ProcessesTreeDataProvider();
-    const featuresTreeDataProvider = new FeaturesTreeDataProvider();
+    // Create unified tree data provider
+    const testerantoTreeDataProvider = new TesterantoTreeDataProvider();
 
     // Register commands
     const showTestsCommand = vscode.commands.registerCommand(
         "testeranto.showTests",
         () => {
-            vscode.window.showInformationMessage("Showing Testeranto tests");
-            vscode.commands.executeCommand("testerantoTestsView.focus");
+            vscode.window.showInformationMessage("Showing Testeranto");
+            vscode.commands.executeCommand("testerantoView.focus");
         }
     );
 
@@ -290,7 +189,7 @@ export function activate(context: vscode.ExtensionContext): void {
                 aiderTerminal.show();
 
                 // Process test name to match Docker container naming convention
-                let processedTestName = testNameStr || "";
+                let processedTestName = testName || "";
                 // Remove file extension
                 processedTestName = processedTestName?.replace(/\.[^/.]+$/, "") || "";
                 // Remove 'example/' prefix if present
@@ -298,7 +197,7 @@ export function activate(context: vscode.ExtensionContext): void {
                 // Replace special characters with underscores (matching DockerManager)
                 const sanitizedTestName = processedTestName ? processedTestName.toLowerCase().replaceAll("/", "_").replaceAll(".", "-") : "";
                 // Construct container name matching DockerManager's convention
-                const containerName = `${runtimeStr}-${sanitizedTestName}-aider`;
+                const containerName = `${runtime}-${sanitizedTestName}-aider`;
 
                 aiderTerminal.sendText("clear");
                 setTimeout(() => {
@@ -405,16 +304,11 @@ export function activate(context: vscode.ExtensionContext): void {
     );
 
     const refreshCommand = vscode.commands.registerCommand("testeranto.refresh", async () => {
-        vscode.window.showInformationMessage("Refreshing all Testeranto views...");
+        vscode.window.showInformationMessage("Refreshing Testeranto view...");
         // First update server status
         await updateServerStatus();
-        // Then refresh all tree views
-        testTreeDataProvider.refresh();
-        // fileTreeDataProvider.refresh();
-        processesTreeDataProvider.refresh();
-        featuresTreeDataProvider.refresh();
-        // Also check for documentation updates
-        setupDocumentationWatcher();
+        // Then refresh the unified tree view
+        testerantoTreeDataProvider.refresh();
     });
 
     const retryConnectionCommand = vscode.commands.registerCommand("testeranto.retryConnection", (provider: any) => {
@@ -458,29 +352,41 @@ export function activate(context: vscode.ExtensionContext): void {
         // Update status after a delay
         setTimeout(async () => {
             await updateServerStatus();
-            testTreeDataProvider.refresh();
-            processesTreeDataProvider.refresh();
+            testerantoTreeDataProvider.refresh();
         }, 5000);
     });
 
-    // Register tree views
-    const testTreeView = vscode.window.createTreeView("testerantoTestsView", {
-        treeDataProvider: testTreeDataProvider,
-        showCollapseAll: true
-    });
 
-    // const fileTreeView = vscode.window.createTreeView("testerantoFilesView", {
-    //     treeDataProvider: fileTreeDataProvider,
-    //     showCollapseAll: true
-    // });
+    const generateHtmlReportCommand = vscode.commands.registerCommand(
+        "testeranto.generateHtmlReport",
+        async () => {
+            vscode.window.showInformationMessage("Generating HTML report via server...");
+            try {
+                const response = await fetch('http://localhost:3000/~/html-report');
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}`);
+                }
+                const data = await response.json();
+                vscode.window.showInformationMessage(`HTML report generated: ${data.message}`);
+                
+                // Open the report in the editor
+                const workspaceFolders = vscode.workspace.workspaceFolders;
+                if (workspaceFolders && workspaceFolders.length > 0) {
+                    const workspaceRoot = workspaceFolders[0].uri.fsPath;
+                    const reportPath = path.join(workspaceRoot, 'testeranto', 'reports', 'index.html');
+                    const uri = vscode.Uri.file(reportPath);
+                    const doc = await vscode.workspace.openTextDocument(uri);
+                    await vscode.window.showTextDocument(doc);
+                }
+            } catch (error: any) {
+                vscode.window.showErrorMessage(`Failed to generate HTML report: ${error.message}`);
+            }
+        }
+    );
 
-    const processesTreeView = vscode.window.createTreeView("testerantoResultsView", {
-        treeDataProvider: processesTreeDataProvider,
-        showCollapseAll: true
-    });
-
-    const featuresTreeView = vscode.window.createTreeView("testerantoFeaturesView", {
-        treeDataProvider: featuresTreeDataProvider,
+    // Register unified tree view in the Testeranto activity bar
+    const testerantoTreeView = vscode.window.createTreeView("testerantoView", {
+        treeDataProvider: testerantoTreeDataProvider,
         showCollapseAll: true
     });
 
@@ -488,10 +394,7 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push({
         dispose: () => {
             terminalManager.disposeAll();
-            processesTreeDataProvider.dispose();
-            testTreeDataProvider.dispose();
-            // fileTreeDataProvider.dispose();
-            featuresTreeDataProvider.dispose();
+            testerantoTreeDataProvider.dispose();
         }
     });
 
@@ -506,16 +409,14 @@ export function activate(context: vscode.ExtensionContext): void {
         refreshCommand,
         retryConnectionCommand,
         startServerCommand,
-        testTreeView,
-        // fileTreeView,
-        processesTreeView,
-        featuresTreeView,
+        generateHtmlReportCommand,
+        testerantoTreeView,
         mainStatusBarItem,
         serverStatusBarItem
     );
 
     console.log("[Testeranto] Commands registered");
-    console.log("[Testeranto] Four tree views registered");
+    console.log("[Testeranto] Unified tree view registered");
 
     vscode.commands.getCommands().then((commands) => {
         const hasCommand = commands.includes("testeranto.showTests");

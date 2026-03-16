@@ -190,7 +190,7 @@ public class Kafe {
         }
         
         // Write to file
-        String filePath = dirPath + "/java.Calculator.test.ts.json";
+        String filePath = dirPath + "/tests.json";
         try (FileWriter writer = new FileWriter(filePath)) {
             // Simple JSON writing - in reality would use a JSON library
             writer.write("{\n");

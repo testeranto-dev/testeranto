@@ -472,13 +472,11 @@ class PitonoClass:
             
             # Get the fs path from test resource configuration
             fs_path = test_resource_config.get('fs', '.')
-            # Get the fs path from test resource configuration
-            fs_path = test_resource_config.get('fs', '.')
-            # Ensure fs_path is treated as a directory (even if it ends with .py)
-            # If fs_path ends with .py, it's already been converted to a directory path
-            # So we don't need to modify it further
             if not fs_path:
                 fs_path = '.'
+            # Ensure fs_path ends with a slash
+            if not fs_path.endswith('/'):
+                fs_path = fs_path + '/'
             report_json_path = os.path.join(fs_path, 'tests.json')
             
             # Create directory if it doesn't exist

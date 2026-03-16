@@ -16,8 +16,6 @@ interface TestResult {
 export class FeaturesTreeDataProviderUtils {
     static buildSourceTreeItems(node: any): TestTreeItem[] {
         const items: TestTreeItem[] = [];
-
-        // Sort children: directories first, then files, alphabetically
         const sortedChildren = Array.from(node.children.values()).sort((a: any, b: any) => {
             if (a.isFile && !b.isFile) return 1;
             if (!a.isFile && b.isFile) return -1;
@@ -25,10 +23,7 @@ export class FeaturesTreeDataProviderUtils {
         });
 
         for (const child of sortedChildren) {
-            // Set collapsible state based on whether it's a file or directory
-            // Directories can be expanded, files can be expanded to show test results
             const collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-
             const treeItem = new TestTreeItem(
                 child.name,
                 TreeItemType.File,
@@ -37,102 +32,43 @@ export class FeaturesTreeDataProviderUtils {
                     sourcePath: child.fullPath,
                     testFile: child.fileName,
                     fileName: child.fileName,
-                    // Add a flag to indicate if it's a file or directory
                     isFile: child.isFile
                 },
                 undefined,
                 child.isFile ? new vscode.ThemeIcon("file-code") : new vscode.ThemeIcon("folder")
             );
-
             items.push(treeItem);
         }
-
         return items;
     }
 
     static getDocumentationFiles(documentationDir: string): TestTreeItem[] {
         const documentationPath = path.join(documentationDir, 'documentation.json');
         if (!fs.existsSync(documentationPath)) {
-            return [
-                new TestTreeItem(
-                    'Documentation not available',
-                    TreeItemType.File,
-                    vscode.TreeItemCollapsibleState.None,
-                    {
-                        description: 'Start server with documentationGlob configured'
-                    },
-                    undefined,
-                    new vscode.ThemeIcon('info')
-                ),
-                new TestTreeItem(
-                    'How to configure',
-                    TreeItemType.File,
-                    vscode.TreeItemCollapsibleState.None,
-                    {
-                        description: 'Add documentationGlob to testeranto config'
-                    },
-                    {
-                        command: 'vscode.open',
-                        title: 'Open Config',
-                        arguments: [vscode.Uri.file(path.join(process.cwd(), 'testeranto', 'testeranto.ts'))]
-                    },
-                    new vscode.ThemeIcon('settings-gear')
-                )
-            ];
+            return [];
         }
-
-        try {
-            const documentationContent = fs.readFileSync(documentationPath, 'utf-8');
-            const documentationData = JSON.parse(documentationContent);
-            const files = documentationData.files || [];
-
-            if (files.length === 0) {
-                return [
-                    new TestTreeItem(
-                        'No documentation files match the glob pattern',
-                        TreeItemType.File,
-                        vscode.TreeItemCollapsibleState.None,
-                        {
-                            description: 'Check your documentationGlob pattern'
-                        },
-                        undefined,
-                        new vscode.ThemeIcon('search')
-                    )
-                ];
-            }
-
-            return files.map((file: string) => {
-                return new TestTreeItem(
-                    file,
-                    TreeItemType.File,
-                    vscode.TreeItemCollapsibleState.None,
-                    {
-                        fileName: file,
-                        isFile: true,
-                        description: 'Documentation file'
-                    },
-                    {
-                        command: 'vscode.open',
-                        title: 'Open File',
-                        arguments: [vscode.Uri.file(path.join(process.cwd(), file))]
-                    },
-                    new vscode.ThemeIcon('markdown')
-                );
-            });
-        } catch (error) {
-            return [
-                new TestTreeItem(
-                    'Error reading documentation',
-                    TreeItemType.File,
-                    vscode.TreeItemCollapsibleState.None,
-                    {
-                        description: String(error)
-                    },
-                    undefined,
-                    new vscode.ThemeIcon('error')
-                )
-            ];
-        }
+        const documentationContent = fs.readFileSync(documentationPath, 'utf-8');
+        const documentationData = JSON.parse(documentationContent);
+        const files = documentationData.files || [];
+        return files.map((file: string) => {
+            const fullPath = path.isAbsolute(file) ? file : path.join(process.cwd(), file);
+            return new TestTreeItem(
+                path.basename(file),
+                TreeItemType.File,
+                vscode.TreeItemCollapsibleState.None,
+                {
+                    fileName: file,
+                    isFile: true,
+                    description: path.dirname(file)
+                },
+                {
+                    command: 'vscode.open',
+                    title: 'Open File',
+                    arguments: [vscode.Uri.file(fullPath)]
+                },
+                new vscode.ThemeIcon('markdown')
+            );
+        });
     }
 
     static getTestResultsRoot(resultsDir: string): TestTreeItem[] {
@@ -150,7 +86,6 @@ export class FeaturesTreeDataProviderUtils {
                 )
             ];
         }
-
         const files = fs.readdirSync(resultsDir).filter(file => file.endsWith('.json'));
         if (files.length === 0) {
             return [
@@ -166,8 +101,6 @@ export class FeaturesTreeDataProviderUtils {
                 )
             ];
         }
-
-        // Group by test name
         const testFiles = new Map<string, string[]>();
         for (const file of files) {
             const match = file.match(/^(\w+)\.(.+)\.json$/);
@@ -180,7 +113,6 @@ export class FeaturesTreeDataProviderUtils {
                 testFiles.get(testName)!.push(file);
             }
         }
-
         const items: TestTreeItem[] = [];
         for (const [testName, runtimeFiles] of testFiles) {
             let passedCount = 0;
@@ -196,7 +128,6 @@ export class FeaturesTreeDataProviderUtils {
                         failedCount++;
                     }
                 } catch {
-                    // Skip
                 }
             }
             const description = `${passedCount} passed, ${failedCount} failed`;
@@ -230,7 +161,6 @@ export class FeaturesTreeDataProviderUtils {
             const match = file.match(/^(\w+)\.(.+)\.json$/);
             return match && match[2] === testName;
         });
-
         return runtimeFiles.map(file => {
             const match = file.match(/^(\w+)\.(.+)\.json$/);
             const runtime = match ? match[1] : 'unknown';
@@ -270,14 +200,10 @@ export class FeaturesTreeDataProviderUtils {
 
     static getTestResults(resultsDir: string, testFile: string): TestTreeItem[] {
         const filePath = path.join(resultsDir, testFile);
-
         try {
             const content = fs.readFileSync(filePath, 'utf-8');
             const result = JSON.parse(content) as TestResult;
-
             const items: TestTreeItem[] = [];
-
-            // Add overall status
             const overallPassed = result.status === true || result.failed === false;
             items.push(
                 new TestTreeItem(
@@ -293,8 +219,6 @@ export class FeaturesTreeDataProviderUtils {
                         new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'))
                 )
             );
-
-            // Add features section
             if (result.features && result.features.length > 0) {
                 const featuresItem = new TestTreeItem(
                     `Features (${result.features.length})`,
@@ -308,8 +232,6 @@ export class FeaturesTreeDataProviderUtils {
                 );
                 items.push(featuresItem);
             }
-
-            // Add Givens section (test scenarios)
             if (result.givens && result.givens.length > 0) {
                 const givensItem = new TestTreeItem(
                     `Test Scenarios (${result.givens.length})`,
@@ -322,12 +244,9 @@ export class FeaturesTreeDataProviderUtils {
                     new vscode.ThemeIcon('list-tree')
                 );
                 items.push(givensItem);
-
-                // Add each given as a child
                 for (let i = 0; i < result.givens.length; i++) {
                     const given = result.givens[i];
                     const givenPassed = given.status === true || given.failed === false;
-
                     const givenItem = new TestTreeItem(
                         `Scenario ${i + 1}: ${given.key || 'Unnamed'}`,
                         TreeItemType.File,
@@ -345,7 +264,6 @@ export class FeaturesTreeDataProviderUtils {
                     items.push(givenItem);
                 }
             }
-
             return items;
         } catch (error) {
             return [
@@ -365,11 +283,9 @@ export class FeaturesTreeDataProviderUtils {
 
     static getTestDetails(resultsDir: string, testFile: string, index: number): TestTreeItem[] {
         const filePath = path.join(resultsDir, testFile);
-
         try {
             const content = fs.readFileSync(filePath, 'utf-8');
             const result = JSON.parse(content) as TestResult;
-
             if (!result.givens || index >= result.givens.length) {
                 return [
                     new TestTreeItem(
@@ -382,11 +298,8 @@ export class FeaturesTreeDataProviderUtils {
                     )
                 ];
             }
-
             const given = result.givens[index];
             const items: TestTreeItem[] = [];
-
-            // Add GIVEN section
             const givenPassed = given.status === true || given.failed === false;
             items.push(
                 new TestTreeItem(
@@ -400,8 +313,6 @@ export class FeaturesTreeDataProviderUtils {
                         new vscode.ThemeIcon('error')
                 )
             );
-
-            // Add features for this given
             if (given.features && given.features.length > 0) {
                 const featuresItem = new TestTreeItem(
                     `Features (${given.features.length})`,
@@ -412,7 +323,6 @@ export class FeaturesTreeDataProviderUtils {
                     new vscode.ThemeIcon('symbol-array')
                 );
                 items.push(featuresItem);
-
                 for (const feature of given.features) {
                     items.push(
                         new TestTreeItem(
@@ -426,8 +336,6 @@ export class FeaturesTreeDataProviderUtils {
                     );
                 }
             }
-
-            // Add WHEN steps
             if (given.whens && given.whens.length > 0) {
                 const whensItem = new TestTreeItem(
                     `WHEN Steps (${given.whens.length})`,
@@ -438,7 +346,6 @@ export class FeaturesTreeDataProviderUtils {
                     new vscode.ThemeIcon('list-ordered')
                 );
                 items.push(whensItem);
-
                 for (let i = 0; i < given.whens.length; i++) {
                     const when = given.whens[i];
                     items.push(
@@ -458,8 +365,6 @@ export class FeaturesTreeDataProviderUtils {
                     );
                 }
             }
-
-            // Add THEN assertions
             if (given.thens && given.thens.length > 0) {
                 const thensItem = new TestTreeItem(
                     `THEN Assertions (${given.thens.length})`,
@@ -470,7 +375,6 @@ export class FeaturesTreeDataProviderUtils {
                     new vscode.ThemeIcon('checklist')
                 );
                 items.push(thensItem);
-
                 for (let i = 0; i < given.thens.length; i++) {
                     const then = given.thens[i];
                     const assertionPassed = !then.error;
@@ -491,8 +395,6 @@ export class FeaturesTreeDataProviderUtils {
                     );
                 }
             }
-
-            // Add error if present
             if (given.error) {
                 items.push(
                     new TestTreeItem(
@@ -505,7 +407,6 @@ export class FeaturesTreeDataProviderUtils {
                     )
                 );
             }
-
             return items;
         } catch (error) {
             return [

@@ -67,9 +67,11 @@ export const nodeBddCommand = (
   nodeConfigPath: string,
   configKey: string,
 ) => {
+
+
   const jsonStr = JSON.stringify({
     ports: [1111],
-    fs: `testeranto/reports/${configKey}`,
+    fs: `testeranto/reports/${configKey}/${fpath}/`,
   });
   return `yarn tsx testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
 };
@@ -113,3 +115,4 @@ export const nodeBuildKitBuild = async (
     throw new Error(`BuildKit build failed: ${result.error}`);
   }
 };
+

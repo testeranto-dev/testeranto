@@ -127,7 +127,7 @@ impl<I: IbddInAny + 'static, O: IbddOutAny + 'static, M: 'static> Rusto<I, O, M>
         }
         
         // Write to file
-        let file_path = format!("{}/rust.Calculator.test.ts.json", dir_path);
+        let file_path = format!("{}/tests.json", dir_path);
         fs::write(&file_path, serde_json::to_string_pretty(&tests_data)?)?;
         
         println!("tests.json written to: {}", file_path);
