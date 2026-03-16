@@ -17,21 +17,25 @@ export const webDockerComposeFile = (
   container_name: string,
   projectConfigPath: string,
   webConfigPath: string,
-  testName: string,
+  runtimeTestsName: string,
 ) => {
   // For web builder service, we need a proper build configuration
   // Since this is a builder service (not BuildKit), it needs a build field
+  const runtimeConfig = config.runtimes[runtimeTestsName];
+  if (!runtimeConfig) {
+    throw new Error(`Runtime config not found for ${runtimeTestsName}`);
+  }
+
   const service: any = {
     build: {
       context: process.cwd(),
-      dockerfile:
-        config.runtimes[container_name]?.dockerfile ||
-        "testeranto/runtimes/web/web.Dockerfile",
+      dockerfile: runtimeConfig.dockerfile || "testeranto/runtimes/web/web.Dockerfile",
     },
     container_name,
     environment: {
       NODE_ENV: "production",
       ENV: "web",
+      MODE: process.env.MODE || "dev",
     },
     working_dir: "/workspace",
     volumes: [
@@ -40,10 +44,9 @@ export const webDockerComposeFile = (
       `${process.cwd()}/testeranto:/workspace/testeranto`,
       // Note: node_modules is NOT mounted to avoid platform incompatibility
     ],
-    command: webBuildCommand(projectConfigPath, webConfigPath, testName, config.runtimes[testName]?.tests || []),
+    command: webBuildCommand(projectConfigPath, webConfigPath, runtimeTestsName, runtimeConfig.tests || []),
     networks: ["allTests_network"],
     expose: ["8000"],
-    depends_on: ["chrome-service"],
   };
 
   return service;
@@ -52,8 +55,19 @@ export const webDockerComposeFile = (
 // Chrome standalone service configuration
 export const chromeServiceConfig = () => {
   return {
-    image: "chromium/chromium:latest",
+    image: "seleniarm/standalone-chromium:124.0",
     container_name: "chrome-service",
+    environment: {
+      SE_SCREEN_WIDTH: "1920",
+      SE_SCREEN_HEIGHT: "1080",
+      SE_SCREEN_DEPTH: "24",
+      SE_VNC_NO_PASSWORD: "1",
+      SE_NO_VNC_PORT: "7900",
+      SE_NODE_MAX_SESSIONS: "1",
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true",
+      SE_NODE_SESSION_TIMEOUT: "300",
+    },
+    shm_size: "2g",
     command: [
       "chromium-browser",
       "--headless",
@@ -76,9 +90,10 @@ export const webBuildCommand = (
   testName: string,
   tests: string[],
 ) => {
-  // Pass MODE environment variable to the builder
+  // MODE is already set in environment, so we don't need to prefix it
   const entryPointsArg = tests.map(t => t.replace(/^\.\//, '')).join(' ');
-  return `MODE=${process.env.MODE || "once"} yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName} ${entryPointsArg}`;
+  // Return a simple command string
+  return `yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName} ${entryPointsArg}`;
 };
 
 export const webBddCommand = (
@@ -90,7 +105,7 @@ export const webBddCommand = (
   // for the directory structure. The original test file has .ts extension.
   // Convert .mjs back to .ts for the fs path to match the directory we created.
   const originalPath = fpath.replace(/\.mjs$/, '.ts');
-  
+
   const jsonStr = JSON.stringify({
     ports: [1111],
     fs: `testeranto/reports/${configKey}/${originalPath}/`,

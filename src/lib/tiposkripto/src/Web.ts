@@ -45,26 +45,9 @@ export class WebTiposkripto<
     filename: string,
     payload: string,
   ): void {
-    // Store files in a global object that can be accessed via Puppeteer
-    if (!(window as any).__testeranto_files__) {
-      (window as any).__testeranto_files__ = {};
-    }
-    (window as any).__testeranto_files__[filename] = payload;
-
-    // Also try to use the File System Access API if available
-    if (navigator.storage && navigator.storage.getDirectory) {
-      (async () => {
-        try {
-          const root = await navigator.storage.getDirectory();
-          const fileHandle = await root.getFileHandle(filename, { create: true });
-          const writable = await fileHandle.createWritable();
-          await writable.write(payload);
-          await writable.close();
-        } catch (e) {
-          console.warn('Could not write to browser storage:', e);
-        }
-      })();
-    }
+    // Call the exposed function from the hoist
+    // This will throw if __writeFile is not exposed, which is what we want
+    (window as any).__writeFile(filename, payload);
   }
 }
 

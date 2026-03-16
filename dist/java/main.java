@@ -138,11 +138,26 @@ public class java_runtime {
             Iterable<? extends JavaFileObject> compilationUnits =
                 fileManager.getJavaFileObjectsFromFiles(Arrays.asList(sourceFile.toFile()));
 
-            // Use current classpath
-            String classpath = System.getProperty("java.class.path");
+            // Build classpath: include current classpath and lib directory
+            String currentClasspath = System.getProperty("java.class.path");
+            Path libDir = Paths.get("/workspace/lib");
+            StringBuilder classpathBuilder = new StringBuilder();
+            classpathBuilder.append(currentClasspath);
+            
+            // Add all JARs from lib directory
+            if (Files.exists(libDir) && Files.isDirectory(libDir)) {
+                try (DirectoryStream<Path> jarStream = Files.newDirectoryStream(libDir, "*.jar")) {
+                    for (Path jarFile : jarStream) {
+                        classpathBuilder.append(":").append(jarFile.toString());
+                    }
+                } catch (IOException e) {
+                    System.err.println("Warning: Could not list JARs in lib directory: " + e.getMessage());
+                }
+            }
+            
             List<String> options = Arrays.asList(
                 "-d", tempDir.toString(),
-                "-cp", classpath
+                "-cp", classpathBuilder.toString()
             );
 
             JavaCompiler.CompilationTask task = compiler.getTask(

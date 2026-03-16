@@ -1,7 +1,13 @@
 import puppeteer, { ConsoleMessage } from 'puppeteer-core';
 import http from 'http';
+import fs from 'fs';
+import path from 'path';
 
 const esbuildUrlDomain = `http://webtests:8000/`;
+
+// Get the config from command line arguments
+const testResourceConfig = process.argv[3] ? JSON.parse(process.argv[3]) : {};
+const reportBaseDir = testResourceConfig.fs || 'testeranto/reports/webtests';
 
 // const relativePath = process.argv[2];
 // const projectConfigPath = process.argv[3];
@@ -56,19 +62,25 @@ async function launchPuppeteer(browserWSEndpoint: string) {
       // logs.closeAll();
     });
 
-    // Note: Functions are no longer exposed via page.exposeFunction()
-    // The web tests should use PM_Web which communicates via WebSocket
-    // PM_Web is instantiated in the browser context and connects to the WebSocket server
+    // Expose writeFile function to the browser
+    await page.exposeFunction('__writeFile', (filePath: string, content: string) => {
+      // Write to the filesystem directly
+      // The path should be relative to the report directory from config
+      const fullPath = path.join(process.cwd(), reportBaseDir, filePath);
+      
+      // Ensure directory exists
+      const dir = path.dirname(fullPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      
+      // Write the file
+      fs.writeFileSync(fullPath, content);
+      console.log(`[hoist] Wrote file: ${fullPath}`);
+    });
 
     const close = () => {
-      // logs.info?.write("close2");
-      // if (!files[src]) {
-      //   files[src] = new Set();
-      // }
-      // delete files[src];
-      // Promise.all(screenshots[src] || []).then(() => {
-      //   delete screenshots[src];
-      // });
+      // Cleanup if needed
     };
 
     page.on("pageerror", (err: Error) => {
@@ -92,50 +104,46 @@ async function launchPuppeteer(browserWSEndpoint: string) {
     });
 
     // const url = `${urlDomain}/testeranto/bundles/web/${relativePath}?config=${testResourceConfig}`;
-    const htmlUrl = `${esbuildUrlDomain}testeranto/bundles/webtests/src/ts/Calculator.test.ts.html`;
-    console.log("htmlUrl", htmlUrl);
+    // Get the test bundle path from command line arguments
+    const testBundlePath = process.argv[2];
+    if (!testBundlePath) {
+      throw new Error('Test bundle path not provided');
+    }
 
-    // Navigate to the HTML page with the config in the query parameter
-    await page.goto(htmlUrl, { waitUntil: "networkidle0" });
+    // Construct the URL for the test bundle
+    // The bundle is served by esbuild at webtests:8000
+    const bundleUrl = `${esbuildUrlDomain}${testBundlePath}`;
+    console.log("bundleUrl", bundleUrl);
 
-    // The HTML page loads the JS bundle, but we need to actually run the test
-    // Use webEvaluator to import and run the test module
-    // First, get the JS file path from the dest
-    // const jsPath = `${esbuildUrlDomain}testeranto/bundles/webtests/src/ts/Calculator.test.mjs`;
-    // // Convert to relative URL for the browser
-    // let jsRelativePath: string;
-    // const jsMatch = jsPath.match(/testeranto\/bundles\/web\/(.*)/);
-    // if (jsMatch) {
-    //   jsRelativePath = jsMatch[1];
-    // } else {
-    //   const jsAbsMatch = jsPath.match(/\/bundles\/web\/(.*)/);
-    //   if (jsAbsMatch) {
-    //     jsRelativePath = jsAbsMatch[1];
-    //   } else {
-    //     jsRelativePath = path.basename(jsPath);
-    //   }
-    // }
-    // const jsUrl = `${esbuildUrlDomain}${jsRelativePath}?cacheBust=${Date.now()}`;
+    // Navigate to a blank page
+    await page.goto('about:blank', { waitUntil: 'networkidle0' });
 
-    // // Evaluate the test using webEvaluator
-    // const evaluation = webEvaluator(jsUrl, testResourceConfig);
-    // console.log("jsUrl", jsUrl);
+    // Evaluate the test bundle directly
+    // The bundle should export a default function that runs tests
+    const testCode = `
+      import('${bundleUrl}').then(async (module) => {
+        try {
+          const testRunner = module.default;
+          await testRunner();
+          return { success: true };
+        } catch (error) {
+          console.error('Test failed:', error);
+          return { success: false, error: error.message };
+        }
+      });
+    `;
 
-    // try {
-    //   const results = (await page.evaluate(evaluation)) as IFinalResults;
-    //   const { fails, failed, features } = results;
-    //   // logs.info?.write("\n idk1");
-    //   // statusMessagePretty(fails, src, "web");
-    //   // this.bddTestIsNowDone(src, fails);
-    // } catch (error) {
-    //   console.error("Error evaluating web test:", error);
-    //   // logs.info?.write("\n Error evaluating web test");
-    //   // statusMessagePretty(-1, src, "web");
-    //   // this.bddTestIsNowDone(src, -1);
-    // }
-
-    // Generate prompt files for Web tests
-    // generatePromptFiles(reportDest, src);
+    try {
+      const result = await page.evaluate(testCode);
+      console.log('Test evaluation result:', result);
+      
+      if (!result || !result.success) {
+        throw new Error(`Test failed: ${result?.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error running web test:', error);
+      throw error;
+    }
 
     await page.close();
     close();
@@ -147,40 +155,45 @@ async function launchPuppeteer(browserWSEndpoint: string) {
 
 }
 
-async function connect() {
-  // Connect to Chrome standalone service
-  const url = `http://chrome-service:9222/json/version`;
-  console.log(`[CLIENT] Attempting to reach Chrome service at ${url}...`);
+async function connectWithRetry(retries = 10, delay = 1000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      // Connect to Chrome standalone service
+      const url = `http://chrome-service:9222/json/version`;
+      console.log(`[CLIENT] Attempt ${i + 1}/${retries}: Attempting to reach Chrome service at ${url}...`);
 
-  const req = http.get(url, (res) => {
-    let data = '';
-    console.log(`[CLIENT] HTTP Status: ${res.statusCode}`);
+      const data = await new Promise<string>((resolve, reject) => {
+        const req = http.get(url, (res) => {
+          let data = '';
+          console.log(`[CLIENT] HTTP Status: ${res.statusCode}`);
 
-    res.on('data', (chunk) => data += chunk);
-    res.on('end', async () => {
-      try {
-        const json = JSON.parse(data);
-        console.log(`[CLIENT] Successfully fetched WS URL: ${json.webSocketDebuggerUrl}`);
-        await launchPuppeteer(json.webSocketDebuggerUrl);
-      } catch (e: any) {
-        console.error('[CLIENT] Failed to parse JSON or connect:', e.message);
-        console.log('[CLIENT] Raw Data received:', data);
+          res.on('data', (chunk) => data += chunk);
+          res.on('end', () => resolve(data));
+        });
+
+        req.on('error', reject);
+        req.setTimeout(5000, () => {
+          req.destroy();
+          reject(new Error('Timeout'));
+        });
+      });
+
+      const json = JSON.parse(data);
+      console.log(`[CLIENT] Successfully fetched WS URL: ${json.webSocketDebuggerUrl}`);
+      await launchPuppeteer(json.webSocketDebuggerUrl);
+      return; // Success
+    } catch (e: any) {
+      console.error(`[CLIENT] Attempt ${i + 1} failed:`, e.message);
+      if (i < retries - 1) {
+        console.log(`[CLIENT] Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        console.error('[CLIENT] All connection attempts failed');
         throw e;
       }
-    });
-  });
-
-  req.on('error', (err) => {
-    console.error('[CLIENT] HTTP Request Failed:', err.message);
-    throw err;
-  });
-
-  req.setTimeout(5000, () => {
-    console.log('[CLIENT] Request timeout');
-    req.destroy();
-    throw new Error('Timeout');
-  });
+    }
+  }
 }
 
-// Start connection
-connect();
+// Start connection with retry
+connectWithRetry();
