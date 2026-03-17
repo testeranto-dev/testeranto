@@ -77,8 +77,23 @@ try {
   process.exit(1);
 }
 
-// Copy media files for webview
+// Copy stakeholder app source for reference
+const stakeholderSrcPath = 'src/stakeholder/DefaultStakeholderApp.tsx';
+const stakeholderDistDir = 'dist/stakeholder';
+const stakeholderDestPath = path.join(stakeholderDistDir, 'DefaultStakeholderApp.tsx');
 
+if (!fs.existsSync(stakeholderDistDir)) {
+  fs.mkdirSync(stakeholderDistDir, { recursive: true });
+}
+
+if (fs.existsSync(stakeholderSrcPath)) {
+  fs.copyFileSync(stakeholderSrcPath, stakeholderDestPath);
+  console.log(`Copied stakeholder app source from ${stakeholderSrcPath} to ${stakeholderDestPath}`);
+} else {
+  console.warn(`Stakeholder source file not found: ${stakeholderSrcPath}`);
+}
+
+// Copy media files for webview
 const mediaDir = 'media';
 const distMediaDir = 'dist/vscode/media';
 

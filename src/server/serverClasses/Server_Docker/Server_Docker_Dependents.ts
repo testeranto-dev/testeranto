@@ -36,6 +36,10 @@ export const readdirSync = (dirPath: string): string[] => {
     return fs.readdirSync(dirPath);
 };
 
+export const unlinkSync = (filePath: string): void => {
+    fs.unlinkSync(filePath);
+};
+
 export const watchFile = (
     filename: string,
     listener: (curr: fs.Stats, prev: fs.Stats) => void,

@@ -2,13 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 // Server_Docker_Utils_Run: Run-related pure functions for Server_Docker
-import type { ICheck, IChecks, IRunTime, ITestconfigV2 } from "../../../Types";
+import type { IRunTime, ITestconfigV2 } from "../../../Types";
 import type { IMode } from "../../types";
 import {
-  cleanTestName,
   DOCKER_COMPOSE_LOGS,
   generateUid,
-  getAiderServiceName,
   getBddServiceName,
   getBuilderServiceName,
   getCheckServiceName,
@@ -34,110 +32,23 @@ import {
   execSyncWrapper,
   existsSync,
   join,
-  mkdirSync,
   processCwd,
   readdirSync,
   readFileSync,
   relative,
   sep,
   spawnWrapper,
-  watch,
-  watchFile,
   writeFileSync,
 } from "./Server_Docker_Dependents";
 import { getCwdPure } from "./Server_Docker_Utils";
+import { spawnPromise, captureContainerExitCode } from "./utils";
 
-export const spawnPromise = (
-  command: string,
-  options?: { cwd?: string },
-): Promise<number> => {
-  return new Promise<number>((resolve, reject) => {
-    // Use shell: true to let the shell handle command parsing (including quotes)
-    const child = spawnWrapper(command, [], {
-      stdio: ["ignore", "pipe", "pipe"],
-      shell: true,
-      cwd: options?.cwd || getCwdPure(),
-    });
-
-    let stdout = "";
-    let stderr = "";
-
-    child.stdout?.on("data", (data: Buffer) => {
-      const chunk = data.toString();
-      stdout += chunk;
-      // Also log to console for real-time debugging
-      process.stdout.write(chunk);
-    });
-
-    child.stderr?.on("data", (data: Buffer) => {
-      const chunk = data.toString();
-      stderr += chunk;
-      // Also log to console for real-time debugging
-      process.stderr.write(chunk);
-    });
-
-    child.on("error", (error: Error) => {
-      reject(error);
-    });
-
-    child.on("close", (code: number | null) => {
-      if (code === 0) {
-        resolve(code || 0);
-      } else {
-        reject(
-          new Error(
-            `Process exited with code ${code}\nCommand: ${command}\nstdout: ${stdout}\nstderr: ${stderr}`,
-          ),
-        );
-      }
-    });
-  });
-};
-
-// Capture container exit code utility
-export const captureContainerExitCode = (
+export type IR = (
   serviceName: string,
   runtime: string,
-  runTimeConfigKey: string,
-): void => {
-  const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
-  const containerId = execSyncWrapper(containerIdCmd, {
-    cwd: getCwdPure(),
-  }).trim();
+  runtimeConfigKey: string,
+) => void;
 
-  if (containerId) {
-    const inspectCmd = `docker inspect --format='{{.State.ExitCode}}' ${containerId}`;
-    const exitCode = execSyncWrapper(inspectCmd, {
-      cwd: getCwdPure(),
-    }).trim();
-
-    const containerExitCodeFilePath = getContainerExitCodeFilePath(
-      getCwdPure(),
-      runtime,
-      serviceName,
-      runTimeConfigKey,
-    );
-    writeFileSync(containerExitCodeFilePath, exitCode);
-
-    consoleLog(
-      `[Server_Docker] Container ${serviceName} (${containerId.substring(0, 12)}) exited with code ${exitCode}`,
-    );
-
-    const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
-    const status = execSyncWrapper(statusCmd, {
-      cwd: getCwdPure(),
-    }).trim();
-    const statusFilePath = getStatusFilePath(
-      getCwdPure(),
-      runtime,
-      serviceName,
-      runTimeConfigKey,
-    );
-    writeFileSync(statusFilePath, status);
-  } else {
-    consoleLog(`[Server_Docker] No container found for service ${serviceName}`);
-  }
-};
 
 export const updateOutputFilesList = (
   outputFiles: Record<string, Record<string, string[]>>,
@@ -443,110 +354,6 @@ export const getProcessSummaryPure = (): any => {
   };
 };
 
-export const getAiderProcessesPure = (
-  configs: any,
-  processes: any[],
-): any[] => {
-  const aiderProcesses = processes.filter(
-    (process: any) => process.name && process.name.includes("-aider"),
-  );
-
-  return aiderProcesses.map((process: any) => {
-    let runtime = "";
-    let testName = "";
-    let configKey = "";
-
-    const name = process.name || process.containerName || "";
-    if (name.includes("-aider")) {
-      // Parse container name to extract runtime and test name
-      // Format: {configKey}-{testName}-aider
-      const match = name.match(/^(.+?)-(.+)-aider$/);
-      if (match) {
-        configKey = match[1];
-        const testPart = match[2];
-
-        //   find the runtime from configs
-        for (const [key, configValue] of Object.entries(configs.runtimes)) {
-          if (key === configKey) {
-            runtime = configValue.runtime;
-            for (const t of configValue.tests) {
-              const cleanedTestName = cleanTestName(t);
-              if (cleanedTestName === testPart) {
-                testName = t;
-                break;
-              }
-            }
-            break;
-          }
-        }
-      }
-    }
-
-    const connectCommand = `docker exec -it ${process.containerId} aider`;
-
-    return {
-      ...process,
-      name: name,
-      containerId: process.containerId || "",
-      runtime: runtime,
-      testName: testName,
-      configKey: configKey,
-      status: process.status || "",
-      state: process.state || "",
-      isActive: process.isActive || false,
-      exitCode: process.exitCode || null,
-      startedAt: process.startedAt || null,
-      finishedAt: process.finishedAt || null,
-      connectCommand: connectCommand,
-      terminalCommand: connectCommand,
-      containerName: name,
-      timestamp: new Date().toISOString(),
-    };
-  });
-};
-
-export const informAiderPure = async (
-  runtime: IRunTime,
-  testName: string,
-  configKey: string,
-  configValue: any,
-  inputFiles: any,
-  captureExistingLogs: (serviceName: string, runtime: string) => void,
-  writeConfigForExtension: () => void,
-): Promise<void> => {
-  const uid = generateUid(configKey, testName);
-  const aiderServiceName = getAiderServiceName(uid);
-  const inputFilesPath = `testeranto/bundles/${runtime}/${testName}-inputFiles.json`;
-
-  try {
-    const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${aiderServiceName}`;
-    const containerId = execSyncWrapper(containerIdCmd, {
-      encoding: "utf-8",
-    }).trim();
-
-    if (!containerId) {
-      throw `[Server_Docker] No container found for aider service: ${aiderServiceName}`;
-    }
-
-    const inputContent = readFileSync(inputFilesPath, "utf-8");
-
-    // Send the input content to the aider process's stdin
-    // We'll use docker exec to write to the main process's stdin (PID 1)
-    // The -i flag keeps stdin open, and we pipe the content
-    const sendInputCmd = `echo ${JSON.stringify(inputContent)} | docker exec -i ${containerId} sh -c 'cat > /proc/1/fd/0'`;
-
-    execSyncWrapper(sendInputCmd, {
-      encoding: "utf-8",
-      stdio: "pipe",
-    });
-  } catch (error: any) {
-    consoleError(
-      `[Server_Docker] Failed to inform aider service ${aiderServiceName}: ${error.message}`,
-    );
-    captureExistingLogs(aiderServiceName, runtime);
-  }
-};
-
 export const launchBddTestPure = async (
   runtime: IRunTime,
   testName: string,
@@ -639,7 +446,7 @@ export const startServiceLoggingPure = (
         sleep 1
       done
       # Capture logs from the beginning
-      docker compose -f "testeranto/docker-compose.yml" logs --no-color -f ${runtime}
+      docker compose -f "testeranto/docker-compose.yml" logs --no-color -f ${serviceName}
     `;
 
   // Open in overwrite mode to replace old logs
@@ -654,7 +461,7 @@ export const startServiceLoggingPure = (
   });
 
   const containerId = execSyncWrapper(
-    `${DOCKER_COMPOSE_BASE} ps -q ${runtime}`,
+    `${DOCKER_COMPOSE_BASE} ps -q ${serviceName}`,
     {
       cwd: cwd,
     },
@@ -683,7 +490,7 @@ export const startServiceLoggingPure = (
 
     writeFileSync(exitCodeFilePath, code?.toString() || "0");
 
-    captureContainerExitCode(serviceName, runtime, cwd);
+    captureContainerExitCode(serviceName, runtime, runtimeConfigKey);
 
     if (containerId) {
       logProcesses.delete(containerId);
@@ -698,274 +505,9 @@ export const startServiceLoggingPure = (
   return newLogProcesses;
 };
 
-// Pure function to watch output files
-export const watchInputFilePure = async (
-  runtime: IRunTime,
-  testsName: string,
-  configs: ITestconfigV2,
-  mode: IMode,
-  inputFiles: Record<string, Record<string, string[]>>,
-  hashs: Record<string, Record<string, string>>,
-  setState: (
-    inputFiles: Record<string, Record<string, string[]>>,
-    hashs: Record<string, Record<string, string>>,
-  ) => void,
-  launchBddTest: (
-    runtime: IRunTime,
-    testName: string,
-    configKey: string,
-    configValue: any,
-  ) => Promise<void>,
-  launchChecks: (
-    runtime: IRunTime,
-    testName: string,
-    configKey: string,
-    configValue: any,
-  ) => Promise<void>,
-  informAider: (
-    runtime: IRunTime,
-    testName: string,
-    configKey: string,
-    configValue: any,
-    files?: any,
-  ) => Promise<void>,
-  resourceChanged: (path: string) => void,
-  loadInputFileOnce: (
-    runtime: IRunTime,
-    testName: string,
-    configKey: string,
-  ) => void,
-): Promise<{
-  inputFiles: Record<string, Record<string, string[]>>;
-  hashs: Record<string, Record<string, string>>;
-}> => {
-  let configKey: string = "";
-  for (const [key, configValue] of Object.entries(configs.runtimes)) {
-    if (
-      configValue.runtime === runtime &&
-      configValue.tests.includes(testsName)
-    ) {
-      configKey = key;
-      break;
-    }
-  }
-
-  let inputFilePath: string;
-  try {
-    inputFilePath = getInputFilePath(runtime, configKey);
-  } catch (error: any) {
-    consoleWarn(
-      `[Server_Docker] No input file path for ${runtime}/${configKey}: ${error.message}`,
-    );
-    return { inputFiles, hashs };
-  }
-
-  const newInputFiles = { ...inputFiles };
-  const newHashs = { ...hashs };
-
-  if (!newInputFiles[configKey]) {
-    newInputFiles[configKey] = {};
-  }
-
-  if (!existsSync(inputFilePath)) {
-    consoleWarn(`${inputFilePath} does not exist yet.`);
-    return { inputFiles: newInputFiles, hashs: newHashs };
-  }
-
-  const fileContent = readFileSync(inputFilePath, "utf-8");
-  const allTestsInfo = JSON.parse(fileContent);
-
-
-
-
-  if (allTestsInfo[testsName]) {
-    const testInfo = allTestsInfo[testsName];
-    newInputFiles[configKey][testsName] = testInfo.files || [];
-    if (!newHashs[configKey]) {
-      newHashs[configKey] = {};
-    }
-    newHashs[configKey][testsName] = testInfo.hash || "";
-
-    // Create directories for each test entrypoint to ensure test.json files can be placed correctly
-    // According to the bug report, test.json files should follow the structure of the entrypoint
-    // For each test in the input JSON, create the appropriate directory under testeranto/reports/{correctConfigKey}/
-    const cwd = getCwdPure();
-    for (const [currentTestName, testInfo] of Object.entries(allTestsInfo)) {
-      // Find which config this test belongs to
-      let testConfigKey: string | null = null;
-      for (const [ck, configValue] of Object.entries(configs.runtimes)) {
-        if (configValue.tests.includes(currentTestName)) {
-          testConfigKey = ck;
-          break;
-        }
-      }
-      
-      // If we couldn't find a config for this test, skip it
-      if (!testConfigKey) {
-        consoleWarn(`[Server_Docker] Could not find config for test ${currentTestName}`);
-        continue;
-      }
-      
-      // The entrypoint path is currentTestName (e.g., "src/ts/Calculator.test.node.ts")
-      // We need to create a directory structure under testeranto/reports/{testConfigKey}/{entrypointPath}/
-      // According to the bug report, test.json should be placed at {entrypointPath}/tests.json
-      // So we need to create a directory for the entire entrypoint path (including the filename as a directory)
-      const entrypointPath = currentTestName;
-      // Remove leading "./" if present
-      const cleanPath = entrypointPath.replace(/^\.\//, '');
-      // Create directory path: testeranto/reports/{testConfigKey}/{cleanPath}/
-      const fullDirPath = join(cwd, "testeranto", "reports", testConfigKey, cleanPath);
-      // We need to create the directory for fullDirPath, not remove the last component
-      // Because tests.json will be placed inside a directory named after the entrypoint file
-      const dirToCreate = fullDirPath;
-      try {
-        if (!existsSync(dirToCreate)) {
-          mkdirSync(dirToCreate, { recursive: true });
-          consoleLog(`[Server_Docker] Created directory for test reports: ${dirToCreate}`);
-        }
-      } catch (error: any) {
-        consoleWarn(`[Server_Docker] Failed to create directory ${dirToCreate}: ${error.message}`);
-      }
-    }
-
-  } else {
-    newInputFiles[configKey][testsName] = [];
-    if (!newHashs[configKey]) {
-      newHashs[configKey] = {};
-    }
-    newHashs[configKey][testsName] = "";
-  }
-
-  if (mode === "dev") {
-    watchFile(inputFilePath, (curr, prev) => {
-      if (!existsSync(inputFilePath)) {
-        consoleWarn(`${inputFilePath} does not exist yet.`);
-        return;
-      }
-
-      const fileContent = readFileSync(inputFilePath, "utf-8");
-      const allTestsInfo = JSON.parse(fileContent);
-      if (allTestsInfo[testsName]) {
-        const testInfo = allTestsInfo[testsName];
-        const newHash = testInfo.hash || "";
-        const oldHash = newHashs[configKey]?.[testsName] || "";
-
-        const updatedInputFiles = { ...newInputFiles };
-        const updatedHashs = { ...newHashs };
-
-        if (!updatedInputFiles[configKey]) {
-          updatedInputFiles[configKey] = {};
-        }
-        if (!updatedHashs[configKey]) {
-          updatedHashs[configKey] = {};
-        }
-
-        updatedInputFiles[configKey][testsName] = testInfo.files || [];
-        updatedHashs[configKey][testsName] = newHash;
-
-        setState(updatedInputFiles, updatedHashs);
-        resourceChanged("/~/inputfiles");
-
-        if (newHash !== oldHash) {
-          for (const [ck, configValue] of Object.entries(configs.runtimes)) {
-            if (
-              configValue.runtime === runtime &&
-              configValue.tests.includes(testsName)
-            ) {
-              launchBddTest(runtime, testsName, ck, configValue);
-              launchChecks(runtime, testsName, ck, configValue);
-              informAider(runtime, testsName, ck, configValue, testInfo.files);
-              break;
-            }
-          }
-        }
-      }
-    });
-  } else {
-    loadInputFileOnce(runtime, testsName, configKey);
-  }
-
-  return { inputFiles: newInputFiles, hashs: newHashs };
-};
-
-export const watchOutputFilePure = (
-  configKey: string,
-  testName: string,
-  runtime: IRunTime,
-  mode: IMode,
-  outputFiles: Record<string, Record<string, string[]>>,
-  resourceChanged: (path: string) => void,
-  updateOutputFilesList: (
-    outputFiles: Record<string, Record<string, string[]>>,
-    configKey: string,
-    testName: string,
-    outputDir: string,
-    projectRoot: string,
-  ) => Record<string, Record<string, string[]>>,
-): Record<string, Record<string, string[]>> => {
-  const cwd = getCwdPure();
-  const outputDir = getFullReportDir(cwd, runtime);
-  const projectRoot = cwd;
-
-  // Ensure the output directory exists
-  if (!existsSync(outputDir)) {
-    consoleLog(`[Server_Docker] Creating output directory: ${outputDir}`);
-    mkdirSync(outputDir, { recursive: true });
-  }
-
-  let newOutputFiles = { ...outputFiles };
-  if (!newOutputFiles[configKey]) {
-    newOutputFiles[configKey] = {};
-  }
-  if (!newOutputFiles[configKey][testName]) {
-    newOutputFiles[configKey][testName] = [];
-  }
-
-  newOutputFiles = updateOutputFilesList(
-    newOutputFiles,
-    configKey,
-    testName,
-    outputDir,
-    projectRoot,
-  );
-
-  if (mode === "dev") {
-    watch(outputDir, (eventType, filename) => {
-      if (filename) {
-        newOutputFiles = updateOutputFilesList(
-          newOutputFiles,
-          configKey,
-          testName,
-          outputDir,
-          projectRoot,
-        );
-        resourceChanged("/~/outputfiles");
-      }
-    });
-  }
-
-  return newOutputFiles;
-};
-
-// Pure function to handle aider processes
-export const handleAiderProcessesPure = (
-  configs: any,
-  getProcessSummary: () => any,
-): any => {
-  const summary = getProcessSummary();
-  const aiderProcesses = getAiderProcessesPure(configs, summary.processes);
-  return {
-    aiderProcesses: aiderProcesses,
-    timestamp: new Date().toISOString(),
-    message: "Success",
-  };
-};
-
-// Pure function to build aider image
-
 // Pure function to start builder services
 export const startBuilderServicesPure = async (
-  configs: any,
+  configs: ITestconfigV2,
   mode: IMode,
   startServiceLogging: (
     serviceName: string,
@@ -973,8 +515,13 @@ export const startBuilderServicesPure = async (
     runtimeConfigKey: string,
   ) => Promise<void>,
 ): Promise<void> => {
-  const builderServices: Array<{serviceName: string, runtime: string, configKey: string}> = [];
+  const builderServices: Array<{
+    serviceName: string;
+    runtime: string;
+    configKey: string;
+  }> = [];
   const processedRuntimes = new Set<string>();
+  let hasWebRuntime = false;
 
   for (const [runtimeTestsName, runtimeTests] of Object.entries(
     configs.runtimes,
@@ -987,45 +534,159 @@ export const startBuilderServicesPure = async (
       builderServices.push({
         serviceName: builderServiceName,
         runtime: runtime,
-        configKey: runtimeTestsName
+        configKey: runtimeTestsName,
       });
+    }
+
+    if (runtime === "web") {
+      hasWebRuntime = true;
     }
   }
 
-  for (const {serviceName, runtime, configKey} of builderServices) {
+  for (const { serviceName, runtime, configKey } of builderServices) {
     try {
+      // For web runtime, the service name might be 'webtests' instead of 'web-builder'
+      const actualServiceName = runtime === "web" ? "webtests" : serviceName;
+        
       // First, try to build the image locally if it doesn't exist
       const imageName = `testeranto-${runtime}-${configKey}:latest`;
       const imageExistsCmd = `docker image inspect ${imageName} > /dev/null 2>&1`;
-      
+
       try {
         execSyncWrapper(imageExistsCmd, { cwd: getCwdPure() });
         consoleLog(`[Server_Docker] Image ${imageName} exists locally`);
       } catch (imageError) {
-        consoleLog(`[Server_Docker] Image ${imageName} not found locally, trying to build...`);
+        consoleLog(
+          `[Server_Docker] Image ${imageName} not found locally, trying to build...`,
+        );
         // Try to build the image
         const buildCmd = `docker build -f ${configs.runtimes[configKey].dockerfile} -t ${imageName} .`;
         try {
           execSyncWrapper(buildCmd, { cwd: getCwdPure() });
           consoleLog(`[Server_Docker] Built image ${imageName}`);
         } catch (buildError) {
-          consoleWarn(`[Server_Docker] Could not build image ${imageName}: ${buildError.message}`);
+          consoleWarn(
+            `[Server_Docker] Could not build image ${imageName}: ${buildError.message}`,
+          );
           // Continue anyway - docker-compose will try to build it
         }
       }
 
       // Start the service
       await spawnPromise(
-        `docker compose -f "testeranto/docker-compose.yml" up -d ${serviceName}`,
+        `docker compose -f "testeranto/docker-compose.yml" up -d ${actualServiceName}`,
       );
 
-      await startServiceLogging(serviceName, runtime, configKey);
+      await startServiceLogging(actualServiceName, runtime, configKey);
     } catch (error: any) {
       consoleError(
-        `[Server_Docker] ❌ Failed to start builder service ${serviceName}:`,
-        error.message,
+        `[Server_Docker] ❌ Failed to start builder service ${serviceName}: ${error.message}`,
       );
+      consoleError(`[Server_Docker] Full error: ${error.stack || error}`);
       // Continue with other services even if one fails
+    }
+  }
+
+  // Start chrome-service if there's a web runtime
+  if (hasWebRuntime) {
+    try {
+      consoleLog(`[Server_Docker] Starting chrome-service for web runtime`);
+
+      // First, ensure chrome-service is in the docker-compose.yml
+      const checkCmd = `docker compose -f "testeranto/docker-compose.yml" config --services`;
+      const servicesOutput = execSyncWrapper(checkCmd, { cwd: getCwdPure() });
+      const services = servicesOutput
+        .trim()
+        .split("\n")
+        .map((s) => s.trim());
+
+      if (!services.includes("chrome-service")) {
+        consoleWarn(
+          `[Server_Docker] chrome-service not found in docker-compose.yml. Regenerating...`,
+        );
+        // We need to regenerate the docker-compose.yml
+        // This should have been done by generateServicesPure, but let's check
+        consoleWarn(
+          `[Server_Docker] Available services: ${services.join(", ")}`,
+        );
+        // We'll try to start it anyway - docker-compose might handle missing services gracefully
+      } else {
+        consoleLog(
+          `[Server_Docker] Found chrome-service in docker-compose.yml`,
+        );
+      }
+
+      // Start chrome-service with a longer timeout
+      consoleLog(`[Server_Docker] Starting chrome-service...`);
+      await spawnPromise(
+        `docker compose -f "testeranto/docker-compose.yml" up -d chrome-service`,
+      );
+
+      // Wait longer for the service to start (chromium can take time)
+      consoleLog(`[Server_Docker] Waiting for chrome-service to start...`);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      // Check if chrome-service is running
+      const psCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q chrome-service`;
+      const containerId = execSyncWrapper(psCmd, { cwd: getCwdPure() }).trim();
+
+      if (containerId) {
+        consoleLog(
+          `[Server_Docker] chrome-service container ID: ${containerId.substring(0, 12)}`,
+        );
+
+        // Check container status
+        const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
+        const status = execSyncWrapper(statusCmd, { cwd: getCwdPure() }).trim();
+        consoleLog(`[Server_Docker] chrome-service status: ${status}`);
+
+        // Wait a bit more if it's starting
+        if (status === "starting" || status === "created") {
+          consoleLog(
+            `[Server_Docker] chrome-service is ${status}, waiting a bit more...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+        }
+
+        // Start logging for chrome-service
+        // Find any web runtime config key
+        let webConfigKey = "";
+        for (const [key, value] of Object.entries(configs.runtimes)) {
+          if (value.runtime === "web") {
+            webConfigKey = key;
+            break;
+          }
+        }
+        if (!webConfigKey) {
+          // Use the first config key if no web runtime found
+          webConfigKey = Object.keys(configs.runtimes)[0] || "default";
+        }
+
+        await startServiceLogging("chrome-service", "web", webConfigKey);
+        consoleLog(`[Server_Docker] ✅ chrome-service started and logging`);
+      } else {
+        consoleWarn(
+          `[Server_Docker] chrome-service container not found after start attempt`,
+        );
+        // Try to get logs to see what happened
+        try {
+          const logsCmd = `docker compose -f "testeranto/docker-compose.yml" logs chrome-service --tail=30`;
+          const logs = execSyncWrapper(logsCmd, { cwd: getCwdPure() });
+          consoleLog(`[Server_Docker] chrome-service logs:\n${logs}`);
+        } catch (logError: any) {
+          consoleWarn(
+            `[Server_Docker] Could not get chrome-service logs: ${logError.message}`,
+          );
+        }
+      }
+    } catch (error: any) {
+      consoleError(
+        `[Server_Docker] ❌ Failed to start chrome-service: ${error.message}`,
+      );
+      consoleError(`[Server_Docker] Full error: ${error.stack || error}`);
+
+      // Don't fail the entire process if chrome-service fails
+      consoleWarn(`[Server_Docker] Continuing without chrome-service...`);
     }
   }
 
@@ -1104,104 +765,6 @@ export const waitForAllTestsToCompletePure = async (
     "[Server_Docker] Timeout waiting for all tests to complete. Some tests may still be running.",
   );
   consoleLog("[Server_Docker] Forcing shutdown due to timeout...");
-};
-
-export type IR = (
-  serviceName: string,
-  runtime: string,
-  runtimeConfigKey: string,
-) => void;
-
-export const captureExistingLogs: IR = (
-  serviceName: string,
-  runtime: string,
-  runtimeConfigKey: string,
-): void => {
-  const reportDir = getFullReportDir(getCwdPure(), runtime);
-  const logFilePath = getLogFilePath(
-    getCwdPure(),
-    runtime,
-    serviceName,
-    runtimeConfigKey,
-  );
-
-  try {
-    // First, check if the container exists (including stopped ones)
-    const checkCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
-    const containerId = execSyncWrapper(checkCmd, {
-      cwd: getCwdPure(),
-      encoding: "utf-8",
-    }).trim();
-
-    const cmd = `${DOCKER_COMPOSE_LOGS} ${serviceName} 2>/dev/null || true`;
-    const existingLogs = execSyncWrapper(cmd, {
-      cwd: getCwdPure(),
-      encoding: "utf-8",
-      maxBuffer: 10 * 1024 * 1024, // 10MB
-    });
-
-    if (existingLogs && existingLogs.trim().length > 0) {
-      writeFileSync(logFilePath, existingLogs);
-      consoleLog(
-        `[Server_Docker] Captured ${existingLogs.length} bytes of existing logs for ${serviceName}`,
-      );
-    } else {
-      // If no logs exist, create an empty file
-      writeFileSync(logFilePath, "");
-    }
-
-    // Also try to capture the container exit code if it has exited
-    captureContainerExitCode(serviceName, runtime, runtimeConfigKey);
-  } catch (error: any) {
-    // It's okay if this fails - the container might not exist yet
-    consoleLog(
-      `[Server_Docker] No existing logs for ${serviceName}: ${error.message}`,
-    );
-  }
-};
-
-export const executeDockerComposeCommand = async (
-  command: string,
-  options?: {
-    useExec?: boolean;
-    execOptions?: { cwd: string };
-    errorMessage?: string;
-  },
-): Promise<IDockerComposeResult> => {
-  const useExec = options?.useExec ?? false;
-  const execOptions = options?.execOptions ?? { cwd: processCwd() };
-  const errorMessage =
-    options?.errorMessage ?? "Error executing docker compose command";
-
-  try {
-    if (useExec) {
-      const { stdout, stderr } = await execAsync(command, execOptions);
-      return {
-        exitCode: 0,
-        out: stdout,
-        err: stderr,
-        data: null,
-      };
-    } else {
-      // For spawn-based commands, we need to handle them differently
-      // Since spawnPromise is in Server_Docker.ts, we'll return a special result
-      // and let the caller handle it
-      return {
-        exitCode: 0,
-        out: "",
-        err: "",
-        data: { command, spawn: true },
-      };
-    }
-  } catch (error: any) {
-    consoleError(`[Docker] ${errorMessage}: ${error.message}`);
-    return {
-      exitCode: 1,
-      out: "",
-      err: `${errorMessage}: ${error.message}`,
-      data: null,
-    };
-  }
 };
 
 // Note: DOCKER_COMPOSE_BASE needs to be imported or defined

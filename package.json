@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.228.0",
+  "version": "0.230.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -26,16 +26,51 @@
     "onCommand:testeranto.refresh",
     "onCommand:testeranto.retryConnection",
     "onCommand:testeranto.startServer",
-    "onView:testerantoView",
+    "onCommand:testeranto.generateHtmlReport",
+    "onView:testeranto.unifiedView",
+    "onView:testeranto.runtimeView",
+    "onView:testeranto.resultsView",
+    "onView:testeranto.processView",
+    "onView:testeranto.reportView",
     "workspaceContains:**/testeranto/extension-config.json",
     "workspaceContains:**/testeranto/reports/**/*.json"
   ],
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "testeranto",
+          "title": "Testeranto",
+          "icon": "$(testing)"
+        }
+      ]
+    },
     "views": {
       "testeranto": [
         {
-          "id": "testerantoView",
-          "name": "Testeranto"
+          "id": "testeranto.unifiedView",
+          "name": "Dashboard",
+          "icon": "$(dashboard)"
+        },
+        {
+          "id": "testeranto.runtimeView",
+          "name": "Runtime Tests",
+          "icon": "$(beaker)"
+        },
+        {
+          "id": "testeranto.resultsView",
+          "name": "Files",
+          "icon": "$(files)"
+        },
+        {
+          "id": "testeranto.processView",
+          "name": "Docker Processes",
+          "icon": "$(server)"
+        },
+        {
+          "id": "testeranto.reportView",
+          "name": "Stakeholder Report",
+          "icon": "$(globe)"
         }
       ]
     },
@@ -120,6 +155,9 @@
     "ATDD"
   ],
   "exports": {
+    "./src/server/serverClasses/StakeholderUtils": {
+      "import": "./src/server/serverClasses/StakeholderUtils.tsx"
+    },
     "./src/cjs-shim.ts": {
       "import": "./dist/cjs-shim.js",
       "require": "./dist/cjs-shim.js"
@@ -343,6 +381,6 @@
     "@esbuild/linux-x64": "^0.27.2",
     "@esbuild/win32-arm64": "^0.27.2",
     "@esbuild/win32-x64": "^0.27.2",
-    "esbuild": "^0.27.2"
+    "esbuild": "^0.27.4"
   }
 }

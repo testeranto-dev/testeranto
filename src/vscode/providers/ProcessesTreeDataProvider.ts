@@ -1,18 +1,14 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
+import { BaseTreeDataProvider } from './BaseTreeDataProvider';
 
-export class ProcessesTreeDataProvider implements vscode.TreeDataProvider<TestTreeItem> {
-  private _onDidChangeTreeData = new vscode.EventEmitter<TestTreeItem | undefined | null | void>();
-  readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
-
+export class ProcessesTreeDataProvider extends BaseTreeDataProvider {
   private processes: any[] = [];
-  private ws: WebSocket | null = null;
-  private isConnected = false;
 
   constructor() {
+    super();
     this.fetchProcesses();
-    this.connectWebSocket();
   }
 
   refresh(): void {
@@ -37,35 +33,10 @@ export class ProcessesTreeDataProvider implements vscode.TreeDataProvider<TestTr
     this._onDidChangeTreeData.fire();
   }
 
-  private connectWebSocket(): void {
-    if (this.ws) {
-      this.ws.close();
+  protected handleWebSocketMessage(message: any): void {
+    if (message.type === 'resourceChanged' && message.url === '/~/processes') {
+      this.fetchProcesses();
     }
-
-    this.ws = new WebSocket('ws://localhost:3000');
-    
-    this.ws.onopen = () => {
-      this.isConnected = true;
-      this._onDidChangeTreeData.fire();
-    };
-    
-    this.ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.type === 'resourceChanged' && message.url === '/~/processes') {
-        this.fetchProcesses();
-      }
-    };
-    
-    this.ws.onerror = () => {
-      this.isConnected = false;
-      this._onDidChangeTreeData.fire();
-    };
-    
-    this.ws.onclose = () => {
-      this.isConnected = false;
-      this.ws = null;
-      this._onDidChangeTreeData.fire();
-    };
   }
 
   private getProcessItems(): TestTreeItem[] {
@@ -199,8 +170,6 @@ export class ProcessesTreeDataProvider implements vscode.TreeDataProvider<TestTr
   }
 
   public dispose(): void {
-    if (this.ws) {
-      this.ws.close();
-    }
+    super.dispose();
   }
 }

@@ -52,34 +52,23 @@ export const webDockerComposeFile = (
   return service;
 };
 
-// Chrome standalone service configuration
+// Chrome service configuration using browserless/chrome
 export const chromeServiceConfig = () => {
   return {
-    image: "seleniarm/standalone-chromium:124.0",
+    image: "browserless/chrome:latest",
     container_name: "chrome-service",
     environment: {
-      SE_SCREEN_WIDTH: "1920",
-      SE_SCREEN_HEIGHT: "1080",
-      SE_SCREEN_DEPTH: "24",
-      SE_VNC_NO_PASSWORD: "1",
-      SE_NO_VNC_PORT: "7900",
-      SE_NODE_MAX_SESSIONS: "1",
-      SE_NODE_OVERRIDE_MAX_SESSIONS: "true",
-      SE_NODE_SESSION_TIMEOUT: "300",
+      CONNECTION_TIMEOUT: "60000",
+      MAX_CONCURRENT_SESSIONS: "1",
+      ENABLE_CORS: "true",
+      PREBOOT_CHROME: "true",
+      DEFAULT_BLOCK_ADS: "true"
     },
     shm_size: "2g",
-    command: [
-      "chromium-browser",
-      "--headless",
-      "--disable-gpu",
-      "--disable-dev-shm-usage",
-      "--disable-setuid-sandbox",
-      "--no-sandbox",
-      "--remote-debugging-address=0.0.0.0",
-      "--remote-debugging-port=9222",
-    ].join(" "),
-    expose: ["9222"],
-    ports: ["9222:9222"],
+    expose: ["3000"],
+    ports: [
+      "9222:3000"
+    ],
     networks: ["allTests_network"],
   };
 };

@@ -86,10 +86,10 @@ async function launchPuppeteer(browserWSEndpoint) {
     throw error;
   }
 }
-async function connectWithRetry(retries = 10, delay = 1e3) {
+async function connectWithRetry(retries = 30, delay = 2e3) {
   for (let i = 0; i < retries; i++) {
     try {
-      const url = `http://chrome-service:9222/json/version`;
+      const url = `http://chrome-service:3000/json/version`;
       console.log(`[CLIENT] Attempt ${i + 1}/${retries}: Attempting to reach Chrome service at ${url}...`);
       const data = await new Promise((resolve, reject) => {
         const req = http.get(url, (res) => {
@@ -99,7 +99,7 @@ async function connectWithRetry(retries = 10, delay = 1e3) {
           res.on("end", () => resolve(data2));
         });
         req.on("error", reject);
-        req.setTimeout(5e3, () => {
+        req.setTimeout(1e4, () => {
           req.destroy();
           reject(new Error("Timeout"));
         });

@@ -8,6 +8,7 @@ export type ITestconfigV2 = {
   featureIngestor: (s: string) => Promise<string>;
   runtimes: Record<string, IBaseTestConfig>;
   documentationGlob?: string; // New field: glob pattern to find documentation files
+  stakeholderReactModule?: string; // Path to custom React component module
 };
 
 export type ICheck = ((x: any) => string);

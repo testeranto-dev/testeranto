@@ -3,6 +3,7 @@ import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { TestTreeDataProviderUtils } from './TestTreeDataProviderUtils';
 import type { IRunTime } from '../../Types';
+import { BaseTreeDataProvider } from './BaseTreeDataProvider';
 
 interface TreeNode {
   name: string;
@@ -11,13 +12,7 @@ interface TreeNode {
   isFile: boolean;
 }
 
-export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeItem> {
-  private _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> = new
-    vscode.EventEmitter<TestTreeItem | undefined | null | void>();
-  readonly onDidChangeTreeData: vscode.Event<TestTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
-
-  private ws: WebSocket | null = null;
-  private isConnected: boolean = false;
+export class TestTreeDataProvider extends BaseTreeDataProvider {
   private connectionAttempts: number = 0;
   private maxConnectionAttempts: number = 5;
   private reconnectTimeout: NodeJS.Timeout | null = null;
@@ -26,12 +21,11 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
   private configWatcher: vscode.FileSystemWatcher | undefined;
 
   constructor() {
+    super();
     // Make initial HTTP request to get configs
     this.fetchConfigsViaHttp().catch(error => {
       console.log('[TestTreeDataProvider] Initial HTTP fetch failed:', error);
     });
-    // Connect to WebSocket for real-time updates
-    this.connectWebSocket();
     // Also keep the file watcher for backward compatibility
     this.setupConfigWatcher();
   }
@@ -75,14 +69,11 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
     if (this.configWatcher) {
       this.configWatcher.dispose();
     }
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = null;
     }
+    super.dispose();
   }
 
   getTreeItem(element: TestTreeItem): vscode.TreeItem {
@@ -306,38 +297,7 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
     // }
   }
 
-  public connectWebSocket(): void {
-    if (this.ws) {
-      this.ws.close();
-    }
-
-    this.ws = new WebSocket('ws://localhost:3000');
-
-    this.ws.onopen = () => {
-      this.isConnected = true;
-      this._onDidChangeTreeData.fire();
-    };
-
-    this.ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.type === 'resourceChanged' && message.url === '/~/configs') {
-        this.fetchConfigsViaHttp();
-      }
-    };
-
-    this.ws.onerror = () => {
-      this.isConnected = false;
-      this._onDidChangeTreeData.fire();
-    };
-
-    this.ws.onclose = () => {
-      this.isConnected = false;
-      this.ws = null;
-      this._onDidChangeTreeData.fire();
-    };
-  }
-
-  private handleWebSocketMessage(message: any): void {
+  protected handleWebSocketMessage(message: any): void {
     console.log('[TestTreeDataProvider] Received WebSocket message:', message.type);
 
     switch (message.type) {
@@ -936,3 +896,4 @@ export class TestTreeDataProvider implements vscode.TreeDataProvider<TestTreeIte
 
     return items;
   }
+}

@@ -21,10 +21,13 @@ import {
   join,
   mkdirSync,
   processCwd,
+  readFileSync,
+  unlinkSync,
   writeFileSync,
   yamlDump,
 } from "./Server_Docker_Dependents";
 import { getCwdPure } from "./Server_Docker_Utils";
+// import { buildAiderImagePure } from "./utils/aider";
 
 export const generateServicesPure = (
   configs: ITestconfigV2,
@@ -39,6 +42,7 @@ export const generateServicesPure = (
     configs.runtimes,
   )) {
     consoleLog(`[generateServicesPure] Processing runtime: ${runtimeTestsName}, runtime type: ${runtimeTests.runtime}`);
+    consoleLog(`[generateServicesPure] Checks for ${runtimeTestsName}: ${runtimeTests.checks?.length || 0} checks`);
     const runtime: IRunTime = runtimeTests.runtime as IRunTime;
     const buildOptions = runtimeTests.buildOptions;
     const testsObj = runtimeTests.tests;
@@ -60,7 +64,11 @@ export const generateServicesPure = (
 
     if (!processedRuntimes.has(runtime)) {
       processedRuntimes.add(runtime);
-      const builderServiceName = getBuilderServiceName(runtime);
+      let builderServiceName = getBuilderServiceName(runtime);
+      // For web runtime, use 'webtests' as the service name to match the code expectations
+      if (runtime === "web") {
+        builderServiceName = "webtests";
+      }
       consoleLog(`[generateServicesPure] Adding builder service: ${builderServiceName} for runtime ${runtime}`);
       const composeFunc = runTimeToCompose[runtime][0];
       const projectConfigPath = "testeranto/testeranto.ts";
@@ -121,7 +129,7 @@ export const generateServicesPure = (
       );
 
       consoleLog(`[generateServicesPure] Added BDD and aider services for test ${tName}`);
-      
+
       checks.forEach((check: ICheck, ndx) => {
         const command = check([]);
         services[getCheckServiceName(uid, ndx)] = staticTestDockerComposeFile(
@@ -136,11 +144,31 @@ export const generateServicesPure = (
     }
   }
 
+  // Always add chrome-service if there's a web runtime
   if (hasWebRuntime) {
     consoleLog(`[generateServicesPure] Adding chrome-service for web runtime`);
-    services["chrome-service"] = chromeServiceConfig();
+    // Use browserless/chrome which is designed for headless Chrome with remote debugging
+    services["chrome-service"] = {
+      image: "browserless/chrome:latest",
+      container_name: "chrome-service",
+      environment: {
+        CONNECTION_TIMEOUT: "60000",
+        MAX_CONCURRENT_SESSIONS: "1",
+        ENABLE_CORS: "true",
+        PREBOOT_CHROME: "true",
+        DEFAULT_BLOCK_ADS: "true"
+      },
+      shm_size: "2g",
+      expose: ["3000"],
+      ports: [
+        "9222:3000"
+      ],
+      networks: ["allTests_network"]
+    };
+    consoleLog(`[generateServicesPure] chrome-service added with browserless/chrome configuration`);
   }
 
+  // Ensure all services have network configuration
   for (const serviceName in services) {
     if (!services[serviceName].networks) {
       services[serviceName].networks = ["allTests_network"];
@@ -178,19 +206,59 @@ export const writeConfigForExtensionOnStop = () => {
 };
 
 export const writeComposeFile = (services: Record<string, any>) => {
-  consoleLog(`[writeComposeFile] Writing ${Object.keys(services).length} services to docker-compose.yml`);
-  const dockerComposeFileContents = BaseCompose(services);
-  
-  consoleLog(`[writeComposeFile] Contents:`, JSON.stringify(dockerComposeFileContents, null, 2));
+  const composeFilePath = join(getCwdPure(), "testeranto/docker-compose.yml");
 
-  writeFileSync(
-    join(getCwdPure(), "testeranto/docker-compose.yml"),
-    yamlDump(dockerComposeFileContents, {
-      lineWidth: -1,
-      noRefs: true,
-    }),
-  );
-  consoleLog(`[writeComposeFile] docker-compose.yml written successfully`);
+  // Delete the old file first to ensure fresh generation
+  if (existsSync(composeFilePath)) {
+    consoleLog(`[writeComposeFile] Removing old docker-compose.yml`);
+    try {
+      unlinkSync(composeFilePath);
+    } catch (error: any) {
+      consoleWarn(`[writeComposeFile] Could not delete old docker-compose.yml: ${error.message}`);
+    }
+  }
+
+  consoleLog(`[writeComposeFile] Writing ${Object.keys(services).length} services to docker-compose.yml`);
+  consoleLog(`[writeComposeFile] Services: ${Object.keys(services).join(', ')}`);
+
+  // Check if chrome-service is in services
+  if (services["chrome-service"]) {
+    consoleLog(`[writeComposeFile] chrome-service is included in services`);
+  } else {
+    consoleWarn(`[writeComposeFile] chrome-service is NOT included in services`);
+  }
+
+  const dockerComposeFileContents = BaseCompose(services);
+
+  // Log the structure for debugging
+  consoleLog(`[writeComposeFile] docker-compose.yml structure:`, JSON.stringify({
+    services: Object.keys(dockerComposeFileContents.services || {}),
+    networks: Object.keys(dockerComposeFileContents.networks || {}),
+    volumes: Object.keys(dockerComposeFileContents.volumes || {})
+  }, null, 2));
+
+  const yamlContent = yamlDump(dockerComposeFileContents, {
+    lineWidth: -1,
+    noRefs: true,
+  });
+
+  writeFileSync(composeFilePath, yamlContent);
+  consoleLog(`[writeComposeFile] docker-compose.yml written successfully to ${composeFilePath}`);
+
+  // Verify the file was written
+  if (existsSync(composeFilePath)) {
+    const fileContent = readFileSync(composeFilePath, 'utf-8');
+    consoleLog(`[writeComposeFile] First 500 chars of docker-compose.yml:\n${fileContent.substring(0, 500)}...`);
+
+    // Check if chrome-service appears in the file
+    if (fileContent.includes('chrome-service:')) {
+      consoleLog(`[writeComposeFile] ✅ chrome-service found in docker-compose.yml`);
+    } else {
+      consoleWarn(`[writeComposeFile] ⚠️ chrome-service NOT found in docker-compose.yml content`);
+    }
+  } else {
+    consoleError(`[writeComposeFile] ❌ docker-compose.yml was not created at ${composeFilePath}`);
+  }
 };
 
 export const BaseCompose = (services: any) => {
@@ -344,56 +412,6 @@ export const writeConfigForExtensionPure = (
   writeFileSync(configPath, configJson);
 };
 
-// Pure function to build aider image
-export const buildAiderImagePure = async (): Promise<void> => {
-  const dockerfilePath = "aider.Dockerfile";
-
-  if (!existsSync(dockerfilePath)) {
-    consoleWarn(
-      `[Server_Docker] ⚠️ aider.Dockerfile not found at ${dockerfilePath}. Aider services may not work correctly.`,
-    );
-
-    const defaultAiderDockerfile = `FROM python:3.11-slim
-WORKDIR /workspace
-RUN pip install --no-cache-dir aider-chat
-USER 1000
-CMD ["tail", "-f", "/dev/null"]`;
-
-    writeFileSync(dockerfilePath, defaultAiderDockerfile);
-    consoleLog(`[Server_Docker] Created default ${dockerfilePath}`);
-  }
-
-  const buildKitOptions = {
-    runtime: "aider",
-    configKey: "aider",
-    dockerfilePath: dockerfilePath,
-    buildContext: getCwdPure(),
-    cacheMounts: [],
-    targetStage: undefined,
-    buildArgs: {},
-  };
-
-  const result = await BuildKitBuilder.buildImage({
-    ...buildKitOptions,
-    // Override the image name
-    runtime: "aider",
-    configKey: "aider",
-  });
-
-  if (result.success) {
-    consoleLog(
-      `[Server_Docker] ✅ Aider image built successfully in ${result.duration}ms`,
-    );
-  } else {
-    consoleError(
-      `[Server_Docker] ❌ Aider image build failed: ${result.error}`,
-    );
-    // Don't throw here, just log the error
-    consoleWarn(
-      `[Server_Docker] Aider services may not work, but continuing with other builds`,
-    );
-  }
-};
 
 // Pure function to build with BuildKit
 export const buildWithBuildKitPure = async (
@@ -402,12 +420,13 @@ export const buildWithBuildKitPure = async (
 ): Promise<void> => {
   const buildErrors: string[] = [];
 
-  try {
-    await buildAiderImagePure();
-  } catch (error: any) {
-    logError(`[Server_Docker] ❌ Aider image build failed: ${error.message}`);
-    buildErrors.push(`aider: ${error.message}`);
-  }
+  // temporarily disabled
+  // try {
+  //   await buildAiderImagePure();
+  // } catch (error: any) {
+  //   logError(`[Server_Docker] ❌ Aider image build failed: ${error.message}`);
+  //   buildErrors.push(`aider: ${error.message}`);
+  // }
 
   for (const [configKey, configValue] of Object.entries(configs.runtimes)) {
     const runtime = configValue.runtime;
@@ -424,7 +443,7 @@ export const buildWithBuildKitPure = async (
       consoleLog(
         `[Server_Docker] Building ${configKey} (${runtime}) with BuildKit`,
       );
-      
+
       // Build the image using BuildKitBuilder
       const result = await BuildKitBuilder.buildImage({
         runtime: runtime,

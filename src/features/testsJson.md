@@ -2,6 +2,8 @@ Each test produces a stardard results file:
 
 Example:
 
+`testeranto/reports/nodetests/src/ts/Calculator.test.node.ts/tests.json`
+
 ```json
 {
   "features": [
