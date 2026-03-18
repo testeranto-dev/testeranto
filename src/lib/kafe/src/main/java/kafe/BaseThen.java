@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-public abstract class BaseThen {
+// Make BaseThen generic for type safety
+public abstract class BaseThen<R> {
     public String name;
-    public Object thenCb;
+    public Function<R, Object> thenCb;
     public boolean error;
     public List<String> artifacts;
     public Boolean status;
     
-    public BaseThen(String name, Object thenCb) {
+    public BaseThen(String name, Function<R, Object> thenCb) {
         this.name = name;
         this.thenCb = thenCb;
         this.error = false;
@@ -25,7 +27,7 @@ public abstract class BaseThen {
         artifacts.add(normalizedPath);
     }
     
-    public abstract Object butThen(Object store, Object thenCb, ITTestResourceConfiguration testResourceConfiguration);
+    public abstract Object butThen(R store, Function<R, Object> thenCb, ITTestResourceConfiguration testResourceConfiguration);
     
     public Map<String, Object> toObj() {
         Map<String, Object> obj = new HashMap<>();
@@ -36,7 +38,7 @@ public abstract class BaseThen {
         return obj;
     }
     
-    public Object test(Object store, ITTestResourceConfiguration testResourceConfiguration) throws Exception {
+    public Object test(R store, ITTestResourceConfiguration testResourceConfiguration, String filepath) throws Exception {
         try {
             Object result = butThen(store, thenCb, testResourceConfiguration);
             status = true;

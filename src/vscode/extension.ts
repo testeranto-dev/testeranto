@@ -1,40 +1,40 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { TerminalManager } from "./TerminalManager";
-import { TesterantoTreeDataProvider } from "./providers/TesterantoTreeDataProvider";
+
+// import { TerminalManager } from "./TerminalManager";
+
+// import { TesterantoTreeDataProvider } from "./providers/TesterantoTreeDataProvider";
 import { TestTreeDataProvider } from "./providers/TestTreeDataProvider";
-import { FeaturesTreeDataProvider } from "./providers/FeaturesTreeDataProvider";
-import { ProcessesTreeDataProvider } from "./providers/ProcessesTreeDataProvider";
-import { HtmlReportProvider } from "./providers/HtmlReportProvider";
+// import { FeaturesTreeDataProvider } from "./providers/FeaturesTreeDataProvider";
+// import { ProcessesTreeDataProvider } from "./providers/ProcessesTreeDataProvider";
+// import { HtmlReportProvider } from "./providers/HtmlReportProvider";
+
 import { TestTreeItem } from "./TestTreeItem";
 import { TreeItemType } from "./types";
 
 export function activate(context: vscode.ExtensionContext): void {
-    console.log("[Testeranto] Extension activating...");
-
     // Helper function to convert local paths to webview URIs
-    const convertLocalPathsToWebviewUris = (htmlContent: string, webview: vscode.Webview, workspaceRoot: string): string => {
-        // Convert relative paths to webview URIs
-        let modifiedHtml = htmlContent;
+    // const convertLocalPathsToWebviewUris = (htmlContent: string, webview: vscode.Webview, workspaceRoot: string): string => {
+    //     // Convert relative paths to webview URIs
+    //     let modifiedHtml = htmlContent;
 
-        // Convert CSS and JS file references
-        modifiedHtml = modifiedHtml.replace(
-            /(href|src)=["']([^"']+\.(css|js|png|jpg|gif|svg))["']/gi,
-            (match, attr, filePath) => {
-                const fullPath = path.join(workspaceRoot, 'testeranto', 'reports', filePath);
-                const uri = webview.asWebviewUri(vscode.Uri.file(fullPath));
-                return `${attr}="${uri}"`;
-            }
-        );
+    //     // Convert CSS and JS file references
+    //     modifiedHtml = modifiedHtml.replace(
+    //         /(href|src)=["']([^"']+\.(css|js|png|jpg|gif|svg))["']/gi,
+    //         (match, attr, filePath) => {
+    //             const fullPath = path.join(workspaceRoot, 'testeranto', 'reports', filePath);
+    //             const uri = webview.asWebviewUri(vscode.Uri.file(fullPath));
+    //             return `${attr}="${uri}"`;
+    //         }
+    //     );
 
-        return modifiedHtml;
-    };
+    //     return modifiedHtml;
+    // };
 
     // Create terminal manager
-    const terminalManager = new TerminalManager();
-    terminalManager.createAllTerminals();
-    console.log("[Testeranto] Created terminals for all tests");
+    // const terminalManager = new TerminalManager();
+    // terminalManager.createAllTerminals();
 
     // Create status bar items
     const mainStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
@@ -119,11 +119,11 @@ export function activate(context: vscode.ExtensionContext): void {
     updateServerStatus();
 
     // Create all providers
-    const unifiedProvider = new TesterantoTreeDataProvider();
+    // const unifiedProvider = new TesterantoTreeDataProvider();
     const runtimeProvider = new TestTreeDataProvider();
-    const resultsProvider = new FeaturesTreeDataProvider();
-    const processProvider = new ProcessesTreeDataProvider();
-    const reportProvider = new HtmlReportProvider();
+    // const resultsProvider = new FeaturesTreeDataProvider();
+    // const processProvider = new ProcessesTreeDataProvider();
+    // const reportProvider = new HtmlReportProvider();
 
     // Register commands
     const showTestsCommand = vscode.commands.registerCommand(
@@ -386,168 +386,167 @@ export function activate(context: vscode.ExtensionContext): void {
         }, 5000);
     });
 
+    // const generateHtmlReportCommand = vscode.commands.registerCommand(
+    //     "testeranto.generateHtmlReport",
+    //     async () => {
+    //         vscode.window.showInformationMessage("Generating stakeholder HTML report...");
+    //         try {
+    //             const response = await fetch('http://localhost:3000/~/html-report');
+    //             if (!response.ok) {
+    //                 throw new Error(`Server returned ${response.status}`);
+    //             }
+    //             const data = await response.json();
+    //             vscode.window.showInformationMessage(`HTML report generated: ${data.message}`);
 
-    const generateHtmlReportCommand = vscode.commands.registerCommand(
-        "testeranto.generateHtmlReport",
-        async () => {
-            vscode.window.showInformationMessage("Generating stakeholder HTML report...");
-            try {
-                const response = await fetch('http://localhost:3000/~/html-report');
-                if (!response.ok) {
-                    throw new Error(`Server returned ${response.status}`);
-                }
-                const data = await response.json();
-                vscode.window.showInformationMessage(`HTML report generated: ${data.message}`);
+    //             // Open the report in a webview panel instead of text editor
+    //             const panel = vscode.window.createWebviewPanel(
+    //                 'testerantoReport',
+    //                 'Testeranto Stakeholder Report',
+    //                 vscode.ViewColumn.One,
+    //                 {
+    //                     enableScripts: true,
+    //                     retainContextWhenHidden: true,
+    //                     localResourceRoots: [
+    //                         vscode.Uri.file(path.join(process.cwd(), 'testeranto', 'reports'))
+    //                     ]
+    //                 }
+    //             );
 
-                // Open the report in a webview panel instead of text editor
-                const panel = vscode.window.createWebviewPanel(
-                    'testerantoReport',
-                    'Testeranto Stakeholder Report',
-                    vscode.ViewColumn.One,
-                    {
-                        enableScripts: true,
-                        retainContextWhenHidden: true,
-                        localResourceRoots: [
-                            vscode.Uri.file(path.join(process.cwd(), 'testeranto', 'reports'))
-                        ]
-                    }
-                );
+    //             // Get the HTML content from the file
+    //             const workspaceFolders = vscode.workspace.workspaceFolders;
+    //             if (workspaceFolders && workspaceFolders.length > 0) {
+    //                 const workspaceRoot = workspaceFolders[0].uri.fsPath;
+    //                 const reportPath = path.join(workspaceRoot, 'testeranto', 'reports', 'index.html');
 
-                // Get the HTML content from the file
-                const workspaceFolders = vscode.workspace.workspaceFolders;
-                if (workspaceFolders && workspaceFolders.length > 0) {
-                    const workspaceRoot = workspaceFolders[0].uri.fsPath;
-                    const reportPath = path.join(workspaceRoot, 'testeranto', 'reports', 'index.html');
+    //                 if (fs.existsSync(reportPath)) {
+    //                     const htmlContent = fs.readFileSync(reportPath, 'utf-8');
 
-                    if (fs.existsSync(reportPath)) {
-                        const htmlContent = fs.readFileSync(reportPath, 'utf-8');
+    //                     // Convert local file paths to webview URIs
+    //                     const webviewHtml = convertLocalPathsToWebviewUris(htmlContent, panel.webview, workspaceRoot);
+    //                     panel.webview.html = webviewHtml;
+    //                 } else {
+    //                     panel.webview.html = `
+    //                         <!DOCTYPE html>
+    //                         <html>
+    //                         <head>
+    //                             <style>
+    //                                 body { 
+    //                                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    //                                     padding: 40px;
+    //                                     background: #f5f5f5;
+    //                                 }
+    //                                 .container {
+    //                                     max-width: 800px;
+    //                                     margin: 0 auto;
+    //                                     background: white;
+    //                                     padding: 30px;
+    //                                     border-radius: 8px;
+    //                                     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    //                                 }
+    //                                 h1 { color: #333; margin-bottom: 20px; }
+    //                                 .error { 
+    //                                     color: #f44336; 
+    //                                     background: #ffebee;
+    //                                     padding: 15px;
+    //                                     border-radius: 4px;
+    //                                     border-left: 4px solid #f44336;
+    //                                 }
+    //                                 .info { 
+    //                                     color: #2196f3; 
+    //                                     background: #e3f2fd;
+    //                                     padding: 15px;
+    //                                     border-radius: 4px;
+    //                                     border-left: 4px solid #2196f3;
+    //                                 }
+    //                                 button {
+    //                                     background: #667eea;
+    //                                     color: white;
+    //                                     border: none;
+    //                                     padding: 10px 20px;
+    //                                     border-radius: 4px;
+    //                                     cursor: pointer;
+    //                                     font-size: 14px;
+    //                                     margin-top: 20px;
+    //                                 }
+    //                                 button:hover {
+    //                                     background: #764ba2;
+    //                                 }
+    //                             </style>
+    //                         </head>
+    //                         <body>
+    //                             <div class="container">
+    //                                 <h1>📊 Testeranto Stakeholder Report</h1>
+    //                                 <p class="error">The HTML report file was not found at: ${reportPath}</p>
+    //                                 <p class="info">Try generating the report again by clicking the button below.</p>
+    //                                 <button onclick="generateReport()">Generate Report</button>
+    //                             </div>
+    //                             <script>
+    //                                 const vscode = acquireVsCodeApi();
+    //                                 function generateReport() {
+    //                                     vscode.postMessage({
+    //                                         command: 'generateReport'
+    //                                     });
+    //                                 }
+    //                             </script>
+    //                         </body>
+    //                         </html>
+    //                     `;
 
-                        // Convert local file paths to webview URIs
-                        const webviewHtml = convertLocalPathsToWebviewUris(htmlContent, panel.webview, workspaceRoot);
-                        panel.webview.html = webviewHtml;
-                    } else {
-                        panel.webview.html = `
-                            <!DOCTYPE html>
-                            <html>
-                            <head>
-                                <style>
-                                    body { 
-                                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-                                        padding: 40px;
-                                        background: #f5f5f5;
-                                    }
-                                    .container {
-                                        max-width: 800px;
-                                        margin: 0 auto;
-                                        background: white;
-                                        padding: 30px;
-                                        border-radius: 8px;
-                                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                                    }
-                                    h1 { color: #333; margin-bottom: 20px; }
-                                    .error { 
-                                        color: #f44336; 
-                                        background: #ffebee;
-                                        padding: 15px;
-                                        border-radius: 4px;
-                                        border-left: 4px solid #f44336;
-                                    }
-                                    .info { 
-                                        color: #2196f3; 
-                                        background: #e3f2fd;
-                                        padding: 15px;
-                                        border-radius: 4px;
-                                        border-left: 4px solid #2196f3;
-                                    }
-                                    button {
-                                        background: #667eea;
-                                        color: white;
-                                        border: none;
-                                        padding: 10px 20px;
-                                        border-radius: 4px;
-                                        cursor: pointer;
-                                        font-size: 14px;
-                                        margin-top: 20px;
-                                    }
-                                    button:hover {
-                                        background: #764ba2;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <div class="container">
-                                    <h1>📊 Testeranto Stakeholder Report</h1>
-                                    <p class="error">The HTML report file was not found at: ${reportPath}</p>
-                                    <p class="info">Try generating the report again by clicking the button below.</p>
-                                    <button onclick="generateReport()">Generate Report</button>
-                                </div>
-                                <script>
-                                    const vscode = acquireVsCodeApi();
-                                    function generateReport() {
-                                        vscode.postMessage({
-                                            command: 'generateReport'
-                                        });
-                                    }
-                                </script>
-                            </body>
-                            </html>
-                        `;
-
-                        // Handle messages from the webview
-                        panel.webview.onDidReceiveMessage(
-                            message => {
-                                switch (message.command) {
-                                    case 'generateReport':
-                                        vscode.commands.executeCommand('testeranto.generateHtmlReport');
-                                        break;
-                                }
-                            },
-                            undefined,
-                            context.subscriptions
-                        );
-                    }
-                }
-            } catch (error: any) {
-                vscode.window.showErrorMessage(`${JSON.stringify(error)}`);
-            }
-        }
-    );
+    //                     // Handle messages from the webview
+    //                     panel.webview.onDidReceiveMessage(
+    //                         message => {
+    //                             switch (message.command) {
+    //                                 case 'generateReport':
+    //                                     vscode.commands.executeCommand('testeranto.generateHtmlReport');
+    //                                     break;
+    //                             }
+    //                         },
+    //                         undefined,
+    //                         context.subscriptions
+    //                     );
+    //                 }
+    //             }
+    //         } catch (error: any) {
+    //             vscode.window.showErrorMessage(`${JSON.stringify(error)}`);
+    //         }
+    //     }
+    // );
 
     // Register all tree views in the Testeranto activity bar
-    const unifiedTreeView = vscode.window.createTreeView("testeranto.unifiedView", {
-        treeDataProvider: unifiedProvider,
-        showCollapseAll: true
-    });
+    // const unifiedTreeView = vscode.window.createTreeView("testeranto.unifiedView", {
+    //     treeDataProvider: unifiedProvider,
+    //     showCollapseAll: true
+    // });
 
     const runtimeTreeView = vscode.window.createTreeView("testeranto.runtimeView", {
         treeDataProvider: runtimeProvider,
         showCollapseAll: true
     });
 
-    const resultsTreeView = vscode.window.createTreeView("testeranto.resultsView", {
-        treeDataProvider: resultsProvider,
-        showCollapseAll: true
-    });
+    // const resultsTreeView = vscode.window.createTreeView("testeranto.resultsView", {
+    //     treeDataProvider: resultsProvider,
+    //     showCollapseAll: true
+    // });
 
-    const processTreeView = vscode.window.createTreeView("testeranto.processView", {
-        treeDataProvider: processProvider,
-        showCollapseAll: true
-    });
+    // const processTreeView = vscode.window.createTreeView("testeranto.processView", {
+    //     treeDataProvider: processProvider,
+    //     showCollapseAll: true
+    // });
 
-    const reportTreeView = vscode.window.createTreeView("testeranto.reportView", {
-        treeDataProvider: reportProvider,
-        showCollapseAll: true
-    });
+    // const reportTreeView = vscode.window.createTreeView("testeranto.reportView", {
+    //     treeDataProvider: reportProvider,
+    //     showCollapseAll: true
+    // });
 
     // Clean up on deactivation
     context.subscriptions.push({
         dispose: () => {
-            terminalManager.disposeAll();
-            unifiedProvider.dispose();
+            // terminalManager.disposeAll();
+            // unifiedProvider.dispose();
             runtimeProvider.dispose();
-            resultsProvider.dispose();
-            processProvider.dispose();
-            reportProvider.dispose();
+            // resultsProvider.dispose();
+            // processProvider.dispose();
+            // reportProvider.dispose();
         }
     });
 
@@ -562,12 +561,12 @@ export function activate(context: vscode.ExtensionContext): void {
         refreshCommand,
         retryConnectionCommand,
         startServerCommand,
-        generateHtmlReportCommand,
-        unifiedTreeView,
+        // generateHtmlReportCommand,
+        // unifiedTreeView,
         runtimeTreeView,
-        resultsTreeView,
-        processTreeView,
-        reportTreeView,
+        // resultsTreeView,
+        // processTreeView,
+        // reportTreeView,
         mainStatusBarItem,
         serverStatusBarItem
     );

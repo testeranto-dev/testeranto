@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { TreeItemType, type TreeItemData } from './types';
 
 export class TestTreeItem extends vscode.TreeItem {
+  children?: TestTreeItem[];
+  
   constructor(
     public readonly label: string,
     public readonly type: TreeItemType,

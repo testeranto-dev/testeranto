@@ -2,25 +2,46 @@
 
 The Ruby implementation of Testeranto.
 
-## Deployment to rubygems
-1) update the version in rubeno.gemspec
-2) `gem build rubeno.gemspec`
+## Ruĝa - Ruby-flavored Testeranto
 
-## Overview
+Rubeno now includes **Ruĝa** (pronounced "ROO-zha"), a Ruby-flavored implementation that provides an idiomatic Ruby DSL for BDD testing while maintaining full compatibility with the baseline Testeranto pattern.
 
-Rubeno is a Ruby implementation of the Testeranto BDD testing framework. It follows the same patterns as the other language implementations (TypeScript, Python, Go) to provide a consistent testing experience across multiple programming languages.
+### Quick Start with Ruĝa
 
-## Structure
+```ruby
+require 'rubeno/flavored'
 
-The implementation consists of:
+# Fluent builder style
+test = Rubeno::Flavored.given("a new calculator") { Calculator.new }
+  .when("adding 2 and 3") { |calc| calc.add(2, 3) }
+  .then("result is 5") { |calc| raise "Expected 5" unless calc.result == 5 }
 
-1. **Base Classes**: `BaseSuite`, `BaseGiven`, `BaseWhen`, `BaseThen` - Core BDD components
-2. **Main Class**: `Rubeno` - Orchestrates test execution
-3. **Test Adapter**: `SimpleTestAdapter` - Default adapter implementation
-4. **Process Manager**: `PM_Ruby` - Handles communication
-5. **Types**: Type definitions for the framework
+result = test.run
 
-## Usage
+# Suite DSL style
+suite = Rubeno::Flavored.suite("Calculator Tests") do
+  scenario "Adding numbers" do
+    subject { Calculator.new }
+    given "a new calculator"
+    when("adding 2 and 3") { |calc| calc.add(2, 3) }
+    then("result is 5") { |calc| calc.result == 5 }
+  end
+end
+
+suite.run
+```
+
+### Features
+
+- **Ruby-idiomatic DSL**: Clean, readable syntax using blocks and method chaining
+- **Test Runner Integration**: Full support for Minitest and RSpec
+- **Dual Compatibility**: Run standalone or convert to baseline format
+- **Fluent Builder**: Chainable API for functional-style composition
+- **Suite DSL**: Class-based organization with before/after hooks
+
+## Baseline Pattern (Original)
+
+For cross-language compatibility and the original Testeranto pattern:
 
 ### Basic Example
 
@@ -60,17 +81,37 @@ Rubeno.main
 
 ### Running Tests
 
-To run tests with Rubeno:
+To run tests with baseline Rubeno:
 
 ```bash
 ruby example/Calculator-test.rb '{"name":"test","fs":".","ports":[]}'
 ```
 
+To run tests with Ruĝa (flavored):
+
+```bash
+ruby example/calculator_ruĝa_test.rb
+```
+
+## Deployment to rubygems
+1) update the version in rubeno.gemspec
+2) `gem build rubeno.gemspec`
+
+## Structure
+
+The implementation consists of:
+
+1. **Baseline Classes**: `BaseSuite`, `BaseGiven`, `BaseWhen`, `BaseThen` - Core BDD components
+2. **Flavored Classes**: `SuiteBuilder`, `ScenarioContext`, `FluentTest` - Ruby-idiomatic DSL
+3. **Main Class**: `Rubeno` - Orchestrates test execution
+4. **Test Adapter**: `SimpleTestAdapter` - Default adapter implementation
+5. **Integration Modules**: `MinitestIntegration`, `RSpecIntegration` - Test runner support
+
 ## Integration with Testeranto
 
 Rubeno follows the same patterns as other Testeranto implementations:
 
-1. **Test Resource Configuration**: Passed as a JSON string argument
+1. **Test Resource Configuration**: Passed as a JSON string argument (baseline)
 2. **Results Output**: Writes to `testeranto/reports/example/ruby.Calculator.test.ts.json`
 3. **WebSocket Communication**: Supports communication via WebSocket (when configured)
 4. **Artifact Generation**: Supports test artifacts and reporting
@@ -87,7 +128,7 @@ WORKDIR /workspace
 
 ## Extending
 
-To create custom adapters, implement the `ITestAdapter` module:
+To create custom adapters for baseline:
 
 ```ruby
 class CustomAdapter
@@ -102,6 +143,18 @@ class CustomAdapter
 end
 ```
 
+To extend the flavored API:
+
+```ruby
+module MyCustomDSL
+  include Rubeno::Flavored
+  
+  def my_custom_helper
+    # Custom DSL extensions
+  end
+end
+```
+
 ## Dependencies
 
 - Ruby 2.7+ (for pattern matching and other modern features)
@@ -109,9 +162,9 @@ end
 
 ## Future Enhancements
 
-1. **WebSocket Support**: Full WebSocket communication for real-time test reporting
-2. **Advanced Adapters**: More sophisticated adapter implementations
-3. **Plugin System**: Extensible plugin architecture
+1. **Enhanced RSpec Integration**: More matchers and configuration options
+2. **Parallel Test Execution**: Support for running tests in parallel
+3. **Test Filtering**: Tag-based test selection and filtering
 4. **Performance Optimizations**: Improved test execution performance
 
 ## See Also
@@ -119,4 +172,19 @@ end
 - [Tiposkripto](../tiposkripto/) - TypeScript/JavaScript implementation
 - [Pitono](../pitono/) - Python implementation
 - [Golingvu](../golingvu/) - Go implementation
+
+## Choosing Between Baseline and Flavored
+
+**Use Baseline Rubeno when:**
+- You need cross-language test compatibility
+- You're working in a multi-language codebase
+- You require the full Testeranto resource configuration system
+
+**Use Ruĝa (Flavored) when:**
+- You want Ruby-idiomatic syntax
+- You're integrating with Minitest or RSpec
+- You prefer functional or DSL-style test composition
+- You're working primarily in Ruby
+
+Both implementations can coexist and even interoperate within the same codebase.
 

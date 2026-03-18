@@ -1,6 +1,7 @@
 package golingvu
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -363,6 +364,179 @@ type Golingvu struct {
 	totalTests              int
 	assertThis              func(t interface{}) interface{}
 	testAdapter             ITestAdapter
+	// For reverse integration with go test
+	t *testing.T
+	// Test configuration for native runner
+	testConfig *TestConfig
+}
+
+// TestConfig holds configuration for native test runner integration
+type TestConfig struct {
+	// Run tests in parallel
+	Parallel bool
+	// Skip test if true
+	Skip bool
+	// Test timeout
+	Timeout time.Duration
+	// Cleanup functions
+	CleanupFuncs []func()
+}
+
+// NewTestConfig creates a new TestConfig with defaults
+func NewTestConfig() *TestConfig {
+	return &TestConfig{
+		Parallel:     false,
+		Skip:         false,
+		Timeout:      30 * time.Second,
+		CleanupFuncs: make([]func(), 0),
+	}
+}
+
+// WithTestingT sets the testing.T instance for native integration
+func (gv *Golingvu) WithTestingT(t *testing.T) *Golingvu {
+	gv.t = t
+	if gv.testConfig == nil {
+		gv.testConfig = NewTestConfig()
+	}
+	return gv
+}
+
+// WithTestConfig sets the test configuration
+func (gv *Golingvu) WithTestConfig(config *TestConfig) *Golingvu {
+	gv.testConfig = config
+	return gv
+}
+
+// RunAsGoTest runs the Golingvu instance as a Go test
+// This enables reverse integration with `go test`
+func (gv *Golingvu) RunAsGoTest() bool {
+	if gv.t == nil {
+		// If no testing.T provided, create a dummy test
+		// This allows the framework to be used without go test
+		return gv.runTestsInternal(nil)
+	}
+	
+	// Set up test based on configuration
+	if gv.testConfig != nil {
+		if gv.testConfig.Skip {
+			gv.t.Skip("Test skipped via Golingvu configuration")
+			return true
+		}
+		
+		if gv.testConfig.Parallel {
+			gv.t.Parallel()
+		}
+		
+		// Set timeout if specified
+		if gv.testConfig.Timeout > 0 {
+			var cancel context.CancelFunc
+			ctx := context.Background()
+			ctx, cancel = context.WithTimeout(ctx, gv.testConfig.Timeout)
+			defer cancel()
+			
+			// Run test with timeout
+			done := make(chan bool)
+			go func() {
+				done <- gv.runTestsInternal(gv.t)
+			}()
+			
+			select {
+			case <-ctx.Done():
+				gv.t.Error("Test timed out")
+				return false
+			case result := <-done:
+				return result
+			}
+		}
+		
+		// Register cleanup functions
+		for _, cleanup := range gv.testConfig.CleanupFuncs {
+			gv.t.Cleanup(cleanup)
+		}
+	}
+	
+	return gv.runTestsInternal(gv.t)
+}
+
+// runTestsInternal executes tests and reports results to testing.T
+func (gv *Golingvu) runTestsInternal(t *testing.T) bool {
+	// Create a test resource configuration for local execution
+	// Note: This is currently not used but kept for future compatibility
+	_ = ITTestResourceConfiguration{
+		Name: "go-test-runner",
+		Fs:   ".",
+	}
+	
+	// Run tests and collect results
+	results, err := gv.runActualTests()
+	if err != nil {
+		if t != nil {
+			t.Errorf("Failed to run tests: %v", err)
+		}
+		return false
+	}
+	
+	// Check for failures
+	fails, _ := results["fails"].(int)
+	passed := fails == 0
+	
+	if t != nil {
+		if !passed {
+			t.Errorf("Test failed with %d failures", fails)
+		} else {
+			t.Logf("Test passed with all %d assertions", gv.totalTests)
+		}
+	}
+	
+	return passed
+}
+
+// TestMainIntegration provides a TestMain function for package-level test setup
+func (gv *Golingvu) TestMainIntegration(m *testing.M) int {
+	// Global setup
+	fmt.Println("Golingvu TestMain: Setting up test environment")
+	
+	// Run tests
+	code := m.Run()
+	
+	// Global teardown
+	fmt.Println("Golingvu TestMain: Cleaning up test environment")
+	
+	return code
+}
+
+// CreateGoTest creates a standard Go test function that can be used with `go test`
+func (gv *Golingvu) CreateGoTest(name string) func(*testing.T) {
+	return func(t *testing.T) {
+		// Create a new instance with the testing.T context
+		testInstance := &Golingvu{
+			TestResourceRequirement: gv.TestResourceRequirement,
+			TestSpecification:       gv.TestSpecification,
+			testAdapter:             gv.testAdapter,
+			t:                       t,
+			testConfig:              gv.testConfig,
+		}
+		
+		// Initialize from the parent instance
+		testInstance.SuitesOverrides = gv.SuitesOverrides
+		testInstance.GivenOverrides = gv.GivenOverrides
+		testInstance.WhenOverrides = gv.WhenOverrides
+		testInstance.ThenOverrides = gv.ThenOverrides
+		testInstance.Specs = gv.Specs
+		testInstance.totalTests = gv.totalTests
+		testInstance.assertThis = gv.assertThis
+		
+		// Run the test
+		testInstance.RunAsGoTest()
+	}
+}
+
+// RegisterCleanup adds a cleanup function to be called after test execution
+func (gv *Golingvu) RegisterCleanup(cleanupFunc func()) {
+	if gv.testConfig == nil {
+		gv.testConfig = NewTestConfig()
+	}
+	gv.testConfig.CleanupFuncs = append(gv.testConfig.CleanupFuncs, cleanupFunc)
 }
 
 // NewPM_Golang creates a new PM_Golang instance
@@ -642,6 +816,13 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm int
 			RunTimeTests: -1,
 		}, err
 	}
+
+	// Store the test resource configuration for use in tests
+	// The variable will be used for file path construction later
+	// This dummy use ensures it's marked as used in all code paths
+	_ = testResourceConfig
+	// Ensure the variable is marked as used
+	_ = testResourceConfig
 
 	// Run the actual tests and capture results
 	testResults, err := gv.runActualTests()

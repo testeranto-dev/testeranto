@@ -4,10 +4,16 @@ import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the node runtime file as text
 import nodeContent from "../../../../dist/prebuild/node/node.mjs" with { type: "text" };
+// Import the native detection module
+import nativeDetectionContent from "./native_detection.js" with { type: "text" };
 
 // Write the node file to a location that will be mounted in the container
 const nodeScriptPath = join(process.cwd(), "testeranto", "node_runtime.ts");
 await Bun.write(nodeScriptPath, nodeContent);
+
+// Write the native detection module
+const nativeDetectionPath = join(process.cwd(), "testeranto", "runtimes", "node", "native_detection.js");
+await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 export const nodeDockerComposeFile = (
   config: ITestconfigV2,

@@ -6,21 +6,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class BaseGiven {
+// Make BaseGiven generic for type safety
+public abstract class BaseGiven<I, S, R> {
     public String key;
     public List<String> features;
-    public List<BaseWhen> whens;
-    public List<BaseThen> thens;
-    public Object givenCb;
+    public List<BaseWhen<S, R>> whens;
+    public List<BaseThen<R>> thens;
+    public Function<S, R> givenCb;
     public Object initialValues;
     public List<String> artifacts;
     public Exception error;
     public boolean failed;
-    public Object store;
+    public R store;
     public int fails;
     
-    public BaseGiven(String key, List<String> features, List<BaseWhen> whens, 
-                    List<BaseThen> thens, Object givenCb, Object initialValues) {
+    public BaseGiven(String key, List<String> features, List<BaseWhen<S, R>> whens, 
+                    List<BaseThen<R>> thens, Function<S, R> givenCb, Object initialValues) {
         this.key = key;
         this.features = features != null ? features : new ArrayList<>();
         this.whens = whens != null ? whens : new ArrayList<>();
@@ -39,12 +40,12 @@ public abstract class BaseGiven {
     
     public Map<String, Object> toObj() {
         List<Map<String, Object>> whenObjs = new ArrayList<>();
-        for (BaseWhen w : whens) {
+        for (BaseWhen<S, R> w : whens) {
             whenObjs.add(w.toObj());
         }
         
         List<Map<String, Object>> thenObjs = new ArrayList<>();
-        for (BaseThen t : thens) {
+        for (BaseThen<R> t : thens) {
             thenObjs.add(t.toObj());
         }
         
@@ -60,35 +61,32 @@ public abstract class BaseGiven {
         return obj;
     }
     
-    public abstract Object givenThat(Object subject, ITTestResourceConfiguration testResourceConfiguration,
-                                   Function<String, Object> artifactory, Object givenCb, 
-                                   Object initialValues, Object pm);
+    public abstract R givenThat(S subject, ITTestResourceConfiguration testResourceConfiguration,
+                               Function<String, Object> artifactory, Function<S, R> givenCb, 
+                               Object initialValues);
     
-    public abstract Object afterEach(Object store, String key, 
-                                   Function<String, Object> artifactory, Object pm);
+    public abstract R afterEach(R store, String key, 
+                               Function<String, Object> artifactory);
     
     public void uberCatcher(Exception e) {
         this.error = e;
     }
     
-    public Object give(Object subject, String key, ITTestResourceConfiguration testResourceConfiguration,
-                      Function<Object, Boolean> tester, int suiteNdx,
-                      Function<String, Object> artifactory) throws Exception {
+    public R give(S subject, String key, ITTestResourceConfiguration testResourceConfiguration,
+                 Function<Object, Boolean> tester, 
+                 Function<String, Object> artifactory,
+                 int suiteNdx) throws Exception {
         this.failed = false;
         this.fails = 0;
         
-        Function<String, Object> givenArtifactory;
-        if (artifactory != null) {
-            givenArtifactory = (fPath) -> {
-                return artifactory.apply("given-" + key + "/" + fPath);
-            };
-        } else {
-            givenArtifactory = (fPath) -> null;
-        }
+        // TypeScript doesn't pass artifactory to give(), so we ignore it
+        // and create a null artifactory function
+        Function<String, Object> givenArtifactory = (fPath) -> null;
         
         try {
+            // Match TypeScript: givenThat doesn't receive artifactory
             store = givenThat(subject, testResourceConfiguration, givenArtifactory, 
-                             givenCb, initialValues, null); // pm parameter removed
+                             givenCb, initialValues);
         } catch (Exception e) {
             failed = true;
             fails++;
@@ -99,7 +97,7 @@ public abstract class BaseGiven {
         try {
             // Process whens
             for (int whenNdx = 0; whenNdx < whens.size(); whenNdx++) {
-                BaseWhen whenStep = whens.get(whenNdx);
+                BaseWhen<S, R> whenStep = whens.get(whenNdx);
                 try {
                     store = whenStep.test(store, testResourceConfiguration);
                 } catch (Exception e) {
@@ -109,11 +107,17 @@ public abstract class BaseGiven {
                 }
             }
             
-            // Process thens
+            // Process thens - TypeScript passes filepath parameter
             for (int thenNdx = 0; thenNdx < thens.size(); thenNdx++) {
-                BaseThen thenStep = thens.get(thenNdx);
+                BaseThen<R> thenStep = thens.get(thenNdx);
                 try {
-                    Object result = thenStep.test(store, testResourceConfiguration);
+                    // Create filepath parameter like TypeScript does
+                    String filepath = suiteNdx != -1 ? 
+                        "suite-" + suiteNdx + "/given-" + key + "/then-" + thenNdx :
+                        "given-" + key + "/then-" + thenNdx;
+                    
+                    // TypeScript BaseThen.test() takes store, testResourceConfiguration, filepath
+                    Object result = thenStep.test(store, testResourceConfiguration, filepath);
                     if (!tester.apply(result)) {
                         failed = true;
                         fails++;
@@ -130,7 +134,8 @@ public abstract class BaseGiven {
             fails++;
         } finally {
             try {
-                afterEach(store, this.key, givenArtifactory, null); // pm parameter removed
+                // Match TypeScript: afterEach receives store, key, and artifactory
+                afterEach(store, this.key, givenArtifactory);
             } catch (Exception e) {
                 failed = true;
                 fails++;

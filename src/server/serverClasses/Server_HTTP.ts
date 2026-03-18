@@ -1,872 +1,23 @@
-import fs from "fs";
-import path from "path";
 import type { ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
-import { HttpManager } from "./HttpManager";
+import { HttpManager } from "./Server_Http/HttpManager";
 import { Server_Base } from "./Server_Base";
 import { Server_WS } from "./Server_WS";
-import { CONTENT_TYPES, getContentType } from "./tcp";
-import { Server_HTTP_utils } from "./Server_HTTP_utils";
+import { Server_HTTP_utils } from "./Server_Http/Server_HTTP_utils";
+import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
+import fs from "fs";
+import path from "path";
 
 export abstract class Server_HTTP extends Server_Base {
   http: HttpManager;
   protected bunServer: ReturnType<typeof Bun.serve> | null = null;
-  routes: any;
+  private routesHandler: Server_HTTP_Routes;
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
     this.http = new HttpManager();
-    this.routes = {
-      'processes': {
-        method: 'GET',
-        handler: () => this.handleHttpGetProcesses()
-      }
-    };
+    this.routesHandler = new Server_HTTP_Routes(this);
   }
-
-  private handleHttpGetProcesses(): Response {
-    console.log(`[DEBUG] handleHttpGetProcesses called`);
-
-    const getProcessSummary = (this as any).getProcessSummary;
-    if (typeof getProcessSummary !== 'function') {
-      console.log(`[DEBUG] getProcessSummary method not available`);
-      return Server_HTTP_utils.jsonResponse({
-        error: 'getProcessSummary method not available',
-        processes: [],
-        total: 0,
-        message: 'Server does not support process listing'
-      }, 503);
-    }
-
-    const processSummary = getProcessSummary();
-    // console.log(`[DEBUG] getProcessSummary returned:`, processSummary);
-
-    if (processSummary?.error) {
-      console.log(`[DEBUG] Process summary has error:`, processSummary.error);
-      return Server_HTTP_utils.jsonResponse({
-        error: processSummary.error,
-        processes: [],
-        total: 0,
-        message: processSummary.message || 'Error retrieving docker processes'
-      }, 503);
-    }
-
-    const formattedProcesses = (processSummary?.processes || []).map((process: any) => ({
-      name: process.processId || process.containerId,
-      status: process.status || process.state,
-      state: process.state,
-      image: process.image,
-      ports: process.ports,
-      exitCode: process.exitCode,
-      isActive: process.isActive,
-      runtime: process.runtime,
-      startedAt: process.startedAt,
-      finishedAt: process.finishedAt
-    }));
-
-    console.log(`[DEBUG] Formatted ${formattedProcesses.length} processes`);
-
-    return Server_HTTP_utils.jsonResponse({
-      processes: formattedProcesses,
-      total: processSummary?.total || formattedProcesses.length,
-      message: processSummary?.message || 'Success'
-    });
-  }
-
-  private handleHttpGetOutputFiles(request: Request, url: URL): Response {
-    const runtime = url.searchParams.get('runtime');
-    const testName = url.searchParams.get('testName');
-
-    console.log(`[DEBUG] handleHttpGetOutputFiles: runtime=${runtime}, testName=${testName}`);
-
-    if (!runtime || !testName) {
-      console.log(`[DEBUG] Missing runtime or testName parameters`);
-      return this.jsonResponse({
-        error: 'Missing runtime or testName query parameters'
-      }, 400);
-    }
-
-    const getOutputFiles = (this as any).getOutputFiles;
-    if (typeof getOutputFiles === 'function') {
-      console.log(`[DEBUG] Using getOutputFiles method`);
-      const outputFiles = getOutputFiles(runtime, testName);
-      console.log(`[DEBUG] getOutputFiles returned:`, outputFiles);
-      return this.jsonResponse({
-        runtime,
-        testName,
-        outputFiles: outputFiles || [],
-        message: 'Success'
-      });
-    }
-
-    console.log(`[DEBUG] getOutputFiles method not available, falling back to directory scan`);
-    const outputDir = path.join(process.cwd(), 'testeranto', 'reports', runtime);
-    console.log(`[DEBUG] Looking in directory: ${outputDir}`);
-
-    if (!fs.existsSync(outputDir)) {
-      console.log(`[DEBUG] Output directory does not exist`);
-      return this.jsonResponse({
-        error: 'getOutputFiles method not available and directory not found',
-        runtime,
-        testName,
-        outputFiles: [],
-        message: 'No output files found'
-      }, 404);
-    }
-
-    const files = fs.readdirSync(outputDir);
-    console.log(`[DEBUG] Found ${files.length} files in output directory:`, files);
-
-    const searchPattern = testName.replace('/', '_').replace('.', '-');
-    console.log(`[DEBUG] Looking for files containing: ${searchPattern}`);
-
-    const testFiles = files.filter((file: string) =>
-      file.includes(searchPattern)
-    );
-
-    console.log(`[DEBUG] Found ${testFiles.length} matching files:`, testFiles);
-
-    const projectRoot = process.cwd();
-    const relativePaths = testFiles.map((file: string) => {
-      const absolutePath = path.join(outputDir, file);
-      let relativePath = path.relative(projectRoot, absolutePath);
-      relativePath = relativePath.split(path.sep).join('/');
-      return relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
-    });
-
-    console.log(`[DEBUG] Returning ${relativePaths.length} output files:`, relativePaths);
-    return this.jsonResponse({
-      runtime,
-      testName,
-      outputFiles: relativePaths || [],
-      message: 'Success (from directory)'
-    });
-  }
-
-  private handleHttpGetTestResults(request: Request, url: URL): Response {
-    const runtime = url.searchParams.get('runtime');
-    const testName = url.searchParams.get('testName');
-
-    console.log(`[DEBUG] handleHttpGetTestResults: runtime=${runtime}, testName=${testName}`);
-
-    const getTestResults = (this as any).getTestResults;
-    if (typeof getTestResults !== 'function') {
-      console.log(`[DEBUG] getTestResults method not available`);
-      return this.jsonResponse({
-        error: 'Test results functionality not available',
-        testResults: [],
-        message: 'Server does not support test results'
-      }, 503);
-    }
-
-    // If runtime and testName are provided, return specific test results
-    if (runtime && testName) {
-      console.log(`[DEBUG] Looking for specific test results for ${runtime}/${testName}`);
-      const testResults = getTestResults(runtime, testName);
-      console.log(`[DEBUG] getTestResults returned:`, testResults);
-      return this.jsonResponse({
-        runtime,
-        testName,
-        testResults: testResults || [],
-        message: 'Success'
-      });
-    }
-
-    // If no parameters, we need to get all test results
-    console.log(`[DEBUG] No parameters provided, returning all test results`);
-
-    // Get all runtimes from configs
-    const configs = this.configs;
-    if (!configs || !configs.runtimes) {
-      console.log(`[DEBUG] No runtimes configured`);
-      return this.jsonResponse({
-        testResults: [],
-        message: 'No runtimes configured'
-      });
-    }
-
-    const allTestResults: any[] = [];
-
-    // For each runtime and test, call getTestResults
-    for (const [runtimeKey, runtimeConfig] of Object.entries(configs.runtimes)) {
-      const runtime = (runtimeConfig as any).runtime;
-      const tests = (runtimeConfig as any).tests || [];
-
-      for (const testName of tests) {
-        console.log(`[DEBUG] Getting test results for ${runtime}/${testName}`);
-        try {
-          const testResults = getTestResults(runtime, testName);
-          console.log(`[DEBUG] Results for ${runtime}/${testName}:`, testResults);
-          if (testResults && Array.isArray(testResults)) {
-            allTestResults.push(...testResults);
-          }
-        } catch (error) {
-          console.error(`[DEBUG] Error getting test results for ${runtime}/${testName}:`, error);
-        }
-      }
-    }
-
-    console.log(`[DEBUG] Returning ${allTestResults.length} total test results`);
-    return this.jsonResponse({
-      testResults: allTestResults,
-      message: 'Success (all test results)'
-    });
-  }
-
-  private handleHttpGetCollatedAllFiles(): Response {
-    console.log(`[DEBUG] handleHttpGetCollatedAllFiles called`);
-
-    // Get all file types
-    const docsTree = this.getCollatedDocumentationTree();
-    const inputTree = this.getCollatedInputFilesTree();
-    const resultsTree = this.getCollatedTestResultsTree();
-    const reportsTree = this.getReportsTree();
-
-    // Merge all trees
-    const mergedTree = Server_HTTP_utils.mergeAllFileTrees([docsTree, inputTree, resultsTree, reportsTree]);
-
-    console.log(`[DEBUG] Returning unified files tree`);
-    return this.jsonResponse({
-      tree: mergedTree,
-      message: 'Success'
-    });
-  }
-
-  private getCollatedDocumentationTree(): Record<string, any> {
-    try {
-      const response = this.handleHttpGetCollatedDocumentation();
-      // Since handleHttpGetCollatedDocumentation returns a Response, we need to extract data differently
-      // For now, return empty tree - the actual implementation would need to be refactored
-      return {};
-    } catch (error) {
-      console.error(`[DEBUG] Error getting documentation tree:`, error);
-      return {};
-    }
-  }
-
-  private getCollatedInputFilesTree(): Record<string, any> {
-    try {
-      const response = this.handleHttpGetCollatedInputFiles();
-      // Similar issue - need to refactor to return data directly
-      return {};
-    } catch (error) {
-      console.error(`[DEBUG] Error getting input files tree:`, error);
-      return {};
-    }
-  }
-
-  private getCollatedTestResultsTree(): Record<string, any> {
-    try {
-      const response = this.handleHttpGetCollatedTestResults();
-      // Similar issue - need to refactor to return data directly
-      return {};
-    } catch (error) {
-      console.error(`[DEBUG] Error getting test results tree:`, error);
-      return {};
-    }
-  }
-
-  private getReportsTree(): Record<string, any> {
-    const reportsDir = path.join(process.cwd(), 'testeranto', 'reports');
-    return Server_HTTP_utils.buildFilesystemTree(reportsDir);
-  }
-
-  private buildFilesystemTree(dirPath: string): Record<string, any> {
-    const tree: Record<string, any> = {};
-
-    if (!fs.existsSync(dirPath)) {
-      return tree;
-    }
-
-    try {
-      const items = fs.readdirSync(dirPath);
-
-      for (const item of items) {
-        const fullPath = path.join(dirPath, item);
-        const stat = fs.statSync(fullPath);
-        const relativePath = path.relative(process.cwd(), fullPath);
-
-        if (stat.isDirectory()) {
-          tree[item] = {
-            type: 'directory',
-            children: this.buildFilesystemTree(fullPath)
-          };
-        } else {
-          tree[item] = {
-            type: 'file',
-            path: relativePath,
-            isJson: item.endsWith('.json'),
-            isHtml: item.endsWith('.html'),
-            isMd: item.endsWith('.md')
-          };
-        }
-      }
-    } catch (error) {
-      console.error(`[DEBUG] Error building filesystem tree for ${dirPath}:`, error);
-    }
-
-    return tree;
-  }
-
-  private mergeAllFileTrees(trees: Record<string, any>[]): Record<string, any> {
-    const merged: Record<string, any> = {};
-
-    for (const tree of trees) {
-      this.mergeFileTree(merged, tree);
-    }
-
-    return merged;
-  }
-
-  private mergeFileTree(target: Record<string, any>, source: Record<string, any>): void {
-    for (const [key, sourceNode] of Object.entries(source)) {
-      if (!target[key]) {
-        target[key] = { ...sourceNode };
-        if (sourceNode.children) {
-          target[key].children = {};
-        }
-      } else if (sourceNode.type === 'directory' && target[key].type === 'directory') {
-        // Merge children
-        if (sourceNode.children) {
-          if (!target[key].children) {
-            target[key].children = {};
-          }
-          this.mergeFileTree(target[key].children, sourceNode.children);
-        }
-      }
-      // If both are files, keep the first one (don't overwrite)
-    }
-  }
-
-  private handleHttpGetCollatedTestResults(): Response {
-    console.log(`[DEBUG] handleHttpGetCollatedTestResults called`);
-
-    const getTestResults = (this as any).getTestResults;
-    if (typeof getTestResults !== 'function') {
-      console.log(`[DEBUG] getTestResults method not available`);
-      return this.jsonResponse({
-        error: 'Test results functionality not available',
-        collatedTestResults: {},
-        message: 'Server does not support test results'
-      }, 503);
-    }
-
-    // Get all runtimes from configs
-    const configs = this.configs;
-    if (!configs || !configs.runtimes) {
-      console.log(`[DEBUG] No runtimes configured`);
-      return this.jsonResponse({
-        collatedTestResults: {},
-        message: 'No runtimes configured'
-      });
-    }
-
-    const collatedTestResults: Record<string, any> = {};
-
-    // For each runtime and test, call getTestResults
-    for (const [runtimeKey, runtimeConfig] of Object.entries(configs.runtimes)) {
-      const runtime = (runtimeConfig as any).runtime;
-      const tests = (runtimeConfig as any).tests || [];
-
-      if (!collatedTestResults[runtimeKey]) {
-        collatedTestResults[runtimeKey] = {
-          runtime: runtime,
-          tests: {},
-          files: []
-        };
-      }
-
-      // Get all files for this configKey (runtimeKey is actually configKey)
-      const allFiles = getTestResults(runtimeKey);
-      console.log(`[DEBUG] Found ${allFiles.length} files for configKey ${runtimeKey}`);
-
-      // Organize files by test
-      const filesByTest: Record<string, any[]> = {};
-      const allFilesList: any[] = [];
-
-      for (const file of allFiles) {
-        // Only include files from this configKey
-        if (file.configKey === runtimeKey) {
-          allFilesList.push({
-            name: file.file,
-            path: file.relativePath,
-            isJson: file.isJson,
-            size: file.size,
-            modified: file.modified,
-            testName: file.testName,
-            result: file.result
-          });
-
-          // Group by test name
-          const testName = file.testName || 'unknown';
-          if (!filesByTest[testName]) {
-            filesByTest[testName] = [];
-          }
-          filesByTest[testName].push(file);
-        }
-      }
-
-      collatedTestResults[runtimeKey].files = allFilesList;
-
-      // Process each test
-      for (const testName of tests) {
-        console.log(`[DEBUG] Getting test results for ${runtimeKey}/${testName}`);
-        try {
-          const testFiles = filesByTest[testName] || [];
-          const testResults = testFiles.filter(file => file.isJson && file.result);
-
-          console.log(`[DEBUG] Found ${testFiles.length} files, ${testResults.length} JSON results for ${runtimeKey}/${testName}`);
-
-          collatedTestResults[runtimeKey].tests[testName] = {
-            testName: testName,
-            files: testFiles.map(file => ({
-              name: file.file,
-              path: file.relativePath,
-              isJson: file.isJson,
-              size: file.size,
-              modified: file.modified
-            })),
-            results: testResults.map(file => file.result),
-            count: testResults.length,
-            fileCount: testFiles.length
-          };
-        } catch (error: any) {
-          console.error(`[DEBUG] Error getting test results for ${runtimeKey}/${testName}:`, error);
-          collatedTestResults[runtimeKey].tests[testName] = {
-            testName: testName,
-            files: [],
-            results: [],
-            count: 0,
-            fileCount: 0,
-            error: error.message
-          };
-        }
-      }
-
-      // Also include files that don't belong to any specific test
-      const otherFiles = allFiles.filter((file: any) => {
-        const fileTestName = file.testName || '';
-        return file.configKey === runtimeKey && !tests.some((t: string) => fileTestName.includes(t) || t.includes(fileTestName));
-      });
-
-      if (otherFiles.length > 0) {
-        collatedTestResults[runtimeKey].otherFiles = otherFiles.map((file: any) => ({
-          name: file.file,
-          path: file.relativePath,
-          isJson: file.isJson,
-          size: file.size,
-          modified: file.modified,
-          testName: file.testName
-        }));
-      }
-    }
-
-    console.log(`[DEBUG] Returning collated test results for ${Object.keys(collatedTestResults).length} runtimes`);
-    return this.jsonResponse({
-      collatedTestResults: collatedTestResults,
-      message: 'Success'
-    });
-  }
-
-  private handleHttpGetInputFiles(request: Request, url: URL): Response {
-    const runtime = url.searchParams.get('runtime');
-    const testName = url.searchParams.get('testName');
-
-    console.log(`[DEBUG] handleHttpGetInputFiles: runtime="${runtime}", testName="${testName}"`);
-
-    if (!runtime || !testName) {
-      console.log(`[DEBUG] Missing runtime or testName parameters`);
-      return this.jsonResponse({
-        error: 'Missing runtime or testName query parameters'
-      }, 400);
-    }
-
-    const getInputFiles = (this as any).getInputFiles;
-    if (typeof getInputFiles !== 'function') {
-      console.log(`[DEBUG] getInputFiles method not available`);
-      throw new Error('getInputFiles does not exist on this instance');
-    }
-
-    console.log(`[DEBUG] Calling getInputFiles with runtime="${runtime}", testName="${testName}"`);
-    const inputFiles = getInputFiles(runtime, testName);
-    console.log(`[DEBUG] getInputFiles returned:`, inputFiles);
-
-    return this.jsonResponse({
-      runtime,
-      testName,
-      inputFiles: inputFiles || [],
-      message: 'Success'
-    });
-  }
-
-  private handleHttpGetAiderProcesses(): Response {
-    const handleAiderProcesses = (this as any).handleAiderProcesses;
-    const getAiderProcesses = (this as any).getAiderProcesses;
-
-    if (typeof handleAiderProcesses === 'function') {
-      const result = handleAiderProcesses();
-      return this.jsonResponse({
-        aiderProcesses: result.aiderProcesses || [],
-        message: result.message || 'Success'
-      });
-    } else if (typeof getAiderProcesses === 'function') {
-      const aiderProcesses = getAiderProcesses();
-      return this.jsonResponse({
-        aiderProcesses: aiderProcesses || [],
-        message: 'Success'
-      });
-    } else {
-      return this.jsonResponse({
-        aiderProcesses: [],
-        message: 'Aider processes not available'
-      });
-    }
-  }
-
-  private handleHttpGetConfigs(): Response {
-    console.log(`[DEBUG] handleHttpGetConfigs called`);
-
-    if (!this.configs) {
-      console.log(`[DEBUG] configs property not available`);
-      return Server_HTTP_utils.jsonResponse({
-        error: 'configs property not available',
-        message: 'Server does not have configs'
-      }, 503);
-    }
-
-    console.log(`[DEBUG] configs structure:`, {
-      hasRuntimes: !!this.configs.runtimes,
-      runtimeCount: this.configs.runtimes ? Object.keys(this.configs.runtimes).length : 0,
-      runtimeKeys: this.configs.runtimes ? Object.keys(this.configs.runtimes) : []
-    });
-
-    return Server_HTTP_utils.jsonResponse({
-      configs: this.configs,
-      message: 'Success'
-    });
-  }
-
-  private handleHttpGetDocumentation(): Response {
-    console.log(`[DEBUG] handleHttpGetDocumentation called`);
-
-    // Documentation files are now embedded in the HTML config
-    // Return empty array for backward compatibility
-    return this.jsonResponse({
-      files: [],
-      message: 'Documentation files are now embedded in HTML config',
-      count: 0
-    });
-  }
-
-  private handleHttpGetCollatedDocumentation(): Response {
-    console.log(`[DEBUG] handleHttpGetCollatedDocumentation called`);
-
-    // Documentation files are now embedded in the HTML config
-    // Return empty for backward compatibility
-    return this.jsonResponse({
-      tree: {},
-      files: [],
-      message: 'Documentation files are now embedded in HTML config'
-    });
-  }
-
-  private handleHttpGetCollatedInputFiles(): Response {
-    console.log(`[DEBUG] handleHttpGetCollatedInputFiles called`);
-
-    // Get configs first to know what runtimes and tests exist
-    if (!this.configs) {
-      console.log(`[DEBUG] configs property not available`);
-      return this.jsonResponse({
-        error: 'configs property not available',
-        message: 'Server does not have configs'
-      }, 503);
-    }
-
-    const collatedInputFiles: Record<string, any> = {};
-
-    // For each runtime, fetch input files for each test
-    const runtimes = this.configs.runtimes;
-    console.log(`[DEBUG] Processing ${Object.keys(runtimes).length} runtimes`);
-
-    // We'll collect promises for all the input file fetches
-    const fetchPromises: Promise<void>[] = [];
-
-    for (const [runtimeKey, runtimeConfig] of Object.entries(runtimes)) {
-      const config = runtimeConfig as any;
-      const runtime = config.runtime;
-      const tests = config.tests || [];
-
-      console.log(`[DEBUG] Processing runtime ${runtimeKey} (${runtime}) with ${tests.length} tests`);
-
-      if (!collatedInputFiles[runtimeKey]) {
-        collatedInputFiles[runtimeKey] = {
-          runtime: runtime,
-          tests: {},
-          tree: {}
-        };
-      }
-
-      for (const testName of tests) {
-        fetchPromises.push(
-          this.fetchInputFilesForTest(runtimeKey, testName)
-            .then(inputFiles => {
-              // Store test entry
-              collatedInputFiles[runtimeKey].tests[testName] = {
-                testName: testName,
-                inputFiles: inputFiles,
-                count: inputFiles.length
-              };
-
-              // Build tree structure for this test
-              this.buildInputFilesTree(collatedInputFiles[runtimeKey].tree, testName, inputFiles);
-            })
-            .catch(error => {
-              console.error(`[DEBUG] Failed to fetch input files for ${runtimeKey}/${testName}:`, error);
-              collatedInputFiles[runtimeKey].tests[testName] = {
-                testName: testName,
-                inputFiles: [],
-                count: 0,
-                error: error.message
-              };
-              // Still build tree with empty files
-              this.buildInputFilesTree(collatedInputFiles[runtimeKey].tree, testName, []);
-            })
-        );
-      }
-    }
-
-    // Wait for all fetches to complete
-    return Promise.all(fetchPromises)
-      .then(() => {
-        // After building all trees, we need to merge them into a single tree structure
-        // that mirrors the filesystem layout
-        const fsTree = this.buildFilesystemTree(collatedInputFiles);
-
-        console.log(`[DEBUG] Collated input files:`, JSON.stringify(collatedInputFiles, null, 2));
-        console.log(`[DEBUG] Filesystem tree:`, JSON.stringify(fsTree, null, 2));
-
-        return this.jsonResponse({
-          collatedInputFiles: collatedInputFiles,
-          fsTree: fsTree,
-          message: 'Success'
-        });
-      })
-      .catch(error => {
-        console.error(`[DEBUG] Error collating input files:`, error);
-        return this.jsonResponse({
-          error: 'Failed to collate input files',
-          message: error.message
-        }, 500);
-      });
-  }
-
-  private buildInputFilesTree(tree: Record<string, any>, testName: string, inputFiles: string[]): void {
-    // Add test entry to tree
-    const testNode = {
-      type: 'test',
-      path: testName,
-      inputFiles: inputFiles,
-      count: inputFiles.length
-    };
-
-    // Split testName into parts (e.g., "src/java/test/java/com/example/calculator/CalculatorTest.java")
-    const parts = testName.split('/').filter(part => part.length > 0);
-
-    let currentNode = tree;
-
-    // Navigate through the path, creating directories as needed
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
-      const isLast = i === parts.length - 1;
-
-      if (!currentNode[part]) {
-        if (isLast) {
-          currentNode[part] = testNode;
-        } else {
-          currentNode[part] = {
-            type: 'directory',
-            children: {}
-          };
-        }
-      } else if (isLast) {
-        // If this is the last part and it already exists, it should be a test node
-        // Update it with input files
-        if (currentNode[part].type === 'test') {
-          currentNode[part].inputFiles = inputFiles;
-          currentNode[part].count = inputFiles.length;
-        }
-      }
-
-      if (!isLast) {
-        currentNode = currentNode[part].children;
-      }
-    }
-  }
-
-  private async fetchInputFilesForTest(runtimeKey: string, testName: string): Promise<string[]> {
-    console.log(`[DEBUG] Fetching input files for ${runtimeKey}/${testName}`);
-
-    const getInputFiles = (this as any).getInputFiles;
-    if (typeof getInputFiles === 'function') {
-      console.log(`[DEBUG] Using getInputFiles method`);
-      const inputFiles = getInputFiles(runtimeKey, testName);
-      console.log(`[DEBUG] getInputFiles returned ${inputFiles.length} files for ${runtimeKey}/${testName}`);
-      return inputFiles;
-    }
-
-    // Fallback to HTTP fetch
-    try {
-      const response = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtimeKey)}&testName=${encodeURIComponent(testName)}`);
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      const data = await response.json();
-      const inputFiles = data.inputFiles || [];
-      console.log(`[DEBUG] HTTP fetch returned ${inputFiles.length} files for ${runtimeKey}/${testName}`);
-      return inputFiles;
-    } catch (error) {
-      console.error(`[DEBUG] HTTP fetch failed for ${runtimeKey}/${testName}:`, error);
-      return [];
-    }
-  }
-
-  private collateDocumentationFiles(files: string[]): Record<string, any> {
-    const tree: Record<string, any> = {};
-
-    for (const filePath of files) {
-      // Normalize the path
-      const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
-      const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-
-      if (parts.length === 0) continue;
-
-      let currentNode = tree;
-
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i];
-        const isLast = i === parts.length - 1;
-
-        if (!currentNode[part]) {
-          currentNode[part] = isLast ? {
-            type: 'file',
-            path: filePath
-          } : {
-            type: 'directory',
-            children: {}
-          };
-        }
-
-        if (!isLast) {
-          currentNode = currentNode[part].children;
-        }
-      }
-    }
-
-    return tree;
-  }
-
-  private handleHttpGetHtmlReport(): Response {
-    console.log(`[DEBUG] handleHttpGetHtmlReport called`);
-
-    const workspaceRoot = process.cwd();
-    console.log(`[DEBUG] Workspace root: ${workspaceRoot}`);
-    
-    const reportsDir = path.join(workspaceRoot, 'testeranto', 'reports');
-    console.log(`[DEBUG] Reports directory: ${reportsDir}`);
-    
-    const reportPath = path.join(reportsDir, 'index.html');
-    console.log(`[DEBUG] Report path: ${reportPath}`);
-
-    // Check if the reports directory exists
-    if (!fs.existsSync(reportsDir)) {
-      console.log(`[DEBUG] Reports directory does not exist: ${reportsDir}`);
-      return this.jsonResponse({
-        error: 'HTML report directory not found',
-        message: 'The reports directory has not been created yet. Run the server to generate it.',
-        path: reportsDir
-      }, 404);
-    }
-
-    // Check if the report exists
-    if (!fs.existsSync(reportPath)) {
-      console.log(`[DEBUG] HTML report file does not exist: ${reportPath}`);
-      return this.jsonResponse({
-        error: 'HTML report not found',
-        message: 'The HTML report has not been generated yet. Run the server to generate it.',
-        path: reportPath
-      }, 404);
-    }
-
-    console.log(`[DEBUG] HTML report found at: ${reportPath}`);
-    return this.jsonResponse({
-      message: 'Stakeholder HTML report is available',
-      path: reportPath,
-      url: `/testeranto/reports/index.html`,
-      timestamp: new Date().toISOString()
-    });
-  }
-
-  private handleHttpGetStakeholderReport(): Response {
-    console.log(`[DEBUG] handleHttpGetStakeholderReport called`);
-
-    const workspaceRoot = process.cwd();
-    const reportPath = path.join(workspaceRoot, 'testeranto', 'reports', 'index.html');
-    
-    if (!fs.existsSync(reportPath)) {
-      console.log(`[DEBUG] Stakeholder report not found at: ${reportPath}`);
-      return new Response('Stakeholder report not found', {
-        status: 404,
-        headers: { 'Content-Type': 'text/html' }
-      });
-    }
-
-    try {
-      const htmlContent = fs.readFileSync(reportPath, 'utf-8');
-      console.log(`[DEBUG] Serving stakeholder report from: ${reportPath}`);
-      return new Response(htmlContent, {
-        status: 200,
-        headers: { 
-          'Content-Type': 'text/html',
-          'Cache-Control': 'no-cache'
-        }
-      });
-    } catch (error: any) {
-      console.error(`[DEBUG] Error reading stakeholder report: ${error.message}`);
-      return new Response(`Error reading stakeholder report: ${error.message}`, {
-        status: 500,
-        headers: { 'Content-Type': 'text/plain' }
-      });
-    }
-  }
-
-  private async handleHttpGetFeatureTree(): Promise<Response> {
-    console.log(`[DEBUG] handleHttpGetFeatureTree called`);
-
-    const server = this as any;
-    if (typeof server.getFeatureTree === 'function') {
-      try {
-        const featureTree = await server.getFeatureTree();
-        console.log(`[DEBUG] Feature tree generated successfully`);
-        return this.jsonResponse({
-          tree: featureTree,
-          message: 'Success'
-        });
-      } catch (error: any) {
-        console.error(`[DEBUG] Error generating feature tree: ${error.message}`);
-        return this.jsonResponse({
-          error: 'Failed to generate feature tree',
-          message: error.message
-        }, 500);
-      }
-    }
-
-    console.log(`[DEBUG] getFeatureTree method not available`);
-    return this.jsonResponse({
-      error: 'Feature tree functionality not available',
-      message: 'Server does not support feature tree generation'
-    }, 503);
-  }
-
 
   async start(): Promise<void> {
     await super.start();
@@ -875,7 +26,7 @@ export abstract class Server_HTTP extends Server_Base {
 
     const serverOptions: any = {
       port,
-      idleTimeout: 60, // Increase from default 10 seconds to 60 seconds
+      idleTimeout: 60,
       fetch: async (request: Request, server: any) => {
         const response = this.handleRequest(request, server);
 
@@ -967,70 +118,7 @@ export abstract class Server_HTTP extends Server_Base {
       return Server_HTTP_utils.handleOptions();
     }
 
-    const routeHandlers: Record<string, () => Response> = {
-      'processes': () => this.handleHttpGetProcesses(),
-      'configs': () => this.handleHttpGetConfigs(),
-      'documentation': () => this.handleHttpGetDocumentation(),
-      'collated-documentation': () => this.handleHttpGetCollatedDocumentation(),
-      'collated-inputfiles': () => this.handleHttpGetCollatedInputFiles(),
-      'collated-testresults': () => this.handleHttpGetCollatedTestResults(),
-      'collated-allfiles': () => this.handleHttpGetCollatedAllFiles(),
-      'aider-processes': () => this.handleHttpGetAiderProcesses(),
-      'outputfiles': () => this.handleHttpGetOutputFiles(request, url),
-      'inputfiles': () => this.handleHttpGetInputFiles(request, url),
-      'testresults': () => this.handleHttpGetTestResults(request, url),
-      'html-report': () => this.handleHttpGetHtmlReport(),
-      'stakeholder-report': () => this.handleHttpGetStakeholderReport(),
-      'feature-tree': () => this.handleHttpGetFeatureTree(),
-    };
-
-    const handler = routeHandlers[routeName];
-    if (handler) {
-      if (request.method !== 'GET') {
-        return new Response(`Method ${request.method} not allowed`, {
-          status: 405,
-          headers: {
-            'Allow': 'GET, OPTIONS',
-            'Content-Type': 'text/plain'
-          }
-        });
-      }
-      return handler();
-    }
-
-    const match = this.http.matchRoute(routeName, this.routes);
-    if (match) {
-      const nodeReq = {
-        url: url.pathname,
-        method: request.method,
-        headers: Object.fromEntries(request.headers.entries()),
-        body: request.body,
-        params: match.params
-      };
-
-      const response = {
-        writeHead: (status: number, headers: Record<string, string>) => {
-          return new Response(null, { status, headers });
-        },
-        end: (body: string) => {
-          return new Response(body, {
-            status: 200,
-            headers: { "Content-Type": "text/plain" }
-          });
-        }
-      };
-
-      const result = match.handler(nodeReq, response);
-      if (result instanceof Response) {
-        return result;
-      }
-      return result as Response;
-    }
-
-    return new Response(`Route not found: /~/${routeName}`, {
-      status: 404,
-      headers: { "Content-Type": "text/plain" },
-    });
+    return this.routesHandler.handleRoute(routeName, request, url);
   }
 
   private async serveStaticFile(request: Request, url: URL): Promise<Response> {
@@ -1044,26 +132,48 @@ export abstract class Server_HTTP extends Server_Base {
     }
 
     const projectRoot = process.cwd();
-    
-    // Special handling for the stakeholder report
+
     if (normalizedPath === '/' || normalizedPath === '/index.html') {
-      const reportPath = path.join(projectRoot, 'testeranto', 'reports', 'index.html');
-      if (fs.existsSync(reportPath)) {
-        return this.serveFile(reportPath);
+      const reportPath = Server_HTTP_utils.join(projectRoot, 'testeranto', 'reports', 'index.html');
+      if (Server_HTTP_utils.existsSync(reportPath)) {
+        // Generate collated files tree and test results, then embed in HTML
+        const collatedFilesTree = await this.generateCollatedFilesTree();
+        const allTestResults = await this.collectAllTestResults();
+        const htmlWithData = await Server_HTTP_utils.generateHtmlWithEmbeddedData(
+          reportPath,
+          this.configs,
+          collatedFilesTree,
+          allTestResults
+        );
+        return new Response(htmlWithData, {
+          status: 200,
+          headers: { "Content-Type": "text/html" },
+        });
       }
     }
-    
-    // Also handle direct access to testeranto/reports/index.html
+
     if (normalizedPath === '/testeranto/reports/index.html' || normalizedPath === '/testeranto/reports/') {
-      const reportPath = path.join(projectRoot, 'testeranto', 'reports', 'index.html');
-      if (fs.existsSync(reportPath)) {
-        return this.serveFile(reportPath);
+      const reportPath = Server_HTTP_utils.join(projectRoot, 'testeranto', 'reports', 'index.html');
+      if (Server_HTTP_utils.existsSync(reportPath)) {
+        // Generate collated files tree and test results, then embed in HTML
+        const collatedFilesTree = await this.generateCollatedFilesTree();
+        const allTestResults = await this.collectAllTestResults();
+        const htmlWithData = await Server_HTTP_utils.generateHtmlWithEmbeddedData(
+          reportPath,
+          this.configs,
+          collatedFilesTree,
+          allTestResults
+        );
+        return new Response(htmlWithData, {
+          status: 200,
+          headers: { "Content-Type": "text/html" },
+        });
       }
     }
 
-    const filePath = path.join(projectRoot, normalizedPath);
+    const filePath = Server_HTTP_utils.join(projectRoot, normalizedPath);
 
-    if (!filePath.startsWith(path.resolve(projectRoot))) {
+    if (!filePath.startsWith(Server_HTTP_utils.resolve(projectRoot))) {
       return new Response("Forbidden", {
         status: 403,
         headers: { "Content-Type": "text/plain" },
@@ -1071,29 +181,28 @@ export abstract class Server_HTTP extends Server_Base {
     }
 
     try {
-      const stats = await fs.promises.stat(filePath);
+      const stats = await Server_HTTP_utils.stat(filePath);
 
       if (stats.isDirectory()) {
-        // Check if there's an index.html in the directory
-        const indexPath = path.join(filePath, 'index.html');
-        if (fs.existsSync(indexPath)) {
-          return this.serveFile(indexPath);
+        const indexPath = Server_HTTP_utils.join(filePath, 'index.html');
+        if (Server_HTTP_utils.existsSync(indexPath)) {
+          return Server_HTTP_utils.serveFile(indexPath);
         }
-        
-        const files = await fs.promises.readdir(filePath);
+
+        const files = await Server_HTTP_utils.readdir(filePath);
 
         const items = await Promise.all(
           files.map(async (file) => {
             try {
-              const stat = await fs.promises.stat(path.join(filePath, file));
+              const stat = await Server_HTTP_utils.stat(Server_HTTP_utils.join(filePath, file));
               const isDir = stat.isDirectory();
               const slash = isDir ? "/" : "";
-              return `<li><a href="${path.join(
+              return `<li><a href="${Server_HTTP_utils.join(
                 normalizedPath,
                 file
               )}${slash}">${file}${slash}</a></li>`;
             } catch {
-              return `<li><a href="${path.join(
+              return `<li><a href="${Server_HTTP_utils.join(
                 normalizedPath,
                 file
               )}">${file}</a></li>`;
@@ -1119,16 +228,15 @@ export abstract class Server_HTTP extends Server_Base {
           headers: { "Content-Type": "text/html" },
         });
       } else {
-        return this.serveFile(filePath);
+        return Server_HTTP_utils.serveFile(filePath);
       }
     } catch (error: any) {
       if (error.code === "ENOENT") {
-        // Try to serve the stakeholder report as a fallback
-        if (normalizedPath === '/' || normalizedPath === '/index.html' || 
-            normalizedPath === '/testeranto/reports/index.html') {
-          const reportPath = path.join(projectRoot, 'testeranto', 'reports', 'index.html');
-          if (fs.existsSync(reportPath)) {
-            return this.serveFile(reportPath);
+        if (normalizedPath === '/' || normalizedPath === '/index.html' ||
+          normalizedPath === '/testeranto/reports/index.html') {
+          const reportPath = Server_HTTP_utils.join(projectRoot, 'testeranto', 'reports', 'index.html');
+          if (Server_HTTP_utils.existsSync(reportPath)) {
+            return Server_HTTP_utils.serveFile(reportPath);
           }
         }
         return new Response(`File not found: ${normalizedPath}`, {
@@ -1144,28 +252,455 @@ export abstract class Server_HTTP extends Server_Base {
     }
   }
 
-  private async serveFile(filePath: string): Promise<Response> {
-    const contentType = getContentType(filePath) || CONTENT_TYPES.OCTET_STREAM;
+  private async generateCollatedFilesTree(): Promise<Record<string, any>> {
+    // Get all runtimes from configs
+    const configs = this.configs;
+    if (!configs || !configs.runtimes) {
+      return {
+        type: 'directory',
+        path: '',
+        name: 'root',
+        children: {}
+      };
+    }
 
-    try {
-      const file = await Bun.file(filePath).arrayBuffer();
-      return new Response(file, {
-        status: 200,
-        headers: { "Content-Type": contentType },
-      });
-    } catch (error: any) {
-      if (error.code === "ENOENT") {
-        return new Response(`File not found: ${filePath}`, {
-          status: 404,
-          headers: { "Content-Type": "text/plain" },
-        });
-      } else {
-        return new Response(`Server Error: ${error.message}`, {
-          status: 500,
-          headers: { "Content-Type": "text/plain" },
-        });
+    // Build a unified tree of all files across all runtimes
+    const treeRoot: Record<string, any> = {};
+
+    // For each runtime, fetch input and output files for each test
+    const runtimes = configs.runtimes;
+    const promises: Promise<void>[] = [];
+
+    for (const [runtimeKey, runtimeConfig] of Object.entries(runtimes)) {
+      const config = runtimeConfig as any;
+      const runtime = config.runtime;
+      const tests = config.tests || [];
+
+      for (const testName of tests) {
+        promises.push(
+          (async () => {
+            try {
+              // Fetch input files
+              const inputResponse = await fetch(`http://localhost:3000/~/inputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
+              const inputData = inputResponse.ok ? await inputResponse.json() : { inputFiles: [] };
+              const inputFiles = inputData.inputFiles || [];
+
+              // Fetch output files
+              const outputResponse = await fetch(`http://localhost:3000/~/outputfiles?runtime=${encodeURIComponent(runtime)}&testName=${encodeURIComponent(testName)}`);
+              const outputData = outputResponse.ok ? await outputResponse.json() : { outputFiles: [] };
+              const outputFiles = outputData.outputFiles || [];
+
+              // Add all input files to the tree
+              for (const file of inputFiles) {
+                const normalizedPath = file.startsWith('/') ? file.substring(1) : file;
+                const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
+                
+                if (parts.length === 0) continue;
+                
+                let currentNode = treeRoot;
+                
+                for (let i = 0; i < parts.length; i++) {
+                  const part = parts[i];
+                  const isLast = i === parts.length - 1;
+                  
+                  if (!currentNode[part]) {
+                    if (isLast) {
+                      currentNode[part] = {
+                        type: 'file',
+                        path: file,
+                        name: part,
+                        runtime,
+                        testName,
+                        fileType: 'input'
+                      };
+                    } else {
+                      currentNode[part] = {
+                        type: 'directory',
+                        name: part,
+                        path: parts.slice(0, i + 1).join('/'),
+                        children: {}
+                      };
+                    }
+                  } else if (isLast) {
+                    // If it's already a file, update with additional info
+                    if (currentNode[part].type === 'file') {
+                      // Keep existing info, but add runtime and testName if not present
+                      if (!currentNode[part].runtimes) {
+                        currentNode[part].runtimes = [];
+                      }
+                      if (!currentNode[part].runtimes.includes(runtime)) {
+                        currentNode[part].runtimes.push(runtime);
+                      }
+                      if (!currentNode[part].tests) {
+                        currentNode[part].tests = [];
+                      }
+                      if (!currentNode[part].tests.includes(testName)) {
+                        currentNode[part].tests.push(testName);
+                      }
+                    }
+                  }
+                  
+                  if (!isLast && currentNode[part].type === 'directory') {
+                    currentNode = currentNode[part].children;
+                  }
+                }
+              }
+
+              // Add all output files to the tree
+              for (const file of outputFiles) {
+                const normalizedPath = file.startsWith('/') ? file.substring(1) : file;
+                const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
+                
+                if (parts.length === 0) continue;
+                
+                let currentNode = treeRoot;
+                
+                for (let i = 0; i < parts.length; i++) {
+                  const part = parts[i];
+                  const isLast = i === parts.length - 1;
+                  
+                  if (!currentNode[part]) {
+                    if (isLast) {
+                      currentNode[part] = {
+                        type: 'file',
+                        path: file,
+                        name: part,
+                        runtime,
+                        testName,
+                        fileType: 'output'
+                      };
+                    } else {
+                      currentNode[part] = {
+                        type: 'directory',
+                        name: part,
+                        path: parts.slice(0, i + 1).join('/'),
+                        children: {}
+                      };
+                    }
+                  } else if (isLast) {
+                    // If it's already a file, update with additional info
+                    if (currentNode[part].type === 'file') {
+                      // Keep existing info, but add runtime and testName if not present
+                      if (!currentNode[part].runtimes) {
+                        currentNode[part].runtimes = [];
+                      }
+                      if (!currentNode[part].runtimes.includes(runtime)) {
+                        currentNode[part].runtimes.push(runtime);
+                      }
+                      if (!currentNode[part].tests) {
+                        currentNode[part].tests = [];
+                      }
+                      if (!currentNode[part].tests.includes(testName)) {
+                        currentNode[part].tests.push(testName);
+                      }
+                      // Update fileType to include both if needed
+                      if (currentNode[part].fileType === 'input') {
+                        // If it was already marked as input, now it's both
+                        currentNode[part].fileType = 'both';
+                      } else if (currentNode[part].fileType !== 'both') {
+                        currentNode[part].fileType = 'output';
+                      }
+                    }
+                  }
+                  
+                  if (!isLast && currentNode[part].type === 'directory') {
+                    currentNode = currentNode[part].children;
+                  }
+                }
+              }
+            } catch (error) {
+              console.error(`Error processing ${runtimeKey}/${testName}:`, error);
+            }
+          })()
+        );
       }
     }
+
+    // Wait for all fetches to complete
+    await Promise.all(promises);
+    
+    // Also add test results files from the reports directory
+    const reportsDir = path.join(process.cwd(), 'testeranto', 'reports');
+    if (fs.existsSync(reportsDir)) {
+      this.addTestResultsFilesToTree(treeRoot, reportsDir);
+    }
+    
+    // Convert the tree to the format expected by the stakeholder app
+    const convertTree = (node: Record<string, any>, currentPath: string = ''): any => {
+      if (node.type === 'file') {
+        const result: any = {
+          type: 'file',
+          path: node.path,
+          name: node.name || path.basename(node.path),
+          fileType: node.fileType || 'file',
+          runtime: node.runtime,
+          testName: node.testName,
+        };
+        
+        // Only try to parse JSON files that are likely test results
+        const isJsonFile = node.path && (
+          node.path.endsWith('.json') || 
+          node.path.endsWith('tests.json') ||
+          path.basename(node.path) === 'tests.json'
+        );
+        
+        // Check if it's a test results file (in reports directory)
+        const isInReportsDir = node.path && node.path.includes('testeranto/reports/');
+        const isTestResultsFile = isJsonFile && isInReportsDir;
+        
+        if (isTestResultsFile && node.path) {
+          try {
+            const content = fs.readFileSync(node.path, 'utf-8');
+            // First, check if the content looks like JSON
+            const trimmedContent = content.trim();
+            if (trimmedContent.startsWith('{') || trimmedContent.startsWith('[')) {
+              const testData = JSON.parse(content);
+              result.testData = testData;
+              result.fileType = 'test-results';
+            } else {
+              // Not valid JSON, keep as regular file
+              console.log(`File ${node.path} is not valid JSON, skipping parse`);
+            }
+          } catch (error) {
+            // If parsing fails, it's not a valid JSON file
+            console.log(`Error parsing JSON from ${node.path}:`, error.message);
+            // Keep as regular file, don't set testData
+          }
+        }
+        
+        return result;
+      } else if (node.type === 'directory') {
+        const children: Record<string, any> = {};
+        for (const [childName, childNode] of Object.entries(node.children || {})) {
+          children[childName] = convertTree(childNode as Record<string, any>, 
+            currentPath ? `${currentPath}/${childName}` : childName);
+        }
+        return {
+          type: 'directory',
+          path: node.path || currentPath,
+          name: node.name || path.basename(currentPath) || 'root',
+          children: children
+        };
+      }
+      return node;
+    };
+
+    // Convert the entire tree
+    const convertedTree: Record<string, any> = {};
+    for (const [key, node] of Object.entries(treeRoot)) {
+      convertedTree[key] = convertTree(node as Record<string, any>, key);
+    }
+    
+    // Return as a single root node
+    return {
+      type: 'directory',
+      path: '',
+      name: 'root',
+      children: convertedTree
+    };
+  }
+
+  private addTestResultsFilesToTree(treeRoot: Record<string, any>, reportsDir: string): void {
+    const addFilesToTree = (dir: string, relativePath: string = '') => {
+      try {
+        const items = fs.readdirSync(dir);
+        for (const item of items) {
+          const fullPath = path.join(dir, item);
+          const stat = fs.statSync(fullPath);
+          const itemRelativePath = relativePath ? `${relativePath}/${item}` : item;
+          
+          if (stat.isDirectory()) {
+            addFilesToTree(fullPath, itemRelativePath);
+          } else {
+            // Add ALL files, including logs
+            const fileType = this.getFileType(item);
+            
+            // Add file to tree
+            const parts = itemRelativePath.split('/').filter(part => part.length > 0);
+            if (parts.length === 0) continue;
+            
+            let currentNode = treeRoot;
+            
+            for (let i = 0; i < parts.length; i++) {
+              const part = parts[i];
+              const isLast = i === parts.length - 1;
+              
+              if (!currentNode[part]) {
+                if (isLast) {
+                  currentNode[part] = {
+                    type: 'file',
+                    path: fullPath,
+                    name: part,
+                    fileType: fileType
+                  };
+                } else {
+                  currentNode[part] = {
+                    type: 'directory',
+                    name: part,
+                    path: parts.slice(0, i + 1).join('/'),
+                    children: {}
+                  };
+                }
+              }
+              
+              if (!isLast && currentNode[part].type === 'directory') {
+                currentNode = currentNode[part].children;
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error(`Error scanning directory ${dir}:`, error);
+      }
+    };
+    
+    addFilesToTree(reportsDir);
+  }
+
+  private getFileType(filename: string): string {
+    if (filename === 'tests.json' || (filename.endsWith('.json') && filename.includes('test'))) {
+      return 'test-results';
+    } else if (filename.endsWith('.log')) {
+      return 'log';
+    } else if (filename.endsWith('.html')) {
+      return 'html';
+    } else if (filename.endsWith('.json')) {
+      return 'json';
+    } else if (filename.endsWith('.md')) {
+      return 'documentation';
+    } else if (filename.endsWith('.ts') || filename.endsWith('.js') || filename.endsWith('.tsx') || filename.endsWith('.jsx')) {
+      return 'javascript';
+    } else if (filename.endsWith('.rb')) {
+      return 'ruby';
+    } else if (filename.endsWith('.py')) {
+      return 'python';
+    } else if (filename.endsWith('.go')) {
+      return 'golang';
+    } else if (filename.endsWith('.rs')) {
+      return 'rust';
+    } else if (filename.endsWith('.java')) {
+      return 'java';
+    } else {
+      return 'file';
+    }
+  }
+
+  private async collectAllTestResults(): Promise<Record<string, any>> {
+    const configs = this.configs;
+    if (!configs || !configs.runtimes) {
+      return {};
+    }
+
+    const allTestResults: Record<string, any> = {};
+    const runtimes = configs.runtimes;
+    const reportsDir = path.join(process.cwd(), 'testeranto', 'reports');
+
+    // Helper function to find all tests.json files
+    const findAllTestsJsonFiles = (dir: string): string[] => {
+      let results: string[] = [];
+      try {
+        const items = fs.readdirSync(dir);
+        for (const item of items) {
+          const fullPath = path.join(dir, item);
+          try {
+            const stat = fs.statSync(fullPath);
+            if (stat.isDirectory()) {
+              results = results.concat(findAllTestsJsonFiles(fullPath));
+            } else if (item === 'tests.json') {
+              results.push(fullPath);
+            }
+          } catch {
+            // Skip if we can't stat
+          }
+        }
+      } catch {
+        // Skip if we can't read directory
+      }
+      return results;
+    };
+
+    // First, collect all tests.json files
+    const allTestsJsonFiles = findAllTestsJsonFiles(reportsDir);
+
+    // Process each runtime and test
+    for (const [runtimeKey, runtimeConfig] of Object.entries(runtimes)) {
+      const config = runtimeConfig as any;
+      const runtime = config.runtime;
+      const tests = config.tests || [];
+
+      if (!allTestResults[runtimeKey]) {
+        allTestResults[runtimeKey] = {};
+      }
+
+      for (const testName of tests) {
+        // Try to find a matching tests.json file
+        let found = false;
+        for (const filePath of allTestsJsonFiles) {
+          // Only process actual JSON files
+          if (!filePath.endsWith('.json') && !filePath.endsWith('tests.json')) {
+            continue;
+          }
+          
+          const normalizedPath = filePath.toLowerCase();
+          const runtimeLower = runtime.toLowerCase();
+          const testNameLower = testName.toLowerCase();
+          
+          // Extract test name from path (last directory before tests.json)
+          const dirName = path.dirname(filePath);
+          const lastDir = path.basename(dirName).toLowerCase();
+          
+          // Check various patterns
+          const containsRuntime = normalizedPath.includes(runtimeLower);
+          const containsTestName = normalizedPath.includes(testNameLower) || 
+                                   lastDir.includes(testNameLower.replace(/\./g, '')) ||
+                                   testNameLower.includes(lastDir);
+          
+          if (containsRuntime && containsTestName) {
+            try {
+              const content = fs.readFileSync(filePath, 'utf-8');
+              // Check if content is valid JSON before parsing
+              const trimmedContent = content.trim();
+              if (trimmedContent.startsWith('{') || trimmedContent.startsWith('[')) {
+                const testData = JSON.parse(content);
+                allTestResults[runtimeKey][testName] = testData;
+                found = true;
+                break;
+              } else {
+                console.log(`File ${filePath} is not valid JSON, skipping`);
+              }
+            } catch (error) {
+              console.error(`Error reading test results from ${filePath}:`, error.message);
+            }
+          }
+        }
+        
+        // If not found, try to find in runtime directory
+        if (!found) {
+          const runtimeDir = path.join(reportsDir, runtime);
+          if (fs.existsSync(runtimeDir)) {
+            const runtimeTestsJsonFiles = findAllTestsJsonFiles(runtimeDir);
+            for (const filePath of runtimeTestsJsonFiles) {
+              try {
+                const content = fs.readFileSync(filePath, 'utf-8');
+                const testData = JSON.parse(content);
+                allTestResults[runtimeKey][testName] = testData;
+                found = true;
+                break;
+              } catch (error) {
+                // Continue
+              }
+            }
+          }
+        }
+        
+        // If still not found, leave empty
+        if (!found) {
+          console.log(`No test results found for ${runtimeKey}/${testName}`);
+        }
+      }
+    }
+
+    return allTestResults;
   }
 
   router(a: any): any {

@@ -9,6 +9,7 @@ src/base_then.py
 src/base_when.py
 src/flavored.py
 src/pitono_types.py
+src/reverse_integration.py
 src/simple_adapter.py
 src/pitono.egg-info/PKG-INFO
 src/pitono.egg-info/SOURCES.txt

@@ -1,0 +1,162 @@
+package golingvu
+
+import (
+	"context"
+	"fmt"
+	"testing"
+	"time"
+)
+
+// ReverseIntegration provides utilities for integrating Golingvu with native Go test runner
+type ReverseIntegration struct {
+	gv *Golingvu
+}
+
+// NewReverseIntegration creates a new ReverseIntegration instance
+func NewReverseIntegration(gv *Golingvu) *ReverseIntegration {
+	return &ReverseIntegration{gv: gv}
+}
+
+// AsGoTest converts a Golingvu test into a standard Go test function
+func (ri *ReverseIntegration) AsGoTest(name string) func(*testing.T) {
+	return func(t *testing.T) {
+		// Create a test instance with the testing.T context
+		testInstance := &Golingvu{
+			TestResourceRequirement: ri.gv.TestResourceRequirement,
+			TestSpecification:       ri.gv.TestSpecification,
+			testAdapter:             ri.gv.testAdapter,
+			t:                       t,
+			testConfig:              ri.gv.testConfig,
+		}
+		
+		// Copy overrides
+		testInstance.SuitesOverrides = ri.gv.SuitesOverrides
+		testInstance.GivenOverrides = ri.gv.GivenOverrides
+		testInstance.WhenOverrides = ri.gv.WhenOverrides
+		testInstance.ThenOverrides = ri.gv.ThenOverrides
+		testInstance.Specs = ri.gv.Specs
+		testInstance.totalTests = ri.gv.totalTests
+		testInstance.assertThis = ri.gv.assertThis
+		
+		// Run the test
+		testInstance.RunAsGoTest()
+	}
+}
+
+// TestSuite creates a test suite that can be run with go test
+func (ri *ReverseIntegration) TestSuite(t *testing.T, suiteName string, tests map[string]func(*testing.T)) {
+	t.Run(suiteName, func(t *testing.T) {
+		for testName, testFunc := range tests {
+			t.Run(testName, testFunc)
+		}
+	})
+}
+
+// WithTimeout sets a timeout for the test
+func (ri *ReverseIntegration) WithTimeout(duration time.Duration) *ReverseIntegration {
+	if ri.gv.testConfig == nil {
+		ri.gv.testConfig = NewTestConfig()
+	}
+	ri.gv.testConfig.Timeout = duration
+	return ri
+}
+
+// WithParallel enables parallel test execution
+func (ri *ReverseIntegration) WithParallel() *ReverseIntegration {
+	if ri.gv.testConfig == nil {
+		ri.gv.testConfig = NewTestConfig()
+	}
+	ri.gv.testConfig.Parallel = true
+	return ri
+}
+
+// Skip marks the test to be skipped
+func (ri *ReverseIntegration) Skip() *ReverseIntegration {
+	if ri.gv.testConfig == nil {
+		ri.gv.testConfig = NewTestConfig()
+	}
+	ri.gv.testConfig.Skip = true
+	return ri
+}
+
+// RunWithContext runs tests with a context for cancellation
+func (ri *ReverseIntegration) RunWithContext(ctx context.Context, t *testing.T) error {
+	// Create a channel to receive test results
+	done := make(chan error)
+	
+	go func() {
+		// Run the test
+		passed := ri.gv.RunAsGoTest()
+		if !passed {
+			done <- fmt.Errorf("test failed")
+		} else {
+			done <- nil
+		}
+	}()
+	
+	// Wait for either context cancellation or test completion
+	select {
+	case <-ctx.Done():
+		t.Error("Test cancelled:", ctx.Err())
+		return ctx.Err()
+	case err := <-done:
+		return err
+	}
+}
+
+// Benchmark creates a benchmark test
+func (ri *ReverseIntegration) Benchmark(b *testing.B) {
+	// Reset timer for setup
+	b.ResetTimer()
+	
+	// Run the benchmark
+	for i := 0; i < b.N; i++ {
+		// Create a fresh instance for each iteration
+		testInstance := &Golingvu{
+			TestResourceRequirement: ri.gv.TestResourceRequirement,
+			TestSpecification:       ri.gv.TestSpecification,
+			testAdapter:             ri.gv.testAdapter,
+		}
+		
+		// Copy overrides
+		testInstance.SuitesOverrides = ri.gv.SuitesOverrides
+		testInstance.GivenOverrides = ri.gv.GivenOverrides
+		testInstance.WhenOverrides = ri.gv.WhenOverrides
+		testInstance.ThenOverrides = ri.gv.ThenOverrides
+		testInstance.Specs = ri.gv.Specs
+		testInstance.totalTests = ri.gv.totalTests
+		testInstance.assertThis = ri.gv.assertThis
+		
+		// Run the test without reporting to testing.T
+		_ = testInstance.runTestsInternal(nil)
+	}
+}
+
+// ExampleTest provides an example of using Golingvu with go test
+func ExampleTest() {
+	// This function shows how to use Golingvu with native Go tests
+	fmt.Println("To use Golingvu with go test:")
+	fmt.Println("1. Create a Golingvu instance")
+	fmt.Println("2. Use ReverseIntegration to convert it to a go test")
+	fmt.Println("3. Run with 'go test -v ./...'")
+}
+
+// TestMainIntegration provides a TestMain function for package-level setup
+func TestMainIntegration(m *testing.M) {
+	// Setup code here
+	fmt.Println("Setting up test environment")
+	
+	// Run tests
+	code := m.Run()
+	
+	// Teardown code here
+	fmt.Println("Cleaning up test environment")
+	
+	// Exit with the test code
+	// os.Exit(code) // Uncomment in actual use
+	_ = code // Use the variable to avoid "declared and not used" error
+	// Additional use to satisfy compiler
+	if false {
+		_ = code
+	}
+}

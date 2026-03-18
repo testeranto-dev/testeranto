@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.230.0",
+  "version": "0.231.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -48,29 +48,9 @@
     "views": {
       "testeranto": [
         {
-          "id": "testeranto.unifiedView",
-          "name": "Dashboard",
-          "icon": "$(dashboard)"
-        },
-        {
           "id": "testeranto.runtimeView",
           "name": "Runtime Tests",
           "icon": "$(beaker)"
-        },
-        {
-          "id": "testeranto.resultsView",
-          "name": "Files",
-          "icon": "$(files)"
-        },
-        {
-          "id": "testeranto.processView",
-          "name": "Docker Processes",
-          "icon": "$(server)"
-        },
-        {
-          "id": "testeranto.reportView",
-          "name": "Stakeholder Report",
-          "icon": "$(globe)"
         }
       ]
     },
@@ -95,10 +75,6 @@
       {
         "command": "testeranto.aider",
         "title": "Testeranto: Connect to Aider"
-      },
-      {
-        "command": "testeranto.launchAiderTerminal",
-        "title": "Testeranto: Launch Aider Terminal"
       },
       {
         "command": "testeranto.openConfig",
@@ -146,7 +122,8 @@
     "prepublishOnly:server": "bun run build",
     "make:server": "bun run build:server && bun link",
     "bundle": "node bundle.js",
-    "publish:ruby": "cd src/lib/rubeno/ && gem build rubeno.gemspec"
+    "publish:ruby": "cd src/lib/rubeno/ && gem build rubeno.gemspec",
+    "launch:extension": "code --extensionDevelopmentPath=\"$PWD\""
   },
   "keywords": [
     "testeranto",

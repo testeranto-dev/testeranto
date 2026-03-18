@@ -1,6 +1,7 @@
+import { HttpDependencies } from '../dependents/HttpDependencies';
+
 export class ProcessesTreeDataProviderUtils {
   static async fetchProcessesViaHttp(): Promise<any> {
-    const response = await fetch('http://localhost:3000/~/processes');
-    return response.json();
+    return HttpDependencies.fetchJson('http://localhost:3000/~/processes');
   }
 }

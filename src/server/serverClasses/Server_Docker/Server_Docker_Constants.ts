@@ -255,3 +255,18 @@ export const getServiceType = (serviceName: string): string => {
   if (serviceName.includes("-builder")) return "builder";
   return "unknown";
 };
+
+export const entryContent = (absolutePath: string) => `
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import CustomStakeholderApp from '${absolutePath}';
+
+export function renderApp(rootElement, data) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <CustomStakeholderApp data={data} />
+    </React.StrictMode>
+  );
+}
+        `;

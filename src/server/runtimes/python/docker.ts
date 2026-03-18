@@ -1,14 +1,19 @@
 import { join } from "node:path";
 import type { ITestconfigV2 } from "../../../Types";
-import { dockerComposeFile } from "../dockerComposeFile";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the python runtime file as text
 import pythonContent from "./python.py" with { type: "text" };
+// Import the native detection module
+import nativeDetectionContent from "./native_detection.py" with { type: "text" };
 
 // Write the python file to a location that will be mounted in the container
 const pythonScriptPath = join(process.cwd(), "testeranto", "python_runtime.py");
 await Bun.write(pythonScriptPath, pythonContent);
+
+// Write the native detection module
+const nativeDetectionPath = join(process.cwd(), "testeranto", "runtimes", "python", "native_detection.py");
+await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 export const pythonDockerComposeFile = (
   config: ITestconfigV2,
@@ -57,7 +62,8 @@ export const pythonBuildCommand = (
   tests: string[],
 ) => {
   // MODE is now passed via environment in the service configuration
-  return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName}  ${tests.join(" ")} `;
+  // Ensure native detection module is available
+  return `cd /workspace && python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName} ${tests.join(" ")}`;
 };
 
 export const pythonBddCommand = (

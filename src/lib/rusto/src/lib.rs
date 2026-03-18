@@ -9,7 +9,7 @@ pub mod base_when;
 pub mod base_then;
 pub mod simple_adapter;
 pub mod rusto;
-pub mod flavored;
+pub mod reverse_integration;
 
 // Re-export main types for convenience
 pub use types::*;
@@ -19,12 +19,7 @@ pub use base_when::BaseWhen;
 pub use base_then::BaseThen;
 pub use simple_adapter::SimpleTestAdapter;
 pub use rusto::Rusto;
-
-// Re-export flavored types
-pub use flavored::{GivenStep, WhenStep, ThenStep, TestCase};
-
-// The macros are available at crate root due to #[macro_export]
-// No need to re-export them from flavored module
+pub use reverse_integration::*;
 
 /// Main entry point for creating a Rusto instance
 pub fn rusto<I, O, M>(

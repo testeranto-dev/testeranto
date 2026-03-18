@@ -1,13 +1,15 @@
 package kafe;
 
-// Test adapter interface
-public interface ITestAdapter {
-    Object beforeAll(Object input, ITTestResourceConfiguration tr, Object pm);
-    Object afterAll(Object store, Object pm);
-    Object beforeEach(Object subject, Object initializer, ITTestResourceConfiguration testResource, 
-                     Object initialValues, Object pm);
-    Object afterEach(Object store, String key, Object pm);
-    Object andWhen(Object store, Object whenCb, Object testResource, Object pm);
-    Object butThen(Object store, Object thenCb, Object testResource, Object pm);
+import java.util.function.Function;
+
+// Make ITestAdapter generic for type safety
+public interface ITestAdapter<I, S, R> {
+    S beforeAll(I input, ITTestResourceConfiguration tr);
+    R afterAll(R store);
+    R beforeEach(S subject, Function<S, R> initializer, ITTestResourceConfiguration testResource, 
+                 Object initialValues);
+    R afterEach(R store, String key);
+    R andWhen(R store, Function<R, R> whenCb, ITTestResourceConfiguration testResource);
+    Object butThen(R store, Function<R, Object> thenCb, ITTestResourceConfiguration testResource);
     boolean assertThis(Object t);
 }

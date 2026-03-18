@@ -5,6 +5,7 @@ import { Server_Docker } from "./Server_Docker";
 import type { ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
 import glob from "glob";
+import { Server_Utils } from "./Server_Utils";
 
 
 // Note: HTML and TypeScript files are now created in embedConfigInHtml()
@@ -144,6 +145,22 @@ ${JSON.stringify(configData, null, 2)}
     // First, ensure the HTML file exists with embedded config
     await this.embedConfigInHtml();
     
+    // Log config structure for debugging
+    console.log(`[Server] Config structure:`);
+    if (this.configs && this.configs.runtimes) {
+      for (const [configKey, runtimeConfig] of Object.entries(this.configs.runtimes)) {
+        const config = runtimeConfig as any;
+        console.log(`  ${configKey}:`);
+        console.log(`    runtime: ${config.runtime}`);
+        console.log(`    tests (${config.tests?.length || 0}):`);
+        if (config.tests) {
+          config.tests.forEach((test: string, i: number) => {
+            console.log(`      ${i}: "${test}"`);
+          });
+        }
+      }
+    }
+    
     // Then start the parent server
     await super.start();
     
@@ -204,8 +221,11 @@ ${JSON.stringify(configData, null, 2)}
       }
     }
     
-    // Add test.json files from the reports directory with their internal structure
-    await this.addTestJsonFilesToTree(tree);
+    // Add source files from the project structure
+    await this.addSourceFilesToTree(tree);
+    
+    // Add test results to their corresponding source files
+    await this.addTestResultsToSourceFiles(tree);
     
     return tree;
   }
@@ -377,13 +397,32 @@ ${JSON.stringify(configData, null, 2)}
 
   private findNodeInTree(tree: any, path: string): any | null {
     const parts = path.split('/').filter(part => part.length > 0);
+    
+    // Start from the root
     let currentNode = tree;
     
     for (const part of parts) {
-      if (currentNode.children && currentNode.children[part]) {
+      // Check if current node has children
+      if (!currentNode.children) {
+        return null;
+      }
+      
+      // Look for the part in children
+      if (currentNode.children[part]) {
         currentNode = currentNode.children[part];
       } else {
-        return null;
+        // Try to find a case-insensitive match or partial match
+        const foundKey = Object.keys(currentNode.children).find(key => 
+          key.toLowerCase() === part.toLowerCase() || 
+          key.includes(part) || 
+          part.includes(key)
+        );
+        
+        if (foundKey) {
+          currentNode = currentNode.children[foundKey];
+        } else {
+          return null;
+        }
       }
     }
     
@@ -443,188 +482,284 @@ ${JSON.stringify(configData, null, 2)}
     return { files: allFiles };
   }
 
-  private async addTestJsonFilesToTree(tree: any): Promise<void> {
-    const reportsDir = join(process.cwd(), 'testeranto', 'reports');
-    if (!existsSync(reportsDir)) {
-      return;
-    }
-
-    // Walk through the reports directory to find all files
-    const walk = async (dir: string, basePath: string = '') => {
-      const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+  private async addSourceFilesToTree(tree: any): Promise<void> {
+    // Get all test entrypoints from configs
+    const testEntrypoints = this.getTestEntrypoints();
+    
+    // Add each test entrypoint to the tree
+    for (const entrypoint of testEntrypoints) {
+      this.addFileToTree(tree, entrypoint, 'test-source');
       
-      for (const entry of entries) {
-        const fullPath = join(dir, entry.name);
-        const relativePath = basePath ? join(basePath, entry.name) : entry.name;
-        
-        if (entry.isDirectory()) {
-          // Add directory to tree
-          const treePath = `testeranto/reports/${relativePath}`;
-          this.addFileToTree(tree, treePath, 'test-directory');
-          await walk(fullPath, relativePath);
-        } else if (entry.isFile()) {
-          // Add file to tree
-          const treePath = `testeranto/reports/${relativePath}`;
-          let fileType = 'file';
-          if (entry.name === 'tests.json') {
-            fileType = 'test-results';
-          } else if (entry.name.endsWith('.json')) {
-            fileType = 'test-data';
-          } else if (entry.name.endsWith('.html')) {
-            fileType = 'html';
-          } else if (entry.name.endsWith('.js')) {
-            fileType = 'javascript';
-          }
-          
-          this.addFileToTree(tree, treePath, fileType);
-          
-          // Load the test data for tests.json files and add their internal structure to the tree
-          if (entry.name === 'tests.json') {
-            const node = this.findNodeInTree(tree, treePath);
-            if (node && node.type === 'file') {
-              try {
-                const content = await fs.promises.readFile(fullPath, 'utf-8');
-                const testData = JSON.parse(content);
-                node.testData = testData;
-                
-                // Add the internal structure of the test results as children
-                await this.addTestResultStructureToNode(node, testData);
-              } catch (error) {
-                console.warn(`[Server] Could not read test results file ${fullPath}: ${error}`);
-              }
-            }
-          }
-        }
+      // Don't load source file content for stakeholder app
+      // Just mark it as a test source file
+      const node = this.findNodeInTree(tree, entrypoint);
+      if (node && node.type === 'file') {
+        // Clear any content that might have been loaded
+        node.content = null;
       }
-    };
-
-    await walk(reportsDir);
+    }
   }
 
-  private async addTestResultStructureToNode(node: any, testData: any): Promise<void> {
-    if (!node.children) {
-      node.children = {};
+  private getTestEntrypoints(): string[] {
+    const entrypoints: string[] = [];
+    
+    if (!this.configs || !this.configs.runtimes) {
+      return entrypoints;
     }
     
-    // Add overall test summary
-    node.children['summary'] = {
-      type: 'test-summary',
-      name: 'summary',
-      path: node.path + '/summary',
-      failed: testData.failed,
-      fails: testData.fails,
-      runTimeTests: testData.runTimeTests,
-      features: testData.features || []
-    };
-    
-    // Add test job if present
-    if (testData.testJob) {
-      // Add test job overview
-      node.children['testJob'] = {
-        type: 'test-job',
-        name: 'testJob',
-        path: node.path + '/testJob',
-        name: testData.testJob.name,
-        fails: testData.testJob.fails,
-        failed: testData.testJob.failed,
-        features: testData.testJob.features || []
-      };
+    // Collect all test paths from the configuration
+    for (const [configKey, runtimeConfig] of Object.entries(this.configs.runtimes)) {
+      const config = runtimeConfig as any;
+      const tests = config.tests || [];
       
-      // Add givens as children
-      if (testData.testJob.givens && Array.isArray(testData.testJob.givens)) {
-        node.children['givens'] = {
-          type: 'directory',
-          name: 'givens',
-          path: node.path + '/givens',
-          children: {}
-        };
-        
-        for (let i = 0; i < testData.testJob.givens.length; i++) {
-          const given = testData.testJob.givens[i];
-          const givenKey = given.key || `given_${i}`;
-          
-          node.children['givens'].children[givenKey] = {
-            type: 'test-given',
-            name: givenKey,
-            path: node.path + '/givens/' + givenKey,
-            failed: given.failed,
-            features: given.features || [],
-            error: given.error,
-            status: given.status,
-            children: {}
-          };
-          
-          // Add whens to the given
-          if (given.whens && Array.isArray(given.whens)) {
-            node.children['givens'].children[givenKey].children['whens'] = {
-              type: 'directory',
-              name: 'whens',
-              path: node.path + '/givens/' + givenKey + '/whens',
-              children: {}
-            };
-            
-            for (let j = 0; j < given.whens.length; j++) {
-              const when = given.whens[j];
-              const whenKey = when.name || `when_${j}`;
-              
-              node.children['givens'].children[givenKey].children['whens'].children[whenKey] = {
-                type: 'test-when',
-                name: whenKey,
-                path: node.path + '/givens/' + givenKey + '/whens/' + whenKey,
-                status: when.status,
-                error: when.error,
-                artifacts: when.artifacts || []
-              };
-            }
-          }
-          
-          // Add thens to the given
-          if (given.thens && Array.isArray(given.thens)) {
-            node.children['givens'].children[givenKey].children['thens'] = {
-              type: 'directory',
-              name: 'thens',
-              path: node.path + '/givens/' + givenKey + '/thens',
-              children: {}
-            };
-            
-            for (let j = 0; j < given.thens.length; j++) {
-              const then = given.thens[j];
-              const thenKey = then.name || `then_${j}`;
-              
-              node.children['givens'].children[givenKey].children['thens'].children[thenKey] = {
-                type: 'test-then',
-                name: thenKey,
-                path: node.path + '/givens/' + givenKey + '/thens/' + thenKey,
-                status: then.status,
-                error: then.error,
-                artifacts: then.artifacts || []
-              };
-            }
-          }
+      for (const testPath of tests) {
+        // The test path in config is typically the entrypoint
+        if (testPath && typeof testPath === 'string') {
+          entrypoints.push(testPath);
         }
       }
     }
     
-    // Add features if present
-    if (testData.features && Array.isArray(testData.features)) {
-      node.children['features'] = {
-        type: 'directory',
-        name: 'features',
-        path: node.path + '/features',
-        children: {}
-      };
+    return [...new Set(entrypoints)]; // Remove duplicates
+  }
+
+  private async addTestResultsToSourceFiles(tree: any): Promise<void> {
+    // Get all test results from the reports directory
+    const testResults = await this.collectTestResults();
+    console.log(`[Server] Processing ${Object.keys(testResults).length} test results`);
+    
+    // For each test result, find its source file and attach the results
+    for (const [testKey, testResult] of Object.entries(testResults)) {
+      console.log(`[Server] Processing test result for key: ${testKey}`);
       
-      for (let i = 0; i < testData.features.length; i++) {
-        const feature = testData.features[i];
-        const featureKey = feature.replace(/[^a-zA-Z0-9]/g, '_') || `feature_${i}`;
+      // Find which source file this test corresponds to
+      const sourceFile = this.findSourceFileForTest(testKey);
+      
+      if (sourceFile) {
+        console.log(`[Server] Found source file ${sourceFile} for test ${testKey}`);
         
-        node.children['features'].children[featureKey] = {
-          type: 'feature',
-          name: feature,
-          path: node.path + '/features/' + featureKey
-        };
+        // Find the node for the source file in the tree
+        const sourceNode = this.findNodeInTree(tree, sourceFile);
+        if (sourceNode && sourceNode.type === 'file') {
+          console.log(`[Server] Found source node for ${sourceFile}`);
+          
+          // Ensure the source node has children
+          if (!sourceNode.children) {
+            sourceNode.children = {};
+          }
+          
+          // Create a unique key for this test result based on the testKey
+          // Use the configKey and test name to make it more readable
+          const parts = testKey.split('/');
+          const configKey = parts[0];
+          const testName = parts.slice(1).join('/');
+          const testResultKey = `${configKey}_${testName.replace(/\//g, '_').replace(/\./g, '-')}`;
+          
+          // Check if test results already exist for this key
+          if (!sourceNode.children[testResultKey]) {
+            // Create a test results node
+            const testResultsNode = {
+              type: 'test-results',
+              name: testResultKey,
+              path: sourceFile + '/' + testResultKey,
+              testData: testResult,
+              children: {}
+            };
+            
+            // Add the internal structure of the test results
+            await this.addTestResultStructureToNode(testResultsNode, testResult);
+            
+            sourceNode.children[testResultKey] = testResultsNode;
+            console.log(`[Server] Added test results for ${testKey} to source file ${sourceFile}`);
+          } else {
+            // Update existing test results
+            sourceNode.children[testResultKey].testData = testResult;
+            // Rebuild the structure
+            sourceNode.children[testResultKey].children = {};
+            await this.addTestResultStructureToNode(sourceNode.children[testResultKey], testResult);
+            console.log(`[Server] Updated test results for ${testKey} in source file ${sourceFile}`);
+          }
+        } else {
+          console.warn(`[Server] Source node not found or not a file for: ${sourceFile}`);
+          // If the source file node doesn't exist, we should add it to the tree
+          if (!sourceNode) {
+            console.log(`[Server] Adding missing source file to tree: ${sourceFile}`);
+            this.addFileToTree(tree, sourceFile, 'test-source');
+            // Try again to attach test results
+            const newSourceNode = this.findNodeInTree(tree, sourceFile);
+            if (newSourceNode && newSourceNode.type === 'file') {
+              if (!newSourceNode.children) {
+                newSourceNode.children = {};
+              }
+              const parts = testKey.split('/');
+              const configKey = parts[0];
+              const testName = parts.slice(1).join('/');
+              const testResultKey = `${configKey}_${testName.replace(/\//g, '_').replace(/\./g, '-')}`;
+              const testResultsNode = {
+                type: 'test-results',
+                name: testResultKey,
+                path: sourceFile + '/' + testResultKey,
+                testData: testResult,
+                children: {}
+              };
+              await this.addTestResultStructureToNode(testResultsNode, testResult);
+              newSourceNode.children[testResultKey] = testResultsNode;
+              console.log(`[Server] Added source file and test results for ${testKey}`);
+            }
+          }
+        }
+      } else {
+        console.warn(`[Server] Could not find source file for test: ${testKey}`);
+        // Even if we can't find the source file, we can still add the test results to the tree
+        // under a special section
+        const testPath = `testeranto/test-results/${testKey}`;
+        this.addFileToTree(tree, testPath, 'test-results');
+        const testNode = this.findNodeInTree(tree, testPath);
+        if (testNode && testNode.type === 'file') {
+          testNode.testData = testResult;
+          console.log(`[Server] Added orphan test results for ${testKey} to special section`);
+        }
       }
     }
+    
+    console.log(`[Server] Finished processing test results`);
+  }
+
+  private async collectTestResults(): Promise<Record<string, any>> {
+    const testResults: Record<string, any> = {};
+    const reportsDir = join(process.cwd(), 'testeranto', 'reports');
+    
+    console.log(`[Server] collectTestResults: looking in ${reportsDir}`);
+    
+    if (!existsSync(reportsDir)) {
+      console.log(`[Server] Reports directory does not exist: ${reportsDir}`);
+      return testResults;
+    }
+
+    // Walk through the reports directory to find all tests.json files
+    const walk = async (dir: string, basePath: string = ''): Promise<void> => {
+      try {
+        const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+        console.log(`[Server] Walking ${dir}, found ${entries.length} entries`);
+        
+        for (const entry of entries) {
+          const fullPath = join(dir, entry.name);
+          const relativePath = basePath ? join(basePath, entry.name) : entry.name;
+          
+          if (entry.isDirectory()) {
+            console.log(`[Server] Entering directory: ${entry.name}`);
+            await walk(fullPath, relativePath);
+          } else if (entry.isFile() && entry.name === 'tests.json') {
+            console.log(`[Server] Found tests.json at: ${relativePath}`);
+            try {
+              const content = await fs.promises.readFile(fullPath, 'utf-8');
+              const testData = JSON.parse(content);
+              
+              // The directory structure can help us identify which test this belongs to
+              // Typically: testeranto/reports/{configKey}/{testName}/tests.json
+              // Where testName is the test entrypoint path
+              const pathParts = relativePath.split('/');
+              console.log(`[Server] Path parts for ${relativePath}:`, pathParts);
+              
+              if (pathParts.length >= 3) {
+                // The structure is: reports/{configKey}/{testName}/tests.json
+                const configKey = pathParts[0]; // First part after reports
+                // The testName is everything between configKey and tests.json
+                const testNameParts = pathParts.slice(1, -1); // Remove configKey and tests.json
+                const testName = testNameParts.join('/');
+                const key = `${configKey}/${testName}`;
+                testResults[key] = testData;
+                console.log(`[Server] Mapped to key: ${key} (configKey: ${configKey}, testName: ${testName})`);
+              } else {
+                console.warn(`[Server] Unexpected path structure for tests.json: ${relativePath} (${pathParts.length} parts)`);
+              }
+            } catch (error) {
+              console.warn(`[Server] Could not read test results file ${fullPath}: ${error}`);
+            }
+          }
+        }
+      } catch (error) {
+        console.warn(`[Server] Error walking directory ${dir}: ${error}`);
+      }
+    };
+
+    // Start walking from the reports directory
+    await walk(reportsDir);
+    console.log(`[Server] Collected ${Object.keys(testResults).length} test results`);
+    
+    // Log all collected test results for debugging
+    for (const [key, value] of Object.entries(testResults)) {
+      console.log(`[Server] Test result key: ${key}, has testJob: ${!!value.testJob}`);
+    }
+    
+    return testResults;
+  }
+
+  private findSourceFileForTest(testKey: string): string | null {
+    console.log(`[Server] findSourceFileForTest called with: "${testKey}"`);
+    
+    // First, let's see what the testKey looks like
+    // It should be in format: configKey/testPath
+    const parts = testKey.split('/');
+    if (parts.length < 2) {
+      console.log(`[Server] testKey doesn't have enough parts: ${parts.length}`);
+      return null;
+    }
+    
+    const configKey = parts[0];
+    const testPath = parts.slice(1).join('/');
+    
+    console.log(`[Server] Parsed configKey: "${configKey}", testPath: "${testPath}"`);
+    
+    // Check if config exists
+    if (!this.configs?.runtimes?.[configKey]) {
+      console.log(`[Server] Config key "${configKey}" not found in runtimes`);
+      console.log(`[Server] Available configs:`, Object.keys(this.configs?.runtimes || {}));
+      return null;
+    }
+    
+    const runtimeConfig = this.configs.runtimes[configKey] as any;
+    const tests = runtimeConfig.tests || [];
+    
+    console.log(`[Server] Looking for testPath "${testPath}" in ${tests.length} tests:`);
+    tests.forEach((t: string, i: number) => console.log(`  ${i}: "${t}"`));
+    
+    // The testPath might be something like "src/ts/Calculator.test.node.ts/tests.json"
+    // But in config, it's just "src/ts/Calculator.test.node.ts"
+    // So we need to remove "/tests.json" if present
+    const cleanTestPath = testPath.replace(/\/tests\.json$/, '');
+    console.log(`[Server] Clean testPath (without /tests.json): "${cleanTestPath}"`);
+    
+    // Try exact match first
+    for (const testEntry of tests) {
+      if (testEntry === cleanTestPath) {
+        console.log(`[Server] Found exact match: "${testEntry}"`);
+        return testEntry;
+      }
+    }
+    
+    // Try to match the base name
+    const cleanTestPathBase = cleanTestPath.split('/').pop();
+    console.log(`[Server] Base name: "${cleanTestPathBase}"`);
+    
+    for (const testEntry of tests) {
+      const testEntryBase = testEntry.split('/').pop();
+      if (testEntryBase === cleanTestPathBase) {
+        console.log(`[Server] Found match by base name: "${testEntry}" (base: "${testEntryBase}")`);
+        return testEntry;
+      }
+    }
+    
+    // Try Server_Utils as a fallback
+    const result = Server_Utils.findSourceFileForTest(testKey, this.configs);
+    console.log(`[Server] Server_Utils result: ${result}`);
+    
+    return result;
+  }
+
+
+  private async addTestResultStructureToNode(node: any, testData: any): Promise<void> {
+    await Server_Utils.addTestResultStructureToNode(node, testData);
   }
 
   private async getTestResultsData(): Promise<any> {

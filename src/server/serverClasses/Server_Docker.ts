@@ -3,6 +3,7 @@ import path, { join } from "path";
 import type { IRunTime, ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
 import {
+  entryContent,
   getInputFilePath,
   type IDockerComposeResult,
 } from "./Server_Docker/Server_Docker_Constants";
@@ -48,9 +49,9 @@ import {
   spawnPromise,
   captureExistingLogs,
   executeDockerComposeCommand,
-  getTestResults,
   makeReportDirectory,
 } from "./Server_Docker/utils";
+import { getTestResultsPure } from "./Server_Docker/Server_Docker_Utils_Run";
 import * as esbuild from 'esbuild';
 
 export class Server_Docker extends Server_WS {
@@ -75,7 +76,7 @@ export class Server_Docker extends Server_WS {
     // First, ensure the HTML report is set up
     // The Server class will handle this via embedConfigInHtml()
     await super.start();
-    
+
     this.writeConfigForExtension();
     await this.setupDockerCompose();
 
@@ -310,7 +311,7 @@ export class Server_Docker extends Server_WS {
   // getDocumentationFiles is no longer needed since documentation files are embedded in HTML
 
   public getTestResults = (runtime?: string, testName?: string): any[] => {
-    return getTestResults(runtime, testName)
+    return getTestResultsPure(runtime, testName)
   };
 
   // public getAiderProcesses = (): any[] => {
@@ -425,34 +426,15 @@ export class Server_Docker extends Server_WS {
     try {
       const entryPoint = join(process.cwd(), "testeranto", "reports", "index.tsx");
       const outfile = join(process.cwd(), "testeranto", "reports", "index.js");
-      
+
       // Check if there's a custom React component specified
       let customComponentPath = this.configs.stakeholderReactModule;
-      let entryContent = '';
-      
+
       if (customComponentPath) {
         // Read the custom component path and create an entry point that uses it
         const absolutePath = join(process.cwd(), customComponentPath);
-        console.log(`[Server_Docker] Using custom React component from: ${absolutePath}`);
-        
-        // Create a wrapper that imports the custom component
-        entryContent = `
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import CustomStakeholderApp from '${absolutePath}';
 
-export function renderApp(rootElement, data) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <React.StrictMode>
-      <CustomStakeholderApp data={data} />
-    </React.StrictMode>
-  );
-}
-        `;
-        
-        // Write the custom entry point
-        await fs.promises.writeFile(entryPoint, entryContent);
+        await fs.promises.writeFile(entryPoint, entryContent(absolutePath));
       } else {
         // Use the default entry point
         // Copy the default index.tsx if it doesn't exist
@@ -463,8 +445,7 @@ export function renderApp(rootElement, data) {
           }
         }
       }
-      
-      // Bundle the app
+
       await esbuild.build({
         entryPoints: [entryPoint],
         bundle: true,
@@ -476,10 +457,8 @@ export function renderApp(rootElement, data) {
 
       });
 
-      console.log("Stakeholder app bundled successfully to testeranto/reports/index.js");
     } catch (error: any) {
       console.warn(`Failed to bundle stakeholder app: ${error.message}`);
-      console.warn("The HTML report will still work, but may not have the latest React app.");
     }
   }
 

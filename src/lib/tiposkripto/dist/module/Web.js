@@ -603,23 +603,7 @@ var WebTiposkripto = class extends BaseTiposkripto {
     );
   }
   writeFileSync(filename, payload) {
-    if (!window.__testeranto_files__) {
-      window.__testeranto_files__ = {};
-    }
-    window.__testeranto_files__[filename] = payload;
-    if (navigator.storage && navigator.storage.getDirectory) {
-      (async () => {
-        try {
-          const root = await navigator.storage.getDirectory();
-          const fileHandle = await root.getFileHandle(filename, { create: true });
-          const writable = await fileHandle.createWritable();
-          await writable.write(payload);
-          await writable.close();
-        } catch (e) {
-          console.warn("Could not write to browser storage:", e);
-        }
-      })();
-    }
+    window.__writeFile(filename, payload);
   }
 };
 var tiposkripto = async (input, testSpecification, testImplementation, testAdapter, testResourceRequirement = defaultTestResourceRequirement) => {

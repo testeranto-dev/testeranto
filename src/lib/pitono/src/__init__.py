@@ -9,23 +9,22 @@ from .base_given import BaseGiven
 from .base_when import BaseWhen
 from .base_then import BaseThen
 
-# Try to import flavored version
+# Import reverse integration
 try:
-    from .flavored import suite, given, when, then, TestSuite, PitonoTestCase
-    _flavored_available = True
-except ImportError:
-    # flavored module might not exist yet
-    _flavored_available = False
+    from .reverse_integration import ReverseIntegration
+    _reverse_integration_available = True
+except ImportError as e:
+    _reverse_integration_available = False
     # Print debug info if needed
-    # print(f"Note: Flavored module not available: {e}")
+    # print(f"Note: Reverse integration module not available: {e}")
 
 __all__ = [
     'Pitono', 'set_default_instance', 'main', 'SimpleTestAdapter',
     'ITestAdapter', 'ITTestResourceConfiguration', 'ITestSpecification',
-    'ITestImplementation', 'ITTestResourceRequest', 'IFinalResults',
+    'ITestImplementation', 'ITestResourceRequest', 'IFinalResults',
     'BaseSuite', 'BaseGiven', 'BaseWhen', 'BaseThen'
 ]
 
-# Add flavored exports if available
-if _flavored_available:
-    __all__.extend(['suite', 'given', 'when', 'then', 'TestSuite', 'PitonoTestCase'])
+# Add reverse integration exports if available
+if _reverse_integration_available:
+    __all__.append('ReverseIntegration')

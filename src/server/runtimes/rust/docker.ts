@@ -4,17 +4,23 @@ import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the rust runtime file as text
 import rustContent from "./main.rs" with { type: "text" };
+// Import the native detection module
+import nativeDetectionContent from "./native_detection.rs" with { type: "text" };
 
 // Write the rust file and a Cargo.toml to a location that will be mounted in the container
 const rustDir = join(process.cwd(), "testeranto", "rust_builder");
 const rustScriptPath = join(rustDir, "src", "main.rs");
 const cargoTomlPath = join(rustDir, "Cargo.toml");
+const nativeDetectionPath = join(rustDir, "src", "native_detection.rs");
 
 // Create directory structure
 await Bun.$`mkdir -p ${join(rustDir, "src")}`;
 
 // Write the Rust builder source
 await Bun.write(rustScriptPath, rustContent);
+
+// Write the native detection module
+await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 // Write a minimal Cargo.toml for the rust builder
 const cargoTomlContent = `[package]

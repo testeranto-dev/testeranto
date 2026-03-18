@@ -4,10 +4,16 @@ import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the golang runtime file as text
 import golangContent from "./main.go" with { type: "text" };
+// Import the native detection module
+import nativeDetectionContent from "./native_detection.go" with { type: "text" };
 
 // Write the golang file to a location that will be mounted in the container
 const golangScriptPath = join(process.cwd(), "testeranto", "golang_runtime.go");
 await Bun.write(golangScriptPath, golangContent);
+
+// Write the native detection module
+const nativeDetectionPath = join(process.cwd(), "testeranto", "runtimes", "golang", "native_detection.go");
+await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 export const golangDockerComposeFile = (
   config: ITestconfigV2,

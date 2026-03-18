@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-public abstract class BaseWhen {
+// Make BaseWhen generic for type safety
+public abstract class BaseWhen<S, R> {
     public String name;
-    public Object whenCb;
+    public Function<R, R> whenCb;
     public Exception error;
     public List<String> artifacts;
     public Boolean status;
     
-    public BaseWhen(String name, Object whenCb) {
+    public BaseWhen(String name, Function<R, R> whenCb) {
         this.name = name;
         this.whenCb = whenCb;
         this.artifacts = new ArrayList<>();
@@ -29,7 +31,7 @@ public abstract class BaseWhen {
         artifacts.add(normalizedPath);
     }
     
-    public abstract Object andWhen(Object store, Object whenCb, ITTestResourceConfiguration testResourceConfiguration);
+    public abstract R andWhen(R store, Function<R, R> whenCb, ITTestResourceConfiguration testResourceConfiguration);
     
     public Map<String, Object> toObj() {
         String errorStr = null;
@@ -44,9 +46,9 @@ public abstract class BaseWhen {
         return obj;
     }
     
-    public Object test(Object store, ITTestResourceConfiguration testResourceConfiguration) throws Exception {
+    public R test(R store, ITTestResourceConfiguration testResourceConfiguration) throws Exception {
         try {
-            Object result = andWhen(store, whenCb, testResourceConfiguration);
+            R result = andWhen(store, whenCb, testResourceConfiguration);
             status = true;
             return result;
         } catch (Exception e) {

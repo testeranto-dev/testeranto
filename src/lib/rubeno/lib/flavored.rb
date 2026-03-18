@@ -373,3 +373,248 @@ module Rubeno
     end
   end
 end
+# frozen_string_literal: true
+
+# Ruĝa - Ruby-flavored Testeranto implementation
+# Provides an idiomatic Ruby DSL for BDD testing while maintaining
+# compatibility with the baseline Testeranto pattern
+
+module Rubeno
+  module Flavored
+    # Base class for building test suites
+    class SuiteBuilder
+      attr_reader :name, :scenarios, :before_all_hook, :after_all_hook
+      
+      def initialize(name)
+        @name = name
+        @scenarios = []
+        @before_all_hook = nil
+        @after_all_hook = nil
+      end
+      
+      def before_all(&block)
+        @before_all_hook = block
+      end
+      
+      def after_all(&block)
+        @after_all_hook = block
+      end
+      
+      def scenario(description, &block)
+        context = ScenarioContext.new(description)
+        context.instance_eval(&block) if block_given?
+        @scenarios << context
+      end
+      
+      def run(config = {})
+        puts "Running suite: #{@name}"
+        
+        # Execute before_all hook if present
+        suite_context = {}
+        suite_context = @before_all_hook.call(suite_context) if @before_all_hook
+        
+        results = []
+        
+        @scenarios.each do |scenario|
+          result = scenario.run(suite_context.dup, config)
+          results << result
+          
+          status = result[:success] ? "✓" : "✗"
+          puts "  #{status} #{scenario.description}"
+          unless result[:success]
+            puts "    Error: #{result[:error]}" if result[:error]
+          end
+        end
+        
+        # Execute after_all hook if present
+        @after_all_hook.call(suite_context) if @after_all_hook
+        
+        {
+          suite_name: @name,
+          scenarios: results,
+          passed: results.all? { |r| r[:success] },
+          total: results.size,
+          passed_count: results.count { |r| r[:success] }
+        }
+      end
+      
+      # Convert to baseline Testeranto format
+      def to_baseline
+        {
+          specification: ->(suite, given, whens, thens) {
+            # This would convert the flavored suite to baseline specification
+            # Implementation depends on the baseline API
+          },
+          implementation: {
+            # This would convert to baseline implementation
+          }
+        }
+      end
+    end
+    
+    # Context for individual scenarios
+    class ScenarioContext
+      attr_reader :description, :given_desc, :given_block, :when_steps, :then_steps, :subject_block
+      
+      def initialize(description)
+        @description = description
+        @given_desc = nil
+        @given_block = nil
+        @when_steps = []
+        @then_steps = []
+        @subject_block = nil
+      end
+      
+      def subject(&block)
+        @subject_block = block
+      end
+      
+      def given(description, &block)
+        @given_desc = description
+        @given_block = block if block_given?
+      end
+      
+      def when(description, &block)
+        @when_steps << { description: description, block: block }
+      end
+      
+      def then(description, &block)
+        @then_steps << { description: description, block: block }
+      end
+      
+      def run(suite_context, config)
+        begin
+          # Setup subject
+          test_subject = @subject_block ? @subject_block.call : nil
+          
+          # Execute Given
+          given_result = if @given_block
+            @given_block.call(test_subject)
+          else
+            test_subject
+          end
+          
+          current_state = given_result
+          
+          # Execute When steps
+          @when_steps.each do |step|
+            current_state = step[:block].call(current_state)
+          end
+          
+          # Execute Then steps (assertions)
+          @then_steps.each do |step|
+            step[:block].call(current_state)
+          end
+          
+          { success: true, description: @description }
+        rescue => e
+          { success: false, description: @description, error: e.message, backtrace: e.backtrace }
+        end
+      end
+    end
+    
+    # Main DSL method to create a test suite
+    def self.suite(name, &block)
+      builder = SuiteBuilder.new(name)
+      builder.instance_eval(&block) if block_given?
+      builder
+    end
+    
+    # Fluent builder pattern for individual tests
+    class FluentTest
+      def initialize(given_desc, setup_block)
+        @given_desc = given_desc
+        @setup_block = setup_block
+        @when_steps = []
+        @then_steps = []
+      end
+      
+      def when(desc, &block)
+        @when_steps << { desc: desc, block: block }
+        self
+      end
+      
+      def then(desc, &block)
+        @then_steps << { desc: desc, block: block }
+        self
+      end
+      
+      def run
+        begin
+          # Setup
+          store = @setup_block.call
+          
+          # Execute When steps
+          @when_steps.each do |step|
+            store = step[:block].call(store)
+          end
+          
+          # Execute Then steps
+          @then_steps.each do |step|
+            step[:block].call(store)
+          end
+          
+          { success: true, store: store }
+        rescue => e
+          { success: false, error: e }
+        end
+      end
+    end
+    
+    # Fluent DSL method
+    def self.given(description, &setup_block)
+      FluentTest.new(description, setup_block)
+    end
+    
+    # Minitest integration module
+    module MinitestIntegration
+      def self.included(base)
+        base.extend(ClassMethods)
+      end
+      
+      module ClassMethods
+        def testeranto_suite(name, &block)
+          # Store the suite definition
+          @testeranto_suite = { name: name, block: block }
+          
+          # Generate test methods at runtime
+          define_method(:test_testeranto_suite) do
+            builder = Rubeno::Flavored.suite(name, &block)
+            result = builder.run
+            assert(result[:passed], "Testeranto suite '#{name}' failed: #{result[:scenarios].select { |s| !s[:success] }.map { |s| s[:description] }.join(', ')}")
+          end
+        end
+      end
+    end
+    
+    # RSpec integration module
+    module RSpecIntegration
+      module DSL
+        def suite(name, &block)
+          describe name do
+            builder = Rubeno::Flavored.suite(name, &block)
+            
+            builder.scenarios.each do |scenario|
+              it scenario.description do
+                result = scenario.run({}, {})
+                expect(result[:success]).to be true
+              end
+            end
+          end
+        end
+      end
+      
+      module Matchers
+        RSpec::Matchers.define :succeed do
+          match do |actual|
+            actual[:success] == true
+          end
+          
+          failure_message do |actual|
+            "expected test to succeed, but it failed: #{actual[:error]}"
+          end
+        end
+      end
+    end
+  end
+end

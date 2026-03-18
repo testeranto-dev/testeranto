@@ -36,7 +36,9 @@ public abstract class BaseSuite {
         
         for (BaseGiven given : givens.values()) {
             if (given.features != null) {
-                for (String feature : given.features) {
+                // Safely handle features which might be raw List or Object[]
+                for (Object featureObj : given.features) {
+                    String feature = featureObj.toString();
                     if (!seen.containsKey(feature)) {
                         features.add(feature);
                         seen.put(feature, true);
@@ -81,9 +83,11 @@ public abstract class BaseSuite {
             String gKey = entry.getKey();
             BaseGiven g = entry.getValue();
             try {
+                // Match TypeScript: artifactory is not passed to give()
+                // The give() method will handle this appropriately
                 store = g.give(subject, gKey, testResourceConfiguration, this::assertThat,
-                              0, // suiteNdx
-                              null); // artifactory is not passed to match TypeScript
+                              null, // artifactory is null to match TypeScript
+                              this.index); // suiteNdx
                 if (g.failed) {
                     fails++;
                 }
