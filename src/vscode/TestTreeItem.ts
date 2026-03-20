@@ -51,4 +51,12 @@ export class TestTreeItem extends vscode.TreeItem {
         return 'unknown';
     }
   }
+
+  // Add a method to get context value for test items with aider
+  public getContextValueWithAider(): string {
+    if (this.type === TreeItemType.Test) {
+      return 'testItemWithAider';
+    }
+    return this.getContextValue();
+  }
 }

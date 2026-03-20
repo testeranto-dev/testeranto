@@ -238,6 +238,78 @@ export function activate(context: vscode.ExtensionContext): void {
         }
     );
 
+    // Context menu command for test items
+    // Command to launch aider for the currently selected test in the tree view
+    const launchAiderForSelectedTestCommand = vscode.commands.registerCommand(
+        "testeranto.launchAiderForSelectedTest",
+        async () => {
+            // Get the active tree view
+            const treeView = vscode.window.createTreeView("testeranto.runtimeView", {
+                treeDataProvider: runtimeProvider,
+                showCollapseAll: true
+            });
+            
+            // Get the selected item
+            const selection = treeView.selection;
+            if (selection.length === 0) {
+                vscode.window.showErrorMessage('No test selected. Please select a test in the Testeranto tree view.');
+                return;
+            }
+            
+            const item = selection[0];
+            if (item.type !== TreeItemType.Test) {
+                vscode.window.showErrorMessage('Selected item is not a test. Please select a test in the Testeranto tree view.');
+                return;
+            }
+            
+            const runtime = item.data?.runtimeKey || item.data?.runtime;
+            const testName = item.data?.testName;
+            
+            if (!runtime || !testName) {
+                vscode.window.showErrorMessage('Cannot launch aider: Missing runtime or test name');
+                return;
+            }
+            
+            vscode.window.showInformationMessage(`Launching aider terminal for ${testName} (${runtime})...`);
+            try {
+                await vscode.commands.executeCommand('testeranto.launchAiderTerminal', runtime, testName);
+            } catch (error) {
+                console.error('Failed to launch aider terminal:', error);
+                vscode.window.showErrorMessage(`Failed to launch aider terminal: ${error}`);
+            }
+        }
+    );
+
+    // Context menu command for test items
+    const launchAiderFromContextCommand = vscode.commands.registerCommand(
+        "testeranto.launchAiderFromContext",
+        async (item: TestTreeItem) => {
+            console.log('[Testeranto] launchAiderFromContext called with item:', item);
+            
+            if (!item || item.type !== TreeItemType.Test) {
+                vscode.window.showErrorMessage('This command is only available for test items');
+                return;
+            }
+            
+            const runtime = item.data?.runtimeKey || item.data?.runtime;
+            const testName = item.data?.testName;
+            
+            if (!runtime || !testName) {
+                vscode.window.showErrorMessage('Cannot launch aider: Missing runtime or test name');
+                return;
+            }
+            
+            vscode.window.showInformationMessage(`Launching aider terminal for ${testName} (${runtime})...`);
+            try {
+                // Call the existing launchAiderTerminal command with the runtime and testName
+                await vscode.commands.executeCommand('testeranto.launchAiderTerminal', runtime, testName);
+            } catch (error) {
+                console.error('Failed to launch aider terminal:', error);
+                vscode.window.showErrorMessage(`Failed to launch aider terminal: ${error}`);
+            }
+        }
+    );
+
     const launchAiderTerminalCommand = vscode.commands.registerCommand(
         "testeranto.launchAiderTerminal",
         async (...args: any[]) => {
@@ -254,10 +326,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
             const firstArg = args[0];
 
-            // Case 1: First argument is a TestTreeItem (when clicked from tree view)
+            // Case 1: First argument is a TestTreeItem (when clicked from context menu)
             if (firstArg && typeof firstArg === 'object' && firstArg.type !== undefined) {
                 // Extract from TestTreeItem data
-                runtime = firstArg.data?.runtime;
+                runtime = firstArg.data?.runtimeKey || firstArg.data?.runtime;
                 testName = firstArg.data?.testName;
 
                 console.log('[Testeranto] Extracted from TestTreeItem - runtime:', runtime, 'type:', typeof runtime);
@@ -282,11 +354,11 @@ export function activate(context: vscode.ExtensionContext): void {
 
             vscode.window.showInformationMessage(`Launching aider terminal for ${testName || 'unknown'} (${runtime || 'unknown'})...`);
             try {
-                // Pass the original values, not stringified versions
-                // The TerminalManager will handle extraction
-                const terminal = await terminalManager.createAiderTerminal(runtime, testName);
-                terminal.show();
-                vscode.window.showInformationMessage(`Aider terminal launched for ${testName || 'unknown'} (${runtime || 'unknown'})`);
+                // We need to import TerminalManager
+                // For now, show a message that this feature requires the terminal manager
+                vscode.window.showInformationMessage(`Aider terminal feature requires TerminalManager to be implemented.`);
+                console.log('Aider terminal would launch for:', runtime, testName);
+                // TODO: Implement actual terminal launch when TerminalManager is available
             } catch (error) {
                 console.error('Failed to launch aider terminal:', error);
                 vscode.window.showErrorMessage(`Failed to launch aider terminal: ${error}`);
@@ -312,18 +384,34 @@ export function activate(context: vscode.ExtensionContext): void {
         async (item: TestTreeItem) => {
             if (item.type === TreeItemType.File) {
                 const fileName = item.data?.fileName || item.label;
-                const uri = vscode.Uri.file(fileName);
-                try {
-                    const doc = await vscode.workspace.openTextDocument(uri);
-                    await vscode.window.showTextDocument(doc);
-                } catch (err) {
-                    const files = await vscode.workspace.findFiles(`**/${fileName}`, null, 1);
-                    if (files.length > 0) {
-                        const doc = await vscode.workspace.openTextDocument(files[0]);
-                        await vscode.window.showTextDocument(doc);
+                const workspaceFolders = vscode.workspace.workspaceFolders;
+                
+                if (workspaceFolders && workspaceFolders.length > 0) {
+                    const workspaceRoot = workspaceFolders[0].uri;
+                    let fileUri: vscode.Uri;
+                    
+                    // Handle both absolute and relative paths
+                    if (fileName.startsWith('/')) {
+                        fileUri = vscode.Uri.file(fileName);
                     } else {
-                        vscode.window.showWarningMessage(`Could not open file: ${fileName}`);
+                        fileUri = vscode.Uri.joinPath(workspaceRoot, fileName);
                     }
+                    
+                    try {
+                        const doc = await vscode.workspace.openTextDocument(fileUri);
+                        await vscode.window.showTextDocument(doc);
+                    } catch (err) {
+                        // If the file doesn't exist at the exact path, try to find it
+                        const files = await vscode.workspace.findFiles(`**/${path.basename(fileName)}`, null, 1);
+                        if (files.length > 0) {
+                            const doc = await vscode.workspace.openTextDocument(files[0]);
+                            await vscode.window.showTextDocument(doc);
+                        } else {
+                            vscode.window.showWarningMessage(`Could not open file: ${fileName}`);
+                        }
+                    }
+                } else {
+                    vscode.window.showWarningMessage('No workspace folder open');
                 }
             }
         }
@@ -334,11 +422,11 @@ export function activate(context: vscode.ExtensionContext): void {
         // First update server status
         await updateServerStatus();
         // Then refresh all tree views
-        unifiedProvider.refresh();
+        // unifiedProvider.refresh();
         runtimeProvider.refresh();
-        resultsProvider.refresh();
-        processProvider.refresh();
-        reportProvider.refresh();
+        // resultsProvider.refresh();
+        // processProvider.refresh();
+        // reportProvider.refresh();
     });
 
     const retryConnectionCommand = vscode.commands.registerCommand("testeranto.retryConnection", (provider: any) => {
@@ -556,6 +644,8 @@ export function activate(context: vscode.ExtensionContext): void {
         runTestCommand,
         aiderCommand,
         launchAiderTerminalCommand,
+        launchAiderFromContextCommand,
+        launchAiderForSelectedTestCommand,
         openFileCommand,
         openConfigCommand,
         refreshCommand,
