@@ -21,6 +21,18 @@ export type ITTestResourceRequirement = {
     ports: number;
     fs: string;
 };
+export type ISetups<I extends TestTypeParams_any> = Record<string, import("./BaseSetup").BaseSetup<I>>;
+export type IActions<I extends TestTypeParams_any> = Record<string, import("./BaseAction").BaseAction<I>>;
+export type IChecks<I extends TestTypeParams_any> = Record<string, import("./BaseCheck").BaseCheck<I>>;
+export type IArranges<I extends TestTypeParams_any> = Record<string, import("./BaseArrange").BaseArrange<I>>;
+export type IActs<I extends TestTypeParams_any> = Record<string, import("./BaseAct").BaseAct<I>>;
+export type IAsserts<I extends TestTypeParams_any> = Record<string, import("./BaseAssert").BaseAssert<I>>;
+export type IMaps<I extends TestTypeParams_any> = Record<string, import("./BaseMap").BaseMap<I>>;
+export type IFeeds<I extends TestTypeParams_any> = Record<string, import("./BaseFeed").BaseFeed<I>>;
+export type IValidates<I extends TestTypeParams_any> = Record<string, import("./BaseValidate").BaseValidate<I>>;
+export type IGivens<I extends TestTypeParams_any> = Record<string, import("./BaseGiven").BaseGiven<I>>;
+export type IWhens<I extends TestTypeParams_any> = Record<string, import("./BaseWhen").BaseWhen<I>>;
+export type IThens<I extends TestTypeParams_any> = Record<string, import("./BaseThen").BaseThen<I>>;
 export type ITTestResourceRequest = {
     ports: number;
 };

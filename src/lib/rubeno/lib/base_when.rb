@@ -1,47 +1,17 @@
 module Rubeno
-  class BaseWhen
-    attr_accessor :name, :when_cb, :error, :artifacts, :status
-    
+  class BaseWhen < BaseAction
     def initialize(name, when_cb)
-      @name = name
-      @when_cb = when_cb
-      @artifacts = []
+      super(name, when_cb)
     end
     
-    def add_artifact(path)
-      normalized_path = path.gsub('\\', '/')
-      @artifacts << normalized_path
+    def perform_action(store, action_cb, test_resource)
+      # Call the action_cb directly
+      action_cb.call(store)
     end
     
+    # Alias for BDD pattern
     def and_when(store, when_cb, test_resource_configuration, pm)
-      # Call the when_cb directly
-      when_cb.call(store)
-    end
-    
-    def to_obj
-      error_str = nil
-      if @error
-        error_str = "#{@error.class}: #{@error.message}"
-      end
-      {
-        name: @name,
-        status: @status,
-        error: error_str,
-        artifacts: @artifacts
-      }
-    end
-    
-    def test(store, test_resource_configuration)
-      begin
-        # Call the when_cb with the store
-        result = @when_cb.call(store)
-        @status = true
-        result
-      rescue => e
-        @status = false
-        @error = e
-        raise e
-      end
+      perform_action(store, when_cb, test_resource_configuration)
     end
   end
 end

@@ -1,18 +1,24 @@
 package golingvu
 
-// Ibdd_in_any represents the input types for Behavior-Driven Development tests.
-// Implement this interface to define custom input types for your tests.
-type Ibdd_in_any interface {
+// TestTypeParams_any represents the unified type parameters for test execution.
+// This replaces Ibdd_in_any for the new unified architecture.
+type TestTypeParams_any interface {
 	Iinput() interface{}
 	Isubject() interface{}
 	Istore() interface{}
 	Iselection() interface{}
-	Then() interface{}
 	Given() interface{}
+	When() interface{}
+	Then() interface{}
 }
 
-// Ibdd_out_any represents the output types for Behavior-Driven Development tests.
-type Ibdd_out_any interface{}
+// TestSpecShape_any represents the unified structure of test specifications.
+// This replaces Ibdd_out_any for the new unified architecture.
+type TestSpecShape_any interface{}
+
+// Legacy type aliases for backward compatibility
+type Ibdd_in_any = TestTypeParams_any
+type Ibdd_out_any = TestSpecShape_any
 
 // TestFunc is a function that can be used in flavored tests
 type TestFunc func(...interface{}) interface{}
@@ -37,8 +43,28 @@ type ITestImplementation struct {
 	Thens  map[string]interface{}
 }
 
-// ITestAdapter defines the interface for adapting test execution to different environments.
-// Implement this interface to customize test setup, teardown, and execution.
+// IUniversalTestAdapter defines the unified interface for adapting test execution.
+// It uses methodology-agnostic terminology for the new unified architecture.
+type IUniversalTestAdapter interface {
+	// Lifecycle hooks
+	PrepareAll(input interface{}, testResource ITTestResourceConfiguration) (interface{}, error)
+	PrepareEach(subject, initializer interface{}, testResource ITTestResourceConfiguration, initialValues interface{}) (interface{}, error)
+	
+	// Execution
+	Execute(store, actionCB interface{}, testResource ITTestResourceConfiguration) (interface{}, error)
+	
+	// Verification
+	Verify(store, checkCB interface{}, testResource ITTestResourceConfiguration) (interface{}, error)
+	
+	// Cleanup
+	CleanupEach(store interface{}, key string) (interface{}, error)
+	CleanupAll(store interface{}) (interface{}, error)
+	
+	// Assertion
+	Assert(x interface{}) bool
+}
+
+// ITestAdapter defines the legacy interface for backward compatibility.
 type ITestAdapter interface {
 	BeforeAll(input interface{}, tr ITTestResourceConfiguration, pm interface{}) interface{}
 	AfterAll(store interface{}, pm interface{}) interface{}
@@ -73,14 +99,37 @@ type ITTestResourceRequirement struct {
 
 // ITTestResourceRequest represents a request for test resources.
 type ITTestResourceRequest struct {
+	Ports int
 }
 
 // DefaultTestResourceRequest provides a default test resource request.
-var DefaultTestResourceRequest = ITTestResourceRequest{}
+var DefaultTestResourceRequest = ITTestResourceRequest{
+	Ports: 0,
+}
 
 // DefaultTestResourceRequirement provides default test resource requirements.
 var DefaultTestResourceRequirement = ITTestResourceRequirement{
 	Name: "default",
 	Fs:   "./",
 }
+
+// Unified Pattern Types
+type ISetups = map[string]interface{}
+type IActions = map[string]interface{}
+type IChecks = map[string]interface{}
+
+// AAA Pattern Types
+type IArranges = map[string]interface{}
+type IActs = map[string]interface{}
+type IAsserts = map[string]interface{}
+
+// TDT Pattern Types
+type IMaps = map[string]interface{}
+type IFeeds = map[string]interface{}
+type IValidates = map[string]interface{}
+
+// BDD Pattern Types (legacy)
+type IGivens = map[string]interface{}
+type IWhens = map[string]interface{}
+type IThens = map[string]interface{}
 

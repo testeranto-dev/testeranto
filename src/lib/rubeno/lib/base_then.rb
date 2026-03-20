@@ -1,44 +1,22 @@
 module Rubeno
-  class BaseThen
-    attr_accessor :name, :then_cb, :error, :artifacts, :status
-    
+  class BaseThen < BaseCheck
     def initialize(name, then_cb)
-      @name = name
-      @then_cb = then_cb
-      @error = false
-      @artifacts = []
+      super(name, then_cb)
     end
     
-    def add_artifact(path)
-      normalized_path = path.gsub('\\', '/')
-      @artifacts << normalized_path
+    def verify_check(store, check_cb, test_resource_configuration)
+      # Call the check_cb directly
+      check_cb.call(store)
     end
     
+    # Alias for BDD pattern
     def but_then(store, then_cb, test_resource_configuration, pm)
-      # Call the then_cb directly
-      then_cb.call(store)
+      verify_check(store, then_cb, test_resource_configuration)
     end
     
-    def to_obj
-      {
-        name: @name,
-        error: @error,
-        artifacts: @artifacts,
-        status: @status
-      }
-    end
-    
-    def test(store, test_resource_configuration)
-      begin
-        # Call the then_cb with the store to get a boolean result
-        result = @then_cb.call(store)
-        @status = true
-        result
-      rescue => e
-        @status = false
-        @error = true
-        raise e
-      end
+    # Override test to not require filepath for backward compatibility
+    def test(store, test_resource_configuration, filepath = nil)
+      super(store, test_resource_configuration, filepath)
     end
   end
 end

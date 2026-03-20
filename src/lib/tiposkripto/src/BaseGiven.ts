@@ -1,5 +1,6 @@
-import { Ibdd_in_any } from "./CoreTypes.js";
+import { TestTypeParams_any } from "./CoreTypes.js";
 import { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
+import { BaseSetup } from "./BaseSetup.js";
 
 /**
  * Represents a collection of Given conditions keyed by their names.
@@ -8,10 +9,15 @@ import { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
  * - Tests often need to reference specific Given conditions by name
  * - This allows for better organization and reuse of setup logic
  * - The BDD pattern often involves multiple named Given scenarios
+ * @deprecated Use BaseSetup for unified terminology
  */
-export type IGivens<I extends Ibdd_in_any> = Record<string, BaseGiven<I>>;
+export type IGivens<I extends TestTypeParams_any> = Record<string, BaseGiven<I>>;
 
-export abstract class BaseGiven<I extends Ibdd_in_any> {
+/**
+ * BaseGiven extends BaseSetup for BDD pattern.
+ * @deprecated Use BaseSetup for unified terminology
+ */
+export abstract class BaseGiven<I extends TestTypeParams_any> extends BaseSetup<I> {
   features: string[];
   whens: any[];
   thens: any[];
@@ -47,17 +53,8 @@ export abstract class BaseGiven<I extends Ibdd_in_any> {
     givenCB: I["given"],
     initialValues: any
   ) {
-    this.features = features;
-    this.whens = whens;
-    this.thens = thens;
-    this.givenCB = givenCB;
-    this.initialValues = initialValues;
-    this.fails = 0; // Initialize fail count
-    this.failed = false;
-    this.error = null;
-    this.store = null;
-    this.key = "";
-    this.status = undefined;
+    // Map whens to actions, thens to checks
+    super(features, whens, thens, givenCB, initialValues);
   }
 
   beforeAll(store: I["istore"]) {
@@ -88,6 +85,17 @@ export abstract class BaseGiven<I extends Ibdd_in_any> {
     givenCB: I["given"],
     initialValues: any
   ): Promise<I["istore"]>;
+
+  // Implement BaseSetup's abstract method
+  async setupThat(
+    subject: I["isubject"],
+    testResourceConfiguration: ITestResourceConfiguration,
+    artifactory: ITestArtifactory,
+    setupCB: I["given"],
+    initialValues: any
+  ): Promise<I["istore"]> {
+    return this.givenThat(subject, testResourceConfiguration, artifactory, setupCB, initialValues);
+  }
 
   async afterEach(
     store: I["istore"],

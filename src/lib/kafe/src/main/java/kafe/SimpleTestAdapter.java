@@ -4,34 +4,34 @@ import java.util.function.Function;
 
 public class SimpleTestAdapter<I, S, R> implements ITestAdapter<I, S, R> {
     @Override
-    public S beforeAll(I input, ITTestResourceConfiguration tr) {
+    public S prepareAll(I input, ITTestResourceConfiguration tr) {
         return (S) input;
     }
     
     @Override
-    public R afterAll(R store) {
+    public R cleanupAll(R store) {
         return store;
     }
     
     @Override
-    public R beforeEach(S subject, Function<S, R> initializer, ITTestResourceConfiguration testResource, 
+    public R prepareEach(S subject, Function<S, R> initializer, ITTestResourceConfiguration testResource, 
                        Object initialValues) {
         return initializer.apply(subject);
     }
     
     @Override
-    public R afterEach(R store, String key) {
+    public R cleanupEach(R store, String key) {
         return store;
     }
     
     @Override
-    public R andWhen(R store, Function<R, R> whenCb, ITTestResourceConfiguration testResource) {
-        return whenCb.apply(store);
+    public R execute(R store, Function<R, R> actionCB, ITTestResourceConfiguration testResource) {
+        return actionCB.apply(store);
     }
     
     @Override
-    public Object butThen(R store, Function<R, Object> thenCb, ITTestResourceConfiguration testResource) {
-        return thenCb.apply(store);
+    public Object verify(R store, Function<R, Object> checkCB, ITTestResourceConfiguration testResource) {
+        return checkCB.apply(store);
     }
     
     @Override
@@ -39,4 +39,6 @@ public class SimpleTestAdapter<I, S, R> implements ITestAdapter<I, S, R> {
         // Simple implementation
         return true;
     }
+    
+    // The default methods in the interface will handle the legacy method calls
 }

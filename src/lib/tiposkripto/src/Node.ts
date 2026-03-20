@@ -1,11 +1,10 @@
 import fs from "fs"
 import {
-  Ibdd_in_any,
-  Ibdd_out_any,
+  TestTypeParams_any,
+  TestSpecShape_any,
   ITestSpecification,
   ITestImplementation,
   ITestAdapter,
-  Ibdd_out
 } from "./CoreTypes";
 import BaseTiposkripto from "./BaseTiposkripto";
 import { ITTestResourceRequest, defaultTestResourceRequirement } from "./types";
@@ -15,8 +14,8 @@ console.log(`[NodeTiposkripto] ${process.argv}`);
 const config = JSON.parse(process.argv[2]);
 
 export class NodeTiposkripto<
-  I extends Ibdd_in_any,
-  O extends Ibdd_out_any,
+  I extends TestTypeParams_any,
+  O extends TestSpecShape_any,
   M
 > extends BaseTiposkripto<I, O, M> {
   constructor(
@@ -45,7 +44,7 @@ export class NodeTiposkripto<
   }
 }
 
-const tiposkripto = async <I extends Ibdd_in_any, O extends Ibdd_out, M>(
+const tiposkripto = async <I extends TestTypeParams_any, O extends TestSpecShape_any, M>(
   input: I["iinput"],
   testSpecification: ITestSpecification<I, O>,
   testImplementation: ITestImplementation<I, O, M>,

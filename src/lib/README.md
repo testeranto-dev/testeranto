@@ -7,7 +7,7 @@ These are the 6 BDD libs
 - kafe (java)
 - rusto (rust)
 
-Each is an implementation of a Testeranto test. Each test should come online with a "test resource configuration" as a command line parameter (in the case of node, python and pitono). For webtests, this should be passed as a query parameter. As each test completes, it should transmit its results back to the server via websockets (this is to accommodate web tests which cannot write to fs directly).
+Each is an implementation of a Testeranto test supporting multiple testing patterns through unified terminology: Setup-Action-Check (formerly BDD's Given-When-Then, AAA's Arrange-Act-Assert, and TDT's Map-Feed-Validate). Each test should come online with a "test resource configuration" as a command line parameter (in the case of node, python and pitono). For webtests, this should be passed as a query parameter. As each test completes, it should transmit its results back to the server via websockets (this is to accommodate web tests which cannot write to fs directly).
 
 ## Publishing
 

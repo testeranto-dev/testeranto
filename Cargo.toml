@@ -7,17 +7,15 @@ edition = "2021"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 md5 = "0.8.0"
-rusto = "0.0.1"
+rusto = { path = "src/lib/rusto", version = "0.1.22" }
 
 [lib]
-name = "rubeno" # The name of the library (defaults to package name)
-path = "src/lib.rs" # The entry point for the library
-crate-type = [
-  "rlib",
-] # The type of library to produce (e.g., rlib, dylib, staticlib)
-test = false # Whether to build/run unit tests by default
-doctest = false # Whether to run documentation tests
-bench = false # Whether to run benchmarks
-doc = true # Whether to include this in documentation
-proc-macro = false # Set to true if this is a procedural macro library
-harness = false # Use the standard libtest harness
+name = "rust_server_runtime"
+path = "src/lib.rs"
+crate-type = ["rlib"]
+test = false
+doctest = false
+bench = false
+doc = true
+proc-macro = false
+harness = false

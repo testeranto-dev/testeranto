@@ -1,9 +1,9 @@
-import { Ibdd_in_any, Ibdd_out, Ibdd_out_any, ITestAdapter, ITestImplementation, ITestSpecification } from "./CoreTypes.js";
+import { TestTypeParams_any, TestSpecShape_any, ITestAdapter, ITestImplementation, ITestSpecification } from "./CoreTypes.js";
 import BaseTiposkripto from "./BaseTiposkripto";
 import { ITTestResourceRequest } from "./types";
-export declare class WebTiposkripto<I extends Ibdd_in_any, O extends Ibdd_out_any, M> extends BaseTiposkripto<I, O, M> {
+export declare class WebTiposkripto<I extends TestTypeParams_any, O extends TestSpecShape_any, M> extends BaseTiposkripto<I, O, M> {
     constructor(input: I["iinput"], testSpecification: ITestSpecification<I, O>, testImplementation: ITestImplementation<I, O, M>, testResourceRequirement: ITTestResourceRequest, testAdapter: Partial<ITestAdapter<I>>);
     writeFileSync(filename: string, payload: string): void;
 }
-declare const tiposkripto: <I extends Ibdd_in_any, O extends Ibdd_out, M>(input: I["iinput"], testSpecification: ITestSpecification<I, O>, testImplementation: ITestImplementation<I, O, M>, testAdapter: Partial<ITestAdapter<I>>, testResourceRequirement?: ITTestResourceRequest) => Promise<BaseTiposkripto<I, O, M>>;
+declare const tiposkripto: <I extends TestTypeParams_any, O extends TestSpecShape_any, M>(input: I["iinput"], testSpecification: ITestSpecification<I, O>, testImplementation: ITestImplementation<I, O, M>, testAdapter: Partial<ITestAdapter<I>>, testResourceRequirement?: ITTestResourceRequest) => Promise<BaseTiposkripto<I, O, M>>;
 export default tiposkripto;

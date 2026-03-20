@@ -1,38 +1,12 @@
-// src/index.ts
-var BaseAdapter = () => ({
-  beforeAll: async (input, testResource) => {
-    return input;
-  },
-  beforeEach: async function(subject, initializer, testResource, initialValues) {
-    return subject;
-  },
-  afterEach: async (store, key) => Promise.resolve(store),
-  afterAll: (store) => void 0,
-  butThen: async (store, thenCb, testResource) => {
-    return thenCb(store);
-  },
-  andWhen: async (store, whenCB, testResource) => {
-    return whenCB(store);
-  },
-  assertThis: (x) => x
-});
-var DefaultAdapter = (p) => {
-  const base = BaseAdapter();
-  return {
-    ...base,
-    ...p
-  };
-};
-
-// src/BaseGiven.ts
-var BaseGiven = class {
-  constructor(features, whens, thens, givenCB, initialValues) {
+// src/BaseSetup.ts
+var BaseSetup = class {
+  constructor(features, actions, checks, setupCB, initialValues) {
     this.artifacts = [];
     this.fails = 0;
     this.features = features;
-    this.whens = whens;
-    this.thens = thens;
-    this.givenCB = givenCB;
+    this.actions = actions;
+    this.checks = checks;
+    this.setupCB = setupCB;
     this.initialValues = initialValues;
     this.fails = 0;
     this.failed = false;
@@ -40,6 +14,214 @@ var BaseGiven = class {
     this.store = null;
     this.key = "";
     this.status = void 0;
+  }
+  addArtifact(path) {
+    if (typeof path !== "string") {
+      throw new Error(
+        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
+          path
+        )}`
+      );
+    }
+    const normalizedPath = path.replace(/\\/g, "/");
+    this.artifacts.push(normalizedPath);
+  }
+  toObj() {
+    return {
+      key: this.key,
+      actions: (this.actions || []).map((a) => {
+        if (a && a.toObj) return a.toObj();
+        console.error("Action step is not as expected!", JSON.stringify(a));
+        return {};
+      }),
+      checks: (this.checks || []).map((c) => c && c.toObj ? c.toObj() : {}),
+      error: this.error ? [this.error, this.error.stack] : null,
+      failed: this.failed,
+      features: this.features || [],
+      artifacts: this.artifacts,
+      status: this.status
+    };
+  }
+  async afterEach(store, key, artifactory) {
+    return store;
+  }
+  async setup(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
+    this.key = key;
+    this.fails = 0;
+    const actualArtifactory = artifactory || ((fPath, value) => {
+    });
+    const setupArtifactory = (fPath, value) => actualArtifactory(`setup-${key}/${fPath}`, value);
+    try {
+      this.store = await this.setupThat(
+        subject,
+        testResourceConfiguration,
+        setupArtifactory,
+        this.setupCB,
+        this.initialValues
+      );
+      this.status = true;
+    } catch (e) {
+      this.status = false;
+      this.failed = true;
+      this.fails++;
+      this.error = e;
+      return this.store;
+    }
+    try {
+      for (const [actionNdx, actionStep] of (this.actions || []).entries()) {
+        try {
+          this.store = await actionStep.test(
+            this.store,
+            testResourceConfiguration
+          );
+        } catch (e) {
+          this.failed = true;
+          this.fails++;
+          this.error = e;
+        }
+      }
+      for (const [checkNdx, checkStep] of this.checks.entries()) {
+        try {
+          const filepath = suiteNdx !== void 0 ? `suite-${suiteNdx}/setup-${key}/check-${checkNdx}` : `setup-${key}/check-${checkNdx}`;
+          const t = await checkStep.test(
+            this.store,
+            testResourceConfiguration,
+            filepath
+          );
+          tester(t);
+        } catch (e) {
+          this.failed = true;
+          this.fails++;
+          this.error = e;
+        }
+      }
+    } catch (e) {
+      this.error = e;
+      this.failed = true;
+      this.fails++;
+    } finally {
+      try {
+        await this.afterEach(this.store, this.key, setupArtifactory);
+      } catch (e) {
+        this.failed = true;
+        this.fails++;
+        this.error = e;
+      }
+    }
+    return this.store;
+  }
+};
+
+// src/BaseAction.ts
+var BaseAction = class {
+  constructor(name, actionCB) {
+    this.artifacts = [];
+    this.name = name;
+    this.actionCB = actionCB;
+  }
+  addArtifact(path) {
+    if (typeof path !== "string") {
+      throw new Error(
+        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
+          path
+        )}`
+      );
+    }
+    const normalizedPath = path.replace(/\\/g, "/");
+    this.artifacts.push(normalizedPath);
+  }
+  toObj() {
+    const obj = {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}
+${this.error.stack}` : null,
+      artifacts: this.artifacts
+    };
+    return obj;
+  }
+  async test(store, testResourceConfiguration) {
+    try {
+      const result = await this.performAction(
+        store,
+        this.actionCB,
+        testResourceConfiguration
+      );
+      this.status = true;
+      return result;
+    } catch (e) {
+      this.status = false;
+      this.error = e;
+      throw e;
+    }
+  }
+};
+
+// src/BaseCheck.ts
+var BaseCheck = class {
+  constructor(name, checkCB) {
+    this.artifacts = [];
+    this.name = name;
+    this.checkCB = checkCB;
+    this.error = false;
+    this.artifacts = [];
+  }
+  addArtifact(path) {
+    if (typeof path !== "string") {
+      throw new Error(
+        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
+          path
+        )}`
+      );
+    }
+    const normalizedPath = path.replace(/\\/g, "/");
+    this.artifacts.push(normalizedPath);
+  }
+  toObj() {
+    const obj = {
+      name: this.name,
+      error: this.error,
+      artifacts: this.artifacts,
+      status: this.status
+    };
+    return obj;
+  }
+  async test(store, testResourceConfiguration, filepath) {
+    const addArtifact = this.addArtifact.bind(this);
+    try {
+      const x = await this.verifyCheck(
+        store,
+        async (s) => {
+          try {
+            if (typeof this.checkCB === "function") {
+              const result = await this.checkCB(s);
+              return result;
+            } else {
+              return this.checkCB;
+            }
+          } catch (e) {
+            this.error = true;
+            throw e;
+          }
+        },
+        testResourceConfiguration
+      );
+      this.status = true;
+      return x;
+    } catch (e) {
+      this.status = false;
+      this.error = true;
+      throw e;
+    }
+  }
+};
+
+// src/BaseGiven.ts
+var BaseGiven = class extends BaseSetup {
+  constructor(features, whens, thens, givenCB, initialValues) {
+    super(features, whens, thens, givenCB, initialValues);
+    this.artifacts = [];
+    this.fails = 0;
   }
   addArtifact(path) {
     if (typeof path !== "string") {
@@ -70,6 +252,10 @@ var BaseGiven = class {
       artifacts: this.artifacts,
       status: this.status
     };
+  }
+  // Implement BaseSetup's abstract method
+  async setupThat(subject, testResourceConfiguration, artifactory, setupCB, initialValues) {
+    return this.givenThat(subject, testResourceConfiguration, artifactory, setupCB, initialValues);
   }
   async afterEach(store, key, artifactory) {
     return store;
@@ -140,6 +326,97 @@ var BaseGiven = class {
     }
     return this.store;
   }
+};
+
+// src/BaseWhen.ts
+var BaseWhen = class extends BaseAction {
+  constructor(name, whenCB) {
+    super(name, whenCB);
+    this.whenCB = whenCB;
+  }
+  // Implement BaseAction's abstract method
+  async performAction(store, actionCB, testResource) {
+    return this.andWhen(store, actionCB, testResource);
+  }
+  async test(store, testResourceConfiguration) {
+    try {
+      const result = await this.andWhen(
+        store,
+        this.whenCB,
+        testResourceConfiguration
+        // proxiedPm
+      );
+      this.status = true;
+      return result;
+    } catch (e) {
+      this.status = false;
+      this.error = e;
+      throw e;
+    }
+  }
+};
+
+// src/BaseThen.ts
+var BaseThen = class extends BaseCheck {
+  constructor(name, thenCB) {
+    super(name, thenCB);
+    this.thenCB = thenCB;
+  }
+  async test(store, testResourceConfiguration, filepath) {
+    const addArtifact = this.addArtifact.bind(this);
+    try {
+      const x = await this.butThen(
+        store,
+        async (s) => {
+          try {
+            if (typeof this.thenCB === "function") {
+              const result = await this.thenCB(s);
+              return result;
+            } else {
+              return this.thenCB;
+            }
+          } catch (e) {
+            this.error = true;
+            throw e;
+          }
+        },
+        testResourceConfiguration
+        // proxiedPm
+      );
+      this.status = true;
+      return x;
+    } catch (e) {
+      this.status = false;
+      this.error = true;
+      throw e;
+    }
+  }
+};
+
+// src/index.ts
+var BaseAdapter = () => ({
+  prepareAll: async (input, testResource) => {
+    return input;
+  },
+  prepareEach: async function(subject, initializer, testResource, initialValues) {
+    return subject;
+  },
+  cleanupEach: async (store, key) => Promise.resolve(store),
+  cleanupAll: (store) => void 0,
+  verify: async (store, checkCb, testResource) => {
+    return checkCb(store);
+  },
+  execute: async (store, actionCB, testResource) => {
+    return actionCB(store);
+  },
+  assert: (x) => x
+});
+var DefaultAdapter = (p) => {
+  const base = BaseAdapter();
+  return {
+    ...base,
+    ...p
+  };
 };
 
 // src/BaseSuite.ts
@@ -251,112 +528,6 @@ var BaseSuite = class {
   }
 };
 
-// src/BaseThen.ts
-var BaseThen = class {
-  constructor(name, thenCB) {
-    this.artifacts = [];
-    this.name = name;
-    this.thenCB = thenCB;
-    this.error = false;
-    this.artifacts = [];
-  }
-  addArtifact(path) {
-    if (typeof path !== "string") {
-      throw new Error(
-        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
-      );
-    }
-    const normalizedPath = path.replace(/\\/g, "/");
-    this.artifacts.push(normalizedPath);
-  }
-  toObj() {
-    const obj = {
-      name: this.name,
-      error: this.error,
-      artifacts: this.artifacts,
-      status: this.status
-    };
-    return obj;
-  }
-  async test(store, testResourceConfiguration, filepath) {
-    const addArtifact = this.addArtifact.bind(this);
-    try {
-      const x = await this.butThen(
-        store,
-        async (s) => {
-          try {
-            if (typeof this.thenCB === "function") {
-              const result = await this.thenCB(s);
-              return result;
-            } else {
-              return this.thenCB;
-            }
-          } catch (e) {
-            this.error = true;
-            throw e;
-          }
-        },
-        testResourceConfiguration
-        // proxiedPm
-      );
-      this.status = true;
-      return x;
-    } catch (e) {
-      this.status = false;
-      this.error = true;
-      throw e;
-    }
-  }
-};
-
-// src/BaseWhen.ts
-var BaseWhen = class {
-  constructor(name, whenCB) {
-    this.artifacts = [];
-    this.name = name;
-    this.whenCB = whenCB;
-  }
-  addArtifact(path) {
-    if (typeof path !== "string") {
-      throw new Error(
-        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
-      );
-    }
-    const normalizedPath = path.replace(/\\/g, "/");
-    this.artifacts.push(normalizedPath);
-  }
-  toObj() {
-    const obj = {
-      name: this.name,
-      status: this.status,
-      error: this.error ? `${this.error.name}: ${this.error.message}
-${this.error.stack}` : null,
-      artifacts: this.artifacts
-    };
-    return obj;
-  }
-  async test(store, testResourceConfiguration) {
-    try {
-      const result = await this.andWhen(
-        store,
-        this.whenCB,
-        testResourceConfiguration
-        // proxiedPm
-      );
-      this.status = true;
-      return result;
-    } catch (e) {
-      this.status = false;
-      this.error = e;
-      throw e;
-    }
-  }
-};
-
 // src/types.ts
 var defaultTestResourceRequirement = {
   ports: 0
@@ -381,13 +552,13 @@ var BaseTiposkripto = class {
         a[key] = (somestring, givens) => {
           return new class extends BaseSuite {
             afterAll(store) {
-              return fullAdapter.afterAll(store);
+              return fullAdapter.cleanupAll(store);
             }
             assertThat(t) {
-              return fullAdapter.assertThis(t);
+              return fullAdapter.assert(t);
             }
             async setup(s, tr) {
-              return fullAdapter.beforeAll?.(s, tr) ?? s;
+              return fullAdapter.prepareAll?.(s, tr) ?? s;
             }
           }(somestring, index, givens);
         };
@@ -403,7 +574,7 @@ var BaseTiposkripto = class {
           const safeThens = Array.isArray(thens) ? [...thens] : [];
           return new class extends BaseGiven {
             async givenThat(subject, testResource, initializer, initialValues2) {
-              return fullAdapter.beforeEach(
+              return fullAdapter.prepareEach(
                 subject,
                 initializer,
                 testResource,
@@ -411,7 +582,7 @@ var BaseTiposkripto = class {
               );
             }
             afterEach(store, key2) {
-              return Promise.resolve(fullAdapter.afterEach(store, key2));
+              return Promise.resolve(fullAdapter.cleanupEach(store, key2));
             }
           }(
             safeFeatures,
@@ -430,7 +601,7 @@ var BaseTiposkripto = class {
         a[key] = (...payload) => {
           const whenInstance = new class extends BaseWhen {
             async andWhen(store, whenCB, testResource) {
-              return await fullAdapter.andWhen(store, whenCB, testResource);
+              return await fullAdapter.execute(store, whenCB, testResource);
             }
           }(`${key}: ${payload && payload.toString()}`, whEn(...payload));
           return whenInstance;
@@ -444,7 +615,7 @@ var BaseTiposkripto = class {
         a[key] = (...args) => {
           const thenInstance = new class extends BaseThen {
             async butThen(store, thenCB, testResource) {
-              return await fullAdapter.butThen(store, thenCB, testResource);
+              return await fullAdapter.verify(store, thenCB, testResource);
             }
           }(`${key}: ${args && args.toString()}`, thEn(...args));
           return thenInstance;
@@ -471,15 +642,7 @@ var BaseTiposkripto = class {
         try {
           const x = await suite2.run(
             input,
-            testResourceConfiguration2 || {
-              name: suite2.name,
-              fs: process.cwd(),
-              ports: [],
-              timeout: 3e4,
-              retries: 3,
-              environment: {},
-              files: []
-            }
+            testResourceConfiguration2
           );
           return x;
         } catch (e) {
@@ -585,7 +748,7 @@ var BaseTiposkripto = class {
 };
 
 // src/Web.ts
-var config = process.argv0[2];
+var config = window.testResourceConfig;
 var WebTiposkripto = class extends BaseTiposkripto {
   constructor(input, testSpecification, testImplementation, testResourceRequirement, testAdapter) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -615,8 +778,6 @@ var tiposkripto = async (input, testSpecification, testImplementation, testAdapt
       testResourceRequirement,
       testAdapter
     );
-    const root = await navigator.storage.getDirectory();
-    const fileHandle = await root.getFileHandle(`${config.fs}/tests.json`);
     return t;
   } catch (e) {
     console.error(e);

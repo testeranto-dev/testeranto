@@ -1,20 +1,9 @@
 from typing import Any, Dict, List, Callable, Optional
+from .base_action import BaseAction
 
-class BaseWhen:
+class BaseWhen(BaseAction):
     def __init__(self, name: str, when_cb: Callable[[Any], Any]):
-        self.name = name
-        self.when_cb = when_cb
-        self.error: Optional[Exception] = None
-        self.artifacts: List[str] = []
-        self.status: Optional[bool] = None
-    
-    def add_artifact(self, path: str) -> None:
-        if not isinstance(path, str):
-            raise TypeError(
-                f"[ARTIFACT ERROR] Expected string, got {type(path)}: {path}"
-            )
-        normalized_path = path.replace('\\', '/')
-        self.artifacts.append(normalized_path)
+        super().__init__(name, when_cb)
     
     async def and_when(
         self,
@@ -23,33 +12,16 @@ class BaseWhen:
         test_resource_configuration: Any
     ) -> Any:
         # This should be implemented by subclasses
-        raise NotImplementedError("and_when must be implemented by subclasses")
+        # But provide a default implementation that calls perform_action
+        return await self.perform_action(store, when_cb, test_resource_configuration)
     
-    def to_obj(self) -> Dict[str, Any]:
-        error_str = None
-        if self.error:
-            error_str = f"{type(self.error).__name__}: {str(self.error)}"
-        return {
-            'name': self.name,
-            'status': self.status,
-            'error': error_str,
-            'artifacts': self.artifacts
-        }
-    
-    async def test(
+    async def perform_action(
         self,
         store: Any,
-        test_resource_configuration: Any,
+        action_cb: Callable[[Any], Any],
+        test_resource
     ) -> Any:
-        try:
-            result = await self.and_when(
-                store,
-                self.when_cb,
-                test_resource_configuration
-            )
-            self.status = True
-            return result
-        except Exception as e:
-            self.status = False
-            self.error = e
-            raise e
+        # Default implementation that can be overridden
+        if callable(action_cb):
+            return action_cb(store)
+        return store

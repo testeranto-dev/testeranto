@@ -14,7 +14,10 @@ Each implementation follows the same core BDD pattern while respecting language 
 
 ## Core Philosophy
 
-### 1. Single Pattern, Multiple Languages
+### 1. Multiple Patterns, Single Framework
+Testeranto supports multiple testing patterns while maintaining a consistent API:
+
+#### BDD Pattern (Given-When-Then)
 Every Testeranto test follows the same fundamental pattern:
 ```
 testeranto(
@@ -26,6 +29,20 @@ testeranto(
   xtras                // Additional arguments passed to Given
 ) -> Test Execution
 ```
+
+#### AAA Pattern (Arrange-Act-Assert)
+Testeranto also supports the AAA pattern through the same infrastructure:
+- **Arrange** maps to **Given** (setup initial state)
+- **Act** maps to **When** (perform actions)
+- **Assert** maps to **Then** (verify outcomes)
+
+#### TDT Pattern (Table Driven Testing)
+Testeranto now supports TDT (Table Driven Testing) pattern:
+- **Map** maps to **Given** (defines test table data)
+- **Feed** maps to **When** (processes each row from the table)
+- **Validate** maps to **Then** (validates output against expected results)
+
+This allows you to use the pattern that best fits your testing style while leveraging the same robust framework.
 
 ### 2. Separation of Concerns
 - **Specification**: Pure business logic, human-readable descriptions
@@ -43,26 +60,37 @@ All implementations provide:
 
 ### The 5 Essential Types (TypeScript Reference)
 
-1. **Ibdd_in**: Describes the "inner" shape of your BDD tests
+1. **TestTypeParams** (formerly `Ibdd_in`): Describes the type parameters for test execution
    ```typescript
-   type Ibdd_in<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen>
+   type TestTypeParams<IInput, ISubject, IStore, ISelection, ISetup, IAction, ICheck>
    ```
 
-2. **Ibdd_out**: Describes the "outer" shape (legal BDD clauses)
+2. **TestSpecShape** (formerly `Ibdd_out`): Describes the structure of test specifications
    ```typescript
-   type Ibdd_out<ISuites, IGivens, IWhens, IThens>
+   type TestSpecShape<ISuites, ISetups, IActions, IChecks>
    ```
 
 3. **ITestSpecification**: Function that defines business requirements
 4. **ITestImplementation**: Structure containing concrete operations
-5. **ITestAdapter**: Interface for test lifecycle hooks
+5. **IUniversalTestAdapter**: Interface for test lifecycle hooks with methodology-agnostic terminology
 
 ### Test Lifecycle
+
+#### BDD Lifecycle
 ```
 BeforeAll → [Suite → (Given → When* → Then*)+] → AfterAll
            ↑
       BeforeEach/AfterEach per Given
 ```
+
+#### AAA Lifecycle
+```
+BeforeAll → [Suite → (Arrange → Act* → Assert*)+] → AfterAll
+           ↑
+      BeforeEach/AfterEach per Arrange
+```
+
+Both patterns share the same underlying lifecycle hooks and adapter methods.
 
 ## Implementation Status & Alignment
 
@@ -159,9 +187,47 @@ async def run(
 
 ### TypeScript (tiposkripto) - Reference Implementation
 - **Status**: Most complete and canonical
-- **Key Files**: `BaseTiposkripto.ts`, `BaseGiven.ts`, `BaseWhen.ts`, `BaseThen.ts`
+- **Key Files**: `BaseTiposkripto.ts`, `BaseSetup.ts`, `BaseAction.ts`, `BaseCheck.ts`
+- **Legacy BDD Files**: `BaseGiven.ts`, `BaseWhen.ts`, `BaseThen.ts` (deprecated)
+- **Legacy AAA Files**: `BaseArrange.ts`, `BaseAct.ts`, `BaseAssert.ts` (deprecated)
+- **Legacy TDT Files**: `BaseMap.ts`, `BaseFeed.ts`, `BaseValidate.ts` (deprecated)
 - **Runtime Support**: Node.js and Web browsers
 - **Type Safety**: Full TypeScript generics support
+- **Pattern Support**: Unified (Setup-Action-Check) with backward compatibility for BDD, AAA, and TDT
+
+#### AAA Example in TypeScript
+```typescript
+import { AAA } from "tiposkripto/src/index";
+import tiposkripto from "tiposkripto/src/Node";
+
+// Define your test subject
+class Calculator {
+  private value: number = 0;
+  
+  add(x: number) { this.value += x; }
+  subtract(x: number) { this.value -= x; }
+  getValue() { return this.value; }
+}
+
+// Use AAA pattern
+const { Suite, Arrange, Act, Assert } = AAA();
+
+const specification = (Suite, Arrange, Act, Assert) => [
+  Suite.Default("Calculator Tests", {
+    test1: Arrange.Default(
+      ["Basic addition"],
+      [Act.Default("add 5", (calc) => { calc.add(5); return calc; })],
+      [Assert.Default("value should be 5", async (calc) => {
+        if (calc.getValue() !== 5) throw new Error("Expected 5");
+        return calc;
+      })]
+    )
+  })
+];
+
+// Implementation would follow similar structure to BDD
+// The adapter remains unchanged
+```
 
 ### Python (pitono) - High Priority Fixes Needed
 - **Status**: Good structure, needs signature alignment

@@ -10,7 +10,7 @@ In more conrete terms, testeranto is
 - a VS code extension
 - integrates static tests, unit tests, integration tests and source code into focused Aider sessions.
 - turns github issues, BDD specs and markdown documentation into packaged artifacts and human readable test reports.
-
+- supports multiple testing patterns: BDD (Given-When-Then), AAA (Arrange-Act-Assert), and TDT (Table Driven Testing)
 - a library of code split across 7 languages and 2 purposes
 
 ## getting started

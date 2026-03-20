@@ -5,15 +5,16 @@ import { ITestResourceConfiguration } from "./types";
 export type SuiteSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
     [K in keyof O["suites"]]: (name: string, givens: IGivens<I>) => BaseSuite<I, O>;
 };
-export type ITestAdapter<I extends Ibdd_in_any> = {
-    assertThis: (x: I["then"]) => any;
-    andWhen: (store: I["istore"], whenCB: I["when"], testResource: ITestResourceConfiguration) => Promise<I["istore"]>;
-    butThen: (store: I["istore"], thenCB: I["then"], testResource: ITestResourceConfiguration) => Promise<I["iselection"]>;
-    afterAll: (store: I["istore"]) => any;
-    afterEach: (store: I["istore"], key: string) => Promise<unknown>;
-    beforeAll: (input: I["iinput"], testResource: ITestResourceConfiguration) => Promise<I["isubject"]>;
-    beforeEach: (subject: I["isubject"], initializer: (c?: any) => I["given"], testResource: ITestResourceConfiguration, initialValues: any) => Promise<I["istore"]>;
+export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
+    prepareAll: (input: I["iinput"], testResource: ITestResourceConfiguration) => Promise<I["isubject"]>;
+    prepareEach: (subject: I["isubject"], initializer: (c?: any) => I["given"], testResource: ITestResourceConfiguration, initialValues: any) => Promise<I["istore"]>;
+    execute: (store: I["istore"], actionCB: I["when"], testResource: ITestResourceConfiguration) => Promise<I["istore"]>;
+    verify: (store: I["istore"], checkCB: I["then"], testResource: ITestResourceConfiguration) => Promise<I["iselection"]>;
+    cleanupEach: (store: I["istore"], key: string) => Promise<unknown>;
+    cleanupAll: (store: I["istore"]) => any;
+    assert: (x: I["then"]) => any;
 };
+export type ITestAdapter<I extends TestTypeParams_any> = IUniversalTestAdapter<I>;
 export type ITestSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = (Suite: SuiteSpecification<I, O>, Given: GivenSpecification<I, O>, When: WhenSpecification<I, O>, Then: ThenSpecification<I, O>) => BaseSuite<I, O>[];
 export type ITestImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any, modifier = {
     whens: TestWhenImplementation<I, O>;
@@ -23,20 +24,22 @@ export type ITestImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any, m
     whens: TestWhenImplementation<I, O>;
     thens: TestThenImplementation<I, O>;
 }, modifier>;
-export type Ibdd_out<ISuites extends TestSuiteShape = TestSuiteShape, IGivens extends TestGivenShape = TestGivenShape, IWhens extends TestWhenShape = TestWhenShape, IThens extends TestThenShape = TestThenShape> = {
+export type TestSpecShape<ISuites extends TestSuiteShape = TestSuiteShape, ISetups extends TestGivenShape = TestGivenShape, IActions extends TestWhenShape = TestWhenShape, IChecks extends TestThenShape = TestThenShape> = {
     suites: ISuites;
-    givens: IGivens;
-    whens: IWhens;
-    thens: IThens;
+    givens: ISetups;
+    whens: IActions;
+    thens: IChecks;
 };
-export type Ibdd_out_any = Ibdd_out<TestSuiteShape, TestGivenShape, TestWhenShape, TestThenShape>;
-export type Ibdd_in<IInput, // Type of initial test input
+export type TestSpecShape_any = TestSpecShape<TestSuiteShape, TestGivenShape, TestWhenShape, TestThenShape>;
+export type Ibdd_out<ISuites, IGivens, IWhens, IThens> = TestSpecShape<ISuites, IGivens, IWhens, IThens>;
+export type Ibdd_out_any = TestSpecShape_any;
+export type TestTypeParams<IInput, // Type of initial test input
 ISubject, // Type of object being tested
 IStore, // Type for storing test state between steps
 ISelection, // Type for selecting state for assertions
-IGiven, // Type for Given step functions
-IWhen, // Type for When step functions
-IThen> = {
+ISetup, // Type for Setup step functions (formerly Given)
+IAction, // Type for Action step functions (formerly When)
+ICheck> = {
     /** Initial input required to start tests */
     iinput: IInput;
     /** The subject being tested (class, function, etc) */
@@ -45,11 +48,13 @@ IThen> = {
     istore: IStore;
     /** Selected portion of state for assertions */
     iselection: ISelection;
-    /** Function type for Given steps */
-    given: IGiven;
-    /** Function type for When steps */
-    when: IWhen;
-    /** Function type for Then steps */
-    then: IThen;
+    /** Function type for Setup steps (Given/Arrange/Map) */
+    given: ISetup;
+    /** Function type for Action steps (When/Act/Feed) */
+    when: IAction;
+    /** Function type for Check steps (Then/Assert/Validate) */
+    then: ICheck;
 };
-export type Ibdd_in_any = Ibdd_in<unknown, unknown, unknown, unknown, unknown, unknown, unknown>;
+export type TestTypeParams_any = TestTypeParams<unknown, unknown, unknown, unknown, unknown, unknown, unknown>;
+export type Ibdd_in<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen> = TestTypeParams<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen>;
+export type Ibdd_in_any = TestTypeParams_any;

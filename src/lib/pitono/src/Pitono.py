@@ -250,12 +250,12 @@ class PitonoClass:
         for key in test_implementation.givens.keys():
             def create_given_closure(given_key):
                 def given_func(features, whens, thens, initial_values=None):
-                    # Create a subclass that uses the adapter's before_each
+                    # Create a subclass that uses the adapter's prepare_each
                     class AdapterGiven(BaseGiven):
                         async def given_that(self, subject, test_resource_configuration, 
                                            artifactory, given_cb, initial_values):
-                            # Use the test adapter's before_each method
-                            return await test_adapter.before_each(
+                            # Use the test adapter's prepare_each method
+                            return await test_adapter.prepare_each(
                                 subject,
                                 given_cb,
                                 test_resource_configuration,
@@ -263,12 +263,12 @@ class PitonoClass:
                             )
                     
                     return AdapterGiven(
-                        given_key,
-                        features,
-                        whens,
-                        thens,
-                        test_implementation.givens[given_key],
-                        initial_values
+                        key=given_key,
+                        features=features,
+                        whens=whens,
+                        thens=thens,
+                        given_cb=test_implementation.givens[given_key],
+                        initial_values=initial_values
                     )
                 return given_func
             classyGivens[key] = create_given_closure(key)
@@ -282,12 +282,11 @@ class PitonoClass:
                     # Create a subclass that implements and_when using the adapter
                     class AdapterWhen(BaseWhen):
                         async def and_when(self, store, when_cb, test_resource_configuration):
-                            # Use the test adapter's and_when method
-                            return await test_adapter.and_when(
+                            # Use the test adapter's execute method
+                            return await test_adapter.execute(
                                 store, 
                                 when_cb, 
-                                test_resource_configuration,
-                                None  # pm parameter
+                                test_resource_configuration
                             )
                     
                     # Use the key as name, similar to TypeScript
@@ -304,12 +303,11 @@ class PitonoClass:
                     # Create a subclass that implements but_then using the adapter
                     class AdapterThen(BaseThen):
                         async def but_then(self, store, then_cb, test_resource_configuration):
-                            # Use the test adapter's but_then method
-                            return await test_adapter.but_then(
+                            # Use the test adapter's verify method
+                            return await test_adapter.verify(
                                 store,
                                 then_cb,
-                                test_resource_configuration,
-                                None  # pm parameter
+                                test_resource_configuration
                             )
                     
                     # Use the key as name, similar to TypeScript

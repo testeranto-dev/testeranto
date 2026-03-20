@@ -1,16 +1,11 @@
 from typing import Any, Dict, List, Callable, Optional
+from .base_check import BaseCheck
+from .pitono_types import ITestResourceConfiguration
 
-class BaseThen:
+class BaseThen(BaseCheck):
     def __init__(self, name: str, then_cb: Callable[[Any], Any]):
-        self.name = name
-        self.then_cb = then_cb
+        super().__init__(name, then_cb)
         self.error = False
-        self.artifacts: List[str] = []
-        self.status: Optional[bool] = None
-    
-    def add_artifact(self, path: str) -> None:
-        normalized_path = path.replace('\\', '/')
-        self.artifacts.append(normalized_path)
     
     async def but_then(
         self,
@@ -19,31 +14,16 @@ class BaseThen:
         test_resource_configuration: Any
     ) -> Any:
         # This should be implemented by subclasses
-        raise NotImplementedError("but_then must be implemented by subclasses")
+        # But provide a default implementation that calls verify_check
+        return await self.verify_check(store, then_cb, test_resource_configuration)
     
-    def to_obj(self) -> Dict[str, Any]:
-        return {
-            'name': self.name,
-            'error': self.error,
-            'artifacts': self.artifacts,
-            'status': self.status
-        }
-    
-    async def test(
+    async def verify_check(
         self,
         store: Any,
-        test_resource_configuration: Any,
-        filepath: Optional[str] = None,
+        check_cb: Callable[[Any], Any],
+        test_resource_configuration: ITestResourceConfiguration
     ) -> Any:
-        try:
-            result = await self.but_then(
-                store,
-                self.then_cb,
-                test_resource_configuration
-            )
-            self.status = True
-            return result
-        except Exception as e:
-            self.status = False
-            self.error = True
-            raise e
+        # Default implementation that can be overridden
+        if callable(check_cb):
+            return check_cb(store)
+        return store

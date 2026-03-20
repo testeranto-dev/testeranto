@@ -71,8 +71,43 @@ public class java_runtime {
             String testFileName = testFilePath.getFileName().toString();
             String testBaseName = testFileName.substring(0, testFileName.lastIndexOf('.'));
             
+            // Check if this is a native test
+            boolean isNativeTest = false;
+            String frameworkType = null;
+            try {
+                // Use JavaNativeTestDetection to detect native tests
+                Class<?> detectionClass = Class.forName("JavaNativeTestDetection");
+                java.lang.reflect.Method translateMethod = detectionClass.getMethod("translateNativeTest", String.class);
+                Object result = translateMethod.invoke(null, testFilePath.toString());
+                
+                if (result != null) {
+                    Class<?> resultClass = result.getClass();
+                    java.lang.reflect.Method isNativeMethod = resultClass.getMethod("isNativeTest");
+                    java.lang.reflect.Method getFrameworkMethod = resultClass.getMethod("getFrameworkType");
+                    
+                    isNativeTest = (Boolean) isNativeMethod.invoke(result);
+                    if (isNativeTest) {
+                        frameworkType = (String) getFrameworkMethod.invoke(result);
+                        System.out.println("  Detected native " + frameworkType + " test");
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("  Note: Native test detection not available: " + e.getMessage());
+            }
+            
             // Collect input files using the found path
             List<String> inputFiles = collectInputFiles(entryPoint);
+            
+            // Add native detection class if it's a native test
+            if (isNativeTest) {
+                Path detectionClassPath = Paths.get("/workspace/testeranto/runtimes/java/native_detection.java");
+                if (Files.exists(detectionClassPath)) {
+                    String relativePath = "/workspace/testeranto/runtimes/java/native_detection.java";
+                    if (!inputFiles.contains(relativePath)) {
+                        inputFiles.add(relativePath);
+                    }
+                }
+            }
             
             // Compute hash
             String testHash = computeFilesHash(inputFiles);
@@ -89,6 +124,10 @@ public class java_runtime {
                 filesArray.put(file);
             }
             testInfo.put("files", filesArray);
+            testInfo.put("isNativeTest", isNativeTest);
+            if (isNativeTest) {
+                testInfo.put("framework", frameworkType);
+            }
             
             // Add to all tests info
             allTestsInfo.put(entryPoint, testInfo);
@@ -98,7 +137,7 @@ public class java_runtime {
             System.out.println("  🔨 Compiling test to " + outputJarPath + "...");
             
             // Create JAR file using the found path
-            createJarFile(entryPoint, outputJarPath, javaConfig);
+            createJarFile(entryPoint, outputJarPath, javaConfig, isNativeTest, frameworkType);
             
             System.out.println("  ✅ Successfully created JAR");
         }
@@ -110,6 +149,269 @@ public class java_runtime {
         System.out.println("\n✅ Created inputFiles.json at " + inputFilesPath + " with " + allTestsInfo.length() + " tests");
         
         System.out.println("\n🎉 Java builder completed successfully");
+    }
+    
+    private static void createJarFile(String testPath, Path jarPath, JSONObject javaConfig, 
+                                      boolean isNativeTest, String frameworkType) throws IOException {
+        // Try to find the test file
+        Path testFilePath = findTestFile(testPath);
+        if (testFilePath == null) {
+            throw new IOException("Test file not found: " + testPath + 
+                " (searched in current directory and /workspace)");
+        }
+        
+        String testFileName = testFilePath.getFileName().toString();
+        String testBaseName = testFileName.substring(0, testFileName.lastIndexOf('.'));
+        
+        // Read the test file to extract package name
+        String packageName = extractPackageName(testFilePath);
+        String fullyQualifiedClassName = packageName.isEmpty() ? testBaseName : packageName + "." + testBaseName;
+        
+        // Create a wrapper class that serves as the main entry point
+        String wrapperClassName = testBaseName + "Wrapper";
+        String wrapperContent;
+        
+        if (isNativeTest) {
+            // Generate wrapper for native tests that includes three-parameter translation
+            wrapperContent = generateNativeTestWrapper(wrapperClassName, fullyQualifiedClassName, frameworkType);
+        } else {
+            // Original wrapper for testeranto tests
+            wrapperContent = generateTesterantoWrapper(wrapperClassName, fullyQualifiedClassName);
+        }
+        
+        // Create a manifest with the wrapper as main class
+        String manifest = "Manifest-Version: 1.0\n";
+        manifest += "Main-Class: " + wrapperClassName + "\n";
+        
+        // Add classpath if specified in config
+        if (javaConfig.has("classpath")) {
+            JSONArray classpathArray = javaConfig.getJSONArray("classpath");
+            StringBuilder classpathBuilder = new StringBuilder();
+            for (int i = 0; i < classpathArray.length(); i++) {
+                if (i > 0) classpathBuilder.append(" ");
+                classpathBuilder.append(classpathArray.getString(i));
+            }
+            manifest += "Class-Path: " + classpathBuilder.toString() + "\n";
+        }
+        
+        // Create a temporary directory
+        Path tempDir = Files.createTempDirectory("java-builder");
+        try {
+            // Write manifest
+            Path metaInfDir = tempDir.resolve("META-INF");
+            Files.createDirectories(metaInfDir);
+            Files.write(metaInfDir.resolve("MANIFEST.MF"), manifest.getBytes());
+            
+            // Copy test file maintaining package structure
+            Path testFileInJar;
+            if (!packageName.isEmpty()) {
+                // Create directory structure for the package
+                String packagePath = packageName.replace('.', '/');
+                Path packageDir = tempDir.resolve(packagePath);
+                Files.createDirectories(packageDir);
+                testFileInJar = packageDir.resolve(testFileName);
+            } else {
+                testFileInJar = tempDir.resolve(testFileName);
+            }
+            Files.copy(testFilePath, testFileInJar);
+            
+            // Write wrapper class (no package needed)
+            Path wrapperFileInJar = tempDir.resolve(wrapperClassName + ".java");
+            Files.write(wrapperFileInJar, wrapperContent.getBytes());
+            
+            // Check if Gradle has already compiled the classes (should have been done before java_runtime runs)
+            Path workspace = Paths.get("/workspace");
+            Path buildDir = workspace.resolve("build");
+            Path classesDir = buildDir.resolve("classes/java/main");
+            Path testClassesDir = buildDir.resolve("classes/java/test");
+            
+            if (Files.exists(classesDir) && Files.exists(testClassesDir)) {
+                System.out.println("  Found compiled classes from Gradle build");
+                
+                // Copy compiled classes to temp directory for JAR creation
+                Path tempClassesDir = tempDir.resolve("classes");
+                Files.createDirectories(tempClassesDir);
+                
+                // Copy main classes
+                copyDirectory(classesDir, tempClassesDir);
+                
+                // Copy test classes
+                copyDirectory(testClassesDir, tempClassesDir);
+                
+                // Clear the temp directory and add compiled classes
+                Files.walk(tempDir)
+                    .filter(path -> !path.equals(tempDir) && !path.startsWith(tempClassesDir))
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+                
+                // Move classes to root of tempDir
+                Files.walk(tempClassesDir)
+                    .forEach(source -> {
+                        try {
+                            Path relative = tempClassesDir.relativize(source);
+                            Path dest = tempDir.resolve(relative);
+                            if (Files.isDirectory(source)) {
+                                Files.createDirectories(dest);
+                            } else {
+                                Files.createDirectories(dest.getParent());
+                                Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                
+                // Clean up tempClassesDir
+                Files.walk(tempClassesDir)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            } else {
+                System.out.println("  WARNING: Compiled classes not found. Gradle build may have failed or not run.");
+                System.out.println("  Falling back to source files for JAR creation.");
+                
+                // Copy Calculator.java source if it exists
+                Path calculatorSource = Paths.get("/workspace/src/java/main/java/com/example/calculator/Calculator.java");
+                if (Files.exists(calculatorSource)) {
+                    String calculatorPackage = "com.example.calculator";
+                    String packagePath = calculatorPackage.replace('.', '/');
+                    Path calculatorPackageDir = tempDir.resolve(packagePath);
+                    Files.createDirectories(calculatorPackageDir);
+                    Path calculatorInTemp = calculatorPackageDir.resolve("Calculator.java");
+                    Files.copy(calculatorSource, calculatorInTemp, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+            
+            // Compile the wrapper class if we have compiled classes from Gradle
+            // Build classpath from Gradle's build directory
+            Path workspace = Paths.get("/workspace");
+            Path buildDir = workspace.resolve("build");
+            Path classesDir = buildDir.resolve("classes/java/main");
+            Path testClassesDir = buildDir.resolve("classes/java/test");
+            
+            if (Files.exists(classesDir) && Files.exists(testClassesDir)) {
+                // Build classpath
+                StringBuilder classpath = new StringBuilder();
+                classpath.append(classesDir.toString());
+                classpath.append(":");
+                classpath.append(testClassesDir.toString());
+                
+                // Add JARs from /workspace/lib
+                Path libDir = Paths.get("/workspace/lib");
+                if (Files.exists(libDir) && Files.isDirectory(libDir)) {
+                    try (DirectoryStream<Path> jarStream = Files.newDirectoryStream(libDir, "*.jar")) {
+                        for (Path jarFile : jarStream) {
+                            classpath.append(":").append(jarFile.toString());
+                        }
+                    } catch (IOException e) {
+                        System.err.println("  Warning: Could not list JARs in lib directory: " + e.getMessage());
+                    }
+                }
+                
+                // Compile wrapper class
+                List<String> compileCommand = Arrays.asList(
+                    "javac",
+                    "-cp", classpath.toString(),
+                    "-d", tempDir.toString(),
+                    wrapperFileInJar.toString()
+                );
+                
+                System.out.println("  Compiling wrapper class with classpath: " + classpath);
+                ProcessBuilder compilePb = new ProcessBuilder(compileCommand);
+                Process compileProcess = compilePb.start();
+                int compileExitCode = compileProcess.waitFor();
+                if (compileExitCode != 0) {
+                    System.err.println("  WARNING: Failed to compile wrapper class");
+                    // Continue anyway - the wrapper source will be included in JAR
+                } else {
+                    System.out.println("  Successfully compiled wrapper class");
+                    // Delete the source file since we have the compiled class
+                    Files.delete(wrapperFileInJar);
+                }
+            }
+            
+            // Create JAR file
+            List<String> jarCommand = Arrays.asList(
+                "jar", "cfm", jarPath.toString(),
+                metaInfDir.resolve("MANIFEST.MF").toString(),
+                "-C", tempDir.toString(), "."
+            );
+            
+            ProcessBuilder pb = new ProcessBuilder(jarCommand);
+            Process process = pb.start();
+            int exitCode;
+            try {
+                exitCode = process.waitFor();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IOException("JAR creation interrupted", e);
+            }
+            
+            if (exitCode != 0) {
+                throw new IOException("jar command failed with exit code " + exitCode);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Interrupted during JAR creation", e);
+        } finally {
+            // Clean up
+            Files.walk(tempDir)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
+        }
+    }
+    
+    private static String generateNativeTestWrapper(String wrapperClassName, String fullyQualifiedClassName, String frameworkType) {
+        return "public class " + wrapperClassName + " {\n" +
+               "    public static void main(String[] args) throws Exception {\n" +
+               "        System.out.println(\"Running native " + frameworkType + " test: " + fullyQualifiedClassName + "\");\n" +
+               "        \n" +
+               "        // Load the test class\n" +
+               "        Class<?> testClass = Class.forName(\"" + fullyQualifiedClassName + "\");\n" +
+               "        \n" +
+               "        // For native tests, we need to run them through their respective test runners\n" +
+               "        // This is a simplified version - in practice would use JUnit/TestNG runners\n" +
+               "        \n" +
+               "        try {\n" +
+               "            // Try to find a main method\n" +
+               "            java.lang.reflect.Method mainMethod = testClass.getMethod(\"main\", String[].class);\n" +
+               "            mainMethod.invoke(null, (Object) args);\n" +
+               "        } catch (NoSuchMethodException e) {\n" +
+               "            // If no main method, print info about the test\n" +
+               "            System.out.println(\"Test class loaded: \" + testClass.getName());\n" +
+               "            System.out.println(\"Framework: " + frameworkType + "\");\n" +
+               "            System.out.println(\"This is a native test that needs a proper test runner.\");\n" +
+               "            \n" +
+               "            // For JUnit tests, we could use JUnitCore\n" +
+               "            if (\"" + frameworkType + "\".startsWith(\"junit\")) {\n" +
+               "                System.out.println(\"To run JUnit tests, use: java -cp .:junit.jar org.junit.runner.JUnitCore \" + testClass.getName());\n" +
+               "            }\n" +
+               "        }\n" +
+               "    }\n" +
+               "}\n";
+    }
+    
+    private static String generateTesterantoWrapper(String wrapperClassName, String fullyQualifiedClassName) {
+        return "public class " + wrapperClassName + " {\n" +
+               "    public static void main(String[] args) throws Exception {\n" +
+               "        // Dynamically load and run the test class\n" +
+               "        Class<?> testClass = Class.forName(\"" + fullyQualifiedClassName + "\");\n" +
+               "        // Look for a main method\n" +
+               "        try {\n" +
+               "            java.lang.reflect.Method mainMethod = testClass.getMethod(\"main\", String[].class);\n" +
+               "            mainMethod.invoke(null, (Object) args);\n" +
+               "        } catch (NoSuchMethodException e) {\n" +
+               "            // If no main method, try to instantiate and run test methods\n" +
+               "            Object instance = testClass.getDeclaredConstructor().newInstance();\n" +
+               "            // Look for methods annotated with @Test or similar\n" +
+               "            // For now, just print a message\n" +
+               "            System.out.println(\"Test class loaded: \" + testClass.getName());\n" +
+               "            System.out.println(\"No main method found. You may need to implement a test runner.\");\n" +
+               "        }\n" +
+               "    }\n" +
+               "}\n";
     }
     
     private static JSONObject loadJavaConfig(Path javaConfigFile) throws Exception {

@@ -10,46 +10,35 @@ It's a long standing problem of bridging the chrome runtime and i am open to oth
 
 Included in this problem is the need to connect to a runnning the chrome-service, not the native host chrome.
 
-## WEe builder
+````sh
+yarn run v1.22.22
 
-```sh
-Error importing config: /workspace/testeranto/runtimes/web/web.ts Error: listen tcp: lookup webtests on 127.0.0.11:53: no such host
+$ /workspace/node_modules/.bin/tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/webtests/src/ts/Calculator.test.web.mjs '{"ports":[1111],"fs":"testeranto/reports/webtests/src/ts/Calculator.test.web.ts/"}'
 
-    at /workspace/node_modules/esbuild/lib/main.js:1313:39
+[CLIENT] Attempt 1/30: Attempting to reach Chrome service at http://chrome-service:3000/json/version...⁠
 
-    at responseCallbacks.<computed> (/workspace/node_modules/esbuild/lib/main.js:884:9)
+[CLIENT] HTTP Status: 200
 
-    at handleIncomingPacket (/workspace/node_modules/esbuild/lib/main.js:938:31)
+[CLIENT] Successfully fetched WS URL: ws://chrome-service:3000
 
-    at Socket.readFromStdout (/workspace/node_modules/esbuild/lib/main.js:862:7)
+bundleUrl http://webtests:8000/testeranto/bundles/webtests/src/ts/Calculator.test.web.mjs⁠
 
-    at Socket.emit (node:events:524:28)
+[CLIENT] Retrying in 2000ms...
 
-    at addChunk (node:internal/streams/readable:561:12)
+[CLIENT] Attempt 2/30: Attempting to reach Chrome service at http://chrome-service:3000/json/version...⁠
 
-    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+Error in web test: Error: net::ERR_ABORTED at webtests:8000/testeranto/bundles/webtests/Calculator.test.web.html
 
-    at Readable.push (node:internal/streams/readable:392:5)
+    at navigate (/workspace/node_modules/puppeteer-core/src/cdp/Frame.ts:211:13)
 
-    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+    at async Function.race (/workspace/node_modules/puppeteer-core/src/util/Deferred.ts:49:14)
 
-Error: listen tcp: lookup webtests on 127.0.0.11:53: no such host
+    at async CdpFrame.goto (/workspace/node_modules/puppeteer-core/src/cdp/Frame.ts:164:17)
 
-    at /workspace/node_modules/esbuild/lib/main.js:1313:39
+    at async CdpPage.goto (/workspace/node_modules/puppeteer-core/src/api/Page.ts:1773:12)
 
-    at responseCallbacks.<computed> (/workspace/node_modules/esbuild/lib/main.js:884:9)
+    at async launchPuppeteer (/workspace/testeranto/web_hoist.ts:59:5)
 
-    at handleIncomingPacket (/workspace/node_modules/esbuild/lib/main.js:938:31)
-
-    at Socket.readFromStdout (/workspace/node_modules/esbuild/lib/main.js:862:7)
-
-    at Socket.emit (node:events:524:28)
-
-    at addChunk (node:internal/streams/readable:561:12)
-
-    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
-
-    at Readable.push (node:internal/streams/readable:392:5)
-
-    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
-```
+    at async connectWithRetry (/workspace/testeranto/web_hoist.ts:109:7)
+    ```
+````

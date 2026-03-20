@@ -1,30 +1,76 @@
 package golingvu
 
-// SimpleTestAdapter is a basic implementation of ITestAdapter
+// SimpleTestAdapter implements both ITestAdapter and IUniversalTestAdapter
 type SimpleTestAdapter struct{}
 
+// IUniversalTestAdapter methods
+func (a *SimpleTestAdapter) PrepareAll(input interface{}, testResource ITTestResourceConfiguration) (interface{}, error) {
+	return input, nil
+}
+
+func (a *SimpleTestAdapter) PrepareEach(subject, initializer interface{}, testResource ITTestResourceConfiguration, initialValues interface{}) (interface{}, error) {
+	return subject, nil
+}
+
+func (a *SimpleTestAdapter) Execute(store, actionCB interface{}, testResource ITTestResourceConfiguration) (interface{}, error) {
+	return store, nil
+}
+
+func (a *SimpleTestAdapter) Verify(store, checkCB interface{}, testResource ITTestResourceConfiguration) (interface{}, error) {
+	return store, nil
+}
+
+func (a *SimpleTestAdapter) CleanupEach(store interface{}, key string) (interface{}, error) {
+	return store, nil
+}
+
+func (a *SimpleTestAdapter) CleanupAll(store interface{}) (interface{}, error) {
+	return store, nil
+}
+
+func (a *SimpleTestAdapter) Assert(x interface{}) bool {
+	return a.AssertThis(x)
+}
+
+// Legacy ITestAdapter methods for backward compatibility
 func (a *SimpleTestAdapter) BeforeAll(input interface{}, tr ITTestResourceConfiguration, pm interface{}) interface{} {
-	return input
+	result, _ := a.PrepareAll(input, tr)
+	return result
 }
 
 func (a *SimpleTestAdapter) AfterAll(store interface{}, pm interface{}) interface{} {
-	return store
+	result, _ := a.CleanupAll(store)
+	return result
 }
 
 func (a *SimpleTestAdapter) BeforeEach(subject, initializer interface{}, testResource ITTestResourceConfiguration, initialValues interface{}, pm interface{}) interface{} {
-	return subject
+	result, _ := a.PrepareEach(subject, initializer, testResource, initialValues)
+	return result
 }
 
 func (a *SimpleTestAdapter) AfterEach(store interface{}, key string, pm interface{}) interface{} {
-	return store
+	result, _ := a.CleanupEach(store, key)
+	return result
 }
 
 func (a *SimpleTestAdapter) AndWhen(store, whenCB interface{}, testResource interface{}, pm interface{}) interface{} {
-	return store
+	// Convert testResource to ITTestResourceConfiguration if possible
+	var tr ITTestResourceConfiguration
+	if t, ok := testResource.(ITTestResourceConfiguration); ok {
+		tr = t
+	}
+	result, _ := a.Execute(store, whenCB, tr)
+	return result
 }
 
 func (a *SimpleTestAdapter) ButThen(store, thenCB interface{}, testResource interface{}, pm interface{}) interface{} {
-	return store
+	// Convert testResource to ITTestResourceConfiguration if possible
+	var tr ITTestResourceConfiguration
+	if t, ok := testResource.(ITTestResourceConfiguration); ok {
+		tr = t
+	}
+	result, _ := a.Verify(store, thenCB, tr)
+	return result
 }
 
 func (a *SimpleTestAdapter) AssertThis(t interface{}) bool {

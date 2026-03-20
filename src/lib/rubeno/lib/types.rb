@@ -85,4 +85,24 @@ module Rubeno
       @test_job = test_job
     end
   end
+  
+  # Unified Pattern Types
+  ISetups = Hash
+  IActions = Hash
+  IChecks = Hash
+  
+  # AAA Pattern Types
+  IArranges = Hash
+  IActs = Hash
+  IAsserts = Hash
+  
+  # TDT Pattern Types
+  IMaps = Hash
+  IFeeds = Hash
+  IValidates = Hash
+  
+  # BDD Pattern Types
+  IGivens = Hash
+  IWhens = Hash
+  IThens = Hash
 end

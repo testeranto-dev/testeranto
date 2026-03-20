@@ -15,7 +15,73 @@ This crate provides a Rust implementation of the Testeranto testing framework, f
 - `src/base_then.rs`: BaseThen struct for Then assertions
 - `src/simple_adapter.rs`: SimpleTestAdapter default implementation
 - `src/rusto.rs`: Main Rusto struct and entry point
+- `src/reverse_integration.rs`: Integration with native Rust test runner
+- `src/ast_transformer.rs`: AST transformation for native Rust tests
 - `src/flavored.rs`: Idiomatic Rust macros for native test integration
+
+## Features
+
+### 1. Multiple Testing Patterns
+Rusto supports multiple testing methodologies through a unified architecture:
+
+#### BDD Pattern (Given-When-Then)
+```rust
+use rusto::prelude::*;
+use rusto::{BaseGiven, BaseWhen, BaseThen};
+
+// Traditional BDD pattern
+```
+
+#### AAA Pattern (Arrange-Act-Assert)
+```rust
+use rusto::prelude::*;
+use rusto::{BaseArrange, BaseAct, BaseAssert};
+
+// AAA pattern for unit testing
+```
+
+#### TDT Pattern (Table Driven Testing)
+```rust
+use rusto::prelude::*;
+use rusto::{BaseMap, BaseFeed, BaseValidate};
+
+// Table-driven testing for data-driven tests
+```
+
+### 2. AST Transformation
+Rusto can transform native Rust tests (`#[test]` functions) to Testeranto-compatible tests:
+
+```rust
+use rusto::{transform_rust_tests, detect_rust_tests};
+
+// Detect tests in a file
+let test_names = detect_rust_tests("tests/my_test.rs")?;
+println!("Found tests: {:?}", test_names);
+
+// Transform tests to Testeranto format
+let transformed = transform_rust_tests("tests/my_test.rs")?;
+println!("Transformed code:\n{}", transformed);
+```
+
+### 3. Native Test Integration
+Run Testeranto tests through `cargo test`:
+
+```rust
+use rusto::reverse_integration::RustoReverseIntegration;
+
+// Convert Rusto instance to native test
+let native_test = rusto_instance.as_native_test(&config);
+```
+
+### 4. Standard Testeranto API
+Use the standard Testeranto API for new tests:
+
+```rust
+use rusto::prelude::*;
+
+// Create test specification, implementation, and adapter
+// ... (standard Testeranto pattern)
+```
 
 ## Usage
 
@@ -28,64 +94,15 @@ Add to your `Cargo.toml`:
 rusto = { path = "./src/lib/rusto" }
 ```
 
-Basic example:
+### AST Transformation Example
 
 ```rust
-use rusto::{Rusto, SimpleTestAdapter, ITestImplementation, ITestSpecification};
-use async_trait::async_trait;
+use rusto::RustASTTransformer;
 
-// Define your test implementation
-let implementation = ITestImplementation {
-    suites: /* ... */,
-    givens: /* ... */,
-    whens: /* ... */,
-    thens: /* ... */,
-};
-
-// Create Rusto instance
-let rusto = Rusto::new(
-    input,
-    test_specification,
-    implementation,
-    test_resource_requirement,
-    Box::new(SimpleTestAdapter::new()),
-);
-
-// Run tests
-let results = rusto.receive_test_resource_config(partial_test_resource).await;
+// Transform existing Rust tests to Testeranto
+let transformed = RustASTTransformer::transform_file("src/tests.rs")?;
+std::fs::write("src/tests_transformed.rs", transformed)?;
 ```
-
-### Flavored Pattern (Idiomatic Rust Macros)
-
-The flavored pattern provides macros that integrate with `cargo test`:
-
-```rust
-use rusto::{test_suite, given, when, then};
-
-struct Calculator {
-    value: i32,
-}
-
-impl Calculator {
-    fn new() -> Self {
-        Calculator { value: 0 }
-    }
-    
-    fn add(&mut self, x: i32, y: i32) {
-        self.value = x + y;
-    }
-    
-    fn result(&self) -> i32 {
-        self.value
-    }
-}
-
-test_suite!("Calculator Tests", {
-    // The macro generates test functions automatically
-});
-```
-
-This will generate proper Rust test functions that can be run with `cargo test`.
 
 ## Testing
 
@@ -103,20 +120,20 @@ cargo test --example calculator_test
 
 ## Integration
 
-Rusto follows the same patterns as other Testeranto implementations:
+Rusto follows the unified Testeranto architecture:
 
-1. **Test Resource Configuration**: Passed as JSON string
-2. **Results Output**: Writes to `testeranto/reports/allTests/example/rust.Calculator.test.ts.json`
-3. **Async Support**: Built on Tokio for async operations
-4. **Error Handling**: Uses `thiserror` for comprehensive error types
-5. **Native Integration**: Flavored macros generate `#[test]` functions compatible with `cargo test`
+1. **AST Transformation**: Convert native tests to Testeranto format
+2. **Test Resource Configuration**: Passed as JSON string
+3. **Results Output**: Consistent format across all languages
+4. **Async Support**: Built on Tokio for async operations
+5. **Error Handling**: Uses `thiserror` for comprehensive error types
 
 ## Future Enhancements
 
-1. **WebSocket Support**: Real-time test reporting
-2. **More Adapters**: Specialized adapter implementations
-3. **Performance Optimizations**: Lever Rust's performance characteristics
-4. **Macro Support**: DSL macros for cleaner test definitions
+1. **Complete AST Transformation**: Full parsing and transformation of test bodies
+2. **WebSocket Support**: Real-time test reporting
+3. **More Adapters**: Specialized adapter implementations
+4. **Performance Optimizations**: Lever Rust's performance characteristics
 
 ## See Also
 

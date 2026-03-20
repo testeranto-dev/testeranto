@@ -325,14 +325,16 @@ async function startBundling(webConfigs, projectConfig, entryPoints2) {
       for (const outputFile of outputFiles) {
         if (outputFile.endsWith(".mjs")) {
           const baseName = path3.basename(outputFile, ".mjs");
-          const htmlPath = `testeranto/bundles/${testName}/${baseName}.html`;
+          const simpleBaseName = baseName.replace(/\./g, "_");
+          const htmlPath = `testeranto/bundles/${testName}/${simpleBaseName}.html`;
           await fs4.promises.mkdir(path3.dirname(htmlPath), { recursive: true });
+          const relativePath = outputFile.replace(`testeranto/bundles/${testName}/`, "");
           const htmlContent = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Test Runner - ${baseName}</title>
-    <script type="module" src="${path3.basename(outputFile)}"></script>
+    <script type="module" src="${relativePath}"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -347,12 +349,12 @@ async function startBundling(webConfigs, projectConfig, entryPoints2) {
     }
     let { hosts, port } = await ctx.serve({
       host: "0.0.0.0",
-      servedir: ".",
+      servedir: "/workspace",
       onRequest: ({ method, path: path4, remoteAddress, status, timeInMS }) => {
         console.log(`[esbuild] ${remoteAddress} - ${method} ${path4} -> ${status} [${timeInMS}ms]`);
       }
     });
-    console.log(`[WEB BUILDER]: esbuild server listening on ${hosts}, port ${port}`);
+    console.log(`[WEB BUILDER]: esbuild server listening on ${hosts}, port ${port}, ${process.cwd()}`);
     await ctx.watch();
     console.log(`[WEB BUILDER] Watch mode active - waiting for file changes...`);
     console.log(`[WEB BUILDER] Using onEnd plugin for rebuild detection`);

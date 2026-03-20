@@ -1,19 +1,14 @@
-import { Ibdd_in_any } from "./CoreTypes.js";
-export declare abstract class BaseWhen<I extends Ibdd_in_any> {
-    name: string;
+import { TestTypeParams_any } from "./CoreTypes.js";
+import { BaseAction } from "./BaseAction.js";
+/**
+ * BaseWhen extends BaseAction for BDD pattern.
+ * @deprecated Use BaseAction for unified terminology
+ */
+export declare abstract class BaseWhen<I extends TestTypeParams_any> extends BaseAction<I> {
     whenCB: (x: I["iselection"]) => I["then"];
-    error: Error;
-    artifacts: string[];
-    status: boolean | undefined;
-    addArtifact(path: string): void;
     constructor(name: string, whenCB: (xyz: I["iselection"]) => I["then"]);
     abstract andWhen(store: I["istore"], whenCB: (x: I["iselection"]) => I["then"], testResource: any): Promise<any>;
-    toObj(): {
-        name: string;
-        status: boolean | undefined;
-        error: string | null;
-        artifacts: string[];
-    };
+    performAction(store: I["istore"], actionCB: (x: I["iselection"]) => I["then"], testResource: any): Promise<any>;
     test(store: I["istore"], testResourceConfiguration: any): Promise<any>;
 }
 /**
@@ -23,5 +18,6 @@ export declare abstract class BaseWhen<I extends Ibdd_in_any> {
  * - When actions might need to be reused across multiple Given conditions
  * - Dynamic composition of test steps is required
  * - Advanced test patterns need to reference When actions by name
+ * @deprecated Use IActions for unified terminology
  */
-export type IWhens<I extends Ibdd_in_any> = Record<string, BaseWhen<I>>;
+export type IWhens<I extends TestTypeParams_any> = Record<string, BaseWhen<I>>;

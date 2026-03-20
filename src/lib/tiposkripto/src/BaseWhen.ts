@@ -1,26 +1,15 @@
-import { Ibdd_in_any } from "./CoreTypes.js";
+import { TestTypeParams_any } from "./CoreTypes.js";
+import { BaseAction } from "./BaseAction.js";
 
-export abstract class BaseWhen<I extends Ibdd_in_any> {
-  public name: string;
+/**
+ * BaseWhen extends BaseAction for BDD pattern.
+ * @deprecated Use BaseAction for unified terminology
+ */
+export abstract class BaseWhen<I extends TestTypeParams_any> extends BaseAction<I> {
   whenCB: (x: I["iselection"]) => I["then"];
-  error: Error;
-  artifacts: string[] = [];
-  status: boolean | undefined;
-
-  addArtifact(path: string) {
-    if (typeof path !== "string") {
-      throw new Error(
-        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
-      );
-    }
-    const normalizedPath = path.replace(/\\/g, "/"); // Normalize path separators
-    this.artifacts.push(normalizedPath);
-  }
 
   constructor(name: string, whenCB: (xyz: I["iselection"]) => I["then"]) {
-    this.name = name;
+    super(name, whenCB);
     this.whenCB = whenCB;
   }
 
@@ -30,16 +19,13 @@ export abstract class BaseWhen<I extends Ibdd_in_any> {
     testResource
   ): Promise<any>;
 
-  toObj() {
-    const obj = {
-      name: this.name,
-      status: this.status,
-      error: this.error
-        ? `${this.error.name}: ${this.error.message}\n${this.error.stack}`
-        : null,
-      artifacts: this.artifacts,
-    };
-    return obj;
+  // Implement BaseAction's abstract method
+  async performAction(
+    store: I["istore"],
+    actionCB: (x: I["iselection"]) => I["then"],
+    testResource
+  ): Promise<any> {
+    return this.andWhen(store, actionCB, testResource);
   }
 
   async test(store: I["istore"], testResourceConfiguration) {
@@ -70,5 +56,6 @@ export abstract class BaseWhen<I extends Ibdd_in_any> {
  * - When actions might need to be reused across multiple Given conditions
  * - Dynamic composition of test steps is required
  * - Advanced test patterns need to reference When actions by name
+ * @deprecated Use IActions for unified terminology
  */
-export type IWhens<I extends Ibdd_in_any> = Record<string, BaseWhen<I>>;
+export type IWhens<I extends TestTypeParams_any> = Record<string, BaseWhen<I>>;

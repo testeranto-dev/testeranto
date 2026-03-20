@@ -1,7 +1,6 @@
 import {
-  Ibdd_in_any,
-  Ibdd_out,
-  Ibdd_out_any,
+  TestTypeParams_any,
+  TestSpecShape_any,
   ITestAdapter,
   ITestImplementation,
   ITestSpecification,
@@ -9,11 +8,20 @@ import {
 import BaseTiposkripto from "./BaseTiposkripto";
 import { ITTestResourceRequest, defaultTestResourceRequirement } from "./types";
 
-const config = process.argv0[2];
+// TODO we can't use process in the web. 
+// const config = process.argv0[2];
+// we could
+// 1) use query params to pass the textConfig?
+// 2) pass as arugment somehow?
+// 3) inject global globals?
+// see hoist.ts
+
+const config = window.testResourceConfig;
+
 
 export class WebTiposkripto<
-  I extends Ibdd_in_any,
-  O extends Ibdd_out_any,
+  I extends TestTypeParams_any,
+  O extends TestSpecShape_any,
   M
 > extends BaseTiposkripto<I, O, M> {
   constructor(
@@ -51,7 +59,7 @@ export class WebTiposkripto<
   }
 }
 
-const tiposkripto = async <I extends Ibdd_in_any, O extends Ibdd_out, M>(
+const tiposkripto = async <I extends TestTypeParams_any, O extends TestSpecShape_any, M>(
   input: I["iinput"],
   testSpecification: ITestSpecification<I, O>,
   testImplementation: ITestImplementation<I, O, M>,
@@ -67,15 +75,7 @@ const tiposkripto = async <I extends Ibdd_in_any, O extends Ibdd_out, M>(
       testAdapter
     );
 
-    // const data = navigator.storage.
-    const root = await navigator.storage.getDirectory();
-
-    // 1. Create (or get) a file handle
-    const fileHandle = await root.getFileHandle(`${config.fs}/tests.json`);
-
-
     return t;
-
 
   } catch (e) {
     console.error(e);

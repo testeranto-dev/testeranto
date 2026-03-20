@@ -1,6 +1,6 @@
 [package]
-name = "testeranto_rusto"
-version = "0.1.21"
+name = "rusto"
+version = "0.1.24"
 edition = "2021"
 description = "Rust implementation of Testeranto"
 authors = ["Testeranto Team"]
@@ -13,6 +13,9 @@ serde_json = "1.0"
 tokio = { version = "1.0", features = ["full"] }
 async-trait = "0.1"
 thiserror = "1.0"
+syn = { version = "2.0", features = ["full", "parsing", "extra-traits"] }
+quote = "1.0"
+tempfile = "3.10"
 
 [dev-dependencies]
 tokio = { version = "1.0", features = ["full"] }
@@ -20,3 +23,7 @@ tokio = { version = "1.0", features = ["full"] }
 [[example]]
 name = "calculator_test"
 path = "examples/calculator_test.rs"
+
+[[example]]
+name = "interoperability_demo"
+path = "examples/interoperability_demo.rs"

@@ -415,31 +415,31 @@ func (gv *Golingvu) RunAsGoTest() bool {
 		// This allows the framework to be used without go test
 		return gv.runTestsInternal(nil)
 	}
-	
+
 	// Set up test based on configuration
 	if gv.testConfig != nil {
 		if gv.testConfig.Skip {
 			gv.t.Skip("Test skipped via Golingvu configuration")
 			return true
 		}
-		
+
 		if gv.testConfig.Parallel {
 			gv.t.Parallel()
 		}
-		
+
 		// Set timeout if specified
 		if gv.testConfig.Timeout > 0 {
 			var cancel context.CancelFunc
 			ctx := context.Background()
 			ctx, cancel = context.WithTimeout(ctx, gv.testConfig.Timeout)
 			defer cancel()
-			
+
 			// Run test with timeout
 			done := make(chan bool)
 			go func() {
 				done <- gv.runTestsInternal(gv.t)
 			}()
-			
+
 			select {
 			case <-ctx.Done():
 				gv.t.Error("Test timed out")
@@ -448,13 +448,13 @@ func (gv *Golingvu) RunAsGoTest() bool {
 				return result
 			}
 		}
-		
+
 		// Register cleanup functions
 		for _, cleanup := range gv.testConfig.CleanupFuncs {
 			gv.t.Cleanup(cleanup)
 		}
 	}
-	
+
 	return gv.runTestsInternal(gv.t)
 }
 
@@ -466,7 +466,7 @@ func (gv *Golingvu) runTestsInternal(t *testing.T) bool {
 		Name: "go-test-runner",
 		Fs:   ".",
 	}
-	
+
 	// Run tests and collect results
 	results, err := gv.runActualTests()
 	if err != nil {
@@ -475,11 +475,11 @@ func (gv *Golingvu) runTestsInternal(t *testing.T) bool {
 		}
 		return false
 	}
-	
+
 	// Check for failures
 	fails, _ := results["fails"].(int)
 	passed := fails == 0
-	
+
 	if t != nil {
 		if !passed {
 			t.Errorf("Test failed with %d failures", fails)
@@ -487,7 +487,7 @@ func (gv *Golingvu) runTestsInternal(t *testing.T) bool {
 			t.Logf("Test passed with all %d assertions", gv.totalTests)
 		}
 	}
-	
+
 	return passed
 }
 
@@ -495,13 +495,13 @@ func (gv *Golingvu) runTestsInternal(t *testing.T) bool {
 func (gv *Golingvu) TestMainIntegration(m *testing.M) int {
 	// Global setup
 	fmt.Println("Golingvu TestMain: Setting up test environment")
-	
+
 	// Run tests
 	code := m.Run()
-	
+
 	// Global teardown
 	fmt.Println("Golingvu TestMain: Cleaning up test environment")
-	
+
 	return code
 }
 
@@ -516,7 +516,7 @@ func (gv *Golingvu) CreateGoTest(name string) func(*testing.T) {
 			t:                       t,
 			testConfig:              gv.testConfig,
 		}
-		
+
 		// Initialize from the parent instance
 		testInstance.SuitesOverrides = gv.SuitesOverrides
 		testInstance.GivenOverrides = gv.GivenOverrides
@@ -525,7 +525,7 @@ func (gv *Golingvu) CreateGoTest(name string) func(*testing.T) {
 		testInstance.Specs = gv.Specs
 		testInstance.totalTests = gv.totalTests
 		testInstance.assertThis = gv.assertThis
-		
+
 		// Run the test
 		testInstance.RunAsGoTest()
 	}
@@ -1160,6 +1160,124 @@ func (gv *Golingvu) RunFlavoredTest(t *testing.T, description string, setupFunc 
 	// In a real implementation, this would create a proper test chain
 	// For now, return the current instance
 	return gv
+}
+
+// Support for new unified patterns
+func (gv *Golingvu) UseUnifiedPatterns() {
+	// This method can be used to enable the new unified architecture
+	// For now, it's a placeholder for future implementation
+}
+
+// BaseArrange represents an AAA pattern Arrange step
+type BaseArrange struct {
+	*BaseGiven
+}
+
+// NewBaseArrange creates a new BaseArrange instance
+func NewBaseArrange(
+	features []string,
+	acts []interface{},
+	asserts []interface{},
+	arrangeCB interface{},
+	initialValues interface{},
+) *BaseArrange {
+	// Convert acts to whens and asserts to thens
+	whens := make([]*BaseWhen, len(acts))
+	for i, act := range acts {
+		whens[i] = &BaseWhen{
+			Key:    fmt.Sprintf("act-%d", i),
+			WhenCB: act,
+		}
+	}
+
+	thens := make([]*BaseThen, len(asserts))
+	for i, assert := range asserts {
+		thens[i] = &BaseThen{
+			Key:    fmt.Sprintf("assert-%d", i),
+			ThenCB: assert,
+		}
+	}
+
+	return &BaseArrange{
+		BaseGiven: NewBaseGiven(
+			"arrange",
+			features,
+			whens,
+			thens,
+			arrangeCB,
+			initialValues,
+		),
+	}
+}
+
+// BaseMap represents a TDT pattern Map step
+type BaseMap struct {
+	*BaseGiven
+	tableData []interface{}
+}
+
+// NewBaseMap creates a new BaseMap instance
+func NewBaseMap(
+	features []string,
+	feeds []interface{},
+	validates []interface{},
+	mapCB interface{},
+	initialValues interface{},
+	tableData []interface{},
+) *BaseMap {
+	// Convert feeds to whens and validates to thens
+	whens := make([]*BaseWhen, len(feeds))
+	for i, feed := range feeds {
+		whens[i] = &BaseWhen{
+			Key:    fmt.Sprintf("feed-%d", i),
+			WhenCB: feed,
+		}
+	}
+
+	thens := make([]*BaseThen, len(validates))
+	for i, validate := range validates {
+		thens[i] = &BaseThen{
+			Key:    fmt.Sprintf("validate-%d", i),
+			ThenCB: validate,
+		}
+	}
+
+	return &BaseMap{
+		BaseGiven: NewBaseGiven(
+			"map",
+			features,
+			whens,
+			thens,
+			mapCB,
+			initialValues,
+		),
+		tableData: tableData,
+	}
+}
+
+// CreateAAA creates an AAA pattern test
+func (gv *Golingvu) CreateAAA(
+	name string,
+	features []string,
+	acts []interface{},
+	asserts []interface{},
+	arrangeCB interface{},
+	initialValues interface{},
+) *BaseArrange {
+	return NewBaseArrange(features, acts, asserts, arrangeCB, initialValues)
+}
+
+// CreateTDT creates a TDT pattern test
+func (gv *Golingvu) CreateTDT(
+	name string,
+	features []string,
+	feeds []interface{},
+	validates []interface{},
+	mapCB interface{},
+	initialValues interface{},
+	tableData []interface{},
+) *BaseMap {
+	return NewBaseMap(features, feeds, validates, mapCB, initialValues, tableData)
 }
 
 // AssertThis is a helper function for assertions

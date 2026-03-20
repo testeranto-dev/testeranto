@@ -140,19 +140,25 @@ async function startBundling(
     if (buildResult.metafile) {
       await processMetafile(projectConfig, buildResult.metafile, 'web', testName);
 
-      // Create HTML files for each output (optional, for debugging)
       const outputFiles = Object.keys(buildResult.metafile.outputs);
       for (const outputFile of outputFiles) {
         if (outputFile.endsWith('.mjs')) {
           const baseName = path.basename(outputFile, '.mjs');
-          const htmlPath = `testeranto/bundles/${testName}/${baseName}.html`;
+          // Create a simpler HTML filename without dots (except .html)
+          const simpleBaseName = baseName.replace(/\./g, '_');
+          const htmlPath = `testeranto/bundles/${testName}/${simpleBaseName}.html`;
           await fs.promises.mkdir(path.dirname(htmlPath), { recursive: true });
+          // Calculate the correct script src path
+          // The HTML is at the root, so we need the relative path from root to the .mjs file
+          // outputFile is like 'testeranto/bundles/webtests/src/ts/Calculator.test.web.mjs'
+          // We need 'src/ts/Calculator.test.web.mjs'
+          const relativePath = outputFile.replace(`testeranto/bundles/${testName}/`, '');
           const htmlContent = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Test Runner - ${baseName}</title>
-    <script type="module" src="${path.basename(outputFile)}"></script>
+    <script type="module" src="${relativePath}"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -167,14 +173,14 @@ async function startBundling(
     }
 
     // Start a dev server - bind to all interfaces
-    let { hosts, port } = await ctx.serve({
+    let { hosts, port, } = await ctx.serve({
       host: '0.0.0.0',
-      servedir: '.',
+      servedir: '/workspace',
       onRequest: ({ method, path, remoteAddress, status, timeInMS }) => {
         console.log(`[esbuild] ${remoteAddress} - ${method} ${path} -> ${status} [${timeInMS}ms]`);
       },
     });
-    console.log(`[WEB BUILDER]: esbuild server listening on ${hosts}, port ${port}`);
+    console.log(`[WEB BUILDER]: esbuild server listening on ${hosts}, port ${port}, ${process.cwd()}`);
 
     // Start watching for changes
     await ctx.watch();

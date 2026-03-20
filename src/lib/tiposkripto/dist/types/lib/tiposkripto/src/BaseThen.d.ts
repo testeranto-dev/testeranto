@@ -1,19 +1,13 @@
-import { Ibdd_in_any } from "./CoreTypes.js";
+import { TestTypeParams_any } from "./CoreTypes.js";
 import { ITestResourceConfiguration } from "./types.js";
-export declare abstract class BaseThen<I extends Ibdd_in_any> {
-    name: string;
+import { BaseCheck } from "./BaseCheck.js";
+/**
+ * BaseThen extends BaseCheck for BDD pattern.
+ * @deprecated Use BaseCheck for unified terminology
+ */
+export declare abstract class BaseThen<I extends TestTypeParams_any> extends BaseCheck<I> {
     thenCB: (storeState: I["iselection"]) => Promise<I["then"]>;
-    error: boolean;
-    artifacts: string[];
-    status: boolean | undefined;
     constructor(name: string, thenCB: (val: I["iselection"]) => Promise<I["then"]>);
-    addArtifact(path: string): void;
-    toObj(): {
-        name: string;
-        error: boolean;
-        artifacts: string[];
-        status: boolean | undefined;
-    };
     abstract butThen(store: I["istore"], thenCB: (s: I["iselection"]) => Promise<I["isubject"]>, testResourceConfiguration: ITestResourceConfiguration): Promise<I["iselection"]>;
     test(store: I["istore"], testResourceConfiguration: any, filepath: string): Promise<I["then"] | undefined>;
 }
@@ -24,5 +18,6 @@ export declare abstract class BaseThen<I extends Ibdd_in_any> {
  * - Assertions might need to be reused or composed dynamically
  * - Custom assertion libraries could benefit from named assertion collections
  * - Advanced validation patterns require named Then conditions
+ * @deprecated Use IChecks for unified terminology
  */
-export type IThens<I extends Ibdd_in_any> = Record<string, BaseThen<I>>;
+export type IThens<I extends TestTypeParams_any> = Record<string, BaseThen<I>>;

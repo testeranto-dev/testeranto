@@ -89,6 +89,7 @@ export const webBddCommand = (
   fpath: string,
   webConfigPath: string,
   configKey: string,
+  containerName: string,
 ) => {
   // fpath has .mjs extension (the bundled file), but we need to use the original test file path
   // for the directory structure. The original test file has .ts extension.
@@ -99,7 +100,11 @@ export const webBddCommand = (
     ports: [1111],
     fs: `testeranto/reports/${configKey}/${originalPath}/`,
   });
-  return `yarn tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
+
+  const command = `yarn tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`
+  console.log(`[SERVER.DOCKER.WEB] ${configKey} ${containerName} ${command}`)
+  // ESBUILD_HOST is now set via environment in the Docker Compose service configuration
+  return command;
 };
 
 // BuildKit-based building for web runtime

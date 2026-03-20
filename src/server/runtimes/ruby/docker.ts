@@ -4,6 +4,7 @@ import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 import rubyContent from "./ruby.rb" with { type: "text" };
 import sourceAnalyzerContent from "./source_analyzer.rb" with { type: "text" };
+import nativeDetectionContent from "./native_detection.rb" with { type: "text" };
 
 // Write the Ruby scripts to a location that will be mounted in the container
 const rubyScriptPath = join(process.cwd(), "testeranto", "ruby_runtime.rb");
@@ -11,6 +12,9 @@ await Bun.write(rubyScriptPath, rubyContent);
 
 const sourceAnalyzerPath = join(process.cwd(), "testeranto", "source_analyzer.rb");
 await Bun.write(sourceAnalyzerPath, sourceAnalyzerContent);
+
+const nativeDetectionPath = join(process.cwd(), "testeranto", "native_detection.rb");
+await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 export const rubyDockerComposeFile = (
   config: ITestconfigV2,
@@ -58,8 +62,8 @@ export const rubyBuildCommand = (
   testName: string,
   tests: string[],
 ) => {
-  // MODE is now passed via environment in the service configuration
-  return `ruby /workspace/testeranto/ruby_runtime.rb /workspace/${projectConfigPath} /workspace/${rubyConfigPath} ${testName} ${tests.join(" ")}`;
+  // Use the native detection script
+  return `ruby /workspace/testeranto/native_detection.rb /workspace/${projectConfigPath} /workspace/${rubyConfigPath} ${testName} ${tests.join(" ")}`;
 };
 
 export const rubyBddCommand = (

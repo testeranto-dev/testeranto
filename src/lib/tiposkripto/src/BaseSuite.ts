@@ -1,4 +1,4 @@
-import { Ibdd_in_any, Ibdd_out_any } from "./CoreTypes.js";
+import { TestTypeParams_any, TestSpecShape_any } from "./CoreTypes.js";
 import { IGivens } from "./BaseGiven";
 import { ITestResourceConfiguration, ITestArtifactory } from "./types.js";
 
@@ -10,12 +10,12 @@ import { ITestResourceConfiguration, ITestArtifactory } from "./types.js";
  * - Named suites allow for selective test execution and better reporting
  * - This supports the hierarchical structure of test organization
  */
-export type ISuites<I extends Ibdd_in_any, O extends Ibdd_out_any> = Record<
+export type ISuites<I extends TestTypeParams_any, O extends TestSpecShape_any> = Record<
   string,
   BaseSuite<I, O>
 >;
 
-export abstract class BaseSuite<I extends Ibdd_in_any, O extends Ibdd_out_any> {
+export abstract class BaseSuite<I extends TestTypeParams_any, O extends TestSpecShape_any> {
   name: string;
   givens: IGivens<I>;
   store: I["istore"];

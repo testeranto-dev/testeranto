@@ -67,11 +67,11 @@ export default abstract class BaseTiposkripto<
         a[key] = (somestring: string, givens: IGivens<I>) => {
           return new (class extends BaseSuite<I, O> {
             afterAll(store: I["istore"]) {
-              return fullAdapter.afterAll(store);
+              return fullAdapter.cleanupAll(store);
             }
 
             assertThat(t: Awaited<I["then"]>): boolean {
-              return fullAdapter.assertThis(t);
+              return fullAdapter.assert(t);
             }
 
             async setup(
@@ -79,7 +79,7 @@ export default abstract class BaseTiposkripto<
               tr: ITestResourceConfiguration
             ): Promise<I["isubject"]> {
               return (
-                fullAdapter.beforeAll?.(s, tr) ??
+                fullAdapter.prepareAll?.(s, tr) ??
                 (s as unknown as Promise<I["isubject"]>)
               );
             }
@@ -107,7 +107,7 @@ export default abstract class BaseTiposkripto<
 
           return new (class extends BaseGiven<I> {
             async givenThat(subject, testResource, initializer, initialValues) {
-              return fullAdapter.beforeEach(
+              return fullAdapter.prepareEach(
                 subject,
                 initializer,
                 testResource,
@@ -116,7 +116,7 @@ export default abstract class BaseTiposkripto<
             }
 
             afterEach(store: I["istore"], key: string): Promise<unknown> {
-              return Promise.resolve(fullAdapter.afterEach(store, key));
+              return Promise.resolve(fullAdapter.cleanupEach(store, key));
             }
           })(
             safeFeatures,
@@ -136,7 +136,7 @@ export default abstract class BaseTiposkripto<
         a[key] = (...payload: any[]) => {
           const whenInstance = new (class extends BaseWhen<I> {
             async andWhen(store, whenCB, testResource) {
-              return await fullAdapter.andWhen(store, whenCB, testResource);
+              return await fullAdapter.execute(store, whenCB, testResource);
             }
           })(`${key}: ${payload && payload.toString()}`, whEn(...payload));
           return whenInstance;
@@ -155,7 +155,7 @@ export default abstract class BaseTiposkripto<
               thenCB,
               testResource: any
             ): Promise<I["iselection"]> {
-              return await fullAdapter.butThen(store, thenCB, testResource);
+              return await fullAdapter.verify(store, thenCB, testResource);
             }
           })(`${key}: ${args && args.toString()}`, thEn(...args));
 
@@ -186,20 +186,12 @@ export default abstract class BaseTiposkripto<
       const suiteRunner =
         (suite: BaseSuite<I, O>) =>
           async (
-            testResourceConfiguration?: ITestResourceConfiguration
+            testResourceConfiguration: ITestResourceConfiguration
           ): Promise<BaseSuite<I, O>> => {
             try {
               const x = await suite.run(
                 input,
-                testResourceConfiguration || {
-                  name: suite.name,
-                  fs: process.cwd(),
-                  ports: [],
-                  timeout: 30000,
-                  retries: 3,
-                  environment: {},
-                  files: []
-                }
+                testResourceConfiguration
               );
 
               return x;

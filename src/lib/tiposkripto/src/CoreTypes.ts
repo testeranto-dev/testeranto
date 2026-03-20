@@ -18,31 +18,44 @@ export type SuiteSpecification<
   };
 
 
-export type ITestAdapter<I extends Ibdd_in_any> = {
-  assertThis: (x: I["then"]) => any;
-  andWhen: (
-    store: I["istore"],
-    whenCB: I["when"],
-    testResource: ITestResourceConfiguration
-  ) => Promise<I["istore"]>;
-  butThen: (
-    store: I["istore"],
-    thenCB: I["then"],
-    testResource: ITestResourceConfiguration
-  ) => Promise<I["iselection"]>;
-  afterAll: (store: I["istore"]) => any;
-  afterEach: (store: I["istore"], key: string) => Promise<unknown>;
-  beforeAll: (
+// Universal test adapter with methodology-agnostic terminology
+export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
+  // Lifecycle hooks
+  prepareAll: (
     input: I["iinput"],
     testResource: ITestResourceConfiguration
   ) => Promise<I["isubject"]>;
-  beforeEach: (
+  prepareEach: (
     subject: I["isubject"],
     initializer: (c?) => I["given"],
     testResource: ITestResourceConfiguration,
     initialValues
   ) => Promise<I["istore"]>;
+  
+  // Execution
+  execute: (
+    store: I["istore"],
+    actionCB: I["when"],
+    testResource: ITestResourceConfiguration
+  ) => Promise<I["istore"]>;
+  
+  // Verification
+  verify: (
+    store: I["istore"],
+    checkCB: I["then"],
+    testResource: ITestResourceConfiguration
+  ) => Promise<I["iselection"]>;
+  
+  // Cleanup
+  cleanupEach: (store: I["istore"], key: string) => Promise<unknown>;
+  cleanupAll: (store: I["istore"]) => any;
+  
+  // Assertion
+  assert: (x: I["then"]) => any;
 };
+
+// Legacy BDD adapter for backward compatibility
+export type ITestAdapter<I extends TestTypeParams_any> = IUniversalTestAdapter<I>;
 
 export type ITestSpecification<
   I extends Ibdd_in_any,
@@ -70,33 +83,38 @@ export type ITestImplementation<
   modifier
 >;
 
-export type Ibdd_out<
+export type TestSpecShape<
   ISuites extends TestSuiteShape = TestSuiteShape,
-  IGivens extends TestGivenShape = TestGivenShape,
-  IWhens extends TestWhenShape = TestWhenShape,
-  IThens extends TestThenShape = TestThenShape
+  ISetups extends TestGivenShape = TestGivenShape,
+  IActions extends TestWhenShape = TestWhenShape,
+  IChecks extends TestThenShape = TestThenShape
 > = {
   suites: ISuites;
-  givens: IGivens;
-  whens: IWhens;
-  thens: IThens;
+  givens: ISetups;
+  whens: IActions;
+  thens: IChecks;
 };
 
-export type Ibdd_out_any = Ibdd_out<
+export type TestSpecShape_any = TestSpecShape<
   TestSuiteShape,
   TestGivenShape,
   TestWhenShape,
   TestThenShape
 >;
 
-export type Ibdd_in<
+// Legacy type aliases for backward compatibility
+export type Ibdd_out<ISuites, IGivens, IWhens, IThens> = 
+  TestSpecShape<ISuites, IGivens, IWhens, IThens>;
+export type Ibdd_out_any = TestSpecShape_any;
+
+export type TestTypeParams<
   IInput, // Type of initial test input
   ISubject, // Type of object being tested
   IStore, // Type for storing test state between steps
   ISelection, // Type for selecting state for assertions
-  IGiven, // Type for Given step functions
-  IWhen, // Type for When step functions
-  IThen // Type for Then step functions
+  ISetup, // Type for Setup step functions (formerly Given)
+  IAction, // Type for Action step functions (formerly When)
+  ICheck // Type for Check step functions (formerly Then)
 > = {
   /** Initial input required to start tests */
   iinput: IInput;
@@ -110,17 +128,17 @@ export type Ibdd_in<
   /** Selected portion of state for assertions */
   iselection: ISelection;
 
-  /** Function type for Given steps */
-  given: IGiven;
+  /** Function type for Setup steps (Given/Arrange/Map) */
+  given: ISetup;
 
-  /** Function type for When steps */
-  when: IWhen;
+  /** Function type for Action steps (When/Act/Feed) */
+  when: IAction;
 
-  /** Function type for Then steps */
-  then: IThen;
+  /** Function type for Check steps (Then/Assert/Validate) */
+  then: ICheck;
 };
 
-export type Ibdd_in_any = Ibdd_in<
+export type TestTypeParams_any = TestTypeParams<
   unknown,
   unknown,
   unknown,
@@ -129,3 +147,8 @@ export type Ibdd_in_any = Ibdd_in<
   unknown,
   unknown
 >;
+
+// Legacy type aliases for backward compatibility
+export type Ibdd_in<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen> = 
+  TestTypeParams<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen>;
+export type Ibdd_in_any = TestTypeParams_any;

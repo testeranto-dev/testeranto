@@ -1,5 +1,6 @@
-import { Ibdd_in_any } from "./CoreTypes.js";
+import { TestTypeParams_any } from "./CoreTypes.js";
 import { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
+import { BaseSetup } from "./BaseSetup.js";
 /**
  * Represents a collection of Given conditions keyed by their names.
  * Givens are typically organized as named collections because:
@@ -7,9 +8,14 @@ import { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
  * - Tests often need to reference specific Given conditions by name
  * - This allows for better organization and reuse of setup logic
  * - The BDD pattern often involves multiple named Given scenarios
+ * @deprecated Use BaseSetup for unified terminology
  */
-export type IGivens<I extends Ibdd_in_any> = Record<string, BaseGiven<I>>;
-export declare abstract class BaseGiven<I extends Ibdd_in_any> {
+export type IGivens<I extends TestTypeParams_any> = Record<string, BaseGiven<I>>;
+/**
+ * BaseGiven extends BaseSetup for BDD pattern.
+ * @deprecated Use BaseSetup for unified terminology
+ */
+export declare abstract class BaseGiven<I extends TestTypeParams_any> extends BaseSetup<I> {
     features: string[];
     whens: any[];
     thens: any[];
@@ -38,6 +44,7 @@ export declare abstract class BaseGiven<I extends Ibdd_in_any> {
         status: boolean | undefined;
     };
     abstract givenThat(subject: I["isubject"], testResourceConfiguration: any, artifactory: ITestArtifactory, givenCB: I["given"], initialValues: any): Promise<I["istore"]>;
+    setupThat(subject: I["isubject"], testResourceConfiguration: ITestResourceConfiguration, artifactory: ITestArtifactory, setupCB: I["given"], initialValues: any): Promise<I["istore"]>;
     afterEach(store: I["istore"], key: string, artifactory: ITestArtifactory): Promise<I["istore"]>;
     give(subject: I["isubject"], key: string, testResourceConfiguration: ITestResourceConfiguration, tester: (t: Awaited<I["then"]> | undefined) => boolean, artifactory?: ITestArtifactory, suiteNdx?: number): Promise<I["istore"]>;
 }
