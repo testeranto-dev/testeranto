@@ -291,8 +291,11 @@ export class Server_HTTP_utils {
       const htmlContent = await fs.promises.readFile(htmlPath, "utf-8");
 
       // Extract features and documentation files from all test results
-      const { features, documentationFiles, bddStatus, featureGraph } =
-        await this.extractFeaturesAndDocsFromTestResults(allTestResults);
+      const result = await this.extractFeaturesAndDocsFromTestResults(allTestResults);
+      const features = result.features || [];
+      const documentationFiles = result.documentationFiles || [];
+      const bddStatus = result.bddStatus || {};
+      const featureGraph = result.featureGraph || { nodes: [], edges: [] };
 
       // Read contents of documentation files
       const documentationWithContent = await this.readDocumentationFiles(documentationFiles);
@@ -316,9 +319,9 @@ export class Server_HTTP_utils {
         allTestResults: allTestResults,
         // Add file contents for files in the tree
         fileContents: await this.extractFileContentsFromTree(collatedFilesTree),
-        // Add feature graph for visualization
-        featureGraph: featureGraph,
-        // Add viz configuration
+        // Add feature graph for visualization (with fallback)
+        featureGraph: featureGraph || { nodes: [], edges: [] },
+        // Add grafeovidajo configuration
         vizConfig: {
           projection: {
             xAttribute: 'status',
@@ -353,7 +356,7 @@ export class Server_HTTP_utils {
       const jsonString = JSON.stringify(embeddedData);
       // Encode to base64 to avoid any HTML/JS escaping issues
       const base64String = Buffer.from(jsonString, 'utf8').toString('base64');
-      
+
       // Create a script tag that decodes the base64 string
       const scriptTag = `<script>
 window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
@@ -466,20 +469,20 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
               // Try to read and parse markdown file
               let frontmatter: Record<string, any> = {};
               let content: string | undefined;
-              
+
               try {
                 const fullPath = path.join(process.cwd(), normalizedPath);
                 if (fs.existsSync(fullPath)) {
                   const fileContent = await fs.promises.readFile(fullPath, 'utf-8');
                   content = fileContent;
-                  
+
                   // Parse markdown frontmatter
                   const match = fileContent.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
                   if (match) {
                     const [, frontmatterStr] = match;
                     frontmatter = this.parseYamlFrontmatter(frontmatterStr);
                   }
-                  
+
                   // Create feature node for graph
                   const nodeId = `feature:${normalizedPath}`;
                   featureNodes.push({
@@ -492,13 +495,13 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
                       _feature: feature
                     }
                   });
-                  
+
                   // Add edges for dependencies
                   if (frontmatter.dependsUpon) {
-                    const dependencies = Array.isArray(frontmatter.dependsUpon) 
-                      ? frontmatter.dependsUpon 
+                    const dependencies = Array.isArray(frontmatter.dependsUpon)
+                      ? frontmatter.dependsUpon
                       : [frontmatter.dependsUpon];
-                    
+
                     for (const dep of dependencies) {
                       let depPath = dep;
                       if (depPath.startsWith('./')) {
@@ -508,7 +511,7 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
                         depPath = depPath.substring(1);
                       }
                       depPath = depPath.replace(/\\/g, '/');
-                      
+
                       const depNodeId = `feature:${depPath}`;
                       featureEdges.push({
                         source: depNodeId,
@@ -544,7 +547,7 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
                 feature,
                 isDocumentation: false,
               });
-              
+
               // Create node for plain feature
               const nodeId = `feature:plain:${feature.replace(/[^a-zA-Z0-9]/g, '_')}`;
               featureNodes.push({
@@ -583,16 +586,16 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
     try {
       const result: Record<string, any> = {};
       const lines = yamlStr.split('\n');
-      
+
       for (const line of lines) {
         const trimmed = line.trim();
         if (!trimmed || trimmed.startsWith('#')) continue;
-        
+
         const colonIndex = trimmed.indexOf(':');
         if (colonIndex > 0) {
           const key = trimmed.substring(0, colonIndex).trim();
           let value = trimmed.substring(colonIndex + 1).trim();
-          
+
           // Try to parse values
           if (value === 'true') value = true;
           else if (value === 'false') value = false;
@@ -610,11 +613,11 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
               // Keep as string
             }
           }
-          
+
           result[key] = value;
         }
       }
-      
+
       return result;
     } catch (error) {
       console.warn('Failed to parse YAML frontmatter:', error);
@@ -854,7 +857,7 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
 
   private static async readDocumentationFiles(files: string[]): Promise<Record<string, string>> {
     const contents: Record<string, string> = {};
-    
+
     for (const file of files) {
       try {
         const fullPath = path.join(process.cwd(), file);
@@ -866,16 +869,16 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
         console.warn(`Could not read documentation file ${file}:`, error);
       }
     }
-    
+
     return contents;
   }
 
   private static async extractFileContentsFromTree(tree: any): Promise<Record<string, string>> {
     const contents: Record<string, string> = {};
-    
+
     const traverse = async (node: any, currentPath: string = '') => {
       if (!node) return;
-      
+
       if (node.type === 'file' && node.path) {
         try {
           const fullPath = path.join(process.cwd(), node.path);
@@ -887,14 +890,14 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
           console.warn(`Could not read file ${node.path}:`, error);
         }
       }
-      
+
       if (node.children) {
         for (const [key, child] of Object.entries(node.children)) {
           await traverse(child, currentPath ? `${currentPath}/${key}` : key);
         }
       }
     };
-    
+
     await traverse(tree);
     return contents;
   }

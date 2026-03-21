@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
-import { GraphData, ProjectionConfig } from '../core/types';
+
 import { projectGraph } from '../core/projection';
+// import type { GraphData } from '..';
+// import type { ProjectionConfig } from '..';
 
 export function useProjection(
-  data: GraphData,
-  config: ProjectionConfig
+  data: any,
+  config: any
 ) {
   return useMemo(() => {
     return projectGraph(data, config);

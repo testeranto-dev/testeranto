@@ -4678,6 +4678,11 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0,
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
+grafeovidajo@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/grafeovidajo/-/grafeovidajo-0.0.4.tgz#b6a7fd29b759b484526d18d58e9a6947e5937e88"
+  integrity sha512-75kohBe8A7eZBQWDohcjU9iVl7cxxDRbiAl7q5QwqbTIYIM3FCpbWGkACWHnA6gwH5EljNihYnmapabFS62LaQ==
+
 graphemer@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"

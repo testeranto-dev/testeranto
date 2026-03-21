@@ -1,5 +1,7 @@
 // NOTE: this file is not a part of our build process, but a odwnstream process run by the user
 // this file is copied to the users project where they can cutomize it
+// This is where a used configure the vizualization. 
+//  for instange, the columns in a kanban chart and to which attribute they map
 
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
@@ -10,6 +12,8 @@ import {
   renderTestDetails,
 } from "testeranto/src/server/serverClasses/StakeholderUtils";
 
+// Note: grafeovidajo should be provided as an external dependency
+// The user's project needs to have it installed
 import { GraphData, Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph } from "grafeovidajo";
 
 export interface StakeholderData {

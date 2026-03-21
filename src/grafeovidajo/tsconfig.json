@@ -1,0 +1,51 @@
+{
+  "ts-node": {
+    "compilerOptions": {
+      "module": "esnext",
+      "allowSyntheticDefaultImports": true,
+      "moduleResolution": "node",
+      "target": "es2020",
+      "esModuleInterop": true
+    }
+  },
+  "declaration": true,
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "useDefineForClassFields": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "module": "esnext",
+    "target": "ES2022",
+    "allowJs": true,
+    "jsx": "react",
+    "strictNullChecks": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "incremental": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "outDir": "dist",
+    "alwaysStrict": true,
+    "downlevelIteration": true,
+    "exactOptionalPropertyTypes": false
+  },
+  "include": [
+    "./**/*.*ts",
+    "./**/*.*tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

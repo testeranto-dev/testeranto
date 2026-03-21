@@ -1,6 +1,6 @@
-we use the viz library to viusalize data which we present to the user through the[stakeholder app](src/serverClasses/index.tsx) the viz library works by mapping graph data to a 2 screen.
+we use the grafeovidajo library to viusalize data which we present to the user through the[stakeholder app](src/serverClasses/index.tsx) the grafeovidajo library works by mapping graph data to a 2 screen.
 
-Our index.html comes loaded with this graph data and viz handles it from there.
+Our index.html comes loaded with this graph data and grafeovidajo handles it from there.
 
 ## graph
 
@@ -22,9 +22,9 @@ dependsUpon: ./someOtherFeature.md
 
 This graph is precomputed and embedded in the html. The front end presents it. WE can still use fetch command, so we do not necessarily need to embed the file contents int the graph, only theirilfenames.
 
-## viz
+## grafeovidajo
 
-the viz library works by mapping graph data to 2d plain. We need to achieve the falling charts
+the grafeovidajo library works by mapping graph data to 2d plain. We need to achieve the falling charts
 
 - esenhow matric
 - gantt

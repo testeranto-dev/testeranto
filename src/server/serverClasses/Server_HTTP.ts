@@ -7,6 +7,7 @@ import { Server_HTTP_utils } from "./Server_Http/Server_HTTP_utils";
 import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
 import fs from "fs";
 import path from "path";
+import glob from "glob";
 
 export abstract class Server_HTTP extends Server_Base {
   http: HttpManager;
@@ -180,7 +181,7 @@ export abstract class Server_HTTP extends Server_Base {
         return Server_HTTP_utils.serveFile(reportsPath);
       }
     }
-    
+
     // Also handle direct requests to /testeranto/reports/*
     if (normalizedPath.startsWith('/testeranto/reports/')) {
       // Remove the /testeranto/reports/ prefix and serve from the reports directory
@@ -314,15 +315,15 @@ export abstract class Server_HTTP extends Server_Base {
               for (const file of inputFiles) {
                 const normalizedPath = file.startsWith('/') ? file.substring(1) : file;
                 const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-                
+
                 if (parts.length === 0) continue;
-                
+
                 let currentNode = treeRoot;
-                
+
                 for (let i = 0; i < parts.length; i++) {
                   const part = parts[i];
                   const isLast = i === parts.length - 1;
-                  
+
                   if (!currentNode[part]) {
                     if (isLast) {
                       currentNode[part] = {
@@ -359,7 +360,7 @@ export abstract class Server_HTTP extends Server_Base {
                       }
                     }
                   }
-                  
+
                   if (!isLast && currentNode[part].type === 'directory') {
                     currentNode = currentNode[part].children;
                   }
@@ -370,15 +371,15 @@ export abstract class Server_HTTP extends Server_Base {
               for (const file of outputFiles) {
                 const normalizedPath = file.startsWith('/') ? file.substring(1) : file;
                 const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-                
+
                 if (parts.length === 0) continue;
-                
+
                 let currentNode = treeRoot;
-                
+
                 for (let i = 0; i < parts.length; i++) {
                   const part = parts[i];
                   const isLast = i === parts.length - 1;
-                  
+
                   if (!currentNode[part]) {
                     if (isLast) {
                       currentNode[part] = {
@@ -422,7 +423,7 @@ export abstract class Server_HTTP extends Server_Base {
                       }
                     }
                   }
-                  
+
                   if (!isLast && currentNode[part].type === 'directory') {
                     currentNode = currentNode[part].children;
                   }
@@ -438,35 +439,35 @@ export abstract class Server_HTTP extends Server_Base {
 
     // Wait for all fetches to complete
     await Promise.all(promises);
-    
+
     // Also add test results files from the reports directory
     const reportsDir = path.join(process.cwd(), 'testeranto', 'reports');
     if (fs.existsSync(reportsDir)) {
       this.addTestResultsFilesToTree(treeRoot, reportsDir);
     }
-    
+
     // Add documentation files from configs.documentationGlob
     if (configs.documentationGlob) {
-      const glob = require('glob');
+
       try {
         const docFiles = glob.sync(configs.documentationGlob, {
           cwd: process.cwd(),
           ignore: ['**/node_modules/**', '**/.git/**'],
           nodir: true
         });
-        
+
         for (const file of docFiles) {
           const normalizedPath = file.startsWith('/') ? file.substring(1) : file;
           const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
-          
+
           if (parts.length === 0) continue;
-          
+
           let currentNode = treeRoot;
-          
+
           for (let i = 0; i < parts.length; i++) {
             const part = parts[i];
             const isLast = i === parts.length - 1;
-            
+
             if (!currentNode[part]) {
               if (isLast) {
                 currentNode[part] = {
@@ -484,7 +485,7 @@ export abstract class Server_HTTP extends Server_Base {
                 };
               }
             }
-            
+
             if (!isLast && currentNode[part].type === 'directory') {
               currentNode = currentNode[part].children;
             }
@@ -494,7 +495,7 @@ export abstract class Server_HTTP extends Server_Base {
         console.error('Error adding documentation files to tree:', error);
       }
     }
-    
+
     // Convert the tree to the format expected by the stakeholder app
     const convertTree = (node: Record<string, any>, currentPath: string = ''): any => {
       if (node.type === 'file') {
@@ -506,18 +507,18 @@ export abstract class Server_HTTP extends Server_Base {
           runtime: node.runtime,
           testName: node.testName,
         };
-        
+
         // Only try to parse JSON files that are likely test results
         const isJsonFile = node.path && (
-          node.path.endsWith('.json') || 
+          node.path.endsWith('.json') ||
           node.path.endsWith('tests.json') ||
           path.basename(node.path) === 'tests.json'
         );
-        
+
         // Check if it's a test results file (in reports directory)
         const isInReportsDir = node.path && node.path.includes('testeranto/reports/');
         const isTestResultsFile = isJsonFile && isInReportsDir;
-        
+
         if (isTestResultsFile && node.path) {
           try {
             const content = fs.readFileSync(node.path, 'utf-8');
@@ -537,12 +538,12 @@ export abstract class Server_HTTP extends Server_Base {
             // Keep as regular file, don't set testData
           }
         }
-        
+
         return result;
       } else if (node.type === 'directory') {
         const children: Record<string, any> = {};
         for (const [childName, childNode] of Object.entries(node.children || {})) {
-          children[childName] = convertTree(childNode as Record<string, any>, 
+          children[childName] = convertTree(childNode as Record<string, any>,
             currentPath ? `${currentPath}/${childName}` : childName);
         }
         return {
@@ -560,7 +561,7 @@ export abstract class Server_HTTP extends Server_Base {
     for (const [key, node] of Object.entries(treeRoot)) {
       convertedTree[key] = convertTree(node as Record<string, any>, key);
     }
-    
+
     // Return as a single root node
     return {
       type: 'directory',
@@ -578,23 +579,23 @@ export abstract class Server_HTTP extends Server_Base {
           const fullPath = path.join(dir, item);
           const stat = fs.statSync(fullPath);
           const itemRelativePath = relativePath ? `${relativePath}/${item}` : item;
-          
+
           if (stat.isDirectory()) {
             addFilesToTree(fullPath, itemRelativePath);
           } else {
             // Add ALL files, including logs
             const fileType = this.getFileType(item);
-            
+
             // Add file to tree
             const parts = itemRelativePath.split('/').filter(part => part.length > 0);
             if (parts.length === 0) continue;
-            
+
             let currentNode = treeRoot;
-            
+
             for (let i = 0; i < parts.length; i++) {
               const part = parts[i];
               const isLast = i === parts.length - 1;
-              
+
               if (!currentNode[part]) {
                 if (isLast) {
                   currentNode[part] = {
@@ -612,7 +613,7 @@ export abstract class Server_HTTP extends Server_Base {
                   };
                 }
               }
-              
+
               if (!isLast && currentNode[part].type === 'directory') {
                 currentNode = currentNode[part].children;
               }
@@ -623,7 +624,7 @@ export abstract class Server_HTTP extends Server_Base {
         console.error(`Error scanning directory ${dir}:`, error);
       }
     };
-    
+
     addFilesToTree(reportsDir);
   }
 
@@ -710,21 +711,21 @@ export abstract class Server_HTTP extends Server_Base {
           if (!filePath.endsWith('.json') && !filePath.endsWith('tests.json')) {
             continue;
           }
-          
+
           const normalizedPath = filePath.toLowerCase();
           const runtimeLower = runtime.toLowerCase();
           const testNameLower = testName.toLowerCase();
-          
+
           // Extract test name from path (last directory before tests.json)
           const dirName = path.dirname(filePath);
           const lastDir = path.basename(dirName).toLowerCase();
-          
+
           // Check various patterns
           const containsRuntime = normalizedPath.includes(runtimeLower);
-          const containsTestName = normalizedPath.includes(testNameLower) || 
-                                   lastDir.includes(testNameLower.replace(/\./g, '')) ||
-                                   testNameLower.includes(lastDir);
-          
+          const containsTestName = normalizedPath.includes(testNameLower) ||
+            lastDir.includes(testNameLower.replace(/\./g, '')) ||
+            testNameLower.includes(lastDir);
+
           if (containsRuntime && containsTestName) {
             try {
               const content = fs.readFileSync(filePath, 'utf-8');
@@ -743,7 +744,7 @@ export abstract class Server_HTTP extends Server_Base {
             }
           }
         }
-        
+
         // If not found, try to find in runtime directory
         if (!found) {
           const runtimeDir = path.join(reportsDir, runtime);
@@ -762,7 +763,7 @@ export abstract class Server_HTTP extends Server_Base {
             }
           }
         }
-        
+
         // If still not found, leave empty
         if (!found) {
           console.log(`No test results found for ${runtimeKey}/${testName}`);
