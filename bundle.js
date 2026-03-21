@@ -77,6 +77,25 @@ try {
   process.exit(1);
 }
 
+// Build stakeholder app bundle
+try {
+  const stakeholderResult = await esbuild.build({
+    entryPoints: ['src/server/serverClasses/index.tsx'],
+    bundle: true,
+    format: "esm",
+    platform: "browser",
+    target: "es2020",
+    outdir: "dist/stakeholder",
+    external: ["react", "react-dom"],
+    outExtension: { '.js': '.mjs' },
+    logLevel: 'info',
+  });
+  console.log("Stakeholder app built successfully to dist/stakeholder/index.mjs");
+} catch (error) {
+  console.error("Failed to build stakeholder app:", error);
+  process.exit(1);
+}
+
 // Copy stakeholder app source for reference
 const stakeholderSrcPath = 'src/stakeholder/DefaultStakeholderApp.tsx';
 const stakeholderDistDir = 'dist/stakeholder';

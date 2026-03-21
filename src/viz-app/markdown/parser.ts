@@ -1,5 +1,5 @@
 import { MarkdownFile } from '../types';
-import { GraphData } from '../viz';
+import { GraphData } from 'viz';
 
 const FRONTMATTER_REGEX = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
 

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Node } from '../viz';
+import { Node } from 'viz';
 import { MarkdownFile } from '../types';
 
 export function useChartSync(

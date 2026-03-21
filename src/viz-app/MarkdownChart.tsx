@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { GraphData, VizComponentProps, Node } from '../viz';
+import { GraphData, VizComponentProps, Node } from 'viz';
 import { MarkdownChartProps } from './types';
 import { useMarkdownFiles } from './hooks/useMarkdownFiles';
 import { useChartSync } from './hooks/useChartSync';

@@ -291,7 +291,7 @@ export class Server_HTTP_utils {
       const htmlContent = await fs.promises.readFile(htmlPath, "utf-8");
 
       // Extract features and documentation files from all test results
-      const { features, documentationFiles, bddStatus } =
+      const { features, documentationFiles, bddStatus, featureGraph } =
         await this.extractFeaturesAndDocsFromTestResults(allTestResults);
 
       // Read contents of documentation files
@@ -316,6 +316,37 @@ export class Server_HTTP_utils {
         allTestResults: allTestResults,
         // Add file contents for files in the tree
         fileContents: await this.extractFileContentsFromTree(collatedFilesTree),
+        // Add feature graph for visualization
+        featureGraph: featureGraph,
+        // Add viz configuration
+        vizConfig: {
+          projection: {
+            xAttribute: 'status',
+            yAttribute: 'points',
+            xType: 'categorical',
+            yType: 'continuous',
+            layout: 'grid'
+          },
+          style: {
+            nodeSize: (node: any) => {
+              if (node.attributes.points) return Math.max(10, node.attributes.points * 5);
+              return 10;
+            },
+            nodeColor: (node: any) => {
+              const status = node.attributes.status;
+              if (status === 'done') return '#4caf50';
+              if (status === 'doing') return '#ff9800';
+              if (status === 'todo') return '#f44336';
+              return '#9e9e9e';
+            },
+            nodeShape: 'circle',
+            labels: {
+              show: true,
+              attribute: 'name',
+              fontSize: 12
+            }
+          }
+        }
       };
 
       // Convert embedded data to a JSON string
@@ -356,18 +387,25 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
       feature: string;
       isDocumentation: boolean;
       path?: string;
+      frontmatter?: Record<string, any>;
+      content?: string;
     }>;
     documentationFiles: string[];
     bddStatus: Record<string, { status: string; color: string }>;
+    featureGraph?: any;
   }> {
     const features: Array<{
       testKey: string;
       feature: string;
       isDocumentation: boolean;
       path?: string;
+      frontmatter?: Record<string, any>;
+      content?: string;
     }> = [];
     const documentationFiles: string[] = [];
     const bddStatus: Record<string, { status: string; color: string }> = {};
+    const featureNodes: any[] = [];
+    const featureEdges: any[] = [];
 
     // Process each test result
     for (const [runtimeKey, tests] of Object.entries(allTestResults)) {
@@ -425,11 +463,74 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
               }
               normalizedPath = normalizedPath.replace(/\\/g, "/");
 
+              // Try to read and parse markdown file
+              let frontmatter: Record<string, any> = {};
+              let content: string | undefined;
+              
+              try {
+                const fullPath = path.join(process.cwd(), normalizedPath);
+                if (fs.existsSync(fullPath)) {
+                  const fileContent = await fs.promises.readFile(fullPath, 'utf-8');
+                  content = fileContent;
+                  
+                  // Parse markdown frontmatter
+                  const match = fileContent.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+                  if (match) {
+                    const [, frontmatterStr] = match;
+                    frontmatter = this.parseYamlFrontmatter(frontmatterStr);
+                  }
+                  
+                  // Create feature node for graph
+                  const nodeId = `feature:${normalizedPath}`;
+                  featureNodes.push({
+                    id: nodeId,
+                    attributes: {
+                      ...frontmatter,
+                      _path: normalizedPath,
+                      _type: 'feature',
+                      _testKey: testKey,
+                      _feature: feature
+                    }
+                  });
+                  
+                  // Add edges for dependencies
+                  if (frontmatter.dependsUpon) {
+                    const dependencies = Array.isArray(frontmatter.dependsUpon) 
+                      ? frontmatter.dependsUpon 
+                      : [frontmatter.dependsUpon];
+                    
+                    for (const dep of dependencies) {
+                      let depPath = dep;
+                      if (depPath.startsWith('./')) {
+                        depPath = depPath.substring(2);
+                      }
+                      if (depPath.startsWith('/')) {
+                        depPath = depPath.substring(1);
+                      }
+                      depPath = depPath.replace(/\\/g, '/');
+                      
+                      const depNodeId = `feature:${depPath}`;
+                      featureEdges.push({
+                        source: depNodeId,
+                        target: nodeId,
+                        attributes: {
+                          type: 'dependsUpon'
+                        }
+                      });
+                    }
+                  }
+                }
+              } catch (error) {
+                console.warn(`Could not read or parse feature file ${normalizedPath}:`, error);
+              }
+
               features.push({
                 testKey,
                 feature,
                 isDocumentation: true,
                 path: normalizedPath,
+                frontmatter,
+                content
               });
 
               // Add to documentation files if not already present
@@ -437,10 +538,23 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
                 documentationFiles.push(normalizedPath);
               }
             } else {
+              // Plain string feature
               features.push({
                 testKey,
                 feature,
                 isDocumentation: false,
+              });
+              
+              // Create node for plain feature
+              const nodeId = `feature:plain:${feature.replace(/[^a-zA-Z0-9]/g, '_')}`;
+              featureNodes.push({
+                id: nodeId,
+                attributes: {
+                  _type: 'plain_feature',
+                  _testKey: testKey,
+                  _feature: feature,
+                  name: feature
+                }
               });
             }
           }
@@ -456,7 +570,56 @@ window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('${base64String}'));
       }
     }
 
-    return { features, documentationFiles, bddStatus };
+    // Create feature graph
+    const featureGraph = {
+      nodes: featureNodes,
+      edges: featureEdges.length > 0 ? featureEdges : undefined
+    };
+
+    return { features, documentationFiles, bddStatus, featureGraph };
+  }
+
+  private static parseYamlFrontmatter(yamlStr: string): Record<string, any> {
+    try {
+      const result: Record<string, any> = {};
+      const lines = yamlStr.split('\n');
+      
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        
+        const colonIndex = trimmed.indexOf(':');
+        if (colonIndex > 0) {
+          const key = trimmed.substring(0, colonIndex).trim();
+          let value = trimmed.substring(colonIndex + 1).trim();
+          
+          // Try to parse values
+          if (value === 'true') value = true;
+          else if (value === 'false') value = false;
+          else if (value === 'null') value = null;
+          else if (!isNaN(Number(value)) && value !== '') value = Number(value);
+          else if (value.startsWith('"') && value.endsWith('"')) {
+            value = value.slice(1, -1);
+          } else if (value.startsWith("'") && value.endsWith("'")) {
+            value = value.slice(1, -1);
+          } else if (value.startsWith('[') && value.endsWith(']')) {
+            // Simple array parsing
+            try {
+              value = JSON.parse(value);
+            } catch {
+              // Keep as string
+            }
+          }
+          
+          result[key] = value;
+        }
+      }
+      
+      return result;
+    } catch (error) {
+      console.warn('Failed to parse YAML frontmatter:', error);
+      return {};
+    }
   }
 
   private static async getBddExitCodeForTest(

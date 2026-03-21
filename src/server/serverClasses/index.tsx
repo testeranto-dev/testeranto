@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import {
   type TreeNode,
@@ -7,10 +7,14 @@ import {
   renderTestDetails,
 } from "testeranto/src/server/serverClasses/StakeholderUtils";
 
+// Import viz components from the viz package
+import { GraphData, Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph } from "viz";
+
 export interface StakeholderData {
   documentation: {
     files: string[];
     timestamp?: number;
+    contents?: Record<string, string>;
   };
   testResults: Record<string, any>;
   errors: Array<{
@@ -40,6 +44,10 @@ export interface StakeholderData {
       [testName: string]: any; // The content of tests.json
     };
   };
+  // Add feature graph for visualization
+  featureGraph?: GraphData;
+  // Add viz configuration
+  vizConfig?: any;
 }
 
 export interface StakeholderAppProps {
@@ -54,6 +62,8 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
   );
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [selectedFileContent, setSelectedFileContent] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<'tree' | 'viz'>('tree');
+  const [vizType, setVizType] = useState<'eisenhower' | 'gantt' | 'kanban' | 'tree'>('eisenhower');
 
   const toggleExpand = (path: string) => {
     const newExpanded = new Set(expandedPaths);
@@ -852,231 +862,503 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
     }
   };
 
+  // Render visualization
+  const renderVisualization = () => {
+    if (!data.featureGraph || !data.featureGraph.nodes || data.featureGraph.nodes.length === 0) {
+      return (
+        <div style={{ padding: "40px", textAlign: "center" }}>
+          <h3>No Feature Graph Available</h3>
+          <p>Features need to be extracted from test results to create visualizations.</p>
+          <p>Run tests to generate feature data.</p>
+        </div>
+      );
+    }
+
+    const graphData: GraphData = {
+      nodes: data.featureGraph.nodes,
+      edges: data.featureGraph.edges || []
+    };
+
+    const baseConfig = data.vizConfig || {
+      projection: {
+        xAttribute: 'status',
+        yAttribute: 'points',
+        xType: 'categorical',
+        yType: 'continuous',
+        layout: 'grid'
+      },
+      style: {
+        nodeSize: (node: any) => {
+          if (node.attributes.points) return Math.max(10, node.attributes.points * 5);
+          return 10;
+        },
+        nodeColor: (node: any) => {
+          const status = node.attributes.status;
+          if (status === 'done') return '#4caf50';
+          if (status === 'doing') return '#ff9800';
+          if (status === 'todo') return '#f44336';
+          return '#9e9e9e';
+        },
+        nodeShape: 'circle',
+        labels: {
+          show: true,
+          attribute: 'name',
+          fontSize: 12
+        }
+      }
+    };
+
+    const commonProps = {
+      data: graphData,
+      width: 800,
+      height: 500,
+      onNodeClick: (node: Node) => {
+        console.log('Node clicked:', node);
+        // You could implement node selection here
+      },
+      onNodeHover: (node: Node | null) => {
+        // Handle hover
+      }
+    };
+
+    switch (vizType) {
+      case 'eisenhower':
+        return (
+          <div>
+            <h3>Eisenhower Matrix</h3>
+            <p>Urgency vs Importance of features</p>
+            <EisenhowerMatrix
+              {...commonProps}
+              config={{
+                ...baseConfig,
+                projection: {
+                  ...baseConfig.projection,
+                  xAttribute: 'urgency',
+                  yAttribute: 'importance',
+                  xType: 'continuous',
+                  yType: 'continuous'
+                },
+                quadrants: {
+                  urgentImportant: { x: [0, 0.5], y: [0, 0.5] },
+                  notUrgentImportant: { x: [0.5, 1], y: [0, 0.5] },
+                  urgentNotImportant: { x: [0, 0.5], y: [0.5, 1] },
+                  notUrgentNotImportant: { x: [0.5, 1], y: [0.5, 1] }
+                }
+              }}
+            />
+          </div>
+        );
+      case 'gantt':
+        return (
+          <div>
+            <h3>Gantt Chart</h3>
+            <p>Feature timeline</p>
+            <GanttChart
+              {...commonProps}
+              config={{
+                ...baseConfig,
+                timeRange: [new Date(), new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)],
+                rowHeight: 30,
+                showDependencies: true
+              }}
+            />
+          </div>
+        );
+      case 'kanban':
+        return (
+          <div>
+            <h3>Kanban Board</h3>
+            <p>Feature status columns</p>
+            <KanbanBoard
+              {...commonProps}
+              config={{
+                ...baseConfig,
+                columns: [
+                  {
+                    id: 'todo',
+                    title: 'To Do',
+                    statusFilter: (node: Node) => node.attributes.status === 'todo',
+                    width: 25
+                  },
+                  {
+                    id: 'doing',
+                    title: 'Doing',
+                    statusFilter: (node: Node) => node.attributes.status === 'doing',
+                    width: 25
+                  },
+                  {
+                    id: 'review',
+                    title: 'Review',
+                    statusFilter: (node: Node) => node.attributes.status === 'review',
+                    width: 25
+                  },
+                  {
+                    id: 'done',
+                    title: 'Done',
+                    statusFilter: (node: Node) => node.attributes.status === 'done',
+                    width: 25
+                  }
+                ]
+              }}
+            />
+          </div>
+        );
+      case 'tree':
+        return (
+          <div>
+            <h3>Feature Dependency Tree</h3>
+            <p>Feature relationships</p>
+            <TreeGraph
+              {...commonProps}
+              config={{
+                ...baseConfig,
+                projection: {
+                  ...baseConfig.projection,
+                  layout: 'tree'
+                },
+                orientation: 'horizontal',
+                nodeSeparation: 100,
+                levelSeparation: 80
+              }}
+            />
+          </div>
+        );
+      default:
+        return <div>Select a visualization type</div>;
+    }
+  };
+
   return (
     <div
       style={{
         padding: "20px",
         fontFamily: "sans-serif",
-        display: "flex",
-        gap: "20px",
       }}
     >
-      <div
-        style={{
-          flex: "0 0 300px",
-          borderRight: "1px solid #ddd",
-          paddingRight: "20px",
-        }}
-      >
-        <div
-          style={{
-            border: "1px solid #ddd",
-            padding: "15px",
-            background: "#f9f9f9",
-            maxHeight: "600px",
-            overflow: "auto",
-          }}
-        >
-          {data.featureTree ? (
-            renderTree(data.featureTree)
-          ) : (
-            <div>
-              <p>
-                No feature tree available. The tree should show documentation
-                files in their proper folder structure.
-              </p>
-              <p>
-                Documentation files found:{" "}
-                {data.documentation?.files?.length || 0}
-              </p>
-              <div
-                style={{
-                  border: "1px solid #eee",
-                  padding: "10px",
-                  background: "#fff",
-                  maxHeight: "200px",
-                  overflow: "auto",
-                }}
-              >
-                {data.documentation?.files?.map((file, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      fontSize: "0.8rem",
-                      marginBottom: "2px",
-                      padding: "2px",
-                      borderBottom: "1px solid #f0f0f0",
-                    }}
-                  >
-                    {file}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div style={{ flex: "1" }}>
-        {selectedFile && (
-          <div
+      <div style={{ marginBottom: "20px" }}>
+        <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+          <button
             style={{
-              marginBottom: "20px",
-              padding: "10px",
-              backgroundColor: "#e3f2fd",
+              padding: "10px 20px",
+              backgroundColor: activeTab === 'tree' ? "#007acc" : "#f0f0f0",
+              color: activeTab === 'tree' ? "white" : "black",
+              border: "none",
               borderRadius: "4px",
+              cursor: "pointer"
             }}
+            onClick={() => setActiveTab('tree')}
           >
-            <strong>Selected:</strong> {selectedFile}
+            File Tree
+          </button>
+          <button
+            style={{
+              padding: "10px 20px",
+              backgroundColor: activeTab === 'viz' ? "#007acc" : "#f0f0f0",
+              color: activeTab === 'viz' ? "white" : "black",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer"
+            }}
+            onClick={() => setActiveTab('viz')}
+          >
+            Visualizations
+          </button>
+        </div>
+
+        {activeTab === 'viz' && (
+          <div>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+              <button
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: vizType === 'eisenhower' ? "#4caf50" : "#f0f0f0",
+                  color: vizType === 'eisenhower' ? "white" : "black",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer"
+                }}
+                onClick={() => setVizType('eisenhower')}
+              >
+                Eisenhower Matrix
+              </button>
+              <button
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: vizType === 'gantt' ? "#4caf50" : "#f0f0f0",
+                  color: vizType === 'gantt' ? "white" : "black",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer"
+                }}
+                onClick={() => setVizType('gantt')}
+              >
+                Gantt Chart
+              </button>
+              <button
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: vizType === 'kanban' ? "#4caf50" : "#f0f0f0",
+                  color: vizType === 'kanban' ? "white" : "black",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer"
+                }}
+                onClick={() => setVizType('kanban')}
+              >
+                Kanban Board
+              </button>
+              <button
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: vizType === 'tree' ? "#4caf50" : "#f0f0f0",
+                  color: vizType === 'tree' ? "white" : "black",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer"
+                }}
+                onClick={() => setVizType('tree')}
+              >
+                Dependency Tree
+              </button>
+            </div>
+            
+            {renderVisualization()}
+            
+            <div style={{ marginTop: "30px", padding: "20px", backgroundColor: "#f5f5f5", borderRadius: "4px" }}>
+              <h4>Feature Graph Statistics</h4>
+              <p>Total Features: {data.featureGraph?.nodes?.length || 0}</p>
+              <p>Dependencies: {data.featureGraph?.edges?.length || 0}</p>
+              <p>Features with status:</p>
+              <ul>
+                <li>Todo: {data.featureGraph?.nodes?.filter((n: any) => n.attributes.status === 'todo').length || 0}</li>
+                <li>Doing: {data.featureGraph?.nodes?.filter((n: any) => n.attributes.status === 'doing').length || 0}</li>
+                <li>Done: {data.featureGraph?.nodes?.filter((n: any) => n.attributes.status === 'done').length || 0}</li>
+              </ul>
+            </div>
           </div>
         )}
 
-        {renderFileContent()}
-
-        {!selectedFile && (
-          <div>
-            <h3>Configuration</h3>
-            {data.configs?.runtimes ? (
-              <div>
-                <p>
-                  Found {Object.keys(data.configs.runtimes).length} runtimes:
-                </p>
-                {Object.entries(data.configs.runtimes).map(
-                  ([key, runtime]: [string, any]) => (
+        {activeTab === 'tree' && (
+          <div style={{ display: "flex", gap: "20px" }}>
+            <div
+              style={{
+                flex: "0 0 300px",
+                borderRight: "1px solid #ddd",
+                paddingRight: "20px",
+              }}
+            >
+              <div
+                style={{
+                  border: "1px solid #ddd",
+                  padding: "15px",
+                  background: "#f9f9f9",
+                  maxHeight: "600px",
+                  overflow: "auto",
+                }}
+              >
+                {data.featureTree ? (
+                  renderTree(data.featureTree)
+                ) : (
+                  <div>
+                    <p>
+                      No feature tree available. The tree should show documentation
+                      files in their proper folder structure.
+                    </p>
+                    <p>
+                      Documentation files found:{" "}
+                      {data.documentation?.files?.length || 0}
+                    </p>
                     <div
-                      key={key}
                       style={{
-                        marginBottom: "10px",
-                        padding: "5px",
-                        borderLeft: "3px solid #007acc",
+                        border: "1px solid #eee",
+                        padding: "10px",
+                        background: "#fff",
+                        maxHeight: "200px",
+                        overflow: "auto",
                       }}
                     >
-                      <strong>{key}</strong> ({runtime.runtime})
-                      <div style={{ marginLeft: "10px" }}>
-                        Tests: {runtime.tests?.length || 0}
-                        {runtime.tests?.map((test: string, i: number) => {
-                          // Check if we have test results for this test
-                          const testResult = data.allTestResults?.[key]?.[test];
-                          return (
-                            <div key={i} style={{ 
-                              fontSize: "12px",
-                              marginBottom: "5px",
-                              padding: "3px",
-                              backgroundColor: testResult ? 
-                                (testResult.failed ? "#ffebee" : "#e8f5e9") : 
-                                "#f5f5f5",
-                              borderRadius: "3px"
-                            }}>
-                              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <span>{test}</span>
-                                {testResult && (
-                                  <span style={{
-                                    fontWeight: "bold",
-                                    color: testResult.failed ? "#f44336" : "#4caf50"
+                      {data.documentation?.files?.map((file, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            fontSize: "0.8rem",
+                            marginBottom: "2px",
+                            padding: "2px",
+                            borderBottom: "1px solid #f0f0f0",
+                          }}
+                        >
+                          {file}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div style={{ flex: "1" }}>
+              {selectedFile && (
+                <div
+                  style={{
+                    marginBottom: "20px",
+                    padding: "10px",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <strong>Selected:</strong> {selectedFile}
+                </div>
+              )}
+
+              {renderFileContent()}
+
+              {!selectedFile && (
+                <div>
+                  <h3>Configuration</h3>
+                  {data.configs?.runtimes ? (
+                    <div>
+                      <p>
+                        Found {Object.keys(data.configs.runtimes).length} runtimes:
+                      </p>
+                      {Object.entries(data.configs.runtimes).map(
+                        ([key, runtime]: [string, any]) => (
+                          <div
+                            key={key}
+                            style={{
+                              marginBottom: "10px",
+                              padding: "5px",
+                              borderLeft: "3px solid #007acc",
+                            }}
+                          >
+                            <strong>{key}</strong> ({runtime.runtime})
+                            <div style={{ marginLeft: "10px" }}>
+                              Tests: {runtime.tests?.length || 0}
+                              {runtime.tests?.map((test: string, i: number) => {
+                                // Check if we have test results for this test
+                                const testResult = data.allTestResults?.[key]?.[test];
+                                return (
+                                  <div key={i} style={{ 
+                                    fontSize: "12px",
+                                    marginBottom: "5px",
+                                    padding: "3px",
+                                    backgroundColor: testResult ? 
+                                      (testResult.failed ? "#ffebee" : "#e8f5e9") : 
+                                      "#f5f5f5",
+                                    borderRadius: "3px"
                                   }}>
-                                    {testResult.failed ? "❌ Failed" : "✅ Passed"}
-                                  </span>
+                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                      <span>{test}</span>
+                                      {testResult && (
+                                        <span style={{
+                                          fontWeight: "bold",
+                                          color: testResult.failed ? "#f44336" : "#4caf50"
+                                        }}>
+                                          {testResult.failed ? "❌ Failed" : "✅ Passed"}
+                                        </span>
+                                      )}
+                                    </div>
+                                    {testResult && (
+                                      <div style={{ fontSize: "11px", marginTop: "2px" }}>
+                                        Tests: {testResult.runTimeTests || 0} | 
+                                        Fails: {testResult.fails || 0} |
+                                        Features: {testResult.features?.length || 0}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  ) : (
+                    <p>No configuration found</p>
+                  )}
+                  
+                  {/* Add a section for test results summary */}
+                  {data.allTestResults && Object.keys(data.allTestResults).length > 0 && (
+                    <div style={{ marginTop: "30px" }}>
+                      <h3>Test Results Summary</h3>
+                      {Object.entries(data.allTestResults).map(([configKey, tests]) => (
+                        <div key={configKey} style={{ marginBottom: "20px" }}>
+                          <h4>{configKey}</h4>
+                          {Object.entries(tests).map(([testName, testData]) => (
+                            <div 
+                              key={testName}
+                              style={{
+                                padding: "10px",
+                                marginBottom: "10px",
+                                backgroundColor: testData.failed ? "#ffebee" : "#e8f5e9",
+                                borderRadius: "5px",
+                                border: "1px solid #ddd",
+                                cursor: "pointer"
+                              }}
+                              onClick={() => {
+                                setSelectedFile(`${configKey}/${testName}`);
+                                setSelectedFileContent(testData);
+                              }}
+                            >
+                              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <strong>{testName}</strong>
+                                <span style={{
+                                  fontWeight: "bold",
+                                  color: testData.failed ? "#f44336" : "#4caf50"
+                                }}>
+                                  {testData.failed ? "❌ Failed" : "✅ Passed"}
+                                </span>
+                              </div>
+                              <div style={{ fontSize: "14px", marginTop: "5px" }}>
+                                <div>Total Tests: {testData.runTimeTests || 0}</div>
+                                <div>Failures: {testData.fails || 0}</div>
+                                {testData.features && (
+                                  <div>Features: {testData.features.length}</div>
                                 )}
                               </div>
-                              {testResult && (
-                                <div style={{ fontSize: "11px", marginTop: "2px" }}>
-                                  Tests: {testResult.runTimeTests || 0} | 
-                                  Fails: {testResult.fails || 0} |
-                                  Features: {testResult.features?.length || 0}
+                              {testData.features && testData.features.length > 0 && (
+                                <div style={{ marginTop: "10px" }}>
+                                  <div style={{ fontSize: "12px", fontWeight: "bold" }}>Features:</div>
+                                  <div style={{ 
+                                    display: "flex", 
+                                    flexWrap: "wrap", 
+                                    gap: "5px",
+                                    marginTop: "5px"
+                                  }}>
+                                    {testData.features.slice(0, 3).map((feature: string, i: number) => (
+                                      <span 
+                                        key={i}
+                                        style={{
+                                          backgroundColor: "#e3f2fd",
+                                          padding: "2px 6px",
+                                          borderRadius: "10px",
+                                          fontSize: "11px"
+                                        }}
+                                      >
+                                        {feature}
+                                      </span>
+                                    ))}
+                                    {testData.features.length > 3 && (
+                                      <span style={{
+                                        backgroundColor: "#f5f5f5",
+                                        padding: "2px 6px",
+                                        borderRadius: "10px",
+                                        fontSize: "11px"
+                                      }}>
+                                        +{testData.features.length - 3} more
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
                               )}
                             </div>
-                          );
-                        })}
-                      </div>
+                          ))}
+                        </div>
+                      ))}
                     </div>
-                  ),
-                )}
-              </div>
-            ) : (
-              <p>No configuration found</p>
-            )}
-            
-            {/* Add a section for test results summary */}
-            {data.allTestResults && Object.keys(data.allTestResults).length > 0 && (
-              <div style={{ marginTop: "30px" }}>
-                <h3>Test Results Summary</h3>
-                {Object.entries(data.allTestResults).map(([configKey, tests]) => (
-                  <div key={configKey} style={{ marginBottom: "20px" }}>
-                    <h4>{configKey}</h4>
-                    {Object.entries(tests).map(([testName, testData]) => (
-                      <div 
-                        key={testName}
-                        style={{
-                          padding: "10px",
-                          marginBottom: "10px",
-                          backgroundColor: testData.failed ? "#ffebee" : "#e8f5e9",
-                          borderRadius: "5px",
-                          border: "1px solid #ddd",
-                          cursor: "pointer"
-                        }}
-                        onClick={() => {
-                          setSelectedFile(`${configKey}/${testName}`);
-                          setSelectedFileContent(testData);
-                        }}
-                      >
-                        <div style={{ display: "flex", justifyContent: "space-between" }}>
-                          <strong>{testName}</strong>
-                          <span style={{
-                            fontWeight: "bold",
-                            color: testData.failed ? "#f44336" : "#4caf50"
-                          }}>
-                            {testData.failed ? "❌ Failed" : "✅ Passed"}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: "14px", marginTop: "5px" }}>
-                          <div>Total Tests: {testData.runTimeTests || 0}</div>
-                          <div>Failures: {testData.fails || 0}</div>
-                          {testData.features && (
-                            <div>Features: {testData.features.length}</div>
-                          )}
-                        </div>
-                        {testData.features && testData.features.length > 0 && (
-                          <div style={{ marginTop: "10px" }}>
-                            <div style={{ fontSize: "12px", fontWeight: "bold" }}>Features:</div>
-                            <div style={{ 
-                              display: "flex", 
-                              flexWrap: "wrap", 
-                              gap: "5px",
-                              marginTop: "5px"
-                            }}>
-                              {testData.features.slice(0, 3).map((feature: string, i: number) => (
-                                <span 
-                                  key={i}
-                                  style={{
-                                    backgroundColor: "#e3f2fd",
-                                    padding: "2px 6px",
-                                    borderRadius: "10px",
-                                    fontSize: "11px"
-                                  }}
-                                >
-                                  {feature}
-                                </span>
-                              ))}
-                              {testData.features.length > 3 && (
-                                <span style={{
-                                  backgroundColor: "#f5f5f5",
-                                  padding: "2px 6px",
-                                  borderRadius: "10px",
-                                  fontSize: "11px"
-                                }}>
-                                  +{testData.features.length - 3} more
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

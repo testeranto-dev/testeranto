@@ -1,4 +1,4 @@
-import { GraphData, Node, VizConfig, VizComponentProps } from '../viz';
+import { GraphData, Node, VizConfig, VizComponentProps } from 'viz';
 
 export interface MarkdownFile {
   path: string;
