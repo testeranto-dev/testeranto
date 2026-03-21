@@ -171,6 +171,26 @@ export abstract class Server_HTTP extends Server_Base {
       }
     }
 
+    // Serve files from the reports directory when requested from root
+    // This handles index.js and any other assets
+    if (normalizedPath.startsWith('/') && !normalizedPath.startsWith('/testeranto/')) {
+      // Check if the file exists in the reports directory
+      const reportsPath = Server_HTTP_utils.join(projectRoot, 'testeranto', 'reports', normalizedPath.substring(1));
+      if (Server_HTTP_utils.existsSync(reportsPath)) {
+        return Server_HTTP_utils.serveFile(reportsPath);
+      }
+    }
+    
+    // Also handle direct requests to /testeranto/reports/*
+    if (normalizedPath.startsWith('/testeranto/reports/')) {
+      // Remove the /testeranto/reports/ prefix and serve from the reports directory
+      const relativePath = normalizedPath.substring('/testeranto/reports/'.length);
+      const reportsPath = Server_HTTP_utils.join(projectRoot, 'testeranto', 'reports', relativePath);
+      if (Server_HTTP_utils.existsSync(reportsPath)) {
+        return Server_HTTP_utils.serveFile(reportsPath);
+      }
+    }
+
     const filePath = Server_HTTP_utils.join(projectRoot, normalizedPath);
 
     if (!filePath.startsWith(Server_HTTP_utils.resolve(projectRoot))) {
@@ -423,6 +443,56 @@ export abstract class Server_HTTP extends Server_Base {
     const reportsDir = path.join(process.cwd(), 'testeranto', 'reports');
     if (fs.existsSync(reportsDir)) {
       this.addTestResultsFilesToTree(treeRoot, reportsDir);
+    }
+    
+    // Add documentation files from configs.documentationGlob
+    if (configs.documentationGlob) {
+      const glob = require('glob');
+      try {
+        const docFiles = glob.sync(configs.documentationGlob, {
+          cwd: process.cwd(),
+          ignore: ['**/node_modules/**', '**/.git/**'],
+          nodir: true
+        });
+        
+        for (const file of docFiles) {
+          const normalizedPath = file.startsWith('/') ? file.substring(1) : file;
+          const parts = normalizedPath.split('/').filter(part => part.length > 0 && part !== '.');
+          
+          if (parts.length === 0) continue;
+          
+          let currentNode = treeRoot;
+          
+          for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            const isLast = i === parts.length - 1;
+            
+            if (!currentNode[part]) {
+              if (isLast) {
+                currentNode[part] = {
+                  type: 'file',
+                  path: file,
+                  name: part,
+                  fileType: 'documentation'
+                };
+              } else {
+                currentNode[part] = {
+                  type: 'directory',
+                  name: part,
+                  path: parts.slice(0, i + 1).join('/'),
+                  children: {}
+                };
+              }
+            }
+            
+            if (!isLast && currentNode[part].type === 'directory') {
+              currentNode = currentNode[part].children;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error adding documentation files to tree:', error);
+      }
     }
     
     // Convert the tree to the format expected by the stakeholder app

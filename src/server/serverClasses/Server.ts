@@ -50,33 +50,13 @@ export class Server extends Server_Docker {
         featureIngestor: undefined,
       };
 
-      // Embed config, documentation files, and feature tree in the HTML
-      const configData = {
-        configs: sanitizedConfigs,
-        documentationFiles: documentationFiles,
-        featureTree: featureTree
-      };
-      
-      const configScript = `<script id="testeranto-config" type="application/json">
-${JSON.stringify(configData, null, 2)}
-</script>`;
-      
       // Read the base HTML template
       const baseHtml = fs.readFileSync(join(__dirname, "index.html"), "utf-8");
       
-      // Insert the config script before the closing </head> tag
-      let htmlContent = baseHtml;
-      if (htmlContent.includes('</head>')) {
-        htmlContent = htmlContent.replace('</head>', `${configScript}\n</head>`);
-      } else {
-        // Fallback: insert before the closing </body> tag
-        htmlContent = htmlContent.replace('</body>', `${configScript}\n</body>`);
-      }
-      
-      // Write the HTML file with embedded config
+      // Write the HTML file without embedded config (it will be embedded by Server_HTTP_utils.generateHtmlWithEmbeddedData)
       const htmlPath = join(reportsDir, "index.html");
-      fs.writeFileSync(htmlPath, htmlContent);
-      console.log(`[Server] Created HTML report with embedded config, ${documentationFiles.length} documentation files, and feature tree at ${htmlPath}`);
+      fs.writeFileSync(htmlPath, baseHtml);
+      console.log(`[Server] Created HTML report template at ${htmlPath}`);
       
     } catch (error) {
       console.error(`[Server] Failed to embed config in HTML:`, error);
