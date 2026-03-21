@@ -17,6 +17,7 @@ await esbuild.build({
   target: "node20",
   outdir: "dist/prebuild",
   packages: "external",
+  external: ['./src/server/serverClasses/index.tsx'],
   // supported: {
   //   "dynamic-import": true,
   // },
@@ -50,6 +51,7 @@ await esbuild.build({
     "dynamic-import": true,
   },
   external: [
+    './src/server/serverClasses/index.tsx',
     "fs", "path", "child_process", "util", "os", "events", "stream",
     "http", "https", "zlib", "crypto", "buffer", "net", "dns", "tls",
     "assert", "querystring", "punycode", "readline", "repl", "vm",

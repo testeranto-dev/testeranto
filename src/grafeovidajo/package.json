@@ -1,0 +1,53 @@
+{
+  "name": "grafeovidajo",
+  "version": "0.0.1",
+  "description": "Visualization library for Testeranto",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./charts/EisenhowerMatrix": {
+      "import": "./dist/charts/EisenhowerMatrix.js",
+      "require": "./dist/charts/EisenhowerMatrix.js",
+      "types": "./dist/charts/EisenhowerMatrix.d.ts"
+    },
+    "./charts/GanttChart": {
+      "import": "./dist/charts/GanttChart.js",
+      "require": "./dist/charts/GanttChart.js",
+      "types": "./dist/charts/GanttChart.d.ts"
+    },
+    "./charts/KanbanBoard": {
+      "import": "./dist/charts/KanbanBoard.js",
+      "require": "./dist/charts/KanbanBoard.js",
+      "types": "./dist/charts/KanbanBoard.d.ts"
+    },
+    "./charts/TreeGraph": {
+      "import": "./dist/charts/TreeGraph.js",
+      "require": "./dist/charts/TreeGraph.js",
+      "types": "./dist/charts/TreeGraph.d.ts"
+    },
+    "./core/types": {
+      "import": "./dist/core/types.js",
+      "require": "./dist/core/types.js",
+      "types": "./dist/core/types.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "dist"
+  ]
+}

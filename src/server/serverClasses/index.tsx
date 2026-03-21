@@ -1,3 +1,6 @@
+// NOTE: this file is not a part of our build process, but a odwnstream process run by the user
+// this file is copied to the users project where they can cutomize it
+
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import {
@@ -7,8 +10,7 @@ import {
   renderTestDetails,
 } from "testeranto/src/server/serverClasses/StakeholderUtils";
 
-// Import viz components from the viz package
-import { GraphData, Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph } from "viz";
+import { GraphData, Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph } from "grafeovidajo";
 
 export interface StakeholderData {
   documentation: {
@@ -102,7 +104,7 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
         else if (ext === 'xml') language = 'xml';
         else if (ext === 'sh') language = 'bash';
         else if (ext === 'log') language = 'log';
-        
+
         setSelectedFileContent({
           type: "file",
           path: node.path,
@@ -112,8 +114,8 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
           size: content.length,
           fileType: node.fileType
         });
-      } else if (embeddedData && embeddedData.documentation && embeddedData.documentation.contents && 
-                 embeddedData.documentation.contents[node.path]) {
+      } else if (embeddedData && embeddedData.documentation && embeddedData.documentation.contents &&
+        embeddedData.documentation.contents[node.path]) {
         // Check documentation contents
         const content = embeddedData.documentation.contents[node.path];
         setSelectedFileContent({
@@ -137,8 +139,8 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
     // Handle documentation files
     else if (node.fileType === "documentation") {
       const embeddedData = (window as any).TESTERANTO_EMBEDDED_DATA;
-      if (embeddedData && embeddedData.documentation && embeddedData.documentation.contents && 
-          embeddedData.documentation.contents[node.path]) {
+      if (embeddedData && embeddedData.documentation && embeddedData.documentation.contents &&
+        embeddedData.documentation.contents[node.path]) {
         const content = embeddedData.documentation.contents[node.path];
         setSelectedFileContent({
           type: "documentation",
@@ -156,14 +158,14 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
           message: `Documentation file: ${node.path}. Content not embedded.`
         });
       }
-    } 
+    }
     // Handle test nodes with BDD status
     else if (node.type === "test") {
       setSelectedFileContent({
         type: "test",
         path: node.path,
         name: node.name,
-        bddStatus: node.bddStatus || {status: 'unknown', color: 'gray'},
+        bddStatus: node.bddStatus || { status: 'unknown', color: 'gray' },
         children: node.children
       });
     }
@@ -300,7 +302,7 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
     } else if (node.type === "feature") {
       const bgColor =
         selectedFile === node.path ? "#fff3e0" : "transparent";
-      
+
       return (
         <div
           key={node.path}
@@ -333,8 +335,8 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
       // Handle test nodes with BDD status
       const bgColor =
         selectedFile === node.path ? "#e3f2fd" : "transparent";
-      const status = node.bddStatus || {status: 'unknown', color: 'gray'};
-      
+      const status = node.bddStatus || { status: 'unknown', color: 'gray' };
+
       return (
         <div
           key={node.path}
@@ -355,9 +357,9 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
               style={{
                 fontSize: "0.8rem",
                 marginLeft: "5px",
-                color: status.color === 'green' ? '#4caf50' : 
-                       status.color === 'yellow' ? '#ff9800' : 
-                       status.color === 'red' ? '#f44336' : '#666',
+                color: status.color === 'green' ? '#4caf50' :
+                  status.color === 'yellow' ? '#ff9800' :
+                    status.color === 'red' ? '#f44336' : '#666',
                 fontWeight: 'bold'
               }}
             >
@@ -762,9 +764,9 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
             <div
               style={{
                 padding: "15px",
-                backgroundColor: selectedFileContent.bddStatus.color === 'green' ? '#e8f5e9' : 
-                                selectedFileContent.bddStatus.color === 'yellow' ? '#fff3e0' : 
-                                selectedFileContent.bddStatus.color === 'red' ? '#ffebee' : '#f5f5f5',
+                backgroundColor: selectedFileContent.bddStatus.color === 'green' ? '#e8f5e9' :
+                  selectedFileContent.bddStatus.color === 'yellow' ? '#fff3e0' :
+                    selectedFileContent.bddStatus.color === 'red' ? '#ffebee' : '#f5f5f5',
                 borderRadius: "4px",
                 marginBottom: "20px",
                 border: "1px solid #ddd",
@@ -1121,9 +1123,9 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
                 Dependency Tree
               </button>
             </div>
-            
+
             {renderVisualization()}
-            
+
             <div style={{ marginTop: "30px", padding: "20px", backgroundColor: "#f5f5f5", borderRadius: "4px" }}>
               <h4>Feature Graph Statistics</h4>
               <p>Total Features: {data.featureGraph?.nodes?.length || 0}</p>
@@ -1237,12 +1239,12 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
                                 // Check if we have test results for this test
                                 const testResult = data.allTestResults?.[key]?.[test];
                                 return (
-                                  <div key={i} style={{ 
+                                  <div key={i} style={{
                                     fontSize: "12px",
                                     marginBottom: "5px",
                                     padding: "3px",
-                                    backgroundColor: testResult ? 
-                                      (testResult.failed ? "#ffebee" : "#e8f5e9") : 
+                                    backgroundColor: testResult ?
+                                      (testResult.failed ? "#ffebee" : "#e8f5e9") :
                                       "#f5f5f5",
                                     borderRadius: "3px"
                                   }}>
@@ -1259,7 +1261,7 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
                                     </div>
                                     {testResult && (
                                       <div style={{ fontSize: "11px", marginTop: "2px" }}>
-                                        Tests: {testResult.runTimeTests || 0} | 
+                                        Tests: {testResult.runTimeTests || 0} |
                                         Fails: {testResult.fails || 0} |
                                         Features: {testResult.features?.length || 0}
                                       </div>
@@ -1275,7 +1277,7 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
                   ) : (
                     <p>No configuration found</p>
                   )}
-                  
+
                   {/* Add a section for test results summary */}
                   {data.allTestResults && Object.keys(data.allTestResults).length > 0 && (
                     <div style={{ marginTop: "30px" }}>
@@ -1284,7 +1286,7 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
                         <div key={configKey} style={{ marginBottom: "20px" }}>
                           <h4>{configKey}</h4>
                           {Object.entries(tests).map(([testName, testData]) => (
-                            <div 
+                            <div
                               key={testName}
                               style={{
                                 padding: "10px",
@@ -1318,14 +1320,14 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
                               {testData.features && testData.features.length > 0 && (
                                 <div style={{ marginTop: "10px" }}>
                                   <div style={{ fontSize: "12px", fontWeight: "bold" }}>Features:</div>
-                                  <div style={{ 
-                                    display: "flex", 
-                                    flexWrap: "wrap", 
+                                  <div style={{
+                                    display: "flex",
+                                    flexWrap: "wrap",
                                     gap: "5px",
                                     marginTop: "5px"
                                   }}>
                                     {testData.features.slice(0, 3).map((feature: string, i: number) => (
-                                      <span 
+                                      <span
                                         key={i}
                                         style={{
                                           backgroundColor: "#e3f2fd",
@@ -1370,12 +1372,12 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
 export function renderApp(rootElement: HTMLElement, data?: StakeholderData) {
   // If no data is provided, try to get it from window
   const appData = data || (typeof window !== 'undefined' && (window as any).TESTERANTO_EMBEDDED_DATA);
-  
+
   if (!appData) {
     console.error('No stakeholder data available');
     return;
   }
-  
+
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <React.StrictMode>
