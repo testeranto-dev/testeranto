@@ -1,20 +1,24 @@
-import glob from "glob";
+// import glob from "glob";
 import type { ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
 import { Server_Base } from "./Server_Base";
-import { HttpManager } from "./Server_Http/HttpManager";
+import { generateCollatedFilesTree } from "./Server_Http/utils/generateCollatedFilesTree";
+import { handleOptions } from "./Server_Http/utils/handleOptions";
+// import { HttpManager } from "./Server_Http/HttpManager";
 import { Server_HTTP_Routes } from "./Server_Http/utils/Server_HTTP_Routes";
-import { Server_HTTP_utils } from "./Server_Http/utils/Server_HTTP_utils";
+import { serveStaticFile } from "./Server_Http/utils/utils";
+import { addTestResultsFilesToTree, getFileType, collectAllTestResults } from "./Server_Http/utils/utils";
+
 import { Server_WS } from "./Server_WS";
 
 export abstract class Server_HTTP extends Server_Base {
-  http: HttpManager;
+  // http: HttpManager;
   protected bunServer: ReturnType<typeof Bun.serve> | null = null;
   private routesHandler: Server_HTTP_Routes;
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
-    this.http = new HttpManager();
+    // this.http = new HttpManager();
     this.routesHandler = new Server_HTTP_Routes(this);
   }
 
@@ -123,33 +127,33 @@ export abstract class Server_HTTP extends Server_Base {
     const routeName = url.pathname.slice(3);
 
     if (request.method === "OPTIONS") {
-      return Server_HTTP_utils.handleOptions();
+      return handleOptions();
     }
 
     return this.routesHandler.handleRoute(routeName, request, url);
   }
 
   private async serveStaticFile(request: Request, url: URL): Promise<Response> {
-    return Server_HTTP_utils.serveStaticFile(request, url, this.configs);
+    return serveStaticFile(request, url, this.configs);
   }
 
   private async generateCollatedFilesTree(): Promise<Record<string, any>> {
-    return Server_HTTP_utils.generateCollatedFilesTree(this.configs);
+    return generateCollatedFilesTree(this.configs);
   }
 
   private addTestResultsFilesToTree(
     treeRoot: Record<string, any>,
     reportsDir: string,
   ): void {
-    Server_HTTP_utils.addTestResultsFilesToTree(treeRoot, reportsDir);
+    addTestResultsFilesToTree(treeRoot, reportsDir);
   }
 
   private getFileType(filename: string): string {
-    return HttpManager.getFileType(filename);
+    return getFileType(filename);
   }
 
   private async collectAllTestResults(): Promise<Record<string, any>> {
-    return Server_HTTP_utils.collectAllTestResults(this.configs);
+    return collectAllTestResults(this.configs);
   }
 
   router(a: any): any {

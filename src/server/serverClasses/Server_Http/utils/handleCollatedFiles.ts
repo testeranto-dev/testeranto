@@ -1,12 +1,12 @@
 import fs from "fs";
 import path from "path";
-import { Server_HTTP_utils } from "./Server_HTTP_utils";
+import { jsonResponse } from "./jsonResponse";
 
 export const handleCollatedFiles = (server: any): Response => {
   // Get all runtimes from configs
   const configs = server.configs;
   if (!configs || !configs.runtimes) {
-    return Server_HTTP_utils.jsonResponse({
+    return jsonResponse({
       tree: {},
       message: "No runtimes configured",
     });

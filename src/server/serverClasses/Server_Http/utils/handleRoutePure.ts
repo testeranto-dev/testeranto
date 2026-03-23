@@ -3,7 +3,8 @@ import { handleConfigs } from "./handleConfigs";
 import { handleInputFiles } from "./handleInputFiles";
 import { handleOutputFiles } from "./handleOutputFiles";
 import { handleTestResults } from "./handleTestResults";
-import { Server_HTTP_utils } from "./Server_HTTP_utils";
+import { jsonResponse } from "./jsonResponse";
+
 
 export const handleRoutePure = (
   routeName: string,
@@ -18,7 +19,7 @@ export const handleRoutePure = (
 
   // Only handle GET requests for now
   if (request.method !== "GET") {
-    return Server_HTTP_utils.jsonResponse(
+    return jsonResponse(
       {
         error: `Method ${request.method} not allowed`,
       },
@@ -56,7 +57,7 @@ export const handleRoutePure = (
     case `app-state`:
       return handleAppState(server);
     default:
-      return Server_HTTP_utils.jsonResponse(
+      return jsonResponse(
         {
           error: `Route not found: ${routeName}`,
         },
@@ -68,13 +69,13 @@ export const handleRoutePure = (
 const handleProcesses = (server: any): Response => {
   const getProcessSummary = server.getProcessSummary;
   if (typeof getProcessSummary !== "function") {
-    return Server_HTTP_utils.jsonResponse({
+    return jsonResponse({
       processes: [],
       message: "Process summary not available",
     });
   }
   const summary = getProcessSummary();
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     processes: summary.processes || [],
     total: summary.total || 0,
     message: "Success",
@@ -82,14 +83,14 @@ const handleProcesses = (server: any): Response => {
 };
 
 const handleCollatedTestResults = (server: any): Response => {
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     collatedTestResults: {},
     message: "Success",
   });
 };
 
 const handleCollatedInputFiles = (server: any): Response => {
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     collatedInputFiles: {},
     fsTree: {},
     message: "Success",
@@ -97,7 +98,7 @@ const handleCollatedInputFiles = (server: any): Response => {
 };
 
 const handleCollatedDocumentation = (): Response => {
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     tree: {},
     files: [],
     message: "Success",
@@ -105,21 +106,21 @@ const handleCollatedDocumentation = (): Response => {
 };
 
 const handleDocumentation = (): Response => {
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     files: [],
     message: "Success",
   });
 };
 
 const handleReports = (): Response => {
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     tree: {},
     message: "Success",
   });
 };
 
 const handleHtmlReport = (): Response => {
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     message: "HTML report would be generated here",
     url: "/testeranto/reports/index.html",
   });
@@ -132,12 +133,12 @@ const handleAiderProcesses = (server: any): Response => {
   const getAiderProcesses = server.getAiderProcesses;
   if (typeof getAiderProcesses === "function") {
     const aiderProcesses = getAiderProcesses();
-    return Server_HTTP_utils.jsonResponse({
+    return jsonResponse({
       aiderProcesses: aiderProcesses || [],
       message: "Success",
     });
   }
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     aiderProcesses: [],
     message: "Aider processes not available",
   });

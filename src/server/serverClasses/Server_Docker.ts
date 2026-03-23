@@ -13,13 +13,6 @@ import {
   logMessagePure,
 } from "./Server_Docker/Server_Docker_Utils";
 import {
-  launchBddTestPure,
-  launchChecksPure,
-  loadInputFileOnce,
-  startServiceLoggingPure,
-  updateOutputFilesList,
-} from "./Server_Docker/Server_Docker_Utils_Run";
-import {
   generateServicesPure,
   writeComposeFile,
   writeConfigForExtensionOnStop,
@@ -49,6 +42,11 @@ import { StakeholderAppBundler } from "./Server_Docker/StakeholderAppBundler";
 import { BuilderServicesManager } from "./Server_Docker/BuilderServicesManager";
 import { AiderImageBuilder } from "./Server_Docker/AiderImageBuilder";
 import { TestCompletionWaiter } from "./Server_Docker/TestCompletionWaiter";
+import { launchBddTestPure } from "./Server_Docker/utils/launchBddTestPure";
+import { launchChecksPure } from "./Server_Docker/utils/launchChecksPure";
+import { loadInputFileOnce } from "./Server_Docker/utils/loadInputFileOnce";
+import { startServiceLoggingPure } from "./Server_Docker/utils/startServiceLoggingPure";
+import { updateOutputFilesList } from "./Server_Docker/utils/updateOutputFilesList";
 
 export class Server_Docker extends Server_WS {
   private logProcesses: Map<string, { process: any; serviceName: string }> =

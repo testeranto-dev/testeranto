@@ -270,3 +270,31 @@ export function renderApp(rootElement, data) {
   );
 }
         `;
+
+export type IR = (
+  serviceName: string,
+  runtime: string,
+  runtimeConfigKey: string,
+) => void;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Pure function to wait for all tests to complete
+
+
+// Note: DOCKER_COMPOSE_BASE needs to be imported or defined
+// export const DOCKER_COMPOSE_BASE = 'docker compose -f "testeranto/docker-compose.yml"';

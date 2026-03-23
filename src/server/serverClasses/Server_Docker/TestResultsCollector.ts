@@ -1,8 +1,9 @@
 import type { IRunTime, ITestconfigV2 } from "../../../Types";
 import type { IMode } from "../../types";
-import { getTestResultsPure } from "./Server_Docker_Utils_Run";
-import { getProcessSummaryPure } from "./Server_Docker_Utils_Run";
-import { getInputFilesPure, getOutputFilesPure } from "./Server_Docker_Utils_Run";
+import { getInputFilesPure } from "./utils/getInputFilesPure.ts";
+import { getOutputFilesPure } from "./utils/getOutputFilesPure";
+import { getProcessSummaryPure } from "./utils/getProcessSummaryPure";
+import { getTestResultsPure } from "./utils/getTestResultsPure";
 
 export interface TestResult {
   runtime: string;
@@ -20,11 +21,11 @@ export class TestResultsCollector {
     private mode: IMode,
     private inputFiles: any,
     private outputFiles: any
-  ) {}
+  ) { }
 
   collectAllTestResults(): TestResult[] {
     const results: TestResult[] = [];
-    
+
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
       const runtime: IRunTime = configValue.runtime as IRunTime;
       const tests = configValue.tests;
@@ -32,11 +33,11 @@ export class TestResultsCollector {
       for (const testName of tests) {
         // Get test results from pure function
         const testResults = getTestResultsPure(runtime, testName);
-        
+
         // Get input and output files
         const inputFiles = getInputFilesPure(this.configs, this.inputFiles, runtime, testName);
         const outputFiles = getOutputFilesPure(this.configs, this.outputFiles, runtime, testName);
-        
+
         // Process each test result
         if (Array.isArray(testResults)) {
           testResults.forEach((result: any) => {
@@ -74,7 +75,7 @@ export class TestResultsCollector {
         }
       }
     }
-    
+
     return results;
   }
 

@@ -1,11 +1,11 @@
-import { waitForAllTestsToCompletePure } from "./Server_Docker_Utils_Run";
+import { waitForAllTestsToCompletePure } from "./utils/waitForAllTestsToCompletePure";
 
 export class TestCompletionWaiter {
   constructor(
     private logMessage: (message: string) => void,
     private getProcessSummary: () => any,
     private logProcesses: Map<string, { process: any; serviceName: string }>
-  ) {}
+  ) { }
 
   async waitForAllTestsToComplete(): Promise<void> {
     await waitForAllTestsToCompletePure(() => this.getProcessSummary());

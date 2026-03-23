@@ -1,13 +1,13 @@
 import path from "path";
 import fs from "fs";
-import { Server_HTTP_utils } from "./Server_HTTP_utils";
+import { jsonResponse } from "./jsonResponse";
 
 export const handleInputFiles = (url: URL, server: any): Response => {
   const runtime = url.searchParams.get("runtime");
   const testName = url.searchParams.get("testName");
 
   if (!runtime || !testName) {
-    return Server_HTTP_utils.jsonResponse(
+    return jsonResponse(
       {
         error: "Missing runtime or testName",
       },
@@ -20,7 +20,7 @@ export const handleInputFiles = (url: URL, server: any): Response => {
   if (typeof getInputFiles === "function") {
     const inputFiles = getInputFiles(runtime, testName);
     if (inputFiles && inputFiles.length > 0) {
-      return Server_HTTP_utils.jsonResponse({
+      return jsonResponse({
         runtime,
         testName,
         inputFiles: inputFiles,
@@ -39,7 +39,7 @@ export const handleInputFiles = (url: URL, server: any): Response => {
   );
 
   if (!fs.existsSync(inputFilesPath)) {
-    return Server_HTTP_utils.jsonResponse({
+    return jsonResponse({
       runtime,
       testName,
       inputFiles: [],
@@ -92,7 +92,7 @@ export const handleInputFiles = (url: URL, server: any): Response => {
       }
     }
 
-    return Server_HTTP_utils.jsonResponse({
+    return jsonResponse({
       runtime,
       testName,
       inputFiles: matchedFiles,
@@ -100,7 +100,7 @@ export const handleInputFiles = (url: URL, server: any): Response => {
         matchedFiles.length > 0 ? "Success" : "No matching input files found",
     });
   } catch (error: any) {
-    return Server_HTTP_utils.jsonResponse({
+    return jsonResponse({
       runtime,
       testName,
       inputFiles: [],

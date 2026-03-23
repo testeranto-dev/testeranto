@@ -1,15 +1,15 @@
-import { Server_HTTP_utils } from "./Server_HTTP_utils";
+import { jsonResponse } from "./jsonResponse";
 
 export const handleConfigs = (server: any): Response => {
   if (!server.configs) {
-    return Server_HTTP_utils.jsonResponse(
+    return jsonResponse(
       {
         error: "Server configs not available",
       },
       503,
     );
   }
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     configs: server.configs,
     message: "Success",
   });

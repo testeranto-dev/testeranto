@@ -2,10 +2,9 @@ import fs from "fs";
 import path from "path";
 import type { IRunTime, ITestconfigV2 } from "../../../Types";
 import type { IMode } from "../../types";
-import { makeReportDirectory } from "../Server_Docker/utils";
-import { loadInputFileOnce } from "../Server_Docker/Server_Docker_Utils_Run";
 import { watchInputFilePure, watchOutputFilePure } from "../Server_Docker/utils/watch";
-import { updateOutputFilesList } from "../Server_Docker/Server_Docker_Utils_Run";
+import { updateOutputFilesList } from "./utils/updateOutputFilesList";
+import { loadInputFileOnce } from "./utils/loadInputFileOnce";
 
 export class TestFileManager {
   inputFiles: any = {};
@@ -16,7 +15,7 @@ export class TestFileManager {
     private configs: ITestconfigV2,
     private mode: IMode,
     private resourceChanged: (path: string) => void
-  ) {}
+  ) { }
 
   async watchOutputFile(
     runtime: IRunTime,

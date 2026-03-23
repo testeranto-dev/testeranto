@@ -1,13 +1,13 @@
 import path from "path";
 import fs from "fs";
-import { Server_HTTP_utils } from "./Server_HTTP_utils";
+import { jsonResponse } from "./jsonResponse";
 
 export const handleOutputFiles = (url: URL, server: any): Response => {
   const runtime = url.searchParams.get("runtime");
   const testName = url.searchParams.get("testName");
 
   if (!runtime || !testName) {
-    return Server_HTTP_utils.jsonResponse(
+    return jsonResponse(
       {
         error: "Missing runtime or testName",
       },
@@ -20,7 +20,7 @@ export const handleOutputFiles = (url: URL, server: any): Response => {
   if (typeof getOutputFiles === "function") {
     const outputFiles = getOutputFiles(runtime, testName);
     if (outputFiles && outputFiles.length > 0) {
-      return Server_HTTP_utils.jsonResponse({
+      return jsonResponse({
         runtime,
         testName,
         outputFiles: outputFiles,
@@ -35,7 +35,7 @@ export const handleOutputFiles = (url: URL, server: any): Response => {
   const outputFiles: string[] = [];
 
   if (!fs.existsSync(reportsBaseDir)) {
-    return Server_HTTP_utils.jsonResponse({
+    return jsonResponse({
       runtime,
       testName,
       outputFiles: [],

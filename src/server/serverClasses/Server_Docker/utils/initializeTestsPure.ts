@@ -1,0 +1,71 @@
+import type { IRunTime, ITestconfigV2 } from "../../../../Types";
+import type { IMode } from "../../../types";
+
+export const initializeTestsPure = async (
+  configs: ITestconfigV2,
+  mode: IMode,
+  inputFiles: Record<string, Record<string, string[]>>,
+  watchInputFile: (runtime: IRunTime, testName: string) => Promise<void>,
+  watchOutputFile: (
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+  ) => void,
+  loadInputFileOnce: (
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+  ) => void,
+  launchBddTest: (
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+    configValue: any,
+  ) => Promise<void>,
+  launchChecks: (
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+    configValue: any,
+  ) => Promise<void>,
+  makeReportDirectory: (testName: string, configKey: string) => string,
+  existsSync: (path: string) => boolean,
+  mkdirSync: (path: string, options?: { recursive: boolean }) => void,
+): Promise<{
+  inputFiles: Record<string, Record<string, string[]>>;
+}> => {
+  const newInputFiles = { ...inputFiles };
+
+  for (const [configKey, configValue] of Object.entries(configs.runtimes)) {
+    const runtime: IRunTime = configValue.runtime as IRunTime;
+    const tests = configValue.tests;
+
+    if (!newInputFiles[configKey]) {
+      newInputFiles[configKey] = {};
+    }
+
+    for (const testName of tests) {
+      if (!newInputFiles[configKey][testName]) {
+        newInputFiles[configKey][testName] = [];
+      }
+
+      const reportDir = makeReportDirectory(testName, configKey);
+
+      if (!existsSync(reportDir)) {
+        mkdirSync(reportDir, { recursive: true });
+      }
+
+      if (mode === "dev") {
+        await watchInputFile(runtime, testName);
+        watchOutputFile(runtime, testName, configKey);
+      } else {
+        loadInputFileOnce(runtime, testName, configKey);
+      }
+
+      await launchBddTest(runtime, testName, configKey, configValue);
+      await launchChecks(runtime, testName, configKey, configValue);
+    }
+  }
+
+  return { inputFiles: newInputFiles };
+};

@@ -6,6 +6,7 @@ import {
   type IDockerComposeResult,
   getContainerExitCodeFilePath,
   getStatusFilePath,
+  type IR,
 } from "../Server_Docker_Constants";
 import {
   execSyncWrapper,
@@ -14,11 +15,9 @@ import {
   execAsync,
   consoleError,
   spawnWrapper,
+  join,
 } from "../Server_Docker_Dependents";
 import { getCwdPure } from "../Server_Docker_Utils";
-import { type IR } from "../Server_Docker_Utils_Run";
-import path, { join } from "path";
-import fs from "fs";
 
 export const captureExistingLogs: IR = (
   serviceName: string,
@@ -203,7 +202,6 @@ export const captureContainerExitCode = (
   }
 };
 
-
 export const makeReportDirectory = (testName: string, configKey: string) => {
   // Create directory for test reports based on the entrypoint
   // Follow the pattern: testeranto/reports/{configKey}/{testName}/
@@ -211,11 +209,5 @@ export const makeReportDirectory = (testName: string, configKey: string) => {
   // This ensures tests.json can be written to the correct location
   const cwd = getCwdPure();
   const cleanTestName = testName.replace(/^\.\//, "");
-  return join(
-    cwd,
-    "testeranto",
-    "reports",
-    configKey,
-    cleanTestName,
-  );
+  return join(cwd, "testeranto", "reports", configKey, cleanTestName);
 };
