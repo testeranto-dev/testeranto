@@ -44,8 +44,8 @@ Expected("check output", ...)
 
 ```typescript
 // Table-driven test specification
-[Value["someInput"], Should["equal"], Expected["someOutput"]],
-[Value["4"], Should["greater than"], Expected[3]]
+([Value["someInput"], Should["equal"], Expected["someOutput"]],
+  [Value["4"], Should["greater than"], Expected[3]]);
 ```
 
 This pattern is ideal for testing multiple input-output combinations with the same test logic.
@@ -140,13 +140,11 @@ Then("expected outcome", ...)
 
 ### 3. TDT (Table Driven Testing) - User-Facing
 
-**High-level verbs**: Value, Should, Expected
+**High-level verbs**: Confirm, [Value, Should, Expected]
 
 **Implementation**:
 
-- `BaseValue` extends `BaseSetup`
-- `BaseShould` extends `BaseAction`
-- `BaseExpected` extends `BaseCheck`
+TBD
 
 **Usage**:
 
@@ -155,7 +153,6 @@ Value("test data table", ...)
 Should("process row", ...)
 Expected("check output", ...)
 ```
-
 
 ## Additional Testing Patterns
 
@@ -185,92 +182,6 @@ It("should behave correctly", ...)
 
 ---
 
-TODOs for Terminology Transition
-
-1. Update TDT Pattern Terminology
-
-• [x] Rename ThatFor → Value (in all files: types, classes, specs)
-• [x] Rename ItIs → Should
-• [x] Rename That → Expected
-• [x] Update BaseThatFor.ts → BaseValue.ts
-• [x] Update BaseItIs.ts → BaseShould.ts
-• [x] Update BaseThat.ts → BaseExpected.ts
-
-2. Update Specification Helper Functions
-
-• [x] Update createTDTSpecification() in index.ts to use Value, Should, Expected
-• [x] Update Confirm() helper function parameters
-• [x] Update example specification in Calculator.test.specification.ts
-
-3. Update Type Definitions
-
-• [x] Update types.ts: add IValues, IShoulds, IExpecteds (kept old types for backward compatibility)
-• [x] Update CoreTypes.ts if needed for TDT type mappings - No changes needed, uses generic types
-
-4. Update Documentation
-
-• [x] Update index.md to reflect new TDT terminology
-• [x] Update multiArchitecture.md ticket
-• [x] Update README if needed - README is minimal and doesn't mention TDT
-
-5. Update Example Files
-
-• [x] Update Calculator.test.specification.ts example to use new syntax:
-
-// From:
-[ThatFor[`someInput`], ItIs["equal to"], That["someOutput"]]
-
-// To:
-[Value["someInput"], Should["equal"], Expected["someOutput"]]
-
-6. Verify Cross-Language Compatibility
-
-• [x] Check that Value, Should, Expected aren't keywords in target languages (Python, Ruby, Rust, Go,
-Java) - These terms are safe in all target languages
-• [x] Ensure the terms work well for code generation in all languages - Terms are clear and consistent
-
-7. Test the Changes
-
-• [ ] Run existing tests to ensure nothing breaks
-• [ ] Create a simple test to verify TDT pattern works with new terminology
-• [ ] Check that BDD and Describe-It patterns remain unchanged
-
-8. Remove Deprecated Files (Clean Break)
-
-• [x] Remove BaseFeed.ts (deprecated TDT action)
-• [x] Remove BaseMap.ts (deprecated TDT setup)  
-• [x] Remove BaseValidate.ts (deprecated TDT check)
-• [x] Remove AAA pattern files (base_arrange.go, base_act.go, base_assert.go) - not currently implemented
-• [x] Rename Go TDT files: base_map.go → base_value.go, base_feed.go → base_should.go, base_validate.go → base_expected.go
-• [x] Add Describe-It pattern to Go implementation: base_describe.go, base_it.go
-• [x] Ensure no backward compatibility code remains
-
-Notes:
-
-• BDD (Given, When, Then), TDT (Value, Should, Expected), and Describe-It (Describe, It) patterns are all user-facing APIs
-• Internal implementation uses Setup, Action, Check (not exposed to users)
-• All deprecated files have been removed for a clean break from old patterns
-• No backward compatibility is maintained as requested
-• Go implementation (golingvu) and TypeScript implementation (tiposkripto) support all three patterns:
-  - BDD: Fully implemented
-  - TDT: Partially implemented (core classes exist, integration in progress)
-  - Describe-It: Partially implemented (core classes exist, integration in progress)
-• AAA (Arrange-Act-Assert) pattern is implemented as the Describe-It pattern with 2 verbs: Describe (Arrange) and It (combined Act and Assert)
-
-Quick Start Commands:
-
-# 1. Rename core TDT files
-
-mv src/BaseThatFor.ts src/BaseValue.ts
-mv src/BaseItIs.ts src/BaseShould.ts
-mv src/BaseThat.ts src/BaseExpected.ts
-
-# 2. Update imports and references
-
-# 3. Update specification examples
-
-# 4. Run tests
-
 Notes:
 
 • BDD (Given, When, Then) and AAA (Describe, It) patterns remain unchanged
@@ -279,3 +190,30 @@ Notes:
 
 This transition maintains backward compatibility for BDD and AAA while making TDT terminology clearer
 and more consistent across all target languages.
+
+---
+
+- Suite // Suite is the root
+  - Given // Bdd tests start with Given
+    - When
+    - When // multiple whens
+      ...
+    - Then
+    - Then
+      ... // multiple thens
+  - Given
+    ... // multiple givens
+
+  - Describe // AAA tests start with describe
+    - Describe // they can multiple levels if 'describes'
+      - ... - it - it... // they can multiple levels if 'its'
+        Describe // multiple Describe
+
+  - Confirm // TDT tess start with confirm
+    - Value
+      - Expect // unlike bdd and aaa, we only have 1 value, with exactly 1 expect and 1 it
+      - It
+    - Value // mulutple values
+      ...
+
+  ... // you can add more Givens, Describes and Confrims

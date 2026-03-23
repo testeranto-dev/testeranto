@@ -2,7 +2,11 @@ import type { GivenSpecification, WhenSpecification, ThenSpecification, TestWhen
 import type { IGivens } from "./BaseGiven";
 import type { BaseSuite } from "./BaseSuite";
 import type { ITestResourceConfiguration } from "./types";
-export type IArtifactory = {};
+
+export type IArtifactory = {
+    writeFileSync: (a: string, b: string) => any;
+};
+
 export type SuiteSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
     [K in keyof O["suites"]]: (name: string, givens: IGivens<I>) => BaseSuite<I, O>;
 };

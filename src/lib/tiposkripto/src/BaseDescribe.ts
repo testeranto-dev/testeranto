@@ -10,7 +10,6 @@ export abstract class BaseDescribe<
   I extends TestTypeParams_any,
 > extends BaseSetup<I> {
   /**
-   * Abstract method to be implemented by concrete Describe classes.
    * Sets up the initial state for the Describe-It pattern (AAA Arrange phase).
    *
    * @param subject The test subject
@@ -20,27 +19,36 @@ export abstract class BaseDescribe<
    * @param initialValues Initial values for setup
    * @returns Promise resolving to the test store
    */
-  abstract setupThat(
+  async setupThat(
     subject: I["isubject"],
     testResourceConfiguration: ITestResourceConfiguration,
     artifactory: ITestArtifactory,
     setupCB: I["given"],
     initialValues: any,
-  ): Promise<I["istore"]>;
+  ): Promise<I["istore"]> {
+    // Default implementation: call setupCB and return the result
+    const result = (setupCB as any)();
+    if (typeof result === "function") {
+      return result();
+    }
+    return result;
+  }
 
   // Its can be nested Describes or actual Its
   its: any[];
 
   constructor(
     features: string[],
-    its: any[],
+    its: any[] | any,
     describeCB: I["given"],
     initialValues: any,
   ) {
+    // Ensure its is always an array
+    const itsArray = Array.isArray(its) ? its : (its !== undefined ? [its] : []);
     // Map its to actions and checks
     // Since Its can mix mutations and assertions, we need to handle them differently
-    super(features, its, [], describeCB, initialValues);
-    this.its = its;
+    super(features, itsArray, [], describeCB, initialValues);
+    this.its = itsArray;
   }
 
   // Override setup to handle Its differently
@@ -178,14 +186,58 @@ export abstract class BaseDescribe<
     };
   }
 
+  // Add describe method that delegates to setup
+  async describe(
+    subject: I["isubject"],
+    key: string,
+    testResourceConfiguration: any,
+    tester: (t: Awaited<I["then"]> | undefined) => boolean,
+    artifactory?: any,
+    suiteNdx?: number,
+  ) {
+    return this.setup(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx);
+  }
+
   toObj() {
+    // Handle its which might not be an array
+    const its = this.its;
+    const describes: any[] = [];
+    const itsArray: any[] = [];
+    
+    if (Array.isArray(its)) {
+      for (const item of its) {
+        if (item && item.toObj) {
+          const obj = item.toObj();
+          // Check if it's a Describe or It based on the object structure
+          if (obj.describes !== undefined || obj.its !== undefined) {
+            // This is likely a Describe
+            describes.push(obj);
+          } else {
+            // This is likely an It
+            itsArray.push(obj);
+          }
+        } else {
+          console.error("Item is not as expected!", JSON.stringify(item));
+        }
+      }
+    } else if (its) {
+      console.warn("its is not an array:", its);
+      if (its.toObj) {
+        const obj = its.toObj();
+        if (obj.describes !== undefined || obj.its !== undefined) {
+          describes.push(obj);
+        } else {
+          itsArray.push(obj);
+        }
+      } else {
+        itsArray.push(its);
+      }
+    }
+    
     return {
       key: this.key,
-      its: (this.its || []).map((it) => {
-        if (it && it.toObj) return it.toObj();
-        console.error("It step is not as expected!", JSON.stringify(it));
-        return {};
-      }),
+      describes: describes,
+      its: itsArray,
       error: this.error ? [this.error, this.error.stack] : null,
       failed: this.failed,
       features: this.features || [],

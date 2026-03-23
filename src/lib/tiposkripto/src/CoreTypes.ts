@@ -28,7 +28,9 @@ import type { IGivens } from "./BaseGiven";
 import type { BaseSuite } from "./BaseSuite";
 import type { ITestResourceConfiguration } from "./types";
 
-export type IArtifactory = {};
+export type IArtifactory = {
+  writeFileSync: (a: string, b: string) => any;
+};
 
 export type SuiteSpecification<
   I extends Ibdd_in_any,
@@ -84,42 +86,9 @@ export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
   assert: (x: I["then"]) => any;
 };
 
-// Legacy BDD adapter for backward compatibility
+// Test adapter type - uses universal method names
 export type ITestAdapter<I extends TestTypeParams_any> =
-  IUniversalTestAdapter<I> & {
-    // Legacy method names for backward compatibility
-    beforeAll?: (
-      input: I["iinput"],
-      testResource: ITestResourceConfiguration,
-      artifactory?: IArtifactory,
-    ) => Promise<I["isubject"]>;
-    beforeEach?: (
-      subject: I["isubject"],
-      initializer: (c?: any) => I["given"],
-      testResource: ITestResourceConfiguration,
-      initialValues: any,
-      artifactory?: IArtifactory,
-    ) => Promise<I["istore"]>;
-    afterEach?: (
-      store: I["istore"],
-      key: string,
-      artifactory?: IArtifactory,
-    ) => Promise<unknown>;
-    afterAll?: (store: I["istore"], artifactory: IArtifactory) => any;
-    andWhen?: (
-      store: I["istore"],
-      actionCB: I["when"],
-      testResource: ITestResourceConfiguration,
-      artifactory?: IArtifactory,
-    ) => Promise<I["istore"]>;
-    butThen?: (
-      store: I["istore"],
-      checkCB: I["then"],
-      testResource: ITestResourceConfiguration,
-      artifactory?: IArtifactory,
-    ) => Promise<I["iselection"]>;
-    assertThis?: (x: I["then"]) => any;
-  };
+  IUniversalTestAdapter<I>;
 
 export type ITestSpecification<
   I extends Ibdd_in_any,
@@ -146,18 +115,21 @@ export type ITestImplementation<
 > = Modify<
   {
     suites: TestSuiteImplementation<O>;
+
+    // BDD pattern
     givens: TestGivenImplementation<I, O>;
     whens: TestWhenImplementation<I, O>;
     thens: TestThenImplementation<I, O>;
+
     // TDT pattern
+    confirms: TestConfirmImplementation<I, O>;
     values: TestValueImplementation<I, O>;
     shoulds: TestShouldImplementation<I, O>;
     expecteds: TestExpectedImplementation<I, O>;
-    // Describe-It pattern
+
+    // AAA pattern
     describes: TestDescribeImplementation<I, O>;
     its: TestItImplementation<I, O>;
-    // Confirm pattern
-    confirms?: TestConfirmImplementation<I, O>;
   },
   modifier
 >;
@@ -199,6 +171,9 @@ export type Ibdd_out<
   IGivens extends TestGivenShape,
   IWhens extends TestWhenShape,
   IThens extends TestThenShape,
+// ISetup,
+// IAction,
+// ICheck,
 > = TestSpecShape<ISuites, IGivens, IWhens, IThens>;
 export type Ibdd_out_any = TestSpecShape_any;
 
@@ -249,8 +224,8 @@ export type Ibdd_in<
   ISubject,
   IStore,
   ISelection,
-  IGiven,
-  IWhen,
-  IThen,
-> = TestTypeParams<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen>;
+  ISetup,
+  IAction,
+  ICheck,
+> = TestTypeParams<IInput, ISubject, IStore, ISelection, ISetup, IAction, ICheck>;
 export type Ibdd_in_any = TestTypeParams_any;

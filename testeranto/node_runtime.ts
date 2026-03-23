@@ -1618,7 +1618,6 @@ async function main() {
         console.error("[NODE BUILDER] Uncaught Exception:", error);
       });
       setInterval(() => {
-        console.log("[NODE BUILDER] Still watching for changes...");
       }, 3e4);
     }
   } catch (error) {

@@ -1,7 +1,10 @@
 import { BaseGiven } from "./lib/tiposkripto/src/BaseGiven";
 import { BaseThen } from "./lib/tiposkripto/src/BaseThen";
 import { BaseWhen } from "./lib/tiposkripto/src/BaseWhen";
-import type { Ibdd_in_any, Ibdd_out_any } from "./lib/tiposkripto/src/CoreTypes";
+import type {
+  Ibdd_in_any,
+  Ibdd_out_any,
+} from "./lib/tiposkripto/src/CoreTypes";
 import type { ITestResourceConfiguration } from "./lib/tiposkripto/src/types";
 
 export type ITestconfigV2 = {
@@ -11,24 +14,23 @@ export type ITestconfigV2 = {
   stakeholderReactModule?: string; // Path to custom React component module
 };
 
-export type ICheck = ((x: any) => string);
-export type IChecks = ICheck[];
+export type IOtherTest = (x: any) => string;
+export type IOtherTests = IOtherTest[];
 
 export type IBaseTestConfig = {
   runtime: string;
   tests: string[];
   dockerfile: string;
   buildOptions: string;
-  checks: IChecks;
+  checks: IOtherTests;
   outputs: string[];
-  // BuildKit specific options
   buildKitOptions?: {
     cacheMounts?: string[];
     multiStage?: boolean;
     targetStage?: string;
     buildArgs?: Record<string, string>;
   };
-}
+};
 
 export type TestSummary = {
   testName: string;
@@ -41,21 +43,13 @@ export type TestSummary = {
   failedFeatures: string[];
 };
 
-// Core test lifecycle hooks
 export type TestLifecycle<Subject, State, Selection> = {
-  // Setup
-  beforeAll?: (input: any) => Promise<Subject>;
-  beforeEach?: (subject: Subject) => Promise<State>;
-
-  // Execution
+  prepareAll?: (input: any) => Promise<Subject>;
+  prepareEach?: (subject: Subject) => Promise<State>;
   executeStep?: (state: State) => Promise<State>;
   verifyStep?: (state: State) => Promise<Selection>;
-
-  // Cleanup
-  afterEach?: (state: State) => Promise<void>;
-  afterAll?: (state: State) => Promise<void>;
-
-  // Assertions
+  cleanupEach?: (state: State) => Promise<void>;
+  cleanupAll?: (state: State) => Promise<void>;
   assert?: (result: Selection) => void;
 };
 
@@ -100,7 +94,7 @@ export type TestLifecycle<Subject, State, Selection> = {
 
 export type GivenSpecification<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
     [K in keyof O["givens"]]: (
       features: string[],
@@ -121,91 +115,93 @@ export type ThenSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
 // Describe-It pattern specifications
 export type DescribeSpecification<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["describes"]]: (
-    features: string[],
-    its: import("./lib/tiposkripto/src/BaseIt").BaseIt<I>[],
-    ...xtras: O["describes"][K]
-  ) => import("./lib/tiposkripto/src/BaseDescribe").BaseDescribe<I>;
-};
+    [K in keyof O["describes"]]: (
+      features: string[],
+      its: import("./lib/tiposkripto/src/BaseIt").BaseIt<I>[],
+      ...xtras: O["describes"][K]
+    ) => import("./lib/tiposkripto/src/BaseDescribe").BaseDescribe<I>;
+  };
 
-export type ItSpecification<
-  I extends Ibdd_in_any,
-  O extends Ibdd_out_any
-> = {
-  [K in keyof O["its"]]: (...xtras: O["its"][K]) => import("./lib/tiposkripto/src/BaseIt").BaseIt<I>;
+export type ItSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+  [K in keyof O["its"]]: (
+    ...xtras: O["its"][K]
+  ) => import("./lib/tiposkripto/src/BaseIt").BaseIt<I>;
 };
 
 // TDT pattern specifications
-export type ValueSpecification<
+
+export type ConfirmSpecification<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["values"]]: (
-    features: string[],
-    tableRows: any[][],
-    ...xtras: O["values"][K]
-  ) => import("./lib/tiposkripto/src/BaseValue").BaseValue<I>;
-};
+    [K in keyof O["confirms"]]: (
+      features: string[],
+      tableRows: any[][],
+      ...xtras: O["confirms"][K]
+    ) => import("./lib/tiposkripto/src/BaseValue").BaseValue<I>;
+    
+export type ValueSpecification<
+      I extends Ibdd_in_any,
+      O extends Ibdd_out_any,
+    > = {
+    [K in keyof O["values"]]: (
+      features: string[],
+      tableRows: any[][],
+      ...xtras: O["values"][K]
+    ) => import("./lib/tiposkripto/src/BaseValue").BaseValue<I>;
+  };
 
 export type ShouldSpecification<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["shoulds"]]: (...xtras: O["shoulds"][K]) => import("./lib/tiposkripto/src/BaseShould").BaseShould<I>;
-};
+    [K in keyof O["shoulds"]]: (
+      ...xtras: O["shoulds"][K]
+    ) => import("./lib/tiposkripto/src/BaseShould").BaseShould<I>;
+  };
 
 export type ExpectSpecification<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["expecteds"]]: (...xtras: O["expecteds"][K]) => import("./lib/tiposkripto/src/BaseExpected").BaseExpected<I>;
-};
-
-// Confirm pattern specification (alias for Value)
-export type ConfirmSpecification<
-  I extends Ibdd_in_any,
-  O extends Ibdd_out_any
-> = {
-  [K in keyof O["confirms"]]: (
-    features: string[],
-    tableRows: any[][],
-    ...xtras: O["confirms"][K]
-  ) => import("./lib/tiposkripto/src/BaseValue").BaseValue<I>;
-};
+    [K in keyof O["expecteds"]]: (
+      ...xtras: O["expecteds"][K]
+    ) => import("./lib/tiposkripto/src/BaseExpected").BaseExpected<I>;
+  };
 
 
+  };
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-// Base implementation types
 export type TestSuiteImplementation<O extends Ibdd_out_any> = {
   [K in keyof O["suites"]]: string;
 };
 
 export type TestGivenImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
     [K in keyof O["givens"]]: (...Ig: O["givens"][K]) => I["given"];
   };
 
 export type TestWhenImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
     [K in keyof O["whens"]]: (
       ...Iw: O["whens"][K]
     ) => (
       zel: I["iselection"],
-      tr: ITestResourceConfiguration
+      tr: ITestResourceConfiguration,
     ) => Promise<I["when"]>;
   };
 
 export type TestThenImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
     [K in keyof O["thens"]]: (
       ...It: O["thens"][K]
@@ -215,66 +211,82 @@ export type TestThenImplementation<
 // Describe-It pattern implementations
 export type TestDescribeImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["describes"]]: (...Id: O["describes"][K]) => I["given"];
-};
+    [K in keyof O["describes"]]: (...Id: O["describes"][K]) => I["given"];
+  };
 
 export type TestItImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["its"]]: (
-    ...Ii: O["its"][K]
-  ) => (sel: I["iselection"]) => I["then"];
-};
+    [K in keyof O["its"]]: (
+      ...Ii: O["its"][K]
+    ) => (sel: I["iselection"]) => I["then"];
+  };
 
 // TDT pattern implementations
 export type TestValueImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["values"]]: (...Iv: O["values"][K]) => I["given"];
-};
+    [K in keyof O["values"]]: (...Iv: O["values"][K]) => I["given"];
+  };
 
 export type TestShouldImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["shoulds"]]: (
-    ...Is: O["shoulds"][K]
-  ) => (sel: I["iselection"]) => I["then"];
-};
+    [K in keyof O["shoulds"]]: (
+      ...Is: O["shoulds"][K]
+    ) => (sel: I["iselection"]) => I["then"];
+  };
 
 export type TestExpectedImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["expecteds"]]: (
-    ...Ie: O["expecteds"][K]
-  ) => (sel: I["iselection"]) => Promise<I["then"]>;
-};
+    [K in keyof O["expecteds"]]: (
+      ...Ie: O["expecteds"][K]
+    ) => (sel: I["iselection"]) => Promise<I["then"]>;
+  };
 
 // Confirm pattern implementation
 export type TestConfirmImplementation<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
-  [K in keyof O["confirms"]]: (...Ic: O["confirms"][K]) => I["given"];
-};
+    [K in keyof O["confirms"]]: (...Ic: O["confirms"][K]) => I["given"];
+  };
 
 export type Modify<T, R> = Omit<T, keyof R> & R;
 
 export type TestSuiteShape = Record<string, any>;
+
 export type TestGivenShape = Record<string, any>;
 export type TestWhenShape = Record<string, any>;
 export type TestThenShape = Record<string, any>;
 
+export type TestDescribeShape = Record<string, any>;
+export type TestItShape = Record<string, any>;
+
+export type TestBaseConfirm = Record<string, any>;
+export type TestBaseValue = Record<string, any>;
+export type TestExpectShape = Record<string, any>;
+export type TestExpectVerify = Record<string, any>;
+
 export type IPluginFactory = (
   register?: (entrypoint: string, sources: string[]) => any,
-  entrypoints?: string[]
+  entrypoints?: string[],
 ) => Plugin;
 
-export type IRunTime = `node` | `web` | `golang` | `python` | `ruby` | `java` | `rust`;
+export type IRunTime =
+  | `node`
+  | `web`
+  | `golang`
+  | `python`
+  | `ruby`
+  | `java`
+  | `rust`;
 
 export type ITestTypes = [string, IRunTime, { ports: number }, ITestTypes[]];

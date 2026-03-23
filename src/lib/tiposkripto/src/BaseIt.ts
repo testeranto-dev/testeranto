@@ -7,7 +7,6 @@ import type { TestTypeParams_any } from "./CoreTypes.js";
  */
 export class BaseIt<I extends TestTypeParams_any> extends BaseAction<I> {
   /**
-   * Abstract method to be implemented by concrete It classes.
    * Performs the action for the Describe-It pattern (AAA Act/Assert combined phase).
    * 
    * @param store The test store
@@ -16,12 +15,15 @@ export class BaseIt<I extends TestTypeParams_any> extends BaseAction<I> {
    * @param artifactory Context-aware artifactory for file operations
    * @returns Promise resolving to the result of the action
    */
-  abstract performAction(
+  async performAction(
     store: I["istore"],
     actionCB: (x: I["iselection"]) => I["then"],
     testResource: any,
     artifactory?: any,
-  ): Promise<any>;
+  ): Promise<any> {
+    // Default implementation: call actionCB and return the result
+    return actionCB(store as any);
+  }
   
   // It can perform both actions and assertions
   constructor(name: string, itCB: (xyz: I["iselection"]) => I["then"]) {
@@ -31,6 +33,11 @@ export class BaseIt<I extends TestTypeParams_any> extends BaseAction<I> {
   // Override test to handle both mutations and assertions
   async test(store: I["istore"], testResourceConfiguration: any, artifactory?: any) {
     try {
+      // Check if actionCB is defined
+      if (!this.actionCB) {
+        this.status = true;
+        return store;
+      }
       const result = await this.performAction(
         store,
         this.actionCB,

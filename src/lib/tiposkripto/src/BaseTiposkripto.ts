@@ -35,7 +35,6 @@ export default abstract class BaseTiposkripto<
 > {
   totalTests: number = 0;
   artifacts: Promise<unknown>[] = [];
-  assertThis: (t: I["then"]) => any = () => { };
   givenOverrides: Record<string, any>;
   specs: any;
   suitesOverrides: Record<string, any>;
@@ -399,7 +398,9 @@ export default abstract class BaseTiposkripto<
           describeCB: I["given"],
           initialValues: any,
         ) => {
-          return new BaseDescribe<I>(features, its, describeCB, initialValues);
+          // Use the implementation function as describeCB if not provided
+          const actualDescribeCB = describeCB || (desc as I["given"]);
+          return new BaseDescribe<I>(features, its, actualDescribeCB, initialValues);
         };
       });
     }
@@ -520,7 +521,7 @@ export default abstract class BaseTiposkripto<
       console.log("testResourceConfiguration", testResourceConfiguration);
       const reportJson = `${testResourceConfiguration.fs}/tests.json`;
       // console.log("writing results to: ", reportJson)
-      this.writeFileSync(reportJson, JSON.stringify(results));
+      this.writeFileSync(reportJson, JSON.stringify(results, null, 2));
     });
   }
 

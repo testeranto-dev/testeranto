@@ -86,12 +86,12 @@ export abstract class BaseGiven<
     const thens = this.thens || [];
     return {
       key: this.key,
-      actions: whens.map((w) => {
+      whens: whens.map((w) => {
         if (w && w.toObj) return w.toObj();
         console.error("When step is not as expected!", JSON.stringify(w));
         return {};
       }),
-      checks: thens.map((t) => (t && t.toObj ? t.toObj() : {})),
+      thens: thens.map((t) => (t && t.toObj ? t.toObj() : {})),
       error: this.error ? [this.error, this.error.stack] : null,
       failed: this.failed,
       features: this.features || [],

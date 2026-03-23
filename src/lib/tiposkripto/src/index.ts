@@ -57,121 +57,19 @@ export const DefaultAdapter = <T extends TestTypeParams_any>(
 ): IUniversalTestAdapter<T> => {
   const base = BaseAdapter<T>();
   
-  // Map legacy method names to new ones with proper parameter handling
-  const mapped: any = { ...p };
+  // Create adapter with new method names
+  // ITestAdapter is now IUniversalTestAdapter, so we can use the methods directly
+  const adapter: IUniversalTestAdapter<T> = {
+    prepareAll: p.prepareAll || base.prepareAll,
+    prepareEach: p.prepareEach || base.prepareEach,
+    execute: p.execute || base.execute,
+    verify: p.verify || base.verify,
+    cleanupEach: p.cleanupEach || base.cleanupEach,
+    cleanupAll: p.cleanupAll || base.cleanupAll,
+    assert: p.assert || base.assert,
+  };
   
-  if (p.beforeAll && !p.prepareAll) {
-    mapped.prepareAll = async (
-      input: T["iinput"],
-      testResource: ITestResourceConfiguration,
-      artifactory?: IArtifactory,
-    ) => {
-      // Handle different parameter counts
-      if (p.beforeAll.length >= 3) {
-        return await (p.beforeAll as any)(input, testResource, artifactory);
-      } else if (p.beforeAll.length >= 2) {
-        return await (p.beforeAll as any)(input, testResource);
-      } else {
-        return await (p.beforeAll as any)(input);
-      }
-    };
-  }
-  if (p.beforeEach && !p.prepareEach) {
-    mapped.prepareEach = async (
-      subject: T["isubject"],
-      initializer: (c?: any) => T["given"],
-      testResource: ITestResourceConfiguration,
-      initialValues: any,
-      artifactory?: IArtifactory,
-    ) => {
-      // Handle different parameter counts
-      if (p.beforeEach!.length >= 5) {
-        return await (p.beforeEach as any)(subject, initializer, testResource, initialValues, artifactory);
-      } else if (p.beforeEach!.length >= 4) {
-        return await (p.beforeEach as any)(subject, initializer, testResource, initialValues);
-      } else if (p.beforeEach!.length >= 3) {
-        return await (p.beforeEach as any)(subject, initializer, testResource);
-      } else if (p.beforeEach!.length >= 2) {
-        return await (p.beforeEach as any)(subject, initializer);
-      } else {
-        return await (p.beforeEach as any)(subject);
-      }
-    };
-  }
-  if (p.afterEach && !p.cleanupEach) {
-    mapped.cleanupEach = async (
-      store: T["istore"],
-      key: string,
-      artifactory?: IArtifactory,
-    ) => {
-      if (p.afterEach!.length >= 3) {
-        return await (p.afterEach as any)(store, key, artifactory);
-      } else if (p.afterEach!.length >= 2) {
-        return await (p.afterEach as any)(store, key);
-      } else {
-        return await (p.afterEach as any)(store);
-      }
-    };
-  }
-  if (p.afterAll && !p.cleanupAll) {
-    mapped.cleanupAll = (store: T["istore"], artifactory: IArtifactory) => {
-      if (p.afterAll!.length >= 2) {
-        return (p.afterAll as any)(store, artifactory);
-      } else {
-        return (p.afterAll as any)(store);
-      }
-    };
-  }
-  if (p.andWhen && !p.execute) {
-    mapped.execute = async (
-      store: T["istore"],
-      actionCB: T["when"],
-      testResource: ITestResourceConfiguration,
-      artifactory?: IArtifactory,
-    ) => {
-      if (p.andWhen!.length >= 4) {
-        return await (p.andWhen as any)(store, actionCB, testResource, artifactory);
-      } else if (p.andWhen!.length >= 3) {
-        return await (p.andWhen as any)(store, actionCB, testResource);
-      } else if (p.andWhen!.length >= 2) {
-        return await (p.andWhen as any)(store, actionCB);
-      } else {
-        return await (p.andWhen as any)(store);
-      }
-    };
-  }
-  if (p.butThen && !p.verify) {
-    mapped.verify = async (
-      store: T["istore"],
-      checkCB: T["then"],
-      testResource: ITestResourceConfiguration,
-      artifactory?: IArtifactory,
-    ) => {
-      if (p.butThen!.length >= 4) {
-        return await (p.butThen as any)(store, checkCB, testResource, artifactory);
-      } else if (p.butThen!.length >= 3) {
-        return await (p.butThen as any)(store, checkCB, testResource);
-      } else if (p.butThen!.length >= 2) {
-        return await (p.butThen as any)(store, checkCB);
-      } else {
-        return await (p.butThen as any)(store);
-      }
-    };
-  }
-  if (p.assertThis && !p.assert) {
-    mapped.assert = (x: T["then"]) => {
-      if (p.assertThis!.length >= 1) {
-        return (p.assertThis as any)(x);
-      } else {
-        return (p.assertThis as any)();
-      }
-    };
-  }
-  
-  return {
-    ...base,
-    ...mapped,
-  } as IUniversalTestAdapter<T>;
+  return adapter;
 };
 
 // Export BDD pattern classes (user-facing)

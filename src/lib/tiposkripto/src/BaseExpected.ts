@@ -8,7 +8,6 @@ import type { ITestResourceConfiguration } from "./types.js";
  */
 export abstract class BaseExpected<I extends TestTypeParams_any> extends BaseCheck<I> {
   /**
-   * Abstract method to be implemented by concrete Expected classes.
    * Validates each row in table-driven testing (TDT pattern).
    * 
    * @param store The test store
@@ -17,12 +16,15 @@ export abstract class BaseExpected<I extends TestTypeParams_any> extends BaseChe
    * @param artifactory Context-aware artifactory for file operations
    * @returns Promise resolving to the selection for verification
    */
-  abstract verifyCheck(
+  async verifyCheck(
     store: I["istore"],
     checkCB: (s: I["iselection"]) => Promise<I["isubject"]>,
     testResourceConfiguration: ITestResourceConfiguration,
     artifactory?: any,
-  ): Promise<I["iselection"]>;
+  ): Promise<I["iselection"]> {
+    // Default implementation: call checkCB and return the result
+    return await checkCB(store as any);
+  }
 
   // Expected value for current row
   expectedValue: any = null;

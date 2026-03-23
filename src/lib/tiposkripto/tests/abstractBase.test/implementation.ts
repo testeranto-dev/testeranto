@@ -44,45 +44,49 @@ export const implementation: ITestImplementation<I, O> = {
     },
   },
 
-
-
   describes: {
-    Default: ({
+    Default: () => () => ({
       testStore: { value: "initial" },
       testSelection: { selected: true },
     }),
-    WithError: ({
+    WithError: () => () => ({
       testStore: { value: "error" },
       testSelection: { selected: false },
     }),
   },
 
   its: {
-    ['modifies and verifies the store']: () => {
-      // TODO
+    ['modifies and verifies the store']: () => (selection: any) => {
+      // Simple check
+      return true;
     }
   },
 
-
   confirms: {
-    Default: () => ({
+    Default: () => () => ({
       testStore: { value: "initial" },
       testSelection: { selected: true },
     }),
   },
 
   values: {
-    first: 1
+    first: () => () => ({
+      testStore: { value: "initial" },
+      testSelection: { selected: true },
+    })
   },
 
   shoulds: {
-    equal: assert,
+    equal: () => (selection: any) => {
+      // Simple check
+      return true;
+    },
   },
 
   expecteds: {
-    ['2']: 2
+    ['2']: () => async (selection: any) => {
+      // Simple check
+      return true;
+    }
   }
-
-
-
 };

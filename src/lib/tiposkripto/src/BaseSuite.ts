@@ -1,5 +1,6 @@
 import type { TestTypeParams_any, TestSpecShape_any } from "./CoreTypes.js";
 import type { IGivens } from "./BaseGiven";
+import { BaseGiven } from "./BaseGiven.js";
 import type { ITestResourceConfiguration, ITestArtifactory } from "./types.js";
 
 /**
@@ -86,28 +87,70 @@ export abstract class BaseSuite<
   }
 
   public toObj() {
-    const givens = Object.keys(this.givens).map((k) => {
-      const givenObj = this.givens[k].toObj();
-      // Ensure given features are strings
-      // if (givenObj.features) {
-      //   givenObj.features = givenObj.features.map(feature => {
+    // We need to organize by pattern type
+    const bddGivens: any[] = [];
+    const aaaDescribes: any[] = [];
+    const tdtConfirms: any[] = [];
+    
+    for (const [k, giver] of Object.entries(this.givens)) {
+      const obj = giver.toObj();
+      
+      // Check the constructor name to determine the type
+      // This is more reliable than checking properties
+      const constructorName = giver.constructor.name;
+      
+      if (constructorName === 'BaseValue') {
+        // TDT pattern
+        tdtConfirms.push({
+          key: obj.key,
+          values: obj.values || [],
+          error: obj.error,
+          failed: obj.failed,
+          features: obj.features,
+          artifacts: obj.artifacts,
+          status: obj.status
+        });
+      } else if (constructorName === 'BaseDescribe') {
+        // AAA pattern
+        aaaDescribes.push({
+          key: obj.key,
+          describes: obj.describes || [],
+          its: obj.its || [],
+          error: obj.error,
+          failed: obj.failed,
+          features: obj.features,
+          artifacts: obj.artifacts,
+          status: obj.status
+        });
+      } else if (constructorName === 'BaseGiven') {
+        // BDD pattern
+        bddGivens.push({
+          key: obj.key,
+          whens: obj.whens || [],
+          thens: obj.thens || [],
+          error: obj.error,
+          failed: obj.failed,
+          features: obj.features,
+          artifacts: obj.artifacts,
+          status: obj.status
+        });
+      } else {
+        // Fallback: check properties
+        if (obj.values !== undefined) {
+          tdtConfirms.push(obj);
+        } else if (obj.describes !== undefined || obj.its !== undefined) {
+          aaaDescribes.push(obj);
+        } else if (obj.whens !== undefined || obj.thens !== undefined) {
+          bddGivens.push(obj);
+        } else {
+          // Default to BDD
+          bddGivens.push(obj);
+        }
+      }
+    }
 
-      //     return feature;
-      //     // if (typeof feature === 'string') {
-      //     //   return feature;
-      //     // } else if (feature && typeof feature === 'object') {
-      //     //   return feature.name || JSON.stringify(feature);
-      //     // } else {
-      //     //   return String(feature);
-      //     // }
-      //   });
-      // }
-      return givenObj;
-    });
-
-    return {
+    const result: any = {
       name: this.name,
-      givens,
       fails: this.fails,
       failed: this.failed,
       features: this.features(),
@@ -115,6 +158,19 @@ export abstract class BaseSuite<
         ? this.artifacts.filter((art) => typeof art === "string")
         : [],
     };
+
+    // Add pattern-specific arrays only if they have content
+    if (bddGivens.length > 0) {
+      result.givens = bddGivens;
+    }
+    if (aaaDescribes.length > 0) {
+      result.describes = aaaDescribes;
+    }
+    if (tdtConfirms.length > 0) {
+      result.confirms = tdtConfirms;
+    }
+
+    return result;
   }
 
   setup(
@@ -190,14 +246,70 @@ export abstract class BaseSuite<
           };
         }
         
-        this.store = await giver.give(
-          subject,
-          gKey,
-          testResourceConfiguration,
-          this.assertThat,
-          givenArtifactory,
-          sNdx,
-        );
+        // Call the appropriate method based on the type of giver
+        if (giver instanceof BaseGiven) {
+          // BaseGiven instance
+          this.store = await giver.give(
+            subject,
+            gKey,
+            testResourceConfiguration,
+            this.assertThat,
+            givenArtifactory,
+            sNdx,
+          );
+        } else if (giver.constructor.name === 'BaseDescribe' || typeof giver.describe === 'function') {
+          // BaseDescribe instance
+          this.store = await giver.describe(
+            subject,
+            gKey,
+            testResourceConfiguration,
+            this.assertThat,
+            givenArtifactory,
+            sNdx,
+          );
+        } else if (giver.constructor.name === 'BaseValue' || typeof giver.value === 'function') {
+          // BaseValue instance
+          this.store = await giver.value(
+            subject,
+            gKey,
+            testResourceConfiguration,
+            this.assertThat,
+            givenArtifactory,
+            sNdx,
+          );
+        } else {
+          // Try to detect based on available methods
+          if (typeof giver.give === 'function') {
+            this.store = await giver.give(
+              subject,
+              gKey,
+              testResourceConfiguration,
+              this.assertThat,
+              givenArtifactory,
+              sNdx,
+            );
+          } else if (typeof giver.describe === 'function') {
+            this.store = await giver.describe(
+              subject,
+              gKey,
+              testResourceConfiguration,
+              this.assertThat,
+              givenArtifactory,
+              sNdx,
+            );
+          } else if (typeof giver.value === 'function') {
+            this.store = await giver.value(
+              subject,
+              gKey,
+              testResourceConfiguration,
+              this.assertThat,
+              givenArtifactory,
+              sNdx,
+            );
+          } else {
+            throw new Error(`Giver ${gKey} has no valid method (give, describe, or value). Type: ${giver.constructor.name}`);
+          }
+        }
         // Add the number of failures from this given to the suite's total
         this.fails += giver.fails || 0;
       } catch (e) {

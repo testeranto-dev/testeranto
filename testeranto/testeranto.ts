@@ -61,6 +61,7 @@ const config: ITestconfigV2 = {
       runtime: "node",
       tests: [
         "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
       ],
       checks: [
         (x) => `yarn eslint ${x.join(" ")} `,

@@ -55,6 +55,9 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
   }
 
   toObj() {
+    // This is a fallback implementation for any class that doesn't override toObj()
+    // It should not be called for BaseGiven, BaseDescribe, or BaseValue
+    console.warn('BaseSetup.toObj() called - this may indicate a missing override');
     return {
       key: this.key,
       actions: (this.actions || []).map((a) => {

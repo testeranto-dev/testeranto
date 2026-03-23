@@ -7,7 +7,6 @@ import type { TestTypeParams_any } from "./CoreTypes.js";
  */
 export class BaseShould<I extends TestTypeParams_any> extends BaseAction<I> {
   /**
-   * Abstract method to be implemented by concrete Should classes.
    * Processes each row in table-driven testing (TDT pattern).
    * 
    * @param store The test store
@@ -16,12 +15,15 @@ export class BaseShould<I extends TestTypeParams_any> extends BaseAction<I> {
    * @param artifactory Context-aware artifactory for file operations
    * @returns Promise resolving to the result of the action
    */
-  abstract performAction(
+  async performAction(
     store: I["istore"],
     actionCB: (x: I["iselection"]) => I["then"],
     testResource: any,
     artifactory?: any,
-  ): Promise<any>;
+  ): Promise<any> {
+    // Default implementation: call actionCB and return the result
+    return actionCB(store as any);
+  }
   
   // Current row data
   currentRow: any[] = [];

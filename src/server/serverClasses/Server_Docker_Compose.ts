@@ -46,6 +46,16 @@ export abstract class Server_Docker_Compose extends Server_WS {
   abstract startServiceLogging: any;
 
   public async DC_upAll(): Promise<IDockerComposeResult> {
+    // Clear builder logs before starting services
+    // Since this is in Server_Docker_Compose, and we need to access Server_Docker's methods,
+    // we need to check if we can call clearBuilderLogs
+    // However, Server_Docker extends Server_Docker_Compose, so when called from Server_Docker,
+    // 'this' will be Server_Docker
+    // To be safe, we'll add a method to clear logs that can be overridden
+    if (typeof (this as any).clearBuilderLogs === 'function') {
+      await (this as any).clearBuilderLogs();
+    }
+    
     const commands = getDockerComposeCommandsPure();
     const result = await executeDockerComposeCommand(commands.up, {
       errorMessage: "docker compose up",
@@ -122,6 +132,11 @@ export abstract class Server_Docker_Compose extends Server_WS {
   }
 
   public async DC_start(): Promise<IDockerComposeResult> {
+    // Clear builder logs before starting services
+    if (typeof (this as any).clearBuilderLogs === 'function') {
+      await (this as any).clearBuilderLogs();
+    }
+    
     const commands = getDockerComposeCommandsPure();
     const result = await executeDockerComposeCommand(commands.start, {
       errorMessage: "docker compose start",

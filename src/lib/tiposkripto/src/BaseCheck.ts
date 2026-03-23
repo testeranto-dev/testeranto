@@ -36,19 +36,42 @@ export abstract class BaseCheck<I extends TestTypeParams_any> {
   }
 
   toObj() {
-    return {
-      key: this.key,
-      its: (this.its || []).map((it) => {
-        if (it && it.toObj) return it.toObj();
-        console.error("It step is not as expected!", JSON.stringify(it));
-        return {};
-      }),
-      error: this.error ? [this.error, this.error.stack] : null,
-      failed: this.failed,
-      features: this.features || [],
+    // BaseCheck doesn't have its, key, failed, or features by default
+    // But subclasses might add them
+    const obj: any = {
+      error: this.error ? [this.error, (this.error as any).stack] : null,
       artifacts: this.artifacts,
       status: this.status,
     };
+    
+    // Add optional properties if they exist
+    if ('key' in this) obj.key = (this as any).key;
+    if ('failed' in this) obj.failed = (this as any).failed;
+    if ('features' in this) obj.features = (this as any).features;
+    
+    // Handle its if it exists
+    if ('its' in this) {
+      const its = (this as any).its;
+      if (Array.isArray(its)) {
+        obj.its = its.map((it: any) => {
+          if (it && it.toObj) return it.toObj();
+          console.error("It step is not as expected!", JSON.stringify(it));
+          return {};
+        });
+      } else if (its) {
+        console.warn("its is not an array:", its);
+        // Check if it has a toObj method
+        if (its.toObj) {
+          obj.its = [its.toObj()];
+        } else {
+          obj.its = [its];
+        }
+      } else {
+        obj.its = [];
+      }
+    }
+    
+    return obj;
   }
 
   abstract verifyCheck(

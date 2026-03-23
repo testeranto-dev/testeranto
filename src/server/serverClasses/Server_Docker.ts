@@ -334,13 +334,20 @@ export class Server_Docker extends Server_Docker_Compose {
       configValue,
     );
 
+    // Clear stored logs for all services associated with this test before starting
+    // We don't know the exact service names, but startServiceLogging will handle it per service
+    // For now, we'll rely on startServiceLogging to clear logs when it's called
+    
     await launchBddTestPure(
       runtime,
       testName,
       configKey,
       configValue,
-      (serviceName, runtime) =>
-        captureExistingLogs(serviceName, runtime, configKey),
+      (serviceName, runtime) => {
+        // Clear stored logs before capturing existing logs
+        this.clearStoredLogs(serviceName, configKey);
+        return captureExistingLogs(serviceName, runtime, configKey);
+      },
       (serviceName, runtime) =>
         this.startServiceLogging(serviceName, runtime, configKey),
       () => this.resourceChanged("/~/processes"),
@@ -368,8 +375,11 @@ export class Server_Docker extends Server_Docker_Compose {
       testName,
       configKey,
       configValue,
-      (serviceName, runtime) =>
-        captureExistingLogs(serviceName, runtime, configKey),
+      (serviceName, runtime) => {
+        // Clear stored logs before capturing existing logs
+        this.clearStoredLogs(serviceName, configKey);
+        return captureExistingLogs(serviceName, runtime, configKey);
+      },
       (serviceName, runtime) =>
         this.startServiceLogging(serviceName, runtime, configKey),
       () => this.resourceChanged("/~/processes"),
@@ -426,11 +436,70 @@ export class Server_Docker extends Server_Docker_Compose {
     return this.testResultsCollector.getProcessSummary();
   };
 
+  private clearStoredLogs(serviceName: string, configKey: string): void {
+    // Clear any stored logs for this service to prevent accumulation
+    // This is a placeholder implementation - actual implementation depends on where logs are stored
+    // For now, we'll log that we would clear logs
+    consoleLog(`[Server_Docker] Clearing stored logs for service: ${serviceName}, config: ${configKey}`);
+    // TODO: Implement actual log clearing based on your storage mechanism
+    // For example, if logs are stored in memory, clear the relevant data structure
+    // If logs are stored in files, delete or truncate the log files
+  }
+
+  private async clearBuilderLogs(): Promise<void> {
+    // Clear logs for all builder services
+    // Builder services are typically prefixed with 'builder_' or can be identified from configs
+    // For now, we'll clear logs for services that are likely to be builder services
+    consoleLog('[Server_Docker] Clearing builder logs');
+    
+    // We can identify builder services from the configuration
+    // Since we don't have direct access to builder service names, we'll clear logs for all services
+    // that have been logged before
+    // This is a temporary implementation
+    for (const [containerId, logProcess] of this.logProcesses.entries()) {
+      if (logProcess.serviceName.includes('builder') || 
+          logProcess.serviceName.includes('build')) {
+        consoleLog(`[Server_Docker] Clearing logs for builder service: ${logProcess.serviceName}`);
+        // Stop the logging process
+        try {
+          logProcess.process.kill('SIGTERM');
+        } catch (error) {
+          consoleError(`[Server_Docker] Error stopping log process for ${logProcess.serviceName}:`, error);
+        }
+        // Remove from the map
+        this.logProcesses.delete(containerId);
+      }
+    }
+    
+    // Also clear any stored log files if they exist
+    // This would depend on your implementation
+  }
+
+  private stopServiceLogging(serviceName: string): void {
+    // Find and stop any existing log processes for this service
+    for (const [containerId, logProcess] of this.logProcesses.entries()) {
+      if (logProcess.serviceName === serviceName) {
+        try {
+          logProcess.process.kill('SIGTERM');
+          this.logProcesses.delete(containerId);
+          consoleLog(`[Server_Docker] Stopped existing log process for service: ${serviceName}`);
+        } catch (error) {
+          consoleError(`[Server_Docker] Error stopping log process for service ${serviceName}:`, error);
+        }
+      }
+    }
+  }
+
   startServiceLogging = (
     serviceName: string,
     runtime: string,
     runtimeConfigKey: string,
   ) => {
+    // First, clear any stored logs for this service to prevent log accumulation
+    this.clearStoredLogs(serviceName, runtimeConfigKey);
+    // Then, stop any existing logging processes for this service
+    this.stopServiceLogging(serviceName);
+    
     this.logProcesses = startServiceLoggingPure(
       serviceName,
       runtime,
@@ -446,6 +515,8 @@ export class Server_Docker extends Server_Docker_Compose {
   }
 
   private async startBuilderServices(): Promise<void> {
+    // Clear builder logs before starting services
+    await this.clearBuilderLogs();
     await this.builderServicesManager.startBuilderServices();
   }
 

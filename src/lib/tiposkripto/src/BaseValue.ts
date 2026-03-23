@@ -8,7 +8,6 @@ import type { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
  */
 export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
   /**
-   * Abstract method to be implemented by concrete Value classes.
    * Sets up table data for the TDT (Table-Driven Testing) pattern.
    * 
    * @param subject The test subject
@@ -18,13 +17,20 @@ export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
    * @param initialValues Initial values for setup
    * @returns Promise resolving to the test store
    */
-  abstract setupThat(
+  async setupThat(
     subject: I["isubject"],
     testResourceConfiguration: ITestResourceConfiguration,
     artifactory: ITestArtifactory,
     setupCB: I["given"],
     initialValues: any,
-  ): Promise<I["istore"]>;
+  ): Promise<I["istore"]> {
+    // Default implementation: call setupCB and return the result
+    const result = (setupCB as any)();
+    if (typeof result === "function") {
+      return result();
+    }
+    return result;
+  }
   
   // Table rows for TDT
   tableRows: any[][];
@@ -154,10 +160,22 @@ export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
     };
   }
 
+  // Add value method that delegates to setup
+  async value(
+    subject: I["isubject"],
+    key: string,
+    testResourceConfiguration: any,
+    tester: (t: Awaited<I["then"]> | undefined) => boolean,
+    artifactory?: any,
+    suiteNdx?: number,
+  ) {
+    return this.setup(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx);
+  }
+
   toObj() {
     return {
       key: this.key,
-      tableRows: this.tableRows || [],
+      values: this.tableRows || [],
       error: this.error ? [this.error, this.error.stack] : null,
       failed: this.failed,
       features: this.features || [],
