@@ -1,4 +1,4 @@
-use crate::types::{IbddInAny, ITTestResourceConfiguration, ITestAdapter};
+use crate::types::{IbddInAny, ITestResourceConfiguration, IUniversalTestAdapter, IArtifactory};
 use async_trait::async_trait;
 
 pub struct SimpleTestAdapter;
@@ -10,7 +10,7 @@ impl SimpleTestAdapter {
 }
 
 #[async_trait]
-impl<I> ITestAdapter<I> for SimpleTestAdapter 
+impl<I> IUniversalTestAdapter<I> for SimpleTestAdapter 
 where
     I: IbddInAny + Send + Sync,
     <I as IbddInAny>::Iinput: Send + 'static,
@@ -18,65 +18,79 @@ where
     <I as IbddInAny>::Istore: Send + 'static,
     <I as IbddInAny>::Given: Send + 'static,
     <I as IbddInAny>::Then: Send + 'static,
+    <I as IbddInAny>::When: Send + 'static,
 {
-    async fn before_all(
+    async fn prepare_all(
         &self,
-        input_val: <I as IbddInAny>::Iinput,
-        _tr: &ITTestResourceConfiguration,
-        _pm: &dyn std::any::Any,
-    ) -> <I as IbddInAny>::Iinput {
-        input_val
+        input: I::Iinput,
+        _tr: &ITestResourceConfiguration,
+        _artifactory: Option<&IArtifactory>,
+    ) -> I::Iinput {
+        input
     }
     
-    async fn after_all(
+    async fn prepare_each(
         &self,
-        store: <I as IbddInAny>::Istore,
-        _pm: &dyn std::any::Any,
-    ) -> <I as IbddInAny>::Istore {
-        store
-    }
-    
-    async fn before_each(
-        &self,
-        subject: <I as IbddInAny>::Isubject,
-        _initializer: <I as IbddInAny>::Given,
-        _test_resource: &ITTestResourceConfiguration,
-        _initial_values: &dyn std::any::Any,
-        _pm: &dyn std::any::Any,
-    ) -> <I as IbddInAny>::Isubject {
+        subject: I::Isubject,
+        _initializer: I::Given,
+        _test_resource: &ITestResourceConfiguration,
+        _initial_values: &(dyn std::any::Any + Send + Sync),
+        _artifactory: Option<&IArtifactory>,
+    ) -> I::Isubject {
         subject
     }
     
-    async fn after_each(
+    async fn cleanup_each(
         &self,
-        store: <I as IbddInAny>::Istore,
+        store: I::Istore,
         _key: &str,
-        _pm: &dyn std::any::Any,
-    ) -> <I as IbddInAny>::Istore {
+        _artifactory: Option<&IArtifactory>,
+    ) -> I::Istore {
         store
     }
     
-    async fn and_when(
+    async fn cleanup_all(
         &self,
-        store: <I as IbddInAny>::Istore,
-        _when_cb: <I as IbddInAny>::Given,
-        _test_resource: &ITTestResourceConfiguration,
-        _pm: &dyn std::any::Any,
-    ) -> <I as IbddInAny>::Istore {
+        store: I::Istore,
+        _artifactory: Option<&IArtifactory>,
+    ) -> I::Istore {
         store
     }
     
-    async fn but_then(
+    async fn execute(
         &self,
-        store: <I as IbddInAny>::Istore,
-        _then_cb: <I as IbddInAny>::Then,
-        _test_resource: &ITTestResourceConfiguration,
-        _pm: &dyn std::any::Any,
-    ) -> <I as IbddInAny>::Istore {
+        store: I::Istore,
+        _action_cb: I::When,
+        _test_resource: &ITestResourceConfiguration,
+        _artifactory: Option<&IArtifactory>,
+    ) -> I::Istore {
         store
     }
     
-    fn assert_this(&self, _t: <I as IbddInAny>::Then) -> bool {
+    async fn verify(
+        &self,
+        store: I::Istore,
+        _check_cb: I::Then,
+        _test_resource: &ITestResourceConfiguration,
+        _artifactory: Option<&IArtifactory>,
+    ) -> I::Iselection {
+        // For a simple adapter, we need to convert Istore to Iselection
+        // This is a placeholder implementation
+        // In practice, this would involve extracting a selection from the store
+        // For now, we'll use a type conversion that may need to be adjusted
+        // based on the actual types
+        unsafe {
+            std::mem::transmute_copy(&store)
+        }
+    }
+    
+    // Assertion - standardized name across all languages
+    // Note: Named assert_that to avoid conflict with Java's 'assert' keyword
+    fn assert_that(&self, _t: I::Then) -> bool {
+        // Convert to bool - this is a simple implementation
+        // In practice, this would depend on the actual type
+        // For now, we'll assume it's a boolean or can be converted to one
+        // This is a placeholder
         true
     }
 }

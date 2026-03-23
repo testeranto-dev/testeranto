@@ -1,6 +1,6 @@
-import { TestTypeParams_any, TestSpecShape_any } from "./CoreTypes.js";
-import { IGivens } from "./BaseGiven";
-import { ITestResourceConfiguration, ITestArtifactory } from "./types.js";
+import type { TestTypeParams_any, TestSpecShape_any } from "./CoreTypes.js";
+import type { IGivens } from "./BaseGiven";
+import type { ITestResourceConfiguration, ITestArtifactory } from "./types.js";
 /**
  * Represents a collection of test suites keyed by their names.
  * Suites are organized as named collections because:
@@ -18,16 +18,17 @@ export declare abstract class BaseSuite<I extends TestTypeParams_any, O extends 
     index: number;
     failed: boolean;
     fails: number;
+    parent: any;
     artifacts: string[];
     addArtifact(path: string): void;
-    constructor(name: string, index: number, givens?: IGivens<I>);
+    constructor(name: string, index: number, givens?: IGivens<I>, parent?: any);
     features(): any[];
     toObj(): {
         name: string;
         givens: {
             key: string;
-            whens: any[];
-            thens: any[];
+            actions: any[];
+            checks: any[];
             error: (string | Error | undefined)[] | null;
             failed: boolean;
             features: string[];

@@ -20,18 +20,12 @@
     "onStartupFinished",
     "onCommand:testeranto.showTests",
     "onCommand:testeranto.runTest",
-    "onCommand:testeranto.aider",
     "onCommand:testeranto.openConfig",
     "onCommand:testeranto.openFile",
     "onCommand:testeranto.refresh",
     "onCommand:testeranto.retryConnection",
     "onCommand:testeranto.startServer",
-    "onCommand:testeranto.generateHtmlReport",
-    "onView:testeranto.unifiedView",
     "onView:testeranto.runtimeView",
-    "onView:testeranto.resultsView",
-    "onView:testeranto.processView",
-    "onView:testeranto.reportView",
     "workspaceContains:**/testeranto/extension-config.json",
     "workspaceContains:**/testeranto/reports/**/*.json"
   ],
@@ -41,7 +35,7 @@
         {
           "id": "testeranto",
           "title": "Testeranto",
-          "icon": "$(testing)"
+          "icon": "$(beaker)"
         }
       ]
     },
@@ -54,15 +48,6 @@
         }
       ]
     },
-    "menus": {
-      "view/item/context": [
-        {
-          "command": "testeranto.launchAiderTerminal",
-          "when": "viewItem == testWithAider",
-          "group": "inline"
-        }
-      ]
-    },
     "commands": [
       {
         "command": "testeranto.showTests",
@@ -71,10 +56,6 @@
       {
         "command": "testeranto.runTest",
         "title": "Testeranto: Run Test"
-      },
-      {
-        "command": "testeranto.aider",
-        "title": "Testeranto: Connect to Aider"
       },
       {
         "command": "testeranto.openConfig",

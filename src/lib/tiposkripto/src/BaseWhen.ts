@@ -1,11 +1,12 @@
-import { TestTypeParams_any } from "./CoreTypes.js";
+import type { TestTypeParams_any } from "./CoreTypes.js";
 import { BaseAction } from "./BaseAction.js";
 
 /**
  * BaseWhen extends BaseAction for BDD pattern.
- * @deprecated Use BaseAction for unified terminology
  */
-export abstract class BaseWhen<I extends TestTypeParams_any> extends BaseAction<I> {
+export abstract class BaseWhen<
+  I extends TestTypeParams_any,
+> extends BaseAction<I> {
   whenCB: (x: I["iselection"]) => I["then"];
 
   constructor(name: string, whenCB: (xyz: I["iselection"]) => I["then"]) {
@@ -13,32 +14,39 @@ export abstract class BaseWhen<I extends TestTypeParams_any> extends BaseAction<
     this.whenCB = whenCB;
   }
 
+  /**
+   * Abstract method to be implemented by concrete When classes.
+   * Performs the action for the BDD When phase.
+   * 
+   * @param store The test store
+   * @param whenCB When callback function
+   * @param testResource Test resource configuration
+   * @param artifactory Context-aware artifactory for file operations
+   * @returns Promise resolving to the result of the action
+   */
   abstract andWhen(
     store: I["istore"],
     whenCB: (x: I["iselection"]) => I["then"],
-    testResource
+    testResource: any,
+    artifactory?: any,
   ): Promise<any>;
 
   // Implement BaseAction's abstract method
   async performAction(
     store: I["istore"],
     actionCB: (x: I["iselection"]) => I["then"],
-    testResource
+    testResource: any,
   ): Promise<any> {
     return this.andWhen(store, actionCB, testResource);
   }
 
-  async test(store: I["istore"], testResourceConfiguration) {
+  async test(store: I["istore"], testResourceConfiguration: any, artifactory?: any) {
     try {
-      // Ensure addArtifact is properly bound to 'this'
-      // const addArtifact = this.addArtifact.bind(this);
-      // const proxiedPm = andWhenProxy(pm, filepath, addArtifact);
-
       const result = await this.andWhen(
         store,
         this.whenCB,
-        testResourceConfiguration
-        // proxiedPm
+        testResourceConfiguration,
+        artifactory as any,
       );
       this.status = true;
       return result;
@@ -56,6 +64,5 @@ export abstract class BaseWhen<I extends TestTypeParams_any> extends BaseAction<
  * - When actions might need to be reused across multiple Given conditions
  * - Dynamic composition of test steps is required
  * - Advanced test patterns need to reference When actions by name
- * @deprecated Use IActions for unified terminology
  */
 export type IWhens<I extends TestTypeParams_any> = Record<string, BaseWhen<I>>;

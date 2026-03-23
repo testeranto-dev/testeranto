@@ -7,6 +7,11 @@ import { buildTreeFromPaths } from './utils/buildTreeFromPaths';
 import { buildTreeItemsFromNode } from './utils/buildTreeItemsFromNode';
 import { buildTreeItemsFromCollatedTree } from './utils/buildTreeItemsFromCollatedTree';
 import { buildTreeItemsFromTestResultsTreeForConfig } from './utils/buildTreeItemsFromTestResultsTreeForConfig';
+import { fetchCollatedDocumentation } from './utils/fetchUtils';
+import { ClearDataUtils } from './utils/clearDataUtils';
+import { processFilesystemTree } from './utils/processFilesystemTree';
+import { buildTreeItemsFromInputFilesTree } from './utils/buildTreeItemsFromInputFilesTree';
+import { getReportItems } from './utils/reportUtils';
 
 interface TreeNode {
     name: string;
@@ -37,13 +42,15 @@ export class TesterantoTreeDataProviderUtils {
     }
 
     static clearData(): void {
-        TesterantoTreeDataProviderUtils.documentationFiles = [];
-        TesterantoTreeDataProviderUtils.documentationTree = {};
-        TesterantoTreeDataProviderUtils.testInputFiles.clear();
-        TesterantoTreeDataProviderUtils.inputFilesTree = {};
-        TesterantoTreeDataProviderUtils.testResults.clear();
-        TesterantoTreeDataProviderUtils.collatedTestResults = {};
-        TesterantoTreeDataProviderUtils.processes = [];
+        ClearDataUtils.clearData(
+            TesterantoTreeDataProviderUtils.documentationFiles,
+            TesterantoTreeDataProviderUtils.documentationTree,
+            TesterantoTreeDataProviderUtils.testInputFiles,
+            TesterantoTreeDataProviderUtils.inputFilesTree,
+            TesterantoTreeDataProviderUtils.testResults,
+            TesterantoTreeDataProviderUtils.collatedTestResults,
+            TesterantoTreeDataProviderUtils.processes
+        );
     }
 
     static getChildrenForElement(element?: TestTreeItem): TestTreeItem[] {
@@ -194,7 +201,7 @@ export class TesterantoTreeDataProviderUtils {
         }
 
         if (Object.keys(TesterantoTreeDataProviderUtils.inputFilesTree).length > 0) {
-            return TesterantoTreeDataProviderUtils.buildTreeItemsFromInputFilesTree(TesterantoTreeDataProviderUtils.inputFilesTree, 'test-inputs');
+            return buildTreeItemsFromInputFilesTree(TesterantoTreeDataProviderUtils.inputFilesTree, 'test-inputs');
         }
 
         for (const [runtime, testEntries] of TesterantoTreeDataProviderUtils.testInputFiles.entries()) {
@@ -350,21 +357,7 @@ export class TesterantoTreeDataProviderUtils {
     }
 
     static getReportItems(): TestTreeItem[] {
-        return [
-            new TestTreeItem(
-                'Generate HTML Report',
-                TreeItemType.File,
-                vscode.TreeItemCollapsibleState.None,
-                {
-                    description: 'Create static report for stakeholders'
-                },
-                {
-                    command: 'testeranto.generateHtmlReport',
-                    title: 'Generate Report'
-                },
-                new vscode.ThemeIcon('file-code')
-            )
-        ];
+        return getReportItems();
     }
 
     static getTestInputRuntimeItems(runtime: string): TestTreeItem[] {
@@ -662,16 +655,11 @@ export class TesterantoTreeDataProviderUtils {
             }
         }
 
-        return TesterantoTreeDataProviderUtils.buildTreeItemsFromInputFilesTree(currentNode, 'test-inputs', filePath);
+        return buildTreeItemsFromInputFilesTree(currentNode, 'test-inputs', filePath);
     }
 
-    // Keep all the existing static helper methods (fetchCollatedDocumentation, buildTreeFromPaths, etc.)
+    // Keep all the existing static helper methods (buildTreeFromPaths, etc.)
     // They remain unchanged
-    static async fetchCollatedDocumentation(): Promise<any> {
-        const response = await fetch('http://localhost:3000/~/collated-documentation');
-        return response.json();
-    }
-
     static async fetchCollatedInputFiles(): Promise<any> {
         const response = await fetch('http://localhost:3000/~/collated-inputfiles');
         return response.json();
@@ -703,7 +691,7 @@ export class TesterantoTreeDataProviderUtils {
             const data = await response.json();
 
             if (data.fsTree) {
-                TesterantoTreeDataProviderUtils.processFilesystemTree(data.fsTree, testInputFiles);
+                processFilesystemTree(data.fsTree, testInputFiles);
             } else if (data.collatedInputFiles) {
                 for (const [runtimeKey, runtimeData] of Object.entries(data.collatedInputFiles as any)) {
                     const runtimeInfo = runtimeData as any;
@@ -761,44 +749,6 @@ export class TesterantoTreeDataProviderUtils {
         return testInputFiles;
     }
 
-    static processFilesystemTree(tree: Record<string, any>, testInputFiles: Map<string, any[]>): void {
-        const processNode = (node: any, path: string = ''): void => {
-            if (!node) return;
-
-            if (node.type === 'test') {
-                const runtime = node.runtime || 'unknown';
-                const testName = node.path || path;
-                const inputFiles = node.inputFiles || [];
-
-                if (!testInputFiles.has(runtime)) {
-                    testInputFiles.set(runtime, []);
-                }
-
-                testInputFiles.get(runtime)!.push({
-                    testName: testName,
-                    files: inputFiles,
-                    count: node.count || 0
-                });
-            }
-
-            if (node.children) {
-                for (const [childName, childNode] of Object.entries(node.children)) {
-                    const childPath = path ? `${path}/${childName}` : childName;
-                    processNode(childNode, childPath);
-                }
-            }
-
-            if (Array.isArray(node)) {
-                for (const item of node) {
-                    processNode(item, path);
-                }
-            }
-        };
-
-        for (const [key, value] of Object.entries(tree)) {
-            processNode(value, key);
-        }
-    }
 
     static async loadTestResults(): Promise<Map<string, any[]>> {
         const testResults = new Map<string, any[]>();
@@ -933,8 +883,7 @@ export class TesterantoTreeDataProviderUtils {
         let documentationTree: Record<string, any> = {};
 
         try {
-            const response = await fetch('http://localhost:3000/~/collated-documentation');
-            const data = await response.json();
+            const data = await fetchCollatedDocumentation();
 
             if (data.tree) {
                 documentationTree = data.tree;
@@ -964,7 +913,7 @@ export class TesterantoTreeDataProviderUtils {
 
             if (data.fsTree) {
                 inputFilesTree = data.fsTree;
-                TesterantoTreeDataProviderUtils.processFilesystemTree(data.fsTree, testInputFiles);
+                processFilesystemTree(data.fsTree, testInputFiles);
             } else if (data.collatedInputFiles) {
                 for (const [runtimeKey, runtimeData] of Object.entries(data.collatedInputFiles as any)) {
                     const runtimeInfo = runtimeData as any;
@@ -1058,112 +1007,6 @@ export class TesterantoTreeDataProviderUtils {
         return buildTreeItemsFromNode(node, context);
     }
 
-    static buildTreeItemsFromInputFilesTree(tree: Record<string, any>, context: string, parentPath: string = ''): TestTreeItem[] {
-        const items: TestTreeItem[] = [];
-
-        const keys = Object.keys(tree).sort((a, b) => {
-            const aNode = tree[a];
-            const bNode = tree[b];
-
-            const aIsArray = Array.isArray(aNode);
-            const bIsArray = Array.isArray(bNode);
-
-            if (aIsArray || bIsArray) {
-                if (aIsArray && !bIsArray) return 1;
-                if (!aIsArray && bIsArray) return -1;
-            }
-
-            const aIsDir = !aIsArray && aNode.type === 'directory';
-            const bIsDir = !bIsArray && bNode.type === 'directory';
-
-            if (aIsDir && !bIsDir) return -1;
-            if (!aIsDir && bIsDir) return 1;
-
-            return a.localeCompare(b);
-        });
-
-        for (const key of keys) {
-            const node = tree[key];
-
-            if (Array.isArray(node)) {
-                for (const item of node) {
-                    const isTest = item.type === 'test';
-                    const isFile = item.type === 'file';
-                    const collapsibleState = vscode.TreeItemCollapsibleState.None;
-
-                    let description = '';
-                    if (isTest) {
-                        description = `Test (${item.count || 0} input files)`;
-                    } else if (isFile) {
-                        description = `Input file for ${item.testName || 'unknown test'}`;
-                    }
-
-                    const treeItem = new TestTreeItem(
-                        key,
-                        TreeItemType.File,
-                        collapsibleState,
-                        {
-                            filePath: parentPath ? `${parentPath}/${key}` : key,
-                            originalPath: item.path,
-                            isFile: true,
-                            context: context,
-                            description: description,
-                            runtime: item.runtime,
-                            testName: item.testName,
-                            inputFiles: item.inputFiles,
-                            count: item.count
-                        },
-                        undefined,
-                        isTest ? new vscode.ThemeIcon('beaker') : new vscode.ThemeIcon('file')
-                    );
-                    items.push(treeItem);
-                }
-                continue;
-            }
-
-            const isDir = node.type === 'directory';
-            const isTest = node.type === 'test';
-            const isFile = node.type === 'file';
-
-            const collapsibleState = isDir
-                ? vscode.TreeItemCollapsibleState.Collapsed
-                : vscode.TreeItemCollapsibleState.None;
-
-            let description = '';
-            if (isTest) {
-                description = `Test (${node.count || 0} input files)`;
-            } else if (isFile) {
-                description = `Input file for ${node.testName || 'unknown test'}`;
-            } else if (isDir) {
-                description = 'Directory';
-            }
-
-            const treeItem = new TestTreeItem(
-                key,
-                TreeItemType.File,
-                collapsibleState,
-                {
-                    filePath: parentPath ? `${parentPath}/${key}` : key,
-                    originalPath: node.path,
-                    isFile: !isDir,
-                    context: context,
-                    description: description,
-                    runtime: node.runtime,
-                    testName: node.testName,
-                    inputFiles: node.inputFiles,
-                    count: node.count
-                },
-                undefined,
-                isTest ? new vscode.ThemeIcon('beaker') :
-                    isFile ? new vscode.ThemeIcon('file') :
-                        new vscode.ThemeIcon('folder')
-            );
-
-            items.push(treeItem);
-        }
-
-        return items;
-    }
 
     static buildTreeItemsFromTestResultsTree(tree: Record<string, any>): TestTreeItem[] {
         const items: TestTreeItem[] = [];

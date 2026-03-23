@@ -11,64 +11,49 @@ from .base_check import BaseCheck
 from .base_given import BaseGiven
 from .base_when import BaseWhen
 from .base_then import BaseThen
+from .base_value import BaseValue
+from .base_should import BaseShould
+from .base_expected import BaseExpected
+from .base_describe import BaseDescribe
+from .base_it import BaseIt
 
-# New unified pattern classes
-from .base_arrange import BaseArrange
-from .base_act import BaseAct
-from .base_assert import BaseAssert
-from .base_map import BaseMap
-from .base_feed import BaseFeed
-from .base_validate import BaseValidate
-
-# Import reverse integration
-try:
-    from .reverse_integration import ReverseIntegration
-    _reverse_integration_available = True
-except ImportError as e:
-    _reverse_integration_available = False
-    # Print debug info if needed
-    # print(f"Note: Reverse integration module not available: {e}")
-
-# Helper functions for AAA and TDT patterns
-def create_aaa_specification(Suite, Arrange, Act, Assert):
-    """Create AAA pattern specification helpers."""
-    return {
-        'Suite': {
-            'Default': lambda name, arrangements: Suite.Default(name, arrangements)
-        },
-        'Arrange': {
-            'Default': lambda features, acts, asserts, arrange_cb, initial_values: 
-                Arrange.Default(features, acts, asserts, arrange_cb, initial_values)
-        },
-        'Act': {
-            'Default': lambda name, act_cb: Act.Default(name, act_cb)
-        },
-        'Assert': {
-            'Default': lambda name, assert_cb: Assert.Default(name, assert_cb)
-        }
-    }
-
-def create_tdt_specification(Suite, Map, Feed, Validate):
+# Helper functions for TDT and Describe-It patterns
+def create_tdt_specification(Suite, Value, Should, Expected):
     """Create TDT pattern specification helpers."""
     return {
         'Suite': {
-            'Default': lambda name, maps: Suite.Default(name, maps)
+            'Default': lambda name, values: Suite.Default(name, values)
         },
-        'Map': {
-            'Default': lambda features, feeds, validates, map_cb, initial_values, table_data=None: 
-                Map.Default(features, feeds, validates, map_cb, initial_values, table_data or [])
+        'Value': {
+            'Default': lambda features, table_rows, confirm_cb, initial_values: 
+                Value.Default(features, table_rows, confirm_cb, initial_values)
         },
-        'Feed': {
-            'Default': lambda name, feed_cb: Feed.Default(name, feed_cb)
+        'Should': {
+            'Default': lambda name, should_cb: Should.Default(name, should_cb)
         },
-        'Validate': {
-            'Default': lambda name, validate_cb: Validate.Default(name, validate_cb)
+        'Expected': {
+            'Default': lambda name, expected_cb: Expected.Default(name, expected_cb)
         }
     }
 
-# Aliases for backward compatibility
-AAA = create_aaa_specification
+def create_describe_it_specification(Suite, Describe, It):
+    """Create Describe-It pattern specification helpers."""
+    return {
+        'Suite': {
+            'Default': lambda name, describes: Suite.Default(name, describes)
+        },
+        'Describe': {
+            'Default': lambda features, its, describe_cb, initial_values: 
+                Describe.Default(features, its, describe_cb, initial_values)
+        },
+        'It': {
+            'Default': lambda name, it_cb: It.Default(name, it_cb)
+        }
+    }
+
+# Aliases
 TDT = create_tdt_specification
+DescribeIt = create_describe_it_specification
 
 __all__ = [
     'Pitono', 'set_default_instance', 'main', 'SimpleTestAdapter',
@@ -76,11 +61,8 @@ __all__ = [
     'ITestImplementation', 'ITestResourceRequest', 'IFinalResults', 'ITestArtifactory',
     'BaseSuite', 'BaseSetup', 'BaseAction', 'BaseCheck',
     'BaseGiven', 'BaseWhen', 'BaseThen',
-    'BaseArrange', 'BaseAct', 'BaseAssert',
-    'BaseMap', 'BaseFeed', 'BaseValidate',
-    'create_aaa_specification', 'create_tdt_specification', 'AAA', 'TDT'
+    'BaseValue', 'BaseShould', 'BaseExpected',
+    'BaseDescribe', 'BaseIt',
+    'create_tdt_specification', 'create_describe_it_specification',
+    'TDT', 'DescribeIt'
 ]
-
-# Add reverse integration exports if available
-if _reverse_integration_available:
-    __all__.append('ReverseIntegration')

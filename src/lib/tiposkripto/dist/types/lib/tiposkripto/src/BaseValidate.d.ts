@@ -1,11 +1,12 @@
 import { BaseCheck } from "./BaseCheck.js";
-import { TestTypeParams_any } from "./CoreTypes.js";
-import { ITestResourceConfiguration } from "./types.js";
+import type { TestTypeParams_any } from "./CoreTypes.js";
+import type { ITestResourceConfiguration } from "./types.js";
 /**
  * BaseValidate extends BaseCheck to support TDT (Table Driven Testing) pattern.
  * It validates the output against expected results.
  */
 export declare class BaseValidate<I extends TestTypeParams_any> extends BaseCheck<I> {
+    verifyCheck(store: I["istore"], checkCB: (s: I["iselection"]) => Promise<I["isubject"]>, testResourceConfiguration: ITestResourceConfiguration, artifactory?: any): Promise<I["iselection"]>;
     expectedResult: any;
     constructor(name: string, validateCB: (val: I["iselection"]) => Promise<I["then"]>);
     setExpectedResult(expected: any): void;

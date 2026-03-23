@@ -20,7 +20,8 @@ class BaseAction:
         self,
         store: Any,
         action_cb: Callable[[Any], Any],
-        test_resource
+        test_resource,
+        artifactory: Any = None
     ) -> Any:
         raise NotImplementedError("perform_action must be implemented by subclasses")
     
@@ -39,12 +40,14 @@ class BaseAction:
         self,
         store: Any,
         test_resource_configuration: Any,
+        artifactory: Any = None
     ) -> Any:
         try:
             result = await self.perform_action(
                 store,
                 self.action_cb,
-                test_resource_configuration
+                test_resource_configuration,
+                artifactory
             )
             self.status = True
             return result

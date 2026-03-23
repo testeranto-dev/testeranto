@@ -1,11 +1,11 @@
-use crate::types::{IbddInAny, ITTestResourceConfiguration};
+use crate::types::{IbddInAny, ITestResourceConfiguration};
 use std::collections::HashMap;
 
 pub struct BaseSuite<I: IbddInAny> {
     pub name: String,
     pub givens: HashMap<String, Box<dyn std::any::Any>>,
     pub store: Option<<I as IbddInAny>::Istore>,
-    pub test_resource_configuration: Option<ITTestResourceConfiguration>,
+    pub test_resource_configuration: Option<ITestResourceConfiguration>,
     pub index: usize,
     pub failed: bool,
     pub fails: i32,
@@ -51,7 +51,7 @@ impl<I: IbddInAny> BaseSuite<I> {
     pub async fn run(
         &mut self,
         _input: I::Iinput,
-        test_resource_configuration: ITTestResourceConfiguration,
+        test_resource_configuration: ITestResourceConfiguration,
     ) -> &Self {
         self.test_resource_configuration = Some(test_resource_configuration);
         self.fails = 0;

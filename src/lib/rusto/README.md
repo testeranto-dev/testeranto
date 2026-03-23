@@ -1,30 +1,47 @@
 # Rusto - Testeranto Implementation for Rust
 
-Rusto is a Rust implementation of the Testeranto BDD testing framework.
+Rusto is a Rust implementation of the Testeranto testing framework.
 
 ## Overview
 
-This crate provides a Rust implementation of the Testeranto testing framework, following the same patterns as other language implementations (TypeScript, Python, Go, Ruby).
+This crate provides a Rust implementation of the Testeranto testing framework, following the same patterns as
+other language implementations (TypeScript, Python, Go, Ruby).
+
+## Status
+
+- **BDD Pattern (Given-When-Then)**: Fully implemented and production-ready (3 verbs)
+- **TDT Pattern (Value-Should-Expected)**: Core classes implemented (BaseValue, BaseShould, BaseExpected), integration in progress (3 verbs)
+- **Describe-It Pattern (AAA/Arrange-Act-Assert)**: Core classes implemented (BaseDescribe, BaseIt), integration in progress (2 verbs)
+- BDD is recommended for production use; TDT and Describe-It patterns are available for experimentation
 
 ## Structure
 
 - `src/types.rs`: Core type definitions and traits
 - `src/base_suite.rs`: BaseSuite struct for test suites
-- `src/base_given.rs`: BaseGiven struct for Given conditions
-- `src/base_when.rs`: BaseWhen struct for When actions
-- `src/base_then.rs`: BaseThen struct for Then assertions
+- `src/base_given.rs`: BaseGiven struct for Given conditions (BDD)
+- `src/base_when.rs`: BaseWhen struct for When actions (BDD)
+- `src/base_then.rs`: BaseThen struct for Then assertions (BDD)
+- `src/base_value.rs`: BaseValue struct for Value setup (TDT)
+- `src/base_should.rs`: BaseShould struct for Should actions (TDT)
+- `src/base_expected.rs`: BaseExpected struct for Expected checks (TDT)
+- `src/base_describe.rs`: BaseDescribe struct for Describe setup (Describe-It/AAA)
+- `src/base_it.rs`: BaseIt struct for It actions (Describe-It/AAA)
 - `src/simple_adapter.rs`: SimpleTestAdapter default implementation
 - `src/rusto.rs`: Main Rusto struct and entry point
 - `src/reverse_integration.rs`: Integration with native Rust test runner
 - `src/ast_transformer.rs`: AST transformation for native Rust tests
-- `src/flavored.rs`: Idiomatic Rust macros for native test integration
 
-## Features
+## Key Features
 
-### 1. Multiple Testing Patterns
-Rusto supports multiple testing methodologies through a unified architecture:
+### 1. Artifactory System (Replaces PM)
+- Context-aware file operations with structured paths
+- `create_artifactory()` method in `Rusto` struct
+- Path format: `{basePath}/suite-{N}/given-{key}/when-{index} filename.txt`
+- Supports `write_file_sync`, `screenshot`, `open_screencast`, `close_screencast`
 
-#### BDD Pattern (Given-When-Then)
+### 2. Multiple Testing Patterns
+
+#### BDD Pattern (Given-When-Then) - Fully Implemented
 ```rust
 use rusto::prelude::*;
 use rusto::{BaseGiven, BaseWhen, BaseThen};
@@ -32,56 +49,29 @@ use rusto::{BaseGiven, BaseWhen, BaseThen};
 // Traditional BDD pattern
 ```
 
-#### AAA Pattern (Arrange-Act-Assert)
+#### TDT Pattern (Value-Should-Expected) - Core Classes Available
 ```rust
 use rusto::prelude::*;
-use rusto::{BaseArrange, BaseAct, BaseAssert};
-
-// AAA pattern for unit testing
-```
-
-#### TDT Pattern (Table Driven Testing)
-```rust
-use rusto::prelude::*;
-use rusto::{BaseMap, BaseFeed, BaseValidate};
+use rusto::{BaseValue, BaseShould, BaseExpected};
 
 // Table-driven testing for data-driven tests
 ```
 
-### 2. AST Transformation
-Rusto can transform native Rust tests (`#[test]` functions) to Testeranto-compatible tests:
-
-```rust
-use rusto::{transform_rust_tests, detect_rust_tests};
-
-// Detect tests in a file
-let test_names = detect_rust_tests("tests/my_test.rs")?;
-println!("Found tests: {:?}", test_names);
-
-// Transform tests to Testeranto format
-let transformed = transform_rust_tests("tests/my_test.rs")?;
-println!("Transformed code:\n{}", transformed);
-```
-
-### 3. Native Test Integration
-Run Testeranto tests through `cargo test`:
-
-```rust
-use rusto::reverse_integration::RustoReverseIntegration;
-
-// Convert Rusto instance to native test
-let native_test = rusto_instance.as_native_test(&config);
-```
-
-### 4. Standard Testeranto API
-Use the standard Testeranto API for new tests:
-
+#### Describe-It Pattern (AAA/Arrange-Act-Assert) - Core Classes Available
 ```rust
 use rusto::prelude::*;
+use rusto::{BaseDescribe, BaseIt};
 
-// Create test specification, implementation, and adapter
-// ... (standard Testeranto pattern)
+// Describe-It pattern (AAA with 2 verbs)
 ```
+
+**Note**: The AAA (Arrange-Act-Assert) pattern is implemented as the Describe-It pattern with 2 verbs: "Describe" for Arrange and "It" for combined Act and Assert phases.
+
+### 3. AST Transformation
+Rusto can transform native Rust tests (`#[test]` functions) to Testeranto-compatible tests.
+
+### 4. Native Test Integration
+Run Testeranto tests through `cargo test`.
 
 ## Usage
 
@@ -94,46 +84,43 @@ Add to your `Cargo.toml`:
 rusto = { path = "./src/lib/rusto" }
 ```
 
-### AST Transformation Example
+### Example Usage
 
 ```rust
-use rusto::RustASTTransformer;
+use rusto::prelude::*;
 
-// Transform existing Rust tests to Testeranto
-let transformed = RustASTTransformer::transform_file("src/tests.rs")?;
-std::fs::write("src/tests_transformed.rs", transformed)?;
-```
+// Create test implementation
+let impl = ITestImplementation {
+    suites: /* ... */,
+    givens: /* ... */,
+    whens: /* ... */,
+    thens: /* ... */,
+    values: /* ... */,
+    shoulds: /* ... */,
+    expecteds: /* ... */,
+    describes: /* ... */,
+    its: /* ... */,
+};
 
-## Testing
-
-Run tests with:
-
-```bash
-cargo test
-```
-
-To run the example:
-
-```bash
-cargo test --example calculator_test
+// Create Rusto instance
+let rusto = rusto(
+    input,
+    test_specification,
+    impl,
+    Box::new(SimpleTestAdapter::new()),
+    ITTestResourceRequest::default(),
+);
 ```
 
 ## Integration
 
 Rusto follows the unified Testeranto architecture:
 
-1. **AST Transformation**: Convert native tests to Testeranto format
+1. **Artifactory**: Context-aware file operations replacing PM
 2. **Test Resource Configuration**: Passed as JSON string
 3. **Results Output**: Consistent format across all languages
-4. **Async Support**: Built on Tokio for async operations
-5. **Error Handling**: Uses `thiserror` for comprehensive error types
-
-## Future Enhancements
-
-1. **Complete AST Transformation**: Full parsing and transformation of test bodies
-2. **WebSocket Support**: Real-time test reporting
-3. **More Adapters**: Specialized adapter implementations
-4. **Performance Optimizations**: Lever Rust's performance characteristics
+4. **Async Support**: Built on async/await with Tokio
+5. **Cross-language compatibility**: Matches TypeScript (tiposkripto) implementation
 
 ## See Also
 
@@ -141,3 +128,7 @@ Rusto follows the unified Testeranto architecture:
 - [Pitono](../pitono/) - Python implementation
 - [Golingvu](../golingvu/) - Go implementation
 - [Rubeno](../rubeno/) - Ruby implementation
+- [Kafe](../kafe/) - Java implementation
+```
+=======
+```

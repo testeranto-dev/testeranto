@@ -1,23 +1,21 @@
-import { TestTypeParams_any } from "./CoreTypes.js";
-import { ITestResourceConfiguration } from "./types.js";
+import type { TestTypeParams_any } from "./CoreTypes.js";
+import type { ITestResourceConfiguration } from "./types.js";
 
 /**
- * BaseCheck is the unified base class for all verification phases.
+ * BaseCheck is the internal unified base class for all verification phases.
  * It covers BDD's Then, AAA's Assert, and TDT's Validate.
- * @deprecated Use BaseThen, BaseAssert, or BaseValidate for specific patterns
+ * This class is not exposed to users - use BaseThen, BaseExpected, or BaseAssert instead.
  */
 export abstract class BaseCheck<I extends TestTypeParams_any> {
   public name: string;
-  checkCB: (
-    storeState: I["iselection"]
-  ) => Promise<I["then"]>;
+  checkCB: (storeState: I["iselection"]) => Promise<I["then"]>;
   error: boolean;
   artifacts: string[] = [];
   status: boolean | undefined;
 
   constructor(
     name: string,
-    checkCB: (val: I["iselection"]) => Promise<I["then"]>
+    checkCB: (val: I["iselection"]) => Promise<I["then"]>,
   ) {
     this.name = name;
     this.checkCB = checkCB;
@@ -29,8 +27,8 @@ export abstract class BaseCheck<I extends TestTypeParams_any> {
     if (typeof path !== "string") {
       throw new Error(
         `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
+          path,
+        )}`,
       );
     }
     const normalizedPath = path.replace(/\\/g, "/");
@@ -50,13 +48,15 @@ export abstract class BaseCheck<I extends TestTypeParams_any> {
   abstract verifyCheck(
     store: I["istore"],
     checkCB: (s: I["iselection"]) => Promise<I["isubject"]>,
-    testResourceConfiguration: ITestResourceConfiguration
+    testResourceConfiguration: ITestResourceConfiguration,
+    artifactory?: any,
   ): Promise<I["iselection"]>;
 
   async test(
     store: I["istore"],
-    testResourceConfiguration,
-    filepath: string
+    testResourceConfiguration: any,
+    filepath: string,
+    artifactory?: any,
   ): Promise<I["then"] | undefined> {
     const addArtifact = this.addArtifact.bind(this);
 
@@ -76,7 +76,8 @@ export abstract class BaseCheck<I extends TestTypeParams_any> {
             throw e;
           }
         },
-        testResourceConfiguration
+        testResourceConfiguration,
+        artifactory,
       );
       this.status = true;
       return x;
@@ -88,4 +89,7 @@ export abstract class BaseCheck<I extends TestTypeParams_any> {
   }
 }
 
-export type IChecks<I extends TestTypeParams_any> = Record<string, BaseCheck<I>>;
+export type IChecks<I extends TestTypeParams_any> = Record<
+  string,
+  BaseCheck<I>
+>;

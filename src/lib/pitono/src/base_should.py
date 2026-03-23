@@ -1,0 +1,37 @@
+from .base_action import BaseAction
+from typing import Any, Callable
+
+class BaseShould(BaseAction):
+    def __init__(self, name: str, should_cb: Callable[[Any], Any]):
+        super().__init__(name, should_cb)
+        self.row_index = -1
+        self.row_data = None
+    
+    # Set the current row data before processing
+    def set_row_data(self, index: int, data: Any):
+        self.row_index = index
+        self.row_data = data
+    
+    async def perform_action(
+        self,
+        store: Any,
+        action_cb: Callable[[Any], Any],
+        test_resource,
+        artifactory: Any = None
+    ) -> Any:
+        # Default implementation
+        if callable(action_cb):
+            return action_cb(store)
+        return store
+    
+    # Alias test to process_row for TDT pattern
+    async def process_row(
+        self,
+        store: Any,
+        test_resource_configuration,
+        row_index: int,
+        row_data: Any,
+        artifactory: Any = None
+    ):
+        self.set_row_data(row_index, row_data)
+        return await super().test(store, test_resource_configuration, artifactory)

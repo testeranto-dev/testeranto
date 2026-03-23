@@ -1,3 +1,7 @@
+---
+status: doing
+---
+
 This ticket tracks the final integration of the vscode extension and stakeholders html report.
 
 For both, we want to folow a similar pattern of consolidating a lot information into a small place

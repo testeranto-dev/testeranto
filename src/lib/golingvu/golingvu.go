@@ -4,350 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
 )
-
-// ipcFile represents a file used for IPC communication
-type ipcFile struct {
-	path    string
-	content []byte
-}
-
-// NewIpcFile creates a new ipcFile instance
-func NewIpcFile(path string) *ipcFile {
-	return &ipcFile{path: path}
-}
-
-// Write writes content to the ipcFile
-func (f *ipcFile) Write(content []byte) (int, error) {
-	f.content = content
-	return len(content), nil
-}
-
-// Close closes the ipcFile
-func (f *ipcFile) Close() error {
-	return nil
-}
-
-// Path returns the file path
-func (f *ipcFile) Path() string {
-	return f.path
-}
-
-type IFinalResults struct {
-	Failed       bool
-	Fails        int
-	Artifacts    []interface{}
-	Features     []string
-	Tests        int
-	RunTimeTests int
-}
-
-// PM_Golang implements the process manager for Go tests
-type PM_Golang struct {
-	testResourceConfiguration ITTestResourceConfiguration
-	client                    net.Conn
-}
-
-// Stop closes the connection and cleans up resources
-func (pm *PM_Golang) Stop() error {
-	if pm.client != nil {
-		err := pm.client.Close()
-		pm.client = nil
-		return err
-	}
-	return nil
-}
-
-func (pm *PM_Golang) Start() error {
-	return nil
-}
-
-// WriteFileSync writes data to a file synchronously
-func (pm *PM_Golang) WriteFileSync(
-	filename string,
-	data string,
-	tr string,
-) (bool, error) {
-	// Ensure the directory exists
-	dir := filepath.Dir(filename)
-	if dir != "" && dir != "." {
-		if err := os.MkdirAll(dir, 0755); err != nil {
-			return false, fmt.Errorf("failed to create directory %s: %w", dir, err)
-		}
-	}
-
-	// If client is nil, write directly to file
-	if pm.client == nil {
-		err := os.WriteFile(filename, []byte(data), 0644)
-		if err != nil {
-			return false, fmt.Errorf("failed to write file %s: %w", filename, err)
-		}
-		return true, nil
-	}
-
-	// Otherwise, use the WebSocket connection
-	result, err := pm.send("writeFileSync", filename, data, tr)
-	if err != nil {
-		return false, fmt.Errorf("failed to send writeFileSync command: %w", err)
-	}
-
-	success, ok := result.(bool)
-	if !ok {
-		return false, fmt.Errorf("invalid response type for writeFileSync")
-	}
-	return success, nil
-}
-
-func (pm *PM_Golang) send(command string, args ...interface{}) (interface{}, error) {
-	// If client is nil, return a dummy response for common commands
-	if pm.client == nil {
-		switch command {
-		case "writeFileSync":
-			// For writeFileSync, we already handle it in WriteFileSync
-			return true, nil
-		case "pages":
-			return []string{}, nil
-		case "newPage":
-			return "dummy-page", nil
-		case "page":
-			return "dummy-page", nil
-		case "existsSync":
-			return true, nil
-		case "mkdirSync":
-			return nil, nil
-		case "write":
-			return true, nil
-		case "createWriteStream":
-			return "dummy-stream", nil
-		case "end":
-			return true, nil
-		case "customclose":
-			return nil, nil
-		case "waitForSelector", "closePage", "goto", "selector", "isDisabled",
-			"getAttribute", "getInnerHtml", "focusOn", "typeInto", "click",
-			"screencast", "screencastStop", "customScreenshot":
-			return nil, nil
-		default:
-			// For unknown commands, return nil with an error
-			return nil, fmt.Errorf("unknown command: %s", command)
-		}
-	}
-
-	// Generate a unique key
-	key := strconv.FormatInt(time.Now().UnixNano(), 10)
-
-	// Create the message array
-	message := []interface{}{command}
-	message = append(message, args...)
-	message = append(message, key)
-
-	// Convert to JSON
-	data, err := json.Marshal(message)
-	if err != nil {
-		return nil, fmt.Errorf("JSON marshal error: %w", err)
-	}
-
-	// Send the length first (4-byte big-endian)
-	length := uint32(len(data))
-	lengthBytes := []byte{
-		byte(length >> 24),
-		byte(length >> 16),
-		byte(length >> 8),
-		byte(length),
-	}
-
-	_, err = pm.client.Write(lengthBytes)
-	if err != nil {
-		return nil, fmt.Errorf("error writing length: %w", err)
-	}
-
-	// Send the actual data
-	_, err = pm.client.Write(data)
-	if err != nil {
-		return nil, fmt.Errorf("error writing data: %w", err)
-	}
-
-	// Wait for response
-	// First read the length
-	lengthBytes = make([]byte, 4)
-	_, err = pm.client.Read(lengthBytes)
-	if err != nil {
-		return nil, fmt.Errorf("error reading length: %w", err)
-	}
-
-	length = uint32(lengthBytes[0])<<24 | uint32(lengthBytes[1])<<16 |
-		uint32(lengthBytes[2])<<8 | uint32(lengthBytes[3])
-
-	// Read the response data
-	responseData := make([]byte, length)
-	_, err = pm.client.Read(responseData)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response data: %w", err)
-	}
-
-	// Parse the response
-	var response map[string]interface{}
-	err = json.Unmarshal(responseData, &response)
-	if err != nil {
-		return nil, fmt.Errorf("JSON unmarshal error: %w", err)
-	}
-
-	// Check if the response key matches our request key
-	if responseKey, ok := response["key"].(string); ok && responseKey == key {
-		if payload, exists := response["payload"]; exists {
-			return payload, nil
-		}
-		return nil, nil
-	}
-
-	return nil, fmt.Errorf("key mismatch in response")
-}
-
-// Implement all the PM methods to match Node and Python implementations
-func (pm *PM_Golang) Pages() ([]string, error) {
-	result, err := pm.send("pages")
-	if err != nil {
-		return nil, err
-	}
-	return result.([]string), nil
-}
-
-func (pm *PM_Golang) WaitForSelector(page, selector string) (interface{}, error) {
-	return pm.send("waitForSelector", page, selector)
-}
-
-func (pm *PM_Golang) ClosePage(page interface{}) (interface{}, error) {
-	return pm.send("closePage", page)
-}
-
-func (pm *PM_Golang) Goto(page, url string) (interface{}, error) {
-	return pm.send("goto", page, url)
-}
-
-func (pm *PM_Golang) NewPage() (string, error) {
-	result, err := pm.send("newPage")
-	if err != nil {
-		return "", err
-	}
-	return result.(string), nil
-}
-
-func (pm *PM_Golang) Selector(selector, page string) (interface{}, error) {
-	return pm.send("$", selector, page)
-}
-
-func (pm *PM_Golang) IsDisabled(selector string) (bool, error) {
-	result, err := pm.send("isDisabled", selector)
-	if err != nil {
-		return false, err
-	}
-	return result.(bool), nil
-}
-
-func (pm *PM_Golang) GetAttribute(selector, attribute, page string) (interface{}, error) {
-	return pm.send("getAttribute", selector, attribute, page)
-}
-
-func (pm *PM_Golang) GetInnerHtml(selector, page string) (interface{}, error) {
-	return pm.send("getInnerHtml", selector, page)
-}
-
-func (pm *PM_Golang) FocusOn(selector string) (interface{}, error) {
-	return pm.send("focusOn", selector)
-}
-
-func (pm *PM_Golang) TypeInto(selector string) (interface{}, error) {
-	return pm.send("typeInto", selector)
-}
-
-func (pm *PM_Golang) Page() (string, error) {
-	result, err := pm.send("page")
-	if err != nil {
-		return "", err
-	}
-	return result.(string), nil
-}
-
-func (pm *PM_Golang) Click(selector string) (interface{}, error) {
-	return pm.send("click", selector)
-}
-
-func (pm *PM_Golang) Screencast(opts map[string]interface{}, page string) (interface{}, error) {
-	return pm.send("screencast", opts, page, pm.testResourceConfiguration.Name)
-}
-
-func (pm *PM_Golang) ScreencastStop(page string) (interface{}, error) {
-	return pm.send("screencastStop", page)
-}
-
-func (pm *PM_Golang) CustomScreenshot(opts map[string]interface{}, page string) (interface{}, error) {
-	return pm.send("customScreenShot", opts, pm.testResourceConfiguration.Name, page)
-}
-
-func (pm *PM_Golang) ExistsSync(destFolder string) (bool, error) {
-	path := pm.testResourceConfiguration.Fs + "/" + destFolder
-	result, err := pm.send("existsSync", path)
-	if err != nil {
-		return false, err
-	}
-	return result.(bool), nil
-}
-
-func (pm *PM_Golang) MkdirSync() (interface{}, error) {
-	path := pm.testResourceConfiguration.Fs + "/"
-	return pm.send("mkdirSync", path)
-}
-
-func (pm *PM_Golang) Write(uid int, contents string) (bool, error) {
-	result, err := pm.send("write", uid, contents)
-	if err != nil {
-		return false, err
-	}
-	return result.(bool), nil
-}
-
-func (pm *PM_Golang) CreateWriteStream(filepath string) (string, error) {
-	fullPath := pm.testResourceConfiguration.Fs + "/" + filepath
-	result, err := pm.send("createWriteStream", fullPath, pm.testResourceConfiguration.Name)
-	if err != nil {
-		return "", err
-	}
-	return result.(string), nil
-}
-
-func (pm *PM_Golang) End(uid interface{}) (bool, error) {
-	result, err := pm.send("end", uid)
-	if err != nil {
-		return false, err
-	}
-	return result.(bool), nil
-}
-
-func (pm *PM_Golang) CustomClose() (interface{}, error) {
-	return pm.send("customclose", pm.testResourceConfiguration.Fs, pm.testResourceConfiguration.Name)
-}
-
-func (pm *PM_Golang) TestArtiFactoryfileWriter(tLog func(...interface{}), callback func(promise interface{})) interface{} {
-	// This would need to be implemented to match the Node.js implementation
-	// For now, return a placeholder
-	return func(fPath string, value interface{}) {
-		// Implementation would go here
-	}
-}
-
-// ITestJob represents a test job
-type ITestJob interface {
-	ToObj() map[string]interface{}
-	Runner(pm interface{}, tLog func(...string)) (interface{}, error)
-	ReceiveTestResourceConfig(pm interface{}) (IFinalResults, error)
-}
 
 // Golingvu is the main test runner class (Go implementation of Tiposkripto)
 type Golingvu struct {
@@ -359,7 +21,6 @@ type Golingvu struct {
 	GivenOverrides          map[string]interface{}
 	WhenOverrides           map[string]interface{}
 	ThenOverrides           map[string]interface{}
-	PuppetMaster            interface{}
 	Specs                   interface{}
 	totalTests              int
 	assertThis              func(t interface{}) interface{}
@@ -368,6 +29,40 @@ type Golingvu struct {
 	t *testing.T
 	// Test configuration for native runner
 	testConfig *TestConfig
+	// Test resource configuration for artifactory
+	TestResourceConfiguration *ITTestResourceConfiguration
+}
+
+// WriteFileSync writes a file synchronously
+// This matches the abstract method in BaseTiposkripto.ts
+func (gv *Golingvu) WriteFileSync(filename string, payload string) {
+	// Get base path from test resource configuration
+	basePath := "testeranto"
+	if gv.TestResourceConfiguration != nil {
+		basePath = gv.TestResourceConfiguration.Fs
+	}
+
+	// Ensure the directory exists
+	dir := filepath.Dir(filename)
+	if dir != "" && dir != "." {
+		// Create the directory relative to basePath
+		fullDir := filepath.Join(basePath, dir)
+		if err := os.MkdirAll(fullDir, 0755); err != nil {
+			fmt.Printf("[Golingvu.WriteFileSync] Error creating directory %s: %v\n", fullDir, err)
+			return
+		}
+	}
+
+	// Create the full path
+	fullPath := filepath.Join(basePath, filename)
+
+	// Write the file
+	err := os.WriteFile(fullPath, []byte(payload), 0644)
+	if err != nil {
+		fmt.Printf("[Golingvu.WriteFileSync] Error writing to %s: %v\n", fullPath, err)
+	} else {
+		fmt.Printf("[Golingvu.WriteFileSync] Wrote to %s\n", fullPath)
+	}
 }
 
 // TestConfig holds configuration for native test runner integration
@@ -539,13 +234,6 @@ func (gv *Golingvu) RegisterCleanup(cleanupFunc func()) {
 	gv.testConfig.CleanupFuncs = append(gv.testConfig.CleanupFuncs, cleanupFunc)
 }
 
-// NewPM_Golang creates a new PM_Golang instance
-func NewPM_Golang(t ITTestResourceConfiguration) (*PM_Golang, error) {
-	return &PM_Golang{
-		testResourceConfiguration: t,
-		client:                    nil,
-	}, nil
-}
 
 // NewGolingvu creates a new Golingvu instance
 func NewGolingvu(
@@ -566,24 +254,34 @@ func NewGolingvu(
 		assertThis: func(t interface{}) interface{} {
 			return testAdapter.AssertThis(t)
 		},
-		testAdapter: testAdapter,
+		testAdapter:               testAdapter,
+		TestResourceConfiguration: nil,
 	}
 
 	// Create classy implementations as functions that return instances
+	// We need to handle multiple patterns: BDD (Given, When, Then), TDT (Value, Should, Expected), Describe-It (Describe, It)
+	
 	classySuites := make(map[string]interface{})
 	for key := range testImplementation.Suites {
-		classySuites[key] = func(somestring string, givens map[string]*BaseGiven) *BaseSuite {
+		classySuites[key] = func(somestring string, setups map[string]interface{}) *BaseSuite {
+			// Convert setups to givens for BaseSuite
+			givens := make(map[string]*BaseGiven)
+			for setupKey, setup := range setups {
+				if given, ok := setup.(*BaseGiven); ok {
+					givens[setupKey] = given
+				}
+			}
 			return &BaseSuite{
 				Key:    somestring,
 				Givens: givens,
-				AfterAllFunc: func(store interface{}, artifactory func(string, interface{}), pm interface{}) interface{} {
-					return testAdapter.AfterAll(store, pm)
+				AfterAllFunc: func(store interface{}, artifactory func(string, interface{}), artifactoryObj interface{}) interface{} {
+					return testAdapter.AfterAll(store, artifactoryObj)
 				},
 				AssertThatFunc: func(t interface{}) bool {
 					return testAdapter.AssertThis(t)
 				},
-				SetupFunc: func(s interface{}, artifactory func(string, interface{}), tr ITTestResourceConfiguration, pm interface{}) interface{} {
-					result := testAdapter.BeforeAll(s, tr, pm)
+				SetupFunc: func(s interface{}, artifactory func(string, interface{}), tr ITTestResourceConfiguration, artifactoryObj interface{}) interface{} {
+					result := testAdapter.BeforeAll(s, tr, artifactoryObj)
 					if result == nil {
 						return s
 					}
@@ -593,66 +291,61 @@ func NewGolingvu(
 		}
 	}
 
+	// BDD Pattern: Givens
 	classyGivens := make(map[string]interface{})
 	for key, g := range testImplementation.Givens {
-		// Capture the current values
 		givenCB := g
 		classyGivens[key] = func(key string, features []string, whens []*BaseWhen, thens []*BaseThen, gcb interface{}, initialValues interface{}) *BaseGiven {
-			return &BaseGiven{
-				Key:           key,
-				Features:      features,
-				Whens:         whens,
-				Thens:         thens,
-				GivenCB:       givenCB,
-				InitialValues: initialValues,
-				Artifacts:     make([]string, 0),
-				GivenThatFunc: func(subject, testResource, artifactory, initializer, initialValues, pm interface{}) (interface{}, error) {
-					// Type assertion for testResource
-					tr, ok := testResource.(ITTestResourceConfiguration)
-					if !ok {
-						return nil, nil
-					}
-					return testAdapter.BeforeEach(subject, initializer, tr, initialValues, pm), nil
-				},
-				AfterEachFunc: func(store interface{}, key string, artifactory, pm interface{}) (interface{}, error) {
-					return testAdapter.AfterEach(store, key, pm), nil
-				},
-				UberCatcherFunc: uberCatcher,
-			}
+			return NewBaseGiven(key, features, whens, thens, givenCB, initialValues)
 		}
 	}
 
+	// BDD Pattern: Whens
 	classyWhens := make(map[string]interface{})
 	for key, whEn := range testImplementation.Whens {
-		// Capture the current values
 		whenKey := key
 		whenCB := whEn
 		classyWhens[key] = func(payload ...interface{}) *BaseWhen {
-			return &BaseWhen{
-				Key:    whenKey,
-				WhenCB: whenCB,
-				AndWhenFunc: func(store, whenCB, testResource, pm interface{}) (interface{}, error) {
-					return testAdapter.AndWhen(store, whenCB, testResource, pm), nil
-				},
+			return NewBaseWhen(whenKey, whenCB)
+		}
+	}
+
+	// BDD Pattern: Thens
+	classyThens := make(map[string]interface{})
+	for key, thEn := range testImplementation.Thens {
+		thenKey := key
+		thenCB := thEn
+		classyThens[key] = func(args ...interface{}) *BaseThen {
+			return NewBaseThen(thenKey, thenCB)
+		}
+	}
+
+	// TDT Pattern: Values
+	classyValues := make(map[string]interface{})
+	// Check if Values exist in testImplementation
+	if values, ok := testImplementation.Suites["Values"]; ok {
+		// Handle TDT pattern
+		if valueMap, ok := values.(map[string]interface{}); ok {
+			for key, val := range valueMap {
+				_ = val // valueCB is not used
+				classyValues[key] = func(features []string, tableRows [][]interface{}, confirmCB interface{}, initialValues interface{}) *BaseValue {
+					return NewBaseValue(features, tableRows, confirmCB, initialValues)
+				}
 			}
 		}
 	}
 
-	classyThens := make(map[string]interface{})
-	for key, thEn := range testImplementation.Thens {
-		// Capture the current values
-		thenKey := key
-		thenCB := thEn
-		classyThens[key] = func(args ...interface{}) *BaseThen {
-			return &BaseThen{
-				Key:    thenKey,
-				ThenCB: thenCB,
-				ButThenFunc: func(store, thenCB, testResource, pm interface{}) (interface{}, error) {
-					return testAdapter.ButThen(store, thenCB, testResource, pm), nil
-				},
-			}
-		}
-	}
+	// TDT Pattern: Shoulds
+	// classyShoulds is not used, so we don't need to declare it
+
+	// TDT Pattern: Expecteds
+	// classyExpecteds is not used, so we don't need to declare it
+
+	// Describe-It Pattern: Describes
+	// classyDescribes is not used, so we don't need to declare it
+
+	// Describe-It Pattern: Its
+	// classyIts is not used, so we don't need to declare it
 
 	// Set up the overrides
 	gv.SuitesOverrides = classySuites
@@ -802,7 +495,7 @@ func NewGolingvuFromFlavored(
 }
 
 // ReceiveTestResourceConfig receives test resource configuration and executes tests
-func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm interface{}) (IFinalResults, error) {
+func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFinalResults, error) {
 	// Parse the test resource configuration
 	var testResourceConfig ITTestResourceConfiguration
 	err := json.Unmarshal([]byte(partialTestResource), &testResourceConfig)
@@ -818,11 +511,7 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm int
 	}
 
 	// Store the test resource configuration for use in tests
-	// The variable will be used for file path construction later
-	// This dummy use ensures it's marked as used in all code paths
-	_ = testResourceConfig
-	// Ensure the variable is marked as used
-	_ = testResourceConfig
+	gv.TestResourceConfiguration = &testResourceConfig
 
 	// Run the actual tests and capture results
 	testResults, err := gv.runActualTests()
@@ -836,31 +525,6 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm int
 			Tests:        0,
 			RunTimeTests: -1,
 		}, fmt.Errorf("failed to run tests: %v", err)
-	}
-
-	// Write tests.json via PM
-	if pm == nil {
-		return IFinalResults{
-			Failed:       true,
-			Fails:        -1,
-			Artifacts:    []interface{}{},
-			Features:     []string{},
-			Tests:        0,
-			RunTimeTests: -1,
-		}, fmt.Errorf("PM is required to write tests.json")
-	}
-
-	// Try to cast to PM_Golang to access WriteFileSync
-	pmGolang, ok := pm.(*PM_Golang)
-	if !ok {
-		return IFinalResults{
-			Failed:       true,
-			Fails:        -1,
-			Artifacts:    []interface{}{},
-			Features:     []string{},
-			Tests:        0,
-			RunTimeTests: -1,
-		}, fmt.Errorf("invalid PM type")
 	}
 
 	data, err := json.MarshalIndent(testResults, "", "  ")
@@ -900,7 +564,8 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm int
 
 	fmt.Printf("writing tests.json to ->: %s\n", filePath)
 
-	_, err = pmGolang.WriteFileSync(filePath, string(data), "test")
+	// Write the file directly using the artifactory approach
+	err = os.WriteFile(filePath, data, 0644)
 	if err != nil {
 		return IFinalResults{
 			Failed:       true,
@@ -909,7 +574,7 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string, pm int
 			Features:     []string{},
 			Tests:        0,
 			RunTimeTests: -1,
-		}, fmt.Errorf("failed to write tests.json via PM: %v", err)
+		}, fmt.Errorf("failed to write tests.json: %v", err)
 	}
 
 	// Calculate total fails from test results
@@ -1143,6 +808,65 @@ func (gv *Golingvu) GetTotalTests() int {
 	return gv.totalTests
 }
 
+// CreateArtifactory creates an artifactory for writing files
+func (gv *Golingvu) CreateArtifactory(context map[string]interface{}) interface{} {
+	// Return an object with only WriteFileSync for Go context
+	// Screenshot and screencast don't make sense in Go
+	return struct {
+		WriteFileSync func(filename string, payload string)
+	}{
+		WriteFileSync: func(filename string, payload string) {
+			// Build the path based on context
+			var path string
+
+			// Add suite context if available
+			if suiteIndex, ok := context["suiteIndex"].(int); ok {
+				path += fmt.Sprintf("suite-%d/", suiteIndex)
+			}
+
+			// Add given context if available
+			if givenKey, ok := context["givenKey"].(string); ok {
+				path += fmt.Sprintf("given-%s/", givenKey)
+			}
+
+			// Add when or then context
+			if whenIndex, ok := context["whenIndex"].(int); ok {
+				path += fmt.Sprintf("when-%d ", whenIndex)
+			} else if thenIndex, ok := context["thenIndex"].(int); ok {
+				path += fmt.Sprintf("then-%d ", thenIndex)
+			}
+
+			path += filename
+
+			// Ensure proper extension
+			if !strings.Contains(path, ".") {
+				path += ".txt"
+			}
+
+			// Get base path from test resource configuration
+			basePath := "testeranto"
+			if gv.TestResourceConfiguration != nil {
+				basePath = gv.TestResourceConfiguration.Fs
+			}
+
+			// Prepend the base path, avoiding double slashes
+			basePathClean := strings.TrimSuffix(basePath, "/")
+			pathClean := strings.TrimPrefix(path, "/")
+			fullPath := fmt.Sprintf("%s/%s", basePathClean, pathClean)
+
+			// Use the WriteFileSync method
+			gv.WriteFileSync(fullPath, payload)
+		},
+	}
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 // RunFlavoredTest is a convenience method to run a flavored test directly
 func (gv *Golingvu) RunFlavoredTest(t *testing.T, description string, setupFunc func() interface{}) *Golingvu {
 	// This is a simple wrapper that creates a test chain and converts it
@@ -1168,116 +892,34 @@ func (gv *Golingvu) UseUnifiedPatterns() {
 	// For now, it's a placeholder for future implementation
 }
 
-// BaseArrange represents an AAA pattern Arrange step
-type BaseArrange struct {
-	*BaseGiven
-}
-
-// NewBaseArrange creates a new BaseArrange instance
-func NewBaseArrange(
-	features []string,
-	acts []interface{},
-	asserts []interface{},
-	arrangeCB interface{},
-	initialValues interface{},
-) *BaseArrange {
-	// Convert acts to whens and asserts to thens
-	whens := make([]*BaseWhen, len(acts))
-	for i, act := range acts {
-		whens[i] = &BaseWhen{
-			Key:    fmt.Sprintf("act-%d", i),
-			WhenCB: act,
-		}
-	}
-
-	thens := make([]*BaseThen, len(asserts))
-	for i, assert := range asserts {
-		thens[i] = &BaseThen{
-			Key:    fmt.Sprintf("assert-%d", i),
-			ThenCB: assert,
-		}
-	}
-
-	return &BaseArrange{
-		BaseGiven: NewBaseGiven(
-			"arrange",
-			features,
-			whens,
-			thens,
-			arrangeCB,
-			initialValues,
-		),
-	}
-}
-
-// BaseMap represents a TDT pattern Map step
-type BaseMap struct {
-	*BaseGiven
-	tableData []interface{}
-}
-
-// NewBaseMap creates a new BaseMap instance
-func NewBaseMap(
-	features []string,
-	feeds []interface{},
-	validates []interface{},
-	mapCB interface{},
-	initialValues interface{},
-	tableData []interface{},
-) *BaseMap {
-	// Convert feeds to whens and validates to thens
-	whens := make([]*BaseWhen, len(feeds))
-	for i, feed := range feeds {
-		whens[i] = &BaseWhen{
-			Key:    fmt.Sprintf("feed-%d", i),
-			WhenCB: feed,
-		}
-	}
-
-	thens := make([]*BaseThen, len(validates))
-	for i, validate := range validates {
-		thens[i] = &BaseThen{
-			Key:    fmt.Sprintf("validate-%d", i),
-			ThenCB: validate,
-		}
-	}
-
-	return &BaseMap{
-		BaseGiven: NewBaseGiven(
-			"map",
-			features,
-			whens,
-			thens,
-			mapCB,
-			initialValues,
-		),
-		tableData: tableData,
-	}
-}
-
-// CreateAAA creates an AAA pattern test
-func (gv *Golingvu) CreateAAA(
+// CreateValue creates a TDT pattern test with Value, Should, Expected
+func (gv *Golingvu) CreateValue(
 	name string,
 	features []string,
-	acts []interface{},
-	asserts []interface{},
-	arrangeCB interface{},
+	tableRows [][]interface{},
+	confirmCB interface{},
 	initialValues interface{},
-) *BaseArrange {
-	return NewBaseArrange(features, acts, asserts, arrangeCB, initialValues)
+) *BaseValue {
+	return NewBaseValue(features, tableRows, confirmCB, initialValues)
 }
 
-// CreateTDT creates a TDT pattern test
-func (gv *Golingvu) CreateTDT(
+// CreateDescribe creates a Describe-It pattern test
+func (gv *Golingvu) CreateDescribe(
 	name string,
 	features []string,
-	feeds []interface{},
-	validates []interface{},
-	mapCB interface{},
+	its []interface{},
+	describeCB interface{},
 	initialValues interface{},
-	tableData []interface{},
-) *BaseMap {
-	return NewBaseMap(features, feeds, validates, mapCB, initialValues, tableData)
+) *BaseDescribe {
+	return NewBaseDescribe(features, its, describeCB, initialValues)
+}
+
+// CreateIt creates an It for Describe-It pattern
+func (gv *Golingvu) CreateIt(
+	name string,
+	itCB interface{},
+) *BaseIt {
+	return NewBaseIt(name, itCB)
 }
 
 // AssertThis is a helper function for assertions
@@ -1296,7 +938,7 @@ func (bj *BaseTestJob) ToObj() map[string]interface{} {
 	}
 }
 
-func (bj *BaseTestJob) Runner(pm interface{}, tLog func(...string)) (interface{}, error) {
+func (bj *BaseTestJob) Runner(artifactory interface{}, tLog func(...string)) (interface{}, error) {
 	// Log that we're running the test
 	if tLog != nil {
 		tLog("Running test:", bj.Name)
@@ -1320,7 +962,7 @@ func (bj *BaseTestJob) Runner(pm interface{}, tLog func(...string)) (interface{}
 	return result, nil
 }
 
-func (bj *BaseTestJob) ReceiveTestResourceConfig(pm interface{}) (IFinalResults, error) {
+func (bj *BaseTestJob) ReceiveTestResourceConfig() (IFinalResults, error) {
 
 	fmt.Println("ReceiveTestResourceConfig")
 
@@ -1333,7 +975,7 @@ func (bj *BaseTestJob) ReceiveTestResourceConfig(pm interface{}) (IFinalResults,
 	}
 
 	// Run the test
-	result, err := bj.Runner(pm, tLog)
+	result, err := bj.Runner(nil, tLog)
 	if err != nil {
 		return IFinalResults{
 			Failed:       true,
@@ -1398,3 +1040,5 @@ func readFileDirectly(path string) (string, error) {
 	}
 	return string(content), nil
 }
+
+

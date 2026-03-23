@@ -15,6 +15,7 @@ public abstract class BaseSuite {
     public boolean failed;
     public int fails;
     public List<String> artifacts;
+    public Object parent; // Reference to parent Kafe instance
     
     public BaseSuite(String name, Map<String, BaseGiven> givens) {
         this.name = name;
@@ -22,7 +23,7 @@ public abstract class BaseSuite {
         this.artifacts = new ArrayList<>();
         this.failed = false;
         this.fails = 0;
-        this.index = 0; // Default index
+        this.index = 0;
     }
     
     public void addArtifact(String path) {
@@ -36,7 +37,6 @@ public abstract class BaseSuite {
         
         for (BaseGiven given : givens.values()) {
             if (given.features != null) {
-                // Safely handle features which might be raw List or Object[]
                 for (Object featureObj : given.features) {
                     String feature = featureObj.toString();
                     if (!seen.containsKey(feature)) {
@@ -74,7 +74,19 @@ public abstract class BaseSuite {
     public Object run(Object input, ITTestResourceConfiguration testResourceConfiguration) {
         this.testResourceConfiguration = testResourceConfiguration;
         
-        Object subject = setup(input, testResourceConfiguration);
+        // Create artifactory for suite
+        Object suiteArtifactory = createSuiteArtifactory();
+        
+        // Call setup with artifactory
+        Object subject;
+        try {
+            subject = setup(input, testResourceConfiguration);
+        } catch (Exception e) {
+            System.err.println("Error in suite setup: " + e.getMessage());
+            this.failed = true;
+            this.fails++;
+            return this;
+        }
         
         fails = 0;
         failed = false;
@@ -83,18 +95,20 @@ public abstract class BaseSuite {
             String gKey = entry.getKey();
             BaseGiven g = entry.getValue();
             try {
-                // Match TypeScript: artifactory is not passed to give()
-                // The give() method will handle this appropriately
+                // Create artifactory for given
+                Object givenArtifactory = createGivenArtifactory(gKey);
+                
                 store = g.give(subject, gKey, testResourceConfiguration, this::assertThat,
-                              null, // artifactory is null to match TypeScript
-                              this.index); // suiteNdx
+                              givenArtifactory, // Pass artifactory as Object
+                              this.index);
                 if (g.failed) {
-                    fails++;
+                    fails += g.fails;
                 }
             } catch (Exception e) {
                 failed = true;
                 fails++;
                 System.err.println("Error in given " + gKey + ": " + e.getMessage());
+                e.printStackTrace();
             }
         }
         
@@ -103,11 +117,47 @@ public abstract class BaseSuite {
         }
         
         try {
+            // Create artifactory for afterAll
+            Object afterAllArtifactory = createSuiteArtifactory();
             afterAll(store);
         } catch (Exception e) {
             System.err.println("Error in after_all: " + e.getMessage());
         }
         
         return this;
+    }
+    
+    private Object createSuiteArtifactory() {
+        if (parent != null) {
+            try {
+                java.lang.reflect.Method createArtifactory = parent.getClass().getMethod("createArtifactory", Map.class);
+                Map<String, Object> context = new HashMap<>();
+                context.put("suiteIndex", this.index);
+                return createArtifactory.invoke(parent, context);
+            } catch (Exception e) {
+                System.err.println("Could not create suite artifactory: " + e.getMessage());
+            }
+        }
+        return null;
+    }
+    
+    private Object createGivenArtifactory(String givenKey) {
+        if (parent != null) {
+            try {
+                java.lang.reflect.Method createArtifactory = parent.getClass().getMethod("createArtifactory", Map.class);
+                Map<String, Object> context = new HashMap<>();
+                context.put("givenKey", givenKey);
+                context.put("suiteIndex", this.index);
+                return createArtifactory.invoke(parent, context);
+            } catch (Exception e) {
+                System.err.println("Could not create given artifactory: " + e.getMessage());
+            }
+        }
+        return null;
+    }
+    
+    // Set parent reference
+    public void setParent(Object parent) {
+        this.parent = parent;
     }
 }

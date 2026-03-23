@@ -24,57 +24,40 @@ class ITTestResourceConfiguration:
 # Universal test adapter with methodology-agnostic terminology
 class IUniversalTestAdapter(Protocol):
     # Lifecycle hooks
-    async def prepare_all(self, input_val: Any, tr: ITTestResourceConfiguration) -> Any:
+    async def prepare_all(self, input_val: Any, tr: ITTestResourceConfiguration, artifactory: Any = None) -> Any:
         ...
     
     async def prepare_each(self, subject: Any, initializer: Callable, 
                           test_resource: ITTestResourceConfiguration, 
-                          initial_values: Any) -> Any:
+                          initial_values: Any,
+                          artifactory: Any = None) -> Any:
         ...
     
     # Execution
     async def execute(self, store: Any, action_cb: Callable, 
-                     test_resource: ITTestResourceConfiguration) -> Any:
+                     test_resource: ITTestResourceConfiguration,
+                     artifactory: Any = None) -> Any:
         ...
     
     # Verification
     async def verify(self, store: Any, check_cb: Callable, 
-                    test_resource: ITTestResourceConfiguration) -> Any:
+                    test_resource: ITTestResourceConfiguration,
+                    artifactory: Any = None) -> Any:
         ...
     
     # Cleanup
-    async def cleanup_each(self, store: Any, key: str) -> Any:
+    async def cleanup_each(self, store: Any, key: str, artifactory: Any = None) -> Any:
         ...
     
-    async def cleanup_all(self, store: Any) -> Any:
+    async def cleanup_all(self, store: Any, artifactory: Any = None) -> Any:
         ...
     
-    # Assertion
-    def assert_this(self, x: Any) -> bool:
+    # Assertion - standardized name across all languages
+    def assert(self, x: Any) -> bool:
         ...
 
-# Legacy BDD adapter for backward compatibility
-class ITestAdapter(IUniversalTestAdapter):
-    # Legacy methods for backward compatibility
-    async def before_all(self, input_val: Any, tr: ITTestResourceConfiguration) -> Any:
-        return await self.prepare_all(input_val, tr)
-    
-    async def after_all(self, store: Any) -> Any:
-        return await self.cleanup_all(store)
-    
-    async def before_each(self, subject: Any, initializer: Any, 
-                         test_resource: ITTestResourceConfiguration, 
-                         initial_values: Any) -> Any:
-        return await self.prepare_each(subject, initializer, test_resource, initial_values)
-    
-    async def after_each(self, store: Any, key: str) -> Any:
-        return await self.cleanup_each(store, key)
-    
-    async def and_when(self, store: Any, when_cb: Any, test_resource: Any) -> Any:
-        return await self.execute(store, when_cb, test_resource)
-    
-    async def but_then(self, store: Any, then_cb: Any, test_resource: Any) -> Any:
-        return await self.verify(store, then_cb, test_resource)
+# ITestAdapter is now just an alias for IUniversalTestAdapter (no legacy methods)
+ITestAdapter = IUniversalTestAdapter
 
 # Test specification function type - matches TypeScript ITestSpecification
 # It can take either 4 or 5 arguments to be flexible

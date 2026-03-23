@@ -47,18 +47,18 @@ type ITestImplementation struct {
 // It uses methodology-agnostic terminology for the new unified architecture.
 type IUniversalTestAdapter interface {
 	// Lifecycle hooks
-	PrepareAll(input interface{}, testResource ITTestResourceConfiguration) (interface{}, error)
-	PrepareEach(subject, initializer interface{}, testResource ITTestResourceConfiguration, initialValues interface{}) (interface{}, error)
+	PrepareAll(input interface{}, testResource ITTestResourceConfiguration, artifactory func(string, interface{})) (interface{}, error)
+	PrepareEach(subject, initializer interface{}, testResource ITTestResourceConfiguration, initialValues interface{}, artifactory func(string, interface{})) (interface{}, error)
 	
 	// Execution
-	Execute(store, actionCB interface{}, testResource ITTestResourceConfiguration) (interface{}, error)
+	Execute(store, actionCB interface{}, testResource ITTestResourceConfiguration, artifactory func(string, interface{})) (interface{}, error)
 	
 	// Verification
-	Verify(store, checkCB interface{}, testResource ITTestResourceConfiguration) (interface{}, error)
+	Verify(store, checkCB interface{}, testResource ITTestResourceConfiguration, artifactory func(string, interface{})) (interface{}, error)
 	
 	// Cleanup
-	CleanupEach(store interface{}, key string) (interface{}, error)
-	CleanupAll(store interface{}) (interface{}, error)
+	CleanupEach(store interface{}, key string, artifactory func(string, interface{})) (interface{}, error)
+	CleanupAll(store interface{}, artifactory func(string, interface{})) (interface{}, error)
 	
 	// Assertion
 	Assert(x interface{}) bool
@@ -66,12 +66,12 @@ type IUniversalTestAdapter interface {
 
 // ITestAdapter defines the legacy interface for backward compatibility.
 type ITestAdapter interface {
-	BeforeAll(input interface{}, tr ITTestResourceConfiguration, pm interface{}) interface{}
-	AfterAll(store interface{}, pm interface{}) interface{}
-	BeforeEach(subject, initializer interface{}, testResource ITTestResourceConfiguration, initialValues interface{}, pm interface{}) interface{}
-	AfterEach(store interface{}, key string, pm interface{}) interface{}
-	AndWhen(store, whenCB interface{}, testResource interface{}, pm interface{}) interface{}
-	ButThen(store, thenCB interface{}, testResource interface{}, pm interface{}) interface{}
+	BeforeAll(input interface{}, tr ITTestResourceConfiguration, artifactory interface{}) interface{}
+	AfterAll(store interface{}, artifactory interface{}) interface{}
+	BeforeEach(subject, initializer interface{}, testResource ITTestResourceConfiguration, initialValues interface{}, artifactory interface{}) interface{}
+	AfterEach(store interface{}, key string, artifactory interface{}) interface{}
+	AndWhen(store, whenCB interface{}, testResource interface{}, artifactory interface{}) interface{}
+	ButThen(store, thenCB interface{}, testResource interface{}, artifactory interface{}) interface{}
 	AssertThis(t interface{}) bool
 }
 
@@ -113,23 +113,59 @@ var DefaultTestResourceRequirement = ITTestResourceRequirement{
 	Fs:   "./",
 }
 
-// Unified Pattern Types
-type ISetups = map[string]interface{}
-type IActions = map[string]interface{}
-type IChecks = map[string]interface{}
+// Unified Pattern Types (internal)
+type ISetups = map[string]*BaseSetup
+type IActions = map[string]*BaseAction
+type IChecks = map[string]*BaseCheck
 
-// AAA Pattern Types
-type IArranges = map[string]interface{}
-type IActs = map[string]interface{}
-type IAsserts = map[string]interface{}
+// User-Facing Pattern Types
+// BDD Pattern
+type IGivens = map[string]*BaseGiven
+type IWhens = map[string]*BaseWhen
+type IThens = map[string]*BaseThen
 
-// TDT Pattern Types
-type IMaps = map[string]interface{}
-type IFeeds = map[string]interface{}
-type IValidates = map[string]interface{}
+// TDT Pattern  
+type IValues = map[string]*BaseValue
+type IShoulds = map[string]*BaseShould
+type IExpecteds = map[string]*BaseExpected
 
-// BDD Pattern Types (legacy)
-type IGivens = map[string]interface{}
-type IWhens = map[string]interface{}
-type IThens = map[string]interface{}
+// Describe-It Pattern
+type IDescribes = map[string]*BaseDescribe
+type IIts = map[string]*BaseIt
+
+// AAA Pattern (Arrange-Act-Assert) - Not implemented per multiArchitecture ticket
+// This pattern is intentionally omitted as it's not part of the current architecture
+// type IArranges = map[string]*BaseArrange
+// type IActs = map[string]*BaseAct  
+// type IAsserts = map[string]*BaseAssert
+
+// TestResourceConfiguration holds configuration for test resources
+type TestResourceConfiguration struct {
+	Name string
+	Fs   string
+}
+
+// IFinalResults represents the final results of test execution
+type IFinalResults struct {
+    Failed       bool
+    Fails        int
+    Artifacts    []interface{}
+    Features     []string
+    Tests        int
+    RunTimeTests int
+}
+
+// ITestJob interface for test execution
+type ITestJob interface {
+    ToObj() map[string]interface{}
+    Runner(artifactory interface{}, tLog func(...string)) (interface{}, error)
+    ReceiveTestResourceConfig() (IFinalResults, error)
+}
+
+// Note: BaseGiven, BaseWhen, BaseThen, BaseSuite, BaseValue, BaseShould,
+// BaseExpected, BaseDescribe, and BaseIt are defined in their respective files.
+// These are not placeholder declarations to avoid duplicate type errors.
+
+// TestResourceConfiguration is a simpler version of ITTestResourceConfiguration.
+// For backward compatibility, use ITTestResourceConfiguration which has more fields.
 

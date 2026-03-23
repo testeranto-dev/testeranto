@@ -1,14 +1,14 @@
-import { TestTypeParams_any } from "./CoreTypes.js";
+import type { TestTypeParams_any } from "./CoreTypes.js";
 
 /**
- * BaseAction is the unified base class for all action phases.
+ * BaseAction is the internal unified base class for all action phases.
  * It covers BDD's When, AAA's Act, and TDT's Feed.
- * @deprecated Use BaseWhen, BaseAct, or BaseFeed for specific patterns
+ * This class is not exposed to users - use BaseWhen, BaseShould, or BaseIt instead.
  */
 export abstract class BaseAction<I extends TestTypeParams_any> {
   public name: string;
   actionCB: (x: I["iselection"]) => I["then"];
-  error: Error;
+  error: Error = null as any;
   artifacts: string[] = [];
   status: boolean | undefined;
 
@@ -16,8 +16,8 @@ export abstract class BaseAction<I extends TestTypeParams_any> {
     if (typeof path !== "string") {
       throw new Error(
         `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
+          path,
+        )}`,
       );
     }
     const normalizedPath = path.replace(/\\/g, "/");
@@ -32,7 +32,8 @@ export abstract class BaseAction<I extends TestTypeParams_any> {
   abstract performAction(
     store: I["istore"],
     actionCB: (x: I["iselection"]) => I["then"],
-    testResource
+    testResource: any,
+    artifactory?: any,
   ): Promise<any>;
 
   toObj() {
@@ -47,12 +48,13 @@ export abstract class BaseAction<I extends TestTypeParams_any> {
     return obj;
   }
 
-  async test(store: I["istore"], testResourceConfiguration) {
+  async test(store: I["istore"], testResourceConfiguration: any, artifactory?: any) {
     try {
       const result = await this.performAction(
         store,
         this.actionCB,
-        testResourceConfiguration
+        testResourceConfiguration,
+        artifactory,
       );
       this.status = true;
       return result;
@@ -64,4 +66,7 @@ export abstract class BaseAction<I extends TestTypeParams_any> {
   }
 }
 
-export type IActions<I extends TestTypeParams_any> = Record<string, BaseAction<I>>;
+export type IActions<I extends TestTypeParams_any> = Record<
+  string,
+  BaseAction<I>
+>;

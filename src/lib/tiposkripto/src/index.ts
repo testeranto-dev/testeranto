@@ -1,12 +1,20 @@
-import { ITestResourceConfiguration } from "./types";
-import { Ibdd_in_any, ITestAdapter, Ibdd_out, ITestImplementation, ITestSpecification } from "./CoreTypes";
-import type BaseTiposkripto from "./BaseTiposkripto.js";
-import { ITTestResourceRequest, defaultTestResourceRequirement } from "./types";
+import type { ITestResourceConfiguration } from "./types";
+import type {
+  IArtifactory,
+  Ibdd_in_any,
+  Ibdd_out_any,
+  IUniversalTestAdapter,
+  ITestAdapter,
+  TestTypeParams_any,
+} from "./CoreTypes";
 
-export const BaseAdapter = <T extends TestTypeParams_any>(): IUniversalTestAdapter<T> => ({
+export const BaseAdapter = <
+  T extends TestTypeParams_any,
+>(): IUniversalTestAdapter<T> => ({
   prepareAll: async (
     input: T["iinput"],
-    testResource: ITestResourceConfiguration
+    testResource: ITestResourceConfiguration,
+    artifactory?: IArtifactory,
   ) => {
     return input as unknown as T["isubject"];
   },
@@ -14,161 +22,349 @@ export const BaseAdapter = <T extends TestTypeParams_any>(): IUniversalTestAdapt
     subject: T["isubject"],
     initializer: (c?: any) => T["given"],
     testResource: ITestResourceConfiguration,
-    initialValues: any
+    initialValues: any,
+    artifactory?: IArtifactory,
   ): Promise<T["istore"]> {
     return subject as unknown as T["istore"];
   },
-  cleanupEach: async (store: T["istore"], key: string) => Promise.resolve(store),
-  cleanupAll: (store: T["istore"]) => undefined,
+  cleanupEach: async (
+    store: T["istore"],
+    key: string,
+    artifactory?: IArtifactory,
+  ) => Promise.resolve(store),
+  cleanupAll: (store: T["istore"], artifactory: IArtifactory) => undefined,
   verify: async (
     store: T["istore"],
     checkCb: T["then"],
-    testResource: ITestResourceConfiguration
+    testResource: ITestResourceConfiguration,
+    artifactory?: IArtifactory,
   ) => {
-    return checkCb(store);
+    return (checkCb as any)(store);
   },
   execute: async (
     store: T["istore"],
     actionCB: T["when"],
-    testResource: ITestResourceConfiguration
+    testResource: ITestResourceConfiguration,
+    artifactory?: IArtifactory,
   ) => {
-    return actionCB(store);
+    return (actionCB as any)(store);
   },
   assert: (x: T["then"]) => x,
 });
 
 export const DefaultAdapter = <T extends TestTypeParams_any>(
-  p: Partial<IUniversalTestAdapter<T>>
+  p: Partial<ITestAdapter<T>>,
 ): IUniversalTestAdapter<T> => {
   const base = BaseAdapter<T>();
+  
+  // Map legacy method names to new ones with proper parameter handling
+  const mapped: any = { ...p };
+  
+  if (p.beforeAll && !p.prepareAll) {
+    mapped.prepareAll = async (
+      input: T["iinput"],
+      testResource: ITestResourceConfiguration,
+      artifactory?: IArtifactory,
+    ) => {
+      // Handle different parameter counts
+      if (p.beforeAll.length >= 3) {
+        return await (p.beforeAll as any)(input, testResource, artifactory);
+      } else if (p.beforeAll.length >= 2) {
+        return await (p.beforeAll as any)(input, testResource);
+      } else {
+        return await (p.beforeAll as any)(input);
+      }
+    };
+  }
+  if (p.beforeEach && !p.prepareEach) {
+    mapped.prepareEach = async (
+      subject: T["isubject"],
+      initializer: (c?: any) => T["given"],
+      testResource: ITestResourceConfiguration,
+      initialValues: any,
+      artifactory?: IArtifactory,
+    ) => {
+      // Handle different parameter counts
+      if (p.beforeEach!.length >= 5) {
+        return await (p.beforeEach as any)(subject, initializer, testResource, initialValues, artifactory);
+      } else if (p.beforeEach!.length >= 4) {
+        return await (p.beforeEach as any)(subject, initializer, testResource, initialValues);
+      } else if (p.beforeEach!.length >= 3) {
+        return await (p.beforeEach as any)(subject, initializer, testResource);
+      } else if (p.beforeEach!.length >= 2) {
+        return await (p.beforeEach as any)(subject, initializer);
+      } else {
+        return await (p.beforeEach as any)(subject);
+      }
+    };
+  }
+  if (p.afterEach && !p.cleanupEach) {
+    mapped.cleanupEach = async (
+      store: T["istore"],
+      key: string,
+      artifactory?: IArtifactory,
+    ) => {
+      if (p.afterEach!.length >= 3) {
+        return await (p.afterEach as any)(store, key, artifactory);
+      } else if (p.afterEach!.length >= 2) {
+        return await (p.afterEach as any)(store, key);
+      } else {
+        return await (p.afterEach as any)(store);
+      }
+    };
+  }
+  if (p.afterAll && !p.cleanupAll) {
+    mapped.cleanupAll = (store: T["istore"], artifactory: IArtifactory) => {
+      if (p.afterAll!.length >= 2) {
+        return (p.afterAll as any)(store, artifactory);
+      } else {
+        return (p.afterAll as any)(store);
+      }
+    };
+  }
+  if (p.andWhen && !p.execute) {
+    mapped.execute = async (
+      store: T["istore"],
+      actionCB: T["when"],
+      testResource: ITestResourceConfiguration,
+      artifactory?: IArtifactory,
+    ) => {
+      if (p.andWhen!.length >= 4) {
+        return await (p.andWhen as any)(store, actionCB, testResource, artifactory);
+      } else if (p.andWhen!.length >= 3) {
+        return await (p.andWhen as any)(store, actionCB, testResource);
+      } else if (p.andWhen!.length >= 2) {
+        return await (p.andWhen as any)(store, actionCB);
+      } else {
+        return await (p.andWhen as any)(store);
+      }
+    };
+  }
+  if (p.butThen && !p.verify) {
+    mapped.verify = async (
+      store: T["istore"],
+      checkCB: T["then"],
+      testResource: ITestResourceConfiguration,
+      artifactory?: IArtifactory,
+    ) => {
+      if (p.butThen!.length >= 4) {
+        return await (p.butThen as any)(store, checkCB, testResource, artifactory);
+      } else if (p.butThen!.length >= 3) {
+        return await (p.butThen as any)(store, checkCB, testResource);
+      } else if (p.butThen!.length >= 2) {
+        return await (p.butThen as any)(store, checkCB);
+      } else {
+        return await (p.butThen as any)(store);
+      }
+    };
+  }
+  if (p.assertThis && !p.assert) {
+    mapped.assert = (x: T["then"]) => {
+      if (p.assertThis!.length >= 1) {
+        return (p.assertThis as any)(x);
+      } else {
+        return (p.assertThis as any)();
+      }
+    };
+  }
+  
   return {
     ...base,
-    ...p,
+    ...mapped,
   } as IUniversalTestAdapter<T>;
 };
 
-// Export Unified base classes
-export { BaseSetup } from "./BaseSetup.js";
-export { BaseAction } from "./BaseAction.js";
-export { BaseCheck } from "./BaseCheck.js";
-
-// Export AAA base classes (deprecated)
-export { BaseArrange } from "./BaseArrange.js";
-export { BaseAct } from "./BaseAct.js";
-export { BaseAssert } from "./BaseAssert.js";
-
-// Export TDT base classes (deprecated)
-export { BaseMap } from "./BaseMap.js";
-export { BaseFeed } from "./BaseFeed.js";
-export { BaseValidate } from "./BaseValidate.js";
-
-// Export BDD base classes (deprecated)
+// Export BDD pattern classes (user-facing)
 export { BaseGiven } from "./BaseGiven.js";
 export { BaseWhen } from "./BaseWhen.js";
 export { BaseThen } from "./BaseThen.js";
 
-// Helper function to create AAA specifications
-export function createAAASpecification<I extends Ibdd_in_any, O extends Ibdd_out_any>(
-  Suite: any,
-  Arrange: any,
-  Act: any,
-  Assert: any
-) {
+// Export TDT pattern classes (user-facing)
+export { BaseValue } from "./BaseValue.js";
+export { BaseShould } from "./BaseShould.js";
+export { BaseExpected } from "./BaseExpected.js";
+
+// Export Describe-It pattern classes (user-facing)
+export { BaseDescribe } from "./BaseDescribe.js";
+export { BaseIt } from "./BaseIt.js";
+
+// Export internal base classes (not exposed to users)
+export { BaseSetup } from "./BaseSetup.js";
+export { BaseAction } from "./BaseAction.js";
+export { BaseCheck } from "./BaseCheck.js";
+
+// Helper function to create Describe-It specifications
+export function createDescribeItSpecification<
+  I extends Ibdd_in_any,
+  O extends Ibdd_out_any,
+>() {
   return {
-    // Create a suite with AAA pattern
+    // Create a suite with Describe-It pattern
     Suite: {
-      Default: (name: string, arrangements: Record<string, any>) => {
-        // Convert arrangements to givens
-        const givens: Record<string, any> = {};
-        for (const [key, arrangement] of Object.entries(arrangements)) {
-          const { features, acts, asserts, arrangeCB, initialValues } = arrangement;
-          givens[key] = Arrange.Default(features, acts, asserts, arrangeCB, initialValues);
-        }
-        return Suite.Default(name, givens);
-      }
+      Default: (Suite: any, Describe: any, It: any) => 
+        (name: string, descriptions: Record<string, any>) => {
+          // Convert descriptions to setups
+          const setups: Record<string, any> = {};
+          for (const [key, description] of Object.entries(descriptions)) {
+            const { features, its, describeCB, initialValues } = description;
+            setups[key] = Describe.Default(
+              features,
+              its,
+              describeCB,
+              initialValues,
+            );
+          }
+          return Suite.Default(name, setups);
+        },
     },
-    // Arrange maps to Given
-    Arrange: {
+    // Describe maps to Setup
+    Describe: {
       Default: (
         features: string[],
-        acts: any[],
-        asserts: any[],
-        arrangeCB: I["given"],
-        initialValues: any
+        its: any[],
+        describeCB: I["given"],
+        initialValues: any,
       ) => {
-        return Arrange.Default(features, acts, asserts, arrangeCB, initialValues);
-      }
+        return (Describe: any) => Describe.Default(
+          features,
+          its,
+          describeCB,
+          initialValues,
+        );
+      },
     },
-    // Act maps to When
-    Act: {
-      Default: (name: string, actCB: (x: I["iselection"]) => I["then"]) => {
-        return Act.Default(name, actCB);
-      }
+    // It can mix mutations and assertions
+    It: {
+      Default: (name: string, itCB: (x: I["iselection"]) => I["then"]) => {
+        return (It: any) => It.Default(name, itCB);
+      },
     },
-    // Assert maps to Then
-    Assert: {
-      Default: (
-        name: string,
-        assertCB: (val: I["iselection"]) => Promise<I["then"]>
-      ) => {
-        return Assert.Default(name, assertCB);
-      }
-    }
   };
 }
 
-// Helper function to create TDT specifications
-export function createTDTSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any>(
-  Suite: any,
-  Map: any,
-  Feed: any,
-  Validate: any
-) {
+// Helper function to create TDT specifications with Value, Should, Expected
+export function createTDTSpecification<
+  I extends Ibdd_in_any,
+  O extends Ibdd_out_any,
+>() {
   return {
     // Create a suite with TDT pattern
     Suite: {
-      Default: (name: string, maps: Record<string, any>) => {
-        // Convert maps to givens
-        const givens: Record<string, any> = {};
-        for (const [key, map] of Object.entries(maps)) {
-          const { features, feeds, validates, mapCB, initialValues, tableData } = map;
-          givens[key] = Map.Default(features, feeds, validates, mapCB, initialValues, tableData);
-        }
-        return Suite.Default(name, givens);
-      }
+      Default: (Suite: any, Value: any, Should: any, Expected: any) => 
+        (name: string, confirms: Record<string, any>) => {
+          // Convert confirms to setups
+          const setups: Record<string, any> = {};
+          for (const [key, confirm] of Object.entries(confirms)) {
+            const { features, tableRows, confirmCB, initialValues } = confirm;
+            setups[key] = Value.Default(
+              features,
+              tableRows,
+              confirmCB,
+              initialValues,
+            );
+          }
+          return Suite.Default(name, setups);
+        },
     },
-    // Map maps to Given
-    Map: {
+    // Value maps to Setup (sets up table data)
+    Value: {
       Default: (
         features: string[],
-        feeds: any[],
-        validates: any[],
-        mapCB: I["given"],
+        tableRows: any[][],
+        confirmCB: I["given"],
         initialValues: any,
-        tableData: any[] = []
       ) => {
-        return Map.Default(features, feeds, validates, mapCB, initialValues, tableData);
-      }
+        return (Value: any) => Value.Default(
+          features,
+          tableRows,
+          confirmCB,
+          initialValues,
+        );
+      },
     },
-    // Feed maps to When
-    Feed: {
-      Default: (name: string, feedCB: (x: I["iselection"]) => I["then"]) => {
-        return Feed.Default(name, feedCB);
-      }
+    // Should processes each row (like Action)
+    Should: {
+      Default: (name: string, shouldCB: (x: I["iselection"]) => I["then"]) => {
+        return (Should: any) => Should.Default(name, shouldCB);
+      },
     },
-    // Validate maps to Then
-    Validate: {
+    // Expected validates each row (like Check)
+    Expected: {
       Default: (
         name: string,
-        validateCB: (val: I["iselection"]) => Promise<I["then"]>
+        expectedCB: (val: I["iselection"]) => Promise<I["then"]>,
       ) => {
-        return Validate.Default(name, validateCB);
-      }
-    }
+        return (Expected: any) => Expected.Default(name, expectedCB);
+      },
+    },
   };
 }
 
-// Alias for backward compatibility
-export const AAA = createAAASpecification;
-export const TDT = createTDTSpecification;
+// Alias for Describe-It pattern
+export function DescribeIt<I extends Ibdd_in_any, O extends Ibdd_out_any>() {
+  // Return an object that matches what the examples expect
+  return {
+    Suite: {
+      Default: (name: string, descriptions: Record<string, any>) => {
+        console.warn('DescribeIt.Suite.Default: This helper function requires proper context from a test specification. Use createDescribeItSpecification() for full functionality.');
+        return { name, descriptions };
+      },
+    },
+    Describe: {
+      Default: (
+        features: string[],
+        its: any[],
+        describeCB: I["given"],
+        initialValues: any,
+      ) => {
+        console.warn('DescribeIt.Describe.Default: This helper function requires proper context. Use createDescribeItSpecification() for full functionality.');
+        return { features, its, describeCB, initialValues };
+      },
+    },
+    It: {
+      Default: (name: string, itCB: (x: I["iselection"]) => I["then"]) => {
+        console.warn('DescribeIt.It.Default: This helper function requires proper context. Use createDescribeItSpecification() for full functionality.');
+        return { name, itCB };
+      },
+    },
+  };
+}
 
+// Alias for TDT pattern with Value, Should, Expected
+export function Confirm<I extends Ibdd_in_any, O extends Ibdd_out_any>() {
+  // Return an object that matches what the examples expect
+  return {
+    Suite: {
+      Default: (name: string, confirms: Record<string, any>) => {
+        console.warn('Confirm.Suite.Default: This helper function requires proper context from a test specification. Use createTDTSpecification() for full functionality.');
+        return { name, confirms };
+      },
+    },
+    Value: {
+      Default: (
+        features: string[],
+        tableRows: any[][],
+        confirmCB: I["given"],
+        initialValues: any,
+      ) => {
+        console.warn('Confirm.Value.Default: This helper function requires proper context. Use createTDTSpecification() for full functionality.');
+        return { features, tableRows, confirmCB, initialValues };
+      },
+    },
+    Should: {
+      Default: (name: string, shouldCB: (x: I["iselection"]) => I["then"]) => {
+        console.warn('Confirm.Should.Default: This helper function requires proper context. Use createTDTSpecification() for full functionality.');
+        return { name, shouldCB };
+      },
+    },
+    Expected: {
+      Default: (
+        name: string,
+        expectedCB: (val: I["iselection"]) => Promise<I["then"]>,
+      ) => {
+        console.warn('Confirm.Expected.Default: This helper function requires proper context. Use createTDTSpecification() for full functionality.');
+        return { name, expectedCB };
+      },
+    },
+  };
+}

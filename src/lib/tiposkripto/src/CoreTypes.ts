@@ -1,70 +1,122 @@
-import {
-  GivenSpecification, WhenSpecification, ThenSpecification,
-  TestWhenImplementation, Modify, TestSuiteImplementation, TestGivenImplementation,
-  TestThenImplementation, TestSuiteShape, TestGivenShape, TestWhenShape, TestThenShape
+import type {
+  GivenSpecification,
+  WhenSpecification,
+  ThenSpecification,
+  TestWhenImplementation,
+  Modify,
+  TestSuiteImplementation,
+  TestGivenImplementation,
+  TestThenImplementation,
+  TestSuiteShape,
+  TestGivenShape,
+  TestWhenShape,
+  TestThenShape,
 } from "../../../Types";
-import { IGivens } from "./BaseGiven";
-import { BaseSuite } from "./BaseSuite";
-import { ITestResourceConfiguration } from "./types";
+import type { IGivens } from "./BaseGiven";
+import type { BaseSuite } from "./BaseSuite";
+import type { ITestResourceConfiguration } from "./types";
+
+export type IArtifactory = {};
 
 export type SuiteSpecification<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = {
     [K in keyof O["suites"]]: (
       name: string,
-      givens: IGivens<I>
+      givens: IGivens<I>,
     ) => BaseSuite<I, O>;
   };
-
 
 // Universal test adapter with methodology-agnostic terminology
 export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
   // Lifecycle hooks
   prepareAll: (
     input: I["iinput"],
-    testResource: ITestResourceConfiguration
+    testResource: ITestResourceConfiguration,
+    artifactory?: IArtifactory,
   ) => Promise<I["isubject"]>;
   prepareEach: (
     subject: I["isubject"],
-    initializer: (c?) => I["given"],
+    initializer: (c?: any) => I["given"],
     testResource: ITestResourceConfiguration,
-    initialValues
+    initialValues: any,
+    artifactory?: IArtifactory,
   ) => Promise<I["istore"]>;
-  
+
   // Execution
   execute: (
     store: I["istore"],
     actionCB: I["when"],
-    testResource: ITestResourceConfiguration
+    testResource: ITestResourceConfiguration,
+    artifactory?: IArtifactory,
   ) => Promise<I["istore"]>;
-  
+
   // Verification
   verify: (
     store: I["istore"],
     checkCB: I["then"],
-    testResource: ITestResourceConfiguration
+    testResource: ITestResourceConfiguration,
+    artifactory?: IArtifactory,
   ) => Promise<I["iselection"]>;
-  
+
   // Cleanup
-  cleanupEach: (store: I["istore"], key: string) => Promise<unknown>;
-  cleanupAll: (store: I["istore"]) => any;
-  
+  cleanupEach: (
+    store: I["istore"],
+    key: string,
+    artifactory?: IArtifactory,
+  ) => Promise<unknown>;
+  cleanupAll: (store: I["istore"], artifactory: IArtifactory) => any;
+
   // Assertion
   assert: (x: I["then"]) => any;
 };
 
 // Legacy BDD adapter for backward compatibility
-export type ITestAdapter<I extends TestTypeParams_any> = IUniversalTestAdapter<I>;
+export type ITestAdapter<I extends TestTypeParams_any> =
+  IUniversalTestAdapter<I> & {
+    // Legacy method names for backward compatibility
+    beforeAll?: (
+      input: I["iinput"],
+      testResource: ITestResourceConfiguration,
+      artifactory?: IArtifactory,
+    ) => Promise<I["isubject"]>;
+    beforeEach?: (
+      subject: I["isubject"],
+      initializer: (c?: any) => I["given"],
+      testResource: ITestResourceConfiguration,
+      initialValues: any,
+      artifactory?: IArtifactory,
+    ) => Promise<I["istore"]>;
+    afterEach?: (
+      store: I["istore"],
+      key: string,
+      artifactory?: IArtifactory,
+    ) => Promise<unknown>;
+    afterAll?: (store: I["istore"], artifactory: IArtifactory) => any;
+    andWhen?: (
+      store: I["istore"],
+      actionCB: I["when"],
+      testResource: ITestResourceConfiguration,
+      artifactory?: IArtifactory,
+    ) => Promise<I["istore"]>;
+    butThen?: (
+      store: I["istore"],
+      checkCB: I["then"],
+      testResource: ITestResourceConfiguration,
+      artifactory?: IArtifactory,
+    ) => Promise<I["iselection"]>;
+    assertThis?: (x: I["then"]) => any;
+  };
 
 export type ITestSpecification<
   I extends Ibdd_in_any,
-  O extends Ibdd_out_any
+  O extends Ibdd_out_any,
 > = (
   Suite: SuiteSpecification<I, O>,
   Given: GivenSpecification<I, O>,
   When: WhenSpecification<I, O>,
-  Then: ThenSpecification<I, O>
+  Then: ThenSpecification<I, O>,
 ) => BaseSuite<I, O>[];
 
 export type ITestImplementation<
@@ -72,7 +124,7 @@ export type ITestImplementation<
   O extends Ibdd_out_any,
   modifier = {
     whens: TestWhenImplementation<I, O>;
-  }
+  },
 > = Modify<
   {
     suites: TestSuiteImplementation<O>;
@@ -87,7 +139,7 @@ export type TestSpecShape<
   ISuites extends TestSuiteShape = TestSuiteShape,
   ISetups extends TestGivenShape = TestGivenShape,
   IActions extends TestWhenShape = TestWhenShape,
-  IChecks extends TestThenShape = TestThenShape
+  IChecks extends TestThenShape = TestThenShape,
 > = {
   suites: ISuites;
   givens: ISetups;
@@ -103,8 +155,12 @@ export type TestSpecShape_any = TestSpecShape<
 >;
 
 // Legacy type aliases for backward compatibility
-export type Ibdd_out<ISuites, IGivens, IWhens, IThens> = 
-  TestSpecShape<ISuites, IGivens, IWhens, IThens>;
+export type Ibdd_out<
+  ISuites extends TestSuiteShape,
+  IGivens extends TestGivenShape,
+  IWhens extends TestWhenShape,
+  IThens extends TestThenShape,
+> = TestSpecShape<ISuites, IGivens, IWhens, IThens>;
 export type Ibdd_out_any = TestSpecShape_any;
 
 export type TestTypeParams<
@@ -114,7 +170,7 @@ export type TestTypeParams<
   ISelection, // Type for selecting state for assertions
   ISetup, // Type for Setup step functions (formerly Given)
   IAction, // Type for Action step functions (formerly When)
-  ICheck // Type for Check step functions (formerly Then)
+  ICheck, // Type for Check step functions (formerly Then)
 > = {
   /** Initial input required to start tests */
   iinput: IInput;
@@ -149,6 +205,13 @@ export type TestTypeParams_any = TestTypeParams<
 >;
 
 // Legacy type aliases for backward compatibility
-export type Ibdd_in<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen> = 
-  TestTypeParams<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen>;
+export type Ibdd_in<
+  IInput,
+  ISubject,
+  IStore,
+  ISelection,
+  IGiven,
+  IWhen,
+  IThen,
+> = TestTypeParams<IInput, ISubject, IStore, ISelection, IGiven, IWhen, IThen>;
 export type Ibdd_in_any = TestTypeParams_any;

@@ -1,9 +1,9 @@
-import { TestTypeParams_any } from "./CoreTypes.js";
-import { ITestResourceConfiguration } from "./types.js";
+import type { TestTypeParams_any } from "./CoreTypes.js";
+import type { ITestResourceConfiguration } from "./types.js";
 /**
- * BaseCheck is the unified base class for all verification phases.
+ * BaseCheck is the internal unified base class for all verification phases.
  * It covers BDD's Then, AAA's Assert, and TDT's Validate.
- * @deprecated Use BaseThen, BaseAssert, or BaseValidate for specific patterns
+ * This class is not exposed to users - use BaseThen, BaseExpected, or BaseAssert instead.
  */
 export declare abstract class BaseCheck<I extends TestTypeParams_any> {
     name: string;
@@ -19,7 +19,7 @@ export declare abstract class BaseCheck<I extends TestTypeParams_any> {
         artifacts: string[];
         status: boolean | undefined;
     };
-    abstract verifyCheck(store: I["istore"], checkCB: (s: I["iselection"]) => Promise<I["isubject"]>, testResourceConfiguration: ITestResourceConfiguration): Promise<I["iselection"]>;
-    test(store: I["istore"], testResourceConfiguration: any, filepath: string): Promise<I["then"] | undefined>;
+    abstract verifyCheck(store: I["istore"], checkCB: (s: I["iselection"]) => Promise<I["isubject"]>, testResourceConfiguration: ITestResourceConfiguration, artifactory?: any): Promise<I["iselection"]>;
+    test(store: I["istore"], testResourceConfiguration: any, filepath: string, artifactory?: any): Promise<I["then"] | undefined>;
 }
 export type IChecks<I extends TestTypeParams_any> = Record<string, BaseCheck<I>>;

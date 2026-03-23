@@ -1,44 +1,79 @@
 package golingvu
 
-// DSL provides a more readable way to create test specifications
+// DSL provides a more readable way to create test specifications for all patterns
 type DSL struct {
-	suites  map[string]interface{}
-	givens  map[string]interface{}
-	whens   map[string]interface{}
-	thens   map[string]interface{}
+	suites    map[string]interface{}
+	givens    map[string]interface{}
+	whens     map[string]interface{}
+	thens     map[string]interface{}
+	values    map[string]interface{}
+	shoulds   map[string]interface{}
+	expecteds map[string]interface{}
+	describes map[string]interface{}
+	its       map[string]interface{}
 }
 
 // NewDSL creates a new DSL instance
 func NewDSL() *DSL {
 	return &DSL{
-		suites: make(map[string]interface{}),
-		givens: make(map[string]interface{}),
-		whens:  make(map[string]interface{}),
-		thens:  make(map[string]interface{}),
+		suites:    make(map[string]interface{}),
+		givens:    make(map[string]interface{}),
+		whens:     make(map[string]interface{}),
+		thens:     make(map[string]interface{}),
+		values:    make(map[string]interface{}),
+		shoulds:   make(map[string]interface{}),
+		expecteds: make(map[string]interface{}),
+		describes: make(map[string]interface{}),
+		its:       make(map[string]interface{}),
 	}
 }
 
 // Suite creates a test suite
-func (d *DSL) Suite(name string, suiteFunc func(string, map[string]*BaseGiven) *BaseSuite) *DSL {
+func (d *DSL) Suite(name string, suiteFunc func(string, map[string]interface{}) *BaseSuite) *DSL {
 	d.suites[name] = suiteFunc
 	return d
 }
 
-// Given creates a given function
+// BDD Pattern
 func (d *DSL) Given(name string, givenFunc func(string, []string, []*BaseWhen, []*BaseThen, interface{}, interface{}) *BaseGiven) *DSL {
 	d.givens[name] = givenFunc
 	return d
 }
 
-// When creates a when function
 func (d *DSL) When(name string, whenFunc func(...interface{}) *BaseWhen) *DSL {
 	d.whens[name] = whenFunc
 	return d
 }
 
-// Then creates a then function
 func (d *DSL) Then(name string, thenFunc func(...interface{}) *BaseThen) *DSL {
 	d.thens[name] = thenFunc
+	return d
+}
+
+// TDT Pattern
+func (d *DSL) Value(name string, valueFunc func([]string, [][]interface{}, interface{}, interface{}) *BaseValue) *DSL {
+	d.values[name] = valueFunc
+	return d
+}
+
+func (d *DSL) Should(name string, shouldFunc func(...interface{}) *BaseShould) *DSL {
+	d.shoulds[name] = shouldFunc
+	return d
+}
+
+func (d *DSL) Expected(name string, expectedFunc func(...interface{}) *BaseExpected) *DSL {
+	d.expecteds[name] = expectedFunc
+	return d
+}
+
+// Describe-It Pattern
+func (d *DSL) Describe(name string, describeFunc func([]string, []interface{}, interface{}, interface{}) *BaseDescribe) *DSL {
+	d.describes[name] = describeFunc
+	return d
+}
+
+func (d *DSL) It(name string, itFunc func(...interface{}) *BaseIt) *DSL {
+	d.its[name] = itFunc
 	return d
 }
 
@@ -235,6 +270,102 @@ func SimpleSpecification(
 		
 		return []interface{}{
 			suiteFunc(suiteName, givensForSuite),
+		}
+	}
+}
+
+// CreateDescribeItSpecification creates a Describe-It pattern specification
+func CreateDescribeItSpecification(
+	suiteName string,
+	descriptions map[string]struct {
+		features []string
+		its      []interface{}
+		describeCB interface{}
+		initialValues interface{}
+	},
+) ITestSpecification {
+	return func(suites, describes, its, _ interface{}) interface{} {
+		suitesMap := suites.(map[string]interface{})
+		describesMap := describes.(map[string]interface{})
+		_ = its.(map[string]interface{}) // itsMap is not used, but we need to consume it
+		
+		// Get functions
+		suiteFunc := suitesMap["DescribeItSuite"].(func(string, map[string]*BaseDescribe) *BaseSuite)
+		
+		// Helper to create a describe
+		createDescribe := func(name string, features []string, its []interface{}, describeCB interface{}, initialValues interface{}) *BaseDescribe {
+			// Try to find a specific describe function by name
+			if describeFuncInterface, exists := describesMap[name]; exists {
+				if describeFunc, ok := describeFuncInterface.(func(string, []string, []interface{}, interface{}, interface{}) *BaseDescribe); ok {
+					return describeFunc(
+						name,
+						features,
+						its,
+						describeCB,
+						initialValues,
+					)
+				}
+			}
+			
+			// Fallback to default
+			return NewBaseDescribe(features, its, describeCB, initialValues)
+		}
+		
+		// Create all describes
+		describesForSuite := make(map[string]*BaseDescribe)
+		for name, desc := range descriptions {
+			describesForSuite[name] = createDescribe(name, desc.features, desc.its, desc.describeCB, desc.initialValues)
+		}
+		
+		return []interface{}{
+			suiteFunc(suiteName, describesForSuite),
+		}
+	}
+}
+
+// CreateTDTSpecification creates a TDT (Table-Driven Testing) pattern specification
+func CreateTDTSpecification(
+	suiteName string,
+	values map[string]struct {
+		features    []string
+		tableRows   [][]interface{}
+		confirmCB   interface{}
+		initialValues interface{}
+	},
+) ITestSpecification {
+	return func(suites, valuesMap, shoulds, expecteds interface{}) interface{} {
+		suitesMap := suites.(map[string]interface{})
+		valuesFuncMap := valuesMap.(map[string]interface{})
+		
+		// Get suite function for TDT
+		suiteFunc := suitesMap["TDTSuite"].(func(string, map[string]*BaseValue) *BaseSuite)
+		
+		// Helper to create a value
+		createValue := func(name string, features []string, tableRows [][]interface{}, confirmCB interface{}, initialValues interface{}) *BaseValue {
+			// Try to find a specific value function by name
+			if valueFuncInterface, exists := valuesFuncMap[name]; exists {
+				if valueFunc, ok := valueFuncInterface.(func([]string, [][]interface{}, interface{}, interface{}) *BaseValue); ok {
+					return valueFunc(
+						features,
+						tableRows,
+						confirmCB,
+						initialValues,
+					)
+				}
+			}
+			
+			// Fallback to default
+			return NewBaseValue(features, tableRows, confirmCB, initialValues)
+		}
+		
+		// Create all values
+		valuesForSuite := make(map[string]*BaseValue)
+		for name, val := range values {
+			valuesForSuite[name] = createValue(name, val.features, val.tableRows, val.confirmCB, val.initialValues)
+		}
+		
+		return []interface{}{
+			suiteFunc(suiteName, valuesForSuite),
 		}
 	}
 }

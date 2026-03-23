@@ -1,106 +1,65 @@
 package golingvu
 
-// BaseGiven represents a base Given condition
-type BaseGiven struct {
-	Features          []string
-	Whens             []*BaseWhen
-	Thens             []*BaseThen
-	Error             error
-	Fail              interface{}
-	Store             interface{}
-	RecommendedFsPath string
-	GivenCB           interface{}
-	InitialValues     interface{}
-	Key               string
-	Failed            bool
-	Fails             int
-	Artifacts         []string
-	GivenThatFunc     func(subject, testResource, artifactory, initializer, initialValues, pm interface{}) (interface{}, error)
-	AfterEachFunc     func(store interface{}, key string, artifactory, pm interface{}) (interface{}, error)
-	UberCatcherFunc   func(func())
-}
+import (
+	"fmt"
+)
 
-// AddArtifact adds an artifact path
-func (bg *BaseGiven) AddArtifact(path string) {
-	// Normalize path separators
-	// For simplicity, we'll assume paths are already normalized
-	bg.Artifacts = append(bg.Artifacts, path)
+// BaseGiven extends BaseSetup for BDD pattern
+type BaseGiven struct {
+	*BaseSetup
+	Whens []*BaseWhen
+	Thens []*BaseThen
+	GivenCB interface{}
 }
 
 // NewBaseGiven creates a new BaseGiven instance
 func NewBaseGiven(key string, features []string, whens []*BaseWhen, thens []*BaseThen, givenCB, initialValues interface{}) *BaseGiven {
+	// Convert whens and thens to actions and checks
+	actions := make([]interface{}, len(whens))
+	for i, w := range whens {
+		actions[i] = w
+	}
+	
+	checks := make([]interface{}, len(thens))
+	for i, t := range thens {
+		checks[i] = t
+	}
+	
+	baseSetup := NewBaseSetup(features, actions, checks, givenCB, initialValues)
+	baseSetup.Key = key
+	
 	return &BaseGiven{
-		Key:           key,
-		Features:      features,
-		Whens:         whens,
-		Thens:         thens,
-		GivenCB:       givenCB,
-		InitialValues: initialValues,
-		Artifacts:     make([]string, 0),
-		Failed:        false,
-		Fails:         0,
-	}
-}
-
-// BeforeAll is called before all tests
-func (bg *BaseGiven) BeforeAll(store interface{}) interface{} {
-	return store
-}
-
-// ToObj converts the instance to a map for serialization
-func (bg *BaseGiven) ToObj() map[string]interface{} {
-	whenObjs := make([]map[string]interface{}, len(bg.Whens))
-	for i, w := range bg.Whens {
-		whenObjs[i] = w.ToObj()
-	}
-
-	thenObjs := make([]map[string]interface{}, len(bg.Thens))
-	for i, t := range bg.Thens {
-		thenObjs[i] = t.ToObj()
-	}
-
-	// Format error similar to TypeScript
-	var errorObj interface{}
-	if bg.Error != nil {
-		errorObj = []interface{}{bg.Error.Error(), bg.Error.Error()}
-	} else {
-		errorObj = nil
-	}
-
-	return map[string]interface{}{
-		"key":       bg.Key,
-		"whens":     whenObjs,
-		"thens":     thenObjs,
-		"error":     errorObj,
-		"failed":    bg.Failed,
-		"features":  bg.Features,
-		"artifacts": bg.Artifacts,
-		"status":    !bg.Failed, // status is true if not failed
+		BaseSetup: baseSetup,
+		Whens:     whens,
+		Thens:     thens,
+		GivenCB:   givenCB,
 	}
 }
 
 // GivenThat executes the given condition
-func (bg *BaseGiven) GivenThat(subject, testResourceConfiguration, artifactory, givenCB, initialValues, pm interface{}) (interface{}, error) {
-	if bg.GivenThatFunc != nil {
-		return bg.GivenThatFunc(subject, testResourceConfiguration, artifactory, givenCB, initialValues, pm)
-	}
+func (bg *BaseGiven) GivenThat(
+	subject interface{},
+	testResourceConfiguration ITTestResourceConfiguration,
+	artifactory func(string, interface{}),
+	givenCB interface{},
+	initialValues interface{},
+) (interface{}, error) {
+	// This should be implemented by the adapter
 	return subject, nil
 }
 
-// AfterEach is called after each test
-func (bg *BaseGiven) AfterEach(store interface{}, key string, artifactory, pm interface{}) (interface{}, error) {
-	if bg.AfterEachFunc != nil {
-		return bg.AfterEachFunc(store, key, artifactory, pm)
-	}
-	return store, nil
+// SetupThat implements BaseSetup's abstract method
+func (bg *BaseGiven) SetupThat(
+	subject interface{},
+	testResourceConfiguration ITTestResourceConfiguration,
+	artifactory func(string, interface{}),
+	setupCB interface{},
+	initialValues interface{},
+) (interface{}, error) {
+	return bg.GivenThat(subject, testResourceConfiguration, artifactory, setupCB, initialValues)
 }
 
-// UberCatcher handles errors
-func (bg *BaseGiven) UberCatcher(e error) {
-	bg.Error = e
-}
-
-// Give executes the given condition
+// Give is an alias for Setup for BDD pattern
 func (bg *BaseGiven) Give(
 	subject interface{},
 	key string,
@@ -109,64 +68,110 @@ func (bg *BaseGiven) Give(
 	artifactory func(string, interface{}),
 	suiteNdx int,
 ) (interface{}, error) {
-	bg.Key = key
-	bg.Fails = 0
+	ndx := &suiteNdx
+	return bg.Setup(subject, key, testResourceConfiguration, tester, artifactory, ndx)
+}
 
-	// Setup
-	store, err := bg.GivenThat(
-		subject,
-		testResourceConfiguration,
-		artifactory,
-		bg.GivenCB,
-		bg.InitialValues,
-		nil, // pm parameter removed
-	)
-	if err != nil {
-		bg.Failed = true
-		bg.Fails++
-		bg.Error = err
-		return nil, err
-	}
-	bg.Store = store
-
-	// Process Whens
-	for _, when := range bg.Whens {
-		_, err := when.Test(
-			bg.Store,
-			testResourceConfiguration,
-		)
-		if err != nil {
-			bg.Failed = true
-			bg.Fails++
-			bg.Error = err
-			// Continue processing
+// CreateDefaultArtifactory creates a default artifactory for the given
+// This matches BaseGiven.ts's createDefaultArtifactory method
+func (bg *BaseGiven) CreateDefaultArtifactory(givenKey string, suiteNdx *int) interface{} {
+	// Try to get parent's CreateArtifactory method
+	if bg.Parent != nil {
+		if parent, ok := bg.Parent.(interface {
+			CreateArtifactory(context map[string]interface{}) interface{}
+		}); ok {
+			context := map[string]interface{}{
+				"givenKey": givenKey,
+			}
+			if suiteNdx != nil {
+				context["suiteIndex"] = *suiteNdx
+			}
+			return parent.CreateArtifactory(context)
 		}
 	}
+	
+	// Fallback to a simple artifactory
+	return struct {
+		WriteFileSync func(filename string, payload string)
+	}{
+		WriteFileSync: func(filename string, payload string) {
+			var path string
+			if suiteNdx != nil {
+				path = fmt.Sprintf("suite-%d/", *suiteNdx)
+			}
+			path += fmt.Sprintf("given-%s/", givenKey)
+			path += filename
+			fmt.Printf("[BaseGiven.CreateDefaultArtifactory] Would write to: %s\n", path)
+		},
+	}
+}
 
-	// Process Thens
-	for _, then := range bg.Thens {
-		result, err := then.Test(
-			bg.Store,
-			testResourceConfiguration,
-		)
-		if err != nil {
-			bg.Failed = true
-			bg.Fails++
-			bg.Error = err
-			// Continue processing
-		} else if !tester(result) {
-			bg.Failed = true
-			bg.Fails++
+// CreateArtifactoryForWhen creates an artifactory for a when action
+// This matches BaseGiven.ts's createArtifactoryForWhen method
+func (bg *BaseGiven) CreateArtifactoryForWhen(givenKey string, whenIndex int, suiteNdx *int) interface{} {
+	// Try to get parent's CreateArtifactory method
+	if bg.Parent != nil {
+		if parent, ok := bg.Parent.(interface {
+			CreateArtifactory(context map[string]interface{}) interface{}
+		}); ok {
+			context := map[string]interface{}{
+				"givenKey":  givenKey,
+				"whenIndex": whenIndex,
+			}
+			if suiteNdx != nil {
+				context["suiteIndex"] = *suiteNdx
+			}
+			return parent.CreateArtifactory(context)
 		}
 	}
-
-	// Cleanup
-	_, err = bg.AfterEach(bg.Store, bg.Key, artifactory, nil) // pm parameter removed
-	if err != nil {
-		bg.Failed = true
-		bg.Fails++
-		bg.Error = err
+	
+	// Fallback to a simple artifactory
+	return struct {
+		WriteFileSync func(filename string, payload string)
+	}{
+		WriteFileSync: func(filename string, payload string) {
+			var path string
+			if suiteNdx != nil {
+				path = fmt.Sprintf("suite-%d/", *suiteNdx)
+			}
+			path += fmt.Sprintf("given-%s/", givenKey)
+			path += fmt.Sprintf("when-%d %v", whenIndex, filename)
+			fmt.Printf("[BaseGiven.CreateArtifactoryForWhen] Would write to: %s\n", path)
+		},
 	}
+}
 
-	return bg.Store, nil
+// CreateArtifactoryForThen creates an artifactory for a then check
+// This matches BaseGiven.ts's createArtifactoryForThen method
+func (bg *BaseGiven) CreateArtifactoryForThen(givenKey string, thenIndex int, suiteNdx *int) interface{} {
+	// Try to get parent's CreateArtifactory method
+	if bg.Parent != nil {
+		if parent, ok := bg.Parent.(interface {
+			CreateArtifactory(context map[string]interface{}) interface{}
+		}); ok {
+			context := map[string]interface{}{
+				"givenKey":  givenKey,
+				"thenIndex": thenIndex,
+			}
+			if suiteNdx != nil {
+				context["suiteIndex"] = *suiteNdx
+			}
+			return parent.CreateArtifactory(context)
+		}
+	}
+	
+	// Fallback to a simple artifactory
+	return struct {
+		WriteFileSync func(filename string, payload string)
+	}{
+		WriteFileSync: func(filename string, payload string) {
+			var path string
+			if suiteNdx != nil {
+				path = fmt.Sprintf("suite-%d/", *suiteNdx)
+			}
+			path += fmt.Sprintf("given-%s/", givenKey)
+			path += fmt.Sprintf("then-%d %v", thenIndex, filename)
+			fmt.Printf("[BaseGiven.CreateArtifactoryForThen] Would write to: %s\n", path)
+		},
+	}
 }

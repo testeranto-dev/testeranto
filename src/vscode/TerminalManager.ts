@@ -83,52 +83,84 @@ export class TerminalManager {
     }
   }
 
-  async createAiderTerminal(runtimeKey: string | string | any, testName: string | any): Promise<vscode.Terminal> {
-    // Helper function to extract string value from various input types
-    const extractString = (value: any, isRuntime: boolean = false): string => {
-      if (typeof value === 'string') {
-        return value;
-      }
-      if (value && typeof value === 'object') {
-        // Try to extract from common object structures
-        if (isRuntime) {
-          // For runtime, try to get from data.runtime or just the value
-          return value.runtimeKey || value.data?.runtimeKey || value.label || value.name || String(value);
-        } else {
-          // For testName, try various property names
-          return value.testName || value.data?.testName || value.label || value.name || String(value);
-        }
-      }
-      return String(value || 'unknown');
-    };
-
-    // Extract string values
-    const runtimeStr = runtimeKey; //extractString(runtime, true);
-    const testNameStr = extractString(testName, false);
-
-    // createAiderTerminal called with runtime: "node", testName: "src/ts/Calculator.test.ts"
-    console.log(`[TerminalManager] createAiderTerminal called with runtime: "${runtimeStr}", testName: "${testNameStr}"`);
-    console.log(`[TerminalManager] Original runtime:`, runtimeKey);
-    console.log(`[TerminalManager] Original testName:`, testName);
-
-    const key = this.getTerminalKey(runtimeStr, testNameStr);
+  async createAiderTerminal(runtime: string, testName: string): Promise<vscode.Terminal> {
+    const key = this.getTerminalKey(runtime, testName);
     let terminal = this.terminals.get(key);
 
-    // If terminal exists and is still running, just show it
     if (terminal && terminal.exitStatus === undefined) {
       terminal.show();
       return terminal;
     }
 
-    // Create a new terminal
-    terminal = vscode.window.createTerminal(`Aider: ${testNameStr} (${runtimeStr})`);
+    terminal = vscode.window.createTerminal(`Aider: ${testName} (${runtime})`);
     this.terminals.set(key, terminal);
 
-    // await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" up -d ${aiderServiceName}`);
+    // Get config key for the test
+    const configKey = await this.getConfigKeyForTest(runtime, testName);
+    if (!configKey) {
+      // Try to fetch configs and log them for debugging
+      try {
+        const response = await fetch('http://localhost:3000/~/configs');
+        if (response.ok) {
+          const data = await response.json();
+          terminal.sendText(`echo "Available configs:"`);
+          if (data.configs && data.configs.runtimes) {
+            for (const [key, value] of Object.entries(data.configs.runtimes)) {
+              const config = value as any;
+              terminal.sendText(`echo "  ${key}: runtime=${config.runtime}, tests=${JSON.stringify(config.tests || [])}"`);
+            }
+          }
+        }
+      } catch (error) {
+        // Ignore
+      }
+      terminal.sendText(`echo "Error: Could not find configuration for ${testName} (${runtime})"`);
+      terminal.sendText(`echo "Trying to guess container name..."`);
+      
+      // Try to guess the container name
+      const guessedConfigKey = runtime.toLowerCase().includes('web') ? 'webtests' : runtime;
+      const containerName = this.getAiderContainerName(guessedConfigKey, testName);
+      terminal.sendText(`echo "Guessed container: ${containerName}"`);
+      terminal.sendText(`docker exec -it ${containerName} /bin/bash || echo "Failed to connect to container"`);
+      terminal.show();
+      return terminal;
+    }
 
-    terminal.sendText(`cd Code/testeranto-example-project`)
-    const tname = `nodetests-src_ts_calculator-test-ts-aider`
-    terminal.sendText(`docker compose -f "testeranto/docker-compose.yml" run -it ${tname} aider`);
+    // Get the aider container name
+    const containerName = this.getAiderContainerName(configKey, testName);
+    
+    // Get workspace root
+    const workspaceRoot = this.getWorkspaceRoot();
+    
+    if (workspaceRoot) {
+      terminal.sendText(`echo "=== Testeranto Aider Session ==="`);
+      terminal.sendText(`echo "Test: ${testName}"`);
+      terminal.sendText(`echo "Runtime: ${runtime}"`);
+      terminal.sendText(`echo "Config: ${configKey}"`);
+      terminal.sendText(`echo "Container: ${containerName}"`);
+      terminal.sendText(`echo ""`);
+      
+      // Check if container is running
+      terminal.sendText(`echo "1. Checking if container is running..."`);
+      terminal.sendText(`if docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then echo "   ✓ Container is running"; else echo "   ⚠ Container not running, starting..." && docker compose -f "${workspaceRoot}/testeranto/docker-compose.yml" up -d ${containerName} && sleep 2; fi`);
+      
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "2. Checking for aider message file..."`);
+      const messageFilePath = `${workspaceRoot}/testeranto/reports/${configKey}/${testName}/aider-message.txt`;
+      terminal.sendText(`if [ -f "${messageFilePath}" ]; then echo "   ✓ Found aider message file at ${messageFilePath}"; else echo "   ⚠ Aider message file not found at ${messageFilePath}"; fi`);
+      
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "3. Starting interactive aider session..."`);
+      terminal.sendText(`echo "   Type 'exit' to leave the container shell"`);
+      terminal.sendText(`echo ""`);
+      
+      // Connect to the container with an interactive shell
+      terminal.sendText(`docker exec -it ${containerName} /bin/bash -c "cd /workspace && echo 'Welcome to the aider container for ${testName}!' && echo '' && echo 'To start aider with the message file, run:' && echo '  cat /workspace/testeranto/reports/${configKey}/${testName}/aider-message.txt | aider --yes' && echo '' && echo 'Or start aider normally:' && echo '  aider' && echo '' && echo 'Current directory: \$(pwd)' && echo 'Files in current directory:' && ls -la && echo '' && /bin/bash"`);
+    } else {
+      terminal.sendText(`echo "Error: Could not determine workspace root"`);
+      terminal.sendText(`echo "Trying to connect to container ${containerName}..."`);
+      terminal.sendText(`docker exec -it ${containerName} /bin/bash`);
+    }
 
     terminal.show();
     return terminal;
@@ -163,6 +195,88 @@ export class TerminalManager {
       console.error('Failed to restart aider process:', error);
       vscode.window.showErrorMessage(`Failed to restart aider process: ${error}`);
     }
+  }
+
+  private async getConfigKeyForTest(runtime: string, testName: string): Promise<string | null> {
+    try {
+      const response = await fetch('http://localhost:3000/~/configs');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      
+      if (data.configs && data.configs.runtimes) {
+        for (const [configKey, configValue] of Object.entries(data.configs.runtimes)) {
+          const runtimeConfig = configValue as any;
+          // Check if runtime matches (handle cases like 'webtests' vs 'web')
+          const runtimeMatches = 
+            runtimeConfig.runtime === runtime || 
+            configKey.toLowerCase().includes(runtime.toLowerCase()) ||
+            runtime.toLowerCase().includes(configKey.toLowerCase());
+          
+          if (runtimeMatches) {
+            const tests = runtimeConfig.tests || [];
+            // Try exact match first
+            if (tests.includes(testName)) {
+              return configKey;
+            }
+            // Try matching by filename (without path)
+            const testFileName = testName.split('/').pop();
+            if (testFileName && tests.includes(testFileName)) {
+              return configKey;
+            }
+            // Try matching any test that contains the testName as a substring
+            for (const test of tests) {
+              if (test.includes(testName) || testName.includes(test)) {
+                return configKey;
+              }
+            }
+            // Try cleaning the test name and comparing
+            const cleanTestName = testName
+              .toLowerCase()
+              .replaceAll("/", "_")
+              .replaceAll(".", "-")
+              .replace(/[^a-z0-9_-]/g, "");
+            for (const test of tests) {
+              const cleanTest = test
+                .toLowerCase()
+                .replaceAll("/", "_")
+                .replaceAll(".", "-")
+                .replace(/[^a-z0-9_-]/g, "");
+              if (cleanTest === cleanTestName) {
+                return configKey;
+              }
+            }
+          }
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error('Failed to fetch configs:', error);
+      return null;
+    }
+  }
+
+  private getAiderContainerName(configKey: string, testName: string): string {
+    // Clean the test name to match the container naming convention used in Server_Docker_Constants
+    // We need to replicate the cleanTestName function from Server_Docker_Constants.ts
+    // First, get just the filename without path
+    const testFileName = testName.split('/').pop() || testName;
+    const cleanTestName = testFileName
+      .toLowerCase()
+      .replaceAll("/", "_")
+      .replaceAll(".", "-")
+      .replace(/[^a-z0-9_-]/g, "");
+    const cleanConfigKey = configKey.toLowerCase();
+    return `${cleanConfigKey}-${cleanTestName}-aider`;
+  }
+
+  private getWorkspaceRoot(): string | null {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (workspaceFolders && workspaceFolders.length > 0) {
+      return workspaceFolders[0].uri.fsPath;
+    }
+    return null;
   }
 
   createAllTerminals(): void {

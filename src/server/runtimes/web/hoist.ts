@@ -6,27 +6,8 @@ import path from "path";
 // Note: esbuildUrlDomain will be determined inside launchPuppeteer
 // after resolving the hostname to an IP address
 
-// Get the config from command line arguments
 const testResourceConfig = process.argv[3] ? JSON.parse(process.argv[3]) : {};
 const reportBaseDir = testResourceConfig.fs || "testeranto/reports/webtests";
-
-// const relativePath = process.argv[2];
-// const projectConfigPath = process.argv[3];
-// const nodeConfigPath = process.argv[4];
-// const testName = process.argv[5];
-// const testResourceConfig = process.argv[5];
-
-// const webEvaluator = (d, webArgz) => {
-//   return `
-// import('${d}').then(async (x) => {
-//   try {
-//     return await (await x.default).receiveTestResourceConfig(${webArgz})
-//   } catch (e) {
-//     console.log("web run failure", e.toString())
-//   }
-// })
-// `;
-// };
 
 async function launchPuppeteer(browserWSEndpoint: string) {
   // Connect via Puppeteer
@@ -56,18 +37,29 @@ async function launchPuppeteer(browserWSEndpoint: string) {
     }
   });
 
-  page.on("close", () => {
-    // logs.writeExitCode(0);
-    // logs.closeAll();
+  page.on("close", async () => {
+    console.log(`[hoist] Page closing, current screencast path:`, currentScreencastPath);
+    // Close active screencast session if exists
+    // if (currentScreencastPath) {
+    //   console.log(`[hoist] Stopping screencast on page close`);
+    //   try {
+    //     await page.stopScreencast();
+    //   } catch (e) {
+    //     console.error(`[hoist] Error stopping screencast:`, e);
+    //   }
+    //   currentScreencastPath = null;
+    // }
+    // console.log(`[hoist] Screencast cleaned up`);
   });
 
   // Expose writeFile function to the browser
   await page.exposeFunction(
     "__writeFile",
     (filePath: string, content: string) => {
-      // Write to the filesystem directly
-      // The path should be relative to the report directory from config
-      const fullPath = path.join(process.cwd(), reportBaseDir, filePath);
+      // The filePath from the artifactory is already the full path relative to workspace
+      // e.g., "testeranto/suite-0/screenshot2.png"
+      // We need to make it absolute by joining with process.cwd()
+      const fullPath = path.join(process.cwd(), filePath);
 
       // Ensure directory exists
       const dir = path.dirname(fullPath);
@@ -79,6 +71,123 @@ async function launchPuppeteer(browserWSEndpoint: string) {
       fs.writeFileSync(fullPath, content);
       console.log(`[hoist] Wrote file: ${fullPath}`);
     },
+  );
+
+  await page.exposeFunction(
+    "__screenshot",
+    async (filePath: string) => {
+      console.log("__screenshot", filePath);
+      // The filePath from the artifactory is already the full path relative to workspace
+      // e.g., "testeranto/suite-0/screenshot2.png"
+      // We need to make it absolute by joining with process.cwd()
+      const absolutePath = path.join(process.cwd(), filePath);
+
+      // Ensure the directory exists
+      const dir = path.dirname(absolutePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+
+      await page.screenshot({
+        path: absolutePath,
+      });
+      console.log(`[hoist] Saved screenshot to: ${absolutePath}`);
+    },
+  );
+
+  // Store screencast recorders
+  let currentScreencastPath: string | null = null;
+  const screencastRecorders = new Map<string, any>();
+
+  await page.exposeFunction(
+    "__openScreencast",
+    async (filePath: string) => {
+      console.log("__openScreencast called with:", filePath);
+      console.log(`[hoist] Current screencast path:`, currentScreencastPath);
+
+      const absolutePath = path.join(process.cwd(), filePath);
+
+      // Ensure the directory exists
+      const dir = path.dirname(absolutePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+
+      if (currentScreencastPath === filePath) {
+        throw "you can't screen multiple times to the same file"
+      }
+
+      // If there's already a screencast running, stop it first
+      if (currentScreencastPath) {
+        console.log(`[hoist] Stopping current screencast at ${currentScreencastPath} before starting new one`);
+        const existingRecorder = screencastRecorders.get(currentScreencastPath);
+        if (existingRecorder) {
+          if (typeof existingRecorder.stop === 'function') {
+            await existingRecorder.stop();
+          } else if (typeof page.stopScreencast === 'function') {
+            await page.stopScreencast();
+          }
+          screencastRecorders.delete(currentScreencastPath);
+        }
+      }
+
+      // Start screencast using Puppeteer's API
+      // Check which method is available
+      let recorder;
+      if (typeof page.screencast === 'function') {
+        recorder = await page.screencast({ path: absolutePath });
+      } else if (typeof page.startScreencast === 'function') {
+        await page.startScreencast({
+          format: 'png',
+          quality: 80,
+          maxWidth: 1920,
+          maxHeight: 1080
+        });
+        // For startScreencast, we need to handle frames manually
+        // Store the recorder info
+        recorder = {
+          stop: async () => {
+            await page.stopScreencast();
+          }
+        };
+      } else {
+        throw new Error('Neither page.screencast() nor page.startScreencast() methods are available');
+      }
+
+      currentScreencastPath = filePath;
+      // Store the recorder if we have one
+      if (recorder) {
+        screencastRecorders.set(filePath, recorder);
+      }
+    },
+  );
+
+  await page.exposeFunction(
+    "__closeScreencast",
+    async (filePath: string) => {
+      console.log("__closeScreencast called with:", filePath);
+      console.log(`[hoist] Current screencast path:`, currentScreencastPath);
+
+      if (currentScreencastPath !== filePath) {
+        console.log(`[hoist] No screencast session found for ${filePath} (current is ${currentScreencastPath})`);
+        return;
+      }
+
+      const absolutePath = path.join(process.cwd(), filePath);
+      console.log(`[hoist] Stopping screencast to: ${absolutePath}`);
+
+      // Stop screencast using Puppeteer's API
+      const recorder = screencastRecorders.get(filePath);
+      if (recorder) {
+        if (typeof recorder.stop === 'function') {
+          await recorder.stop();
+        } else if (typeof page.stopScreencast === 'function') {
+          await page.stopScreencast();
+        }
+        screencastRecorders.delete(filePath);
+      }
+      currentScreencastPath = null;
+    }
   );
 
   const close = () => {
@@ -113,28 +222,28 @@ async function launchPuppeteer(browserWSEndpoint: string) {
     throw new Error("Test bundle path not provided");
   }
 
-  // Read the .mjs bundle file from the filesystem
-  console.log(`[hoist] Reading bundle from: ${testBundlePath}`);
-  const bundleAbsolutePath = path.join(process.cwd(), testBundlePath);
-  
-  if (!fs.existsSync(bundleAbsolutePath)) {
-    throw new Error(`Bundle file not found at ${bundleAbsolutePath}`);
-  }
-  
-  const bundleContent = fs.readFileSync(bundleAbsolutePath, 'utf-8');
-  console.log(`[hoist] Bundle size: ${bundleContent.length} characters`);
-  
   // Get the test resource configuration from command line
   const testResourceConfig = process.argv[3] ? JSON.parse(process.argv[3]) : {};
   console.log(`[hoist] Test resource config:`, testResourceConfig);
-  
-  // Create a blob URL for the bundle content
-  // We'll inject it into the page using evaluate
+
+  // Read the bundle file from the filesystem
+  const bundleAbsolutePath = path.join(process.cwd(), testBundlePath);
+  console.log(`[hoist] Reading bundle from: ${bundleAbsolutePath}`);
+
+  if (!fs.existsSync(bundleAbsolutePath)) {
+    throw new Error(`Bundle file not found at ${bundleAbsolutePath}`);
+  }
+
+  const bundleContent = fs.readFileSync(bundleAbsolutePath, 'utf-8');
+  console.log(`[hoist] Bundle size: ${bundleContent.length} characters`);
+
+  // Create a simple HTML page that will load the bundle via page.evaluate
   const htmlContent = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Test Runner</title>
+
 </head>
 <body>
     <div id="root"></div>
@@ -142,55 +251,76 @@ async function launchPuppeteer(browserWSEndpoint: string) {
       // Inject the test resource configuration as a global variable
       window.testResourceConfig = ${JSON.stringify(testResourceConfig)};
       console.log('Test resource config injected:', window.testResourceConfig);
-    </script>
-    <script type="module">
-      // Create a blob with the bundle content
-      const bundleContent = ${JSON.stringify(bundleContent)};
-      const blob = new Blob([bundleContent], { type: 'application/javascript' });
-      const blobUrl = URL.createObjectURL(blob);
       
-      // Import the bundle
-      import(blobUrl).then(module => {
+      // This will be populated by page.evaluate
+      window.bundleContent = null;
+    </script>
+</body>
+</html>`;
+
+  const dataUrl = `data:text/html;charset=utf-8,${encodeURIComponent(htmlContent)}`;
+  console.log(`[hoist] Navigating to data URL`);
+
+  try {
+    await page.goto(dataUrl, { waitUntil: "networkidle0", timeout: 60000 });
+    console.log(`[hoist] Successfully navigated to data URL`);
+
+    // Now inject the bundle content and execute it
+    console.log(`[hoist] Injecting and executing bundle...`);
+    await page.evaluate(async (content) => {
+      try {
+        // Create a blob with the bundle content
+        const blob = new Blob([content], { type: 'application/javascript' });
+        const blobUrl = URL.createObjectURL(blob);
+
+        console.log('Starting to load bundle from blob URL');
+        const module = await import(blobUrl);
         console.log('Test bundle loaded successfully from blob');
+
         // Check if the module has a default export
         if (module && module.default) {
           // If it's a function, call it with the test resource config
           if (typeof module.default === 'function') {
             // Pass the config to the test function
-            return module.default(window.testResourceConfig);
+            await module.default(window.testResourceConfig);
+          } else {
+            // Otherwise, just use it as is
+            console.log('Module loaded:', module);
           }
-          // Otherwise, just use it as is
-          console.log('Module loaded:', module);
         } else {
           console.log('Module loaded, but no default export:', module);
         }
-      }).catch(error => {
+
+        // Clean up the blob URL
+        URL.revokeObjectURL(blobUrl);
+      } catch (error) {
         console.error('Failed to load test bundle:', error);
         console.error('Error stack:', error.stack);
-      });
-    </script>
-</body>
-</html>`;
-  
-  const dataUrl = `data:text/html;charset=utf-8,${encodeURIComponent(htmlContent)}`;
-  console.log(`[hoist] Navigating to data URL with embedded bundle`);
-  
-  try {
-    await page.goto(dataUrl, { waitUntil: "networkidle0", timeout: 10000 });
-    console.log(`[hoist] Successfully navigated to data URL`);
-    
-    // Wait for tests to run
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        throw error;
+      }
+    }, bundleContent);
+
+    // Wait for tests to run - give more time
     console.log(`[hoist] Waiting for tests to execute...`);
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    
+    await new Promise(resolve => setTimeout(resolve, 15000));
+
     // Check page title for debugging
     const pageTitle = await page.title();
     console.log(`[hoist] Page title: ${pageTitle}`);
-    
+
   } catch (e: any) {
     console.error(`[hoist] Failed to navigate to data URL: ${e.message}`);
     throw e;
   }
+
+  // Wait for any pending operations
+  console.log(`[hoist] Waiting for pending operations...`);
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  // Check if there are any active screencast sessions
+  console.log(`[hoist] Active screencast sessions before closing: ${screencastRecorders.size}`);
 
   // Close the page and browser
   await page.close();

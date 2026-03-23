@@ -19,7 +19,19 @@ import "github.com/testeranto-dev/testeranto/src/lib/golingvu"
 
 ## Overview
 
-Golingvu is the Go implementation of the Testeranto testing framework. It provides BDD-style testing capabilities for Go applications, integrated with the broader Testeranto ecosystem.
+Golingvu is the Go implementation of the Testeranto testing framework. It provides multiple testing methodologies:
+
+1. **BDD (Behavior Driven Development)**: Given, When, Then (fully implemented and production-ready)
+2. **TDT (Table-Driven Testing)**: Value, Should, Expected (core classes implemented, integration in progress)
+3. **Describe-It Pattern (AAA/Arrange-Act-Assert)**: Describe, It (core classes implemented, integration in progress)
+
+All patterns are built upon a unified internal architecture using Setup, Action, Check (not exposed to users) and use the Artifactory system for file operations (replacing the deprecated PM system).
+
+**Note**: 
+- The AAA (Arrange-Act-Assert) pattern is implemented as the Describe-It pattern with 2 verbs: "Describe" and "It". This differs from BDD which uses 3 separate verbs.
+- BDD pattern is fully functional and recommended for production use
+- TDT and Describe-It patterns have core classes available for experimentation
+- Uses Artifactory for file operations (not PM)
 
 ## Key Components
 

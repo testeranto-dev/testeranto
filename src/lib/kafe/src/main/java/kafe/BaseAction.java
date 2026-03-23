@@ -37,7 +37,8 @@ public abstract class BaseAction<S, R> {
     public abstract R performAction(
         R store,
         Function<R, R> actionCB,
-        ITTestResourceConfiguration testResourceConfiguration
+        ITTestResourceConfiguration testResourceConfiguration,
+        Object artifactory
     );
     
     public Map<String, Object> toObj() {
@@ -54,8 +55,12 @@ public abstract class BaseAction<S, R> {
     }
     
     public R test(R store, ITTestResourceConfiguration testResourceConfiguration) throws Exception {
+        return test(store, testResourceConfiguration, null);
+    }
+    
+    public R test(R store, ITTestResourceConfiguration testResourceConfiguration, Object artifactory) throws Exception {
         try {
-            R result = performAction(store, actionCB, testResourceConfiguration);
+            R result = performAction(store, actionCB, testResourceConfiguration, artifactory);
             status = true;
             return result;
         } catch (Exception e) {

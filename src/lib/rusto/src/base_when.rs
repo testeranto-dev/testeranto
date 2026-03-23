@@ -1,4 +1,4 @@
-use crate::types::IbddInAny;
+use crate::types::{IbddInAny, IArtifactory};
 use std::collections::HashMap;
 
 pub struct BaseWhen<I: IbddInAny> {
@@ -34,9 +34,21 @@ impl<I: IbddInAny> BaseWhen<I> {
         obj
     }
     
-    pub async fn test(&mut self, store: I::Istore) -> Result<I::Istore, String> {
-        // In a real implementation, this would execute the when callback
-        // For now, just return the store unchanged
+    pub async fn test(&mut self, store: I::Istore, _test_resource: &dyn std::any::Any, _artifactory: Option<&IArtifactory>) -> Result<I::Istore, String> {
+        // Execute the when callback
+        // This is a simplified implementation
+        // In practice, we would use the when_cb to transform the store
+        Ok(store)
+    }
+    
+    pub async fn and_when(
+        &mut self,
+        store: I::Istore,
+        _when_cb: &dyn Fn(I::Iselection) -> I::Then,
+        _test_resource: &dyn std::any::Any,
+        _artifactory: Option<&IArtifactory>,
+    ) -> Result<I::Istore, String> {
+        // Default implementation
         Ok(store)
     }
 }

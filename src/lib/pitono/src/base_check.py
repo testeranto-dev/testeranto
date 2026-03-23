@@ -36,7 +36,8 @@ class BaseCheck:
         self,
         store: Any,
         check_cb: Callable[[Any], Any],
-        test_resource_configuration: ITestResourceConfiguration
+        test_resource_configuration: ITestResourceConfiguration,
+        artifactory: Any = None
     ) -> Any:
         raise NotImplementedError("verify_check must be implemented by subclasses")
     
@@ -44,13 +45,15 @@ class BaseCheck:
         self,
         store: Any,
         test_resource_configuration: Any,
-        filepath: str
+        filepath: str,
+        artifactory: Any = None
     ) -> Any:
         try:
             result = await self.verify_check(
                 store,
                 self.check_cb,
-                test_resource_configuration
+                test_resource_configuration,
+                artifactory
             )
             self.status = True
             return result

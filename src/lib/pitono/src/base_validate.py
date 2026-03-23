@@ -1,6 +1,6 @@
 from .base_check import BaseCheck
 from typing import Any, Callable
-from .pitono_types import ITestResourceConfiguration
+from .pitono_types import ITTestResourceConfiguration
 
 class BaseValidate(BaseCheck):
     def __init__(
@@ -20,9 +20,10 @@ class BaseValidate(BaseCheck):
         self,
         store: Any,
         validate_cb: Callable[[Any], Any],
-        test_resource_configuration: ITestResourceConfiguration
+        test_resource_configuration: ITTestResourceConfiguration,
+        artifactory: Any = None
     ):
-        return await super().verify_check(store, validate_cb, test_resource_configuration)
+        return await super().verify_check(store, validate_cb, test_resource_configuration, artifactory)
     
     # Alias test to check for TDT pattern
     async def check(
@@ -30,7 +31,8 @@ class BaseValidate(BaseCheck):
         store: Any,
         test_resource_configuration,
         filepath: str,
-        expected_result: Any
+        expected_result: Any,
+        artifactory: Any = None
     ):
         self.set_expected_result(expected_result)
-        return await super().test(store, test_resource_configuration, filepath)
+        return await super().test(store, test_resource_configuration, filepath, artifactory)

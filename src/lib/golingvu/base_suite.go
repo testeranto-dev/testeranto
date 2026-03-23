@@ -1,12 +1,16 @@
 package golingvu
 
+import (
+	"fmt"
+)
+
 // BaseSuite represents a test suite
 type BaseSuite struct {
 	Key                       string
 	Givens                    map[string]*BaseGiven
-	AfterAllFunc              func(store interface{}, artifactory func(string, interface{}), pm interface{}) interface{}
+	AfterAllFunc              func(store interface{}, artifactory func(string, interface{}), artifactoryObj interface{}) interface{}
 	AssertThatFunc            func(t interface{}) bool
-	SetupFunc                 func(s interface{}, artifactory func(string, interface{}), tr ITTestResourceConfiguration, pm interface{}) interface{}
+	SetupFunc                 func(s interface{}, artifactory func(string, interface{}), tr ITTestResourceConfiguration, artifactoryObj interface{}) interface{}
 	Store                     interface{}
 	TestResourceConfiguration ITTestResourceConfiguration
 	Index                     int
@@ -19,17 +23,29 @@ type BaseSuite struct {
 func (bs *BaseSuite) Run(input interface{}, testResourceConfiguration ITTestResourceConfiguration) (*BaseSuite, error) {
 	bs.TestResourceConfiguration = testResourceConfiguration
 
-	// Setup - pass nil for artifactory and pm for now
-	subject := bs.SetupFunc(input, nil, testResourceConfiguration, nil)
+	// Setup - create artifactory for suite
+	var suiteArtifactory func(string, interface{})
+	// In a real implementation, this would come from the parent
+	// For now, use a simple implementation
+	suiteArtifactory = func(filename string, payload interface{}) {
+		fmt.Printf("[BaseSuite] Would write to suite-%d/%s\n", bs.Index, filename)
+	}
+	
+	subject := bs.SetupFunc(input, suiteArtifactory, testResourceConfiguration, nil)
 
 	// Run each given
 	for gKey, g := range bs.Givens {
+		// Create artifactory for the given
+		givenArtifactory := func(filename string, payload interface{}) {
+			fmt.Printf("[BaseSuite] Would write to suite-%d/given-%s/%s\n", bs.Index, gKey, filename)
+		}
+		
 		_, err := g.Give(
 			subject,
 			gKey,
 			testResourceConfiguration,
 			bs.AssertThatFunc,
-			nil, // artifactory is not passed, matching TypeScript
+			givenArtifactory,
 			bs.Index,
 		)
 		if err != nil {
@@ -39,8 +55,8 @@ func (bs *BaseSuite) Run(input interface{}, testResourceConfiguration ITTestReso
 		}
 	}
 
-	// After all - pass nil for artifactory and pm
-	bs.AfterAllFunc(bs.Store, nil, nil)
+	// After all
+	bs.AfterAllFunc(bs.Store, suiteArtifactory, nil)
 
 	return bs, nil
 }

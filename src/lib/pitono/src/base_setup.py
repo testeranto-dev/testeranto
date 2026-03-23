@@ -111,9 +111,12 @@ class BaseSetup:
             # Process actions
             for action_ndx, action_step in enumerate(self.actions):
                 try:
+                    # Create artifactory for action context
+                    action_artifactory = self._create_artifactory_for_action(key, action_ndx, suite_ndx)
                     self.store = await action_step.test(
                         self.store,
                         test_resource_configuration,
+                        action_artifactory
                     )
                 except Exception as e:
                     self.failed = True
@@ -128,10 +131,13 @@ class BaseSetup:
                     else:
                         filepath = f"setup-{key}/check-{check_ndx}"
                     
+                    # Create artifactory for check context
+                    check_artifactory = self._create_artifactory_for_check(key, check_ndx, suite_ndx)
                     result = await check_step.test(
                         self.store,
                         test_resource_configuration,
-                        filepath
+                        filepath,
+                        check_artifactory
                     )
                     if not tester(result):
                         self.failed = True
@@ -153,3 +159,13 @@ class BaseSetup:
                 self.error = e
         
         return self.store
+    
+    def _create_artifactory_for_action(self, key: str, action_index: int, suite_ndx: Optional[int] = None):
+        # This should be implemented by subclasses that have access to parent
+        # For now, return a simple artifactory
+        return lambda f_path, value: None
+    
+    def _create_artifactory_for_check(self, key: str, check_index: int, suite_ndx: Optional[int] = None):
+        # This should be implemented by subclasses that have access to parent
+        # For now, return a simple artifactory
+        return lambda f_path, value: None

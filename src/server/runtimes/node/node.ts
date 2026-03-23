@@ -12,7 +12,8 @@ import {
   JestConverter,
   MochaConverter,
   VitestConverter,
-  GenericConverter 
+  GenericConverter, 
+  JasmineConverter
 } from './framework-converters/index.js';
 
 // Import native detection module

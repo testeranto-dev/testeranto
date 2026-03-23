@@ -1,6 +1,6 @@
 module Rubeno
   class BaseSuite
-    attr_accessor :name, :givens, :store, :test_resource_configuration, :index, :failed, :fails, :artifacts
+    attr_accessor :name, :givens, :store, :test_resource_configuration, :index, :failed, :fails, :artifacts, :parent
     
     def initialize(name, givens = {})
       @name = name
@@ -40,7 +40,7 @@ module Rubeno
       }
     end
     
-    def setup(s, tr)
+    def setup(s, tr, artifactory = nil)
       s
     end
     
@@ -48,26 +48,41 @@ module Rubeno
       !!t
     end
     
-    def after_all(store)
+    def after_all(store, artifactory = nil)
       store
     end
     
     def run(input_val, test_resource_configuration)
       @test_resource_configuration = test_resource_configuration
       
-      subject = setup(input_val, test_resource_configuration)
+      # Create artifactory for suite setup
+      suite_artifactory = nil
+      if @parent && @parent.respond_to?(:create_artifactory)
+        suite_artifactory = @parent.create_artifactory(suite_index: @index)
+      end
+      
+      subject = setup(input_val, test_resource_configuration, suite_artifactory)
       
       @fails = 0
       @failed = false
       
       @givens.each do |g_key, g|
         begin
+          # Create artifactory for the given
+          given_artifactory = nil
+          if @parent && @parent.respond_to?(:create_artifactory)
+            given_artifactory = @parent.create_artifactory(given_key: g_key, suite_index: @index)
+          end
+          
+          # Set parent reference if not already set
+          g._parent = @parent if g.respond_to?(:_parent=)
+          
           @store = g.give(
             subject,
             g_key,
             test_resource_configuration,
             method(:assert_that),
-            nil,  # artifactory is not passed to match TypeScript
+            given_artifactory,
             @index
           )
           @fails += g.fails if g.fails && g.fails > 0
@@ -81,7 +96,7 @@ module Rubeno
       @failed = true if @fails > 0
       
       begin
-        after_all(@store)
+        after_all(@store, suite_artifactory)
       rescue => e
         puts "Error in after_all: #{e.message}"
       end

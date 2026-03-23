@@ -1,10 +1,118 @@
-# Rubeno
+# Rubeno - Ruby Implementation of Testeranto
 
-The Ruby implementation of Testeranto.
+## Overview
 
-## Ruĝa - Ruby-flavored Testeranto
+Rubeno is the Ruby implementation of the Testeranto testing framework, providing support for all three testing patterns:
 
-Rubeno now includes **Ruĝa** (pronounced "ROO-zha"), a Ruby-flavored implementation that provides an idiomatic Ruby DSL for BDD testing while maintaining full compatibility with the baseline Testeranto pattern.
+1. **BDD (Behavior Driven Development)**: Given, When, Then (3 verbs) - fully implemented and production-ready
+2. **TDT (Table-Driven Testing)**: Value, Should, Expected (3 verbs) - core classes implemented
+3. **Describe-It Pattern (AAA/Arrange-Act-Assert)**: Describe, It (2 verbs) - core classes implemented
+
+All patterns use unified terminology: Setup-Action-Check internally, with user-facing APIs for each pattern.
+
+**Note on Visual Artifacts**: Ruby is a server-side language and CANNOT capture screenshots or screencasts. Only the Web runtime (browser environment) can capture visual content. This is a necessary difference between web and other runtimes. The Ruby implementation intentionally omits these methods because they cannot be implemented meaningfully outside of a browser context.
+
+## Architecture
+
+### Core Classes
+
+- **BaseSetup**: Unified base for all setup phases (BDD's Given, TDT's Value, Describe-It's Describe)
+- **BaseAction**: Unified base for all action phases (BDD's When, TDT's Should, Describe-It's It)
+- **BaseCheck**: Unified base for all verification phases (BDD's Then, TDT's Expected)
+
+### Pattern-Specific Classes
+
+#### BDD Pattern
+- `BaseGiven` extends `BaseSetup`
+- `BaseWhen` extends `BaseAction`
+- `BaseThen` extends `BaseCheck`
+
+#### TDT Pattern
+- `BaseValue` extends `BaseSetup`
+- `BaseShould` extends `BaseAction`
+- `BaseExpected` extends `BaseCheck`
+
+#### Describe-It Pattern (AAA)
+- `BaseDescribe` extends `BaseSetup`
+- `BaseIt` extends `BaseAction`
+
+### Artifactory System
+
+PM (Process Manager) has been deprecated and removed in favor of artifactory:
+
+```ruby
+# Create context-aware artifactory
+artifactory = createArtifactory(
+  givenKey: "test1",
+  suiteIndex: 0,
+  whenIndex: 0
+)
+
+# Use artifactory for file operations
+artifactory[:writeFileSync].call("log.txt", "test data")
+# Note: screenshot and screencast methods are placeholders for cross-language compatibility
+# but are not applicable to Ruby implementation
+artifactory[:screenshot].call("screen.png")
+```
+
+## Status
+
+- **BDD Pattern**: Fully functional and production-ready
+- **TDT Pattern**: Core classes available for experimentation
+- **Describe-It Pattern**: Core classes available for experimentation
+- **Artifactory**: Fully implemented, replacing deprecated PM
+- **Cross-language compatibility**: Matches TypeScript (tiposkripto) implementation
+
+## Deprecated Components
+
+- **PM (Process Manager)**: Removed - use artifactory instead
+- **Old AAA pattern files** (`base_arrange.rb`, `base_act.rb`, `base_assert.rb`): Deprecated - use Describe-It pattern instead
+- **Old TDT pattern files** (`base_map.rb`, `base_feed.rb`, `base_validate.rb`): Deprecated - use Value-Should-Expected pattern instead
+
+## Quick Start
+
+```ruby
+require 'rubeno'
+
+# Create test implementation with all patterns
+impl = Rubeno::ITestImplementation.new(
+  suites: { 'Default' => 'Test Suite' },
+  givens: { 'test1' => ->(initial) { Calculator.new } },
+  whens: { 'add' => ->(x) { ->(calc) { calc.add(x); calc } } },
+  thens: { 'result' => ->(expected) { ->(calc) { calc.result == expected } } },
+  values: { 'table' => ->(features, rows, cb, init) { BaseValue.new(features, rows, cb, init) } },
+  shoulds: { 'process' => ->(name) { BaseShould.new(name, ->(store) { store }) } },
+  expecteds: { 'check' => ->(name) { BaseExpected.new(name, ->(store) { true }) } },
+  describes: { 'feature' => ->(features, its, cb, init) { BaseDescribe.new(features, its, cb, init) } },
+  its: { 'test' => ->(name) { BaseIt.new(name, ->(store) { store }) } }
+)
+
+# Create Rubeno instance
+rubeno = Rubeno.Rubeno(
+  nil,
+  ->(suites, givens, whens, thens, values, shoulds, expecteds, describes, its) do
+    # Test specification
+    []
+  end,
+  impl,
+  Rubeno::SimpleTestAdapter.new
+)
+```
+
+## Integration with Testeranto Ecosystem
+
+Rubeno follows the same patterns as other Testeranto implementations:
+
+1. **Consistent API**: Matches TypeScript's BaseTiposkripto
+2. **Artifactory**: Context-aware file operations
+3. **Test Resource Configuration**: JSON-based configuration
+4. **Multi-pattern support**: BDD, TDT, and Describe-It patterns
+
+## See Also
+
+- [Tiposkripto](../tiposkripto/) - TypeScript implementation
+- [Golingvu](../golingvu/) - Go implementation
+- [Kafe](../kafe/) - Java implementation
 
 ### Quick Start with Ruĝa
 

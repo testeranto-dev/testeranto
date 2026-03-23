@@ -1,8 +1,8 @@
-import { Ibdd_in_any, Ibdd_out_any } from "./CoreTypes";
-import { IGivens, BaseGiven } from "./BaseGiven";
-import { BaseSuite } from "./BaseSuite";
-import { BaseThen } from "./BaseThen";
-import { BaseWhen } from "./BaseWhen";
+import type { BaseGiven } from "./BaseGiven";
+import type { BaseSuite } from "./BaseSuite";
+import type { BaseThen } from "./BaseThen";
+import type { BaseWhen } from "./BaseWhen";
+import type { Ibdd_in_any, Ibdd_out_any, TestTypeParams_any } from "./CoreTypes";
 
 export type ISuiteKlasser<I extends Ibdd_in_any, O extends Ibdd_out_any> = (
   name: string,
@@ -11,16 +11,16 @@ export type ISuiteKlasser<I extends Ibdd_in_any, O extends Ibdd_out_any> = (
 ) => BaseSuite<I, O>;
 
 export type IGivenKlasser<I extends Ibdd_in_any> = (
-  name,
-  features,
-  whens,
-  thens,
-  givenCB
+  name: string,
+  features: string[],
+  whens: BaseWhen<I>[],
+  thens: BaseThen<I>[],
+  givenCB: I["given"]
 ) => BaseGiven<I>;
 
-export type IWhenKlasser<I extends Ibdd_in_any> = (s, o) => BaseWhen<I>;
+export type IWhenKlasser<I extends Ibdd_in_any> = (s: I["istore"], o: any) => BaseWhen<I>;
 
-export type IThenKlasser<I extends Ibdd_in_any> = (s, o) => BaseThen<I>;
+export type IThenKlasser<I extends Ibdd_in_any> = (s: I["iselection"], o: any) => BaseThen<I>;
 
 export type ITestResourceConfiguration = {
   name: string;
@@ -38,22 +38,17 @@ export type ITTestResourceRequirement = {
   fs: string;
 };
 
-// Unified Pattern Types
+// Unified Pattern Types (internal)
 export type ISetups<I extends TestTypeParams_any> = Record<string, import("./BaseSetup").BaseSetup<I>>;
 export type IActions<I extends TestTypeParams_any> = Record<string, import("./BaseAction").BaseAction<I>>;
 export type IChecks<I extends TestTypeParams_any> = Record<string, import("./BaseCheck").BaseCheck<I>>;
 
-// AAA Pattern Types (deprecated)
-export type IArranges<I extends TestTypeParams_any> = Record<string, import("./BaseArrange").BaseArrange<I>>;
-export type IActs<I extends TestTypeParams_any> = Record<string, import("./BaseAct").BaseAct<I>>;
-export type IAsserts<I extends TestTypeParams_any> = Record<string, import("./BaseAssert").BaseAssert<I>>;
-
-// TDT Pattern Types (deprecated)
-export type IMaps<I extends TestTypeParams_any> = Record<string, import("./BaseMap").BaseMap<I>>;
-export type IFeeds<I extends TestTypeParams_any> = Record<string, import("./BaseFeed").BaseFeed<I>>;
-export type IValidates<I extends TestTypeParams_any> = Record<string, import("./BaseValidate").BaseValidate<I>>;
-
-// BDD Pattern Types (deprecated)
+// User-Facing Pattern Types
+export type IValues<I extends TestTypeParams_any> = Record<string, import("./BaseValue").BaseValue<I>>;
+export type IShoulds<I extends TestTypeParams_any> = Record<string, import("./BaseShould").BaseShould<I>>;
+export type IExpecteds<I extends TestTypeParams_any> = Record<string, import("./BaseExpected").BaseExpected<I>>;
+export type IDescribes<I extends TestTypeParams_any> = Record<string, import("./BaseDescribe").BaseDescribe<I>>;
+export type IIts<I extends TestTypeParams_any> = Record<string, import("./BaseIt").BaseIt<I>>;
 export type IGivens<I extends TestTypeParams_any> = Record<string, import("./BaseGiven").BaseGiven<I>>;
 export type IWhens<I extends TestTypeParams_any> = Record<string, import("./BaseWhen").BaseWhen<I>>;
 export type IThens<I extends TestTypeParams_any> = Record<string, import("./BaseThen").BaseThen<I>>;
@@ -76,7 +71,7 @@ export type ITestJob = {
     x: ITestResourceConfiguration
   ) => Promise<BaseSuite<Ibdd_in_any, Ibdd_out_any>>;
   testResourceRequirement: ITTestResourceRequirement;
-  receiveTestResourceConfig: (x) => IFinalResults;
+  receiveTestResourceConfig: (x: ITestResourceConfiguration) => IFinalResults;
 };
 
 export type ITestResults = Promise<{ test: ITest }>[];

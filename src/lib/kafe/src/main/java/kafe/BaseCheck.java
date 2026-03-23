@@ -38,7 +38,8 @@ public abstract class BaseCheck<R> {
     public abstract Object verifyCheck(
         R store,
         Function<R, Object> checkCB,
-        ITTestResourceConfiguration testResourceConfiguration
+        ITTestResourceConfiguration testResourceConfiguration,
+        Object artifactory
     );
     
     public Map<String, Object> toObj() {
@@ -51,8 +52,12 @@ public abstract class BaseCheck<R> {
     }
     
     public Object test(R store, ITTestResourceConfiguration testResourceConfiguration, String filepath) throws Exception {
+        return test(store, testResourceConfiguration, filepath, null);
+    }
+    
+    public Object test(R store, ITTestResourceConfiguration testResourceConfiguration, String filepath, Object artifactory) throws Exception {
         try {
-            Object result = verifyCheck(store, checkCB, testResourceConfiguration);
+            Object result = verifyCheck(store, checkCB, testResourceConfiguration, artifactory);
             status = true;
             return result;
         } catch (Exception e) {

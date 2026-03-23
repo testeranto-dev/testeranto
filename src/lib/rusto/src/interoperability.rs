@@ -4,9 +4,8 @@
 //! other Rust test frameworks.
 
 use std::collections::HashMap;
-use std::path::Path;
 use std::fs;
-use syn::{parse_file, File, Item};
+use syn::{parse_file, File};
 use quote::ToTokens;
 
 /// Core interoperability trait for Rust test frameworks

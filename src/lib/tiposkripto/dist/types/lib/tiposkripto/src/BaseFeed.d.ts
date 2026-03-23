@@ -1,10 +1,11 @@
 import { BaseAction } from "./BaseAction.js";
-import { TestTypeParams_any } from "./CoreTypes.js";
+import type { TestTypeParams_any } from "./CoreTypes.js";
 /**
  * BaseFeed extends BaseAction to support TDT (Table Driven Testing) pattern.
  * It processes each row from the table.
  */
 export declare class BaseFeed<I extends TestTypeParams_any> extends BaseAction<I> {
+    performAction(store: I["istore"], actionCB: (x: I["iselection"]) => I["then"], testResource: any, artifactory?: any): Promise<any>;
     rowIndex: number;
     rowData: any;
     constructor(name: string, feedCB: (xyz: I["iselection"]) => I["then"]);

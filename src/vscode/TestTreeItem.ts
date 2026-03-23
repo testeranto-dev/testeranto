@@ -42,7 +42,7 @@ export class TestTreeItem extends vscode.TreeItem {
       case TreeItemType.Runtime:
         return 'runtimeItem';
       case TreeItemType.Test:
-        return 'testItem';
+        return 'testItemWithAider';
       case TreeItemType.File:
         return 'fileItem';
       case TreeItemType.Info:

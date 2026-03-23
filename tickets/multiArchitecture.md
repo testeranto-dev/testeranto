@@ -1,16 +1,54 @@
 # Testeranto Multi-Strategy Testing Architecture
 
-### BDD (Behavior Driven Desien)
+### BDD (Behavior Driven Design)
 
-Given, when, then
+**High-level verbs**: Given, When, Then
 
-### AAA (Arange Act Assert)
+**Implementation**:
 
-Arrange, Act, Assert
+- `BaseGiven` extends `BaseSetup`
+- `BaseWhen` extends `BaseAction`
+- `BaseThen` extends `BaseCheck`
 
-### TDT (Table driven testing)
+**Usage**:
 
-Map (inputs and outputs), feed (the enumeration), validate (assert upon output)
+```typescript
+Given("initial state", ...)
+When("action is performed", ...)
+Then("expected outcome", ...)
+```
+
+### AAA (Arrange-Act-Assert) - Implemented as Describe-It Pattern (2 Verbs)
+
+**Note**: The AAA (Arrange-Act-Assert) pattern is implemented as the Describe-It pattern with 2 verbs: "Describe" (for Arrange) and "It" (for combined Act and Assert). This differs from BDD which uses 3 separate verbs (Given, When, Then). The Describe-It pattern follows the same underlying architecture but uses terminology common in JavaScript testing frameworks like Jest and Mocha.
+
+### TDT (Table Driven Testing)
+
+**High-level verbs**: Value, Should, Expected
+
+**Implementation**:
+
+- `BaseValue` extends `BaseSetup` (formerly `BaseThatFor`)
+- `BaseShould` extends `BaseAction` (formerly `BaseItIs`)
+- `BaseExpected` extends `BaseCheck` (formerly `BaseThat`)
+
+**Usage**:
+
+```typescript
+Value("test data table", ...)
+Should("process row", ...)
+Expected("check output", ...)
+```
+
+**Example**:
+
+```typescript
+// Table-driven test specification
+[Value["someInput"], Should["equal"], Expected["someOutput"]],
+[Value["4"], Should["greater than"], Expected[3]]
+```
+
+This pattern is ideal for testing multiple input-output combinations with the same test logic.
 
 ## Overview
 
@@ -78,7 +116,7 @@ The type system has been renamed for clarity:
 
 ## Supported Methodologies
 
-### 1. BDD (Behavior Driven Development)
+### 1. BDD (Behavior Driven Development) - User-Facing
 
 **High-level verbs**: Given, When, Then
 
@@ -96,468 +134,148 @@ When("action is performed", ...)
 Then("expected outcome", ...)
 ```
 
-### 2. AAA (Arrange-Act-Assert)
+### 2. AAA (Arrange-Act-Assert) - Implemented as Describe-It Pattern
 
-**High-level verbs**: Arrange, Act, Assert
+**Note**: The AAA (Arrange-Act-Assert) pattern is implemented as the Describe-It pattern with 2 verbs: "Describe" (for Arrange) and "It" (for combined Act and Assert). This follows the same underlying architecture but uses terminology common in JavaScript testing frameworks.
+
+### 3. TDT (Table Driven Testing) - User-Facing
+
+**High-level verbs**: Value, Should, Expected
 
 **Implementation**:
 
-- `BaseArrange` extends `BaseSetup`
-- `BaseAct` extends `BaseAction`
-- `BaseAssert` extends `BaseCheck`
+- `BaseValue` extends `BaseSetup`
+- `BaseShould` extends `BaseAction`
+- `BaseExpected` extends `BaseCheck`
 
 **Usage**:
 
 ```typescript
-Arrange("setup", ...)
-Act("perform operation", ...)
-Assert("verify result", ...)
+Value("test data table", ...)
+Should("process row", ...)
+Expected("check output", ...)
 ```
 
-### 3. TDT (Table Driven Testing)
-
-**High-level verbs**: Map, Feed, Validate
-
-**Implementation**:
-
-- `BaseMap` extends `BaseSetup`
-- `BaseFeed` extends `BaseAction`
-- `BaseValidate` extends `BaseCheck`
-
-**Usage**:
-
-```typescript
-Map("test data table", ...)
-Feed("process row", ...)
-Validate("check output", ...)
-```
 
 ## Additional Testing Patterns
 
-### 4. Describe-It (Common in JavaScript testing frameworks)
+### 3. Describe-It Pattern (AAA/Arrange-Act-Assert)
 
 **High-level verbs**: Describe, It
 
 **Implementation**:
 
-- `Describe` blocks map to test suites
-- `It` blocks map to individual test cases using the underlying setup-action-check pattern
+- `BaseDescribe` extends `BaseSetup` (for Arrange/Describe)
+- `BaseIt` extends `BaseAction` (for Act/Assert combined in It)
 
 **Usage**:
 
 ```typescript
-Describe("feature", () => {
-  It("should behave correctly", ...)
-})
+Describe("feature", ...)
+It("should behave correctly", ...)
 ```
 
-## Architecture Benefits
-
-### 1. Consistency
-
-All methodologies share the same:
-
-- Test execution engine
-- Resource management
-- Artifact handling
-- Reporting infrastructure
-
-### 2. Flexibility
-
-Developers can:
-
-- Choose the methodology that fits their needs
-- Mix methodologies within the same codebase
-- Create custom methodologies by extending base classes
-
-### 3. Maintainability
-
-- Core logic is centralized in three base classes
-- Methodology-specific code is isolated in extensions
-- Changes to core infrastructure benefit all methodologies
-
-### 4. Interoperability
-
-Tests written in different methodologies can:
-
-- Share test resources
-- Use the same adapters
-- Produce consistent output formats
-- Run in the same test execution environment
-
-## Implementation Status
-
-### ✅ Completed
+**Note**: This pattern combines the Act and Assert phases into a single "It" step, which is common in JavaScript testing frameworks like Jest and Mocha.
 
 - BDD implementation (Given, When, Then)
-- AAA implementation (Arrange, Act, Assert)
-- TDT implementation (Map, Feed, Validate)
+- AAA implementation TBD
+- TDT implementation TBD
 - Unified adapter interface
 - Renamed type system (TestTypeParams, TestSpecShape)
 
-### 🔄 In Progress
+---
 
-- BaseSetup, BaseAction, BaseCheck implementation
-- Describe-It pattern implementation
-- Documentation updates
+TODOs for Terminology Transition
 
-### 📋 Planned
+1. Update TDT Pattern Terminology
 
-- Performance optimizations
-- Additional testing patterns
-- Enhanced tooling integration
-- Cross-language consistency
+• [x] Rename ThatFor → Value (in all files: types, classes, specs)
+• [x] Rename ItIs → Should
+• [x] Rename That → Expected
+• [x] Update BaseThatFor.ts → BaseValue.ts
+• [x] Update BaseItIs.ts → BaseShould.ts
+• [x] Update BaseThat.ts → BaseExpected.ts
 
-## Migration Path
+2. Update Specification Helper Functions
 
-### For Existing Users
+• [x] Update createTDTSpecification() in index.ts to use Value, Should, Expected
+• [x] Update Confirm() helper function parameters
+• [x] Update example specification in Calculator.test.specification.ts
 
-1. **BDD users**: Continue using Given/When/Then - no changes required
-2. **New users**: Choose any methodology based on preference
-3. **Framework developers**: Extend BaseSetup/BaseAction/BaseCheck for custom patterns
+3. Update Type Definitions
 
-### Code Examples
+• [x] Update types.ts: add IValues, IShoulds, IExpecteds (kept old types for backward compatibility)
+• [x] Update CoreTypes.ts if needed for TDT type mappings - No changes needed, uses generic types
 
-**Using BDD pattern:**
+4. Update Documentation
 
-```typescript
-import { Given, When, Then } from "tiposkripto"
+• [x] Update index.md to reflect new TDT terminology
+• [x] Update multiArchitecture.md ticket
+• [x] Update README if needed - README is minimal and doesn't mention TDT
 
-Given("a user is logged in", ...)
-When("they click the button", ...)
-Then("the modal should open", ...)
-```
+5. Update Example Files
 
-**Using AAA pattern:**
+• [x] Update Calculator.test.specification.ts example to use new syntax:
 
-```typescript
-import { Arrange, Act, Assert } from "tiposkripto"
+// From:
+[ThatFor[`someInput`], ItIs["equal to"], That["someOutput"]]
 
-Arrange("database is seeded", ...)
-Act("API endpoint is called", ...)
-Assert("response is correct", ...)
-```
+// To:
+[Value["someInput"], Should["equal"], Expected["someOutput"]]
 
-**Using TDT pattern:**
+6. Verify Cross-Language Compatibility
 
-```typescript
-import { Map, Feed, Validate } from "tiposkripto"
+• [x] Check that Value, Should, Expected aren't keywords in target languages (Python, Ruby, Rust, Go,
+Java) - These terms are safe in all target languages
+• [x] Ensure the terms work well for code generation in all languages - Terms are clear and consistent
 
-Map("test cases", [
-  { input: 1, expected: 2 },
-  { input: 2, expected: 4 }
-])
-Feed("process input", ...)
-Validate("check against expected", ...)
-```
+7. Test the Changes
 
-## Future Directions
+• [ ] Run existing tests to ensure nothing breaks
+• [ ] Create a simple test to verify TDT pattern works with new terminology
+• [ ] Check that BDD and Describe-It patterns remain unchanged
 
-### 1. Pattern Composition
+8. Remove Deprecated Files (Clean Break)
 
-Allow mixing methodologies within single test suites:
+• [x] Remove BaseFeed.ts (deprecated TDT action)
+• [x] Remove BaseMap.ts (deprecated TDT setup)  
+• [x] Remove BaseValidate.ts (deprecated TDT check)
+• [x] Remove AAA pattern files (base_arrange.go, base_act.go, base_assert.go) - not currently implemented
+• [x] Rename Go TDT files: base_map.go → base_value.go, base_feed.go → base_should.go, base_validate.go → base_expected.go
+• [x] Add Describe-It pattern to Go implementation: base_describe.go, base_it.go
+• [x] Ensure no backward compatibility code remains
 
-```typescript
-Describe("API tests", () => {
-  Given("authenticated user", ...)
-  Map("test cases", [...]).Feed(...).Validate(...)
-})
-```
+Notes:
 
-### 2. Custom Methodologies
+• BDD (Given, When, Then), TDT (Value, Should, Expected), and Describe-It (Describe, It) patterns are all user-facing APIs
+• Internal implementation uses Setup, Action, Check (not exposed to users)
+• All deprecated files have been removed for a clean break from old patterns
+• No backward compatibility is maintained as requested
+• Go implementation (golingvu) and TypeScript implementation (tiposkripto) support all three patterns:
+  - BDD: Fully implemented
+  - TDT: Partially implemented (core classes exist, integration in progress)
+  - Describe-It: Partially implemented (core classes exist, integration in progress)
+• AAA (Arrange-Act-Assert) pattern is implemented as the Describe-It pattern with 2 verbs: Describe (Arrange) and It (combined Act and Assert)
 
-Enable developers to define their own testing patterns:
+Quick Start Commands:
 
-```typescript
-class CustomPattern extends BaseSetup { ... }
-class CustomAction extends BaseAction { ... }
-class CustomCheck extends BaseCheck { ... }
-```
+# 1. Rename core TDT files
 
-### 3. Enhanced Tooling
+mv src/BaseThatFor.ts src/BaseValue.ts
+mv src/BaseItIs.ts src/BaseShould.ts
+mv src/BaseThat.ts src/BaseExpected.ts
 
-- IDE plugins for all methodologies
-- Visual test composition tools
-- Performance profiling across patterns
-- Cross-methodology test reporting
+# 2. Update imports and references
 
-## Conclusion
+# 3. Update specification examples
 
-Testeranto's multi-strategy architecture provides a flexible, consistent foundation for various
-testing methodologies. By unifying the core infrastructure while supporting distinct high-level
-APIs, it offers developers the freedom to choose the right approach for each testing scenario while
-maintaining consistency across the entire test suite.
+# 4. Run tests
 
-The architecture ensures that all methodologies benefit from shared improvements while maintaining
-their unique characteristics and developer experiences.
+Notes:
 
-All testing methodologies are built upon three fundamental classes:
+• BDD (Given, When, Then) and AAA (Describe, It) patterns remain unchanged
+• Only TDT pattern gets updated terminology
+• The changes are mostly renaming for clarity and cross-language compatibility
 
-1. **BaseSetup** - Handles test initialization and state preparation
-2. **BaseAction** - Manages test execution and operations
-3. **BaseCheck** - Performs verification and assertions
-
-These classes provide a consistent foundation while allowing methodology-specific extensions.
-
-### Adapter Interface
-
-The test adapter uses methodology-agnostic terminology:
-
-```typescript
-interface IUniversalTestAdapter<I extends TestTypeParams_any> {
-  // Lifecycle hooks
-  prepareAll: (
-    input: I["iinput"],
-    testResource: ITestResourceConfiguration,
-  ) => Promise<I["isubject"]>;
-  prepareEach: (
-    subject: I["isubject"],
-    initializer: (c?) => I["given"],
-    testResource: ITestResourceConfiguration,
-    initialValues,
-  ) => Promise<I["istore"]>;
-
-  // Execution
-  execute: (
-    store: I["istore"],
-    actionCB: I["when"],
-    testResource: ITestResourceConfiguration,
-  ) => Promise<I["istore"]>;
-
-  // Verification
-  verify: (
-    store: I["istore"],
-    checkCB: I["then"],
-    testResource: ITestResourceConfiguration,
-  ) => Promise<I["iselection"]>;
-
-  // Cleanup
-  cleanupEach: (store: I["istore"], key: string) => Promise<unknown>;
-  cleanupAll: (store: I["istore"]) => any;
-
-  // Assertion
-  assert: (x: I["then"]) => any;
-}
-```
-
-### Type System
-
-The type system has been renamed for clarity:
-
-1. **TestTypeParams** (formerly `Ibdd_in`) - Defines the type parameters for test execution
-2. **TestSpecShape** (formerly `Ibdd_out`) - Defines the structure of test specifications
-
-## Supported Methodologies
-
-### 1. BDD (Behavior Driven Development)
-
-**High-level verbs**: Given, When, Then
-
-**Implementation**:
-
-- `BaseGiven` extends `BaseSetup`
-- `BaseWhen` extends `BaseAction`
-- `BaseThen` extends `BaseCheck`
-
-**Usage**:
-
-```typescript
-Given("initial state", ...)
-When("action is performed", ...)
-Then("expected outcome", ...)
-```
-
-### 2. AAA (Arrange-Act-Assert)
-
-**High-level verbs**: Arrange, Act, Assert
-
-**Implementation**:
-
-- `BaseArrange` extends `BaseSetup`
-- `BaseAct` extends `BaseAction`
-- `BaseAssert` extends `BaseCheck`
-
-**Usage**:
-
-```typescript
-Arrange("setup", ...)
-Act("perform operation", ...)
-Assert("verify result", ...)
-```
-
-### 3. TDT (Table Driven Testing)
-
-**High-level verbs**: Map, Feed, Validate
-
-**Implementation**:
-
-- `BaseMap` extends `BaseSetup`
-- `BaseFeed` extends `BaseAction`
-- `BaseValidate` extends `BaseCheck`
-
-**Usage**:
-
-```typescript
-Map("test data table", ...)
-Feed("process row", ...)
-Validate("check output", ...)
-```
-
-## Additional Testing Patterns
-
-### 4. Describe-It (Common in JavaScript testing frameworks)
-
-**High-level verbs**: Describe, It
-
-**Implementation**:
-
-- `Describe` blocks map to test suites
-- `It` blocks map to individual test cases using the underlying setup-action-check pattern
-
-**Usage**:
-
-```typescript
-Describe("feature", () => {
-  It("should behave correctly", ...)
-})
-```
-
-## Architecture Benefits
-
-### 1. Consistency
-
-All methodologies share the same:
-
-- Test execution engine
-- Resource management
-- Artifact handling
-- Reporting infrastructure
-
-### 2. Flexibility
-
-Developers can:
-
-- Choose the methodology that fits their needs
-- Mix methodologies within the same codebase
-- Create custom methodologies by extending base classes
-
-### 3. Maintainability
-
-- Core logic is centralized in three base classes
-- Methodology-specific code is isolated in extensions
-- Changes to core infrastructure benefit all methodologies
-
-### 4. Interoperability
-
-Tests written in different methodologies can:
-
-- Share test resources
-- Use the same adapters
-- Produce consistent output formats
-- Run in the same test execution environment
-
-## Implementation Status
-
-### ✅ Completed
-
-- BDD implementation (Given, When, Then)
-- AAA implementation (Arrange, Act, Assert)
-- TDT implementation (Map, Feed, Validate)
-- Unified adapter interface
-- Renamed type system (TestTypeParams, TestSpecShape)
-
-### 🔄 In Progress
-
-- BaseSetup, BaseAction, BaseCheck implementation
-- Describe-It pattern implementation
-- Documentation updates
-
-### 📋 Planned
-
-- Performance optimizations
-- Additional testing patterns
-- Enhanced tooling integration
-- Cross-language consistency
-
-## Migration Path
-
-### For Existing Users
-
-1. **BDD users**: Continue using Given/When/Then - no changes required
-2. **New users**: Choose any methodology based on preference
-3. **Framework developers**: Extend BaseSetup/BaseAction/BaseCheck for custom patterns
-
-### Code Examples
-
-**Using BDD pattern:**
-
-```typescript
-import { Given, When, Then } from "tiposkripto"
-
-Given("a user is logged in", ...)
-When("they click the button", ...)
-Then("the modal should open", ...)
-```
-
-**Using AAA pattern:**
-
-```typescript
-import { Arrange, Act, Assert } from "tiposkripto"
-
-Arrange("database is seeded", ...)
-Act("API endpoint is called", ...)
-Assert("response is correct", ...)
-```
-
-**Using TDT pattern:**
-
-```typescript
-import { Map, Feed, Validate } from "tiposkripto"
-
-Map("test cases", [
-  { input: 1, expected: 2 },
-  { input: 2, expected: 4 }
-])
-Feed("process input", ...)
-Validate("check against expected", ...)
-```
-
-## Future Directions
-
-### 1. Pattern Composition
-
-Allow mixing methodologies within single test suites:
-
-```typescript
-Describe("API tests", () => {
-  Given("authenticated user", ...)
-  Map("test cases", [...]).Feed(...).Validate(...)
-})
-```
-
-### 2. Custom Methodologies
-
-Enable developers to define their own testing patterns:
-
-```typescript
-class CustomPattern extends BaseSetup { ... }
-class CustomAction extends BaseAction { ... }
-class CustomCheck extends BaseCheck { ... }
-```
-
-### 3. Enhanced Tooling
-
-- IDE plugins for all methodologies
-- Visual test composition tools
-- Performance profiling across patterns
-- Cross-methodology test reporting
-
-## Conclusion
-
-Testeranto's multi-strategy architecture provides a flexible, consistent foundation for various
-testing methodologies. By unifying the core infrastructure while supporting distinct high-level
-APIs, it offers developers the freedom to choose the right approach for each testing scenario while
-maintaining consistency across the entire test suite.
-
-The architecture ensures that all methodologies benefit from shared improvements while maintaining
-their unique characteristics and developer experiences.
+This transition maintains backward compatibility for BDD and AAA while making TDT terminology clearer
+and more consistent across all target languages.

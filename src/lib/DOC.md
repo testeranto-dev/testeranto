@@ -2,7 +2,8 @@
 
 ## Overview
 
-Testeranto is a Behavior-Driven Development (BDD) testing framework implemented across six programming languages:
+Testeranto is a testing framework implemented across six programming languages:
+
 - **TypeScript/JavaScript**: `tiposkripto`
 - **Python**: `pitono`
 - **Go**: `golingvu`
@@ -15,10 +16,13 @@ Each implementation follows the same core BDD pattern while respecting language 
 ## Core Philosophy
 
 ### 1. Multiple Patterns, Single Framework
+
 Testeranto supports multiple testing patterns while maintaining a consistent API:
 
 #### BDD Pattern (Given-When-Then)
+
 Every Testeranto test follows the same fundamental pattern:
+
 ```
 testeranto(
   subject,              // The thing being tested
@@ -30,27 +34,39 @@ testeranto(
 ) -> Test Execution
 ```
 
-#### AAA Pattern (Arrange-Act-Assert)
-Testeranto also supports the AAA pattern through the same infrastructure:
-- **Arrange** maps to **Given** (setup initial state)
-- **Act** maps to **When** (perform actions)
-- **Assert** maps to **Then** (verify outcomes)
+This pattern enforces a stricter set of steps. You define a series of Whens and a list of Thens. The Whens are executed in order and the Thens are not guaranteed to run in any order.
+
+#### Describe/It
+
+Testeranto also supports the Describe/It pattern through the same infrastructure:
+
+- **Describe** maps to **Given** (setup initial state)
+- **It** maps to TBD
+
+This pattern enforces a looser set of steps. You define nested Describe functions with It functions. The It functions allow for both mutations and assertions mixed.
 
 #### TDT Pattern (Table Driven Testing)
+
 Testeranto now supports TDT (Table Driven Testing) pattern:
+
 - **Map** maps to **Given** (defines test table data)
 - **Feed** maps to **When** (processes each row from the table)
 - **Validate** maps to **Then** (validates output against expected results)
 
+This pattern is best used for testing stateless functions. You provide an input, an output, and an assertion.
+
 This allows you to use the pattern that best fits your testing style while leveraging the same robust framework.
 
 ### 2. Separation of Concerns
+
 - **Specification**: Pure business logic, human-readable descriptions
 - **Implementation**: Concrete operations that bring specifications to life
 - **Adapter**: Non-business logic code that adapts your test subject to BDD hooks
 
 ### 3. Consistent Cross-Language API
+
 All implementations provide:
+
 - `BaseSuite`, `BaseGiven`, `BaseWhen`, `BaseThen` base classes
 - `ITestAdapter` interface for lifecycle hooks
 - JSON-based test resource configuration
@@ -61,11 +77,13 @@ All implementations provide:
 ### The 5 Essential Types (TypeScript Reference)
 
 1. **TestTypeParams** (formerly `Ibdd_in`): Describes the type parameters for test execution
+
    ```typescript
    type TestTypeParams<IInput, ISubject, IStore, ISelection, ISetup, IAction, ICheck>
    ```
 
 2. **TestSpecShape** (formerly `Ibdd_out`): Describes the structure of test specifications
+
    ```typescript
    type TestSpecShape<ISuites, ISetups, IActions, IChecks>
    ```
@@ -77,6 +95,7 @@ All implementations provide:
 ### Test Lifecycle
 
 #### BDD Lifecycle
+
 ```
 BeforeAll → [Suite → (Given → When* → Then*)+] → AfterAll
            ↑
@@ -84,6 +103,7 @@ BeforeAll → [Suite → (Given → When* → Then*)+] → AfterAll
 ```
 
 #### AAA Lifecycle
+
 ```
 BeforeAll → [Suite → (Arrange → Act* → Assert*)+] → AfterAll
            ↑
@@ -95,6 +115,7 @@ Both patterns share the same underlying lifecycle hooks and adapter methods.
 ## Implementation Status & Alignment
 
 ### ✅ Well-Aligned Components
+
 - All languages have the four core base classes
 - Consistent BDD pattern: Given-When-Then
 - JSON test results format
@@ -103,7 +124,9 @@ Both patterns share the same underlying lifecycle hooks and adapter methods.
 ### ⚠️ Partial Alignment Issues
 
 #### 1. Method Signatures
+
 **TypeScript (Reference):**
+
 ```typescript
 async give(
   subject: I["isubject"],
@@ -116,6 +139,7 @@ async give(
 ```
 
 **Python (Needs Fix):**
+
 ```python
 async def give(
     self,
@@ -132,15 +156,21 @@ async def give(
 **Action Required**: Update Python to pass `filepath` parameter to `then_step.test()`
 
 #### 2. Adapter Interface
+
 **TypeScript (Reference):**
+
 ```typescript
 interface ITestAdapter<I extends Ibdd_in_any> {
-  beforeAll: (input: I["iinput"], testResource: ITestResourceConfiguration) => Promise<I["isubject"]>;
+  beforeAll: (
+    input: I["iinput"],
+    testResource: ITestResourceConfiguration,
+  ) => Promise<I["isubject"]>;
   // No 'pm' parameter
 }
 ```
 
 **Python/Java/Ruby (Current):**
+
 ```python
 async def before_all(self, input_val: Any, tr: ITTestResourceConfiguration, pm: Any) -> Any:
     # Has 'pm' parameter
@@ -149,7 +179,9 @@ async def before_all(self, input_val: Any, tr: ITTestResourceConfiguration, pm: 
 **Action Required**: Remove `pm` parameter from adapter methods where TypeScript doesn't have it
 
 #### 3. BaseSuite.run() Parameters
+
 **TypeScript (Reference):**
+
 ```typescript
 async run(
   input: I["iinput"],
@@ -159,6 +191,7 @@ async run(
 ```
 
 **Python (Fixed):**
+
 ```python
 async def run(
     self,
@@ -186,6 +219,7 @@ async def run(
 ## Language-Specific Implementation Details
 
 ### TypeScript (tiposkripto) - Reference Implementation
+
 - **Status**: Most complete and canonical
 - **Key Files**: `BaseTiposkripto.ts`, `BaseSetup.ts`, `BaseAction.ts`, `BaseCheck.ts`
 - **Legacy BDD Files**: `BaseGiven.ts`, `BaseWhen.ts`, `BaseThen.ts` (deprecated)
@@ -196,6 +230,7 @@ async def run(
 - **Pattern Support**: Unified (Setup-Action-Check) with backward compatibility for BDD, AAA, and TDT
 
 #### AAA Example in TypeScript
+
 ```typescript
 import { AAA } from "tiposkripto/src/index";
 import tiposkripto from "tiposkripto/src/Node";
@@ -203,10 +238,16 @@ import tiposkripto from "tiposkripto/src/Node";
 // Define your test subject
 class Calculator {
   private value: number = 0;
-  
-  add(x: number) { this.value += x; }
-  subtract(x: number) { this.value -= x; }
-  getValue() { return this.value; }
+
+  add(x: number) {
+    this.value += x;
+  }
+  subtract(x: number) {
+    this.value -= x;
+  }
+  getValue() {
+    return this.value;
+  }
 }
 
 // Use AAA pattern
@@ -216,13 +257,20 @@ const specification = (Suite, Arrange, Act, Assert) => [
   Suite.Default("Calculator Tests", {
     test1: Arrange.Default(
       ["Basic addition"],
-      [Act.Default("add 5", (calc) => { calc.add(5); return calc; })],
-      [Assert.Default("value should be 5", async (calc) => {
-        if (calc.getValue() !== 5) throw new Error("Expected 5");
-        return calc;
-      })]
-    )
-  })
+      [
+        Act.Default("add 5", (calc) => {
+          calc.add(5);
+          return calc;
+        }),
+      ],
+      [
+        Assert.Default("value should be 5", async (calc) => {
+          if (calc.getValue() !== 5) throw new Error("Expected 5");
+          return calc;
+        }),
+      ],
+    ),
+  }),
 ];
 
 // Implementation would follow similar structure to BDD
@@ -230,6 +278,7 @@ const specification = (Suite, Arrange, Act, Assert) => [
 ```
 
 ### Python (pitono) - High Priority Fixes Needed
+
 - **Status**: Good structure, needs signature alignment
 - **Key Issues**:
   1. `BaseGiven.give()` should pass `filepath` to `then_step.test()`
@@ -241,6 +290,7 @@ const specification = (Suite, Arrange, Act, Assert) => [
   - `src/lib/pitono/src/simple_adapter.py`
 
 ### Go (golingvu) - Medium Priority
+
 - **Status**: Basic implementation needs completion
 - **Key Issues**:
   1. Placeholder implementations need real logic
@@ -252,6 +302,7 @@ const specification = (Suite, Arrange, Act, Assert) => [
   - `src/lib/golingvu/base_when.go`
 
 ### Ruby (rubeno) - Medium Priority
+
 - **Status**: Functional but Ruby-specific patterns
 - **Key Issues**:
   1. Method naming (snake_case consistency)
@@ -262,6 +313,7 @@ const specification = (Suite, Arrange, Act, Assert) => [
   - `src/lib/rubeno/lib/base_given.rb`
 
 ### Rust (rusto) - High Priority
+
 - **Status**: Skeletal structure with incomplete async
 - **Key Issues**:
   1. Complete async implementations using `async_trait`
@@ -273,6 +325,7 @@ const specification = (Suite, Arrange, Act, Assert) => [
   - `src/lib/rusto/src/types.rs`
 
 ### Java (kafe) - High Priority
+
 - **Status**: Placeholder implementation needs significant work
 - **Key Issues**:
   1. Replace placeholder implementations with actual code
@@ -286,18 +339,21 @@ const specification = (Suite, Arrange, Act, Assert) => [
 ## Alignment Plan
 
 ### Phase 1: Core Interface Standardization (Immediate)
+
 1. **Standardize method signatures** across all base classes
 2. **Align adapter interfaces** to match TypeScript's `ITestAdapter`
 3. **Consistent error handling** patterns
 4. **Uniform artifact management** with path normalization
 
 ### Phase 2: Type System Harmonization (Short-term)
+
 1. **TypeScript**: Keep as reference model
 2. **Python/Ruby**: Enhance type hints to match TypeScript patterns
 3. **Go/Java/Rust**: Implement equivalent generics/interface patterns
 4. **Document type mappings** between languages
 
 ### Phase 3: Async/Concurrency Patterns (Medium-term)
+
 1. **Standardize async signatures** across all languages
 2. **Implement consistent promise/future patterns**
 3. **Ensure thread/goroutine safety** where applicable
@@ -306,19 +362,22 @@ const specification = (Suite, Arrange, Act, Assert) => [
 ## Testing Strategy
 
 ### Cross-Language Test Suite
+
 Create a reference test that runs in all languages:
+
 ```typescript
 // TypeScript reference
 Suite.Default("Calculator Tests", {
   test1: Given.Default(
     ["Basic arithmetic"],
     [When.add(2, 3)],
-    [Then.resultShouldBe(5)]
-  )
-})
+    [Then.resultShouldBe(5)],
+  ),
+});
 ```
 
 ### Implementation Checklist for Each Language
+
 - [ ] `BaseGiven.give()` method signature matches TypeScript
 - [ ] `BaseThen.test()` accepts `filepath` parameter
 - [ ] Adapter methods have correct parameters (no extra `pm`)
@@ -331,13 +390,16 @@ Suite.Default("Calculator Tests", {
 ## Development Workflow
 
 ### 1. Start with TypeScript Reference
+
 Always check TypeScript implementation first:
+
 ```bash
 cd src/lib/tiposkripto
 npm test  # Run reference tests
 ```
 
 ### 2. Update Target Language
+
 ```bash
 # Example: Fix Python implementation
 cd src/lib/pitono
@@ -348,12 +410,14 @@ python -m pytest tests/ -v
 ```
 
 ### 3. Verify Cross-Language Consistency
+
 ```bash
 # Run the same test scenario in multiple languages
 ./scripts/run-cross-language-test.sh CalculatorTest
 ```
 
 ### 4. Update Documentation
+
 ```bash
 # Update this DOC.md with changes
 # Update language-specific README files
@@ -362,17 +426,21 @@ python -m pytest tests/ -v
 ## Common Patterns & Solutions
 
 ### Problem: Extra Parameters in Method Signatures
+
 **Solution**: Remove parameters not present in TypeScript reference:
+
 ```python
 # Before (Python):
 async def before_all(self, input_val, tr, pm):  # Extra 'pm'
-    
+
 # After (matches TypeScript):
 async def before_all(self, input_val, tr):  # No 'pm'
 ```
 
 ### Problem: Missing Parameters
+
 **Solution**: Add missing parameters from TypeScript reference:
+
 ```python
 # Before (Python):
 result = await then_step.test(store, test_resource_configuration)
@@ -383,7 +451,9 @@ result = await then_step.test(store, test_resource_configuration, filepath)
 ```
 
 ### Problem: Inconsistent Error Handling
+
 **Solution**: Standardize on try-catch patterns:
+
 ```python
 # Standard pattern:
 try:
@@ -400,6 +470,7 @@ except Exception as e:
 ## Toolchain Integration
 
 ### Official Test Runners
+
 - **Go**: `go test` integration via `golingvu`
 - **Rust**: `cargo test` integration via `rusto` macros
 - **Python**: `unittest`/`pytest` compatibility via `pitono`
@@ -408,7 +479,9 @@ except Exception as e:
 - **TypeScript**: Vitest/Jest/Node test runner adapters
 
 ### CI/CD Integration
+
 Each implementation should:
+
 1. Produce JUnit XML or similar standard reports
 2. Support parallel test execution
 3. Integrate with GitHub Actions, GitLab CI, etc.
@@ -417,6 +490,7 @@ Each implementation should:
 ## For AI Assistants
 
 ### Key Points to Remember
+
 1. **TypeScript is the reference**: All other implementations should match it
 2. **Check method signatures first**: Most incongruencies are parameter mismatches
 3. **Preserve language idioms**: Match TypeScript patterns but use language-appropriate syntax
@@ -424,6 +498,7 @@ Each implementation should:
 5. **WebSocket port**: Default is 'ipcfile' or provided as argument
 
 ### Common Fix Patterns
+
 ```python
 # Pattern 1: Remove extra parameters
 - async def method(self, a, b, c, pm):  # Has extra 'pm'
@@ -439,7 +514,9 @@ Each implementation should:
 ```
 
 ### Verification Checklist for AI
+
 When reviewing or modifying code:
+
 - [ ] Method signatures match TypeScript reference
 - [ ] Adapter interface has correct parameters
 - [ ] Error handling follows language idioms
@@ -451,17 +528,20 @@ When reviewing or modifying code:
 ## Getting Help
 
 ### Reference Implementations
+
 - **Full Example**: `src/lib/tiposkripto/tests/abstractBase.test/`
 - **TypeScript Types**: `src/lib/tiposkripto/src/CoreTypes.ts`
 - **Base Classes**: `src/lib/tiposkripto/src/Base*.ts`
 
 ### Common Issues & Solutions
+
 1. **"Parameter mismatch"**: Compare with TypeScript reference implementation
 2. **"Async not working"**: Check language-specific async patterns
 3. **"Test not running"**: Verify test resource configuration format
 4. **"Results not writing"**: Check filesystem permissions and paths
 
 ### Contributing
+
 1. Always start with TypeScript reference
 2. Update one language at a time
 3. Run existing tests before making changes
@@ -471,6 +551,7 @@ When reviewing or modifying code:
 ## Version History & Compatibility
 
 ### Current Versions
+
 - `tiposkripto`: 0.1.x (reference)
 - `pitono`: 0.1.24
 - `golingvu`: Not versioned
@@ -479,7 +560,9 @@ When reviewing or modifying code:
 - `kafe`: Not versioned
 
 ### Breaking Changes
+
 When making changes that affect cross-language compatibility:
+
 1. Update this DOC.md file
 2. Notify maintainers of all implementations
 3. Consider migration path for existing tests
@@ -487,6 +570,6 @@ When making changes that affect cross-language compatibility:
 
 ---
 
-*Last Updated: 2026-03-14*
-*Maintainer: Testeranto Team*
-*Reference: TypeScript (tiposkripto) implementation*
+_Last Updated: 2026-03-14_
+_Maintainer: Testeranto Team_
+_Reference: TypeScript (tiposkripto) implementation_

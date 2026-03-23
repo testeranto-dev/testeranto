@@ -1,4 +1,4 @@
-use crate::types::{IbddInAny, ITTestResourceConfiguration};
+use crate::types::{IbddInAny, ITestResourceConfiguration};
 use std::collections::HashMap;
 
 /// BaseSetup is the unified base class for all setup phases.
@@ -62,7 +62,7 @@ impl<I: IbddInAny> BaseSetup<I> {
         &mut self,
         _subject: I::Isubject,
         _key: &str,
-        _test_resource_configuration: &ITTestResourceConfiguration,
+        _test_resource_configuration: &ITestResourceConfiguration,
         _tester: fn(I::Then) -> bool,
         _artifactory: Option<fn(&str, &dyn std::any::Any)>,
         _suite_ndx: Option<i32>,

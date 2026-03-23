@@ -1,8 +1,8 @@
 import { BaseGiven } from "./BaseGiven";
 import { BaseThen } from "./BaseThen";
 import { BaseWhen } from "./BaseWhen";
-import { Ibdd_in_any, Ibdd_out_any, ITestSpecification, ITestImplementation, ITestAdapter } from "./CoreTypes.js";
-import { ITestJob, ITTestResourceRequest, ITestResourceConfiguration } from "./types.js";
+import type { Ibdd_in_any, Ibdd_out_any, ITestSpecification, ITestImplementation, ITestAdapter } from "./CoreTypes.js";
+import type { ITestJob, ITTestResourceRequest, ITestResourceConfiguration } from "./types.js";
 type IExtenstions = Record<string, unknown>;
 export default abstract class BaseTiposkripto<I extends Ibdd_in_any = Ibdd_in_any, O extends Ibdd_out_any = Ibdd_out_any, M = unknown> {
     totalTests: number;
@@ -18,11 +18,24 @@ export default abstract class BaseTiposkripto<I extends Ibdd_in_any = Ibdd_in_an
     whenOverrides: Record<string, any>;
     testResourceConfiguration: ITestResourceConfiguration;
     abstract writeFileSync(filename: string, payload: string): void;
+    createArtifactory(context?: {
+        givenKey?: string;
+        whenIndex?: number;
+        thenIndex?: number;
+        suiteIndex?: number;
+    }): {
+        writeFileSync: (filename: string, payload: string) => void;
+    };
     constructor(webOrNode: "web" | "node", input: I["iinput"], testSpecification: ITestSpecification<I, O>, testImplementation: ITestImplementation<I, O, M> & {
         suites: Record<string, object>;
-        givens: Record<string, any>;
-        whens: Record<string, any>;
-        thens: Record<string, any>;
+        givens?: Record<string, any>;
+        whens?: Record<string, any>;
+        thens?: Record<string, any>;
+        values?: Record<string, any>;
+        shoulds?: Record<string, any>;
+        expecteds?: Record<string, any>;
+        describes?: Record<string, any>;
+        its?: Record<string, any>;
     }, testResourceRequirement: ITTestResourceRequest | undefined, testAdapter: Partial<ITestAdapter<I>> | undefined, testResourceConfiguration: ITestResourceConfiguration, wsPort?: string, wsHost?: string);
     receiveTestResourceConfig(testResourceConfig: ITestResourceConfiguration): Promise<any>;
     Specs(): any;

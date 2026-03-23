@@ -107,11 +107,15 @@ export class TestTreeDataProviderUtils {
               TreeItemType.Test,
               vscode.TreeItemCollapsibleState.Collapsed,
               { runtimeKey, testName },
-              undefined, // No command on click
+              {
+                command: 'testeranto.launchAiderTerminal',
+                title: 'Launch Aider',
+                arguments: [{ runtimeKey, testName }]
+              },
               new vscode.ThemeIcon('beaker'),
               'testItemWithAider'
             );
-            item.tooltip = `Click to expand test files. Use command palette or context menu to launch aider.`;
+            item.tooltip = `Click to launch aider for this test.`;
             return item;
           });
         }

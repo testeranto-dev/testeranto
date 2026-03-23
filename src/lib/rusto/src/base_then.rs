@@ -1,4 +1,4 @@
-use crate::types::IbddInAny;
+use crate::types::{IbddInAny, IArtifactory};
 use std::collections::HashMap;
 
 pub struct BaseThen<I: IbddInAny> {
@@ -34,9 +34,21 @@ impl<I: IbddInAny> BaseThen<I> {
         obj
     }
     
-    pub async fn test(&mut self, _store: I::Istore) -> Result<I::Then, String> {
-        // In a real implementation, this would execute the then callback
-        // For now, return an error since we can't construct I::Then
+    pub async fn test(&mut self, _store: I::Istore, _test_resource: &dyn std::any::Any, _filepath: &str, _artifactory: Option<&IArtifactory>) -> Result<I::Then, String> {
+        // Execute the then callback
+        // This is a placeholder implementation
+        // In practice, we would use the then_cb to verify the store
+        Err("Not implemented".to_string())
+    }
+    
+    pub async fn but_then(
+        &mut self,
+        _store: I::Istore,
+        _then_cb: &dyn Fn(I::Iselection) -> I::Then,
+        _test_resource: &dyn std::any::Any,
+        _artifactory: Option<&IArtifactory>,
+    ) -> Result<I::Iselection, String> {
+        // Default implementation
         Err("Not implemented".to_string())
     }
 }

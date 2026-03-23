@@ -1,20 +1,29 @@
-import { GivenSpecification, WhenSpecification, ThenSpecification, TestWhenImplementation, Modify, TestSuiteImplementation, TestGivenImplementation, TestThenImplementation, TestSuiteShape, TestGivenShape, TestWhenShape, TestThenShape } from "../../../Types";
-import { IGivens } from "./BaseGiven";
-import { BaseSuite } from "./BaseSuite";
-import { ITestResourceConfiguration } from "./types";
+import type { GivenSpecification, WhenSpecification, ThenSpecification, TestWhenImplementation, Modify, TestSuiteImplementation, TestGivenImplementation, TestThenImplementation, TestSuiteShape, TestGivenShape, TestWhenShape, TestThenShape } from "../../../Types";
+import type { IGivens } from "./BaseGiven";
+import type { BaseSuite } from "./BaseSuite";
+import type { ITestResourceConfiguration } from "./types";
+export type IArtifactory = {};
 export type SuiteSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
     [K in keyof O["suites"]]: (name: string, givens: IGivens<I>) => BaseSuite<I, O>;
 };
 export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
-    prepareAll: (input: I["iinput"], testResource: ITestResourceConfiguration) => Promise<I["isubject"]>;
-    prepareEach: (subject: I["isubject"], initializer: (c?: any) => I["given"], testResource: ITestResourceConfiguration, initialValues: any) => Promise<I["istore"]>;
-    execute: (store: I["istore"], actionCB: I["when"], testResource: ITestResourceConfiguration) => Promise<I["istore"]>;
-    verify: (store: I["istore"], checkCB: I["then"], testResource: ITestResourceConfiguration) => Promise<I["iselection"]>;
-    cleanupEach: (store: I["istore"], key: string) => Promise<unknown>;
-    cleanupAll: (store: I["istore"]) => any;
+    prepareAll: (input: I["iinput"], testResource: ITestResourceConfiguration, artifactory?: IArtifactory) => Promise<I["isubject"]>;
+    prepareEach: (subject: I["isubject"], initializer: (c?: any) => I["given"], testResource: ITestResourceConfiguration, initialValues: any, artifactory?: IArtifactory) => Promise<I["istore"]>;
+    execute: (store: I["istore"], actionCB: I["when"], testResource: ITestResourceConfiguration, artifactory?: IArtifactory) => Promise<I["istore"]>;
+    verify: (store: I["istore"], checkCB: I["then"], testResource: ITestResourceConfiguration, artifactory?: IArtifactory) => Promise<I["iselection"]>;
+    cleanupEach: (store: I["istore"], key: string, artifactory?: IArtifactory) => Promise<unknown>;
+    cleanupAll: (store: I["istore"], artifactory: IArtifactory) => any;
     assert: (x: I["then"]) => any;
 };
-export type ITestAdapter<I extends TestTypeParams_any> = IUniversalTestAdapter<I>;
+export type ITestAdapter<I extends TestTypeParams_any> = IUniversalTestAdapter<I> & {
+    beforeAll?: (input: I["iinput"], testResource: ITestResourceConfiguration, artifactory?: IArtifactory) => Promise<I["isubject"]>;
+    beforeEach?: (subject: I["isubject"], initializer: (c?: any) => I["given"], testResource: ITestResourceConfiguration, initialValues: any, artifactory?: IArtifactory) => Promise<I["istore"]>;
+    afterEach?: (store: I["istore"], key: string, artifactory?: IArtifactory) => Promise<unknown>;
+    afterAll?: (store: I["istore"], artifactory: IArtifactory) => any;
+    andWhen?: (store: I["istore"], actionCB: I["when"], testResource: ITestResourceConfiguration, artifactory?: IArtifactory) => Promise<I["istore"]>;
+    butThen?: (store: I["istore"], checkCB: I["then"], testResource: ITestResourceConfiguration, artifactory?: IArtifactory) => Promise<I["iselection"]>;
+    assertThis?: (x: I["then"]) => any;
+};
 export type ITestSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = (Suite: SuiteSpecification<I, O>, Given: GivenSpecification<I, O>, When: WhenSpecification<I, O>, Then: ThenSpecification<I, O>) => BaseSuite<I, O>[];
 export type ITestImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any, modifier = {
     whens: TestWhenImplementation<I, O>;
@@ -31,7 +40,7 @@ export type TestSpecShape<ISuites extends TestSuiteShape = TestSuiteShape, ISetu
     thens: IChecks;
 };
 export type TestSpecShape_any = TestSpecShape<TestSuiteShape, TestGivenShape, TestWhenShape, TestThenShape>;
-export type Ibdd_out<ISuites, IGivens, IWhens, IThens> = TestSpecShape<ISuites, IGivens, IWhens, IThens>;
+export type Ibdd_out<ISuites extends TestSuiteShape, IGivens extends TestGivenShape, IWhens extends TestWhenShape, IThens extends TestThenShape> = TestSpecShape<ISuites, IGivens, IWhens, IThens>;
 export type Ibdd_out_any = TestSpecShape_any;
 export type TestTypeParams<IInput, // Type of initial test input
 ISubject, // Type of object being tested

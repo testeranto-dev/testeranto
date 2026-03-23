@@ -11,17 +11,19 @@ class BaseThen(BaseCheck):
         self,
         store: Any,
         then_cb: Callable[[Any], Any],
-        test_resource_configuration: Any
+        test_resource_configuration: Any,
+        artifactory: Any = None
     ) -> Any:
         # This should be implemented by subclasses
         # But provide a default implementation that calls verify_check
-        return await self.verify_check(store, then_cb, test_resource_configuration)
+        return await self.verify_check(store, then_cb, test_resource_configuration, artifactory)
     
     async def verify_check(
         self,
         store: Any,
         check_cb: Callable[[Any], Any],
-        test_resource_configuration: ITestResourceConfiguration
+        test_resource_configuration: ITestResourceConfiguration,
+        artifactory: Any = None
     ) -> Any:
         # Default implementation that can be overridden
         if callable(check_cb):

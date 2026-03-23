@@ -28,12 +28,12 @@ module Rubeno
       }
     end
     
-    def verify_check(store, check_cb, test_resource_configuration)
+    def verify_check(store, check_cb, test_resource_configuration, artifactory = nil)
       # This should be implemented by subclasses
       raise NotImplementedError, "Subclasses must implement verify_check"
     end
     
-    def test(store, test_resource_configuration, filepath)
+    def test(store, test_resource_configuration, filepath, artifactory = nil)
       add_artifact = method(:add_artifact)
       
       begin
@@ -42,7 +42,7 @@ module Rubeno
           ->(s) do
             begin
               if @check_cb.respond_to?(:call)
-                result = @check_cb.call(s)
+                result = @check_cb.call(s) 
                 return result
               else
                 return @check_cb
@@ -52,7 +52,8 @@ module Rubeno
               raise e
             end
           end,
-          test_resource_configuration
+          test_resource_configuration,
+          artifactory
         )
         @status = true
         return x

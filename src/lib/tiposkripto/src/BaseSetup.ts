@@ -1,10 +1,10 @@
-import { TestTypeParams_any } from "./CoreTypes.js";
-import { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
+import type { TestTypeParams_any } from "./CoreTypes.js";
+import type { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
 
 /**
- * BaseSetup is the unified base class for all setup phases.
+ * BaseSetup is the internal unified base class for all setup phases.
  * It covers BDD's Given, AAA's Arrange, and TDT's Map.
- * @deprecated Use BaseGiven, BaseArrange, or BaseMap for specific patterns
+ * This class is not exposed to users - use BaseGiven, BaseValue, or BaseDescribe instead.
  */
 export abstract class BaseSetup<I extends TestTypeParams_any> {
   features: string[];
@@ -13,7 +13,7 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
   error: Error;
   fail: any;
   store: I["istore"];
-  recommendedFsPath: string;
+  recommendedFsPath: string = "";
   setupCB: I["given"];
   initialValues: any;
   key: string;
@@ -26,8 +26,8 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
     if (typeof path !== "string") {
       throw new Error(
         `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
+          path,
+        )}`,
       );
     }
     const normalizedPath = path.replace(/\\/g, "/");
@@ -39,7 +39,7 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
     actions: any[],
     checks: any[],
     setupCB: I["given"],
-    initialValues: any
+    initialValues: any,
   ) {
     this.features = features;
     this.actions = actions;
@@ -48,7 +48,7 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
     this.initialValues = initialValues;
     this.fails = 0;
     this.failed = false;
-    this.error = null;
+    this.error = null as any;
     this.store = null;
     this.key = "";
     this.status = undefined;
@@ -76,13 +76,13 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
     testResourceConfiguration: ITestResourceConfiguration,
     artifactory: ITestArtifactory,
     setupCB: I["given"],
-    initialValues: any
+    initialValues: any,
   ): Promise<I["istore"]>;
 
   async afterEach(
     store: I["istore"],
     key: string,
-    artifactory: ITestArtifactory
+    artifactory: ITestArtifactory,
   ): Promise<I["istore"]> {
     return store;
   }
@@ -93,12 +93,13 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
     testResourceConfiguration: ITestResourceConfiguration,
     tester: (t: Awaited<I["then"]> | undefined) => boolean,
     artifactory?: ITestArtifactory,
-    suiteNdx?: number
+    suiteNdx?: number,
   ) {
     this.key = key;
     this.fails = 0;
 
-    const actualArtifactory = artifactory || ((fPath: string, value: unknown) => {});
+    const actualArtifactory =
+      artifactory || ((fPath: string, value: unknown) => { });
     const setupArtifactory = (fPath: string, value: unknown) =>
       actualArtifactory(`setup-${key}/${fPath}`, value);
 
@@ -108,7 +109,7 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
         testResourceConfiguration,
         setupArtifactory,
         this.setupCB,
-        this.initialValues
+        this.initialValues,
       );
       this.status = true;
     } catch (e: any) {
@@ -123,9 +124,16 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
       // Process actions
       for (const [actionNdx, actionStep] of (this.actions || []).entries()) {
         try {
+          // Create artifactory for action context
+          const actionArtifactory = this.createArtifactoryForAction(
+            key,
+            actionNdx,
+            suiteNdx,
+          );
           this.store = await actionStep.test(
             this.store,
             testResourceConfiguration,
+            actionArtifactory,
           );
         } catch (e: any) {
           this.failed = true;
@@ -133,17 +141,25 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
           this.error = e;
         }
       }
-      
+
       // Process checks
       for (const [checkNdx, checkStep] of this.checks.entries()) {
         try {
-          const filepath = suiteNdx !== undefined ? 
-            `suite-${suiteNdx}/setup-${key}/check-${checkNdx}` : 
-            `setup-${key}/check-${checkNdx}`;
+          const filepath =
+            suiteNdx !== undefined
+              ? `suite-${suiteNdx}/setup-${key}/check-${checkNdx}`
+              : `setup-${key}/check-${checkNdx}`;
+          // Create artifactory for check context
+          const checkArtifactory = this.createArtifactoryForCheck(
+            key,
+            checkNdx,
+            suiteNdx,
+          );
           const t = await checkStep.test(
             this.store,
             testResourceConfiguration,
-            filepath
+            filepath,
+            checkArtifactory,
           );
           tester(t);
         } catch (e: any) {
@@ -168,6 +184,71 @@ export abstract class BaseSetup<I extends TestTypeParams_any> {
 
     return this.store;
   }
+
+  private createArtifactoryForAction(
+    key: string,
+    actionIndex: number,
+    suiteNdx?: number,
+  ) {
+    const self = this as any;
+    if (self._parent && self._parent.createArtifactory) {
+      return self._parent.createArtifactory({
+        givenKey: key,
+        whenIndex: actionIndex,
+        suiteIndex: suiteNdx,
+      });
+    }
+    // Fallback to logging
+    return {
+      writeFileSync: (filename: string, payload: string) => {
+        let path = "";
+        if (suiteNdx !== undefined) {
+          path += `suite-${suiteNdx}/`;
+        }
+        path += `setup-${key}/`;
+        path += `action-${actionIndex} ${filename}`;
+        console.log(`[Artifactory] Would write to: ${path}`);
+        console.log(`[Artifactory] Content: ${payload.substring(0, 100)}...`);
+      },
+      screenshot: (filename: string, payload?: string) => {
+        console.log(`[Artifactory] Would take screenshot: ${filename}`);
+      },
+    };
+  }
+
+  private createArtifactoryForCheck(
+    key: string,
+    checkIndex: number,
+    suiteNdx?: number,
+  ) {
+    const self = this as any;
+    if (self._parent && self._parent.createArtifactory) {
+      return self._parent.createArtifactory({
+        givenKey: key,
+        thenIndex: checkIndex,
+        suiteIndex: suiteNdx,
+      });
+    }
+    // Fallback to logging
+    return {
+      writeFileSync: (filename: string, payload: string) => {
+        let path = "";
+        if (suiteNdx !== undefined) {
+          path += `suite-${suiteNdx}/`;
+        }
+        path += `setup-${key}/`;
+        path += `check-${checkIndex} ${filename}`;
+        console.log(`[Artifactory] Would write to: ${path}`);
+        console.log(`[Artifactory] Content: ${payload.substring(0, 100)}...`);
+      },
+      screenshot: (filename: string, payload?: string) => {
+        console.log(`[Artifactory] Would take screenshot: ${filename}`);
+      },
+    };
+  }
 }
 
-export type ISetups<I extends TestTypeParams_any> = Record<string, BaseSetup<I>>;
+export type ISetups<I extends TestTypeParams_any> = Record<
+  string,
+  BaseSetup<I>
+>;

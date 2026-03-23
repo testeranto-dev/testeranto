@@ -31,7 +31,7 @@ public abstract class BaseGiven<I, S, R> extends BaseSetup<I, S, R> {
     public abstract R setupThat(
         S subject,
         ITTestResourceConfiguration testResourceConfiguration,
-        Function<String, Object> artifactory,
+        Object artifactory,
         Function<S, R> setupCB,
         Object initialValues
     );
@@ -42,7 +42,7 @@ public abstract class BaseGiven<I, S, R> extends BaseSetup<I, S, R> {
         String key,
         ITTestResourceConfiguration testResourceConfiguration,
         Function<Object, Boolean> tester,
-        Function<String, Object> artifactory,
+        Object artifactory,
         int suiteNdx
     ) throws Exception {
         return super.setup(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx);

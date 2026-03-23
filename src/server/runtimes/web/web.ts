@@ -1,4 +1,3 @@
-
 import esbuild from "esbuild";
 import puppeteer from "puppeteer-core";
 import configer from "./esbuild";
@@ -13,12 +12,12 @@ const nodeConfigPath = process.argv[3];
 const testName = process.argv[4];
 const entryPoints = process.argv.slice(5);
 
-const reportDir = path.join(process.cwd(), 'testeranto', 'reports', testName);
+const reportDir = path.join(process.cwd(), "testeranto", "reports", testName);
 if (!fs.existsSync(reportDir)) {
   fs.mkdirSync(reportDir, { recursive: true });
 }
-const logFilePath = path.join(reportDir, 'build.log');
-const logStream = fs.createWriteStream(logFilePath, { flags: 'a' });
+const logFilePath = path.join(reportDir, "build.log");
+const logStream = fs.createWriteStream(logFilePath, { flags: "a" });
 
 // Override console.log to write to both console and log file
 const originalConsoleLog = console.log;
@@ -27,14 +26,16 @@ const originalConsoleWarn = console.warn;
 
 function logToFile(message: any, ...optionalParams: any[]) {
   const timestamp = new Date().toISOString();
-  const formattedMessage = typeof message === 'string' ? message : JSON.stringify(message, null, 2);
+  const formattedMessage =
+    typeof message === "string" ? message : JSON.stringify(message, null, 2);
   const fullMessage = `[${timestamp}] ${formattedMessage}`;
 
   // Write to file
-  logStream.write(fullMessage + '\n');
+  logStream.write(fullMessage + "\n");
   if (optionalParams.length > 0) {
-    optionalParams.forEach(param => {
-      const paramStr = typeof param === 'string' ? param : JSON.stringify(param, null, 2);
+    optionalParams.forEach((param) => {
+      const paramStr =
+        typeof param === "string" ? param : JSON.stringify(param, null, 2);
       logStream.write(`  ${paramStr}\n`);
     });
   }
@@ -49,14 +50,22 @@ console.log = (...args) => {
 
 console.error = (...args) => {
   const timestamp = new Date().toISOString();
-  const message = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg, null, 2)).join(' ');
+  const message = args
+    .map((arg) =>
+      typeof arg === "string" ? arg : JSON.stringify(arg, null, 2),
+    )
+    .join(" ");
   logStream.write(`[${timestamp}] ERROR: ${message}\n`);
   originalConsoleError.apply(console, args);
 };
 
 console.warn = (...args) => {
   const timestamp = new Date().toISOString();
-  const message = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg, null, 2)).join(' ');
+  const message = args
+    .map((arg) =>
+      typeof arg === "string" ? arg : JSON.stringify(arg, null, 2),
+    )
+    .join(" ");
   logStream.write(`[${timestamp}] WARN: ${message}\n`);
   originalConsoleWarn.apply(console, args);
 };
@@ -71,32 +80,32 @@ console.log(`[WEB BUILDER] CWD: ${process.cwd()}`);
 const urlDomain = `http://webtests:8000/`;
 
 // Handle process exit to close log stream
-process.on('exit', () => {
-  console.log('[WEB BUILDER] Process exiting');
+process.on("exit", () => {
+  console.log("[WEB BUILDER] Process exiting");
   logStream.end();
 });
-process.on('SIGINT', () => {
-  console.log('[WEB BUILDER] Received SIGINT');
+process.on("SIGINT", () => {
+  console.log("[WEB BUILDER] Received SIGINT");
   logStream.end();
   process.exit(0);
 });
-process.on('uncaughtException', (error) => {
-  console.error('[WEB BUILDER] Uncaught exception:', error);
+process.on("uncaughtException", (error) => {
+  console.error("[WEB BUILDER] Uncaught exception:", error);
   logStream.end();
 });
 
 async function startBundling(
   webConfigs: any,
   projectConfig: ITestconfigV2,
-  entryPoints: string[]
+  entryPoints: string[],
 ) {
   console.log(`[WEB BUILDER] is now bundling: ${testName}`);
-  console.log(`[WEB BUILDER] Entry points: ${entryPoints.join(', ')}`);
+  console.log(`[WEB BUILDER] Entry points: ${entryPoints.join(", ")}`);
 
   const w = configer(webConfigs, testName, projectConfig, entryPoints);
 
   // Check if we're in dev mode
-  const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
+  const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
 
   if (isDevMode) {
     console.log(`[WEB BUILDER] Running in dev mode - starting watch mode`);
@@ -107,11 +116,16 @@ async function startBundling(
       plugins: [
         ...(w.plugins || []),
         {
-          name: 'testeranto-web-rebuild-notifier',
+          name: "testeranto-web-rebuild-notifier",
           setup(build) {
             build.onEnd(async (result) => {
               if (result.metafile) {
-                await processMetafile(projectConfig, result.metafile, 'web', testName);
+                await processMetafile(
+                  projectConfig,
+                  result.metafile,
+                  "web",
+                  testName,
+                );
                 console.log(`[WEB BUILDER] Metafile updated`);
 
                 // Trigger test re-run by touching inputFiles.json
@@ -121,12 +135,19 @@ async function startBundling(
                   if (fs.existsSync(inputFilesPath)) {
                     const stats = fs.statSync(inputFilesPath);
                     fs.utimesSync(inputFilesPath, stats.atime, new Date());
-                    console.log(`[WEB BUILDER] Triggered inputFiles.json update at ${inputFilesPath}`);
+                    console.log(
+                      `[WEB BUILDER] Triggered inputFiles.json update at ${inputFilesPath}`,
+                    );
                   } else {
-                    console.log(`[WEB BUILDER] inputFiles.json doesn't exist yet at ${inputFilesPath}`);
+                    console.log(
+                      `[WEB BUILDER] inputFiles.json doesn't exist yet at ${inputFilesPath}`,
+                    );
                   }
                 } catch (error) {
-                  console.error(`[WEB BUILDER] Failed to trigger inputFiles.json update:`, error);
+                  console.error(
+                    `[WEB BUILDER] Failed to trigger inputFiles.json update:`,
+                    error,
+                  );
                 }
               }
             });
@@ -137,55 +158,38 @@ async function startBundling(
 
     // Build once initially
     const buildResult = await ctx.rebuild();
-    if (buildResult.metafile) {
-      await processMetafile(projectConfig, buildResult.metafile, 'web', testName);
 
-      const outputFiles = Object.keys(buildResult.metafile.outputs);
-      for (const outputFile of outputFiles) {
-        if (outputFile.endsWith('.mjs')) {
-          const baseName = path.basename(outputFile, '.mjs');
-          // Create a simpler HTML filename without dots (except .html)
-          const simpleBaseName = baseName.replace(/\./g, '_');
-          const htmlPath = `testeranto/bundles/${testName}/${simpleBaseName}.html`;
-          await fs.promises.mkdir(path.dirname(htmlPath), { recursive: true });
-          // Calculate the correct script src path
-          // The HTML is at the root, so we need the relative path from root to the .mjs file
-          // outputFile is like 'testeranto/bundles/webtests/src/ts/Calculator.test.web.mjs'
-          // We need 'src/ts/Calculator.test.web.mjs'
-          const relativePath = outputFile.replace(`testeranto/bundles/${testName}/`, '');
-          const htmlContent = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Test Runner - ${baseName}</title>
-    <script type="module" src="${relativePath}"></script>
-</head>
-<body>
-    <div id="root"></div>
-</body>
-</html>`;
-          await fs.promises.writeFile(htmlPath, htmlContent);
-          console.log(`Created HTML file: ${htmlPath}`);
-        }
-      }
+    if (buildResult.metafile) {
+      await processMetafile(
+        projectConfig,
+        buildResult.metafile,
+        "web",
+        testName,
+      );
     } else {
       console.warn("No metafile generated by esbuild");
     }
 
     // Start a dev server - bind to all interfaces
-    let { hosts, port, } = await ctx.serve({
-      host: '0.0.0.0',
-      servedir: '/workspace',
+    let { hosts, port } = await ctx.serve({
+      host: "0.0.0.0",
+      servedir: "/workspace",
       onRequest: ({ method, path, remoteAddress, status, timeInMS }) => {
-        console.log(`[esbuild] ${remoteAddress} - ${method} ${path} -> ${status} [${timeInMS}ms]`);
+        console.log(
+          `[esbuild] ${remoteAddress} - ${method} ${path} -> ${status} [${timeInMS}ms]`,
+        );
       },
     });
-    console.log(`[WEB BUILDER]: esbuild server listening on ${hosts}, port ${port}, ${process.cwd()}`);
+    console.log(
+      `[WEB BUILDER]: esbuild server listening on ${hosts}, port ${port}, ${process.cwd()}`,
+    );
 
     // Start watching for changes
     await ctx.watch();
 
-    console.log(`[WEB BUILDER] Watch mode active - waiting for file changes...`);
+    console.log(
+      `[WEB BUILDER] Watch mode active - waiting for file changes...`,
+    );
 
     // Note: esbuild context doesn't have an 'on' method for rebuild events
     // We'll handle rebuilds through the onEnd plugin instead
@@ -199,35 +203,16 @@ async function startBundling(
     });
 
     console.log("Chrome is a separate service, not launched in builder");
-
   } else {
     // Once mode - just build once
     const buildResult = await esbuild.build(w);
     if (buildResult.metafile) {
-      await processMetafile(projectConfig, buildResult.metafile, 'web', testName);
-
-      // Create HTML files for each output (optional, for debugging)
-      const outputFiles = Object.keys(buildResult.metafile.outputs);
-      for (const outputFile of outputFiles) {
-        if (outputFile.endsWith('.mjs')) {
-          const baseName = path.basename(outputFile, '.mjs');
-          const htmlPath = `testeranto/bundles/${testName}/${baseName}.html`;
-          await fs.promises.mkdir(path.dirname(htmlPath), { recursive: true });
-          const htmlContent = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Test Runner - ${baseName}</title>
-    <script type="module" src="${path.basename(outputFile)}"></script>
-</head>
-<body>
-    <div id="root"></div>
-</body>
-</html>`;
-          await fs.promises.writeFile(htmlPath, htmlContent);
-          console.log(`Created HTML file: ${htmlPath}`);
-        }
-      }
+      await processMetafile(
+        projectConfig,
+        buildResult.metafile,
+        "web",
+        testName,
+      );
     } else {
       console.warn("No metafile generated by esbuild");
     }
@@ -241,7 +226,11 @@ async function main() {
     const projectConfigs = (await import(projectConfigPath)).default;
     await startBundling(nodeConfigs, projectConfigs, entryPoints);
   } catch (error) {
-    console.error("WEB BUILDER: Error importing config:", nodeConfigPath, error);
+    console.error(
+      "WEB BUILDER: Error importing config:",
+      nodeConfigPath,
+      error,
+    );
     console.error(error);
     process.exit(1);
   }

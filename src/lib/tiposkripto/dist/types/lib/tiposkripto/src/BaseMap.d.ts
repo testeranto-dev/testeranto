@@ -1,11 +1,12 @@
 import { BaseSetup } from "./BaseSetup.js";
-import { TestTypeParams_any } from "./CoreTypes.js";
-import { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
+import type { TestTypeParams_any } from "./CoreTypes.js";
+import type { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
 /**
  * BaseMap extends BaseSetup to support TDT (Table Driven Testing) pattern.
  * It sets up the test table data.
  */
 export declare class BaseMap<I extends TestTypeParams_any> extends BaseSetup<I> {
+    setupThat(subject: I["isubject"], testResourceConfiguration: ITestResourceConfiguration, artifactory: ITestArtifactory, setupCB: I["given"], initialValues: any): Promise<I["istore"]>;
     tableData: any[];
     constructor(features: string[], feeds: any[], // These will be processed as actions
     validates: any[], // These will be processed as checks

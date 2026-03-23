@@ -16,7 +16,8 @@ public abstract class BaseWhen<S, R> extends BaseAction<S, R> {
     public abstract R performAction(
         R store,
         Function<R, R> actionCB,
-        ITTestResourceConfiguration testResourceConfiguration
+        ITTestResourceConfiguration testResourceConfiguration,
+        Object artifactory
     );
     
     // Alias test to andWhenTest for BDD pattern

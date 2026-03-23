@@ -87,7 +87,7 @@ public abstract class BaseSetup<I, S, R> {
     public abstract R setupThat(
         S subject,
         ITTestResourceConfiguration testResourceConfiguration,
-        Function<String, Object> artifactory,
+        Object artifactory,
         Function<S, R> setupCB,
         Object initialValues
     );
@@ -95,7 +95,7 @@ public abstract class BaseSetup<I, S, R> {
     public R afterEach(
         R store,
         String key,
-        Function<String, Object> artifactory
+        Object artifactory
     ) {
         return store;
     }
@@ -105,18 +105,22 @@ public abstract class BaseSetup<I, S, R> {
         String key,
         ITTestResourceConfiguration testResourceConfiguration,
         Function<Object, Boolean> tester,
-        Function<String, Object> artifactory,
+        Object artifactoryObj,
         int suiteNdx
     ) throws Exception {
         this.key = key;
         this.fails = 0;
         
-        Function<String, Object> setupArtifactory = (fPath) -> {
-            if (artifactory != null) {
-                return artifactory.apply("setup-" + key + "/" + fPath);
-            }
-            return null;
-        };
+        // Ensure we have an artifactory - create a default one if none provided
+        Object setupArtifactory = artifactoryObj;
+        if (setupArtifactory == null) {
+            // Create a simple default artifactory that does nothing
+            setupArtifactory = new Object() {
+                public void writeFileSync(String filename, String payload) {
+                    System.out.println("[Default Artifactory] Would write to: " + filename);
+                }
+            };
+        }
         
         try {
             this.store = setupThat(
@@ -136,11 +140,18 @@ public abstract class BaseSetup<I, S, R> {
         }
         
         try {
-            // Process actions
+            // Process actions with artifactory
             for (int actionNdx = 0; actionNdx < actions.size(); actionNdx++) {
                 BaseAction<S, R> actionStep = actions.get(actionNdx);
                 try {
-                    this.store = actionStep.test(this.store, testResourceConfiguration);
+                    // Create context-specific artifactory for this action
+                    Object actionArtifactory = createActionArtifactory(key, actionNdx, suiteNdx, artifactoryObj);
+                    this.store = actionStep.performAction(
+                        this.store,
+                        actionStep.actionCB,
+                        testResourceConfiguration,
+                        actionArtifactory
+                    );
                 } catch (Exception e) {
                     this.failed = true;
                     this.fails++;
@@ -148,7 +159,7 @@ public abstract class BaseSetup<I, S, R> {
                 }
             }
             
-            // Process checks
+            // Process checks with artifactory
             for (int checkNdx = 0; checkNdx < checks.size(); checkNdx++) {
                 BaseCheck<R> checkStep = checks.get(checkNdx);
                 try {
@@ -156,7 +167,14 @@ public abstract class BaseSetup<I, S, R> {
                         "suite-" + suiteNdx + "/setup-" + key + "/check-" + checkNdx :
                         "setup-" + key + "/check-" + checkNdx;
                     
-                    Object result = checkStep.test(this.store, testResourceConfiguration, filepath);
+                    // Create context-specific artifactory for this check
+                    Object checkArtifactory = createCheckArtifactory(key, checkNdx, suiteNdx, artifactoryObj);
+                    Object result = checkStep.verifyCheck(
+                        this.store,
+                        checkStep.checkCB,
+                        testResourceConfiguration,
+                        checkArtifactory
+                    );
                     if (!tester.apply(result)) {
                         this.failed = true;
                         this.fails++;
@@ -182,5 +200,17 @@ public abstract class BaseSetup<I, S, R> {
         }
         
         return this.store;
+    }
+    
+    private Object createActionArtifactory(String key, int actionIndex, int suiteNdx, Object parentArtifactory) {
+        // In a real implementation, this would create a context-specific artifactory
+        // For now, return the parent artifactory
+        return parentArtifactory;
+    }
+    
+    private Object createCheckArtifactory(String key, int checkIndex, int suiteNdx, Object parentArtifactory) {
+        // In a real implementation, this would create a context-specific artifactory
+        // For now, return the parent artifactory
+        return parentArtifactory;
     }
 }

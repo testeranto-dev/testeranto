@@ -18,7 +18,7 @@ module Rubeno
       @artifacts << normalized_path
     end
     
-    def perform_action(store, action_cb, test_resource)
+    def perform_action(store, action_cb, test_resource, artifactory = nil)
       # This should be implemented by subclasses
       raise NotImplementedError, "Subclasses must implement perform_action"
     end
@@ -36,12 +36,13 @@ module Rubeno
       }
     end
     
-    def test(store, test_resource_configuration)
+    def test(store, test_resource_configuration, artifactory = nil)
       begin
         result = perform_action(
           store,
           @action_cb,
-          test_resource_configuration
+          test_resource_configuration,
+          artifactory
         )
         @status = true
         result
