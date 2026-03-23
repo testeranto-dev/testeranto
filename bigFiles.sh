@@ -22,7 +22,7 @@ if [[ ! -d "$TARGET_DIR" ]]; then
     exit 1
 fi
 
-echo "Searching for the 10 largest .ts, .tsx, .rb, .rs, .java, .py, .go files in '$TARGET_DIR' (excluding node_modules and venv)..."
+echo "Searching for the 10 largest .ts, .tsx, .rb, .rs, .java, .py, .go files in '$TARGET_DIR' (excluding node_modules, venv, target/package, and lib/rusto/target)..."
 echo ""
 
 # Detect platform for appropriate stat command
@@ -52,7 +52,7 @@ while IFS= read -r -d '' file; do
     if [[ -n "$size" ]]; then
         printf "%d %s\n" "$size" "$file" >> "$TEMP_FILE"
     fi
-done < <(find "$TARGET_DIR" \( -name "node_modules" -o -name "venv" \) -prune -o \
+done < <(find "$TARGET_DIR" \( -name "node_modules" -o -name "venv" -o -name "target/package" -o -path "*/lib/rusto/target" -o -path "*/lib/rusto/target/*" \) -prune -o \
     -type f \( \
     -name "*.ts" -o \
     -name "*.tsx" -o \

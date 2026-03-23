@@ -50,9 +50,15 @@ export class Server_Docker extends Server_WS {
   private builderServicesManager: BuilderServicesManager;
   private aiderImageBuilder: AiderImageBuilder;
   private testCompletionWaiter: TestCompletionWaiter;
+  private inputFiles: any;
+  private hashs: any;
+  private outputFiles: any;
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
+    this.inputFiles = {};
+    this.hashs = {};
+    this.outputFiles = {};
     this.testFileManager = new TestFileManager(configs, mode, (path) =>
       this.resourceChanged(path),
     );
@@ -421,8 +427,9 @@ export class Server_Docker extends Server_WS {
     return this.testResultsCollector.getTestResults(runtime, testName);
   };
 
-  public collectAllTestResults = (): any[] => {
-    return this.testResultsCollector.collectAllTestResults();
+  private collectAllTestResults = async (): Promise<Record<string, any>> => {
+    const results = this.testResultsCollector.collectAllTestResults();
+    return { results };
   };
 
   public getProcessSummary = (): any => {

@@ -93,7 +93,7 @@ export async function collectAllTestResults(
           } catch (error) {
             console.error(
               `Error reading test results from ${filePath}:`,
-              error.message,
+              error instanceof Error ? error.message : String(error),
             );
           }
         }

@@ -132,7 +132,6 @@ export const generateServicesPure = (
           f,
           buildOptions,
           runtimeTestsName,
-          webBuilderServiceName,
         );
       } else {
         bddCommand = bddCommandFunc(f, buildOptions, runtimeTestsName);

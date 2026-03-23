@@ -4,68 +4,9 @@ import { handleInputFiles } from "./handleInputFiles";
 import { handleOutputFiles } from "./handleOutputFiles";
 import { handleTestResults } from "./handleTestResults";
 import { jsonResponse } from "./jsonResponse";
+import { handleOptions } from "./handleOptions";
 
-
-export const handleRoutePure = (
-  routeName: string,
-  request: Request,
-  url: URL,
-  server: any,
-): Response => {
-  // Handle OPTIONS requests
-  if (request.method === "OPTIONS") {
-    return Server_HTTP_utils.handleOptions();
-  }
-
-  // Only handle GET requests for now
-  if (request.method !== "GET") {
-    return jsonResponse(
-      {
-        error: `Method ${request.method} not allowed`,
-      },
-      405,
-    );
-  }
-
-  switch (routeName) {
-    case "configs":
-      return handleConfigs(server);
-    case "processes":
-      return handleProcesses(server);
-    case "inputfiles":
-      return handleInputFiles(url, server);
-    case "outputfiles":
-      return handleOutputFiles(url, server);
-    case "testresults":
-      return handleTestResults(url, server);
-    case "collated-testresults":
-      return handleCollatedTestResults(server);
-    case "collated-inputfiles":
-      return handleCollatedInputFiles(server);
-    case "collated-documentation":
-      return handleCollatedDocumentation();
-    case "documentation":
-      return handleDocumentation();
-    case "reports":
-      return handleReports();
-    case "html-report":
-      return handleHtmlReport();
-    case "aider-processes":
-      return handleAiderProcesses(server);
-    case "collated-files":
-      return handleCollatedFiles(server);
-    case `app-state`:
-      return handleAppState(server);
-    default:
-      return jsonResponse(
-        {
-          error: `Route not found: ${routeName}`,
-        },
-        404,
-      );
-  }
-};
-
+// Declare missing functions
 const handleProcesses = (server: any): Response => {
   const getProcessSummary = server.getProcessSummary;
   if (typeof getProcessSummary !== "function") {
@@ -126,8 +67,12 @@ const handleHtmlReport = (): Response => {
   });
 };
 
-// TODO
-const handleAppState = (server: any): Response => { };
+const handleAppState = (server: any): Response => { 
+  return jsonResponse({
+    appState: {},
+    message: "App state endpoint not implemented",
+  });
+};
 
 const handleAiderProcesses = (server: any): Response => {
   const getAiderProcesses = server.getAiderProcesses;
@@ -142,4 +87,64 @@ const handleAiderProcesses = (server: any): Response => {
     aiderProcesses: [],
     message: "Aider processes not available",
   });
+};
+
+export const handleRoutePure = (
+  routeName: string,
+  request: Request,
+  url: URL,
+  server: any,
+): Response => {
+  // Handle OPTIONS requests
+  if (request.method === "OPTIONS") {
+    return handleOptions();
+  }
+
+  // Only handle GET requests for now
+  if (request.method !== "GET") {
+    return jsonResponse(
+      {
+        error: `Method ${request.method} not allowed`,
+      },
+      405,
+    );
+  }
+
+  switch (routeName) {
+    case "configs":
+      return handleConfigs(server);
+    case "processes":
+      return handleProcesses(server);
+    case "inputfiles":
+      return handleInputFiles(url, server);
+    case "outputfiles":
+      return handleOutputFiles(url, server);
+    case "testresults":
+      return handleTestResults(url, server);
+    case "collated-testresults":
+      return handleCollatedTestResults(server);
+    case "collated-inputfiles":
+      return handleCollatedInputFiles(server);
+    case "collated-documentation":
+      return handleCollatedDocumentation();
+    case "documentation":
+      return handleDocumentation();
+    case "reports":
+      return handleReports();
+    case "html-report":
+      return handleHtmlReport();
+    case "aider-processes":
+      return handleAiderProcesses(server);
+    case "collated-files":
+      return handleCollatedFiles(server);
+    case `app-state`:
+      return handleAppState(server);
+    default:
+      return jsonResponse(
+        {
+          error: `Route not found: ${routeName}`,
+        },
+        404,
+      );
+  }
 };

@@ -51,11 +51,12 @@ export class TestResultsCollector {
               timestamp: new Date()
             });
           });
-        } else if (testResults) {
+        } else if (testResults && typeof testResults === 'object') {
+          const passed = !(testResults as any).failed;
           results.push({
             runtime,
             testName,
-            passed: !testResults.failed,
+            passed,
             details: testResults,
             inputFiles,
             outputFiles,

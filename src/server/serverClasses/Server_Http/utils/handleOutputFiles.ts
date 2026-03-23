@@ -155,7 +155,7 @@ export const handleOutputFiles = (url: URL, server: any): Response => {
   // Remove duplicates
   const uniqueFiles = [...new Set(outputFiles)];
 
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     runtime,
     testName,
     outputFiles: uniqueFiles,

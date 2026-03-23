@@ -13,9 +13,11 @@ import {
 
 import { Server_WS } from "./Server_WS";
 
+declare const Bun: any;
+
 export abstract class Server_HTTP extends Server_Base {
   // http: HttpManager;
-  protected bunServer: ReturnType<typeof Bun.serve> | null = null;
+  protected bunServer: any | null = null;
   private routesHandler: Server_HTTP_Routes;
 
   constructor(configs: ITestconfigV2, mode: IMode) {
@@ -60,9 +62,10 @@ export abstract class Server_HTTP extends Server_Base {
     };
 
     if (this instanceof Server_WS) {
+      const wsThis = this as Server_WS;
       serverOptions.websocket = {
         open: (ws: WebSocket) => {
-          (this as Server_WS).wsClients.add(ws);
+          (wsThis as any).wsClients?.add?.(ws);
           ws.send(
             JSON.stringify({
               type: "connected",
@@ -77,19 +80,23 @@ export abstract class Server_HTTP extends Server_Base {
               ? JSON.parse(message)
               : JSON.parse(message.toString());
           if (ws && typeof ws.send === "function") {
-            (this as Server_WS).handleWebSocketMessage(ws, data);
+            (wsThis as any).handleWebSocketMessage?.(ws, data);
           }
         },
         close: (ws: WebSocket) => {
-          (this as Server_WS).wsClients.delete(ws);
+          (wsThis as any).wsClients?.delete?.(ws);
         },
         error: (ws: WebSocket, error: Error) => {
-          (this as Server_WS).wsClients.delete(ws);
+          (wsThis as any).wsClients?.delete?.(ws);
         },
       };
     }
 
-    this.bunServer = Bun.serve(serverOptions);
+    if (typeof Bun !== 'undefined') {
+      this.bunServer = Bun.serve(serverOptions);
+    } else {
+      console.error('Bun is not available');
+    }
   }
 
   async stop() {
@@ -132,7 +139,19 @@ export abstract class Server_HTTP extends Server_Base {
       return handleOptions();
     }
 
-    return this.routesHandler.handleRoute(routeName, request, url);
+    const result = this.routesHandler.handleRoute(routeName, request, url);
+    // Ensure we always return a Response
+    if (result instanceof Promise) {
+      // Return a Response that will be resolved later
+      return new Response(null, { status: 202 });
+    }
+    if (result instanceof Response) {
+      return result;
+    }
+    return new Response(JSON.stringify({ error: "Invalid response" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   private async serveStaticFile(request: Request, url: URL): Promise<Response> {

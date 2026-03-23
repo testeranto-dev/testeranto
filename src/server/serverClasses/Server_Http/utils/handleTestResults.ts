@@ -1,3 +1,7 @@
+import fs from "fs";
+import path from "path";
+import { jsonResponse } from "./jsonResponse";
+
 export const handleTestResults = (url: URL, server: any): Response => {
   const runtime = url.searchParams.get("runtime");
   const testName = url.searchParams.get("testName");
@@ -6,7 +10,7 @@ export const handleTestResults = (url: URL, server: any): Response => {
   const reportsDir = path.join(process.cwd(), "testeranto", "reports");
 
   if (!fs.existsSync(reportsDir)) {
-    return Server_HTTP_utils.jsonResponse({
+    return jsonResponse({
       testResults: [],
       message: "No reports directory found",
     });
@@ -120,7 +124,7 @@ export const handleTestResults = (url: URL, server: any): Response => {
     }
   }
 
-  return Server_HTTP_utils.jsonResponse({
+  return jsonResponse({
     testResults,
     message: "Success",
   });

@@ -27,8 +27,7 @@ export const writeConfigForExtensionOnStop = () => {
     writeFileSync(configPath, configJson);
   } catch (error: any) {
     consoleError(
-      `[Server_Docker] Failed to write extension config on stop:`,
-      error,
+      `[Server_Docker] Failed to write extension config on stop: ${error}`,
     );
   }
 };

@@ -165,8 +165,8 @@ export const serveStaticFile = async (
       "index.html",
     );
     if (fs.existsSync(reportPath)) {
-      const collatedFilesTree = await generateCollatedFilesTreeOriginal(configs);
-      const allTestResults = await collectAllTestResultsOriginal(configs);
+      const collatedFilesTree = configs ? await generateCollatedFilesTreeOriginal(configs) : {};
+      const allTestResults = configs ? await collectAllTestResultsOriginal(configs) : {};
       const htmlWithData = await generateHtmlWithEmbeddedDataOriginal(
         reportPath,
         configs,
@@ -191,8 +191,8 @@ export const serveStaticFile = async (
       "index.html",
     );
     if (fs.existsSync(reportPath)) {
-      const collatedFilesTree = await generateCollatedFilesTreeOriginal(configs);
-      const allTestResults = await collectAllTestResultsOriginal(configs);
+      const collatedFilesTree = configs ? await generateCollatedFilesTreeOriginal(configs) : {};
+      const allTestResults = configs ? await collectAllTestResultsOriginal(configs) : {};
       const htmlWithData = await generateHtmlWithEmbeddedDataOriginal(
         reportPath,
         configs,
@@ -281,8 +281,11 @@ export const addTestResultsFilesToTree = (
 
 // Wrapper functions
 export const collectAllTestResults = async (
-  configs: ITestconfigV2,
+  configs: ITestconfigV2 | undefined,
 ): Promise<Record<string, any>> => {
+  if (!configs) {
+    return {};
+  }
   return collectAllTestResultsOriginal(configs);
 };
 
@@ -416,8 +419,8 @@ export const serveFile = async (filePath: string): Promise<Response> => {
   const contentType = getContentType(filePath);
 
   try {
-    const file = Bun.file(filePath);
-    return new Response(file, {
+    const fileContent = await fs.promises.readFile(filePath);
+    return new Response(fileContent, {
       status: 200,
       headers: { "Content-Type": contentType },
     });
@@ -519,7 +522,7 @@ export const fetchInputFilesForTest = async (
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     const data = await response.json();
-    const inputFiles = data.inputFiles || [];
+    const inputFiles = (data as any).inputFiles || [];
     return inputFiles;
   } catch (error) {
     return [];

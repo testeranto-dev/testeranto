@@ -1,6 +1,6 @@
-import { ITestconfigV2 } from "../../Types";
+import type { ITestconfigV2 } from "../../Types";
 import { WsManager } from "./WsManager";
-import { IMode } from "../types";
+import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
 
 export class Server_WS extends Server_HTTP {
@@ -56,7 +56,7 @@ export class Server_WS extends Server_HTTP {
     const response = this.wsManager.processMessage(
       message.type,
       message.data,
-      () => this.getProcessSummary(),
+      () => this.getProcessSummary?.(),
       (processId: string) => {
         const processManager = this as any;
         if (typeof processManager.getProcessLogs === "function") {

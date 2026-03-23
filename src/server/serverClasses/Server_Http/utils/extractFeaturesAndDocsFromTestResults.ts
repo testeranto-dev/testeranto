@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { glob } from "glob";
+// import { glob } from "glob";
 import { getBddExitCodeForTest } from "./getBddExitCodeForTest";
 
 export const extractFeaturesAndDocsFromTestResults = async (
@@ -33,18 +33,20 @@ export const extractFeaturesAndDocsFromTestResults = async (
 
   // Process each test result
   for (const [runtimeKey, tests] of Object.entries(allTestResults)) {
-    for (const [testName, testData] of Object.entries(tests)) {
+    const testsObj = tests as Record<string, any>;
+    for (const [testName, testData] of Object.entries(testsObj)) {
       const testKey = `${runtimeKey}/${testName}`;
 
       // Extract features from test data
       if (testData && typeof testData === "object") {
         // Get features from various locations
         let testFeatures: string[] = [];
-        if (testData.features && Array.isArray(testData.features)) {
-          testFeatures = testData.features;
-        } else if (testData.testJob && testData.testJob.givens) {
+        const data = testData as any;
+        if (data.features && Array.isArray(data.features)) {
+          testFeatures = data.features;
+        } else if (data.testJob && data.testJob.givens) {
           const allFeatures = new Set<string>();
-          for (const given of testData.testJob.givens) {
+          for (const given of data.testJob.givens) {
             if (given.features && Array.isArray(given.features)) {
               for (const feature of given.features) {
                 allFeatures.add(feature);
@@ -106,7 +108,9 @@ export const extractFeaturesAndDocsFromTestResults = async (
                 );
                 if (match) {
                   const [, frontmatterStr] = match;
-                  frontmatter = this.parseYamlFrontmatter(frontmatterStr);
+                  // frontmatter = this.parseYamlFrontmatter(frontmatterStr);
+                  // For now, leave frontmatter empty
+                  frontmatter = {};
                 }
 
                 // Create feature node for graph

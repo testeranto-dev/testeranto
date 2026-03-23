@@ -38,6 +38,8 @@ export class StakeholderAppBundler {
         }
       }
 
+      // Dynamically import esbuild
+      const esbuild = await import('esbuild');
       await esbuild.build({
         entryPoints: [entryPoint],
         bundle: true,

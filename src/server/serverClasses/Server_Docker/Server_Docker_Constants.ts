@@ -121,7 +121,8 @@ export const runTimeToCompose: Record<
   ]
 > = {
   node: [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
-  web: [webDockerComposeFile, webBuildCommand, webBddCommand],
+  web: [webDockerComposeFile, webBuildCommand, (fpath: string, nodeConfigPath: string, configKey: string) => 
+    webBddCommand(fpath, nodeConfigPath, configKey, "")],
   python: [pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand],
   golang: [golangDockerComposeFile, golangBuildCommand, golangBddCommand],
   ruby: [rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand],

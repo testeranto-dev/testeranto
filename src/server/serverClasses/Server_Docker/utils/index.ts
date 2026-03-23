@@ -43,7 +43,6 @@ export const captureExistingLogs: IR = (
     const existingLogs = execSyncWrapper(cmd, {
       cwd: processCwd(),
       encoding: "utf-8",
-      maxBuffer: 10 * 1024 * 1024, // 10MB
     });
 
     if (existingLogs && existingLogs.trim().length > 0) {

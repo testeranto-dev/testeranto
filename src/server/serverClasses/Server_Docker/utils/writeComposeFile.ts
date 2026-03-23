@@ -47,17 +47,17 @@ export const writeComposeFile = (services: Record<string, any>) => {
   const dockerComposeFileContents = BaseCompose(services);
 
   // Log the structure for debugging
+  const structure = JSON.stringify(
+    {
+      services: Object.keys(dockerComposeFileContents.services || {}),
+      networks: Object.keys(dockerComposeFileContents.networks || {}),
+      volumes: Object.keys(dockerComposeFileContents.volumes || {}),
+    },
+    null,
+    2
+  );
   consoleLog(
-    `[writeComposeFile] docker-compose.yml structure:`,
-    JSON.stringify(
-      {
-        services: Object.keys(dockerComposeFileContents.services || {}),
-        networks: Object.keys(dockerComposeFileContents.networks || {}),
-        volumes: Object.keys(dockerComposeFileContents.volumes || {}),
-      },
-      null,
-      2,
-    ),
+    `[writeComposeFile] docker-compose.yml structure: ${structure}`,
   );
 
   const yamlContent = yamlDump(dockerComposeFileContents, {

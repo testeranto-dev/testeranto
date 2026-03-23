@@ -36,9 +36,9 @@ export const buildWithBuildKitPure = async (
         configKey: configKey,
         dockerfilePath: configValue.dockerfile,
         buildContext: processCwd(),
-        cacheMounts: buildKitOptions.cacheMounts || [],
-        targetStage: buildKitOptions.targetStage,
-        buildArgs: buildKitOptions.buildArgs || {},
+        cacheMounts: buildKitOptions?.cacheMounts || [],
+        targetStage: buildKitOptions?.targetStage,
+        buildArgs: buildKitOptions?.buildArgs || {},
       });
 
       if (result.success) {

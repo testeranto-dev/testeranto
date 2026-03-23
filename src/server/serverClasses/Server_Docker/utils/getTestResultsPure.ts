@@ -74,8 +74,7 @@ export const getTestResultsPure = (
           });
         } catch (error) {
           consoleLog(
-            `[Server_Docker] Error processing file ${itemPath}:`,
-            error,
+            `[Server_Docker] Error processing file ${itemPath}: ${String(error)}`,
           );
         }
       }
