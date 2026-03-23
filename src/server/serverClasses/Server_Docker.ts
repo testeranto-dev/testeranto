@@ -2,26 +2,27 @@ import fs, { existsSync } from "fs";
 import path from "path";
 import type { IRunTime, ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
-import { getDockerComposeDownPure, getReportDirPure, type IDockerComposeResult } from "./Server_Docker/Server_Docker_Constants";
-import { consoleError, consoleLog, processCwd, processExit } from "./Server_Docker/Server_Docker_Dependents";
-import { Server_WS } from "./Server_WS";
+import {
+  getDockerComposeDownPure,
+  getReportDirPure,
+  logMessage,
+} from "./Server_Docker/Server_Docker_Constants";
+import {
+  consoleError,
+  consoleLog,
+  processCwd,
+  processExit,
+} from "./Server_Docker/Server_Docker_Dependents";
 import {
   watchInputFilePure,
   watchOutputFilePure,
 } from "./Server_Docker/utils/watch";
-// import {
-//   informAiderPure,
-//   getAiderProcessesPure,
-//   handleAiderProcessesPure,
-// } from "./Server_Docker/utils/aider";
 import {
   spawnPromise,
   captureExistingLogs,
-  executeDockerComposeCommand,
   makeReportDirectory,
 } from "./Server_Docker/utils";
 import { TestFileManager } from "./Server_Docker/TestFileManager";
-import { DockerComposeManager } from "./Server_Docker/DockerComposeManager";
 import { TestResultsCollector } from "./Server_Docker/TestResultsCollector";
 import { AiderMessageManager } from "./Server_Docker/AiderMessageManager";
 import { StakeholderAppBundler } from "./Server_Docker/StakeholderAppBundler";
@@ -37,13 +38,12 @@ import { generateServicesPure } from "./Server_Docker/utils/generateServicesPure
 import { writeComposeFile } from "./Server_Docker/utils/writeComposeFile";
 import { writeConfigForExtensionOnStop } from "./Server_Docker/utils/writeConfigForExtensionOnStop";
 import { writeConfigForExtensionPure } from "./Server_Docker/utils/writeConfigForExtensionPure";
-import { getDockerComposeCommandsPure } from "./Server_Docker/utils/getDockerComposeCommandsPure";
+import { Server_Docker_Compose } from "./Server_Docker_Compose";
 
-export class Server_Docker extends Server_WS {
+export class Server_Docker extends Server_Docker_Compose {
   private logProcesses: Map<string, { process: any; serviceName: string }> =
     new Map();
   private testFileManager: TestFileManager;
-  private dockerComposeManager: DockerComposeManager;
   private testResultsCollector: TestResultsCollector;
   private aiderMessageManager: AiderMessageManager;
   private stakeholderAppBundler: StakeholderAppBundler;
@@ -62,16 +62,7 @@ export class Server_Docker extends Server_WS {
     this.testFileManager = new TestFileManager(configs, mode, (path) =>
       this.resourceChanged(path),
     );
-    this.dockerComposeManager = new DockerComposeManager(
-      configs,
-      mode,
-      (message: string, error?: any) => this.logError(message, error),
-      (message: string) => this.logMessage(message),
-      (path: string) => this.resourceChanged(path),
-      () => this.getProcessSummary(),
-      (serviceName: string, runtime: string, runtimeConfigKey: string) =>
-        this.startServiceLogging(serviceName, runtime, runtimeConfigKey),
-    );
+
     // Initialize testResultsCollector with inputFiles and outputFiles from testFileManager
     this.testResultsCollector = new TestResultsCollector(
       configs,
@@ -87,8 +78,8 @@ export class Server_Docker extends Server_WS {
         this.testFileManager.getInputFilesForTest(configKey, testName),
       (configKey: string, testName: string) =>
         this.testFileManager.getOutputFilesForTest(configKey, testName),
-      (message: string) => this.logMessage(message),
-      (message: string, error?: any) => this.logError(message, error),
+      (message: string) => consoleLog(message),
+      (message: string, error?: any) => consoleError(message, error),
     );
     // Initialize stakeholderAppBundler
     this.stakeholderAppBundler = new StakeholderAppBundler(
@@ -104,12 +95,12 @@ export class Server_Docker extends Server_WS {
     );
     // Initialize aider image builder
     this.aiderImageBuilder = new AiderImageBuilder(
-      (message: string) => this.logMessage(message),
-      (message: string, error?: any) => this.logError(message, error),
+      (message: string) => consoleLog(message),
+      (message: string, error?: any) => consoleError(message, error),
     );
     // Initialize test completion waiter
     this.testCompletionWaiter = new TestCompletionWaiter(
-      (message: string) => this.logMessage(message),
+      (message: string) => consoleError(message),
       () => this.getProcessSummary(),
       this.logProcesses,
     );
@@ -192,18 +183,18 @@ export class Server_Docker extends Server_WS {
     if (this.mode === "once") {
       try {
         await this.waitForAllTestsToComplete();
-        this.logMessage(
+        logMessage(
           "[Server_Docker] Tests completed, waiting for pending operations...",
         );
         await new Promise((resolve) => setTimeout(resolve, 5000));
         await this.stop();
         processExit(0);
       } catch (error: any) {
-        this.logError("[Server_Docker] Error in once mode:", error);
+        consoleError("[Server_Docker] Error in once mode:", error);
         try {
           await this.stop();
         } catch (stopError) {
-          this.logError("[Server_Docker] Error stopping services:", stopError);
+          consoleError("[Server_Docker] Error stopping services:", stopError);
         }
         processExit(1);
       }
@@ -216,7 +207,7 @@ export class Server_Docker extends Server_WS {
       try {
         logProcess.process.kill("SIGTERM");
       } catch (error) {
-        this.logError(
+        consoleError(
           `[Server_Docker] Error stopping log process ${containerId}:`,
           error,
         );
@@ -306,7 +297,6 @@ export class Server_Docker extends Server_WS {
     configValue: any,
     inputFiles?: any,
   ) {
-
     await this.createAiderMessageFile(
       runtime,
       testName,
@@ -436,11 +426,11 @@ export class Server_Docker extends Server_WS {
     return this.testResultsCollector.getProcessSummary();
   };
 
-  private async startServiceLogging(
+  startServiceLogging = (
     serviceName: string,
     runtime: string,
     runtimeConfigKey: string,
-  ): Promise<void> {
+  ) => {
     this.logProcesses = startServiceLoggingPure(
       serviceName,
       runtime,
@@ -449,105 +439,7 @@ export class Server_Docker extends Server_WS {
       runtimeConfigKey,
     );
     this.writeConfigForExtension();
-  }
-
-  public async DC_upAll(): Promise<IDockerComposeResult> {
-    const commands = getDockerComposeCommandsPure();
-    const result = await executeDockerComposeCommand(commands.up, {
-      errorMessage: "docker compose up",
-    });
-    if (result.exitCode === 0 && result.data?.spawn) {
-      try {
-        await spawnPromise(commands.up);
-        return { exitCode: 0, out: "", err: "", data: null };
-      } catch (error: any) {
-        this.logError(`[Docker] docker compose up ❌ ${error.message}`);
-        return {
-          exitCode: 1,
-          out: "",
-          err: `Error starting services: ${error.message}`,
-          data: null,
-        };
-      }
-    }
-    return result;
-  }
-
-  public async DC_down(): Promise<IDockerComposeResult> {
-    const commands = getDockerComposeCommandsPure();
-    const result = await executeDockerComposeCommand(commands.down, {
-      errorMessage: "docker compose down",
-    });
-    if (result.exitCode === 0 && result.data?.spawn) {
-      try {
-        await spawnPromise(commands.down);
-        return { exitCode: 0, out: "", err: "", data: null };
-      } catch (error: any) {
-        this.logMessage(`[DC_down] Error during down: ${error.message}`);
-        return {
-          exitCode: 1,
-          out: "",
-          err: `Error stopping services: ${error.message}`,
-          data: null,
-        };
-      }
-    }
-    return result;
-  }
-
-  public async DC_ps(): Promise<IDockerComposeResult> {
-    const commands = getDockerComposeCommandsPure();
-    return executeDockerComposeCommand(commands.ps, {
-      useExec: true,
-      execOptions: { cwd: processCwd() },
-      errorMessage: "Error getting service status",
-    });
-  }
-
-  public async DC_logs(
-    serviceName: string,
-    options?: { follow?: boolean; tail?: number },
-  ): Promise<IDockerComposeResult> {
-    const tail = options?.tail ?? 100;
-    const commands = getDockerComposeCommandsPure();
-    const command = commands.logs(serviceName, tail);
-    return executeDockerComposeCommand(command, {
-      useExec: true,
-      execOptions: { cwd: processCwd() },
-      errorMessage: `Error getting logs for ${serviceName}`,
-    });
-  }
-
-  public async DC_configServices(): Promise<IDockerComposeResult> {
-    const commands = getDockerComposeCommandsPure();
-    return executeDockerComposeCommand(commands.config, {
-      useExec: true,
-      execOptions: { cwd: processCwd() },
-      errorMessage: "Error getting services from config",
-    });
-  }
-
-  public async DC_start(): Promise<IDockerComposeResult> {
-    const commands = getDockerComposeCommandsPure();
-    const result = await executeDockerComposeCommand(commands.start, {
-      errorMessage: "docker compose start",
-    });
-    if (result.exitCode === 0 && result.data?.spawn) {
-      try {
-        await spawnPromise(commands.start);
-        return { exitCode: 0, out: "", err: "", data: null };
-      } catch (error: any) {
-        this.logError(`[Docker] docker compose start ❌ ${error.message}`);
-        return {
-          exitCode: 1,
-          out: "",
-          err: `Error starting services: ${error.message}`,
-          data: null,
-        };
-      }
-    }
-    return result;
-  }
+  };
 
   private async buildAiderImage(): Promise<void> {
     await this.aiderImageBuilder.buildAiderImage();
@@ -561,41 +453,7 @@ export class Server_Docker extends Server_WS {
     await this.testCompletionWaiter.waitForAllTestsToComplete();
   }
 
-  private logMessage(message: string): void {
-    consoleLog(message);
-  }
-
-  private logError(message: string, error?: any): void {
-    if (error) {
-      consoleError(`${message} ${error}`);
-    } else {
-      consoleError(message);
-    }
-  }
-
   private async bundleStakeholderApp(): Promise<void> {
     await this.stakeholderAppBundler.bundleStakeholderApp();
   }
-
-  // public getAiderProcesses = (): any[] => {
-  //   return getAiderProcessesPure(
-  //     this.configs,
-  //     this.getProcessSummary().processes,
-  //   );
-  // };
-
-  // public handleAiderProcesses = (): any => {
-  //   return handleAiderProcessesPure(this.configs, () =>
-  //     this.getProcessSummary(),
-  //   );
-  // };
-
-  // private async buildWithBuildKit(): Promise<void> {
-  //   // First, build the aider image
-  //   await this.buildAiderImage();
-
-  //   await buildWithBuildKitPure(this.configs, (error: any) => {
-  //     this.logError(error);
-  //   });
-  // }
 }
