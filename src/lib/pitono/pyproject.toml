@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pitono"
-version = "0.3.0"
+name = "testeranto-pitono"
+version = "0.3.1"
 description = "Python implementation of Testeranto"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -25,7 +25,7 @@ classifiers = [
 # pitono-core-generator = "core_generator:main"  # Removed as core_generator doesn't exist
 
 [tool.setuptools]
-packages = ["pitono"]
+packages = ["testeranto-pitono"]
 
 [tool.setuptools.package-dir]
-pitono = "src"
+testeranto-pitono = "src"
