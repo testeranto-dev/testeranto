@@ -265,20 +265,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rusto"
-version = "0.3.0"
-dependencies = [
- "async-trait",
- "quote",
- "serde",
- "serde_json",
- "syn",
- "tempfile",
- "thiserror",
- "tokio",
-]
-
-[[package]]
 name = "scopeguard"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -381,6 +367,20 @@ dependencies = [
  "once_cell",
  "rustix",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "testeranto_rusto"
+version = "0.3.0"
+dependencies = [
+ "async-trait",
+ "quote",
+ "serde",
+ "serde_json",
+ "syn",
+ "tempfile",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]

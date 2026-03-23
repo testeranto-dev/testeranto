@@ -1,5 +1,5 @@
 [package]
-name = "rusto"
+name = "testeranto_rusto"
 version = "0.3.0"
 edition = "2021"
 description = "Rust implementation of Testeranto"
