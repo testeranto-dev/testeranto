@@ -2,12 +2,12 @@
 import fs from "fs";
 import path from "path";
 import type { ITestconfigV2 } from "../../../../Types";
-import { collectAllTestResults as collectAllTestResultsOriginal } from "./collectAllTestResults";
-import { generateCollatedFilesTree as generateCollatedFilesTreeOriginal } from "./generateCollatedFilesTree";
-import { generateHtmlWithEmbeddedData as generateHtmlWithEmbeddedDataOriginal } from "./generateHtmlWithEmbeddedData";
-import { getContentType } from "./getContentType";
-import { handleOptions as handleOptionsOriginal } from "./handleOptions";
-import { jsonResponse as jsonResponseOriginal } from "./jsonResponse";
+import { collectAllTestResults as collectAllTestResultsOriginal } from "./../collectAllTestResults";
+import { generateCollatedFilesTree as generateCollatedFilesTreeOriginal } from "./../generateCollatedFilesTree";
+import { generateHtmlWithEmbeddedData as generateHtmlWithEmbeddedDataOriginal } from "./../generateHtmlWithEmbeddedData";
+import { getContentType } from "./../getContentType";
+import { handleOptions as handleOptionsOriginal } from "./../handleOptions";
+import { jsonResponse as jsonResponseOriginal } from "./../jsonResponse";
 
 // Route utilities
 export const routeName = (req: any): string => {
@@ -396,13 +396,13 @@ export const collateDocumentationFiles = (files: string[]): Record<string, any> 
       if (!currentNode[part]) {
         currentNode[part] = isLast
           ? {
-              type: "file",
-              path: filePath,
-            }
+            type: "file",
+            path: filePath,
+          }
           : {
-              type: "directory",
-              children: {},
-            };
+            type: "directory",
+            children: {},
+          };
       }
 
       if (!isLast) {

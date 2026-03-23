@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { ITestconfigV2 } from "../../../../Types";
+import type { ITestconfigV2 } from "../../../Types";
 
 export async function collectAllTestResults(
   configs: ITestconfigV2,

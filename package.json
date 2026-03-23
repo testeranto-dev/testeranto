@@ -264,6 +264,7 @@
     "@isomorphic-git/lightning-fs": "^4.6.2",
     "@jest/globals": "^30.0.4",
     "@monaco-editor/react": "^4.7.0",
+    "@types/babel__generator": "^7.27.0",
     "@types/chokidar": "^2.1.7",
     "@types/dockerode": "3.3.40",
     "@types/eslint": "^9.6.1",

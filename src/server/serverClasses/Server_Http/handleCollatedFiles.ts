@@ -1,6 +1,6 @@
+import type { TreeNode } from "../StakeholderUtils";
 import { jsonResponse } from "./jsonResponse";
-import { processTest } from "./handleCollatedFilesUtils/index";
-import type { TreeNode } from "./handleCollatedFilesUtils/index";
+import { processTest } from "./utils/handleCollatedFilesUtils";
 
 export const handleCollatedFiles = (server: any): Response => {
   // Get all runtimes from configs

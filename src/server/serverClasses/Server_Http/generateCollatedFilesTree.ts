@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 // import { glob } from "glob";
-import type { ITestconfigV2 } from "../../../../Types";
+import type { ITestconfigV2 } from "../../../Types";
 import { getFileType } from "./getFileType";
 
 export async function generateCollatedFilesTree(
