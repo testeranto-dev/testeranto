@@ -19,7 +19,10 @@ import {
   consoleWarn,
   processCwd,
 } from "../Server_Docker_Dependents";
-import { bddTestDockerComposeFile, aiderDockerComposeFile, staticTestDockerComposeFile } from "../Server_Docker_Utils_Setup";
+import { aiderDockerComposeFile } from "./aiderDockerComposeFile";
+import { bddTestDockerComposeFile } from "./bddTestDockerComposeFile";
+import { staticTestDockerComposeFile } from "./staticTestDockerComposeFile";
+
 
 export const generateServicesPure = (
   configs: ITestconfigV2,

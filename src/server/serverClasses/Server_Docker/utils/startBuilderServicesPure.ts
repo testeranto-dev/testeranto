@@ -7,8 +7,9 @@ import {
   consoleLog,
   consoleWarn,
   execSyncWrapper,
+  processCwd,
 } from "../Server_Docker_Dependents";
-import { getCwdPure } from "../Server_Docker_Utils";
+
 
 // Pure function to start builder services
 export const startBuilderServicesPure = async (
@@ -58,7 +59,7 @@ export const startBuilderServicesPure = async (
       const imageExistsCmd = `docker image inspect ${imageName} > /dev/null 2>&1`;
 
       try {
-        execSyncWrapper(imageExistsCmd, { cwd: getCwdPure() });
+        execSyncWrapper(imageExistsCmd, { cwd: processCwd() });
         consoleLog(`[Server_Docker] Image ${imageName} exists locally`);
       } catch (imageError) {
         consoleLog(
@@ -67,7 +68,7 @@ export const startBuilderServicesPure = async (
         // Try to build the image
         const buildCmd = `docker build -f ${configs.runtimes[configKey].dockerfile} -t ${imageName} .`;
         try {
-          execSyncWrapper(buildCmd, { cwd: getCwdPure() });
+          execSyncWrapper(buildCmd, { cwd: processCwd() });
           consoleLog(`[Server_Docker] Built image ${imageName}`);
         } catch (buildError) {
           consoleWarn(
@@ -99,7 +100,7 @@ export const startBuilderServicesPure = async (
 
       // First, ensure chrome-service is in the docker-compose.yml
       const checkCmd = `docker compose -f "testeranto/docker-compose.yml" config --services`;
-      const servicesOutput = execSyncWrapper(checkCmd, { cwd: getCwdPure() });
+      const servicesOutput = execSyncWrapper(checkCmd, { cwd: processCwd() });
       const services = servicesOutput
         .trim()
         .split("\n")
@@ -133,7 +134,7 @@ export const startBuilderServicesPure = async (
 
       // Check if chrome-service is running
       const psCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q chrome-service`;
-      const containerId = execSyncWrapper(psCmd, { cwd: getCwdPure() }).trim();
+      const containerId = execSyncWrapper(psCmd, { cwd: processCwd() }).trim();
 
       if (containerId) {
         consoleLog(
@@ -142,7 +143,7 @@ export const startBuilderServicesPure = async (
 
         // Check container status
         const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
-        const status = execSyncWrapper(statusCmd, { cwd: getCwdPure() }).trim();
+        const status = execSyncWrapper(statusCmd, { cwd: processCwd() }).trim();
         consoleLog(`[Server_Docker] chrome-service status: ${status}`);
 
         // Wait a bit more if it's starting
@@ -176,7 +177,7 @@ export const startBuilderServicesPure = async (
         // Try to get logs to see what happened
         try {
           const logsCmd = `docker compose -f "testeranto/docker-compose.yml" logs chrome-service --tail=30`;
-          const logs = execSyncWrapper(logsCmd, { cwd: getCwdPure() });
+          const logs = execSyncWrapper(logsCmd, { cwd: processCwd() });
           consoleLog(`[Server_Docker] chrome-service logs:\n${logs}`);
         } catch (logError: any) {
           consoleWarn(

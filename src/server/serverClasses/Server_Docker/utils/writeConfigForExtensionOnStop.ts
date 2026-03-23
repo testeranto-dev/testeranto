@@ -3,13 +3,13 @@ import {
   existsSync,
   join,
   mkdirSync,
+  processCwd,
   writeFileSync,
 } from "../Server_Docker_Dependents";
-import { getCwdPure } from "../Server_Docker_Utils";
 
 export const writeConfigForExtensionOnStop = () => {
   try {
-    const configDir = join(getCwdPure(), "testeranto");
+    const configDir = join(processCwd(), "testeranto");
     const configPath = join(configDir, "extension-config.json");
 
     if (!existsSync(configDir)) {

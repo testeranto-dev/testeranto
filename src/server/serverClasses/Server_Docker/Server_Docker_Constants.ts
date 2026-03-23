@@ -38,7 +38,15 @@ import {
   webDockerComposeFile,
 } from "../../runtimes/web/docker";
 
-// Constants
+export const getReportDirPure = (): string => {
+  return `testeranto/reports`;
+};
+
+export const getDockerComposeDownPure = (): string => {
+  return 'docker compose -f "testeranto/docker-compose.yml" down -v --remove-orphans';
+};
+
+
 export const SERVICE_SUFFIXES = {
   BUILDER: "builder",
   BDD: "bdd",

@@ -3,8 +3,11 @@ import { join } from "path";
 import type { IRunTime, ITestconfigV2 } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { getInputFilePath, getFullReportDir } from "../Server_Docker_Constants";
-import { consoleWarn, consoleLog } from "../Server_Docker_Dependents";
-import { getCwdPure } from "../Server_Docker_Utils";
+import {
+  consoleWarn,
+  consoleLog,
+  processCwd,
+} from "../Server_Docker_Dependents";
 
 // Pure function to watch output files
 export const watchInputFilePure = async (
@@ -94,7 +97,7 @@ export const watchInputFilePure = async (
     // Create directories for each test entrypoint to ensure test.json files can be placed correctly
     // According to the bug report, test.json files should follow the structure of the entrypoint
     // For each test in the input JSON, create the appropriate directory under testeranto/reports/{correctConfigKey}/
-    const cwd = getCwdPure();
+    const cwd = processCwd();
     for (const [currentTestName, testInfo] of Object.entries(allTestsInfo)) {
       // Find which config this test belongs to
       let testConfigKey: string | null = null;
@@ -219,7 +222,7 @@ export const watchOutputFilePure = (
     projectRoot: string,
   ) => Record<string, Record<string, string[]>>,
 ): Record<string, Record<string, string[]>> => {
-  const cwd = getCwdPure();
+  const cwd = processCwd();
   const outputDir = getFullReportDir(cwd, runtime);
   const projectRoot = cwd;
 

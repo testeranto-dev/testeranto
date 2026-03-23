@@ -17,16 +17,15 @@ import {
   spawnWrapper,
   join,
 } from "../Server_Docker_Dependents";
-import { getCwdPure } from "../Server_Docker_Utils";
 
 export const captureExistingLogs: IR = (
   serviceName: string,
   runtime: string,
   runtimeConfigKey: string,
 ): void => {
-  const reportDir = getFullReportDir(getCwdPure(), runtime);
+  const reportDir = getFullReportDir(processCwd(), runtime);
   const logFilePath = getLogFilePath(
-    getCwdPure(),
+    processCwd(),
     runtime,
     serviceName,
     runtimeConfigKey,
@@ -36,13 +35,13 @@ export const captureExistingLogs: IR = (
     // First, check if the container exists (including stopped ones)
     const checkCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
     const containerId = execSyncWrapper(checkCmd, {
-      cwd: getCwdPure(),
+      cwd: processCwd(),
       encoding: "utf-8",
     }).trim();
 
     const cmd = `${DOCKER_COMPOSE_LOGS} ${serviceName} 2>/dev/null || true`;
     const existingLogs = execSyncWrapper(cmd, {
-      cwd: getCwdPure(),
+      cwd: processCwd(),
       encoding: "utf-8",
       maxBuffer: 10 * 1024 * 1024, // 10MB
     });
@@ -120,7 +119,7 @@ export const spawnPromise = (
     const child = spawnWrapper(command, [], {
       stdio: ["ignore", "pipe", "pipe"],
       shell: true,
-      cwd: options?.cwd || getCwdPure(),
+      cwd: options?.cwd || processCwd(),
     });
 
     let stdout = "";
@@ -165,17 +164,17 @@ export const captureContainerExitCode = (
 ): void => {
   const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
   const containerId = execSyncWrapper(containerIdCmd, {
-    cwd: getCwdPure(),
+    cwd: processCwd(),
   }).trim();
 
   if (containerId) {
     const inspectCmd = `docker inspect --format='{{.State.ExitCode}}' ${containerId}`;
     const exitCode = execSyncWrapper(inspectCmd, {
-      cwd: getCwdPure(),
+      cwd: processCwd(),
     }).trim();
 
     const containerExitCodeFilePath = getContainerExitCodeFilePath(
-      getCwdPure(),
+      processCwd(),
       runtime,
       serviceName,
       runTimeConfigKey,
@@ -188,10 +187,10 @@ export const captureContainerExitCode = (
 
     const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
     const status = execSyncWrapper(statusCmd, {
-      cwd: getCwdPure(),
+      cwd: processCwd(),
     }).trim();
     const statusFilePath = getStatusFilePath(
-      getCwdPure(),
+      processCwd(),
       runtime,
       serviceName,
       runTimeConfigKey,
@@ -207,7 +206,7 @@ export const makeReportDirectory = (testName: string, configKey: string) => {
   // Follow the pattern: testeranto/reports/{configKey}/{testName}/
   // where testName is the entrypoint path (e.g., "src/ts/Calculator.test.node.ts")
   // This ensures tests.json can be written to the correct location
-  const cwd = getCwdPure();
+  const cwd = processCwd();
   const cleanTestName = testName.replace(/^\.\//, "");
   return join(cwd, "testeranto", "reports", configKey, cleanTestName);
 };

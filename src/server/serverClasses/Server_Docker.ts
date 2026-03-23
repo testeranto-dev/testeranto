@@ -2,22 +2,8 @@ import fs, { existsSync } from "fs";
 import path from "path";
 import type { IRunTime, ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
-import { type IDockerComposeResult } from "./Server_Docker/Server_Docker_Constants";
-import { consoleError } from "./Server_Docker/Server_Docker_Dependents";
-import {
-  exitProcessPure,
-  getCwdPure,
-  getDockerComposeCommandsPure,
-  getDockerComposeDownPure,
-  getReportDirPure,
-  logMessagePure,
-} from "./Server_Docker/Server_Docker_Utils";
-import {
-  generateServicesPure,
-  writeComposeFile,
-  writeConfigForExtensionOnStop,
-  writeConfigForExtensionPure,
-} from "./Server_Docker/Server_Docker_Utils_Setup";
+import { getDockerComposeDownPure, getReportDirPure, type IDockerComposeResult } from "./Server_Docker/Server_Docker_Constants";
+import { consoleError, consoleLog, processCwd, processExit } from "./Server_Docker/Server_Docker_Dependents";
 import { Server_WS } from "./Server_WS";
 import {
   watchInputFilePure,
@@ -47,6 +33,11 @@ import { launchChecksPure } from "./Server_Docker/utils/launchChecksPure";
 import { loadInputFileOnce } from "./Server_Docker/utils/loadInputFileOnce";
 import { startServiceLoggingPure } from "./Server_Docker/utils/startServiceLoggingPure";
 import { updateOutputFilesList } from "./Server_Docker/utils/updateOutputFilesList";
+import { generateServicesPure } from "./Server_Docker/utils/generateServicesPure";
+import { writeComposeFile } from "./Server_Docker/utils/writeComposeFile";
+import { writeConfigForExtensionOnStop } from "./Server_Docker/utils/writeConfigForExtensionOnStop";
+import { writeConfigForExtensionPure } from "./Server_Docker/utils/writeConfigForExtensionPure";
+import { getDockerComposeCommandsPure } from "./Server_Docker/utils/getDockerComposeCommandsPure";
 
 export class Server_Docker extends Server_WS {
   private logProcesses: Map<string, { process: any; serviceName: string }> =
@@ -200,7 +191,7 @@ export class Server_Docker extends Server_WS {
         );
         await new Promise((resolve) => setTimeout(resolve, 5000));
         await this.stop();
-        exitProcessPure(0);
+        processExit(0);
       } catch (error: any) {
         this.logError("[Server_Docker] Error in once mode:", error);
         try {
@@ -208,7 +199,7 @@ export class Server_Docker extends Server_WS {
         } catch (stopError) {
           this.logError("[Server_Docker] Error stopping services:", stopError);
         }
-        exitProcessPure(1);
+        processExit(1);
       }
     }
   }
@@ -301,6 +292,7 @@ export class Server_Docker extends Server_WS {
     this.hashs = result.hashs;
   }
 
+  // Create aider message file for the test
   async informAider(
     runtime: IRunTime,
     testName: string,
@@ -308,7 +300,7 @@ export class Server_Docker extends Server_WS {
     configValue: any,
     inputFiles?: any,
   ) {
-    // Create aider message file for the test
+
     await this.createAiderMessageFile(
       runtime,
       testName,
@@ -398,7 +390,7 @@ export class Server_Docker extends Server_WS {
       this.configs,
       this.mode,
       this.getProcessSummary(),
-      getCwdPure(),
+      processCwd(),
     );
   }
 
@@ -445,7 +437,7 @@ export class Server_Docker extends Server_WS {
     this.logProcesses = startServiceLoggingPure(
       serviceName,
       runtime,
-      getCwdPure(),
+      processCwd(),
       this.logProcesses,
       runtimeConfigKey,
     );
@@ -500,7 +492,7 @@ export class Server_Docker extends Server_WS {
     const commands = getDockerComposeCommandsPure();
     return executeDockerComposeCommand(commands.ps, {
       useExec: true,
-      execOptions: { cwd: getCwdPure() },
+      execOptions: { cwd: processCwd() },
       errorMessage: "Error getting service status",
     });
   }
@@ -514,7 +506,7 @@ export class Server_Docker extends Server_WS {
     const command = commands.logs(serviceName, tail);
     return executeDockerComposeCommand(command, {
       useExec: true,
-      execOptions: { cwd: getCwdPure() },
+      execOptions: { cwd: processCwd() },
       errorMessage: `Error getting logs for ${serviceName}`,
     });
   }
@@ -523,7 +515,7 @@ export class Server_Docker extends Server_WS {
     const commands = getDockerComposeCommandsPure();
     return executeDockerComposeCommand(commands.config, {
       useExec: true,
-      execOptions: { cwd: getCwdPure() },
+      execOptions: { cwd: processCwd() },
       errorMessage: "Error getting services from config",
     });
   }
@@ -563,7 +555,7 @@ export class Server_Docker extends Server_WS {
   }
 
   private logMessage(message: string): void {
-    logMessagePure(message);
+    consoleLog(message);
   }
 
   private logError(message: string, error?: any): void {

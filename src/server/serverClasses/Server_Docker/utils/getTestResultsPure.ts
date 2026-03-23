@@ -3,18 +3,18 @@ import {
   consoleLog,
   existsSync,
   join,
+  processCwd,
   readdirSync,
   readFileSync,
   sep,
 } from "../Server_Docker_Dependents";
-import { getCwdPure } from "../Server_Docker_Utils";
 
 export const getTestResultsPure = (
   runtime?: string,
   testName?: string,
 ): any[] => {
   const testResults: any[] = [];
-  const cwd = getCwdPure();
+  const cwd = processCwd();
   const reportsDir = join(cwd, "testeranto", "reports");
 
   // Helper function to recursively collect all files

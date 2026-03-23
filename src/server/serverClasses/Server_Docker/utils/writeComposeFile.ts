@@ -1,10 +1,20 @@
-import { consoleError, consoleLog, consoleWarn, existsSync, join, readFileSync, unlinkSync, writeFileSync, yamlDump } from "../Server_Docker_Dependents";
-import { getCwdPure, } from "../Server_Docker_Utils";
-import { BaseCompose } from "../Server_Docker_Utils_Setup";
+import {
+  consoleError,
+  consoleLog,
+  consoleWarn,
+  existsSync,
+  join,
+  processCwd,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+  yamlDump,
+} from "../Server_Docker_Dependents";
+import { BaseCompose } from "./BaseCompose";
 
 
 export const writeComposeFile = (services: Record<string, any>) => {
-  const composeFilePath = join(getCwdPure(), "testeranto/docker-compose.yml");
+  const composeFilePath = join(processCwd(), "testeranto/docker-compose.yml");
 
   // Delete the old file first to ensure fresh generation
   if (existsSync(composeFilePath)) {

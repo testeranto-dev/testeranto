@@ -1,22 +1,15 @@
-import { execSync } from "child_process";
-import path from "path";
-import fs from "fs";
 import type { ITestconfigV2 } from "../../../Types";
 import type { IMode } from "../../types";
-import {
-  getDockerComposeCommandsPure,
-  getDockerComposeDownPure,
-  getCwdPure,
-  logMessagePure
-} from "../Server_Docker/Server_Docker_Utils";
-import {
-  executeDockerComposeCommand,
-  spawnPromise
-} from "./utils";
-import { generateServicesPure, writeComposeFile, buildWithBuildKitPure, writeConfigForExtensionPure, writeConfigForExtensionOnStop } from "./Server_Docker_Utils_Setup";
+import { executeDockerComposeCommand, spawnPromise } from "./utils";
 import { BuilderServicesManager } from "./BuilderServicesManager";
 import { AiderImageBuilder } from "./AiderImageBuilder";
-
+import { buildWithBuildKitPure } from "./utils/buildWithBuildKitPure";
+import { generateServicesPure } from "./utils/generateServicesPure";
+import { getDockerComposeCommandsPure } from "./utils/getDockerComposeCommandsPure";
+import { writeComposeFile } from "./utils/writeComposeFile";
+import { writeConfigForExtensionOnStop } from "./utils/writeConfigForExtensionOnStop";
+import { writeConfigForExtensionPure } from "./utils/writeConfigForExtensionPure";
+import { processCwd } from "./Server_Docker_Dependents";
 
 export interface IDockerComposeResult {
   exitCode: number;
@@ -36,16 +29,20 @@ export class DockerComposeManager {
     private logMessage: (message: string) => void,
     private resourceChanged: (path: string) => void,
     private getProcessSummary: () => any,
-    private startServiceLogging: (serviceName: string, runtime: string, runtimeConfigKey: string) => Promise<void>
+    private startServiceLogging: (
+      serviceName: string,
+      runtime: string,
+      runtimeConfigKey: string,
+    ) => Promise<void>,
   ) {
     this.builderServicesManager = new BuilderServicesManager(
       configs,
       mode,
-      startServiceLogging
+      startServiceLogging,
     );
     this.aiderImageBuilder = new AiderImageBuilder(
       (message: string) => this.logMessage(message),
-      (message: string, error?: any) => this.logError(message, error)
+      (message: string, error?: any) => this.logError(message, error),
     );
   }
 
@@ -142,7 +139,7 @@ export class DockerComposeManager {
     const commands = getDockerComposeCommandsPure();
     return executeDockerComposeCommand(commands.ps, {
       useExec: true,
-      execOptions: { cwd: getCwdPure() },
+      execOptions: { cwd: processCwd() },
       errorMessage: "Error getting service status",
     });
   }
@@ -156,7 +153,7 @@ export class DockerComposeManager {
     const command = commands.logs(serviceName, tail);
     return executeDockerComposeCommand(command, {
       useExec: true,
-      execOptions: { cwd: getCwdPure() },
+      execOptions: { cwd: processCwd() },
       errorMessage: `Error getting logs for ${serviceName}`,
     });
   }
@@ -165,7 +162,7 @@ export class DockerComposeManager {
     const commands = getDockerComposeCommandsPure();
     return executeDockerComposeCommand(commands.config, {
       useExec: true,
-      execOptions: { cwd: getCwdPure() },
+      execOptions: { cwd: processCwd() },
       errorMessage: "Error getting services from config",
     });
   }
@@ -175,7 +172,7 @@ export class DockerComposeManager {
       this.configs,
       this.mode,
       processSummary,
-      getCwdPure(),
+      processCwd(),
     );
   }
 
