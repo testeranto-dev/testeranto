@@ -104,11 +104,11 @@ export async function processMetafile(
     // Only process test files (files ending with .test.ts, .test.js, .spec.ts, .spec.js)
     // Also support additional extensions like .test.web.ts, .spec.node.js, etc.
     // Exclude library files like src/lib/tiposkripto/Web.ts and src/lib/tiposkripto/Node.ts
-    const isTestFile = /\.(test|spec)\.[^.]+\.(ts|js)$/.test(entryPoint) || /\.(test|spec)\.(ts|js)$/.test(entryPoint) || entryPoint.includes('.test.') || entryPoint.includes('.spec.');
-    if (!isTestFile) {
-      console.log(`[${runtime} Builder] Skipping non-test entryPoint: ${entryPoint}`);
-      continue;
-    }
+    // const isTestFile = /\.(test|spec)\.[^.]+\.(ts|js)$/.test(entryPoint) || /\.(test|spec)\.(ts|js)$/.test(entryPoint) || entryPoint.includes('.test.') || entryPoint.includes('.spec.');
+    // if (!isTestFile) {
+    //   console.log(`[${runtime} Builder] Skipping non-test entryPoint: ${entryPoint}`);
+    //   continue;
+    // }
 
     const outputInputs = outputInfoTyped.inputs || {};
 

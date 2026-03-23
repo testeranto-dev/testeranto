@@ -501,11 +501,6 @@ async function processMetafile(config, metafile, runtime, configKey) {
       continue;
     }
     const entryPoint = outputInfoTyped.entryPoint;
-    const isTestFile = /\.(test|spec)\.[^.]+\.(ts|js)$/.test(entryPoint) || /\.(test|spec)\.(ts|js)$/.test(entryPoint) || entryPoint.includes(".test.") || entryPoint.includes(".spec.");
-    if (!isTestFile) {
-      console.log(`[${runtime} Builder] Skipping non-test entryPoint: ${entryPoint}`);
-      continue;
-    }
     const outputInputs = outputInfoTyped.inputs || {};
     const collectedFiles = /* @__PURE__ */ new Set();
     for (const inputFile of Object.keys(outputInputs)) {

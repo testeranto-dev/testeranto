@@ -109,22 +109,30 @@ export const loadInputFileOnce = (
     newInputFiles[configKey] = {};
   }
 
-  const fileContent = readFileSync(inputFilePath, "utf-8");
-  const allTestsInfo = JSON.parse(fileContent);
-  if (allTestsInfo[testName]) {
-    const testInfo = allTestsInfo[testName];
-    newInputFiles[configKey][testName] = testInfo.files || [];
-    if (!newHashs[configKey]) {
-      newHashs[configKey] = {};
+  console.log(`reading input file`, inputFilePath)
+
+  try {
+    const fileContent = readFileSync(inputFilePath, "utf-8");
+    const allTestsInfo = JSON.parse(fileContent);
+    if (allTestsInfo[testName]) {
+      const testInfo = allTestsInfo[testName];
+      newInputFiles[configKey][testName] = testInfo.files || [];
+      if (!newHashs[configKey]) {
+        newHashs[configKey] = {};
+      }
+      newHashs[configKey][testName] = testInfo.hash || "";
+    } else {
+      newInputFiles[configKey][testName] = [];
+      if (!newHashs[configKey]) {
+        newHashs[configKey] = {};
+      }
+      newHashs[configKey][testName] = "";
     }
-    newHashs[configKey][testName] = testInfo.hash || "";
-  } else {
-    newInputFiles[configKey][testName] = [];
-    if (!newHashs[configKey]) {
-      newHashs[configKey] = {};
-    }
-    newHashs[configKey][testName] = "";
+  } catch (e) {
+    console.error(e)
+    console.log(inputFilePath, 'was not found. skipping...')
   }
+
 
   return { inputFiles: newInputFiles, hashs: newHashs };
 };

@@ -6,7 +6,7 @@ import type { ITestResourceConfiguration } from "./types.js";
  * BaseExpected extends BaseCheck for TDT pattern.
  * Validates each row in table-driven testing.
  */
-export class BaseExpected<I extends TestTypeParams_any> extends BaseCheck<I> {
+export abstract class BaseExpected<I extends TestTypeParams_any> extends BaseCheck<I> {
   /**
    * Abstract method to be implemented by concrete Expected classes.
    * Validates each row in table-driven testing (TDT pattern).
@@ -23,10 +23,10 @@ export class BaseExpected<I extends TestTypeParams_any> extends BaseCheck<I> {
     testResourceConfiguration: ITestResourceConfiguration,
     artifactory?: any,
   ): Promise<I["iselection"]>;
-  
+
   // Expected value for current row
   expectedValue: any = null;
-  
+
   constructor(
     name: string,
     expectedCB: (val: I["iselection"]) => Promise<I["then"]>,

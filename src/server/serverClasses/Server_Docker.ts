@@ -1,13 +1,8 @@
-import fs, { existsSync, mkdirSync, readFileSync } from "fs";
-import path, { join } from "path";
-import { execSync } from "child_process";
+import fs, { existsSync } from "fs";
+import path from "path";
 import type { IRunTime, ITestconfigV2 } from "../../Types";
 import type { IMode } from "../types";
-import {
-  entryContent,
-  getInputFilePath,
-  type IDockerComposeResult,
-} from "./Server_Docker/Server_Docker_Constants";
+import { type IDockerComposeResult } from "./Server_Docker/Server_Docker_Constants";
 import { consoleError } from "./Server_Docker/Server_Docker_Dependents";
 import {
   exitProcessPure,
@@ -18,19 +13,13 @@ import {
   logMessagePure,
 } from "./Server_Docker/Server_Docker_Utils";
 import {
-  getInputFilesPure,
-  getOutputFilesPure,
-  getProcessSummaryPure,
   launchBddTestPure,
   launchChecksPure,
   loadInputFileOnce,
-  startBuilderServicesPure,
   startServiceLoggingPure,
   updateOutputFilesList,
-  waitForAllTestsToCompletePure,
 } from "./Server_Docker/Server_Docker_Utils_Run";
 import {
-  buildWithBuildKitPure,
   generateServicesPure,
   writeComposeFile,
   writeConfigForExtensionOnStop,
@@ -52,21 +41,83 @@ import {
   executeDockerComposeCommand,
   makeReportDirectory,
 } from "./Server_Docker/utils";
-import { getTestResultsPure } from "./Server_Docker/Server_Docker_Utils_Run";
-import * as esbuild from 'esbuild';
+import { TestFileManager } from "./Server_Docker/TestFileManager";
+import { DockerComposeManager } from "./Server_Docker/DockerComposeManager";
+import { TestResultsCollector } from "./Server_Docker/TestResultsCollector";
+import { AiderMessageManager } from "./Server_Docker/AiderMessageManager";
+import { StakeholderAppBundler } from "./Server_Docker/StakeholderAppBundler";
+import { BuilderServicesManager } from "./Server_Docker/BuilderServicesManager";
+import { AiderImageBuilder } from "./Server_Docker/AiderImageBuilder";
+import { TestCompletionWaiter } from "./Server_Docker/TestCompletionWaiter";
 
 export class Server_Docker extends Server_WS {
   private logProcesses: Map<string, { process: any; serviceName: string }> =
     new Map();
-  inputFiles: any = {};
-  outputFiles: any = {};
-
-  // Store hashes for each test to detect which specific tests have changed
-  // Structure: hashs[configKey][testName] = hash
-  hashs: Record<string, Record<string, string>> = {};
+  private testFileManager: TestFileManager;
+  private dockerComposeManager: DockerComposeManager;
+  private testResultsCollector: TestResultsCollector;
+  private aiderMessageManager: AiderMessageManager;
+  private stakeholderAppBundler: StakeholderAppBundler;
+  private builderServicesManager: BuilderServicesManager;
+  private aiderImageBuilder: AiderImageBuilder;
+  private testCompletionWaiter: TestCompletionWaiter;
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
+    this.testFileManager = new TestFileManager(configs, mode, (path) =>
+      this.resourceChanged(path),
+    );
+    this.dockerComposeManager = new DockerComposeManager(
+      configs,
+      mode,
+      (message: string, error?: any) => this.logError(message, error),
+      (message: string) => this.logMessage(message),
+      (path: string) => this.resourceChanged(path),
+      () => this.getProcessSummary(),
+      (serviceName: string, runtime: string, runtimeConfigKey: string) =>
+        this.startServiceLogging(serviceName, runtime, runtimeConfigKey),
+    );
+    // Initialize testResultsCollector with inputFiles and outputFiles from testFileManager
+    this.testResultsCollector = new TestResultsCollector(
+      configs,
+      mode,
+      this.testFileManager.inputFiles,
+      this.testFileManager.outputFiles,
+    );
+    // Initialize aiderMessageManager
+    this.aiderMessageManager = new AiderMessageManager(
+      configs,
+      mode,
+      (configKey: string, testName: string) =>
+        this.testFileManager.getInputFilesForTest(configKey, testName),
+      (configKey: string, testName: string) =>
+        this.testFileManager.getOutputFilesForTest(configKey, testName),
+      (message: string) => this.logMessage(message),
+      (message: string, error?: any) => this.logError(message, error),
+    );
+    // Initialize stakeholderAppBundler
+    this.stakeholderAppBundler = new StakeholderAppBundler(
+      configs,
+      (message: string) => console.warn(message),
+    );
+    // Initialize builder services manager
+    this.builderServicesManager = new BuilderServicesManager(
+      configs,
+      mode,
+      (serviceName: string, runtime: string, runtimeConfigKey: string) =>
+        this.startServiceLogging(serviceName, runtime, runtimeConfigKey),
+    );
+    // Initialize aider image builder
+    this.aiderImageBuilder = new AiderImageBuilder(
+      (message: string) => this.logMessage(message),
+      (message: string, error?: any) => this.logError(message, error),
+    );
+    // Initialize test completion waiter
+    this.testCompletionWaiter = new TestCompletionWaiter(
+      (message: string) => this.logMessage(message),
+      () => this.getProcessSummary(),
+      this.logProcesses,
+    );
   }
 
   generateServices(): Record<string, any> {
@@ -74,21 +125,18 @@ export class Server_Docker extends Server_WS {
   }
 
   async start() {
-    // First, ensure the HTML report is set up
-    // The Server class will handle this via embedConfigInHtml()
     await super.start();
 
-    this.writeConfigForExtension();
-    await this.setupDockerCompose();
+    this.dockerComposeManager.writeConfigForExtension(this.getProcessSummary());
+    await this.dockerComposeManager.setupDockerCompose();
 
-    // Bundle stakeholder app (after HTML is created)
     await this.bundleStakeholderApp();
 
     getReportDirPure();
 
     await spawnPromise(getDockerComposeDownPure());
-    await this.buildWithBuildKit();
-    await this.startBuilderServices();
+    await this.dockerComposeManager.buildWithBuildKit();
+    await this.dockerComposeManager.startBuilderServices();
 
     for (const [configKey, configValue] of Object.entries(
       this.configs.runtimes,
@@ -96,31 +144,51 @@ export class Server_Docker extends Server_WS {
       const runtime: IRunTime = configValue.runtime as IRunTime;
       const tests = configValue.tests;
 
-      if (!this.inputFiles[configKey]) {
-        this.inputFiles[configKey] = {};
-      }
-
       for (const testName of tests) {
-        if (!this.inputFiles[configKey][testName]) {
-          this.inputFiles[configKey][testName] = [];
-        }
-
-        const reportDir = makeReportDirectory(testName, configKey)
+        const reportDir = makeReportDirectory(testName, configKey);
 
         if (!existsSync(reportDir)) {
-          mkdirSync(reportDir, { recursive: true });
+          fs.mkdirSync(reportDir, { recursive: true });
         }
 
         if (this.mode === "dev") {
-          this.watchInputFile(runtime, testName);
-          this.watchOutputFile(runtime, testName, configKey);
+          await this.testFileManager.watchInputFile(
+            runtime,
+            testName,
+            (runtime, testName, configKey, configValue) =>
+              this.launchBddTest(runtime, testName, configKey, configValue),
+            (runtime, testName, configKey, configValue) =>
+              this.launchChecks(runtime, testName, configKey, configValue),
+            (runtime, testName, configKey, configValue, files) =>
+              this.informAider(
+                runtime,
+                testName,
+                configKey,
+                configValue,
+                files,
+              ),
+            (runtime, testName, configKey) =>
+              this.testFileManager.loadInputFileOnce(
+                runtime,
+                testName,
+                configKey,
+              ),
+          );
+          await this.testFileManager.watchOutputFile(
+            runtime,
+            testName,
+            configKey,
+          );
         } else {
-          this.loadInputFileOnce(runtime, testName, configKey);
+          this.testFileManager.loadInputFileOnce(runtime, testName, configKey);
         }
 
-        // Create aider message file for the test
-        await this.createAiderMessageFile(runtime, testName, configKey, configValue);
-
+        await this.createAiderMessageFile(
+          runtime,
+          testName,
+          configKey,
+          configValue,
+        );
         await this.launchBddTest(runtime, testName, configKey, configValue);
         await this.launchChecks(runtime, testName, configKey, configValue);
       }
@@ -129,18 +197,14 @@ export class Server_Docker extends Server_WS {
     if (this.mode === "once") {
       try {
         await this.waitForAllTestsToComplete();
-        
-        // Give extra time for any pending I/O operations (like screenshots) to complete
-        this.logMessage("[Server_Docker] Tests completed, waiting for pending operations...");
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        
-        // Stop all services to ensure clean exit
+        this.logMessage(
+          "[Server_Docker] Tests completed, waiting for pending operations...",
+        );
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         await this.stop();
-        
         exitProcessPure(0);
       } catch (error: any) {
         this.logError("[Server_Docker] Error in once mode:", error);
-        // Still try to stop services
         try {
           await this.stop();
         } catch (stopError) {
@@ -157,21 +221,24 @@ export class Server_Docker extends Server_WS {
       try {
         logProcess.process.kill("SIGTERM");
       } catch (error) {
-        this.logError(`[Server_Docker] Error stopping log process ${containerId}:`, error);
+        this.logError(
+          `[Server_Docker] Error stopping log process ${containerId}:`,
+          error,
+        );
       }
     }
-    
+
     // Wait a bit for log processes to finish
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     this.logProcesses.clear();
 
     // Stop Docker services
     const result = await this.DC_down();
-    
+
     // Wait for Docker services to fully stop
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     this.resourceChanged("/~/processes");
     writeConfigForExtensionOnStop();
     await super.stop();
@@ -244,7 +311,12 @@ export class Server_Docker extends Server_WS {
     inputFiles?: any,
   ) {
     // Create aider message file for the test
-    await this.createAiderMessageFile(runtime, testName, configKey, configValue);
+    await this.createAiderMessageFile(
+      runtime,
+      testName,
+      configKey,
+      configValue,
+    );
   }
 
   private async createAiderMessageFile(
@@ -253,113 +325,12 @@ export class Server_Docker extends Server_WS {
     configKey: string,
     configValue: any,
   ): Promise<void> {
-    try {
-      // Use the same logic as makeReportDirectory for consistency
-      const reportDir = makeReportDirectory(testName, configKey);
-
-      // Ensure the directory exists
-      if (!fs.existsSync(reportDir)) {
-        fs.mkdirSync(reportDir, { recursive: true });
-      }
-
-      // Create the aider message file path
-      const messageFilePath = path.join(reportDir, "aider-message.txt");
-
-      // Get input files for this specific test
-      const inputFilesForTest = this.getInputFilesForTest(configKey, testName);
-      // Get output files for this specific test
-      const outputFilesForTest = this.getOutputFilesForTest(configKey, testName);
-
-      // Build the message content
-      let messageContent = "";
-      
-      // Add input files (source files)
-      if (inputFilesForTest.length > 0) {
-        messageContent += inputFilesForTest.map(file => `/add ${file}`).join('\n') + '\n\n';
-      }
-      
-      // Add output files (logs, results)
-      if (outputFilesForTest.length > 0) {
-        messageContent += outputFilesForTest.map(file => `/read ${file}`).join('\n') + '\n\n';
-      }
-      
-      messageContent += "Observe these logs and apply.\n\n";
-
-      fs.writeFileSync(messageFilePath, messageContent);
-
-      this.logMessage(`[Server_Docker] Created aider message file at ${messageFilePath}`);
-    } catch (error: any) {
-      this.logError(`[Server_Docker] Failed to create aider message file:`, error);
-    }
-  }
-
-  private getInputFilesForTest(configKey: string, testName: string): string[] {
-    // this.inputFiles is structured as: { [configKey]: { [testName]: string[] } }
-    if (!this.inputFiles[configKey]) {
-      return [];
-    }
-    if (!this.inputFiles[configKey][testName]) {
-      return [];
-    }
-    // Ensure it's an array
-    const files = this.inputFiles[configKey][testName];
-    return Array.isArray(files) ? files : [];
-  }
-
-  private getOutputFilesForTest(configKey: string, testName: string): string[] {
-    const files: string[] = [];
-    const cwd = process.cwd();
-    
-    // Add files from this.outputFiles structure
-    if (this.outputFiles[configKey] && this.outputFiles[configKey][testName]) {
-      const outputFiles = this.outputFiles[configKey][testName];
-      if (Array.isArray(outputFiles)) {
-        files.push(...outputFiles);
-      }
-    }
-    
-    // Get the base report directory for this configKey
-    const baseReportDir = path.join(cwd, "testeranto", "reports", configKey);
-    
-    // Scan for all files in the base report directory
-    const scanAllFiles = (dir: string): void => {
-      if (!fs.existsSync(dir)) {
-        return;
-      }
-      
-      const items = fs.readdirSync(dir, { withFileTypes: true });
-      for (const item of items) {
-        const fullPath = path.join(dir, item.name);
-        if (item.isDirectory()) {
-          // Always scan subdirectories
-          scanAllFiles(fullPath);
-        } else {
-          // Add all files
-          files.push(fullPath);
-        }
-      }
-    };
-    
-    // Scan the base report directory
-    if (fs.existsSync(baseReportDir)) {
-      scanAllFiles(baseReportDir);
-    }
-    
-    // Also scan for files in the parent directory (testeranto/reports/)
-    const parentDir = path.join(cwd, "testeranto", "reports");
-    if (fs.existsSync(parentDir)) {
-      const parentItems = fs.readdirSync(parentDir, { withFileTypes: true });
-      for (const item of parentItems) {
-        const fullPath = path.join(parentDir, item.name);
-        // Include files directly in reports/ directory (like build.log)
-        if (item.isFile()) {
-          files.push(fullPath);
-        }
-      }
-    }
-    
-    // Remove duplicates and sort for consistency
-    return [...new Set(files)].sort();
+    await this.aiderMessageManager.createAiderMessageFile(
+      runtime,
+      testName,
+      configKey,
+      configValue,
+    );
   }
 
   // each test has a bdd test to be launched when inputFiles.json changes
@@ -370,7 +341,12 @@ export class Server_Docker extends Server_WS {
     configValue: any,
   ) {
     // Create aider message file when test is launched
-    await this.createAiderMessageFile(runtime, testName, configKey, configValue);
+    await this.createAiderMessageFile(
+      runtime,
+      testName,
+      configKey,
+      configValue,
+    );
 
     await launchBddTestPure(
       runtime,
@@ -394,7 +370,12 @@ export class Server_Docker extends Server_WS {
     configValue: any,
   ) {
     // Create aider message file when checks are launched
-    await this.createAiderMessageFile(runtime, testName, configKey, configValue);
+    await this.createAiderMessageFile(
+      runtime,
+      testName,
+      configKey,
+      configValue,
+    );
 
     await launchChecksPure(
       runtime,
@@ -424,16 +405,11 @@ export class Server_Docker extends Server_WS {
   }
 
   public getInputFiles = (runtime: string, testName: string): string[] => {
-    return getInputFilesPure(this.configs, this.inputFiles, runtime, testName);
+    return this.testResultsCollector.getInputFiles(runtime, testName);
   };
 
   public getOutputFiles = (runtime: string, testName: string): string[] => {
-    const result = getOutputFilesPure(
-      this.configs,
-      this.outputFiles,
-      runtime,
-      testName,
-    );
+    const result = this.testResultsCollector.getOutputFiles(runtime, testName);
 
     const outputDir = path.join(
       process.cwd(),
@@ -451,27 +427,16 @@ export class Server_Docker extends Server_WS {
     return result || [];
   };
 
-  // getDocumentationFiles is no longer needed since documentation files are embedded in HTML
-
   public getTestResults = (runtime?: string, testName?: string): any[] => {
-    return getTestResultsPure(runtime, testName)
+    return this.testResultsCollector.getTestResults(runtime, testName);
   };
 
-  // public getAiderProcesses = (): any[] => {
-  //   return getAiderProcessesPure(
-  //     this.configs,
-  //     this.getProcessSummary().processes,
-  //   );
-  // };
-
-  // public handleAiderProcesses = (): any => {
-  //   return handleAiderProcessesPure(this.configs, () =>
-  //     this.getProcessSummary(),
-  //   );
-  // };
+  public collectAllTestResults = (): any[] => {
+    return this.testResultsCollector.collectAllTestResults();
+  };
 
   public getProcessSummary = (): any => {
-    return getProcessSummaryPure();
+    return this.testResultsCollector.getProcessSummary();
   };
 
   private async startServiceLogging(
@@ -565,46 +530,6 @@ export class Server_Docker extends Server_WS {
     });
   }
 
-  private async bundleStakeholderApp(): Promise<void> {
-    try {
-      const entryPoint = join(process.cwd(), "testeranto", "reports", "index.tsx");
-      const outfile = join(process.cwd(), "testeranto", "reports", "index.js");
-
-      // Check if there's a custom React component specified
-      let customComponentPath = this.configs.stakeholderReactModule;
-
-      if (customComponentPath) {
-        // Read the custom component path and create an entry point that uses it
-        const absolutePath = join(process.cwd(), customComponentPath);
-
-        await fs.promises.writeFile(entryPoint, entryContent(absolutePath));
-      } else {
-        // Use the default entry point
-        // Copy the default index.tsx if it doesn't exist
-        if (!existsSync(entryPoint)) {
-          const defaultEntry = join(__dirname, "index.tsx");
-          if (existsSync(defaultEntry)) {
-            await fs.promises.copyFile(defaultEntry, entryPoint);
-          }
-        }
-      }
-
-      await esbuild.build({
-        entryPoints: [entryPoint],
-        bundle: true,
-        format: "esm",
-        platform: "browser",
-        target: "es2020",
-        jsx: "automatic",
-        outfile: outfile,
-
-      });
-
-    } catch (error: any) {
-      console.warn(`Failed to bundle stakeholder app: ${error.message}`);
-    }
-  }
-
   public async DC_start(): Promise<IDockerComposeResult> {
     const commands = getDockerComposeCommandsPure();
     const result = await executeDockerComposeCommand(commands.start, {
@@ -627,159 +552,16 @@ export class Server_Docker extends Server_WS {
     return result;
   }
 
-  private async buildWithBuildKit(): Promise<void> {
-    // First, build the aider image
-    await this.buildAiderImage();
-    
-    await buildWithBuildKitPure(this.configs, (error: any) => {
-      this.logError(error);
-    });
-  }
-
   private async buildAiderImage(): Promise<void> {
-    try {
-      const dockerfilePath = path.join(process.cwd(), "aider.Dockerfile");
-      
-      // Check if the aider.Dockerfile exists
-      if (!fs.existsSync(dockerfilePath)) {
-        this.logMessage(`[Server_Docker] ⚠️ aider.Dockerfile not found at ${dockerfilePath}. Creating default.`);
-        
-        const defaultAiderDockerfile = `FROM python:3.11-slim
-WORKDIR /workspace
-RUN pip install --no-cache-dir aider-chat
-# Create a non-root user for security
-RUN useradd -m -u 1000 aider && chown -R aider:aider /workspace
-USER aider
-# Default command keeps container running
-CMD ["tail", "-f", "/dev/null"]`;
-
-        fs.writeFileSync(dockerfilePath, defaultAiderDockerfile);
-        this.logMessage(`[Server_Docker] Created default ${dockerfilePath}`);
-      }
-      
-      // Build the aider image
-      this.logMessage(`[Server_Docker] Building aider image...`);
-      execSync(`docker build -t testeranto-aider:latest -f ${dockerfilePath} .`, {
-        stdio: 'inherit',
-        cwd: process.cwd()
-      });
-      this.logMessage(`[Server_Docker] ✅ Aider image built successfully`);
-    } catch (error: any) {
-      this.logError(`[Server_Docker] ❌ Aider image build failed:`, error);
-      this.logMessage(`[Server_Docker] Aider services may not work, but continuing with other builds`);
-    }
+    await this.aiderImageBuilder.buildAiderImage();
   }
 
   private async startBuilderServices(): Promise<void> {
-    await startBuilderServicesPure(
-      this.configs,
-      this.mode,
-      (serviceName: string, runtime: string, runtimeConfigKey: string) =>
-        this.startServiceLogging(serviceName, runtime, runtimeConfigKey),
-    );
+    await this.builderServicesManager.startBuilderServices();
   }
 
   private async waitForAllTestsToComplete(): Promise<void> {
-    await waitForAllTestsToCompletePure(() => this.getProcessSummary());
-    
-    // Additional wait to ensure all async operations (like screenshots) are complete
-    // Check if there are any active processes still running
-    let attempts = 0;
-    const maxAttempts = 60; // Wait up to 60 seconds
-    const checkInterval = 1000; // Check every second
-    
-    while (attempts < maxAttempts) {
-      const summary = this.getProcessSummary();
-      const activeProcesses = summary.processes?.filter((p: any) => p.isActive === true) || [];
-      
-      if (activeProcesses.length === 0) {
-        // Also check if there are any pending operations in logProcesses
-        if (this.logProcesses.size === 0) {
-          break;
-        }
-      }
-      
-      this.logMessage(`[Server_Docker] Waiting for ${activeProcesses.length} active processes and ${this.logProcesses.size} log processes to complete...`);
-      await new Promise(resolve => setTimeout(resolve, checkInterval));
-      attempts++;
-    }
-    
-    if (attempts >= maxAttempts) {
-      this.logMessage(`[Server_Docker] Timeout waiting for all processes to complete`);
-    } else {
-      this.logMessage(`[Server_Docker] All processes completed`);
-    }
-    
-    // Wait specifically for screenshot files to be written
-    // Check for any pending screenshot operations in the reports directory
-    this.logMessage(`[Server_Docker] Checking for pending screenshot operations...`);
-    await this.waitForScreenshots();
-    
-    // Final delay to ensure any pending I/O operations are flushed
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  }
-
-  private async waitForScreenshots(): Promise<void> {
-    // Look for screenshot files in the reports directory
-    const reportsDir = path.join(process.cwd(), "testeranto", "reports");
-    if (!fs.existsSync(reportsDir)) {
-      return;
-    }
-    
-    // Maximum time to wait for screenshots (30 seconds)
-    const maxWaitTime = 30000;
-    const checkInterval = 1000;
-    let elapsed = 0;
-    
-    while (elapsed < maxWaitTime) {
-      // Find all .png files that might be in the process of being written
-      const pngFiles: string[] = [];
-      const findPngFiles = (dir: string) => {
-        if (!fs.existsSync(dir)) return;
-        const items = fs.readdirSync(dir, { withFileTypes: true });
-        for (const item of items) {
-          const fullPath = path.join(dir, item.name);
-          if (item.isDirectory()) {
-            findPngFiles(fullPath);
-          } else if (item.name.endsWith('.png') || item.name.endsWith('.jpg') || item.name.endsWith('.jpeg')) {
-            pngFiles.push(fullPath);
-          }
-        }
-      };
-      
-      findPngFiles(reportsDir);
-      
-      // Check if any files are still being written by checking file modification times
-      const now = Date.now();
-      let anyRecentFiles = false;
-      for (const file of pngFiles) {
-        try {
-          const stats = fs.statSync(file);
-          // If file was modified in the last 2 seconds, it might still be writing
-          if (now - stats.mtimeMs < 2000) {
-            anyRecentFiles = true;
-            this.logMessage(`[Server_Docker] Screenshot file ${file} was modified recently, waiting...`);
-            break;
-          }
-        } catch (error) {
-          // File might have been deleted, ignore
-        }
-      }
-      
-      if (!anyRecentFiles) {
-        this.logMessage(`[Server_Docker] No recent screenshot files found, continuing...`);
-        break;
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, checkInterval));
-      elapsed += checkInterval;
-    }
-    
-    if (elapsed >= maxWaitTime) {
-      this.logMessage(`[Server_Docker] Timeout waiting for screenshots to complete`);
-    } else {
-      this.logMessage(`[Server_Docker] Screenshot operations completed`);
-    }
+    await this.testCompletionWaiter.waitForAllTestsToComplete();
   }
 
   private logMessage(message: string): void {
@@ -793,4 +575,30 @@ CMD ["tail", "-f", "/dev/null"]`;
       consoleError(message);
     }
   }
+
+  private async bundleStakeholderApp(): Promise<void> {
+    await this.stakeholderAppBundler.bundleStakeholderApp();
+  }
+
+  // public getAiderProcesses = (): any[] => {
+  //   return getAiderProcessesPure(
+  //     this.configs,
+  //     this.getProcessSummary().processes,
+  //   );
+  // };
+
+  // public handleAiderProcesses = (): any => {
+  //   return handleAiderProcessesPure(this.configs, () =>
+  //     this.getProcessSummary(),
+  //   );
+  // };
+
+  // private async buildWithBuildKit(): Promise<void> {
+  //   // First, build the aider image
+  //   await this.buildAiderImage();
+
+  //   await buildWithBuildKitPure(this.configs, (error: any) => {
+  //     this.logError(error);
+  //   });
+  // }
 }

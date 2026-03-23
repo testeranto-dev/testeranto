@@ -1,4 +1,4 @@
-import { Ibdd_in, Ibdd_out } from "./CoreTypes";
+import type { Ibdd_in, Ibdd_out } from "../../src/CoreTypes.js";
 
 export type I = Ibdd_in<
   {}, // iinput

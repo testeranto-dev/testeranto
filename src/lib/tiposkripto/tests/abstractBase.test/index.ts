@@ -1,13 +1,15 @@
-import Tiposkripto from "../../src/Tiposkripto";
-import { testAdapter } from "./adapter";
-import { implementation } from "./implementation";
-import { MockGiven } from "./MockGiven";
-import { MockThen } from "./MockThen";
-import { MockWhen } from "./MockWhen";
-import { specification } from "./specification";
-import { I, O } from "./types";
 
-export default Tiposkripto<I, O, {}>(
+import { NodeTiposkripto } from "../../src/Node.js";
+import { testAdapter } from "./adapter.js";
+import { implementation } from "./implementation.js";
+import { MockGiven } from "./MockGiven.js";
+import { MockThen } from "./MockThen.js";
+import { MockWhen } from "./MockWhen.js";
+import { specification } from "./specification.js";
+import type { I, O } from "./types.js";
+import { defaultTestResourceRequirement } from "../../src/types.js";
+
+export default new NodeTiposkripto<I, O, {}>(
   {
     MockGiven,
     MockWhen,
@@ -15,5 +17,6 @@ export default Tiposkripto<I, O, {}>(
   },
   specification,
   implementation,
+  defaultTestResourceRequirement,
   testAdapter
 );

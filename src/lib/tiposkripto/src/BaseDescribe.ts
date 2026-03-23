@@ -6,11 +6,13 @@ import type { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
  * BaseDescribe extends BaseSetup for Describe-It pattern (AAA).
  * Describe can be nested, and Its can mix mutations and assertions.
  */
-export class BaseDescribe<I extends TestTypeParams_any> extends BaseSetup<I> {
+export abstract class BaseDescribe<
+  I extends TestTypeParams_any,
+> extends BaseSetup<I> {
   /**
    * Abstract method to be implemented by concrete Describe classes.
    * Sets up the initial state for the Describe-It pattern (AAA Arrange phase).
-   * 
+   *
    * @param subject The test subject
    * @param testResourceConfiguration Test resource configuration
    * @param artifactory Context-aware artifactory for file operations
@@ -25,10 +27,10 @@ export class BaseDescribe<I extends TestTypeParams_any> extends BaseSetup<I> {
     setupCB: I["given"],
     initialValues: any,
   ): Promise<I["istore"]>;
-  
+
   // Its can be nested Describes or actual Its
   its: any[];
-  
+
   constructor(
     features: string[],
     its: any[],
@@ -85,7 +87,7 @@ export class BaseDescribe<I extends TestTypeParams_any> extends BaseSetup<I> {
             itNdx,
             suiteNdx,
           );
-          
+
           // Check if it's a nested Describe
           if (itStep && itStep instanceof BaseDescribe) {
             // Process nested Describe
@@ -95,7 +97,7 @@ export class BaseDescribe<I extends TestTypeParams_any> extends BaseSetup<I> {
               testResourceConfiguration,
               tester,
               itArtifactory,
-              suiteNdx
+              suiteNdx,
             );
             this.store = nestedResult;
           } else {
@@ -109,7 +111,11 @@ export class BaseDescribe<I extends TestTypeParams_any> extends BaseSetup<I> {
             if (result !== undefined) {
               // If it returns something, it might be a new store state
               // or an assertion result to test
-              if (typeof result === 'boolean' || result === null || result === undefined) {
+              if (
+                typeof result === "boolean" ||
+                result === null ||
+                result === undefined
+              ) {
                 // Likely an assertion result
                 tester(result);
               } else {
@@ -171,6 +177,25 @@ export class BaseDescribe<I extends TestTypeParams_any> extends BaseSetup<I> {
       },
     };
   }
+
+  toObj() {
+    return {
+      key: this.key,
+      its: (this.its || []).map((it) => {
+        if (it && it.toObj) return it.toObj();
+        console.error("It step is not as expected!", JSON.stringify(it));
+        return {};
+      }),
+      error: this.error ? [this.error, this.error.stack] : null,
+      failed: this.failed,
+      features: this.features || [],
+      artifacts: this.artifacts,
+      status: this.status,
+    };
+  }
 }
 
-export type IDescribes<I extends TestTypeParams_any> = Record<string, BaseDescribe<I>>;
+export type IDescribes<I extends TestTypeParams_any> = Record<
+  string,
+  BaseDescribe<I>
+>;

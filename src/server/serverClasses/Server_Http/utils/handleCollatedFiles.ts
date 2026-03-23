@@ -2,35 +2,6 @@ import fs from "fs";
 import path from "path";
 import { Server_HTTP_utils } from "./Server_HTTP_utils";
 
-const getExitCodeFromFile = (
-  filePath: string,
-): { code: string; color: string } => {
-  try {
-    if (fs.existsSync(filePath)) {
-      const content = fs.readFileSync(filePath, "utf-8").trim();
-      const code = content || "unknown";
-      // Determine color based on exit code
-      let color = "gray";
-      if (code !== "unknown") {
-        const num = parseInt(code, 10);
-        if (!isNaN(num)) {
-          if (num === 0) {
-            color = "green";
-          } else if (num > 0) {
-            color = "yellow";
-          } else {
-            color = "red";
-          }
-        }
-      }
-      return { code, color };
-    }
-  } catch (error) {
-    console.error(`Error reading exit code from ${filePath}:`, error);
-  }
-  return { code: "unknown", color: "gray" };
-};
-
 export const handleCollatedFiles = (server: any): Response => {
   // Get all runtimes from configs
   const configs = server.configs;
@@ -866,4 +837,33 @@ const getOutputFilesForTest = (runtime: string, testName: string): string[] => {
   // Remove duplicates
   const uniqueFiles = [...new Set(outputFiles)];
   return uniqueFiles;
+};
+
+const getExitCodeFromFile = (
+  filePath: string,
+): { code: string; color: string } => {
+  try {
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, "utf-8").trim();
+      const code = content || "unknown";
+      // Determine color based on exit code
+      let color = "gray";
+      if (code !== "unknown") {
+        const num = parseInt(code, 10);
+        if (!isNaN(num)) {
+          if (num === 0) {
+            color = "green";
+          } else if (num > 0) {
+            color = "yellow";
+          } else {
+            color = "red";
+          }
+        }
+      }
+      return { code, color };
+    }
+  } catch (error) {
+    console.error(`Error reading exit code from ${filePath}:`, error);
+  }
+  return { code: "unknown", color: "gray" };
 };

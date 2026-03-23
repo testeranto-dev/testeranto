@@ -1,0 +1,30 @@
+{
+  "src/lib/tiposkripto/tests/abstractBase.test/index.ts": {
+    "hash": "d865c9a2eadbce79502d23dbfb7e13cc",
+    "files": [
+      "/src/lib/tiposkripto/src/Node.ts",
+      "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "/src/lib/tiposkripto/src/index.ts",
+      "/src/lib/tiposkripto/src/BaseGiven.ts",
+      "/src/lib/tiposkripto/src/BaseSetup.ts",
+      "/src/lib/tiposkripto/src/BaseWhen.ts",
+      "/src/lib/tiposkripto/src/BaseAction.ts",
+      "/src/lib/tiposkripto/src/BaseThen.ts",
+      "/src/lib/tiposkripto/src/BaseCheck.ts",
+      "/src/lib/tiposkripto/src/BaseValue.ts",
+      "/src/lib/tiposkripto/src/BaseShould.ts",
+      "/src/lib/tiposkripto/src/BaseExpected.ts",
+      "/src/lib/tiposkripto/src/BaseDescribe.ts",
+      "/src/lib/tiposkripto/src/BaseIt.ts",
+      "/src/lib/tiposkripto/src/BaseSuite.ts",
+      "/src/lib/tiposkripto/src/types.ts",
+      "/src/lib/tiposkripto/tests/abstractBase.test/adapter.ts",
+      "/src/lib/tiposkripto/tests/abstractBase.test/implementation.ts",
+      "/src/lib/tiposkripto/tests/abstractBase.test/MockGiven.ts",
+      "/src/lib/tiposkripto/tests/abstractBase.test/MockThen.ts",
+      "/src/lib/tiposkripto/tests/abstractBase.test/MockWhen.ts",
+      "/src/lib/tiposkripto/tests/abstractBase.test/specification.ts",
+      "/src/lib/tiposkripto/tests/abstractBase.test/index.ts"
+    ]
+  }
+}

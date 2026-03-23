@@ -24,7 +24,7 @@ export type ITestAdapter<I extends TestTypeParams_any> = IUniversalTestAdapter<I
     butThen?: (store: I["istore"], checkCB: I["then"], testResource: ITestResourceConfiguration, artifactory?: IArtifactory) => Promise<I["iselection"]>;
     assertThis?: (x: I["then"]) => any;
 };
-export type ITestSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = (Suite: SuiteSpecification<I, O>, Given: GivenSpecification<I, O>, When: WhenSpecification<I, O>, Then: ThenSpecification<I, O>) => BaseSuite<I, O>[];
+export type ITestSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = (Suite: SuiteSpecification<I, O>, Given: GivenSpecification<I, O>, When: WhenSpecification<I, O>, Then: ThenSpecification<I, O>, Describe: DescribewSpecification<I, O>, It: ItSpecification<I, O>, Confirm: ValueSpecification<I, O>, Value: ValueSpecification<I, O>, Should: ShouldSpecification<I, O>, Expected: ExpectSpecification<I, O>) => BaseSuite<I, O>[];
 export type ITestImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any, modifier = {
     whens: TestWhenImplementation<I, O>;
 }> = Modify<{

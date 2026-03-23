@@ -1,13 +1,32 @@
-import { ITestSpecification } from "./CoreTypes";
-import { I, O } from "./types";
+import type { ITestSpecification } from "../../src/CoreTypes.js";
+import type { I, O } from "./types.js";
 
 export const specification: ITestSpecification<I, O> = (
   Suite,
   Given,
   When,
-  Then
+  Then,
+  Describe,
+  It,
+  Confirm,
+  Value,
+  Should,
+  Expect
 ) => [
     Suite.Default("BaseGiven Tests", {
+
+      aaa_style: Describe.Default(
+        ['someFEatures'],
+        It['modifies and verifies the store']()
+
+      ),
+
+      tdt_style: Confirm.Default(
+        ['someFEatures'],
+        [Value.first, Should.equal, Expect['2']]
+
+      ),
+
       initialization: Given.Default(
         ["Should initialize with default values"],
         [],
@@ -20,7 +39,7 @@ export const specification: ITestSpecification<I, O> = (
       ),
     }),
 
-    Suite.Default("BaseWhen Tests", {
+    Suite.Default("BaseWhen Test", {
       stateModification: Given.Default(
         ["Should modify state correctly"],
         [When.modifyStore("modified")],

@@ -5,12 +5,12 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-
-	// "log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	
+	frameworkconverters "src/server/runtimes/golang/framework-converters"
 )
 
 // Package struct maps the fields we need from 'go list'
@@ -129,6 +129,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Create a map to store all tests' information
+	type TestInfo struct {
+		Hash  string   `json:"hash"`
+		Files []string `json:"files"`
+	}
+	allTestsInfo := make(map[string]TestInfo)
+
 	// Process each entry point
 	for _, entryPoint := range entryPoints {
 		fmt.Printf("\n📦 Processing Go test: %s\n", entryPoint)
@@ -164,9 +171,11 @@ func main() {
 		}
 
 		// Get relative path from module root to entry point
-		relEntryPath, err := filepath.Rel(moduleRoot, entryPointPath)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "  ❌ Failed to get relative path: %v\n", err)
+		var relEntryPath string
+		var err1 error
+		relEntryPath, err1 = filepath.Rel(moduleRoot, entryPointPath)
+		if err1 != nil {
+			fmt.Fprintf(os.Stderr, "  ❌ Failed to get relative path: %v\n", err1)
 			os.Exit(1)
 		}
 
@@ -174,10 +183,12 @@ func main() {
 		// The build will succeed or fail based on go.mod correctness
 		fmt.Printf("  Building with Go modules...\n")
 		
+		// Declare goSumPath here so it can be used below
+		goSumPath := filepath.Join(moduleRoot, "go.sum")
+		
 		// Ensure dependencies are up to date, especially for local modules
 		// First, remove go.sum to force fresh resolution
-		goSumPath := filepath.Join(moduleRoot, "go.sum")
-		if _, err := os.Stat(goSumPath); err == nil {
+		if _, errStat := os.Stat(goSumPath); errStat == nil {
 			fmt.Printf("  Removing go.sum to force fresh dependency resolution...\n")
 			os.Remove(goSumPath)
 		}
@@ -187,20 +198,34 @@ func main() {
 		tidyCmd.Stdout = os.Stdout
 		tidyCmd.Stderr = os.Stderr
 		tidyCmd.Dir = moduleRoot
-		if err := tidyCmd.Run(); err != nil {
-			fmt.Printf("  ⚠️  go mod tidy failed: %v\n", err)
+		if errTidy := tidyCmd.Run(); errTidy != nil {
+			fmt.Printf("  ⚠️  go mod tidy failed: %v\n", errTidy)
 			// Continue anyway, as the build might still work
 		}
 
-		// Collect input files in a simple way, similar to rust builder
+		// Use framework converters to detect test type
+		converter := frameworkconverters.DetectFramework(entryPointPath)
+		fmt.Printf("  Detected framework: %s\n", converter.Name())
+		
+		// Run native detection for more detailed analysis
+		detectionResult, err := TranslateNativeTest(entryPointPath)
+		if err != nil {
+			fmt.Printf("  ⚠️  Native detection failed: %v\n", err)
+			detectionResult = &DetectionResult{
+				IsNativeTest:   true,
+				FrameworkType:  converter.Name(),
+				TestStructure:  map[string]interface{}{},
+			}
+		}
+		
+		// Collect input files
 		var inputs []string
 		
 		// Add the entry point file itself
-		relEntryToWorkspace, err := filepath.Rel(workspace, entryPointPath)
-		if err == nil && !strings.HasPrefix(relEntryToWorkspace, "..") {
+		relEntryToWorkspace, errRel := filepath.Rel(workspace, entryPointPath)
+		if errRel == nil && !strings.HasPrefix(relEntryToWorkspace, "..") {
 			inputs = append(inputs, relEntryToWorkspace)
 		} else {
-			// Fallback
 			inputs = append(inputs, entryPoint)
 		}
 		
@@ -210,9 +235,9 @@ func main() {
 		fmt.Printf("  Module root: %s\n", moduleRoot)
 		fmt.Printf("  go.mod path: %s\n", goModPath)
 		for _, filePath := range []string{goModPath, goSumPath} {
-			if _, err := os.Stat(filePath); err == nil {
-				relToWorkspace, err := filepath.Rel(workspace, filePath)
-				if err == nil && !strings.HasPrefix(relToWorkspace, "..") {
+			if _, errStat := os.Stat(filePath); errStat == nil {
+				relToWorkspace, errRel := filepath.Rel(workspace, filePath)
+				if errRel == nil && !strings.HasPrefix(relToWorkspace, "..") {
 					inputs = append(inputs, relToWorkspace)
 				}
 			} else {
@@ -221,45 +246,79 @@ func main() {
 		}
 		
 		// Add all .go files in the module root and subdirectories
-		// This is similar to rust builder which adds all .rs files in src/
-		err = filepath.Walk(moduleRoot, func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return nil // skip errors
+		errWalk := filepath.Walk(moduleRoot, func(path string, info os.FileInfo, errWalkInner error) error {
+			if errWalkInner != nil {
+				return nil
 			}
 			if !info.IsDir() && strings.HasSuffix(path, ".go") {
-				relToWorkspace, err := filepath.Rel(workspace, path)
-				if err == nil && !strings.HasPrefix(relToWorkspace, "..") {
+				relToWorkspace, errRel := filepath.Rel(workspace, path)
+				if errRel == nil && !strings.HasPrefix(relToWorkspace, "..") {
 					inputs = append(inputs, relToWorkspace)
 				}
 			}
 			return nil
 		})
-		if err != nil {
-			fmt.Printf("  ⚠️  Warning while walking directory: %v\n", err)
+		if errWalk != nil {
+			fmt.Printf("  ⚠️  Warning while walking directory: %v\n", errWalk)
 		}
 		
-		fmt.Printf("  Found %d input files (simplified collection)\n", len(inputs))
+		fmt.Printf("  Found %d input files\n", len(inputs))
+		
+		// Generate framework-specific wrapper if needed
+		if detectionResult.IsNativeTest {
+			fmt.Printf("  Generating %s wrapper...\n", converter.Name())
+			
+			// Create wrapper directory
+			wrapperDir := filepath.Join(bundlesDir, "wrappers")
+			if err := os.MkdirAll(wrapperDir, 0755); err != nil {
+				fmt.Printf("  ⚠️  Failed to create wrapper directory: %v\n", err)
+			} else {
+				// Convert detection result to map for converter
+				detectionMap := map[string]interface{}{
+					"isNativeTest":  detectionResult.IsNativeTest,
+					"frameworkType": detectionResult.FrameworkType,
+					"testStructure": detectionResult.TestStructure,
+				}
+				
+				// Generate wrapper content
+				wrapperContent := converter.GenerateWrapper(entryPointPath, detectionMap, hash)
+				
+				// Write wrapper file
+				wrapperFileName := fmt.Sprintf("%s_wrapper.go", binaryName)
+				wrapperPath := filepath.Join(wrapperDir, wrapperFileName)
+				if err := os.WriteFile(wrapperPath, []byte(wrapperContent), 0644); err != nil {
+					fmt.Printf("  ⚠️  Failed to write wrapper: %v\n", err)
+				} else {
+					fmt.Printf("  ✅ Wrapper generated: %s\n", wrapperPath)
+					
+					// Also compile the wrapper
+					wrapperExePath := filepath.Join(bundlesDir, fmt.Sprintf("%s_wrapper", binaryName))
+					buildWrapperCmd := exec.Command("go", "build", "-o", wrapperExePath, wrapperPath)
+					buildWrapperCmd.Stdout = os.Stdout
+					buildWrapperCmd.Stderr = os.Stderr
+					buildWrapperCmd.Dir = moduleRoot
+					
+					if err := buildWrapperCmd.Run(); err != nil {
+						fmt.Printf("  ⚠️  Failed to compile wrapper: %v\n", err)
+					} else {
+						fmt.Printf("  ✅ Wrapper compiled: %s\n", wrapperExePath)
+					}
+				}
+			}
+		}
 
 		// Compute hash
-		testHash, err := computeFilesHash(inputs)
-		if err != nil {
-			fmt.Printf("  ⚠️  Failed to compute hash: %v\n", err)
-			testHash = "error"
+		hash, err2 := computeFilesHash(inputs)
+		if err2 != nil {
+			fmt.Printf("  ⚠️  Failed to compute hash: %v\n", err2)
+			hash = "error"
 		}
 
-		// Create inputFiles.json
-		inputFilesBasename := strings.ReplaceAll(entryPoint, "/", "_") + "-inputFiles.json"
-		inputFilesPath := filepath.Join(bundlesDir, inputFilesBasename)
-		inputFilesJSON, err := json.MarshalIndent(inputs, "", "  ")
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "  ❌ Failed to marshal inputFiles.json: %v\n", err)
-			os.Exit(1)
+		// Store test information
+		allTestsInfo[entryPoint] = TestInfo{
+			Hash:  hash,
+			Files: inputs,
 		}
-		if err := os.WriteFile(inputFilesPath, inputFilesJSON, 0644); err != nil {
-			fmt.Fprintf(os.Stderr, "  ❌ Failed to write inputFiles.json: %v\n", err)
-			os.Exit(1)
-		}
-		fmt.Printf("  ✅ Created inputFiles.json at %s\n", inputFilesPath)
 
 		// Compile the binary
 		outputExePath := filepath.Join(bundlesDir, binaryName)
@@ -297,8 +356,8 @@ func main() {
 		buildCmd.Stderr = os.Stderr
 		buildCmd.Dir = moduleRoot
 
-		if err := buildCmd.Run(); err != nil {
-			fmt.Fprintf(os.Stderr, "  ❌ Failed to compile: %v\n", err)
+		if err3 := buildCmd.Run(); err3 != nil {
+			fmt.Fprintf(os.Stderr, "  ❌ Failed to compile: %v\n", err3)
 			fmt.Fprintf(os.Stderr, "  💡 Go module dependency error.\n")
 			fmt.Fprintf(os.Stderr, "  💡 This could be due to:\n")
 			fmt.Fprintf(os.Stderr, "  💡 1. Missing or incorrect module structure\n")
@@ -316,37 +375,32 @@ func main() {
 		fmt.Printf("  ✅ Successfully compiled to %s\n", outputExePath)
 
 		// Make executable
-		if err := os.Chmod(outputExePath, 0755); err != nil {
-			fmt.Printf("  ⚠️  Failed to make binary executable: %v\n", err)
+		if err4 := os.Chmod(outputExePath, 0755); err4 != nil {
+			fmt.Printf("  ⚠️  Failed to make binary executable: %v\n", err4)
 		}
 
-		// Create dummy bundle file (for consistency with other runtimes)
-		dummyPath := filepath.Join(bundlesDir, entryPoint)
-		if err := os.MkdirAll(filepath.Dir(dummyPath), 0755); err != nil {
-			fmt.Fprintf(os.Stderr, "  ❌ Failed to create dummy bundle directory: %v\n", err)
-			os.Exit(1)
-		}
-
-		dummyContent := fmt.Sprintf(`#!/usr/bin/env bash
-# Dummy bundle file generated by testeranto
-# Hash: %s
-# This file execs the compiled Go binary
-
-exec "%s" "$@"
-`, testHash, outputExePath)
-
-		if err := os.WriteFile(dummyPath, []byte(dummyContent), 0755); err != nil {
-			fmt.Fprintf(os.Stderr, "  ❌ Failed to write dummy bundle file: %v\n", err)
-			os.Exit(1)
-		}
-
-		fmt.Printf("  ✅ Created dummy bundle file at %s\n", dummyPath)
+		// No dummy bundle file needed for compiled Go binaries
+		// We'll use the actual binary directly
+		fmt.Printf("  ✅ Compiled binary ready at %s\n", outputExePath)
 
 		// Change back to workspace root for next iteration
-		if err := os.Chdir(workspace); err != nil {
-			fmt.Fprintf(os.Stderr, "  ⚠️  Failed to change back to workspace: %v\n", err)
+		if err5 := os.Chdir(workspace); err5 != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠️  Failed to change back to workspace: %v\n", err5)
 		}
 	}
+
+	// Write single inputFiles.json for all tests
+	inputFilesPath := filepath.Join(bundlesDir, "inputFiles.json")
+	inputFilesJSON, err := json.MarshalIndent(allTestsInfo, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ❌ Failed to marshal inputFiles.json: %v\n", err)
+		os.Exit(1)
+	}
+	if err := os.WriteFile(inputFilesPath, inputFilesJSON, 0644); err != nil {
+		fmt.Fprintf(os.Stderr, "  ❌ Failed to write inputFiles.json: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("\n✅ Created inputFiles.json at %s with %d tests\n", inputFilesPath, len(allTestsInfo))
 
 	fmt.Println("\n🎉 Go builder completed successfully")
 }
@@ -454,7 +508,7 @@ func loadConfig(path string) (*Config, error) {
 	}
 
 	var config Config
-	if err := json.Unmarshal(output, &config); err != nil {
+	if err = json.Unmarshal(output, &config); err != nil {
 		return nil, fmt.Errorf("failed to decode config JSON: %w", err)
 	}
 

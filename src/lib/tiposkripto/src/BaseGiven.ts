@@ -64,6 +64,8 @@ export abstract class BaseGiven<
     // Ensure whens and thens are arrays
     this.whens = whens || [];
     this.thens = thens || [];
+    // Store the givenCB
+    this.givenCB = givenCB;
     console.log(`[BaseGiven.constructor] _parent initialized to null`);
     console.log(`[BaseGiven.constructor] whens:`, this.whens.length);
     console.log(`[BaseGiven.constructor] thens:`, this.thens.length);

@@ -43,6 +43,13 @@ export default abstract class BaseTiposkripto<I extends Ibdd_in_any = Ibdd_in_an
     Given(): Record<keyof IExtenstions, (name: string, features: string[], whens: BaseWhen<I>[], thens: BaseThen<I>[], gcb: I["given"]) => BaseGiven<I>>;
     When(): Record<keyof IExtenstions, (arg0: I["istore"], ...arg1: any) => BaseWhen<I>>;
     Then(): Record<keyof IExtenstions, (selection: I["iselection"], expectation: any) => BaseThen<I>>;
+    Describe(): Record<string, any>;
+    It(): Record<string, any>;
+    Confirm(): Record<string, any>;
+    Value(): Record<string, any>;
+    Should(): Record<string, any>;
+    Expect(): Record<string, any>;
+    Expected(): Record<string, any>;
     getTestJobs(): ITestJob[];
     private calculateTotalTests;
 }

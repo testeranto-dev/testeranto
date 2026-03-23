@@ -1,4 +1,11 @@
-import { DefaultAdapter } from "./index.js";
+import {
+  BaseDescribe,
+  BaseExpected,
+  BaseIt,
+  BaseShould,
+  BaseValue,
+  DefaultAdapter,
+} from "./index.js";
 import type { IGivens } from "./BaseGiven";
 import { BaseGiven } from "./BaseGiven";
 import { BaseSuite } from "./BaseSuite";
@@ -28,7 +35,7 @@ export default abstract class BaseTiposkripto<
 > {
   totalTests: number = 0;
   artifacts: Promise<unknown>[] = [];
-  assertThis: (t: I["then"]) => any = () => {};
+  assertThis: (t: I["then"]) => any = () => { };
   givenOverrides: Record<string, any>;
   specs: any;
   suitesOverrides: Record<string, any>;
@@ -57,7 +64,7 @@ export default abstract class BaseTiposkripto<
 
         // Start with the test resource configuration fs path
         const basePath = this.testResourceConfiguration?.fs || "testeranto";
-        
+
         // Log for debugging
         console.log("[Artifactory] Base path:", basePath);
         console.log("[Artifactory] Context:", context);
@@ -89,11 +96,11 @@ export default abstract class BaseTiposkripto<
 
         // Prepend the base path, avoiding double slashes
         // Remove trailing slash from basePath if present
-        const basePathClean = basePath.replace(/\/$/, '');
+        const basePathClean = basePath.replace(/\/$/, "");
         // Remove leading slash from path if present
-        const pathClean = path.replace(/^\//, '');
+        const pathClean = path.replace(/^\//, "");
         const fullPath = `${basePathClean}/${pathClean}`;
-        
+
         console.log("[Artifactory] Full path:", fullPath);
 
         // Call the abstract implementation
@@ -145,7 +152,7 @@ export default abstract class BaseTiposkripto<
         )}`,
       );
     }
-    
+
     // Create classy implementations for all patterns
     const classySuites = Object.entries(testImplementation.suites).reduce(
       (a: Record<string, any>, [key], index) => {
@@ -257,52 +264,77 @@ export default abstract class BaseTiposkripto<
     // BDD Pattern: Whens
     const classyWhens: Record<string, any> = {};
     if (testImplementation.whens) {
-      Object.entries(testImplementation.whens).forEach(([key, whEn]: [string, (...x: any[]) => any]) => {
-        classyWhens[key] = (...payload: any[]) => {
-          const capturedFullAdapter = fullAdapter;
-          const whenInstance = new (class extends BaseWhen<I> {
-            async andWhen(
-              store: any,
-              whenCB: any,
-              testResource: any,
-              artifactory: any,
-            ) {
-              return await capturedFullAdapter.execute(
-                store,
-                whenCB,
-                testResource,
-                artifactory,
-              );
-            }
-          })(`${key}: ${payload && payload.toString()}`, whEn(...payload));
-          return whenInstance;
-        };
-      });
+      Object.entries(testImplementation.whens).forEach(
+        ([key, whEn]: [string, (...x: any[]) => any]) => {
+          classyWhens[key] = (...payload: any[]) => {
+            const capturedFullAdapter = fullAdapter;
+            const whenInstance = new (class extends BaseWhen<I> {
+              async andWhen(
+                store: any,
+                whenCB: any,
+                testResource: any,
+                artifactory: any,
+              ) {
+                return await capturedFullAdapter.execute(
+                  store,
+                  whenCB,
+                  testResource,
+                  artifactory,
+                );
+              }
+            })(`${key}: ${payload && payload.toString()}`, whEn(...payload));
+            return whenInstance;
+          };
+        },
+      );
     }
 
     // BDD Pattern: Thens
     const classyThens: Record<string, any> = {};
     if (testImplementation.thens) {
-      Object.entries(testImplementation.thens).forEach(([key, thEn]: [string, (...x: any[]) => any]) => {
-        classyThens[key] = (...args: any[]) => {
-          const capturedFullAdapter = fullAdapter;
-          const thenInstance = new (class extends BaseThen<I> {
-            verifyCheck(
-              store: any,
-              checkCB: any,
-              testResourceConfiguration: any,
-              artifactory: any,
-            ): Promise<I["iselection"]> {
-              return capturedFullAdapter.verify(
-                store,
-                checkCB,
-                testResourceConfiguration,
-                artifactory,
-              );
-            }
-          })(`${key}: ${args && args.toString()}`, thEn(...args));
+      Object.entries(testImplementation.thens).forEach(
+        ([key, thEn]: [string, (...x: any[]) => any]) => {
+          classyThens[key] = (...args: any[]) => {
+            const capturedFullAdapter = fullAdapter;
+            const thenInstance = new (class extends BaseThen<I> {
+              async butThen(
+                store: any,
+                thenCB: any,
+                testResourceConfiguration: any,
+                artifactory: any,
+              ): Promise<I["iselection"]> {
+                return capturedFullAdapter.verify(
+                  store,
+                  thenCB,
+                  testResourceConfiguration,
+                  artifactory,
+                );
+              }
+            })(`${key}: ${args && args.toString()}`, thEn(...args));
 
-          return thenInstance;
+            return thenInstance;
+          };
+        },
+      );
+    }
+
+    // Confirm Pattern (similar to Values but for Confirm)
+    const classyConfirms: Record<string, any> = {};
+    if (testImplementation.confirms) {
+      Object.entries(testImplementation.confirms).forEach(([key, val]) => {
+        classyConfirms[key] = (
+          features: string[],
+          tableRows: any[][],
+          confirmCB: I["given"],
+          initialValues: any,
+        ) => {
+          // Use the implementation function as confirmCB
+          return new BaseValue<I>(
+            features,
+            tableRows,
+            val as I["given"],
+            initialValues,
+          );
         };
       });
     }
@@ -330,21 +362,31 @@ export default abstract class BaseTiposkripto<
     // TDT Pattern: Shoulds (part of 3-verb TDT pattern)
     const classyShoulds: Record<string, any> = {};
     if (testImplementation.shoulds) {
-      Object.entries(testImplementation.shoulds).forEach(([key, shouldCB]: [string, (...x: any[]) => any]) => {
-        classyShoulds[key] = (...args: any[]) => {
-          return new BaseShould<I>(`${key}: ${args && args.toString()}`, shouldCB(...args));
-        };
-      });
+      Object.entries(testImplementation.shoulds).forEach(
+        ([key, shouldCB]: [string, (...x: any[]) => any]) => {
+          classyShoulds[key] = (...args: any[]) => {
+            return new BaseShould<I>(
+              `${key}: ${args && args.toString()}`,
+              shouldCB(...args),
+            );
+          };
+        },
+      );
     }
 
     // TDT Pattern: Expecteds (part of 3-verb TDT pattern)
     const classyExpecteds: Record<string, any> = {};
     if (testImplementation.expecteds) {
-      Object.entries(testImplementation.expecteds).forEach(([key, expectedCB]: [string, (...x: any[]) => any]) => {
-        classyExpecteds[key] = (...args: any[]) => {
-          return new BaseExpected<I>(`${key}: ${args && args.toString()}`, expectedCB(...args));
-        };
-      });
+      Object.entries(testImplementation.expecteds).forEach(
+        ([key, expectedCB]: [string, (...x: any[]) => any]) => {
+          classyExpecteds[key] = (...args: any[]) => {
+            return new BaseExpected<I>(
+              `${key}: ${args && args.toString()}`,
+              expectedCB(...args),
+            );
+          };
+        },
+      );
     }
 
     // Describe-It Pattern: Describes (2-verb AAA pattern)
@@ -357,12 +399,7 @@ export default abstract class BaseTiposkripto<
           describeCB: I["given"],
           initialValues: any,
         ) => {
-          return new BaseDescribe<I>(
-            features,
-            its,
-            describeCB,
-            initialValues,
-          );
+          return new BaseDescribe<I>(features, its, describeCB, initialValues);
         };
       });
     }
@@ -370,24 +407,31 @@ export default abstract class BaseTiposkripto<
     // Describe-It Pattern: Its (2-verb AAA pattern)
     const classyIts: Record<string, any> = {};
     if (testImplementation.its) {
-      Object.entries(testImplementation.its).forEach(([key, itCB]: [string, (...x: any[]) => any]) => {
-        classyIts[key] = (...args: any[]) => {
-          return new BaseIt<I>(`${key}: ${args && args.toString()}`, itCB(...args));
-        };
-      });
+      Object.entries(testImplementation.its).forEach(
+        ([key, itCB]: [string, (...x: any[]) => any]) => {
+          classyIts[key] = (...args: any[]) => {
+            return new BaseIt<I>(
+              `${key}: ${args && args.toString()}`,
+              itCB(...args),
+            );
+          };
+        },
+      );
     }
 
     this.suitesOverrides = classySuites;
     this.givenOverrides = classyGivens;
     this.whenOverrides = classyWhens;
     this.thenOverrides = classyThens;
-    
+
     // Store TDT and Describe-It overrides for use in specifications
     (this as any).valuesOverrides = classyValues;
     (this as any).shouldsOverrides = classyShoulds;
     (this as any).expectedsOverrides = classyExpecteds;
     (this as any).describesOverrides = classyDescribes;
     (this as any).itsOverrides = classyIts;
+    // For Confirm pattern
+    (this as any).confirmsOverrides = classyConfirms;
     this.testResourceRequirement = testResourceRequirement;
     this.testSpecification = testSpecification;
 
@@ -396,6 +440,12 @@ export default abstract class BaseTiposkripto<
       this.Given() as any,
       this.When() as any,
       this.Then() as any,
+      this.Describe() as any,
+      this.It() as any,
+      this.Confirm() as any,
+      this.Value() as any,
+      this.Should() as any,
+      this.Expected() as any,
     );
 
     this.totalTests = this.calculateTotalTests();
@@ -523,6 +573,34 @@ export default abstract class BaseTiposkripto<
     (selection: I["iselection"], expectation: any) => BaseThen<I>
   > {
     return this.thenOverrides;
+  }
+
+  Describe(): Record<string, any> {
+    return (this as any).describesOverrides || {};
+  }
+
+  It(): Record<string, any> {
+    return (this as any).itsOverrides || {};
+  }
+
+  Confirm(): Record<string, any> {
+    return (this as any).confirmsOverrides || {};
+  }
+
+  Value(): Record<string, any> {
+    return (this as any).valuesOverrides || {};
+  }
+
+  Should(): Record<string, any> {
+    return (this as any).shouldsOverrides || {};
+  }
+
+  Expect(): Record<string, any> {
+    return (this as any).expectedsOverrides || {};
+  }
+
+  Expected(): Record<string, any> {
+    return (this as any).expectedsOverrides || {};
   }
 
   // Add a method to access test jobs which can be used by receiveTestResourceConfig

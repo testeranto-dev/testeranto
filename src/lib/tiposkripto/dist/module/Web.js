@@ -1006,6 +1006,19 @@ var BaseTiposkripto = class {
         };
       });
     }
+    const classyConfirms = {};
+    if (testImplementation.confirms) {
+      Object.entries(testImplementation.confirms).forEach(([key, val]) => {
+        classyConfirms[key] = (features, tableRows, confirmCB, initialValues) => {
+          return new BaseValue(
+            features,
+            tableRows,
+            val,
+            initialValues
+          );
+        };
+      });
+    }
     const classyValues = {};
     if (testImplementation.values) {
       Object.entries(testImplementation.values).forEach(([key, val]) => {
@@ -1065,13 +1078,20 @@ var BaseTiposkripto = class {
     this.expectedsOverrides = classyExpecteds;
     this.describesOverrides = classyDescribes;
     this.itsOverrides = classyIts;
+    this.confirmsOverrides = classyConfirms;
     this.testResourceRequirement = testResourceRequirement;
     this.testSpecification = testSpecification;
     this.specs = testSpecification(
       this.Suites(),
       this.Given(),
       this.When(),
-      this.Then()
+      this.Then(),
+      this.Describe(),
+      this.It(),
+      this.Confirm(),
+      this.Value(),
+      this.Should(),
+      this.Expected()
     );
     this.totalTests = this.calculateTotalTests();
     this.testJobs = this.specs.map((suite) => {
@@ -1194,6 +1214,27 @@ var BaseTiposkripto = class {
   }
   Then() {
     return this.thenOverrides;
+  }
+  Describe() {
+    return this.describesOverrides || {};
+  }
+  It() {
+    return this.itsOverrides || {};
+  }
+  Confirm() {
+    return this.confirmsOverrides || {};
+  }
+  Value() {
+    return this.valuesOverrides || {};
+  }
+  Should() {
+    return this.shouldsOverrides || {};
+  }
+  Expect() {
+    return this.expectedsOverrides || {};
+  }
+  Expected() {
+    return this.expectedsOverrides || {};
   }
   // Add a method to access test jobs which can be used by receiveTestResourceConfig
   getTestJobs() {

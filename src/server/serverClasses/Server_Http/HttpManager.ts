@@ -1,3 +1,5 @@
+import { getFileType } from "./utils/getFileType";
+
 export class HttpManager {
   routeName(req: any): string {
     const url = new URL(req.url!, `http://${req.headers.host}`);
@@ -13,12 +15,13 @@ export class HttpManager {
     // Prevent directory traversal attacks
     const decodedPath = decodeURIComponent(urlPath);
     // Remove leading slash to make it relative
-    return decodedPath.startsWith("/")
-      ? decodedPath.slice(1)
-      : decodedPath;
+    return decodedPath.startsWith("/") ? decodedPath.slice(1) : decodedPath;
   }
 
-  matchRoute(routeName: string, routes: Record<string, any>): { handler: any; params: Record<string, string> } | null {
+  matchRoute(
+    routeName: string,
+    routes: Record<string, any>,
+  ): { handler: any; params: Record<string, string> } | null {
     // First, try exact match
     if (routes && routes[routeName]) {
       return { handler: routes[routeName], params: {} };
@@ -26,14 +29,15 @@ export class HttpManager {
 
     // Then, try pattern matching
     for (const [pattern, handler] of Object.entries(routes)) {
-      if (pattern.includes(':')) {
+      if (pattern.includes(":")) {
         // Split pattern into parts
-        const patternParts = pattern.split('/');
-        const routeParts = routeName.split('/');
+        const patternParts = pattern.split("/");
+        const routeParts = routeName.split("/");
 
         // Check if the last pattern part ends with .xml and contains a parameter
         const lastPatternPart = patternParts[patternParts.length - 1];
-        const isLastParamWithExtension = lastPatternPart.includes(':') && lastPatternPart.includes('.xml');
+        const isLastParamWithExtension =
+          lastPatternPart.includes(":") && lastPatternPart.includes(".xml");
 
         if (isLastParamWithExtension) {
           // For patterns like 'process_manager/:runtime/:testname.xml'
@@ -45,7 +49,7 @@ export class HttpManager {
             const patternPart = patternParts[i];
             const routePart = routeParts[i];
 
-            if (patternPart.startsWith(':')) {
+            if (patternPart.startsWith(":")) {
               // It's a parameter
               const paramName = patternPart.slice(1);
               params[paramName] = routePart;
@@ -57,12 +61,15 @@ export class HttpManager {
 
           if (matches) {
             // The last parameter should capture all remaining route parts
-            const lastParamName = lastPatternPart.slice(1, lastPatternPart.indexOf('.xml'));
+            const lastParamName = lastPatternPart.slice(
+              1,
+              lastPatternPart.indexOf(".xml"),
+            );
             const remainingParts = routeParts.slice(patternParts.length - 1);
-            let paramValue = remainingParts.join('/');
+            let paramValue = remainingParts.join("/");
 
             // Remove .xml from the end if present
-            if (paramValue.endsWith('.xml')) {
+            if (paramValue.endsWith(".xml")) {
               paramValue = paramValue.slice(0, -4);
             }
             params[lastParamName] = paramValue;
@@ -82,7 +89,7 @@ export class HttpManager {
             const patternPart = patternParts[i];
             const routePart = routeParts[i];
 
-            if (patternPart.startsWith(':')) {
+            if (patternPart.startsWith(":")) {
               // It's a parameter
               const paramName = patternPart.slice(1);
               params[paramName] = routePart;
@@ -101,20 +108,23 @@ export class HttpManager {
     return null;
   }
 
-  extractParams(pattern: string, routeName: string): Record<string, string> | null {
-    const patternParts = pattern.split('/');
-    const routeParts = routeName.split('/');
-    
+  extractParams(
+    pattern: string,
+    routeName: string,
+  ): Record<string, string> | null {
+    const patternParts = pattern.split("/");
+    const routeParts = routeName.split("/");
+
     if (patternParts.length !== routeParts.length) {
       return null;
     }
-    
+
     const params: Record<string, string> = {};
     for (let i = 0; i < patternParts.length; i++) {
       const patternPart = patternParts[i];
       const routePart = routeParts[i];
-      
-      if (patternPart.startsWith(':')) {
+
+      if (patternPart.startsWith(":")) {
         const paramName = patternPart.slice(1);
         params[paramName] = routePart;
       } else if (patternPart !== routePart) {
@@ -122,5 +132,9 @@ export class HttpManager {
       }
     }
     return params;
+  }
+
+  static getFileType(filename: string): string {
+    return getFileType(filename);
   }
 }

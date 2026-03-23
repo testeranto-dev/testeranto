@@ -36,8 +36,9 @@ export abstract class BaseWhen<
     store: I["istore"],
     actionCB: (x: I["iselection"]) => I["then"],
     testResource: any,
+    artifactory?: any,
   ): Promise<any> {
-    return this.andWhen(store, actionCB, testResource);
+    return this.andWhen(store, actionCB, testResource, artifactory);
   }
 
   async test(store: I["istore"], testResourceConfiguration: any, artifactory?: any) {

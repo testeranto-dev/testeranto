@@ -1,24 +1,35 @@
-import { ITestAdapter } from "../../src/CoreTypes";
-import { I } from "./types";
+import type { ITestAdapter } from "../../src/CoreTypes.js";
+import type { I } from "./types.js";
 
 export const testAdapter: ITestAdapter<I> = {
-  beforeEach: async (subject, initializer, testResource, initialValues) => {
-    const result = await initializer();
-    // Ensure the result matches the expected type
-    if (typeof result === "function") {
-      // If it's a function, call it to get the actual store
-      return result();
+  // Universal adapter methods
+  prepareAll: async (input, testResource, artifactory) => {
+    return input as any;
+  },
+  prepareEach: async (subject, initializer, testResource, initialValues, artifactory) => {
+    // initializer should be a function that returns I["given"]
+    // I["given"] is () => () => { testStore: ... }
+    if (typeof initializer !== 'function') {
+      throw new Error(`initializer is not a function: ${typeof initializer}`);
     }
-    return result;
+    // initializer doesn't take initialValues in this test implementation
+    const givenFunc = initializer();
+    if (typeof givenFunc === "function") {
+      const storeFunc = givenFunc();
+      if (typeof storeFunc === "function") {
+        return storeFunc();
+      }
+      return storeFunc;
+    }
+    return givenFunc;
   },
-  andWhen: async (store, whenCB, testResource, pm) => {
-    return whenCB(store);
+  execute: async (store, actionCB, testResource, artifactory) => {
+    return actionCB(store);
   },
-  butThen: async (store, thenCB, testResource, pm) => {
-    return thenCB(store);
+  verify: async (store, checkCB, testResource, artifactory) => {
+    return checkCB(store);
   },
-  afterEach: async (store, key, pm) => Promise.resolve(store),
-  afterAll: async (store, pm) => { },
-  assertThis: (result) => !!result,
-  beforeAll: async (input, testResource, pm) => input as any,
+  cleanupEach: async (store, key, artifactory) => Promise.resolve(store),
+  cleanupAll: async (store, artifactory) => { },
+  assert: (x) => !!x,
 };

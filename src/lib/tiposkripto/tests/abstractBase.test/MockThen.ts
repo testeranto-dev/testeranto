@@ -1,5 +1,6 @@
-import { Ibdd_in_any } from "../../src/CoreTypes";
-import { BaseThen } from "../BaseThen";
+import type { Ibdd_in_any } from "../../src/CoreTypes.js";
+import { BaseThen } from "../../src/BaseThen.js";
+import type { ITestResourceConfiguration } from "../../src/types.js";
 
 export class MockThen<I extends Ibdd_in_any> extends BaseThen<I> {
   constructor(
@@ -12,7 +13,8 @@ export class MockThen<I extends Ibdd_in_any> extends BaseThen<I> {
   async butThen(
     store: I["istore"],
     thenCB: (s: I["iselection"]) => Promise<I["isubject"]>,
-    testResourceConfiguration: any
+    testResourceConfiguration: ITestResourceConfiguration,
+    artifactory?: any
   ): Promise<I["iselection"]> {
     // The thenCB expects a selection, not the store directly
     // We need to extract the selection from the store

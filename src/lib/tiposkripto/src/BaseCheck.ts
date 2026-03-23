@@ -36,13 +36,19 @@ export abstract class BaseCheck<I extends TestTypeParams_any> {
   }
 
   toObj() {
-    const obj = {
-      name: this.name,
-      error: this.error,
+    return {
+      key: this.key,
+      its: (this.its || []).map((it) => {
+        if (it && it.toObj) return it.toObj();
+        console.error("It step is not as expected!", JSON.stringify(it));
+        return {};
+      }),
+      error: this.error ? [this.error, this.error.stack] : null,
+      failed: this.failed,
+      features: this.features || [],
       artifacts: this.artifacts,
       status: this.status,
     };
-    return obj;
   }
 
   abstract verifyCheck(

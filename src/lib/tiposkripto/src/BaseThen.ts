@@ -37,6 +37,16 @@ export abstract class BaseThen<
     artifactory?: any,
   ): Promise<I["iselection"]>;
 
+  // Implement the abstract verifyCheck method from BaseCheck
+  async verifyCheck(
+    store: I["istore"],
+    checkCB: (s: I["iselection"]) => Promise<I["isubject"]>,
+    testResourceConfiguration: ITestResourceConfiguration,
+    artifactory?: any,
+  ): Promise<I["iselection"]> {
+    return this.butThen(store, checkCB, testResourceConfiguration, artifactory);
+  }
+
   async test(
     store: I["istore"],
     testResourceConfiguration: ITestResourceConfiguration,

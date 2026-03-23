@@ -2,11 +2,23 @@ import type {
   GivenSpecification,
   WhenSpecification,
   ThenSpecification,
+  DescribeSpecification,
+  ItSpecification,
+  ValueSpecification,
+  ShouldSpecification,
+  ExpectSpecification,
+  ConfirmSpecification,
   TestWhenImplementation,
   Modify,
   TestSuiteImplementation,
   TestGivenImplementation,
   TestThenImplementation,
+  TestDescribeImplementation,
+  TestItImplementation,
+  TestValueImplementation,
+  TestShouldImplementation,
+  TestExpectedImplementation,
+  TestConfirmImplementation,
   TestSuiteShape,
   TestGivenShape,
   TestWhenShape,
@@ -117,6 +129,12 @@ export type ITestSpecification<
   Given: GivenSpecification<I, O>,
   When: WhenSpecification<I, O>,
   Then: ThenSpecification<I, O>,
+  Describe: DescribeSpecification<I, O>,
+  It: ItSpecification<I, O>,
+  Confirm: ConfirmSpecification<I, O>,
+  Value: ValueSpecification<I, O>,
+  Should: ShouldSpecification<I, O>,
+  Expected: ExpectSpecification<I, O>,
 ) => BaseSuite<I, O>[];
 
 export type ITestImplementation<
@@ -131,6 +149,15 @@ export type ITestImplementation<
     givens: TestGivenImplementation<I, O>;
     whens: TestWhenImplementation<I, O>;
     thens: TestThenImplementation<I, O>;
+    // TDT pattern
+    values: TestValueImplementation<I, O>;
+    shoulds: TestShouldImplementation<I, O>;
+    expecteds: TestExpectedImplementation<I, O>;
+    // Describe-It pattern
+    describes: TestDescribeImplementation<I, O>;
+    its: TestItImplementation<I, O>;
+    // Confirm pattern
+    confirms?: TestConfirmImplementation<I, O>;
   },
   modifier
 >;
@@ -140,11 +167,23 @@ export type TestSpecShape<
   ISetups extends TestGivenShape = TestGivenShape,
   IActions extends TestWhenShape = TestWhenShape,
   IChecks extends TestThenShape = TestThenShape,
+  IDescribes extends TestGivenShape = TestGivenShape,
+  IIts extends TestWhenShape = TestWhenShape,
+  IValues extends TestGivenShape = TestGivenShape,
+  IShoulds extends TestWhenShape = TestWhenShape,
+  IExpecteds extends TestThenShape = TestThenShape,
+  IConfirms extends TestGivenShape = TestGivenShape,
 > = {
   suites: ISuites;
   givens: ISetups;
   whens: IActions;
   thens: IChecks;
+  describes?: IDescribes;
+  its?: IIts;
+  values?: IValues;
+  shoulds?: IShoulds;
+  expecteds?: IExpecteds;
+  confirms?: IConfirms;
 };
 
 export type TestSpecShape_any = TestSpecShape<

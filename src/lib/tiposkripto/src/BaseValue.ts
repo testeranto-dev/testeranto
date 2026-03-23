@@ -153,6 +153,18 @@ export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
       },
     };
   }
+
+  toObj() {
+    return {
+      key: this.key,
+      tableRows: this.tableRows || [],
+      error: this.error ? [this.error, this.error.stack] : null,
+      failed: this.failed,
+      features: this.features || [],
+      artifacts: this.artifacts,
+      status: this.status,
+    };
+  }
 }
 
 export type IValues<I extends TestTypeParams_any> = Record<string, BaseValue<I>>;

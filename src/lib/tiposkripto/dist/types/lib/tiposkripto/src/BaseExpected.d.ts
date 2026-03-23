@@ -5,7 +5,7 @@ import type { ITestResourceConfiguration } from "./types.js";
  * BaseExpected extends BaseCheck for TDT pattern.
  * Validates each row in table-driven testing.
  */
-export declare class BaseExpected<I extends TestTypeParams_any> extends BaseCheck<I> {
+export declare abstract class BaseExpected<I extends TestTypeParams_any> extends BaseCheck<I> {
     /**
      * Abstract method to be implemented by concrete Expected classes.
      * Validates each row in table-driven testing (TDT pattern).

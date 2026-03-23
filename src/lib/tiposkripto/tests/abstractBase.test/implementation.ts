@@ -1,6 +1,7 @@
-import { ITestImplementation } from "./CoreTypes";
+import assert from "node:assert";
+import type { ITestImplementation } from "../../src/CoreTypes";
 
-import { I, O } from "./types";
+import type { I, O } from "./types";
 
 export const implementation: ITestImplementation<I, O> = {
   suites: {
@@ -42,4 +43,46 @@ export const implementation: ITestImplementation<I, O> = {
       return store;
     },
   },
+
+
+
+  describes: {
+    Default: ({
+      testStore: { value: "initial" },
+      testSelection: { selected: true },
+    }),
+    WithError: ({
+      testStore: { value: "error" },
+      testSelection: { selected: false },
+    }),
+  },
+
+  its: {
+    ['modifies and verifies the store']: () => {
+      // TODO
+    }
+  },
+
+
+  confirms: {
+    Default: () => ({
+      testStore: { value: "initial" },
+      testSelection: { selected: true },
+    }),
+  },
+
+  values: {
+    first: 1
+  },
+
+  shoulds: {
+    equal: assert,
+  },
+
+  expecteds: {
+    ['2']: 2
+  }
+
+
+
 };
