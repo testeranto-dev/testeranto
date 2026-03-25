@@ -140,12 +140,13 @@ export type ConfirmSpecification<
       features: string[],
       tableRows: any[][],
       ...xtras: O["confirms"][K]
-    ) => import("./lib/tiposkripto/src/BaseValue").BaseValue<I>;
-    
+    ) => import("./lib/tiposkripto/src/BaseValue").BaseValue<I>
+  };
+
 export type ValueSpecification<
-      I extends Ibdd_in_any,
-      O extends Ibdd_out_any,
-    > = {
+  I extends Ibdd_in_any,
+  O extends Ibdd_out_any,
+> = {
     [K in keyof O["values"]]: (
       features: string[],
       tableRows: any[][],
@@ -172,9 +173,9 @@ export type ExpectSpecification<
   };
 
 
-  };
+//   };
 
-//////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////////
 
 export type TestSuiteImplementation<O extends Ibdd_out_any> = {
   [K in keyof O["suites"]]: string;

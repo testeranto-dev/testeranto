@@ -6,7 +6,7 @@ export class AiderImageBuilder {
   constructor(
     private logMessage: (message: string) => void,
     private logError: (message: string, error?: any) => void
-  ) {}
+  ) { }
 
   async buildAiderImage(): Promise<void> {
     try {
@@ -40,7 +40,7 @@ CMD ["tail", "-f", "/dev/null"]`;
           cwd: process.cwd(),
         },
       );
-      this.logMessage(`[Server_Docker] ✅ Aider image built successfully`);
+
     } catch (error: any) {
       this.logError(`[Server_Docker] ❌ Aider image build failed:`, error);
       this.logMessage(

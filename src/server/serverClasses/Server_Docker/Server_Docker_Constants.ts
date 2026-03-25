@@ -284,6 +284,7 @@ export type IR = (
   serviceName: string,
   runtime: string,
   runtimeConfigKey: string,
+  testName?: string,
 ) => void;
 
 

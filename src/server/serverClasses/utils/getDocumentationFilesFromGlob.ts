@@ -28,9 +28,6 @@ export function getDocumentationFilesFromGlob(
       return file.split(require("path").sep).join("/");
     });
 
-    console.log(
-      `[utils] Found ${relativeFiles.length} documentation files from glob: ${globPattern}`,
-    );
     return relativeFiles;
   } catch (error) {
     console.error(

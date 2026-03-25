@@ -55,9 +55,6 @@ export class BuildKitBuilder {
       ${options.buildContext}`;
 
     try {
-      console.log(`[BuildKit] Building ${options.runtime} image for ${options.configKey}`);
-      console.log(`[BuildKit] Command: ${buildCommand}`);
-
       const { stdout, stderr } = await execAsync(buildCommand, {
         maxBuffer: 10 * 1024 * 1024 // 10MB buffer for large builds
       });
@@ -97,7 +94,7 @@ export class BuildKitBuilder {
     command: string
   ): any {
     const serviceName = `${configKey}-${testName}-buildkit`;
-    
+
     const baseService: any = {
       image: `testeranto-${runtime}-${configKey}:latest`,
       container_name: serviceName,
@@ -116,7 +113,7 @@ export class BuildKitBuilder {
       networks: ["allTests_network"]
       // Note: No 'build' field - image is pre-built with BuildKit
     };
-    
+
     // Add runtime-specific configurations
     if (runtime === 'web') {
       // Web runtime needs additional ports and environment
@@ -127,7 +124,7 @@ export class BuildKitBuilder {
         PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
       };
     }
-    
+
     return {
       [serviceName]: baseService
     };

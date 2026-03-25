@@ -15,27 +15,20 @@ export async function addTestResultsToSourceFiles(tree: any, configs: any): Prom
   // Get all test results from the reports directory
   const reportsDir = path.join(process.cwd(), "testeranto", "reports");
   const testResults = await collectTestResults(reportsDir);
-  console.log(
-    `[utils] Processing ${Object.keys(testResults).length} test results`,
-  );
+
 
   // For each test result, find its source file and attach the results
   for (const [testKey, testResult] of Object.entries(testResults)) {
-    console.log(`[utils] Processing test result for key: ${testKey}`);
 
     // Find which source file this test corresponds to
     const sourceFile = findSourceFileForTest(testKey, configs);
 
     if (sourceFile) {
-      console.log(
-        `[utils] Found source file ${sourceFile} for test ${testKey}`,
-      );
+
 
       // Find the node for the source file in the tree
       const sourceNode = findNodeInTree(tree, sourceFile);
       if (sourceNode && sourceNode.type === "file") {
-        console.log(`[utils] Found source node for ${sourceFile}`);
-
         // Ensure the source node has children
         if (!sourceNode.children) {
           sourceNode.children = {};
@@ -66,9 +59,7 @@ export async function addTestResultsToSourceFiles(tree: any, configs: any): Prom
           );
 
           sourceNode.children[testResultKey] = testResultsNode;
-          console.log(
-            `[utils] Added test results for ${testKey} to source file ${sourceFile}`,
-          );
+
         } else {
           // Update existing test results
           sourceNode.children[testResultKey].testData = testResult;
@@ -78,9 +69,7 @@ export async function addTestResultsToSourceFiles(tree: any, configs: any): Prom
             sourceNode.children[testResultKey],
             testResult,
           );
-          console.log(
-            `[utils] Updated test results for ${testKey} in source file ${sourceFile}`,
-          );
+
         }
       } else {
         console.warn(
@@ -138,5 +127,4 @@ export async function addTestResultsToSourceFiles(tree: any, configs: any): Prom
     }
   }
 
-  console.log(`[utils] Finished processing test results`);
 }

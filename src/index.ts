@@ -1,30 +1,30 @@
+// TODO auto add correct version instead of hardcode
+
 import readline from "readline";
 import { Server } from "./server/serverClasses/Server";
 
 const mode = process.argv[2] as "once" | "dev" | "-v";
-if (mode !== "once" && mode !== "dev" && mode != "-v") {
-  console.error(`The 3rd argument should be 'dev' or 'once', not '${mode}'.`);
-
-  console.error(`you passed '${process.argv}'.`);
-
-  process.exit(-1);
-}
 
 if (mode === "-v") {
-  console.log(`v${"0.225.2"} `)
+  console.log(`v${"0.233.7"} `)
   process.exit(0);
 }
 
-const config = (await import(process.cwd() + '/testeranto/testeranto.ts')).default;
+console.log(`hello testeranto v0.233.7 - running in ${mode} mode\n Press 'q' to initiate a graceful shutdown.\nPress 'CTRL + c' to quit forcefully.\n`);
 
+if (mode !== "once" && mode !== "dev" && mode != "-v") {
+  console.error(`The 3rd argument should be 'dev' or 'once', not '${mode}'.`);
+  console.error(`The process was given the folowring arguments:  '${process.argv}'.`);
+  process.exit(-1);
+} else {
+
+}
+
+const config = (await import(process.cwd() + '/testeranto/testeranto.ts')).default;
 const server = new Server(config, mode);
 
-// Set up keypress handling for graceful shutdown
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) process.stdin.setRawMode(true);
-
-console.log(("[Server] Press 'q' to initiate a graceful shutdown."));
-console.log(("[Server] Press 'CTRL + c' to quit forcefully."));
 
 process.stdin.on("keypress", async (str, key) => {
   if (key.name === "q") {
@@ -51,7 +51,7 @@ server.start().catch((error) => {
   process.exit(1);
 });
 
-console.log(`hello testeranto v0.224.4 - running in ${mode} mode`);
+
 
 // In once mode, we don't need to keep the process alive indefinitely
 // The server will handle shutting down when tests are complete
@@ -63,7 +63,7 @@ if (mode === 'once') {
     console.error('Force exiting after 30 minutes');
     process.exit(1);
   }, 30 * 60 * 1000);
-  
+
   // Clear the timeout if the process exits normally
   process.on('exit', () => {
     clearTimeout(forceExitTimeout);

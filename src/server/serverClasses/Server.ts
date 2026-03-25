@@ -42,11 +42,8 @@ export class Server extends Server_Docker {
   }
 
   async start(): Promise<void> {
-    // First, ensure the HTML file exists with embedded config
     await this.embedConfigInHtml();
 
-    // Log config structure for debugging
-    console.log(`[Server] Config structure:`);
     if (this.configs && this.configs.runtimes) {
       for (const [configKey, runtimeConfig] of Object.entries(
         this.configs.runtimes,
@@ -66,19 +63,11 @@ export class Server extends Server_Docker {
     // Then start the parent server
     await super.start();
 
-    if (this.configs.documentationGlob) {
-      console.log(
-        `[Server] Documentation glob pattern: ${this.configs.documentationGlob}`,
-      );
-    } else {
-      console.log("[Server] No documentationGlob configured in configs");
-    }
   }
 
   private async generateStaticDataFile(): Promise<void> {
     const reportsDir = join(process.cwd(), "testeranto", "reports");
 
-    // Collect all necessary data
     const data = {
       documentation: await this.getDocumentationData(),
       testResults: await this.getTestResultsData(),

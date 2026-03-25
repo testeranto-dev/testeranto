@@ -2,8 +2,7 @@ import { RUN_TIMES } from "../../../../runtimes";
 import type {
   ITestconfigV2,
   IRunTime,
-  IChecks,
-  ICheck,
+
 } from "../../../../Types";
 import type { IMode } from "../../../types";
 import {
@@ -28,9 +27,7 @@ export const generateServicesPure = (
   configs: ITestconfigV2,
   mode: IMode,
 ): Record<string, any> => {
-  consoleLog(
-    `[generateServicesPure] Starting with ${Object.keys(configs.runtimes).length} runtimes`,
-  );
+
   const services: any = {};
   const processedRuntimes = new Set<IRunTime>();
   let hasWebRuntime = false;
@@ -38,12 +35,7 @@ export const generateServicesPure = (
   for (const [runtimeTestsName, runtimeTests] of Object.entries(
     configs.runtimes,
   )) {
-    consoleLog(
-      `[generateServicesPure] Processing runtime: ${runtimeTestsName}, runtime type: ${runtimeTests.runtime}`,
-    );
-    consoleLog(
-      `[generateServicesPure] Checks for ${runtimeTestsName}: ${runtimeTests.checks?.length || 0} checks`,
-    );
+
     const runtime: IRunTime = runtimeTests.runtime as IRunTime;
     const buildOptions = runtimeTests.buildOptions;
     const testsObj = runtimeTests.tests;
@@ -57,12 +49,6 @@ export const generateServicesPure = (
       hasWebRuntime = true;
     }
 
-    if (runtimeTests.buildKitOptions === undefined) {
-      consoleWarn(
-        `[Server_Docker] No BuildKit options for ${runtimeTestsName}`,
-      );
-    }
-
     if (!processedRuntimes.has(runtime)) {
       processedRuntimes.add(runtime);
       let builderServiceName = getBuilderServiceName(runtime);
@@ -70,9 +56,7 @@ export const generateServicesPure = (
       if (runtime === "web") {
         builderServiceName = "webtests";
       }
-      consoleLog(
-        `[generateServicesPure] Adding builder service: ${builderServiceName} for runtime ${runtime}`,
-      );
+
       const composeFunc = runTimeToCompose[runtime][0];
       const projectConfigPath = "testeranto/testeranto.ts";
       const runtimeConfigPath = buildOptions;
@@ -103,14 +87,9 @@ export const generateServicesPure = (
           };
         }
       }
-      consoleLog(
-        `[generateServicesPure] Builder service ${builderServiceName} configured`,
-      );
+
     }
 
-    consoleLog(
-      `[generateServicesPure] Processing ${testsObj.length} tests for ${runtimeTestsName}`,
-    );
     for (const tName of testsObj) {
       const cleanedTestName = cleanTestName(tName);
       const uid = `${runtimeTestsName.toLowerCase()}-${cleanedTestName}`;
@@ -147,11 +126,7 @@ export const generateServicesPure = (
         getAiderServiceName(uid),
       );
 
-      consoleLog(
-        `[generateServicesPure] Added BDD and aider services for test ${tName}`,
-      );
-
-      checks.forEach((check: ICheck, ndx) => {
+      checks.forEach((check: ICheck, ndx: number) => {
         const command = check([]);
         services[getCheckServiceName(uid, ndx)] = staticTestDockerComposeFile(
           runtime,
@@ -160,16 +135,11 @@ export const generateServicesPure = (
           configs,
           runtimeTestsName,
         );
-        consoleLog(
-          `[generateServicesPure] Added check service ${getCheckServiceName(uid, ndx)}`,
-        );
       });
     }
   }
 
-  // Always add chrome-service if there's a web runtime
   if (hasWebRuntime) {
-    consoleLog(`[generateServicesPure] Adding chrome-service for web runtime`);
     // Use browserless/chrome which is designed for headless Chrome with remote debugging
     services["chrome-service"] = {
       image: "browserless/chrome:latest",
@@ -186,20 +156,13 @@ export const generateServicesPure = (
       ports: ["9222:3000"],
       networks: ["allTests_network"],
     };
-    consoleLog(
-      `[generateServicesPure] chrome-service added with browserless/chrome configuration`,
-    );
   }
 
-  // Ensure all services have network configuration
   for (const serviceName in services) {
     if (!services[serviceName].networks) {
       services[serviceName].networks = ["allTests_network"];
     }
   }
 
-  consoleLog(
-    `[generateServicesPure] Generated ${Object.keys(services).length} services: ${Object.keys(services).join(", ")}`,
-  );
   return services;
 };

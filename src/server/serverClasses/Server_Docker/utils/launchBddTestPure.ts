@@ -7,8 +7,8 @@ export const launchBddTestPure = async (
   testName: string,
   configKey: string,
   configValue: any,
-  captureExistingLogs: (serviceName: string, runtime: string) => void,
-  startServiceLogging: (serviceName: string, runtime: string) => Promise<void>,
+  captureExistingLogs: (serviceName: string, runtime: string, configKey: string, testName?: string) => void,
+  startServiceLogging: (serviceName: string, runtime: string, configKey: string, testName?: string) => Promise<void>,
   resourceChanged: () => void,
   writeConfigForExtension: () => void,
 ): Promise<void> => {
@@ -20,15 +20,15 @@ export const launchBddTestPure = async (
       `docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`,
     );
 
-    await captureExistingLogs(bddServiceName, runtime);
+    await captureExistingLogs(bddServiceName, runtime, configKey, testName);
 
-    await startServiceLogging(bddServiceName, runtime);
+    await startServiceLogging(bddServiceName, runtime, configKey, testName);
 
     resourceChanged();
     writeConfigForExtension();
   } catch (error: any) {
     // Even if starting failed, try to capture any logs that might exist
-    captureExistingLogs(bddServiceName, runtime);
+    captureExistingLogs(bddServiceName, runtime, configKey, testName);
     // Still update the config even if there's an error
     writeConfigForExtension();
   }

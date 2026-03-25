@@ -8,19 +8,15 @@ export abstract class Server_Base {
   constructor(configs: ITestconfigV2, mode: IMode) {
     this.configs = configs;
     this.mode = mode;
-
-    console.log(`[Base] ${this.configs}`)
-
   }
 
   async start() {
-    // console.log(`[Server_Base] start()`)
+    // no-op
   }
 
   async stop() {
     console.log(`goodbye testeranto`)
     process.exit()
   }
-
 
 }

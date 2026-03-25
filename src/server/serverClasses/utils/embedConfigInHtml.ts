@@ -36,7 +36,6 @@ if (container) {
   console.error('Could not find root element');
 }`;
     fs.writeFileSync(tsxPath, baseTsx);
-    console.log(`[utils] Copied TypeScript file to ${tsxPath}`);
 
     // Get documentation files if glob pattern exists
     let documentationFiles: string[] = [];
@@ -87,7 +86,7 @@ if (container) {
     // Write the HTML file
     const htmlPath = path.join(reportsDir, "index.html");
     fs.writeFileSync(htmlPath, baseHtml);
-    console.log(`[utils] Created HTML report template at ${htmlPath}`);
+
   } catch (error) {
     console.error(`[utils] Failed to embed config in HTML:`, error);
     // Try to create a basic HTML file as fallback

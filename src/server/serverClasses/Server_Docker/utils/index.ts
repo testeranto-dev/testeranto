@@ -22,14 +22,25 @@ export const captureExistingLogs: IR = (
   serviceName: string,
   runtime: string,
   runtimeConfigKey: string,
+  testName?: string,
 ): void => {
   const reportDir = getFullReportDir(processCwd(), runtime);
-  const logFilePath = getLogFilePath(
-    processCwd(),
-    runtime,
-    serviceName,
-    runtimeConfigKey,
-  );
+  
+  // Generate log file path using the same logic as startServiceLoggingPure
+  let baseName: string;
+  if (testName) {
+    const cleanedTestName = cleanTestNameForPath(testName);
+    const suffixMatch = serviceName.match(/-(bdd|check-\d+|aider|builder)$/);
+    if (suffixMatch) {
+      const suffix = suffixMatch[1];
+      baseName = `${cleanedTestName}_${suffix}`;
+    } else {
+      baseName = serviceName;
+    }
+  } else {
+    baseName = serviceName;
+  }
+  const logFilePath = `${processCwd()}/testeranto/reports/${runtimeConfigKey}/${baseName}.log`;
 
   try {
     // First, check if the container exists (including stopped ones)
@@ -56,7 +67,7 @@ export const captureExistingLogs: IR = (
     }
 
     // Also try to capture the container exit code if it has exited
-    captureContainerExitCode(serviceName, runtime, runtimeConfigKey);
+    captureContainerExitCode(serviceName, runtime, runtimeConfigKey, testName);
   } catch (error: any) {
     // It's okay if this fails - the container might not exist yet
     consoleLog(
@@ -156,10 +167,26 @@ export const spawnPromise = (
   });
 };
 
+// Helper to clean test name for file paths (preserves directory structure)
+const cleanTestNameForPath = (testName: string): string => {
+  // Convert to lowercase
+  let result = testName.toLowerCase();
+  // Replace dots with hyphens in the filename part only
+  const parts = result.split('/');
+  const lastPart = parts[parts.length - 1];
+  const cleanedLastPart = lastPart.replace(/\./g, '-');
+  parts[parts.length - 1] = cleanedLastPart;
+  result = parts.join('/');
+  // Remove any other invalid characters (keep slashes, hyphens, underscores, alphanumeric)
+  result = result.replace(/[^a-z0-9_\-/]/g, '');
+  return result;
+};
+
 export const captureContainerExitCode = (
   serviceName: string,
   runtime: string,
   runTimeConfigKey: string,
+  testName?: string,
 ): void => {
   const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
   const containerId = execSyncWrapper(containerIdCmd, {
@@ -172,12 +199,25 @@ export const captureContainerExitCode = (
       cwd: processCwd(),
     }).trim();
 
-    const containerExitCodeFilePath = getContainerExitCodeFilePath(
-      processCwd(),
-      runtime,
-      serviceName,
-      runTimeConfigKey,
-    );
+    // Determine base name
+    let baseName: string;
+    if (testName) {
+      // For test services, we need to extract the suffix from serviceName and append it with underscore
+      const cleanedTestName = cleanTestNameForPath(testName);
+      
+      // Extract suffix from serviceName (e.g., "-bdd", "-check-0")
+      const suffixMatch = serviceName.match(/-(bdd|check-\d+|aider|builder)$/);
+      if (suffixMatch) {
+        const suffix = suffixMatch[1]; // "bdd", "check-0", etc.
+        baseName = `${cleanedTestName}_${suffix}`;
+      } else {
+        baseName = serviceName;
+      }
+    } else {
+      baseName = serviceName;
+    }
+    
+    const containerExitCodeFilePath = `${processCwd()}/testeranto/reports/${runTimeConfigKey}/${baseName}.container.exitcode`;
     writeFileSync(containerExitCodeFilePath, exitCode);
 
     consoleLog(
@@ -188,12 +228,7 @@ export const captureContainerExitCode = (
     const status = execSyncWrapper(statusCmd, {
       cwd: processCwd(),
     }).trim();
-    const statusFilePath = getStatusFilePath(
-      processCwd(),
-      runtime,
-      serviceName,
-      runTimeConfigKey,
-    );
+    const statusFilePath = `${processCwd()}/testeranto/reports/${runTimeConfigKey}/${baseName}.container.status`;
     writeFileSync(statusFilePath, status);
   } else {
     consoleLog(`[Server_Docker] No container found for service ${serviceName}`);

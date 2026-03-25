@@ -7,8 +7,8 @@ export const launchChecksPure = async (
   testName: string,
   configKey: string,
   configValue: any,
-  captureExistingLogs: IR,
-  startServiceLogging: (serviceName: string, runtime: string) => Promise<void>,
+  captureExistingLogs: (serviceName: string, runtime: string, configKey: string, testName?: string) => void,
+  startServiceLogging: (serviceName: string, runtime: string, configKey: string, testName?: string) => Promise<void>,
   resourceChanged: () => void,
   writeConfigForExtension: () => void,
 ): Promise<void> => {
@@ -21,11 +21,11 @@ export const launchChecksPure = async (
         `docker compose -f "testeranto/docker-compose.yml" up -d ${checkServiceName}`,
       );
       // Capture any existing logs first
-      captureExistingLogs(checkServiceName, runtime, configKey);
-      await startServiceLogging(checkServiceName, runtime);
+      captureExistingLogs(checkServiceName, runtime, configKey, testName);
+      await startServiceLogging(checkServiceName, runtime, configKey, testName);
       resourceChanged();
     } catch (error: any) {
-      captureExistingLogs(checkServiceName, runtime, configKey);
+      captureExistingLogs(checkServiceName, runtime, configKey, testName);
     }
   }
 

@@ -40,6 +40,11 @@ import { writeConfigForExtensionOnStop } from "./Server_Docker/utils/writeConfig
 import { writeConfigForExtensionPure } from "./Server_Docker/utils/writeConfigForExtensionPure";
 import { Server_Docker_Compose } from "./Server_Docker_Compose";
 
+// TODO: TICKET-001 - Refactor logging system to separate test and builder services
+// Current implementation uses a hack where testName presence distinguishes between
+// test services (BDD/check) and builder services. This should be refactored into
+// separate functions with clear interfaces.
+
 export class Server_Docker extends Server_Docker_Compose {
   private logProcesses: Map<string, { process: any; serviceName: string }> =
     new Map();
@@ -343,13 +348,13 @@ export class Server_Docker extends Server_Docker_Compose {
       testName,
       configKey,
       configValue,
-      (serviceName, runtime) => {
+      (serviceName, runtime, configKey, testName) => {
         // Clear stored logs before capturing existing logs
         this.clearStoredLogs(serviceName, configKey);
-        return captureExistingLogs(serviceName, runtime, configKey);
+        return captureExistingLogs(serviceName, runtime, configKey, testName);
       },
-      (serviceName, runtime) =>
-        this.startServiceLogging(serviceName, runtime, configKey),
+      (serviceName, runtime, configKey, testName) =>
+        this.startServiceLogging(serviceName, runtime, configKey, testName),
       () => this.resourceChanged("/~/processes"),
       () => this.writeConfigForExtension(),
     );
@@ -375,13 +380,13 @@ export class Server_Docker extends Server_Docker_Compose {
       testName,
       configKey,
       configValue,
-      (serviceName, runtime) => {
+      (serviceName, runtime, configKey, testName) => {
         // Clear stored logs before capturing existing logs
         this.clearStoredLogs(serviceName, configKey);
-        return captureExistingLogs(serviceName, runtime, configKey);
+        return captureExistingLogs(serviceName, runtime, configKey, testName);
       },
-      (serviceName, runtime) =>
-        this.startServiceLogging(serviceName, runtime, configKey),
+      (serviceName, runtime, configKey, testName) =>
+        this.startServiceLogging(serviceName, runtime, configKey, testName),
       () => this.resourceChanged("/~/processes"),
       () => this.writeConfigForExtension(),
     );
@@ -494,6 +499,7 @@ export class Server_Docker extends Server_Docker_Compose {
     serviceName: string,
     runtime: string,
     runtimeConfigKey: string,
+    testName?: string,
   ) => {
     // First, clear any stored logs for this service to prevent log accumulation
     this.clearStoredLogs(serviceName, runtimeConfigKey);
@@ -506,6 +512,7 @@ export class Server_Docker extends Server_Docker_Compose {
       processCwd(),
       this.logProcesses,
       runtimeConfigKey,
+      testName,
     );
     this.writeConfigForExtension();
   };
