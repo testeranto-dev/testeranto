@@ -1,32 +1,6 @@
-import type {
-  GivenSpecification,
-  WhenSpecification,
-  ThenSpecification,
-  DescribeSpecification,
-  ItSpecification,
-  ValueSpecification,
-  ShouldSpecification,
-  ExpectSpecification,
-  ConfirmSpecification,
-  TestWhenImplementation,
-  Modify,
-  TestSuiteImplementation,
-  TestGivenImplementation,
-  TestThenImplementation,
-  TestDescribeImplementation,
-  TestItImplementation,
-  TestValueImplementation,
-  TestShouldImplementation,
-  TestExpectedImplementation,
-  TestConfirmImplementation,
-  TestSuiteShape,
-  TestGivenShape,
-  TestWhenShape,
-  TestThenShape,
-} from "../../../Types";
-import type { IGivens } from "./BaseGiven";
-import type { BaseSuite } from "./BaseSuite";
-import type { ITestResourceConfiguration } from "./types";
+import { IGivens, ITestResourceConfiguration } from "./types";
+import { BaseSuite } from "./verbs/BaseSuite";
+
 
 export type IArtifactory = {
   writeFileSync: (a: string, b: string) => any;
@@ -52,7 +26,7 @@ export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
   ) => Promise<I["isubject"]>;
   prepareEach: (
     subject: I["isubject"],
-    initializer: (c?: any) => I["given"],
+    initializer: (c?: any) => I["check"],
     testResource: ITestResourceConfiguration,
     initialValues: any,
     artifactory?: IArtifactory,
@@ -61,7 +35,7 @@ export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
   // Execution
   execute: (
     store: I["istore"],
-    actionCB: I["when"],
+    actionCB: I["check"],
     testResource: ITestResourceConfiguration,
     artifactory?: IArtifactory,
   ) => Promise<I["istore"]>;
@@ -69,7 +43,7 @@ export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
   // Verification
   verify: (
     store: I["istore"],
-    checkCB: I["then"],
+    checkCB: I["check"],
     testResource: ITestResourceConfiguration,
     artifactory?: IArtifactory,
   ) => Promise<I["iselection"]>;
@@ -83,7 +57,7 @@ export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
   cleanupAll: (store: I["istore"], artifactory: IArtifactory) => any;
 
   // Assertion
-  assert: (x: I["then"]) => any;
+  assert: (x: I["check"]) => any;
 };
 
 // Test adapter type - uses universal method names
@@ -165,7 +139,6 @@ export type TestSpecShape_any = TestSpecShape<
   TestThenShape
 >;
 
-// Legacy type aliases for backward compatibility
 export type Ibdd_out<
   ISuites extends TestSuiteShape,
   IGivens extends TestGivenShape,
@@ -199,13 +172,13 @@ export type TestTypeParams<
   iselection: ISelection;
 
   /** Function type for Setup steps (Given/Arrange/Map) */
-  given: ISetup;
+  setup: ISetup;
 
   /** Function type for Action steps (When/Act/Feed) */
-  when: IAction;
+  action: IAction;
 
   /** Function type for Check steps (Then/Assert/Validate) */
-  then: ICheck;
+  check: ICheck;
 };
 
 export type TestTypeParams_any = TestTypeParams<
@@ -227,5 +200,13 @@ export type Ibdd_in<
   ISetup,
   IAction,
   ICheck,
-> = TestTypeParams<IInput, ISubject, IStore, ISelection, ISetup, IAction, ICheck>;
+> = TestTypeParams<
+  IInput,
+  ISubject,
+  IStore,
+  ISelection,
+  ISetup,
+  IAction,
+  ICheck
+>;
 export type Ibdd_in_any = TestTypeParams_any;

@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import type { Ibdd_in, IArtifactory, Ibdd_out } from "../../src/CoreTypes";
+import type { Ibdd_in, IArtifactory, Ibdd_out } from "../../src/public/CoreTypes";
 import type { Calculator } from "./Calculator";
 
 
@@ -14,7 +14,6 @@ export type ICalculatorNode = Ibdd_in<
 >;
 
 type IInput = typeof React.Component;
-
 // export type ISelection = ReactNode;
 // export type IStore = ReactNode;
 // export type ISubject = ReactNode;

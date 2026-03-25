@@ -1,16 +1,18 @@
-import type { TestTypeParams_any } from "./CoreTypes.js";
-import { BaseAction } from "./BaseAction.js";
+import { TestTypeParams_any } from "../../CoreTypes.js";
 
 /**
- * BaseWhen extends BaseAction for BDD pattern.
+ * BaseWhen for BDD pattern - independent implementation
  */
 export abstract class BaseWhen<
   I extends TestTypeParams_any,
-> extends BaseAction<I> {
+> {
+  name: string;
   whenCB: (x: I["iselection"]) => I["then"];
+  error: Error | null = null;
+  status: boolean | undefined;
 
   constructor(name: string, whenCB: (xyz: I["iselection"]) => I["then"]) {
-    super(name, whenCB);
+    this.name = name;
     this.whenCB = whenCB;
   }
 
@@ -31,16 +33,6 @@ export abstract class BaseWhen<
     artifactory?: any,
   ): Promise<any>;
 
-  // Implement BaseAction's abstract method
-  async performAction(
-    store: I["istore"],
-    actionCB: (x: I["iselection"]) => I["then"],
-    testResource: any,
-    artifactory?: any,
-  ): Promise<any> {
-    return this.andWhen(store, actionCB, testResource, artifactory);
-  }
-
   async test(store: I["istore"], testResourceConfiguration: any, artifactory?: any) {
     try {
       const result = await this.andWhen(
@@ -56,6 +48,14 @@ export abstract class BaseWhen<
       this.error = e;
       throw e;
     }
+  }
+
+  toObj() {
+    return {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null,
+    };
   }
 }
 /**

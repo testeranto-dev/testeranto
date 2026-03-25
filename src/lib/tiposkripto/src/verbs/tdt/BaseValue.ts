@@ -1,63 +1,56 @@
-import { BaseSetup } from "./BaseSetup.js";
-import type { TestTypeParams_any } from "./CoreTypes.js";
-import type { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
+import type { TestTypeParams_any } from "../../CoreTypes.js";
+import type { ITestArtifactory, ITestResourceConfiguration } from "../types.js";
+import { CommonUtils } from "../internal/CommonUtils.js";
 
 /**
- * BaseValue extends BaseSetup for TDT pattern.
+ * BaseValue for TDT pattern - independent implementation
  * Sets up table data for table-driven testing.
  */
-export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
-  /**
-   * Sets up table data for the TDT (Table-Driven Testing) pattern.
-   * 
-   * @param subject The test subject
-   * @param testResourceConfiguration Test resource configuration
-   * @param artifactory Context-aware artifactory for file operations
-   * @param setupCB Setup callback function
-   * @param initialValues Initial values for setup
-   * @returns Promise resolving to the test store
-   */
-  async setupThat(
-    subject: I["isubject"],
-    testResourceConfiguration: ITestResourceConfiguration,
-    artifactory: ITestArtifactory,
-    setupCB: I["given"],
-    initialValues: any,
-  ): Promise<I["istore"]> {
-    // Default implementation: call setupCB and return the result
-    const result = (setupCB as any)();
-    if (typeof result === "function") {
-      return result();
-    }
-    return result;
-  }
-  
-  // Table rows for TDT
+export class BaseValue<I extends TestTypeParams_any> {
+  features: string[];
   tableRows: any[][];
-  
+  confirmCB: I["setup"];
+  initialValues: any;
+  key: string = "";
+  failed: boolean = false;
+  artifacts: string[] = [];
+  fails: number = 0;
+  status: boolean | undefined;
+  error: Error | null = null;
+  store: I["istore"] = null as any;
+  testResourceConfiguration: ITestResourceConfiguration | null = null;
+
   constructor(
     features: string[],
     tableRows: any[][],
-    confirmCB: I["given"],
+    confirmCB: I["setup"],
     initialValues: any,
   ) {
-    // For TDT, actions will be Should and checks will be Expected
-    // We'll process them differently in setup
-    super(features, [], [], confirmCB, initialValues);
+    this.features = features;
     this.tableRows = tableRows;
+    this.confirmCB = confirmCB;
+    this.initialValues = initialValues;
   }
 
-  // Override setup to process table rows
-  async setup(
+  setParent(parent: any) {
+    (this as any)._parent = parent;
+  }
+
+  addArtifact(path: string) {
+    CommonUtils.addArtifact(this.artifacts, path);
+  }
+
+  async value(
     subject: I["isubject"],
     key: string,
     testResourceConfiguration: ITestResourceConfiguration,
-    tester: (t: Awaited<I["then"]> | undefined) => boolean,
-    artifactory?: ITestArtifactory,
+    tester: (t: Awaited<I["check"]> | undefined) => boolean,
+    artifactory?: any,
     suiteNdx?: number,
   ) {
     this.key = key;
     this.fails = 0;
+    this.testResourceConfiguration = testResourceConfiguration;
 
     const actualArtifactory =
       artifactory || ((fPath: string, value: unknown) => { });
@@ -65,13 +58,13 @@ export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
       actualArtifactory(`value-${key}/${fPath}`, value);
 
     try {
-      this.store = await this.setupThat(
-        subject,
-        testResourceConfiguration,
-        valueArtifactory,
-        this.setupCB,
-        this.initialValues,
-      );
+      // Setup phase
+      const result = (this.confirmCB as any)();
+      if (typeof result === "function") {
+        this.store = await result();
+      } else {
+        this.store = await result;
+      }
       this.status = true;
     } catch (e: any) {
       this.status = false;
@@ -91,12 +84,17 @@ export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
             rowIndex,
             suiteNdx,
           );
-          
+
           // Process the row
           // The actions and checks should be set up to handle row data
           // For now, we'll just pass the row to the tester
           // In practice, this would be more complex
-          const rowResult = await this.processRow(row, rowIndex, rowArtifactory, testResourceConfiguration);
+          const rowResult = await this.processRow(
+            row,
+            rowIndex,
+            rowArtifactory,
+            testResourceConfiguration,
+          );
           if (rowResult !== undefined) {
             tester(rowResult);
           }
@@ -123,7 +121,12 @@ export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
     return this.store;
   }
 
-  private async processRow(row: any[], rowIndex: number, artifactory: any, testResourceConfiguration: any) {
+  private async processRow(
+    row: any[],
+    rowIndex: number,
+    artifactory: any,
+    testResourceConfiguration: any,
+  ) {
     // This would be implemented to process each row using Should and Expected
     // For now, return the row for testing
     return row;
@@ -160,16 +163,8 @@ export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
     };
   }
 
-  // Add value method that delegates to setup
-  async value(
-    subject: I["isubject"],
-    key: string,
-    testResourceConfiguration: any,
-    tester: (t: Awaited<I["then"]> | undefined) => boolean,
-    artifactory?: any,
-    suiteNdx?: number,
-  ) {
-    return this.setup(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx);
+  async afterEach(store: I["istore"], key: string, artifactory: any): Promise<I["istore"]> {
+    return store;
   }
 
   toObj() {
@@ -185,4 +180,7 @@ export class BaseValue<I extends TestTypeParams_any> extends BaseSetup<I> {
   }
 }
 
-export type IValues<I extends TestTypeParams_any> = Record<string, BaseValue<I>>;
+export type IValues<I extends TestTypeParams_any> = Record<
+  string,
+  BaseValue<I>
+>;

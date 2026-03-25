@@ -1,22 +1,24 @@
-import type { TestTypeParams_any } from "./CoreTypes.js";
-import type { ITestResourceConfiguration } from "./types.js";
-import { BaseCheck } from "./BaseCheck.js";
+import type { TestTypeParams_any } from "../../CoreTypes.js";
+import type { ITestResourceConfiguration } from "../../types.js";
 
 /**
- * BaseThen extends BaseCheck for BDD pattern.
+ * BaseThen for BDD pattern - independent implementation
  */
 export abstract class BaseThen<
   I extends TestTypeParams_any,
-> extends BaseCheck<I> {
+> {
+  name: string;
   thenCB: (
     storeState: I["iselection"],
   ) => Promise<I["then"]>;
+  error: Error | null = null;
+  status: boolean | undefined;
 
   constructor(
     name: string,
     thenCB: (val: I["iselection"]) => Promise<I["then"]>,
   ) {
-    super(name, thenCB);
+    this.name = name;
     this.thenCB = thenCB;
   }
 
@@ -37,16 +39,6 @@ export abstract class BaseThen<
     artifactory?: any,
   ): Promise<I["iselection"]>;
 
-  // Implement the abstract verifyCheck method from BaseCheck
-  async verifyCheck(
-    store: I["istore"],
-    checkCB: (s: I["iselection"]) => Promise<I["isubject"]>,
-    testResourceConfiguration: ITestResourceConfiguration,
-    artifactory?: any,
-  ): Promise<I["iselection"]> {
-    return this.butThen(store, checkCB, testResourceConfiguration, artifactory);
-  }
-
   async test(
     store: I["istore"],
     testResourceConfiguration: ITestResourceConfiguration,
@@ -65,7 +57,7 @@ export abstract class BaseThen<
               return this.thenCB;
             }
           } catch (e) {
-            this.error = true;
+            this.error = e;
             throw e;
           }
         },
@@ -76,9 +68,17 @@ export abstract class BaseThen<
       return x;
     } catch (e) {
       this.status = false;
-      this.error = true;
+      this.error = e;
       throw e;
     }
+  }
+
+  toObj() {
+    return {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null,
+    };
   }
 }
 /**

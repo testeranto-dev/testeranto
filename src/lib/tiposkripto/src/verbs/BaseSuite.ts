@@ -1,7 +1,6 @@
-import type { TestTypeParams_any, TestSpecShape_any } from "./CoreTypes.js";
-import type { IGivens } from "./BaseGiven";
-import { BaseGiven } from "./BaseGiven.js";
-import type { ITestResourceConfiguration, ITestArtifactory } from "./types.js";
+import type { TestTypeParams_any, TestSpecShape_any } from "../CoreTypes.js";
+import type { ITestResourceConfiguration, ITestArtifactory, IGivens, IDescribes, IIts } from "../types.js";
+import { CommonUtils } from "./internal/CommonUtils.js";
 
 /**
  * Represents a collection of test suites keyed by their names.
@@ -22,6 +21,8 @@ export abstract class BaseSuite<
 > {
   name: string;
   givens: IGivens<I>;
+  describes: IDescribes<I>;
+  its: IIts<I>;
   store: I["istore"] = null as any;
   testResourceConfiguration: ITestResourceConfiguration = null as any;
   index: number = 0;
@@ -32,15 +33,7 @@ export abstract class BaseSuite<
   artifacts: string[] = [];
 
   addArtifact(path: string) {
-    if (typeof path !== "string") {
-      throw new Error(
-        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path,
-        )}`,
-      );
-    }
-    const normalizedPath = path.replace(/\\/g, "/"); // Normalize path separators
-    this.artifacts.push(normalizedPath);
+    CommonUtils.addArtifact(this.artifacts, path);
   }
 
   constructor(
@@ -91,22 +84,33 @@ export abstract class BaseSuite<
     const bddGivens: any[] = [];
     const aaaDescribes: any[] = [];
     const tdtConfirms: any[] = [];
-    
+
     for (const [k, giver] of Object.entries(this.givens)) {
       const obj = giver.toObj();
-      
+
       // Check the constructor name to determine the type
       // This is more reliable than checking properties
       const constructorName = giver.constructor.name;
-      
-      if (constructorName === 'BaseValue') {
-        // TDT pattern
+
+      if (constructorName === 'BaseConfirm') {
+        // TDT pattern - Confirm organizes the tests
+        tdtConfirms.push({
+          key: obj.key || giver.name,
+          values: obj.values || [],
+          error: obj.error,
+          failed: obj.failed,
+          features: obj.features || [],
+          artifacts: obj.artifacts,
+          status: obj.status
+        });
+      } else if (constructorName === 'BaseValue') {
+        // TDT pattern - individual Value (legacy, might not be used)
         tdtConfirms.push({
           key: obj.key,
           values: obj.values || [],
           error: obj.error,
           failed: obj.failed,
-          features: obj.features,
+          features: obj.features || [],
           artifacts: obj.artifacts,
           status: obj.status
         });
@@ -118,7 +122,7 @@ export abstract class BaseSuite<
           its: obj.its || [],
           error: obj.error,
           failed: obj.failed,
-          features: obj.features,
+          features: obj.features || [],
           artifacts: obj.artifacts,
           status: obj.status
         });
@@ -130,18 +134,47 @@ export abstract class BaseSuite<
           thens: obj.thens || [],
           error: obj.error,
           failed: obj.failed,
-          features: obj.features,
+          features: obj.features || [],
           artifacts: obj.artifacts,
           status: obj.status
         });
       } else {
         // Fallback: check properties
-        if (obj.values !== undefined) {
-          tdtConfirms.push(obj);
-        } else if (obj.describes !== undefined || obj.its !== undefined) {
-          aaaDescribes.push(obj);
-        } else if (obj.whens !== undefined || obj.thens !== undefined) {
-          bddGivens.push(obj);
+        if (obj.values !== undefined || constructorName.includes('Confirm') || constructorName.includes('Value')) {
+          // TDT pattern
+          tdtConfirms.push({
+            key: obj.key || k,
+            values: obj.values || [],
+            error: obj.error,
+            failed: obj.failed,
+            features: obj.features || [],
+            artifacts: obj.artifacts,
+            status: obj.status
+          });
+        } else if (obj.describes !== undefined || obj.its !== undefined || constructorName.includes('Describe')) {
+          // AAA pattern
+          aaaDescribes.push({
+            key: obj.key,
+            describes: obj.describes || [],
+            its: obj.its || [],
+            error: obj.error,
+            failed: obj.failed,
+            features: obj.features || [],
+            artifacts: obj.artifacts,
+            status: obj.status
+          });
+        } else if (obj.whens !== undefined || obj.thens !== undefined || constructorName.includes('Given')) {
+          // BDD pattern
+          bddGivens.push({
+            key: obj.key,
+            whens: obj.whens || [],
+            thens: obj.thens || [],
+            error: obj.error,
+            failed: obj.failed,
+            features: obj.features || [],
+            artifacts: obj.artifacts,
+            status: obj.status
+          });
         } else {
           // Default to BDD
           bddGivens.push(obj);
@@ -178,12 +211,10 @@ export abstract class BaseSuite<
     artifactory: ITestArtifactory,
     tr: ITestResourceConfiguration,
   ): Promise<I["isubject"]> {
-    console.log("mark9");
-
     return new Promise((res) => res(s as unknown as I["isubject"]));
   }
 
-  assertThat(t: Awaited<I["then"]> | undefined): boolean {
+  assertThat(t: Awaited<I["check"]> | undefined): boolean {
     return !!t;
   }
 
@@ -245,10 +276,12 @@ export abstract class BaseSuite<
             },
           };
         }
-        
+
         // Call the appropriate method based on the type of giver
-        if (giver instanceof BaseGiven) {
-          // BaseGiven instance
+        const constructorName = giver.constructor.name;
+
+        if (constructorName === 'BaseGiven' || typeof giver.give === 'function') {
+          // BaseGiven instance (BDD)
           this.store = await giver.give(
             subject,
             gKey,
@@ -257,8 +290,8 @@ export abstract class BaseSuite<
             givenArtifactory,
             sNdx,
           );
-        } else if (giver.constructor.name === 'BaseDescribe' || typeof giver.describe === 'function') {
-          // BaseDescribe instance
+        } else if (constructorName === 'BaseDescribe' || typeof giver.describe === 'function') {
+          // BaseDescribe instance (AAA)
           this.store = await giver.describe(
             subject,
             gKey,
@@ -267,8 +300,15 @@ export abstract class BaseSuite<
             givenArtifactory,
             sNdx,
           );
-        } else if (giver.constructor.name === 'BaseValue' || typeof giver.value === 'function') {
-          // BaseValue instance
+        } else if (constructorName === 'BaseConfirm' || typeof giver.run === 'function') {
+          // BaseConfirm instance (TDT)
+          this.store = await giver.run(
+            subject,
+            testResourceConfiguration,
+            givenArtifactory,
+          );
+        } else if (constructorName === 'BaseValue' || typeof giver.value === 'function') {
+          // BaseValue instance (TDT - legacy)
           this.store = await giver.value(
             subject,
             gKey,
@@ -297,6 +337,13 @@ export abstract class BaseSuite<
               givenArtifactory,
               sNdx,
             );
+          } else if (typeof giver.run === 'function') {
+            // TDT Confirm
+            this.store = await giver.run(
+              subject,
+              testResourceConfiguration,
+              givenArtifactory,
+            );
           } else if (typeof giver.value === 'function') {
             this.store = await giver.value(
               subject,
@@ -307,7 +354,7 @@ export abstract class BaseSuite<
               sNdx,
             );
           } else {
-            throw new Error(`Giver ${gKey} has no valid method (give, describe, or value). Type: ${giver.constructor.name}`);
+            throw new Error(`Giver ${gKey} has no valid method (give, describe, run, or value). Type: ${giver.constructor.name}`);
           }
         }
         // Add the number of failures from this given to the suite's total

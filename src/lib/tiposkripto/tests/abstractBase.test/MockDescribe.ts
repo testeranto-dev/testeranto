@@ -1,5 +1,6 @@
+
 import type { Ibdd_in_any } from "../../src/CoreTypes.js";
-import { BaseDescribe } from "../../src/BaseDescribe.js";
+import { BaseDescribe } from "../../src/index.js";
 import type { ITestArtifactory, ITestResourceConfiguration } from "../../src/types.js";
 
 export class MockDescribe<I extends Ibdd_in_any> extends BaseDescribe<I> {

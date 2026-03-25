@@ -1,5 +1,6 @@
-import type { Ibdd_in_any } from "../../src/CoreTypes.js";
-import { BaseWhen } from "../../src/BaseWhen.js";
+
+import type { Ibdd_in_any } from "../../src/CoreTypes";
+import { BaseWhen } from "../../src/verbs/bdd/BaseWhen";
 
 export class MockWhen<I extends Ibdd_in_any> extends BaseWhen<I> {
   constructor(name: string, whenCB: (x: I["iselection"]) => I["then"]) {

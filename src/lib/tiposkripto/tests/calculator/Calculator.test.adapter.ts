@@ -1,3 +1,4 @@
+// import type { ITestAdapter } from "../../src/public/CoreTypes.js";
 import type { ITestAdapter } from "../../src/CoreTypes.js";
 import type { ICalculatorNode } from "./Calculator.test.types.js";
 

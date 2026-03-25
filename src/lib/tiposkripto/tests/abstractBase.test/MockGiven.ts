@@ -1,7 +1,9 @@
-import type { Ibdd_in_any } from "../../src/CoreTypes.js";
-import { BaseGiven } from "../../src/BaseGiven.js";
-import type { BaseThen } from "../../src/BaseThen.js";
-import type { BaseWhen } from "../../src/BaseWhen.js";
+
+import { BaseGiven } from "../../dist/module";
+import type { Ibdd_in_any } from "../../src/CoreTypes";
+import { BaseThen } from "../../src/verbs/bdd/BaseThen";
+import { BaseWhen } from "../../src/verbs/bdd/BaseWhen";
+
 
 export class MockGiven<I extends Ibdd_in_any> extends BaseGiven<I> {
   constructor(

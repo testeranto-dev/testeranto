@@ -1,3 +1,4 @@
+
 import type { ITestSpecification } from "../../src/CoreTypes";
 import type { ICalculatorNode, O } from "./Calculator.test.types";
 
@@ -14,16 +15,17 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
   Expected,
 ) => {
   return [
-    Suite.Default("Testing Calculator operations", {
+
+    Suite.Default("Testing Calculator operationz", {
       // TDT style
       basicMath: Confirm["some simple caclulator"](
         [],
         [
+          [Value["one and two"], Should["equal"], Expected["three"]],
           [
-            Value["one and two"], Should["equal"], Expected["three"]
-          ],
-          [
-            Value.of([3, 4]), Should['when multiplied, be at least'], Expected["to be"](11)
+            Value.of([3, 4]),
+            Should["when multiplied, be at least"],
+            Expected["to be"](11),
           ],
         ],
       ),

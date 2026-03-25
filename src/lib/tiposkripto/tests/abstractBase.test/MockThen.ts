@@ -1,6 +1,8 @@
+
+
 import type { Ibdd_in_any } from "../../src/CoreTypes.js";
-import { BaseThen } from "../../src/BaseThen.js";
 import type { ITestResourceConfiguration } from "../../src/types.js";
+import { BaseThen } from "../../src/verbs/bdd/BaseThen.js";
 
 export class MockThen<I extends Ibdd_in_any> extends BaseThen<I> {
   constructor(

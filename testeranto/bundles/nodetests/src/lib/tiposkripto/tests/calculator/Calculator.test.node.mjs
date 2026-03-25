@@ -1,6 +1,5 @@
-import {
-  NodeTiposkripto
-} from "../../../../../chunk-PN7EUBDN.mjs";
+// src/lib/tiposkripto/src/Node.ts
+console.log(`[NodeTiposkripto] ${process.argv}`);
 
 // src/lib/tiposkripto/tests/calculator/Calculator.ts
 var Calculator = class {
@@ -151,12 +150,16 @@ var implementation = {
   // TDT style /////////////////////////
   confirms: {
     addition: () => {
-      const calc = new Calculator();
-      return calc.add;
+      return (features, testCases) => {
+        console.log("[DEBUG] Confirm addition called with:", features, testCases);
+        return () => new Calculator();
+      };
     },
     "some simple caclulator": () => {
-      const calc = new Calculator();
-      return calc;
+      return (features, testCases) => {
+        console.log("[DEBUG] Confirm some simple caclulator called with:", features, testCases);
+        return () => new Calculator();
+      };
     }
   },
   values: {
@@ -249,16 +252,12 @@ var implementation = {
 // src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts
 var specification = (Suite, Given, When, Then, Describe, It, Confirm, Value, Should, Expected) => {
   return [
-    Suite.Default("Testing Calculator operations", {
+    Suite.Default("Testing Calculator operationz", {
       // TDT style
       basicMath: Confirm["some simple caclulator"](
         [],
         [
-          [
-            Value["one and two"],
-            Should["equal"],
-            Expected["three"]
-          ],
+          [Value["one and two"], Should["equal"], Expected["three"]],
           [
             Value.of([3, 4]),
             Should["when multiplied, be at least"],
@@ -537,7 +536,7 @@ var specification = (Suite, Given, When, Then, Describe, It, Confirm, Value, Sho
 };
 
 // src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts
-var Calculator_test_node_default = new NodeTiposkripto(
+var Calculator_test_node_default = new (void 0)(
   Calculator,
   specification,
   implementation,

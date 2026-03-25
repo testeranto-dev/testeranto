@@ -1,5 +1,5 @@
-import type { TestTypeParams_any } from "./CoreTypes.js";
-import type { ITestArtifactory, ITestResourceConfiguration } from "./types.js";
+import type { TestTypeParams_any } from "../../CoreTypes.js";
+import type { ITestArtifactory, ITestResourceConfiguration } from "../types.js";
 
 /**
  * BaseSetup is the internal unified base class for all setup phases.

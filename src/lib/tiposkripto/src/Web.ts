@@ -1,25 +1,19 @@
-import type {
+import BaseTiposkripto from "../BaseTiposkripto";
+import {
+  ITTestResourceRequest,
+  defaultTestResourceRequirement,
+} from "../types";
+import {
   TestTypeParams_any,
   TestSpecShape_any,
-  ITestAdapter,
-  ITestImplementation,
   ITestSpecification,
-} from "./CoreTypes.js";
-import BaseTiposkripto from "./BaseTiposkripto";
-import type { ITTestResourceRequest } from "./types";
-import { defaultTestResourceRequirement } from "./types";
-
-// TODO we can't use process in the web.
-// const config = process.argv0[2];
-// we could
-// 1) use query params to pass the textConfig?
-// 2) pass as arugment somehow?
-// 3) inject global globals?
-// see hoist.ts
+  ITestImplementation,
+  ITestAdapter,
+} from "./CoreTypes";
 
 // Check if we're in a browser environment
-const isBrowser = typeof globalThis !== 'undefined' &&
-  (globalThis as any).window !== undefined;
+const isBrowser =
+  typeof globalThis !== "undefined" && (globalThis as any).window !== undefined;
 
 declare global {
   interface Window {
@@ -29,9 +23,7 @@ declare global {
   }
 }
 
-const config = isBrowser ?
-  (globalThis as any).window?.testResourceConfig :
-  {};
+const config = isBrowser ? (globalThis as any).window?.testResourceConfig : {};
 
 export class WebTiposkripto<
   I extends TestTypeParams_any,
@@ -58,7 +50,9 @@ export class WebTiposkripto<
           const encodedConfig = urlParams.get("config");
           if (encodedConfig) {
             try {
-              testResourceConfig = JSON.parse(decodeURIComponent(encodedConfig));
+              testResourceConfig = JSON.parse(
+                decodeURIComponent(encodedConfig),
+              );
             } catch (e) {
               console.error("Failed to parse config from URL:", e);
               testResourceConfig = {};
@@ -71,7 +65,7 @@ export class WebTiposkripto<
     }
 
     // Ensure we have an object with fs property
-    if (typeof testResourceConfig === 'string') {
+    if (typeof testResourceConfig === "string") {
       try {
         testResourceConfig = JSON.parse(testResourceConfig);
       } catch (e) {
@@ -79,11 +73,11 @@ export class WebTiposkripto<
         testResourceConfig = {};
       }
     }
-    
-    if (!testResourceConfig || typeof testResourceConfig !== 'object') {
+
+    if (!testResourceConfig || typeof testResourceConfig !== "object") {
       testResourceConfig = {};
     }
-    
+
     // Ensure fs path is set for web tests
     if (!testResourceConfig.fs) {
       // Try to construct a default path based on the test name or URL
@@ -102,11 +96,16 @@ export class WebTiposkripto<
         }
       }
       testResourceConfig.fs = `testeranto/reports/webtests/${testPath}`;
-      console.log(`[WebTiposkripto] Constructed default fs path: ${testResourceConfig.fs}`);
+      console.log(
+        `[WebTiposkripto] Constructed default fs path: ${testResourceConfig.fs}`,
+      );
     }
 
-    console.log("[WebTiposkripto] testResourceConfig:", JSON.stringify(testResourceConfig));
-    
+    console.log(
+      "[WebTiposkripto] testResourceConfig:",
+      JSON.stringify(testResourceConfig),
+    );
+
     super(
       "web",
       input,
@@ -116,8 +115,11 @@ export class WebTiposkripto<
       testAdapter,
       testResourceConfig,
     );
-    
-    console.log("[WebTiposkripto] testResourceConfiguration.fs:", this.testResourceConfiguration?.fs);
+
+    console.log(
+      "[WebTiposkripto] testResourceConfiguration.fs:",
+      this.testResourceConfiguration?.fs,
+    );
   }
 
   writeFileSync(filename: string, payload: string): void {
@@ -128,10 +130,10 @@ export class WebTiposkripto<
       if (win && win.__writeFile) {
         win.__writeFile(filename, payload);
       } else {
-        console.error('__writeFile not available');
+        console.error("__writeFile not available");
       }
     } else {
-      console.error('Not in browser environment');
+      console.error("Not in browser environment");
     }
   }
 
@@ -145,10 +147,10 @@ export class WebTiposkripto<
       if (win && win.__screenshot) {
         win.__screenshot(filename, payload);
       } else {
-        console.error('__screenshot not available');
+        console.error("__screenshot not available");
       }
     } else {
-      console.error('Not in browser environment');
+      console.error("Not in browser environment");
     }
   }
 
@@ -159,10 +161,10 @@ export class WebTiposkripto<
       if (win && win.__openScreencast) {
         await win.__openScreencast(filename);
       } else {
-        console.error('__openScreencast not available');
+        console.error("__openScreencast not available");
       }
     } else {
-      console.error('Not in browser environment');
+      console.error("Not in browser environment");
     }
   }
 
@@ -173,24 +175,34 @@ export class WebTiposkripto<
       if (win && win.__closeScreencast) {
         await win.__closeScreencast(filename);
       } else {
-        console.error('__closeScreencast not available');
+        console.error("__closeScreencast not available");
       }
     } else {
-      console.error('Not in browser environment');
+      console.error("Not in browser environment");
     }
   }
 
   // Override createArtifactory to add web-specific methods
   createArtifactory(
     context: {
+      suiteIndex?: number;
+
       givenKey?: string;
       whenIndex?: number;
       thenIndex?: number;
-      suiteIndex?: number;
+
+      describeIndex?: number;
+      itIndex?: number;
+
+      confirmKey?: string;
+      valueKey?: string;
+      shouldIndex?: number;
+      expectKey?: number;
+
     } = {},
   ) {
     const baseArtifactory = super.createArtifactory(context);
-    
+
     // Add web-specific methods to the artifactory
     return {
       ...baseArtifactory,
@@ -202,7 +214,7 @@ export class WebTiposkripto<
 
         // Start with the test resource configuration fs path
         const basePath = this.testResourceConfiguration?.fs || "testeranto";
-        
+
         console.log("[Artifactory Screenshot] Base path:", basePath);
         console.log("[Artifactory Screenshot] Context:", context);
 
@@ -232,10 +244,10 @@ export class WebTiposkripto<
         }
 
         // Prepend the base path, avoiding double slashes
-        const basePathClean = basePath.replace(/\/$/, '');
-        const pathClean = path.replace(/^\//, '');
+        const basePathClean = basePath.replace(/\/$/, "");
+        const pathClean = path.replace(/^\//, "");
         const fullPath = `${basePathClean}/${pathClean}`;
-        
+
         console.log("[Artifactory Screenshot] Full path:", fullPath);
 
         // Call the web implementation
@@ -247,7 +259,7 @@ export class WebTiposkripto<
 
         // Start with the test resource configuration fs path
         const basePath = this.testResourceConfiguration?.fs || "testeranto";
-        
+
         console.log("[Artifactory openScreencast] Base path:", basePath);
         console.log("[Artifactory openScreencast] Context:", context);
 
@@ -277,10 +289,10 @@ export class WebTiposkripto<
         }
 
         // Prepend the base path, avoiding double slashes
-        const basePathClean = basePath.replace(/\/$/, '');
-        const pathClean = path.replace(/^\//, '');
+        const basePathClean = basePath.replace(/\/$/, "");
+        const pathClean = path.replace(/^\//, "");
         const fullPath = `${basePathClean}/${pathClean}`;
-        
+
         console.log("[Artifactory openScreencast] Full path:", fullPath);
 
         // Call the web implementation
@@ -292,7 +304,7 @@ export class WebTiposkripto<
 
         // Start with the test resource configuration fs path
         const basePath = this.testResourceConfiguration?.fs || "testeranto";
-        
+
         console.log("[Artifactory closeScreencast] Base path:", basePath);
         console.log("[Artifactory closeScreencast] Context:", context);
 
@@ -322,10 +334,10 @@ export class WebTiposkripto<
         }
 
         // Prepend the base path, avoiding double slashes
-        const basePathClean = basePath.replace(/\/$/, '');
-        const pathClean = path.replace(/^\//, '');
+        const basePathClean = basePath.replace(/\/$/, "");
+        const pathClean = path.replace(/^\//, "");
         const fullPath = `${basePathClean}/${pathClean}`;
-        
+
         console.log("[Artifactory closeScreencast] Full path:", fullPath);
 
         // Call the web implementation

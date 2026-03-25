@@ -1,6 +1,4 @@
-import assert from "node:assert";
 import type { ITestImplementation } from "../../src/CoreTypes";
-
 import type { I, O } from "./types";
 
 export const implementation: ITestImplementation<I, O> = {

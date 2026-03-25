@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testeranto - Stakeholder Report</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    #root {
+      min-height: 100vh;
+    }
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 1.2rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="loading">
+      <h2>Loading Testeranto Stakeholder Report...</h2>
+    </div>
+  </div>
+
+  <script type="module">
+    document.addEventListener('DOMContentLoaded', async function () {
+      const root = document.getElementById('root');
+      
+      try {
+        // Check for embedded data
+        const embeddedData = window.TESTERANTO_EMBEDDED_DATA;
+        if (!embeddedData) {
+          throw new Error('No embedded data found. The server may not have generated the report properly.');
+        }
+        
+        console.log('Loaded embedded data:', embeddedData);
+        
+        // Import the React app from the embedded bundle
+        // Note: We need to ensure index.js is available at /testeranto/reports/index.js
+        // But for now, we'll use a simple inline renderer if the import fails
+        try {
+          const { renderApp } = await import('/testeranto/reports/index.js');
+          renderApp(root, embeddedData);
+        } catch (importError) {
+          console.warn('Could not import React app, using fallback renderer:', importError);
+          // Fallback: render a simple view with the embedded data
+          renderFallbackApp(root, embeddedData);
+        }
+      } catch (error) {
+        console.error('Failed to load stakeholder report:', error);
+        root.innerHTML = `
+          <div style="padding: 40px; text-align: center;">
+            <h1 style="color: #d32f2f;">Error Loading Report</h1>
+            <p>${error.message}</p>
+            <p>Please make sure the Testeranto server has generated the report files.</p>
+            <details style="text-align: left; max-width: 800px; margin: 20px auto;">
+              <summary>Technical Details</summary>
+              <pre style="background: #f5f5f5; padding: 10px; overflow: auto;">${error.stack}</pre>
+            </details>
+          </div>
+        `;
+      }
+    });
+
+    // Simple fallback renderer for when React app is not available
+    function renderFallbackApp(root, data) {
+      const { configs, featureTree, documentation, allTestResults } = data;
+      
+      let html = `
+        <div style="padding: 20px; font-family: sans-serif;">
+          <h1>Testeranto Stakeholder Report</h1>
+          <p><strong>Generated:</strong> ${new Date(data.timestamp).toLocaleString()}</p>
+      `;
+      
+      // Show documentation files
+      if (documentation && documentation.files && documentation.files.length > 0) {
+        html += `
+          <h2>Documentation Files (${documentation.files.length})</h2>
+          <ul style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+            ${documentation.files.map(file => `<li>${file}</li>`).join('')}
+          </ul>
+        `;
+      }
+      
+      // Show test results
+      if (allTestResults && Object.keys(allTestResults).length > 0) {
+        html += `<h2>Test Results</h2>`;
+        
+        for (const [runtimeKey, tests] of Object.entries(allTestResults)) {
+          html += `<h3>${runtimeKey}</h3>`;
+          
+          for (const [testName, testData] of Object.entries(tests)) {
+            const status = testData.failed ? '❌ Failed' : '✅ Passed';
+            const color = testData.failed ? '#f44336' : '#4caf50';
+            
+            html += `
+              <div style="margin-bottom: 15px; padding: 10px; border-left: 4px solid ${color}; background: #f9f9f9;">
+                <div style="display: flex; justify-content: space-between;">
+                  <strong>${testName}</strong>
+                  <span style="color: ${color}; font-weight: bold;">${status}</span>
+                </div>
+                <div style="font-size: 14px; margin-top: 5px;">
+                  Tests: ${testData.runTimeTests || 0} | 
+                  Failures: ${testData.fails || 0}
+                </div>
+            `;
+            
+            // Show features if available
+            if (testData.features && testData.features.length > 0) {
+              html += `
+                <div style="margin-top: 10px;">
+                  <div style="font-size: 12px; font-weight: bold;">Features:</div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
+                    ${testData.features.slice(0, 5).map(feature => 
+                      `<span style="background: #e3f2fd; padding: 2px 8px; border-radius: 10px; font-size: 11px;">${feature}</span>`
+                    ).join('')}
+                    ${testData.features.length > 5 ? 
+                      `<span style="background: #f5f5f5; padding: 2px 8px; border-radius: 10px; font-size: 11px;">+${testData.features.length - 5} more</span>` : 
+                      ''}
+                  </div>
+                </div>
+              `;
+            }
+            
+            html += `</div>`;
+          }
+        }
+      }
+      
+      html += `</div>`;
+      root.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

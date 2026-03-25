@@ -1,4 +1,4 @@
-import type { TestTypeParams_any } from "./CoreTypes.js";
+import type { TestTypeParams_any } from "../../CoreTypes.js";
 
 /**
  * BaseAction is the internal unified base class for all action phases.
@@ -12,6 +12,12 @@ export abstract class BaseAction<I extends TestTypeParams_any> {
   artifacts: string[] = [];
   status: boolean | undefined;
 
+  constructor(name: string, actionCB: (xyz: I["iselection"]) => I["then"]) {
+    this.name = name;
+    this.actionCB = actionCB;
+  }
+
+
   addArtifact(path: string) {
     if (typeof path !== "string") {
       throw new Error(
@@ -24,10 +30,6 @@ export abstract class BaseAction<I extends TestTypeParams_any> {
     this.artifacts.push(normalizedPath);
   }
 
-  constructor(name: string, actionCB: (xyz: I["iselection"]) => I["then"]) {
-    this.name = name;
-    this.actionCB = actionCB;
-  }
 
   abstract performAction(
     store: I["istore"],
@@ -48,7 +50,11 @@ export abstract class BaseAction<I extends TestTypeParams_any> {
     return obj;
   }
 
-  async test(store: I["istore"], testResourceConfiguration: any, artifactory?: any) {
+  async test(
+    store: I["istore"],
+    testResourceConfiguration: any,
+    artifactory?: any,
+  ) {
     try {
       const result = await this.performAction(
         store,

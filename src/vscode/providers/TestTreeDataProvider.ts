@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
-import { TestTreeDataProviderUtils } from './TestTreeDataProviderUtils';
+import * as TestTreeUtils from './utils/testTree';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
 
 export class TestTreeDataProvider extends BaseTreeDataProvider {
@@ -9,7 +9,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   constructor() {
     super();
-    TestTreeDataProviderUtils.fetchConfigsViaHttp().catch(error => {
+    TestTreeUtils.fetchConfigsViaHttp().catch(error => {
       console.log('[TestTreeDataProvider] Initial HTTP fetch failed:', error);
     });
     this.setupConfigWatcher();
@@ -17,7 +17,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   refresh(): void {
     console.log('[TestTreeDataProvider] Manual refresh requested');
-    TestTreeDataProviderUtils.fetchConfigsViaHttp().catch(error => {
+    TestTreeUtils.fetchConfigsViaHttp().catch(error => {
       console.log('[TestTreeDataProvider] HTTP refresh failed:', error);
     }).then(() => {
       this._onDidChangeTreeData.fire();
@@ -64,30 +64,19 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]> {
     if (!element) {
-      return TestTreeDataProviderUtils.getRuntimeItems();
+      return this.getRuntimeItems();
     } else if (element.type === TreeItemType.Runtime) {
       const runtime = element.data?.runtime;
-      return Promise.resolve(TestTreeDataProviderUtils.getTestItems(runtime));
+      return Promise.resolve(this.getTestItems(runtime));
     } else if (element.type === TreeItemType.Test) {
       const { runtime, testName } = element.data || {};
-      return TestTreeDataProviderUtils.getTestFileItems(runtime, testName);
+      return this.getTestFileItems(runtime, testName);
     } else if (element.type === TreeItemType.File) {
       const { 
         runtime, 
         testName, 
         path, 
-        isFile,
-        isTestResultsSection,
-        isFilesSection,
-        isFeaturesSection,
-        isTestCasesSection,
-        isTestCase,
-        isFeature,
-        filePath,
-        testData,
-        features,
-        testCases,
-        testCase
+        isFile
       } = element.data || {};
 
       if (isFile) {
@@ -99,189 +88,113 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
         return Promise.resolve(element.children);
       }
 
-      // Handle test results section
-      if (isTestResultsSection) {
-        // For now, return empty - the test results are already added in getTestFileItems
-        return Promise.resolve([]);
-      }
-      
-      // Handle files section
-      if (isFilesSection) {
-        return TestTreeDataProviderUtils.getDirectoryChildren(runtime, testName, '');
-      }
-      
-      // Handle features section
-      if (isFeaturesSection && features) {
-        return Promise.resolve(features.map((feature: string) => {
-          return new TestTreeItem(
-            feature,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              runtime, 
-              testName,
-              isFeature: true,
-              feature: feature 
-            },
-            undefined,
-            new vscode.ThemeIcon("symbol-string")
-          );
-        }));
-      }
-      
-      // Handle test cases section
-      if (isTestCasesSection && testCases) {
-        return Promise.resolve(testCases.map((tc: any) => {
-          const statusIcon = tc.failed ? 
-            new vscode.ThemeIcon("error", new vscode.ThemeColor("testing.iconFailed")) :
-            new vscode.ThemeIcon("check", new vscode.ThemeColor("testing.iconPassed"));
-          
-          return new TestTreeItem(
-            tc.key || `Test Case`,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.Collapsed,
-            { 
-              runtime, 
-              testName,
-              isTestCase: true,
-              testCase: tc 
-            },
-            undefined,
-            statusIcon
-          );
-        }));
-      }
-      
-      // Handle individual test case expansion
-      if (isTestCase && testCase) {
-        const items: TestTreeItem[] = [];
-        
-        // Add features if present
-        if (testCase.features && Array.isArray(testCase.features)) {
-          const featuresItem = new TestTreeItem(
-            `Features (${testCase.features.length})`,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.Collapsed,
-            { 
-              runtime, 
-              testName,
-              isTestCaseFeatures: true,
-              features: testCase.features 
-            },
-            undefined,
-            new vscode.ThemeIcon("list-unordered")
-          );
-          items.push(featuresItem);
-        }
-        
-        // Add whens if present
-        if (testCase.whens && Array.isArray(testCase.whens)) {
-          const whensItem = new TestTreeItem(
-            `Steps (${testCase.whens.length})`,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.Collapsed,
-            { 
-              runtime, 
-              testName,
-              isTestCaseWhens: true,
-              whens: testCase.whens 
-            },
-            undefined,
-            new vscode.ThemeIcon("play")
-          );
-          items.push(whensItem);
-        }
-        
-        // Add thens if present
-        if (testCase.thens && Array.isArray(testCase.thens)) {
-          const thensItem = new TestTreeItem(
-            `Assertions (${testCase.thens.length})`,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.Collapsed,
-            { 
-              runtime, 
-              testName,
-              isTestCaseThens: true,
-              thens: testCase.thens 
-            },
-            undefined,
-            new vscode.ThemeIcon("check")
-          );
-          items.push(thensItem);
-        }
-        
-        return Promise.resolve(items);
-      }
-      
-      // Handle test case features expansion
-      if (element.data?.isTestCaseFeatures && features) {
-        return Promise.resolve(features.map((feature: string) => {
-          return new TestTreeItem(
-            feature,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              runtime, 
-              testName,
-              isFeature: true,
-              feature: feature 
-            },
-            undefined,
-            new vscode.ThemeIcon("symbol-string")
-          );
-        }));
-      }
-      
-      // Handle test case whens expansion
-      if (element.data?.isTestCaseWhens && testCase?.whens) {
-        return Promise.resolve(testCase.whens.map((w: any, i: number) => {
-          const statusIcon = w.status ? 
-            new vscode.ThemeIcon("check", new vscode.ThemeColor("testing.iconPassed")) :
-            new vscode.ThemeIcon("error", new vscode.ThemeColor("testing.iconFailed"));
-          
-          return new TestTreeItem(
-            `${i + 1}. ${w.name}`,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              runtime, 
-              testName,
-              isWhen: true,
-              when: w 
-            },
-            undefined,
-            statusIcon
-          );
-        }));
-      }
-      
-      // Handle test case thens expansion
-      if (element.data?.isTestCaseThens && testCase?.thens) {
-        return Promise.resolve(testCase.thens.map((t: any, i: number) => {
-          const statusIcon = t.status ? 
-            new vscode.ThemeIcon("check", new vscode.ThemeColor("testing.iconPassed")) :
-            new vscode.ThemeIcon("error", new vscode.ThemeColor("testing.iconFailed"));
-          
-          return new TestTreeItem(
-            `${i + 1}. ${t.name}`,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            { 
-              runtime, 
-              testName,
-              isThen: true,
-              then: t 
-            },
-            undefined,
-            statusIcon
-          );
-        }));
-      }
-
       // Handle directory expansion
-      return TestTreeDataProviderUtils.getDirectoryChildren(runtime, testName, path || '');
+      return TestTreeUtils.getDirectoryChildren(runtime, testName, path || '');
     }
     return Promise.resolve([]);
+  }
+
+  private async getRuntimeItems(): Promise<TestTreeItem[]> {
+    const items: TestTreeItem[] = [];
+
+    items.push(TestTreeUtils.createRefreshItem());
+
+    const configData = TestTreeUtils.getConfigData();
+    if (configData && configData.configs && configData.configs.runtimes) {
+      const runtimes = configData.configs.runtimes;
+      const runtimeEntries = Object.entries(runtimes);
+
+      if (runtimeEntries.length > 0) {
+        items.push(TestTreeUtils.createRuntimeCountItem(runtimeEntries.length));
+
+        for (const [runtimeKey, runtimeConfig] of runtimeEntries) {
+          const config = runtimeConfig as any;
+          if (config.runtime) {
+            items.push(TestTreeUtils.createRuntimeItem(runtimeKey, config));
+          }
+        }
+      }
+    }
+    return items;
+  }
+
+  private getTestItems(runtime?: string): TestTreeItem[] {
+    if (!runtime) {
+      return [];
+    }
+
+    const configData = TestTreeUtils.getConfigData();
+    if (configData && configData.configs && configData.configs.runtimes) {
+      const runtimes = configData.configs.runtimes;
+
+      for (const [runtimeKey, runtimeConfig] of Object.entries(runtimes)) {
+        const config = runtimeConfig as any;
+        if (config.runtime === runtime) {
+          const tests = config.tests || [];
+          return tests.map((testName: string) => {
+            return TestTreeUtils.createTestItem(runtimeKey, testName);
+          });
+        }
+      }
+    }
+    return [];
+  }
+
+  private async getTestFileItems(
+    runtime: string,
+    testName: string,
+  ): Promise<TestTreeItem[]> {
+    try {
+      console.log(
+        `[TestTreeDataProvider] Fetching collated files for ${runtime}/${testName}`,
+      );
+
+      const response = await fetch("http://localhost:3000/~/collated-files");
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log(
+        `[TestTreeDataProvider] Received collated files data:`,
+        data,
+      );
+
+      const tree = data.tree || {};
+      console.log(`[TestTreeDataProvider] Tree keys:`, Object.keys(tree));
+
+      const filteredTree = TestTreeUtils.filterTreeForRuntimeAndTest(
+        tree,
+        runtime,
+        testName,
+      );
+      console.log(
+        `[TestTreeDataProvider] Filtered tree keys:`,
+        Object.keys(filteredTree),
+      );
+
+      TestTreeUtils.logTreeStructure(filteredTree, 0);
+
+      const fileItems = TestTreeUtils.convertTreeToItems(
+        filteredTree,
+        runtime,
+        testName,
+      );
+      console.log(
+        `[TestTreeDataProvider] Converted ${fileItems.length} file items`,
+      );
+
+      if (fileItems.length > 0) {
+        return fileItems;
+      }
+
+      return TestTreeUtils.createNoFilesItem(runtime, testName);
+    } catch (error) {
+      console.error(
+        "[TestTreeDataProvider] Error fetching collated files:",
+        error,
+      );
+      return TestTreeUtils.createErrorItems(runtime, testName, error);
+    }
   }
 
   protected handleWebSocketMessage(message: any): void {
@@ -294,7 +207,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       case 'resourceChanged':
         console.log('[TestTreeDataProvider] Resource changed, fetching updated configs:', message.url);
         if (message.url === '/~/configs') {
-          TestTreeDataProviderUtils.fetchConfigsViaHttp().catch(error => {
+          TestTreeUtils.fetchConfigsViaHttp().catch(error => {
             console.log('[TestTreeDataProvider] HTTP fetch after resource change failed:', error);
           }).then(() => {
             this._onDidChangeTreeData.fire();

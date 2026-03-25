@@ -1,30 +1,16 @@
-import {
-  BaseDescribe,
-  BaseExpected,
-  BaseIt,
-  BaseShould,
-  BaseValue,
-  DefaultAdapter,
-} from "./index.js";
-import type { IGivens } from "./BaseGiven";
-import { BaseGiven } from "./BaseGiven";
-import { BaseSuite } from "./BaseSuite";
-import { BaseThen } from "./BaseThen";
-import { BaseWhen } from "./BaseWhen";
-import type {
-  Ibdd_in_any,
-  Ibdd_out_any,
-  ITestSpecification,
-  ITestImplementation,
-  ITestAdapter,
-} from "./CoreTypes.js";
-import type {
-  ITestJob,
-  ITTestResourceRequest,
-  ITestResourceConfiguration,
-  IFinalResults,
-} from "./types.js";
-import { defaultTestResourceRequirement } from "./types.js";
+import { DefaultAdapter } from "./Adapters";
+import { Ibdd_in_any, Ibdd_out_any, ITestSpecification, ITestImplementation, ITestAdapter } from "./CoreTypes";
+import { ITestJob, ITTestResourceRequest, ITestResourceConfiguration, defaultTestResourceRequirement, IFinalResults } from "./types";
+import { BaseDescribe } from "./verbs/aaa/BaseDescribe";
+import { BaseIt } from "./verbs/aaa/BaseIt";
+import { BaseSuite } from "./verbs/BaseSuite";
+import { BaseGiven } from "./verbs/bdd/BaseGiven";
+import { BaseThen } from "./verbs/bdd/BaseThen";
+import { BaseWhen } from "./verbs/bdd/BaseWhen";
+import { BaseExpected } from "./verbs/tdt/BaseExpected";
+import { BaseShould } from "./verbs/tdt/BaseShould";
+import { BaseValue } from "./verbs/tdt/BaseValue";
+
 
 type IExtenstions = Record<string, unknown>;
 
@@ -44,6 +30,13 @@ export default abstract class BaseTiposkripto<
   thenOverrides: Record<string, any>;
   whenOverrides: Record<string, any>;
   testResourceConfiguration: ITestResourceConfiguration;
+  describeOverrides: Record<string, any>;
+  itOverrides: Record<string, any>;
+
+  confirmOverides: Record<string, any>;
+  valueOvverides: Record<string, any>;
+  shouldOverrides: Record<string, any>;
+  expectOverides: Record<string, any>;
 
   abstract writeFileSync(filename: string, payload: string): void;
 
@@ -175,7 +168,7 @@ export default abstract class BaseTiposkripto<
               return capturedFullAdapter.cleanupAll(store, suiteArtifactory);
             }
 
-            assertThat(t: Awaited<I["then"]>): boolean {
+            assertThat(t: Awaited<I["check"]>): boolean {
               return capturedFullAdapter.assert(t);
             }
 
@@ -204,7 +197,7 @@ export default abstract class BaseTiposkripto<
           features: string[],
           whens: BaseWhen<I>[],
           thens: BaseThen<I>[],
-          gcb: I["given"],
+          gcb: I["action"],
           initialValues: any,
         ) => {
           const safeFeatures = Array.isArray(features) ? [...features] : [];
@@ -324,14 +317,14 @@ export default abstract class BaseTiposkripto<
         classyConfirms[key] = (
           features: string[],
           tableRows: any[][],
-          confirmCB: I["given"],
+          confirmCB: I["setup"],
           initialValues: any,
         ) => {
           // Use the implementation function as confirmCB
           return new BaseValue<I>(
             features,
             tableRows,
-            val as I["given"],
+            val as I["setup"],
             initialValues,
           );
         };
@@ -345,7 +338,7 @@ export default abstract class BaseTiposkripto<
         classyValues[key] = (
           features: string[],
           tableRows: any[][],
-          confirmCB: I["given"],
+          confirmCB: I["setup"],
           initialValues: any,
         ) => {
           return new BaseValue<I>(
@@ -395,12 +388,17 @@ export default abstract class BaseTiposkripto<
         classyDescribes[key] = (
           features: string[],
           its: any[],
-          describeCB: I["given"],
+          describeCB: I["setup"],
           initialValues: any,
         ) => {
           // Use the implementation function as describeCB if not provided
-          const actualDescribeCB = describeCB || (desc as I["given"]);
-          return new BaseDescribe<I>(features, its, actualDescribeCB, initialValues);
+          const actualDescribeCB = describeCB || (desc as I["setup"]);
+          return new BaseDescribe<I>(
+            features,
+            its,
+            actualDescribeCB,
+            initialValues,
+          );
         };
       });
     }
@@ -426,7 +424,7 @@ export default abstract class BaseTiposkripto<
     this.thenOverrides = classyThens;
 
     // Store TDT and Describe-It overrides for use in specifications
-    (this as any).valuesOverrides = classyValues;
+    this.valuesOverrides = classyValues;
     (this as any).shouldsOverrides = classyShoulds;
     (this as any).expectedsOverrides = classyExpecteds;
     (this as any).describesOverrides = classyDescribes;
@@ -556,7 +554,7 @@ export default abstract class BaseTiposkripto<
       features: string[],
       whens: BaseWhen<I>[],
       thens: BaseThen<I>[],
-      gcb: I["given"],
+      gcb: I["setup"],
     ) => BaseGiven<I>
   > {
     return this.givenOverrides;

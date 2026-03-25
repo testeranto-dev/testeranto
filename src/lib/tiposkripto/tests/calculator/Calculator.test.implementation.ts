@@ -1,7 +1,7 @@
 import { assert } from "chai";
 
 import { Calculator } from "./Calculator.js";
-import type { ITestImplementation } from "../../src/CoreTypes.js";
+import type { ITestImplementation } from "../../src/public/CoreTypes.js";
 import type { ICalculatorNode, O, M } from "./Calculator.test.types.js";
 
 export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
@@ -12,12 +12,20 @@ export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
   // TDT style /////////////////////////
   confirms: {
     addition: () => {
-      const calc = new Calculator();
-      return calc.add;
+      // Return a function that will be called with features and testCases
+      // and should return a confirmCB function
+      return (features: string[], testCases: any[][]) => {
+        console.log("[DEBUG] Confirm addition called with:", features, testCases);
+        // Return a function that creates a Calculator (confirmCB)
+        return () => new Calculator();
+      };
     },
     "some simple caclulator": () => {
-      const calc = new Calculator();
-      return calc;
+      return (features: string[], testCases: any[][]) => {
+        console.log("[DEBUG] Confirm some simple caclulator called with:", features, testCases);
+        // Return a function that creates a Calculator (confirmCB)
+        return () => new Calculator();
+      };
     },
   },
 

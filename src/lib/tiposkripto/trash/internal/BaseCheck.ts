@@ -1,5 +1,5 @@
-import type { TestTypeParams_any } from "./CoreTypes.js";
-import type { ITestResourceConfiguration } from "./types.js";
+import type { TestTypeParams_any } from "../../CoreTypes.js";
+import type { ITestResourceConfiguration } from "../types.js";
 
 /**
  * BaseCheck is the internal unified base class for all verification phases.
@@ -43,12 +43,12 @@ export abstract class BaseCheck<I extends TestTypeParams_any> {
       artifacts: this.artifacts,
       status: this.status,
     };
-    
+
     // Add optional properties if they exist
     if ('key' in this) obj.key = (this as any).key;
     if ('failed' in this) obj.failed = (this as any).failed;
     if ('features' in this) obj.features = (this as any).features;
-    
+
     // Handle its if it exists
     if ('its' in this) {
       const its = (this as any).its;
@@ -70,7 +70,7 @@ export abstract class BaseCheck<I extends TestTypeParams_any> {
         obj.its = [];
       }
     }
-    
+
     return obj;
   }
 
