@@ -8,11 +8,17 @@ export class Calculator {
       // Note: Using eval is not recommended for production code
       // This is just for testing purposes
       const result = eval(this.display);
-      this.display = result.toString();
+      // Handle division by zero
+      if (result === Infinity || result === -Infinity) {
+        this.display = "Error";
+      } else {
+        this.display = result.toString();
+      }
     } catch (error) {
+      // For a calculator, syntax errors should be displayed, not thrown
+      // This allows the user to see the error and correct their input
       this.display = "Error";
-      throw error;
-    }
+    } 
   }
 
   memoryStore(): void {

@@ -1,5 +1,5 @@
 ---
-status: doing
+status: done but needs more attention
 files:
   - src/vscode/types.ts
   - src/vscode/TestTreeItem.ts

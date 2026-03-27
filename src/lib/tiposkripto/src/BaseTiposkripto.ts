@@ -1,16 +1,20 @@
 import { DefaultAdapter } from "./Adapters";
-import { Ibdd_in_any, Ibdd_out_any, ITestSpecification, ITestImplementation, ITestAdapter } from "./CoreTypes";
-import { ITestJob, ITTestResourceRequest, ITestResourceConfiguration, defaultTestResourceRequirement, IFinalResults } from "./types";
+import {
+  Ibdd_in_any, Ibdd_out_any, ITestSpecification, ITestImplementation, ITestAdapter
+} from "./CoreTypes";
+import {
+  ITestJob, ITTestResourceRequest, ITestResourceConfiguration, defaultTestResourceRequirement, IFinalResults
+} from "./types";
 import { BaseDescribe } from "./verbs/aaa/BaseDescribe";
 import { BaseIt } from "./verbs/aaa/BaseIt";
 import { BaseSuite } from "./verbs/BaseSuite";
 import { BaseGiven } from "./verbs/bdd/BaseGiven";
 import { BaseThen } from "./verbs/bdd/BaseThen";
 import { BaseWhen } from "./verbs/bdd/BaseWhen";
+import { BaseConfirm } from "./verbs/tdt/BaseConfirm";
 import { BaseExpected } from "./verbs/tdt/BaseExpected";
 import { BaseShould } from "./verbs/tdt/BaseShould";
 import { BaseValue } from "./verbs/tdt/BaseValue";
-
 
 type IExtenstions = Record<string, unknown>;
 
@@ -125,8 +129,8 @@ export default abstract class BaseTiposkripto<
     testResourceRequirement: ITTestResourceRequest = defaultTestResourceRequirement,
     testAdapter: Partial<ITestAdapter<I>> = {},
     testResourceConfiguration: ITestResourceConfiguration,
-    wsPort: string = "3456",
-    wsHost: string = "localhost",
+    // wsPort: string = "3456",
+    // wsHost: string = "localhost",
   ) {
     this.testResourceConfiguration = testResourceConfiguration;
 
@@ -316,14 +320,14 @@ export default abstract class BaseTiposkripto<
       Object.entries(testImplementation.confirms).forEach(([key, val]) => {
         classyConfirms[key] = (
           features: string[],
-          tableRows: any[][],
+          testCases: any[][],
           confirmCB: I["setup"],
           initialValues: any,
         ) => {
-          // Use the implementation function as confirmCB
-          return new BaseValue<I>(
+          // Create a BaseConfirm instance
+          return new BaseConfirm<I>(
             features,
-            tableRows,
+            testCases,
             val as I["setup"],
             initialValues,
           );
@@ -434,93 +438,149 @@ export default abstract class BaseTiposkripto<
     this.testResourceRequirement = testResourceRequirement;
     this.testSpecification = testSpecification;
 
-    this.specs = testSpecification(
-      this.Suites() as any,
-      this.Given() as any,
-      this.When() as any,
-      this.Then() as any,
-      this.Describe() as any,
-      this.It() as any,
-      this.Confirm() as any,
-      this.Value() as any,
-      this.Should() as any,
-      this.Expected() as any,
-    );
+    try {
+      this.specs = testSpecification(
+        this.Suites() as any,
+        this.Given() as any,
+        this.When() as any,
+        this.Then() as any,
+        this.Describe() as any,
+        this.It() as any,
+        this.Confirm() as any,
+        this.Value() as any,
+        this.Should() as any,
+        this.Expected() as any,
+      );
 
-    this.totalTests = this.calculateTotalTests();
+      this.totalTests = this.calculateTotalTests();
 
-    this.testJobs = this.specs.map((suite: BaseSuite<I, O>) => {
-      const suiteRunner =
-        (suite: BaseSuite<I, O>) =>
-          async (
+      this.testJobs = this.specs.map((suite: BaseSuite<I, O>) => {
+        const suiteRunner =
+          (suite: BaseSuite<I, O>) =>
+            async (
+              testResourceConfiguration: ITestResourceConfiguration,
+            ): Promise<BaseSuite<I, O>> => {
+              try {
+                const x = await suite.run(input, testResourceConfiguration);
+
+                return x;
+              } catch (e) {
+                console.error((e as Error).stack);
+                throw e;
+              }
+            };
+
+        const runner = suiteRunner(suite);
+
+        const totalTests = this.totalTests;
+        const testJob = {
+          test: suite,
+
+          toObj: () => {
+            return suite.toObj();
+          },
+
+          runner,
+
+          receiveTestResourceConfig: async (
             testResourceConfiguration: ITestResourceConfiguration,
-          ): Promise<BaseSuite<I, O>> => {
+          ): Promise<IFinalResults> => {
             try {
-              const x = await suite.run(input, testResourceConfiguration);
-
-              return x;
+              const suiteDone: BaseSuite<I, O> = await runner(
+                testResourceConfiguration,
+              );
+              const fails = suiteDone.fails;
+              return {
+                failed: fails > 0,
+                fails,
+                artifacts: [], // this.artifacts is not accessible here
+                features: suiteDone.features(),
+                tests: 0,
+                runTimeTests: totalTests,
+                testJob: testJob.toObj(),
+              };
             } catch (e) {
               console.error((e as Error).stack);
-              throw e;
+              return {
+                failed: true,
+                fails: -1,
+                artifacts: [],
+                features: [],
+                tests: 0,
+                runTimeTests: -1,
+                testJob: testJob.toObj(),
+              };
             }
+          },
+        };
+        return testJob;
+      });
+
+      // Only try to run tests if we have test jobs
+      if (this.testJobs.length > 0) {
+        (
+          this.testJobs[0].receiveTestResourceConfig(
+            testResourceConfiguration,
+          ) as unknown as Promise<IFinalResults>
+        ).then((results) => {
+          results.timestamp = Date.now();
+          console.log("testResourceConfiguration", testResourceConfiguration);
+          const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+          this.writeFileSync(reportJson, JSON.stringify(results, null, 2));
+        }).catch((error) => {
+          console.error("Error running test job:", error);
+          // Write error results
+          const errorResults = {
+            failed: true,
+            fails: -1,
+            artifacts: [],
+            features: [],
+            tests: 0,
+            runTimeTests: -1,
+            testJob: {},
+            timestamp: Date.now(),
+            error: error.message,
+            stack: error.stack
           };
-
-      const runner = suiteRunner(suite);
-
-      const totalTests = this.totalTests;
-      const testJob = {
-        test: suite,
-
-        toObj: () => {
-          return suite.toObj();
-        },
-
-        runner,
-
-        receiveTestResourceConfig: async (
-          testResourceConfiguration: ITestResourceConfiguration,
-        ): Promise<IFinalResults> => {
-          try {
-            const suiteDone: BaseSuite<I, O> = await runner(
-              testResourceConfiguration,
-            );
-            const fails = suiteDone.fails;
-            return {
-              failed: fails > 0,
-              fails,
-              artifacts: [], // this.artifacts is not accessible here
-              features: suiteDone.features(),
-              tests: 0,
-              runTimeTests: totalTests,
-              testJob: testJob.toObj(),
-            };
-          } catch (e) {
-            console.error((e as Error).stack);
-            return {
-              failed: true,
-              fails: -1,
-              artifacts: [],
-              features: [],
-              tests: 0,
-              runTimeTests: -1,
-              testJob: testJob.toObj(),
-            };
-          }
-        },
+          const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+          this.writeFileSync(reportJson, JSON.stringify(errorResults, null, 2));
+        });
+      } else {
+        // No test jobs - write empty results
+        const emptyResults = {
+          failed: true,
+          fails: -1,
+          artifacts: [],
+          features: [],
+          tests: 0,
+          runTimeTests: -1,
+          testJob: {},
+          timestamp: Date.now(),
+          error: "No test jobs were created"
+        };
+        const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+        this.writeFileSync(reportJson, JSON.stringify(emptyResults, null, 2));
+      }
+    } catch (error) {
+      console.error("Error during test specification:", error);
+      // Write error results immediately
+      const errorResults = {
+        failed: true,
+        fails: -1,
+        artifacts: [],
+        features: [],
+        tests: 0,
+        runTimeTests: -1,
+        testJob: {},
+        timestamp: Date.now(),
+        error: error.message,
+        stack: error.stack
       };
-      return testJob;
-    });
-
-    (
-      this.testJobs[0].receiveTestResourceConfig(
-        testResourceConfiguration,
-      ) as unknown as Promise<IFinalResults>
-    ).then((results) => {
-      console.log("testResourceConfiguration", testResourceConfiguration);
       const reportJson = `${testResourceConfiguration.fs}/tests.json`;
-      // console.log("writing results to: ", reportJson)
-      this.writeFileSync(reportJson, JSON.stringify(results, null, 2));
-    });
+      this.writeFileSync(reportJson, JSON.stringify(errorResults, null, 2));
+      // Re-throw to maintain existing behavior
+      throw error;
+    }
   }
 
   async receiveTestResourceConfig(

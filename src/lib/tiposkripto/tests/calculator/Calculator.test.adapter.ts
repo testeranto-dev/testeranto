@@ -15,35 +15,50 @@ export const adapter: ITestAdapter<ICalculatorNode> = {
     artifactory,
   ) => {
     console.log("[adapter] beforeEach called with subject:", subject);
-    // The initializer should create and return a Calculator instance
-    const calculator = await initializer();
+    // initializer is () => Calculator, so call it
+    const calculator = initializer();
     console.log("[adapter] beforeEach created calculator:", calculator);
-    if (!calculator) {
-      throw new Error("Initializer failed to create a Calculator instance");
-    }
     return calculator;
   },
   execute: async (store, whenCB, testResource, artifactory) => {
     console.log("[adapter] andWhen called with store:", store);
-    if (!store) {
-      throw new Error("Store is undefined in andWhen");
-    }
-    const updatedStore = whenCB(store);
-    console.log("[adapter] andWhen updated store:", updatedStore);
-    // Ensure we always return a valid store
-    return updatedStore || store;
+    // whenCB is (calculator: Calculator) => Calculator
+    const result = whenCB(store);
+    console.log("[adapter] andWhen result:", result);
+    return result;
   },
-  verify: async (store, thenCB, testResource, artifactory) => {
-    console.log("[adapter] butThen called with store:", store);
-    if (!store) {
-      throw new Error("Store is undefined in butThen");
+  verify: async (store, verificationFn, testResource, artifactory) => {
+    console.log("[adapter] verify called with store:", store);
+    console.log("[adapter] verificationFn:", verificationFn);
+    
+    // For TDT pattern, verificationFn might be wrapped differently
+    // It should be a function that returns a verification function
+    if (typeof verificationFn === 'function') {
+      try {
+        // Call verificationFn to get the actual verification function
+        const actualVerificationFn = verificationFn();
+        
+        if (typeof actualVerificationFn === 'function') {
+          // The verification function might expect (store) or (input, fn)
+          // Try to call it with store
+          try {
+            return actualVerificationFn(store);
+          } catch (e) {
+            // If that fails, it might expect (input, fn)
+            // For TDT, the input and fn should be provided by BaseConfirm
+            // We'll let BaseConfirm handle this wrapping
+            console.log("[adapter] verificationFn expects different signature:", e.message);
+            throw e;
+          }
+        } else {
+          // If verificationFn doesn't return a function, use it directly
+          return verificationFn;
+        }
+      } catch (e) {
+        console.log("[adapter] Error in verify:", e);
+        throw e;
+      }
     }
-    // Call the assertion function with the store
-    // This will perform the assertion (e.g., assert.equal)
-    console.log("[adapter] butThen calling thenCB with store");
-    thenCB(store);
-
-    // Return the store itself
     return store;
   },
   cleanupEach: async (store, key, artifactory) => {

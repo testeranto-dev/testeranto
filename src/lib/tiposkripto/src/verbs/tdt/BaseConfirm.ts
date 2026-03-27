@@ -42,12 +42,64 @@ export class BaseConfirm<I extends TestTypeParams_any> {
   toObj() {
     const testCases = this.testCases || [];
     return CommonUtils.toObj(this, {
-      values: testCases.map((testCase) => {
-        if (Array.isArray(testCase) && testCase.length >= 3) {
+      testCases: testCases.map((testCase) => {
+        if (Array.isArray(testCase) && testCase.length >= 2) {
+          const [value, should] = testCase;
+          
+          // Get input data
+          let inputData: any = null;
+          try {
+            if (typeof value === 'function') {
+              inputData = value();
+            } else if (value && typeof value.toObj === 'function') {
+              const obj = value.toObj();
+              inputData = obj.features || obj;
+            } else {
+              inputData = value;
+            }
+          } catch (e) {
+            inputData = `Error: ${e.message}`;
+          }
+          
+          // Get test description
+          let testDescription: any = null;
+          try {
+            if (should) {
+              if (typeof should === 'function') {
+                // Try to get a better name from the function
+                // For should functions that are created by beEqualTo(expected), etc.
+                // They might have properties that indicate what they are
+                if (should.name && should.name !== '') {
+                  testDescription = should.name;
+                } else {
+                  // Try to extract from the function's string representation
+                  const funcStr = should.toString();
+                  if (funcStr.includes('beEqualTo')) {
+                    testDescription = 'beEqualTo';
+                  } else if (funcStr.includes('beGreaterThan')) {
+                    testDescription = 'beGreaterThan';
+                  } else if (funcStr.includes('whenMultipliedAreAtLeast')) {
+                    testDescription = 'whenMultipliedAreAtLeast';
+                  } else if (funcStr.includes('equal')) {
+                    testDescription = 'equal';
+                  } else {
+                    testDescription = 'Test function';
+                  }
+                }
+              } else if (should && typeof should.toObj === 'function') {
+                const obj = should.toObj();
+                testDescription = obj.name || 'Should';
+              } else {
+                testDescription = String(should);
+              }
+            }
+          } catch (e) {
+            testDescription = `Error: ${e.message}`;
+          }
+          
           return {
-            value: testCase[0],
-            should: testCase[1],
-            expected: testCase[2]
+            input: inputData,
+            test: testDescription,
           };
         }
         return testCase;
@@ -65,10 +117,29 @@ export class BaseConfirm<I extends TestTypeParams_any> {
   ) {
     this.key = key;
     this.fails = 0;
+    this.testResourceConfiguration = testResourceConfiguration;
+
+    // Store suite index for use in artifactory creation
+    (this as any)._suiteIndex = suiteNdx;
+
+    // Create a proper artifactory if one isn't provided
+    const actualArtifactory = artifactory;
 
     try {
-      // Setup phase
-      this.store = await this.confirmCB(subject, this.initialValues);
+      // Setup phase - use the adapter's prepareEach, similar to BaseGiven
+      const parent = (this as any)._parent;
+      if (parent && parent.adapter) {
+        this.store = await parent.adapter.prepareEach(
+          subject,
+          this.confirmCB,
+          testResourceConfiguration,
+          this.initialValues,
+          actualArtifactory,
+        );
+      } else {
+        // Fallback: call confirmCB directly
+        this.store = await this.confirmCB();
+      }
       this.status = true;
     } catch (e: any) {
       this.status = false;
@@ -80,21 +151,27 @@ export class BaseConfirm<I extends TestTypeParams_any> {
       // Process each test case
       for (const [caseIndex, testCase] of this.testCases.entries()) {
         try {
-          // Each test case is [Value, Should, Expected]
-          if (Array.isArray(testCase) && testCase.length >= 3) {
-            const [value, should, expected] = testCase;
+          // Each test case is now [Value, Should] where Should is already called with expected value
+          if (Array.isArray(testCase) && testCase.length >= 2) {
+            const [value, should] = testCase;
 
-            // Process the test case
-            // In a real implementation, this would execute the test
-            // For now, we'll just mark it as processed
-            console.log(`[BaseConfirm] Processing test case ${caseIndex}:`, { value, should, expected });
-
-            // Simulate test execution
-            // This is where the actual test logic would go
-            const result = true; // Placeholder
-
-            if (result !== undefined) {
-              tester(result);
+            // Get the input from value
+            let input: any;
+            if (typeof value === 'function') {
+              input = value();
+            } else if (value && typeof value.toObj === 'function') {
+              const obj = value.toObj();
+              input = obj.features || obj;
+            } else {
+              input = value;
+            }
+            
+            // should is already a function that expects (input, fn)
+            // where fn is the confirmCB (e.g., new Calculator().add)
+            if (typeof should === 'function') {
+              // Directly call the should function with input and this.confirmCB
+              should(input, this.confirmCB);
+              tester(true);
             }
           }
         } catch (e: any) {

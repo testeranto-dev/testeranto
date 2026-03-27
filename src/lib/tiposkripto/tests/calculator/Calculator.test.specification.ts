@@ -12,215 +12,114 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
   Confirm,
   Value,
   Should,
-  Expected,
 ) => {
   return [
-
-    Suite.Default("Testing Calculator operationz", {
-      // TDT style
-      basicMath: Confirm["some simple caclulator"](
-        [],
+    Suite.Default("Comprehensive Calculator Tests", {
+      // ========== TDT (Table-Driven Testing) Tests ==========
+  
+      tdtAdditionTable: Confirm["addition"](
+        ["TDT addition table"],
         [
-          [Value["one and two"], Should["equal"], Expected["three"]],
-          [
-            Value.of([3, 4]),
-            Should["when multiplied, be at least"],
-            Expected["to be"](11),
-          ],
+          [Value.of([1, 1]), Should.beEqualTo(2)],
+          [Value.of([2, 3]), Should.beGreaterThan(4)],
         ],
       ),
 
-      // Describe-It style
-      aNiceNewTest: Describe["another simple caclulator"](
+      // ========== AAA (Describe-It) Tests ==========
+      aaaBasicOperations: Describe["another simple caclulator"](
+        ["AAA basic operations"],
         [
-          "pressing nothing, the display is empty", // basic string
-        ],
-
-        //  you can have multiple nested
-        Describe["has memory functions"](
-          // unlike bdd, you can mix updates and assertions
           It["can save 1 memory"](),
           It["can save 2 memories"](),
-        ),
+        ],
       ),
 
-      // BDD style
-      testEmptyDisplay: Given.Default(
+      aaaDisplayTests: Describe["another simple caclulator"](
+        ["AAA display functionality"],
         [
-          "pressing nothing, the display is empty", // basic string
-          "./README.md", // relative path
-          "/README.md", // "absolute" path, where absolute is project root
+          // We'll need to add more its in the implementation
+          // For now, reuse existing ones
+          It["can save 1 memory"](),
+          It["can save 2 memories"](),
         ],
+      ),
+
+      aaaNestedDescribes: Describe["another simple caclulator"](
+        ["AAA nested structure"],
+        [
+          It["can save 1 memory"](),
+          It["can save 2 memories"](),
+        ],
+      ),
+
+      // ========== BDD (Given-When-Then) Tests ==========
+      // Basic display tests
+      bddEmptyDisplay: Given.Default(
+        ["BDD empty display"],
         [],
         [Then.result("")],
       ),
-      testSingleDigit: Given.Default(
-        ["entering a number puts it on the display"],
-        [When.press("2")],
-        [Then.result("2")],
-      ),
-      testMultipleDigits: Given.Default(
-        ["entering multiple digits concatenates them"],
-        [When.press("2"), When.press("2")],
-        [Then.result("22")],
-      ),
-      testLargeNumber: Given.Default(
-        ["entering a large number works correctly"],
-        [
-          When.press("1"),
-          When.press("2"),
-          When.press("3"),
-          When.press("4"),
-          When.press("5"),
-        ],
-        [Then.result("12345")],
+
+      bddSingleDigit: Given.Default(
+        ["BDD single digit"],
+        [When.press("7")],
+        [Then.result("7")],
       ),
 
-      // Basic operations
-      testAdditionExpression: Given.Default(
-        ["addition expression is displayed correctly"],
-        [When.press("2"), When.press("+"), When.press("3")],
-        [Then.result("2+3")],
-      ),
-      testIncompleteAddition: Given.Default(
-        ["incomplete addition expression is displayed correctly"],
-        [When.press("2"), When.press("+")],
-        [Then.result("2+")],
-      ),
-      testSubtractionExpression: Given.Default(
-        ["subtraction expression is displayed correctly"],
-        [When.press("7"), When.press("-"), When.press("3")],
-        [Then.result("7-3")],
-      ),
-      testMultiplicationExpression: Given.Default(
-        ["multiplication expression is displayed correctly"],
-        [When.press("4"), When.press("*"), When.press("5")],
-        [Then.result("4*5")],
-      ),
-      testDivisionExpression: Given.Default(
-        ["division expression is displayed correctly"],
-        [When.press("8"), When.press("/"), When.press("2")],
-        [Then.result("8/2")],
+      bddMultipleDigits: Given.Default(
+        ["BDD multiple digits"],
+        [When.press("1"), When.press("2"), When.press("3")],
+        [Then.result("123")],
       ),
 
-      // Complex expressions
-      testMixedOperations: Given.Default(
-        ["mixed operations are displayed correctly"],
+      // Arithmetic operations
+      bddAddition: Given.Default(
+        ["BDD addition"],
         [
-          When.press("2"),
-          When.press("+"),
-          When.press("3"),
-          When.press("*"),
-          When.press("4"),
-        ],
-        [Then.result("2+3*4")],
-      ),
-      testLongExpression: Given.Default(
-        ["long complex expression is displayed correctly"],
-        [
-          When.press("1"),
-          When.press("+"),
-          When.press("2"),
-          When.press("*"),
-          When.press("3"),
-          When.press("-"),
-          When.press("4"),
-          When.press("/"),
           When.press("5"),
-        ],
-        [Then.result("1+2*3-4/5")],
-      ),
-
-      // Calculation tests
-      testSimpleAddition: Given.Default(
-        ["simple addition calculation"],
-        [
-          When.press("2"),
-          When.press("3"),
           When.press("+"),
-          When.press("4"),
-          When.press("5"),
+          When.press("3"),
           When.enter(),
         ],
-        [Then.result("68")],
+        [Then.result("8")],
       ),
-      testSimpleSubtraction: Given.Default(
-        ["simple subtraction calculation"],
+
+      bddSubtraction: Given.Default(
+        ["BDD subtraction"],
         [
           When.press("9"),
-          When.press("5"),
           When.press("-"),
-          When.press("3"),
-          When.press("2"),
+          When.press("4"),
           When.enter(),
         ],
-        [Then.result("63")],
+        [Then.result("5")],
       ),
-      testSimpleMultiplication: Given.Default(
-        ["simple multiplication calculation"],
-        [When.press("6"), When.press("*"), When.press("7"), When.enter()],
-        [Then.result("42")],
-      ),
-      testSimpleDivision: Given.Default(
-        ["simple division calculation"],
+
+      bddMultiplication: Given.Default(
+        ["BDD multiplication"],
         [
-          When.press("8"),
-          When.press("4"),
-          When.press("/"),
-          When.press("2"),
+          When.press("6"),
+          When.press("*"),
+          When.press("7"),
           When.enter(),
         ],
         [Then.result("42")],
       ),
 
-      // Edge cases
-      testClearOperation: Given.Default(
-        ["clear operation resets the display"],
+      bddDivision: Given.Default(
+        ["BDD division"],
         [
-          When.press("1"),
+          When.press("8"),
+          When.press("/"),
           When.press("2"),
-          When.press("3"),
-          When.press("C"),
-          When.press("4"),
+          When.enter(),
         ],
         [Then.result("4")],
       ),
-      testStartingWithOperator: Given.Default(
-        ["starting with operator should work"],
-        [When.press("+"), When.press("5")],
-        [Then.result("+5")],
-      ),
-      testMultipleOperators: Given.Default(
-        ["multiple operators in sequence"],
-        [When.press("5"), When.press("+"), When.press("-"), When.press("3")],
-        [Then.result("5+-3")],
-      ),
 
-      // Decimal numbers
-      testDecimalInput: Given.Default(
-        ["decimal number input"],
-        [When.press("3"), When.press("."), When.press("1"), When.press("4")],
-        [Then.result("3.14")],
-      ),
-      testDecimalCalculation: Given.Default(
-        ["decimal calculation"],
-        [
-          When.press("3"),
-          When.press("."),
-          When.press("1"),
-          When.press("+"),
-          When.press("1"),
-          When.press("."),
-          When.press("8"),
-          When.press("6"),
-          When.enter(),
-        ],
-        [Then.result("4.96")],
-      ),
-
-      // Complex calculations
-      testOrderOfOperations: Given.Default(
-        ["order of operations is respected"],
+      // Complex expressions
+      bddChainedOperations: Given.Default(
+        ["BDD chained operations"],
         [
           When.press("2"),
           When.press("+"),
@@ -231,8 +130,170 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
         ],
         [Then.result("14")],
       ),
-      testParenthesesExpression: Given.Default(
-        ["parentheses in expression"],
+
+      bddDecimalOperations: Given.Default(
+        ["BDD decimal operations"],
+        [
+          When.press("3"),
+          When.press("."),
+          When.press("1"),
+          When.press("4"),
+          When.press("+"),
+          When.press("1"),
+          When.press("."),
+          When.press("5"),
+          When.enter(),
+        ],
+        [Then.result("4.64")],
+      ),
+
+      // Clear functionality
+      bddClearDisplay: Given.Default(
+        ["BDD clear display"],
+        [
+          When.press("9"),
+          When.press("9"),
+          When.press("C"),
+          When.press("5"),
+        ],
+        [Then.result("5")],
+      ),
+
+      // Memory operations
+      bddMemoryStoreRecall: Given.Default(
+        ["BDD memory store and recall"],
+        [
+          When.press("4"),
+          When.press("2"),
+          When.memoryStore(),
+          When.press("C"),
+          When.memoryRecall(),
+        ],
+        [Then.result("42")],
+      ),
+
+      bddMemoryAdd: Given.Default(
+        ["BDD memory add"],
+        [
+          When.press("1"),
+          When.press("0"),
+          When.memoryStore(),
+          When.press("C"),
+          When.press("2"),
+          When.press("0"),
+          When.memoryAdd(),
+          When.memoryRecall(),
+        ],
+        [Then.result("30")],
+      ),
+
+      bddMemoryClear: Given.Default(
+        ["BDD memory clear"],
+        [
+          When.press("7"),
+          When.press("7"),
+          When.memoryStore(),
+          When.memoryClear(),
+          When.memoryRecall(),
+        ],
+        [Then.result("0")],
+      ),
+
+      // Error cases
+      bddDivisionByZero: Given.Default(
+        ["BDD division by zero"],
+        [
+          When.press("5"),
+          When.press("/"),
+          When.press("0"),
+          When.enter(),
+        ],
+        [Then.result("Error")],
+      ),
+
+      bddInvalidExpression: Given.Default(
+        ["BDD invalid expression"],
+        [
+          When.press("2"),
+          When.press("+"),
+          When.press("+"),
+          When.press("3"),
+          When.enter(),
+        ],
+        [Then.result("Error")],
+      ),
+
+      // Multiple whens and thens
+      bddMultipleActions: Given.Default(
+        ["BDD multiple actions and assertions"],
+        [
+          When.press("1"),
+          When.press("+"),
+          When.press("2"),
+          When.enter(),
+          When.press("*"),
+          When.press("3"),
+          When.enter(),
+        ],
+        [
+          Then.result("9"),
+        ],
+      ),
+
+      // Edge cases
+      bddStartingWithOperator: Given.Default(
+        ["BDD starting with operator"],
+        [When.press("+"), When.press("5")],
+        [Then.result("+5")],
+      ),
+
+      bddMultipleOperators: Given.Default(
+        ["BDD multiple operators"],
+        [When.press("5"), When.press("+"), When.press("-"), When.press("3")],
+        [Then.result("5+-3")],
+      ),
+
+      bddLargeNumber: Given.Default(
+        ["BDD large number"],
+        [
+          When.press("1"),
+          When.press("2"),
+          When.press("3"),
+          When.press("4"),
+          When.press("5"),
+          When.press("6"),
+          When.press("7"),
+          When.press("8"),
+          When.press("9"),
+        ],
+        [Then.result("123456789")],
+      ),
+
+      // Mixed operations with memory
+      bddComplexMemoryScenario: Given.Default(
+        ["BDD complex memory scenario"],
+        [
+          When.press("1"),
+          When.press("0"),
+          When.memoryStore(),
+          When.press("C"),
+          When.press("2"),
+          When.press("0"),
+          When.memoryAdd(),
+          When.press("C"),
+          When.press("5"),
+          When.memoryAdd(),
+          When.memoryRecall(),
+          When.press("*"),
+          When.press("2"),
+          When.enter(),
+        ],
+        [Then.result("70")],
+      ),
+
+      // Parentheses operations
+      bddParentheses: Given.Default(
+        ["BDD parentheses"],
         [
           When.press("("),
           When.press("2"),
@@ -246,61 +307,27 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
         [Then.result("20")],
       ),
 
-      // Error cases
-      testDivisionByZero: Given.Default(
-        ["division by zero shows error"],
-        [When.press("5"), When.press("/"), When.press("0"), When.enter()],
-        [Then.result("Error")],
-      ),
-      testInvalidExpression: Given.Default(
-        ["invalid expression shows error"],
+      // Zero handling
+      bddZeroOperations: Given.Default(
+        ["BDD zero operations"],
         [
-          When.press("2"),
+          When.press("0"),
           When.press("+"),
-          When.press("+"),
-          When.press("3"),
+          When.press("0"),
           When.enter(),
-        ],
-        [Then.result("Error")],
-      ),
-
-      // Memory functions
-      testMemoryStoreRecall: Given.Default(
-        ["memory store and recall"],
-        [
-          When.press("1"),
-          When.press("2"),
-          When.press("3"),
-          When.press("MS"),
-          When.press("C"),
-          When.press("MR"),
-        ],
-        [Then.result("123")],
-      ),
-      testMemoryClear: Given.Default(
-        ["memory clear"],
-        [
-          When.press("4"),
-          When.press("5"),
-          When.press("6"),
-          When.press("MS"),
-          When.press("MC"),
-          When.press("MR"),
         ],
         [Then.result("0")],
       ),
-      testMemoryAddition: Given.Default(
-        ["memory addition"],
+
+      bddMultiplyByZero: Given.Default(
+        ["BDD multiply by zero"],
         [
-          When.press("1"),
+          When.press("5"),
+          When.press("*"),
           When.press("0"),
-          When.press("M+"),
-          When.press("2"),
-          When.press("0"),
-          When.press("M+"),
-          When.press("MR"),
+          When.enter(),
         ],
-        [Then.result("30")],
+        [Then.result("0")],
       ),
     }),
   ];

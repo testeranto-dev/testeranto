@@ -86,7 +86,7 @@ export abstract class BaseSuite<
     const tdtConfirms: any[] = [];
 
     for (const [k, giver] of Object.entries(this.givens)) {
-      const obj = giver.toObj();
+      const obj = giver.toObj ? giver.toObj() : {};
 
       // Check the constructor name to determine the type
       // This is more reliable than checking properties
@@ -95,89 +95,93 @@ export abstract class BaseSuite<
       if (constructorName === 'BaseConfirm') {
         // TDT pattern - Confirm organizes the tests
         tdtConfirms.push({
-          key: obj.key || giver.name,
-          values: obj.values || [],
+          key: obj.key || k,
+          values: obj.testCases || obj.values || [],
           error: obj.error,
           failed: obj.failed,
           features: obj.features || [],
-          artifacts: obj.artifacts,
+          artifacts: obj.artifacts || [],
           status: obj.status
         });
       } else if (constructorName === 'BaseValue') {
-        // TDT pattern - individual Value (legacy, might not be used)
+        // TDT pattern - individual Value
         tdtConfirms.push({
-          key: obj.key,
-          values: obj.values || [],
+          key: obj.key || k,
+          values: obj.values || obj.tableRows || [],
           error: obj.error,
           failed: obj.failed,
           features: obj.features || [],
-          artifacts: obj.artifacts,
+          artifacts: obj.artifacts || [],
           status: obj.status
         });
       } else if (constructorName === 'BaseDescribe') {
         // AAA pattern
         aaaDescribes.push({
-          key: obj.key,
+          key: obj.key || k,
           describes: obj.describes || [],
           its: obj.its || [],
           error: obj.error,
           failed: obj.failed,
           features: obj.features || [],
-          artifacts: obj.artifacts,
+          artifacts: obj.artifacts || [],
           status: obj.status
         });
       } else if (constructorName === 'BaseGiven') {
         // BDD pattern
         bddGivens.push({
-          key: obj.key,
+          key: obj.key || k,
           whens: obj.whens || [],
           thens: obj.thens || [],
           error: obj.error,
           failed: obj.failed,
           features: obj.features || [],
-          artifacts: obj.artifacts,
+          artifacts: obj.artifacts || [],
           status: obj.status
         });
       } else {
         // Fallback: check properties
-        if (obj.values !== undefined || constructorName.includes('Confirm') || constructorName.includes('Value')) {
+        if (obj.values !== undefined || obj.tableRows !== undefined || obj.testCases !== undefined || 
+            constructorName.includes('Confirm') || constructorName.includes('Value')) {
           // TDT pattern
           tdtConfirms.push({
             key: obj.key || k,
-            values: obj.values || [],
+            values: obj.values || obj.tableRows || obj.testCases || [],
             error: obj.error,
             failed: obj.failed,
             features: obj.features || [],
-            artifacts: obj.artifacts,
+            artifacts: obj.artifacts || [],
             status: obj.status
           });
         } else if (obj.describes !== undefined || obj.its !== undefined || constructorName.includes('Describe')) {
           // AAA pattern
           aaaDescribes.push({
-            key: obj.key,
+            key: obj.key || k,
             describes: obj.describes || [],
             its: obj.its || [],
             error: obj.error,
             failed: obj.failed,
             features: obj.features || [],
-            artifacts: obj.artifacts,
+            artifacts: obj.artifacts || [],
             status: obj.status
           });
         } else if (obj.whens !== undefined || obj.thens !== undefined || constructorName.includes('Given')) {
           // BDD pattern
           bddGivens.push({
-            key: obj.key,
+            key: obj.key || k,
             whens: obj.whens || [],
             thens: obj.thens || [],
             error: obj.error,
             failed: obj.failed,
             features: obj.features || [],
-            artifacts: obj.artifacts,
+            artifacts: obj.artifacts || [],
             status: obj.status
           });
         } else {
           // Default to BDD
-          bddGivens.push(obj);
+          bddGivens.push({
+            key: k,
+            ...obj
+          });
         }
       }
     }
@@ -252,8 +256,7 @@ export abstract class BaseSuite<
 
     const subject = await this.setup(input, suiteArtifactory, testResourceConfiguration);
 
-    for (const [gKey, g] of Object.entries(this.givens)) {
-      const giver = this.givens[gKey];
+    for (const [gKey, giver] of Object.entries(this.givens)) {
       try {
         // Create artifactory for the given
         let givenArtifactory;
@@ -278,11 +281,10 @@ export abstract class BaseSuite<
         }
 
         // Call the appropriate method based on the type of giver
-        const constructorName = giver.constructor.name;
-
-        if (constructorName === 'BaseGiven' || typeof giver.give === 'function') {
+        // Check for methods directly instead of constructor name
+        if (typeof (giver as any).give === 'function') {
           // BaseGiven instance (BDD)
-          this.store = await giver.give(
+          this.store = await (giver as any).give(
             subject,
             gKey,
             testResourceConfiguration,
@@ -290,9 +292,9 @@ export abstract class BaseSuite<
             givenArtifactory,
             sNdx,
           );
-        } else if (constructorName === 'BaseDescribe' || typeof giver.describe === 'function') {
+        } else if (typeof (giver as any).describe === 'function') {
           // BaseDescribe instance (AAA)
-          this.store = await giver.describe(
+          this.store = await (giver as any).describe(
             subject,
             gKey,
             testResourceConfiguration,
@@ -300,16 +302,26 @@ export abstract class BaseSuite<
             givenArtifactory,
             sNdx,
           );
-        } else if (constructorName === 'BaseConfirm' || typeof giver.run === 'function') {
+        } else if (typeof (giver as any).run === 'function') {
           // BaseConfirm instance (TDT)
-          this.store = await giver.run(
+          this.store = await (giver as any).run(
             subject,
             testResourceConfiguration,
             givenArtifactory,
           );
-        } else if (constructorName === 'BaseValue' || typeof giver.value === 'function') {
-          // BaseValue instance (TDT - legacy)
-          this.store = await giver.value(
+        } else if (typeof (giver as any).confirm === 'function') {
+          // BaseConfirm instance (TDT)
+          this.store = await (giver as any).confirm(
+            subject,
+            gKey,
+            testResourceConfiguration,
+            this.assertThat,
+            givenArtifactory,
+            sNdx,
+          );
+        } else if (typeof (giver as any).value === 'function') {
+          // BaseValue instance (TDT)
+          this.store = await (giver as any).value(
             subject,
             gKey,
             testResourceConfiguration,
@@ -318,54 +330,17 @@ export abstract class BaseSuite<
             sNdx,
           );
         } else {
-          // Try to detect based on available methods
-          if (typeof giver.give === 'function') {
-            this.store = await giver.give(
-              subject,
-              gKey,
-              testResourceConfiguration,
-              this.assertThat,
-              givenArtifactory,
-              sNdx,
-            );
-          } else if (typeof giver.describe === 'function') {
-            this.store = await giver.describe(
-              subject,
-              gKey,
-              testResourceConfiguration,
-              this.assertThat,
-              givenArtifactory,
-              sNdx,
-            );
-          } else if (typeof giver.run === 'function') {
-            // TDT Confirm
-            this.store = await giver.run(
-              subject,
-              testResourceConfiguration,
-              givenArtifactory,
-            );
-          } else if (typeof giver.value === 'function') {
-            this.store = await giver.value(
-              subject,
-              gKey,
-              testResourceConfiguration,
-              this.assertThat,
-              givenArtifactory,
-              sNdx,
-            );
-          } else {
-            throw new Error(`Giver ${gKey} has no valid method (give, describe, run, or value). Type: ${giver.constructor.name}`);
-          }
+          throw new Error(`Giver ${gKey} has no valid method (give, describe, run, or value)`);
         }
         // Add the number of failures from this given to the suite's total
-        this.fails += giver.fails || 0;
+        this.fails += (giver as any).fails || 0;
       } catch (e) {
         this.failed = true;
         // Add 1 to fails for the caught error
         this.fails += 1;
         // Also add any failures from the given itself
-        if (giver.fails) {
-          this.fails += giver.fails;
+        if ((giver as any).fails) {
+          this.fails += (giver as any).fails;
         }
         console.error(`Error in given ${gKey}:`, e);
         // Don't re-throw to continue with other givens

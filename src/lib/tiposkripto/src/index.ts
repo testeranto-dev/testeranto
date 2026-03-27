@@ -1,6 +1,5 @@
 import { Ibdd_in_any, Ibdd_out_any } from "./CoreTypes.js";
 
-
 // Export TDT pattern classes (user-facing)
 export { BaseValue } from "./verbs/tdt/BaseValue.js";
 export { BaseShould } from "./verbs/tdt/BaseShould";
@@ -9,8 +8,6 @@ export { BaseExpected } from "./verbs/tdt/BaseExpected.js";
 // Export Describe-It pattern classes (user-facing)
 export { BaseDescribe } from "./verbs/aaa/BaseDescribe.js";
 export { BaseIt } from "./verbs/aaa/BaseIt.js";
-
-
 
 // Helper function to create Describe-It specifications
 export function createDescribeItSpecification<

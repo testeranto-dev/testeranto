@@ -1,7 +1,6 @@
 import { IGivens, ITestResourceConfiguration } from "./types";
 import { BaseSuite } from "./verbs/BaseSuite";
 
-
 export type IArtifactory = {
   writeFileSync: (a: string, b: string) => any;
 };
@@ -191,7 +190,7 @@ export type TestTypeParams_any = TestTypeParams<
   unknown
 >;
 
-// Legacy type aliases for backward compatibility
+
 export type Ibdd_in<
   IInput,
   ISubject,

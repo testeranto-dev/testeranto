@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
-import type { Ibdd_in, IArtifactory, Ibdd_out } from "../../src/public/CoreTypes";
 import type { Calculator } from "./Calculator";
-
+import type { Ibdd_in, IArtifactory, Ibdd_out } from "../../src/CoreTypes";
 
 export type ICalculatorNode = Ibdd_in<
   typeof Calculator, // iinput
@@ -48,6 +47,11 @@ export type O = Ibdd_out<
   }
 >;
 
+// type M allows you customize you implementation
+// The default implementation is a function which accepts an expected value and returns another function which accepts the actual value.
+// But you can create one that just returns 1 function, or even a constant.
+// If you do not use the default case, you will need to update type M, which describes the shape of the implementations
+// You can even type specific verbs if you want!
 export type M = {
   givens: {
     [K in keyof O["givens"]]: (...args: O["givens"][K]) => Calculator;

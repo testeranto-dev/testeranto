@@ -1,8 +1,5 @@
-import BaseTiposkripto from "../BaseTiposkripto";
-import {
-  ITTestResourceRequest,
-  defaultTestResourceRequirement,
-} from "../types";
+
+import BaseTiposkripto from "./BaseTiposkripto";
 import {
   TestTypeParams_any,
   TestSpecShape_any,
@@ -10,6 +7,7 @@ import {
   ITestImplementation,
   ITestAdapter,
 } from "./CoreTypes";
+import { ITTestResourceRequest, defaultTestResourceRequirement } from "./types";
 
 // Check if we're in a browser environment
 const isBrowser =

@@ -25,17 +25,12 @@ export const handleCollatedFiles = (server: any): Response => {
 
     for (const testName of tests) {
       try {
-        console.log(
-          `[DEBUG] Processing ${runtime}/${testName}`,
-        );
         processTest(runtimeKey, runtime, testName, treeRoot);
       } catch (error) {
         console.error(`Error processing ${runtimeKey}/${testName}:`, error);
       }
     }
   }
-
-  console.log("[collation]", JSON.stringify(treeRoot, null, 2));
 
   return jsonResponse({
     tree: treeRoot,

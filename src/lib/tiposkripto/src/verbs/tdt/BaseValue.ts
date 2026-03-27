@@ -168,9 +168,34 @@ export class BaseValue<I extends TestTypeParams_any> {
   }
 
   toObj() {
+    // Process table rows to include actual values
+    const processedRows = (this.tableRows || []).map(row => {
+      if (Array.isArray(row)) {
+        return row.map(item => {
+          if (item && typeof item === 'object') {
+            // If it has a toObj method, call it
+            if (item.toObj) {
+              return item.toObj();
+            }
+            // Otherwise, return key properties
+            const result: any = {};
+            for (const [key, value] of Object.entries(item)) {
+              if (key !== '_parent' && key !== 'testResourceConfiguration') {
+                result[key] = value;
+              }
+            }
+            return result;
+          }
+          return item;
+        });
+      }
+      return row;
+    });
+
     return {
       key: this.key,
-      values: this.tableRows || [],
+      values: processedRows,
+      tableRows: this.tableRows || [],
       error: this.error ? [this.error, this.error.stack] : null,
       failed: this.failed,
       features: this.features || [],

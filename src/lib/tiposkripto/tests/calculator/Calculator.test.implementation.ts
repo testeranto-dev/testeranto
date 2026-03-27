@@ -1,127 +1,140 @@
 import { assert } from "chai";
-
 import { Calculator } from "./Calculator.js";
-import type { ITestImplementation } from "../../src/public/CoreTypes.js";
 import type { ICalculatorNode, O, M } from "./Calculator.test.types.js";
+import type { ITestImplementation } from "../../src/CoreTypes.js";
+
+const x = new Calculator()
 
 export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
   suites: {
-    Default: { description: "Default test suite for Calculator" },
+    Default: { description: "Comprehensive test suite for Calculator" },
   },
 
   // TDT style /////////////////////////
   confirms: {
-    addition: () => {
-      // Return a function that will be called with features and testCases
-      // and should return a confirmCB function
-      return (features: string[], testCases: any[][]) => {
-        console.log("[DEBUG] Confirm addition called with:", features, testCases);
-        // Return a function that creates a Calculator (confirmCB)
-        return () => new Calculator();
-      };
-    },
-    "some simple caclulator": () => {
-      return (features: string[], testCases: any[][]) => {
-        console.log("[DEBUG] Confirm some simple caclulator called with:", features, testCases);
-        // Return a function that creates a Calculator (confirmCB)
-        return () => new Calculator();
-      };
-    },
+    addition: new Calculator().add,
   },
 
   values: {
     of: (...numbers: number[]) => {
       return numbers;
     },
-
     "one and two": () => {
       return [1, 2];
     },
   },
 
-  expecteds: {
-    three: () => {
-      return 3;
-    },
-    'to be': (x: any) => {
-      return x;
-    },
-  },
-
   shoulds: {
-    equal: (a: number, b: number) => {
-      assert.equal(a, b, `${a} did not equal ${b}`);
-      return undefined;
+    beEqualTo: (expected: number) => {
+      return (input: number[], confirmation: (a: number, b: number) => number) => {
+        return assert.equal(expected, confirmation(input[0], input[1]))
+      };
     },
 
-    'when multiplied, be at least': (...numbers: number[]) => {
-      return (multiplied: number, threshold: number) => {
-        assert.isAtLeast(multiplied, threshold);
-        return undefined;
+    beGreaterThan: (expected: number) => {
+      return (input: number[], confirmation: (a: number, b: number) => number) => {
+        return assert.isAbove(expected, confirmation(input[0], input[1]))
+      };
+    },
+
+    // whenAddedAreGreaterThan: (expected: number) => {
+    //   return (input: number[], calculator: Calculator) => {
+    //     const [a, b] = input;
+    //     const result = calculator.add(a, b);
+    //     assert.isAbove(result, expected, `${a} + ${b} should be greater than ${expected}`);
+    //   };
+    // },
+    whenMultipliedAreAtLeast: (expected: number) => {
+      return (input: number[], calculator: Calculator) => {
+        const [a, b] = input;
+        const result = calculator.multiply(a, b);
+        assert.isAtLeast(result, expected, `${a} * ${b} should be at least ${expected}`);
+      };
+    },
+    equal: (expected: any) => {
+      return (input: any, calculator: Calculator) => {
+        assert.deepEqual(input, expected);
       };
     },
   },
 
   // AAA style /////////////////////////
   describes: {
-    "another simple caclulator": () => {
-      const calc = new Calculator();
-      return calc;
-    },
+    "another simple calculator": () => new Calculator(),
   },
 
   its: {
-    "can save 1 memory": (calculator: Calculator) => {
-      calculator.memoryStore();
-      return calculator;
+    "can save 1 memory": () => {
+      return (calculator: Calculator) => {
+        calculator.memoryStore();
+        assert.equal(calculator.getValue("memory"), 0);
+      };
     },
-
-    "can save 2 memories": (calculator: Calculator) => {
-      calculator.memoryStore();
-      calculator.memoryAdd();
-      return calculator;
+    "can save 2 memories": () => {
+      return (calculator: Calculator) => {
+        calculator.memoryStore();
+        calculator.memoryAdd();
+        const memory = calculator.getValue("memory");
+        assert.isNumber(memory);
+      };
     },
   },
 
   // BDD style /////////////////////////
   givens: {
-    Default: () => {
-      const calc = new Calculator();
-      return calc;
-    },
+    Default: () => new Calculator(),
   },
 
   whens: {
-    press: (button: string) => (calculator: Calculator) => {
-      const result = calculator.press(button);
-      return result;
+    press: (button: string) => {
+      return (calculator: Calculator) => {
+        return calculator.press(button);
+      };
     },
-    enter: () => (calculator: Calculator) => {
-      calculator.enter();
-      return calculator;
+    enter: () => {
+      return (calculator: Calculator) => {
+        calculator.enter();
+        return calculator;
+      };
     },
-    memoryStore: () => (calculator: Calculator) => {
-      calculator.memoryStore();
-      return calculator;
+    memoryStore: () => {
+      return (calculator: Calculator) => {
+        calculator.memoryStore();
+        return calculator;
+      };
     },
-    memoryRecall: () => (calculator: Calculator) => {
-      calculator.memoryRecall();
-      return calculator;
+    memoryRecall: () => {
+      return (calculator: Calculator) => {
+        calculator.memoryRecall();
+        return calculator;
+      };
     },
-    memoryClear: () => (calculator: Calculator) => {
-      calculator.memoryClear();
-      return calculator;
+    memoryClear: () => {
+      return (calculator: Calculator) => {
+        calculator.memoryClear();
+        return calculator;
+      };
     },
-    memoryAdd: () => (calculator: Calculator) => {
-      calculator.memoryAdd();
-      return calculator;
+    memoryAdd: () => {
+      return (calculator: Calculator) => {
+        calculator.memoryAdd();
+        return calculator;
+      };
     },
   },
 
   thens: {
-    result: (expected: string) => (calculator: Calculator) => {
-      assert.equal(calculator.getDisplay(), expected);
-      return undefined;
+    result: (expected: string) => {
+      return (calculator: Calculator) => {
+        const actual = calculator.getDisplay();
+        const actualNum = parseFloat(actual);
+        const expectedNum = parseFloat(expected);
+        if (!isNaN(actualNum) && !isNaN(expectedNum)) {
+          assert.closeTo(actualNum, expectedNum, 0.0000001);
+        } else {
+          assert.equal(actual, expected);
+        }
+      };
     },
   },
 };

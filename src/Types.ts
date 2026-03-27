@@ -1,11 +1,21 @@
-import { BaseGiven } from "./lib/tiposkripto/src/BaseGiven";
-import { BaseThen } from "./lib/tiposkripto/src/BaseThen";
-import { BaseWhen } from "./lib/tiposkripto/src/BaseWhen";
+
+import type { Plugin } from "esbuild";
 import type {
   Ibdd_in_any,
   Ibdd_out_any,
 } from "./lib/tiposkripto/src/CoreTypes";
 import type { ITestResourceConfiguration } from "./lib/tiposkripto/src/types";
+
+import type { BaseGiven } from "./lib/tiposkripto/src/verbs/bdd/BaseGiven";
+import type { BaseThen } from "./lib/tiposkripto/src/verbs/bdd/BaseThen";
+import type { BaseWhen } from "./lib/tiposkripto/src/verbs/bdd/BaseWhen";
+
+import type { BaseDescribe} from "./lib/tiposkripto/src/verbs/aaa/BaseDescribe";
+import type { BaseIt } from "./lib/tiposkripto/src/verbs/aaa/BaseIt";
+
+import type { BaseConfirm } from "./lib/tiposkripto/src/verbs/tdt/BaseConfirm";
+import type { BaseValue } from "./lib/tiposkripto/src/verbs/tdt/BaseValue";
+import type { BaseShould } from "./lib/tiposkripto/src/verbs/tdt/BaseShould";
 
 export type ITestconfigV2 = {
   featureIngestor: (s: string) => Promise<string>;
@@ -53,45 +63,6 @@ export type TestLifecycle<Subject, State, Selection> = {
   assert?: (result: Selection) => void;
 };
 
-// BDD Test Structure
-// export type TestDefinition<Subject, State, Selection> = {
-//   // Test subject
-//   subject: Subject;
-
-//   // Test steps
-//   given?: (input: any) => State;
-//   when?: (state: State) => State | Promise<State>;
-//   then?: (state: State) => Selection | Promise<Selection>;
-
-//   // Configuration
-//   resources?: ITestResourceConfiguration;
-//   pm?: typeof PM;
-// };
-
-// Test Suite Organization
-// export type TestSuite = {
-//   name: string;
-//   tests: TestDefinition<any, any, any>[];
-//   features?: string[];
-// };
-
-// Runtime Configuration
-// export type RuntimeConfig = {
-//   type: "node" | "web" | "pure" | "spawn";
-//   ports?: number[];
-//   plugins?: Plugin[];
-// };
-
-// // Project Configuration
-// export type ProjectConfig = {
-//   name: string;
-//   sourceDir: string;
-//   testSuites: TestSuite[];
-//   runtime: RuntimeConfig;
-//   minify?: boolean;
-//   debug?: boolean;
-// };
-
 export type GivenSpecification<
   I extends Ibdd_in_any,
   O extends Ibdd_out_any,
@@ -119,15 +90,15 @@ export type DescribeSpecification<
 > = {
     [K in keyof O["describes"]]: (
       features: string[],
-      its: import("./lib/tiposkripto/src/BaseIt").BaseIt<I>[],
+      its: BaseIt<I>[],
       ...xtras: O["describes"][K]
-    ) => import("./lib/tiposkripto/src/BaseDescribe").BaseDescribe<I>;
+    ) => BaseDescribe<I>;
   };
 
 export type ItSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
   [K in keyof O["its"]]: (
     ...xtras: O["its"][K]
-  ) => import("./lib/tiposkripto/src/BaseIt").BaseIt<I>;
+  ) => BaseIt<I>;
 };
 
 // TDT pattern specifications
@@ -140,7 +111,7 @@ export type ConfirmSpecification<
       features: string[],
       tableRows: any[][],
       ...xtras: O["confirms"][K]
-    ) => import("./lib/tiposkripto/src/BaseValue").BaseValue<I>
+    ) => BaseConfirm<I>
   };
 
 export type ValueSpecification<
@@ -151,7 +122,7 @@ export type ValueSpecification<
       features: string[],
       tableRows: any[][],
       ...xtras: O["values"][K]
-    ) => import("./lib/tiposkripto/src/BaseValue").BaseValue<I>;
+    ) => BaseValue<I>;
   };
 
 export type ShouldSpecification<
@@ -160,18 +131,8 @@ export type ShouldSpecification<
 > = {
     [K in keyof O["shoulds"]]: (
       ...xtras: O["shoulds"][K]
-    ) => import("./lib/tiposkripto/src/BaseShould").BaseShould<I>;
+    ) => BaseShould<I>;
   };
-
-export type ExpectSpecification<
-  I extends Ibdd_in_any,
-  O extends Ibdd_out_any,
-> = {
-    [K in keyof O["expecteds"]]: (
-      ...xtras: O["expecteds"][K]
-    ) => import("./lib/tiposkripto/src/BaseExpected").BaseExpected<I>;
-  };
-
 
 //   };
 
