@@ -14,14 +14,6 @@ import {
 } from "./utils/buildTestResultsTreeUtils";
 import { buildTreeItemsFromTestResultsTreeForConfig } from "./utils/buildTreeItemsFromTestResultsTreeForConfig";
 
-interface TreeNode {
-    name: string;
-    children: Map<string, TreeNode>;
-    fullPath: string;
-    isFile: boolean;
-    originalPath?: string;
-}
-
 export class TesterantoTreeDataProviderUtils {
     static async loadInitialData(): Promise<void> {
         await DataManagementUtils.loadInitialData(
@@ -50,8 +42,12 @@ export class TesterantoTreeDataProviderUtils {
     static getRootItems(): TestTreeItem[] {
         return getRootItemsUtil(
             DataManagementUtils.getDocumentationFiles(),
+            DataManagementUtils.getDocumentationTree(),
+            DataManagementUtils.getTestInputFiles(),
+            DataManagementUtils.getInputFilesTree(),
             DataManagementUtils.getTestResults(),
-            DataManagementUtils.getProcesses(),
+            DataManagementUtils.getCollatedTestResults(),
+            DataManagementUtils.getProcesses()
         );
     }
 
@@ -64,8 +60,6 @@ export class TesterantoTreeDataProviderUtils {
         collatedTestResults: Record<string, any>;
         processes: any[];
     }> {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
         const [documentationData, testInputData, testResultsData, processes] =
             await Promise.all([
                 loadDocumentationData(),
@@ -84,8 +78,6 @@ export class TesterantoTreeDataProviderUtils {
             processes,
         };
     }
-
-
 
     static buildTreeItemsFromTestResultsTree(
         tree: Record<string, any>,
