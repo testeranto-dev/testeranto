@@ -1,4 +1,4 @@
-# testeranto
+# Testeranto
 
 ## What is it?
 
