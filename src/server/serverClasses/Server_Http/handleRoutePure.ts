@@ -74,6 +74,23 @@ const handleAppState = (server: any): Response => {
   });
 };
 
+const handleProcessLogs = (server: any, processId: string): Response => {
+  const getProcessLogs = server.getProcessLogs;
+  if (typeof getProcessLogs === "function") {
+    const logs = getProcessLogs(processId);
+    return jsonResponse({
+      logs: logs || [],
+      status: "retrieved",
+      message: "Success",
+    });
+  }
+  return jsonResponse({
+    logs: [],
+    status: "not_available",
+    message: "Process logs not available",
+  });
+};
+
 const handleAiderProcesses = (server: any): Response => {
   const getAiderProcesses = server.getAiderProcesses;
   if (typeof getAiderProcesses === "function") {
@@ -108,6 +125,12 @@ export const handleRoutePure = (
       },
       405,
     );
+  }
+
+  // Check for process-logs route
+  if (routeName.startsWith("process-logs/")) {
+    const processId = routeName.substring("process-logs/".length);
+    return handleProcessLogs(server, processId);
   }
 
   switch (routeName) {

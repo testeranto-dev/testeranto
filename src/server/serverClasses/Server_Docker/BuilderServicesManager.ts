@@ -10,10 +10,15 @@ export class BuilderServicesManager {
   ) { }
 
   async startBuilderServices(): Promise<void> {
-    await startBuilderServicesPure(
-      this.configs,
-      this.mode,
-      this.startServiceLogging
-    );
+    try {
+      await startBuilderServicesPure(
+        this.configs,
+        this.mode,
+        this.startServiceLogging
+      );
+    } catch (error) {
+      console.error('[BuilderServicesManager] Failed to start builder services:', error);
+      // Don't rethrow - allow the application to continue
+    }
   }
 }

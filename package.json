@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.233.7",
+  "version": "0.233.9",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -25,7 +25,10 @@
     "onCommand:testeranto.refresh",
     "onCommand:testeranto.retryConnection",
     "onCommand:testeranto.startServer",
+    "onCommand:testeranto.refreshDockerProcesses",
+    "onCommand:testeranto.showProcessLogs",
     "onView:testeranto.runtimeView",
+    "onView:testeranto.dockerProcessView",
     "workspaceContains:**/testeranto/extension-config.json",
     "workspaceContains:**/testeranto/reports/**/*.json"
   ],
@@ -45,6 +48,11 @@
           "id": "testeranto.runtimeView",
           "name": "Runtime Tests",
           "icon": "$(beaker)"
+        },
+        {
+          "id": "testeranto.dockerProcessView",
+          "name": "Docker Processes",
+          "icon": "$(server)"
         }
       ]
     },
@@ -76,6 +84,14 @@
       {
         "command": "testeranto.startServer",
         "title": "Testeranto: Start Server"
+      },
+      {
+        "command": "testeranto.refreshDockerProcesses",
+        "title": "Testeranto: Refresh Docker Processes"
+      },
+      {
+        "command": "testeranto.showProcessLogs",
+        "title": "Testeranto: Show Process Logs"
       }
     ]
   },
@@ -342,6 +358,6 @@
     "@esbuild/linux-x64": "^0.27.2",
     "@esbuild/win32-arm64": "^0.27.2",
     "@esbuild/win32-x64": "^0.27.2",
-    "esbuild": "^0.27.4"
+    "esbuild": "0.27.3"
   }
 }

@@ -149,14 +149,32 @@ Return IFinalResults
 ### Integration Points
 
 #### With Go Testing Package
-- `RunAsGoTest()`: Runs tests via `testing.T`
-- `CreateGoTest()`: Creates standard Go test functions
-- `TestMainIntegration()`: Package-level test setup
+Golingvu provides full integration with Go's built-in testing framework:
+
+- `RunAsGoTest()`: Runs tests via `testing.T` with full `go test` compatibility
+- `CreateGoTest()`: Creates standard Go test functions that can be used with `go test`
+- `TestMainIntegration()`: Package-level test setup compatible with `TestMain`
+- `RunSimpleTest()`: Quick integration for simple test cases
+- `WithTestingT()`: Sets the `testing.T` context for test execution
+- `WithTestConfig()`: Configures test behavior (parallel, skip, timeout)
+
+**Example Usage with `go test`:**
+```bash
+# Run all Golingvu tests
+go test ./...
+
+# Run specific test
+go test -run TestCalculator
+
+# Run with coverage
+go test -cover -v
+```
 
 #### With Testeranto Ecosystem
 - WebSocket communication for cross-language test execution
 - JSON test resource configuration format
 - Consistent artifact path structure across languages
+- `ReceiveTestResourceConfig()`: Receives configuration from official test runner
 
 ### File Dependencies
 

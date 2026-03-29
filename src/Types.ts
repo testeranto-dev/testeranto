@@ -10,7 +10,7 @@ import type { BaseGiven } from "./lib/tiposkripto/src/verbs/bdd/BaseGiven";
 import type { BaseThen } from "./lib/tiposkripto/src/verbs/bdd/BaseThen";
 import type { BaseWhen } from "./lib/tiposkripto/src/verbs/bdd/BaseWhen";
 
-import type { BaseDescribe} from "./lib/tiposkripto/src/verbs/aaa/BaseDescribe";
+import type { BaseDescribe } from "./lib/tiposkripto/src/verbs/aaa/BaseDescribe";
 import type { BaseIt } from "./lib/tiposkripto/src/verbs/aaa/BaseIt";
 
 import type { BaseConfirm } from "./lib/tiposkripto/src/verbs/tdt/BaseConfirm";
@@ -18,6 +18,7 @@ import type { BaseValue } from "./lib/tiposkripto/src/verbs/tdt/BaseValue";
 import type { BaseShould } from "./lib/tiposkripto/src/verbs/tdt/BaseShould";
 
 export type ITestconfigV2 = {
+  volumes: string[],
   featureIngestor: (s: string) => Promise<string>;
   runtimes: Record<string, IBaseTestConfig>;
   documentationGlob?: string; // New field: glob pattern to find documentation files

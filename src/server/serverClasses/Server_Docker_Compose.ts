@@ -39,23 +39,19 @@ export abstract class Server_Docker_Compose extends Server_WS {
   }
 
   async setupDockerCompose() {
-    writeComposeFile(this.generateServices());
+    writeComposeFile(this.generateServices(), this.configs);
   }
 
   abstract getProcessSummary: any;
   abstract startServiceLogging: any;
 
+  // TODO: this code is duplicated in DockerComposeManager
   public async DC_upAll(): Promise<IDockerComposeResult> {
     // Clear builder logs before starting services
-    // Since this is in Server_Docker_Compose, and we need to access Server_Docker's methods,
-    // we need to check if we can call clearBuilderLogs
-    // However, Server_Docker extends Server_Docker_Compose, so when called from Server_Docker,
-    // 'this' will be Server_Docker
-    // To be safe, we'll add a method to clear logs that can be overridden
     if (typeof (this as any).clearBuilderLogs === 'function') {
       await (this as any).clearBuilderLogs();
     }
-    
+
     const commands = getDockerComposeCommandsPure();
     const result = await executeDockerComposeCommand(commands.up, {
       errorMessage: "docker compose up",
@@ -66,6 +62,8 @@ export abstract class Server_Docker_Compose extends Server_WS {
         return { exitCode: 0, out: "", err: "", data: null };
       } catch (error: any) {
         consoleError(`[Docker] docker compose up ❌ ${error.message}`);
+        // Don't throw - return a result indicating partial failure
+        // This allows the application to continue with other operations
         return {
           exitCode: 1,
           out: "",
@@ -73,6 +71,11 @@ export abstract class Server_Docker_Compose extends Server_WS {
           data: null,
         };
       }
+    }
+    // Even if the initial command failed, we can still continue
+    // Log the error but don't prevent the application from running
+    if (result.exitCode !== 0) {
+      consoleError(`[Docker] docker compose up command failed: ${result.err}`);
     }
     return result;
   }
@@ -136,7 +139,7 @@ export abstract class Server_Docker_Compose extends Server_WS {
     if (typeof (this as any).clearBuilderLogs === 'function') {
       await (this as any).clearBuilderLogs();
     }
-    
+
     const commands = getDockerComposeCommandsPure();
     const result = await executeDockerComposeCommand(commands.start, {
       errorMessage: "docker compose start",
@@ -147,6 +150,7 @@ export abstract class Server_Docker_Compose extends Server_WS {
         return { exitCode: 0, out: "", err: "", data: null };
       } catch (error: any) {
         consoleError(`[Docker] docker compose start ❌ ${error.message}`);
+        // Don't throw - return a result indicating partial failure
         return {
           exitCode: 1,
           out: "",
@@ -154,6 +158,10 @@ export abstract class Server_Docker_Compose extends Server_WS {
           data: null,
         };
       }
+    }
+    // Even if the initial command failed, we can still continue
+    if (result.exitCode !== 0) {
+      consoleError(`[Docker] docker compose start command failed: ${result.err}`);
     }
     return result;
   }

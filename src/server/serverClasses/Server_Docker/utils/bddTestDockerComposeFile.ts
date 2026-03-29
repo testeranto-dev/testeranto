@@ -19,7 +19,7 @@ export const bddTestDockerComposeFile = (
     throw `[Docker] [bddTestDockerComposeFile] no dockerfile found for ${dockerfilePath}, ${Object.entries(configs)}`;
   }
 
-  const service: any = {
+  const service: Record<string, any> = {
     build: {
       context: processCwd(),
       dockerfile: dockerfilePath,
@@ -31,8 +31,9 @@ export const bddTestDockerComposeFile = (
     },
     working_dir: "/workspace",
     volumes: [
-      `${processCwd()}/src:/workspace/src`,
-      `${processCwd()}/dist:/workspace/dist`,
+      ...configs.volumes,
+      // `${processCwd()}/src:/workspace/src`,
+      // `${processCwd()}/dist:/workspace/dist`,
       `${processCwd()}/testeranto:/workspace/testeranto`,
     ],
     command: command,

@@ -50,17 +50,17 @@ export const getInputFilesPure = (
   ) {
     const files = inputFiles[configKey][testName];
     if (Array.isArray(files) && files.length > 0) {
-      consoleLog(
-        `[Server_Docker] Found ${files.length} files in memory for ${configKey}/${testName}`,
-      );
+      // consoleLog(
+      //   `[Server_Docker] Found ${files.length} files in memory for ${configKey}/${testName}`,
+      // );
       return files;
     }
   }
 
   // If no files in memory, try to load from the input file directly
-  consoleLog(
-    `[Server_Docker] No files in memory for ${configKey}/${testName}, trying to load from input file`,
-  );
+  // consoleLog(
+  //   `[Server_Docker] No files in memory for ${configKey}/${testName}, trying to load from input file`,
+  // );
   try {
     // Use the runtime type from the config, not the parameter
     const configRuntime = configs.runtimes[configKey]?.runtime;

@@ -3,6 +3,7 @@
 
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import type { ITestconfigV2 } from '../../Types';
 
 const execAsync = promisify(exec);
 
@@ -91,7 +92,8 @@ export class BuildKitBuilder {
     runtime: string,
     configKey: string,
     testName: string,
-    command: string
+    command: string,
+    config: ITestconfigV2
   ): any {
     const serviceName = `${configKey}-${testName}-buildkit`;
 
@@ -104,8 +106,9 @@ export class BuildKitBuilder {
       },
       working_dir: "/workspace",
       volumes: [
-        `${process.cwd()}/src:/workspace/src`,
-        `${process.cwd()}/dist:/workspace/dist`,
+        ...config.volumes,
+        // `${process.cwd()}/src:/workspace/src`,
+        // `${process.cwd()}/dist:/workspace/dist`,
         `${process.cwd()}/testeranto:/workspace/testeranto`,
         // Note: node_modules is NOT mounted to avoid platform incompatibility
       ],

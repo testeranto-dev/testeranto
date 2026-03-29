@@ -2,7 +2,8 @@ export enum TreeItemType {
   Runtime,
   Test,
   File,
-  Info
+  Info,
+  Config
 }
 
 export interface TreeItemData {

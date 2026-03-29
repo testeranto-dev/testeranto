@@ -76,11 +76,11 @@ export const DOCKER_COMPOSE_BUILD = `${DOCKER_COMPOSE_BASE} build`;
 export const DOCKER_COMPOSE_START = `${DOCKER_COMPOSE_BASE} start`;
 export const DOCKER_COMPOSE_CONFIG = `${DOCKER_COMPOSE_BASE} config --services`;
 
-export const COMMON_VOLUMES = [
-  `${process.cwd()}/src:/workspace/src`,
-  `${process.cwd()}/dist:/workspace/dist`,
-  `${process.cwd()}/testeranto:/workspace/testeranto`,
-];
+// export const COMMON_VOLUMES = [
+//   `${process.cwd()}/src:/workspace/src`,
+//   `${process.cwd()}/dist:/workspace/dist`,
+//   `${process.cwd()}/testeranto:/workspace/testeranto`,
+// ];
 
 export const NETWORK_CONFIG = {
   networks: ["allTests_network"],
@@ -121,8 +121,7 @@ export const runTimeToCompose: Record<
   ]
 > = {
   node: [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
-  web: [webDockerComposeFile, webBuildCommand, (fpath: string, nodeConfigPath: string, configKey: string) => 
-    webBddCommand(fpath, nodeConfigPath, configKey, "")],
+  web: [webDockerComposeFile, webBuildCommand, webBddCommand],
   python: [pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand],
   golang: [golangDockerComposeFile, golangBuildCommand, golangBddCommand],
   ruby: [rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand],

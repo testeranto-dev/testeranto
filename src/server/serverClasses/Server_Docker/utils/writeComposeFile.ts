@@ -1,3 +1,4 @@
+import type { ITestconfigV2 } from "../../../../Types";
 import {
   consoleError,
   consoleLog,
@@ -13,7 +14,7 @@ import {
 import { BaseCompose } from "./BaseCompose";
 
 
-export const writeComposeFile = (services: Record<string, any>) => {
+export const writeComposeFile = (services: Record<string, any>, config: ITestconfigV2) => {
   const composeFilePath = join(processCwd(), "testeranto/docker-compose.yml");
 
   // Delete the old file first to ensure fresh generation

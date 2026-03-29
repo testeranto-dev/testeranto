@@ -166,6 +166,15 @@ type ITestJob interface {
 // BaseExpected, BaseDescribe, and BaseIt are defined in their respective files.
 // These are not placeholder declarations to avoid duplicate type errors.
 
+// AssertionError represents a test assertion error
+type AssertionError struct {
+	Message string
+}
+
+func (e *AssertionError) Error() string {
+	return e.Message
+}
+
 // TestResourceConfiguration is a simpler version of ITTestResourceConfiguration.
 // For backward compatibility, use ITTestResourceConfiguration which has more fields.
 

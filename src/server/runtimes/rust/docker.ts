@@ -58,10 +58,8 @@ export const rustDockerComposeFile = (
     },
     working_dir: "/workspace",
     volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/dist:/workspace/dist`,
+      ...config.volumes,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
-      `${process.cwd()}/../testerantoV2:/workspace/testerantoV2`,
     ],
     command: rustBuildCommand(
       projectConfigPath,

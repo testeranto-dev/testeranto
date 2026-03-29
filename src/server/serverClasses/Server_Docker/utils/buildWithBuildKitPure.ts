@@ -3,12 +3,16 @@ import type { ITestconfigV2 } from "../../../../Types";
 import { BuildKitBuilder } from "../../../buildkit/BuildKit_Utils";
 import { processCwd } from "../Server_Docker_Dependents";
 
+// Track failed builds to prevent infinite retries
+const failedBuilds = new Set<string>();
+
 // Pure function to build with BuildKit
 export const buildWithBuildKitPure = async (
   configs: ITestconfigV2,
   logError: (error: any) => void,
-): Promise<void> => {
+): Promise<Set<string>> => {
   const buildErrors: string[] = [];
+  const failedConfigs = new Set<string>();
 
   // temporarily disabled
   // try {
@@ -21,6 +25,18 @@ export const buildWithBuildKitPure = async (
   for (const [configKey, configValue] of Object.entries(configs.runtimes)) {
     const runtime = configValue.runtime;
     const buildKitOptions = configValue.buildKitOptions;
+    
+    // Create a unique identifier for this build
+    const buildId = `${configKey}-${runtime}`;
+    
+    // Skip if this build has already failed
+    if (failedBuilds.has(buildId)) {
+      const skipMsg = `[Server_Docker] ⏭️ Skipping previously failed build for ${configKey} (${runtime})`;
+      logError(skipMsg);
+      buildErrors.push(`${configKey} (${runtime}): Previously failed, skipping`);
+      failedConfigs.add(configKey);
+      continue;
+    }
 
     // if (!buildKitOptions) {
     //   consoleLog(
@@ -42,10 +58,16 @@ export const buildWithBuildKitPure = async (
       });
 
       if (result.success) {
+        // If build succeeds, remove from failed builds set
+        failedBuilds.delete(buildId);
       } else {
         throw new Error(result.error || "Build failed");
       }
     } catch (error: any) {
+      // Mark this build as failed
+      failedBuilds.add(buildId);
+      failedConfigs.add(configKey);
+      
       const errorMsg = `[Server_Docker] ❌ BuildKit build failed for ${configKey} (${runtime}): ${error.message}`;
       logError(errorMsg);
       buildErrors.push(`${configKey} (${runtime}): ${error.message}`);
@@ -56,6 +78,9 @@ export const buildWithBuildKitPure = async (
     const errorMessage =
       `BuildKit builds failed for ${buildErrors.length} runtime(s):\n` +
       buildErrors.map((error) => `  - ${error}`).join("\n");
-    throw new Error(errorMessage);
+    consoleLog(`[buildWithBuildKitPure] Build failures: ${errorMessage}`);
+    // Don't throw - return which configs failed
   }
+  
+  return failedConfigs;
 };

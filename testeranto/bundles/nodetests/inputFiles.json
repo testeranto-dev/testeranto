@@ -6,7 +6,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
-    "hash": "d20de1076c3f529852fb6fa7436511bb",
+    "hash": "eb42565ed3ccb87e70ae39fe0680ad4b",
     "files": [
       "/src/lib/tiposkripto/src/Node.ts",
       "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
@@ -28,6 +28,13 @@
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+    ]
+  },
+  "src/vscode/providers/utils/testTree/debugTest.js": {
+    "hash": "f47e3694fe9f3fda96ac10d948c3ee7d",
+    "files": [
+      "/src/vscode/providers/utils/testTree/debugTest.js",
+      "/src/vscode/providers/utils/testTree/treeFilter.ts"
     ]
   }
 }

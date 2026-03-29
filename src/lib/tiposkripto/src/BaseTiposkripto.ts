@@ -37,10 +37,10 @@ export default abstract class BaseTiposkripto<
   describeOverrides: Record<string, any>;
   itOverrides: Record<string, any>;
 
-  confirmOverides: Record<string, any>;
-  valueOvverides: Record<string, any>;
-  shouldOverrides: Record<string, any>;
-  expectOverides: Record<string, any>;
+  confirmOverrides: Record<string, any>;
+  valuesOverrides: Record<string, any>;
+  shouldsOverrides: Record<string, any>;
+  expectedsOverrides: Record<string, any>;
 
   abstract writeFileSync(filename: string, payload: string): void;
 
@@ -429,12 +429,12 @@ export default abstract class BaseTiposkripto<
 
     // Store TDT and Describe-It overrides for use in specifications
     this.valuesOverrides = classyValues;
-    (this as any).shouldsOverrides = classyShoulds;
-    (this as any).expectedsOverrides = classyExpecteds;
-    (this as any).describesOverrides = classyDescribes;
-    (this as any).itsOverrides = classyIts;
+    this.shouldsOverrides = classyShoulds;
+    this.expectedsOverrides = classyExpecteds;
+    this.describesOverrides = classyDescribes;
+    this.itsOverrides = classyIts;
     // For Confirm pattern
-    (this as any).confirmsOverrides = classyConfirms;
+    this.confirmsOverrides = classyConfirms;
     this.testResourceRequirement = testResourceRequirement;
     this.testSpecification = testSpecification;
 
@@ -635,31 +635,31 @@ export default abstract class BaseTiposkripto<
   }
 
   Describe(): Record<string, any> {
-    return (this as any).describesOverrides || {};
+    return this.describesOverrides || {};
   }
 
   It(): Record<string, any> {
-    return (this as any).itsOverrides || {};
+    return this.itsOverrides || {};
   }
 
   Confirm(): Record<string, any> {
-    return (this as any).confirmsOverrides || {};
+    return this.confirmsOverrides || {};
   }
 
   Value(): Record<string, any> {
-    return (this as any).valuesOverrides || {};
+    return this.valuesOverrides || {};
   }
 
   Should(): Record<string, any> {
-    return (this as any).shouldsOverrides || {};
+    return this.shouldsOverrides || {};
   }
 
   Expect(): Record<string, any> {
-    return (this as any).expectedsOverrides || {};
+    return this.expectedsOverrides || {};
   }
 
   Expected(): Record<string, any> {
-    return (this as any).expectedsOverrides || {};
+    return this.expectedsOverrides || {};
   }
 
   // Add a method to access test jobs which can be used by receiveTestResourceConfig

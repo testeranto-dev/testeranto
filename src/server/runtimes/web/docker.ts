@@ -39,10 +39,8 @@ export const webDockerComposeFile = (
     },
     working_dir: "/workspace",
     volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/dist:/workspace/dist`,
+      ...config.volumes,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
-      // Note: node_modules is NOT mounted to avoid platform incompatibility
     ],
     command: webBuildCommand(projectConfigPath, webConfigPath, runtimeTestsName, runtimeConfig.tests || []),
     networks: ["allTests_network"],

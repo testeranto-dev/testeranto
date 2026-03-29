@@ -800,25 +800,8 @@ var BaseConfirm = class {
     this.testResourceConfiguration = testResourceConfiguration;
     this._suiteIndex = suiteNdx;
     const actualArtifactory = artifactory;
-    try {
-      const parent = this._parent;
-      if (parent && parent.adapter) {
-        this.store = await parent.adapter.prepareEach(
-          subject,
-          this.confirmCB,
-          testResourceConfiguration,
-          this.initialValues,
-          actualArtifactory
-        );
-      } else {
-        this.store = await this.confirmCB();
-      }
-      this.status = true;
-    } catch (e) {
-      this.status = false;
-      CommonUtils.handleTestError(e, this);
-      return this.store;
-    }
+    this.store = null;
+    this.status = true;
     try {
       for (const [caseIndex, testCase] of this.testCases.entries()) {
         try {
@@ -1703,7 +1686,6 @@ var adapter = {
 
 // src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts
 import { assert } from "chai";
-var x = new Calculator();
 var implementation = {
   suites: {
     Default: { description: "Comprehensive test suite for Calculator" }
@@ -1728,7 +1710,8 @@ var implementation = {
     },
     beGreaterThan: (expected) => {
       return (input, confirmation) => {
-        return assert.isAbove(expected, confirmation(input[0], input[1]));
+        const result2 = confirmation(input[0], input[1]);
+        return assert.isAbove(result2, expected, `${result2} should be greater than ${expected}`);
       };
     },
     // whenAddedAreGreaterThan: (expected: number) => {
@@ -1829,9 +1812,23 @@ var implementation = {
 };
 
 // src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts
-var specification = (Suite, Given, When, Then, Describe, It, Confirm, Value, Should) => {
+var x = [
+  [
+    "someMarkdownFile.md",
+    "documentation.md"
+  ],
+  [
+    Describe["another simple calculator"](
+      [
+        It["can save 1 memory"](),
+        It["can save 2 memories"]()
+      ]
+    )
+  ]
+];
+var specification = (Suite, Given, When, Then, Describe2, It2, Confirm, Value, Should) => {
   return [
-    Suite.Default("Comprehensive Calculator Tests", {
+    Suite.Default("Comprehensive Calculator Test", {
       // ========== TDT (Table-Driven Testing) Tests ==========
       tdtAdditionTable: Confirm["addition"](
         ["TDT addition table"],
@@ -1841,27 +1838,27 @@ var specification = (Suite, Given, When, Then, Describe, It, Confirm, Value, Sho
         ]
       ),
       // ========== AAA (Describe-It) Tests ==========
-      aaaBasicOperations: Describe["another simple caclulator"](
+      aaaBasicOperations: Describe2["another simple calculator"](
         ["AAA basic operations"],
         [
-          It["can save 1 memory"](),
-          It["can save 2 memories"]()
+          It2["can save 1 memory"](),
+          It2["can save 2 memories"]()
         ]
       ),
-      aaaDisplayTests: Describe["another simple caclulator"](
+      aaaDisplayTests: Describe2["another simple calculator"](
         ["AAA display functionality"],
         [
           // We'll need to add more its in the implementation
           // For now, reuse existing ones
-          It["can save 1 memory"](),
-          It["can save 2 memories"]()
+          It2["can save 1 memory"](),
+          It2["can save 2 memories"]()
         ]
       ),
-      aaaNestedDescribes: Describe["another simple caclulator"](
+      aaaNestedDescribes: Describe2["another simple calculator"](
         ["AAA nested structure"],
         [
-          It["can save 1 memory"](),
-          It["can save 2 memories"]()
+          It2["can save 1 memory"](),
+          It2["can save 2 memories"]()
         ]
       ),
       // ========== BDD (Given-When-Then) Tests ==========

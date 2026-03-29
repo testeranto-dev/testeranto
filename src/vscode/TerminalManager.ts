@@ -98,69 +98,32 @@ export class TerminalManager {
     // Get config key for the test
     const configKey = await this.getConfigKeyForTest(runtime, testName);
     if (!configKey) {
-      // Try to fetch configs and log them for debugging
-      try {
-        const response = await fetch('http://localhost:3000/~/configs');
-        if (response.ok) {
-          const data = await response.json();
-          terminal.sendText(`echo "Available configs:"`);
-          if (data.configs && data.configs.runtimes) {
-            for (const [key, value] of Object.entries(data.configs.runtimes)) {
-              const config = value as any;
-              terminal.sendText(`echo "  ${key}: runtime=${config.runtime}, tests=${JSON.stringify(config.tests || [])}"`);
-            }
-          }
-        }
-      } catch (error) {
-        // Ignore
-      }
       terminal.sendText(`echo "Error: Could not find configuration for ${testName} (${runtime})"`);
-      terminal.sendText(`echo "Trying to guess container name..."`);
-      
-      // Try to guess the container name
-      const guessedConfigKey = runtime.toLowerCase().includes('web') ? 'webtests' : runtime;
-      const containerName = this.getAiderContainerName(guessedConfigKey, testName);
-      terminal.sendText(`echo "Guessed container: ${containerName}"`);
-      terminal.sendText(`docker exec -it ${containerName} /bin/bash || echo "Failed to connect to container"`);
       terminal.show();
       return terminal;
     }
 
     // Get the aider container name
     const containerName = this.getAiderContainerName(configKey, testName);
-    
-    // Get workspace root
+
+    // Get workspace root to find the message file
     const workspaceRoot = this.getWorkspaceRoot();
-    
-    if (workspaceRoot) {
-      terminal.sendText(`echo "=== Testeranto Aider Session ==="`);
-      terminal.sendText(`echo "Test: ${testName}"`);
-      terminal.sendText(`echo "Runtime: ${runtime}"`);
-      terminal.sendText(`echo "Config: ${configKey}"`);
-      terminal.sendText(`echo "Container: ${containerName}"`);
-      terminal.sendText(`echo ""`);
-      
-      // Check if container is running
-      terminal.sendText(`echo "1. Checking if container is running..."`);
-      terminal.sendText(`if docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then echo "   ✓ Container is running"; else echo "   ⚠ Container not running, starting..." && docker compose -f "${workspaceRoot}/testeranto/docker-compose.yml" up -d ${containerName} && sleep 2; fi`);
-      
-      terminal.sendText(`echo ""`);
-      terminal.sendText(`echo "2. Checking for aider message file..."`);
-      const messageFilePath = `${workspaceRoot}/testeranto/reports/${configKey}/${testName}/aider-message.txt`;
-      terminal.sendText(`if [ -f "${messageFilePath}" ]; then echo "   ✓ Found aider message file at ${messageFilePath}"; else echo "   ⚠ Aider message file not found at ${messageFilePath}"; fi`);
-      
-      terminal.sendText(`echo ""`);
-      terminal.sendText(`echo "3. Starting interactive aider session..."`);
-      terminal.sendText(`echo "   Type 'exit' to leave the container shell"`);
-      terminal.sendText(`echo ""`);
-      
-      // Connect to the container with an interactive shell
-      terminal.sendText(`docker exec -it ${containerName} /bin/bash -c "cd /workspace && echo 'Welcome to the aider container for ${testName}!' && echo '' && echo 'To start aider with the message file, run:' && echo '  cat /workspace/testeranto/reports/${configKey}/${testName}/aider-message.txt | aider --yes' && echo '' && echo 'Or start aider normally:' && echo '  aider' && echo '' && echo 'Current directory: \$(pwd)' && echo 'Files in current directory:' && ls -la && echo '' && /bin/bash"`);
-    } else {
+    if (!workspaceRoot) {
       terminal.sendText(`echo "Error: Could not determine workspace root"`);
-      terminal.sendText(`echo "Trying to connect to container ${containerName}..."`);
-      terminal.sendText(`docker exec -it ${containerName} /bin/bash`);
+      terminal.show();
+      return terminal;
     }
+
+    // The container's working directory is /workspace
+    // Use relative path from /workspace
+    const relativeMessagePath = `testeranto/reports/${configKey}/${testName}/aider-message.txt`;
+    
+    // First, check if the container is running, start it if not
+    terminal.sendText(`if ! docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then echo "Starting aider container..." && docker compose -f "${workspaceRoot}/testeranto/docker-compose.yml" up -d ${containerName} && sleep 2; fi`);
+    
+    // Run aider with the message file
+    // Change to /workspace first, then pipe the file to aider
+    terminal.sendText(`docker exec -i ${containerName} sh -c "cd /workspace && cat '${relativeMessagePath}' | aider --yes"`);
 
     terminal.show();
     return terminal;
@@ -204,16 +167,16 @@ export class TerminalManager {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      
+
       if (data.configs && data.configs.runtimes) {
         for (const [configKey, configValue] of Object.entries(data.configs.runtimes)) {
           const runtimeConfig = configValue as any;
           // Check if runtime matches (handle cases like 'webtests' vs 'web')
-          const runtimeMatches = 
-            runtimeConfig.runtime === runtime || 
+          const runtimeMatches =
+            runtimeConfig.runtime === runtime ||
             configKey.toLowerCase().includes(runtime.toLowerCase()) ||
             runtime.toLowerCase().includes(configKey.toLowerCase());
-          
+
           if (runtimeMatches) {
             const tests = runtimeConfig.tests || [];
             // Try exact match first
@@ -258,16 +221,15 @@ export class TerminalManager {
   }
 
   private getAiderContainerName(configKey: string, testName: string): string {
-    // Clean the test name to match the container naming convention used in Server_Docker_Constants
-    // We need to replicate the cleanTestName function from Server_Docker_Constants.ts
-    // First, get just the filename without path
-    const testFileName = testName.split('/').pop() || testName;
-    const cleanTestName = testFileName
+    // Replicate the exact cleaning logic from Server_Docker_Constants.cleanTestName
+    const cleanTestName = testName
       .toLowerCase()
       .replaceAll("/", "_")
       .replaceAll(".", "-")
       .replace(/[^a-z0-9_-]/g, "");
     const cleanConfigKey = configKey.toLowerCase();
+    // The aider service name is generated using getAiderServiceName(uid) where uid = `${cleanConfigKey}-${cleanTestName}`
+    // So the container name should be `${cleanConfigKey}-${cleanTestName}-aider`
     return `${cleanConfigKey}-${cleanTestName}-aider`;
   }
 

@@ -3,8 +3,6 @@ import { Calculator } from "./Calculator.js";
 import type { ICalculatorNode, O, M } from "./Calculator.test.types.js";
 import type { ITestImplementation } from "../../src/CoreTypes.js";
 
-const x = new Calculator()
-
 export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
   suites: {
     Default: { description: "Comprehensive test suite for Calculator" },
@@ -33,7 +31,8 @@ export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
 
     beGreaterThan: (expected: number) => {
       return (input: number[], confirmation: (a: number, b: number) => number) => {
-        return assert.isAbove(expected, confirmation(input[0], input[1]))
+        const result = confirmation(input[0], input[1]);
+        return assert.isAbove(result, expected, `${result} should be greater than ${expected}`)
       };
     },
 

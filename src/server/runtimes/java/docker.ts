@@ -31,8 +31,7 @@ export const javaDockerComposeFile = (
     },
     working_dir: "/workspace",
     volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/dist:/workspace/dist`,
+      ...config.volumes,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
     command: javaBuildCommand(

@@ -12,7 +12,7 @@ export class AiderMessageManager {
     private getOutputFilesForTest: (configKey: string, testName: string) => string[],
     private logMessage: (message: string) => void,
     private logError: (message: string, error?: any) => void
-  ) {}
+  ) { }
 
   async createAiderMessageFile(
     runtime: IRunTime,
@@ -33,13 +33,21 @@ export class AiderMessageManager {
       let messageContent = "";
       if (inputFilesForTest.length > 0) {
         messageContent +=
-          inputFilesForTest.map((file) => `/add ${file}`).join("\n") + "\n\n";
+          inputFilesForTest.map((file) => {
+            // Remove leading slash if present to make paths relative to workspace root
+            const cleanFile = file.startsWith('/') ? file.substring(1) : file;
+            return `/add ${cleanFile}`;
+          }).join("\n") + "\n\n";
       }
       if (outputFilesForTest.length > 0) {
         messageContent +=
-          outputFilesForTest.map((file) => `/read ${file}`).join("\n") + "\n\n";
+          outputFilesForTest.map((file) => {
+            // Remove leading slash if present to make paths relative to workspace root
+            const cleanFile = file.startsWith('/') ? file.substring(1) : file;
+            return `/read ${cleanFile}`;
+          }).join("\n") + "\n\n";
       }
-      messageContent += "Observe these logs and apply.\n\n";
+      messageContent += "Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.\n\n";
 
       fs.writeFileSync(messageFilePath, messageContent);
       this.logMessage(

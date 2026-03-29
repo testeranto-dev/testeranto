@@ -51,14 +51,27 @@ export class DockerComposeManager {
   }
 
   async setupDockerCompose(): Promise<void> {
-    writeComposeFile(this.generateServices());
+    writeComposeFile(this.generateServices(), this.configs);
   }
 
-  async buildWithBuildKit(): Promise<void> {
-    await this.buildAiderImage();
-    await buildWithBuildKitPure(this.configs, (error: any) => {
-      this.logError(error);
-    });
+  async buildWithBuildKit(): Promise<Set<string>> {
+    try {
+      await this.buildAiderImage();
+    } catch (error) {
+      this.logError('[DockerComposeManager] Failed to build aider image:', error);
+      // Continue despite aider image failure
+    }
+    
+    try {
+      const failedConfigs = await buildWithBuildKitPure(this.configs, (error: any) => {
+        this.logError(error);
+      });
+      return failedConfigs;
+    } catch (error) {
+      this.logError('[DockerComposeManager] buildWithBuildKit failed:', error);
+      // Return empty set - we'll treat all configs as potentially failed
+      return new Set<string>();
+    }
   }
 
   private async buildAiderImage(): Promise<void> {
@@ -66,7 +79,12 @@ export class DockerComposeManager {
   }
 
   async startBuilderServices(): Promise<void> {
-    await this.builderServicesManager.startBuilderServices();
+    try {
+      await this.builderServicesManager.startBuilderServices();
+    } catch (error) {
+      this.logError('[DockerComposeManager] Failed to start builder services:', error);
+      // Don't rethrow - allow the application to continue
+    }
   }
 
   async DC_upAll(): Promise<IDockerComposeResult> {

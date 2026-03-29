@@ -22,6 +22,8 @@ import {
   captureExistingLogs,
   makeReportDirectory,
 } from "./Server_Docker/utils";
+import { generateUid, getAiderServiceName } from "./Server_Docker/Server_Docker_Constants";
+import { execSync } from "child_process";
 import { TestFileManager } from "./Server_Docker/TestFileManager";
 import { TestResultsCollector } from "./Server_Docker/TestResultsCollector";
 import { AiderMessageManager } from "./Server_Docker/AiderMessageManager";
@@ -58,6 +60,8 @@ export class Server_Docker extends Server_Docker_Compose {
   private inputFiles: any;
   private hashs: any;
   private outputFiles: any;
+  // Track which builder configs failed - don't launch any services for these
+  private failedBuilderConfigs: Set<string> = new Set();
 
   constructor(configs: ITestconfigV2, mode: IMode) {
     super(configs, mode);
@@ -126,8 +130,30 @@ export class Server_Docker extends Server_Docker_Compose {
     getReportDirPure();
 
     await spawnPromise(getDockerComposeDownPure());
-    await this.dockerComposeManager.buildWithBuildKit();
-    await this.dockerComposeManager.startBuilderServices();
+
+    // Build builder services with error handling
+    try {
+      const failedConfigs = await this.dockerComposeManager.buildWithBuildKit();
+      // Store which configs failed
+      for (const configKey of failedConfigs) {
+        this.failedBuilderConfigs.add(configKey);
+        consoleLog(`[Server_Docker] Builder failed for config ${configKey}, will skip all dependent services`);
+      }
+    } catch (error) {
+      consoleError('[Server_Docker] Builder image build failed:', error);
+      // Mark all configs as failed to be safe
+      for (const configKey of Object.keys(this.configs.runtimes)) {
+        this.failedBuilderConfigs.add(configKey);
+      }
+    }
+
+    // Start builder services with error handling
+    try {
+      await this.dockerComposeManager.startBuilderServices();
+    } catch (error) {
+      consoleError('[Server_Docker] Failed to start builder services:', error);
+      // Continue despite builder service failures
+    }
 
     for (const [configKey, configValue] of Object.entries(
       this.configs.runtimes,
@@ -136,52 +162,58 @@ export class Server_Docker extends Server_Docker_Compose {
       const tests = configValue.tests;
 
       for (const testName of tests) {
-        const reportDir = makeReportDirectory(testName, configKey);
+        try {
+          const reportDir = makeReportDirectory(testName, configKey);
 
-        if (!existsSync(reportDir)) {
-          fs.mkdirSync(reportDir, { recursive: true });
-        }
+          if (!existsSync(reportDir)) {
+            fs.mkdirSync(reportDir, { recursive: true });
+          }
 
-        if (this.mode === "dev") {
-          await this.testFileManager.watchInputFile(
-            runtime,
-            testName,
-            (runtime, testName, configKey, configValue) =>
-              this.launchBddTest(runtime, testName, configKey, configValue),
-            (runtime, testName, configKey, configValue) =>
-              this.launchChecks(runtime, testName, configKey, configValue),
-            (runtime, testName, configKey, configValue, files) =>
-              this.informAider(
-                runtime,
-                testName,
-                configKey,
-                configValue,
-                files,
-              ),
-            (runtime, testName, configKey) =>
-              this.testFileManager.loadInputFileOnce(
-                runtime,
-                testName,
-                configKey,
-              ),
-          );
-          await this.testFileManager.watchOutputFile(
+          if (this.mode === "dev") {
+            await this.testFileManager.watchInputFile(
+              runtime,
+              testName,
+              (runtime, testName, configKey, configValue) =>
+                this.launchBddTest(runtime, testName, configKey, configValue),
+              (runtime, testName, configKey, configValue) =>
+                this.launchChecks(runtime, testName, configKey, configValue),
+              (runtime, testName, configKey, configValue, files) =>
+                this.informAider(
+                  runtime,
+                  testName,
+                  configKey,
+                  configValue,
+                  files,
+                ),
+              (runtime, testName, configKey) =>
+                this.testFileManager.loadInputFileOnce(
+                  runtime,
+                  testName,
+                  configKey,
+                ),
+            );
+            await this.testFileManager.watchOutputFile(
+              runtime,
+              testName,
+              configKey,
+            );
+          } else {
+            this.testFileManager.loadInputFileOnce(runtime, testName, configKey);
+          }
+
+          await this.createAiderMessageFile(
             runtime,
             testName,
             configKey,
+            configValue,
           );
-        } else {
-          this.testFileManager.loadInputFileOnce(runtime, testName, configKey);
+          await this.launchBddTest(runtime, testName, configKey, configValue);
+          await this.launchChecks(runtime, testName, configKey, configValue);
+          await this.launchAider(runtime, testName, configKey, configValue);
+        } catch (error) {
+          consoleError(`[Server_Docker] Error processing test ${testName} for config ${configKey}:`, error);
+          // Continue with other tests
         }
-
-        await this.createAiderMessageFile(
-          runtime,
-          testName,
-          configKey,
-          configValue,
-        );
-        await this.launchBddTest(runtime, testName, configKey, configValue);
-        await this.launchChecks(runtime, testName, configKey, configValue);
       }
     }
 
@@ -223,6 +255,7 @@ export class Server_Docker extends Server_Docker_Compose {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     this.logProcesses.clear();
+    this.failedBuilderConfigs.clear();
 
     // Stop Docker services
     const result = await this.DC_down();
@@ -308,6 +341,8 @@ export class Server_Docker extends Server_Docker_Compose {
       configKey,
       configValue,
     );
+    // Also launch the aider service when input files change
+    await this.launchAider(runtime, testName, configKey, configValue);
   }
 
   private async createAiderMessageFile(
@@ -331,6 +366,12 @@ export class Server_Docker extends Server_Docker_Compose {
     configKey: string,
     configValue: any,
   ) {
+    // Check if builder failed for this config
+    if (this.failedBuilderConfigs.has(configKey)) {
+      consoleLog(`[Server_Docker] Skipping BDD test ${testName} because builder failed for config ${configKey}`);
+      return;
+    }
+
     // Create aider message file when test is launched
     await this.createAiderMessageFile(
       runtime,
@@ -342,7 +383,7 @@ export class Server_Docker extends Server_Docker_Compose {
     // Clear stored logs for all services associated with this test before starting
     // We don't know the exact service names, but startServiceLogging will handle it per service
     // For now, we'll rely on startServiceLogging to clear logs when it's called
-    
+
     await launchBddTestPure(
       runtime,
       testName,
@@ -367,6 +408,12 @@ export class Server_Docker extends Server_Docker_Compose {
     configKey: string,
     configValue: any,
   ) {
+    // Check if builder failed for this config
+    if (this.failedBuilderConfigs.has(configKey)) {
+      consoleLog(`[Server_Docker] Skipping checks for ${testName} because builder failed for config ${configKey}`);
+      return;
+    }
+
     // Create aider message file when checks are launched
     await this.createAiderMessageFile(
       runtime,
@@ -390,6 +437,52 @@ export class Server_Docker extends Server_Docker_Compose {
       () => this.resourceChanged("/~/processes"),
       () => this.writeConfigForExtension(),
     );
+  }
+
+  async launchAider(
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+    configValue: any,
+  ) {
+    // Check if builder failed for this config
+    if (this.failedBuilderConfigs.has(configKey)) {
+      consoleLog(`[Server_Docker] Skipping aider for ${testName} because builder failed for config ${configKey}`);
+      return;
+    }
+
+    // Create aider message file
+    await this.createAiderMessageFile(
+      runtime,
+      testName,
+      configKey,
+      configValue,
+    );
+
+    // Launch aider service
+    const uid = generateUid(configKey, testName);
+    const aiderServiceName = getAiderServiceName(uid);
+    
+    // Start the aider service
+    const { processCwd } = await import("./Server_Docker/Server_Docker_Dependents");
+    
+    try {
+      // Start the aider service
+      execSync(`docker compose -f "${processCwd()}/testeranto/docker-compose.yml" up -d ${aiderServiceName}`, {
+        stdio: "inherit",
+        cwd: processCwd(),
+      });
+      
+      // Start logging for the aider service
+      this.startServiceLogging(aiderServiceName, runtime, configKey, testName);
+      
+      this.resourceChanged("/~/processes");
+      this.writeConfigForExtension();
+      
+      consoleLog(`[Server_Docker] Started aider service: ${aiderServiceName}`);
+    } catch (error: any) {
+      consoleError(`[Server_Docker] Failed to start aider service ${aiderServiceName}:`, error);
+    }
   }
 
   async setupDockerCompose() {
@@ -418,12 +511,12 @@ export class Server_Docker extends Server_Docker_Compose {
       "reports",
       runtime,
     );
-    if (fs.existsSync(outputDir)) {
-      const files = fs.readdirSync(outputDir);
-      console.log(
-        `[Server_Docker] Found ${files.length} files in ${outputDir}`,
-      );
-    }
+    // if (fs.existsSync(outputDir)) {
+    //   const files = fs.readdirSync(outputDir);
+    //   console.log(
+    //     `[Server_Docker] Found ${files.length} files in ${outputDir}`,
+    //   );
+    // }
 
     return result || [];
   };
@@ -438,14 +531,36 @@ export class Server_Docker extends Server_Docker_Compose {
   };
 
   public getProcessSummary = (): any => {
-    return this.testResultsCollector.getProcessSummary();
+    const processSummary = this.testResultsCollector.getProcessSummary();
+    // Add build errors if available
+    if (this.dockerComposeManager) {
+      const buildErrors = (this.dockerComposeManager as any).getBuildErrors?.();
+      if (buildErrors && buildErrors.length > 0) {
+        return {
+          ...processSummary,
+          buildErrors: buildErrors
+        };
+      }
+    }
+    return processSummary;
+  };
+
+  public getProcessLogs = (processId: string): string[] => {
+    // This is a placeholder implementation
+    // In a real implementation, you would fetch logs from Docker or a log store
+    return [
+      `Logs for process ${processId}`,
+      `Timestamp: ${new Date().toISOString()}`,
+      `Status: Placeholder implementation`,
+      `To implement: Fetch actual logs from Docker container or log file`,
+    ];
   };
 
   private clearStoredLogs(serviceName: string, configKey: string): void {
     // Clear any stored logs for this service to prevent accumulation
     // This is a placeholder implementation - actual implementation depends on where logs are stored
     // For now, we'll log that we would clear logs
-    consoleLog(`[Server_Docker] Clearing stored logs for service: ${serviceName}, config: ${configKey}`);
+
     // TODO: Implement actual log clearing based on your storage mechanism
     // For example, if logs are stored in memory, clear the relevant data structure
     // If logs are stored in files, delete or truncate the log files
@@ -455,16 +570,15 @@ export class Server_Docker extends Server_Docker_Compose {
     // Clear logs for all builder services
     // Builder services are typically prefixed with 'builder_' or can be identified from configs
     // For now, we'll clear logs for services that are likely to be builder services
-    consoleLog('[Server_Docker] Clearing builder logs');
-    
+
     // We can identify builder services from the configuration
     // Since we don't have direct access to builder service names, we'll clear logs for all services
     // that have been logged before
     // This is a temporary implementation
     for (const [containerId, logProcess] of this.logProcesses.entries()) {
-      if (logProcess.serviceName.includes('builder') || 
-          logProcess.serviceName.includes('build')) {
-        consoleLog(`[Server_Docker] Clearing logs for builder service: ${logProcess.serviceName}`);
+      if (logProcess.serviceName.includes('builder') ||
+        logProcess.serviceName.includes('build')) {
+
         // Stop the logging process
         try {
           logProcess.process.kill('SIGTERM');
@@ -475,7 +589,7 @@ export class Server_Docker extends Server_Docker_Compose {
         this.logProcesses.delete(containerId);
       }
     }
-    
+
     // Also clear any stored log files if they exist
     // This would depend on your implementation
   }
@@ -505,7 +619,7 @@ export class Server_Docker extends Server_Docker_Compose {
     this.clearStoredLogs(serviceName, runtimeConfigKey);
     // Then, stop any existing logging processes for this service
     this.stopServiceLogging(serviceName);
-    
+
     this.logProcesses = startServiceLoggingPure(
       serviceName,
       runtime,
@@ -518,13 +632,23 @@ export class Server_Docker extends Server_Docker_Compose {
   };
 
   private async buildAiderImage(): Promise<void> {
-    await this.aiderImageBuilder.buildAiderImage();
+    try {
+      await this.aiderImageBuilder.buildAiderImage();
+    } catch (error) {
+      consoleError('[Server_Docker] Failed to build aider image:', error);
+      // Continue without the aider image
+    }
   }
 
   private async startBuilderServices(): Promise<void> {
     // Clear builder logs before starting services
     await this.clearBuilderLogs();
-    await this.builderServicesManager.startBuilderServices();
+    try {
+      await this.builderServicesManager.startBuilderServices();
+    } catch (error) {
+      consoleError('[Server_Docker] Failed to start builder services:', error);
+      // Don't rethrow - allow other services to continue
+    }
   }
 
   private async waitForAllTestsToComplete(): Promise<void> {

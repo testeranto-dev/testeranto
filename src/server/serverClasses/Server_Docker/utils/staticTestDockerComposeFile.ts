@@ -18,6 +18,10 @@ export const staticTestDockerComposeFile = (
       // ...config.env,
     },
     working_dir: "/workspace",
+    volumes: [
+      ...config.volumes,
+      `${processCwd()}/testeranto:/workspace/testeranto`,
+    ],
     command: command,
     networks: ["allTests_network"],
   };

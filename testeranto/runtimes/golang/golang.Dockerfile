@@ -1,11 +1,20 @@
 FROM golang:1.22
+
 WORKDIR /workspace
 
-# Copy go.mod and go.sum to ensure they exist in the image
-# But note: the actual workspace will be mounted over /workspace at runtime
-COPY go.mod go.sum /workspace/
+# Install build tools including gcc for CGO support
+RUN apt-get update && apt-get install -y build-essential
 
-# Download dependencies to cache them in the image
-# Don't run go mod tidy here as it would modify the image's go.sum,
-# but the mounted workspace will override it anyway
-RUN go mod download
+# git is already installed in the golang:1.22 image
+# No need to install it with apk or apt
+
+# Set environment variables
+ENV GO111MODULE=on \
+    CGO_ENABLED=1
+
+# Install golangci-lint version compatible with Go 1.22
+# Version 1.54.2 is the latest that supports Go 1.22
+RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
+
+# Default command
+CMD ["go", "version"]

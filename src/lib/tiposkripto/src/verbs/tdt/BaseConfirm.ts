@@ -125,27 +125,10 @@ export class BaseConfirm<I extends TestTypeParams_any> {
     // Create a proper artifactory if one isn't provided
     const actualArtifactory = artifactory;
 
-    try {
-      // Setup phase - use the adapter's prepareEach, similar to BaseGiven
-      const parent = (this as any)._parent;
-      if (parent && parent.adapter) {
-        this.store = await parent.adapter.prepareEach(
-          subject,
-          this.confirmCB,
-          testResourceConfiguration,
-          this.initialValues,
-          actualArtifactory,
-        );
-      } else {
-        // Fallback: call confirmCB directly
-        this.store = await this.confirmCB();
-      }
-      this.status = true;
-    } catch (e: any) {
-      this.status = false;
-      CommonUtils.handleTestError(e, this);
-      return this.store;
-    }
+    // For TDT tests, we don't need to setup a store via adapter.prepareEach
+    // The confirmCB is the function to test (e.g., new Calculator().add)
+    this.store = null;
+    this.status = true;
 
     try {
       // Process each test case
@@ -170,6 +153,7 @@ export class BaseConfirm<I extends TestTypeParams_any> {
             // where fn is the confirmCB (e.g., new Calculator().add)
             if (typeof should === 'function') {
               // Directly call the should function with input and this.confirmCB
+              // The confirmCB is the function to test
               should(input, this.confirmCB);
               tester(true);
             }

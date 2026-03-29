@@ -104,6 +104,19 @@ func (gv *Golingvu) WithTestConfig(config *TestConfig) *Golingvu {
 
 // RunAsGoTest runs the Golingvu instance as a Go test
 // This enables reverse integration with `go test`
+// 
+// Usage with standard Go testing:
+//   func TestMyFeature(t *testing.T) {
+//       gv := NewGolingvu(...)
+//       gv.WithTestingT(t).RunAsGoTest()
+//   }
+// 
+// This method supports all `go test` features including:
+//   - Parallel execution (via TestConfig.Parallel)
+//   - Test skipping (via TestConfig.Skip)
+//   - Timeouts (via TestConfig.Timeout)
+//   - Cleanup functions (via RegisterCleanup())
+//   - Verbose output (via `go test -v`)
 func (gv *Golingvu) RunAsGoTest() bool {
 	if gv.t == nil {
 		// If no testing.T provided, create a dummy test
@@ -153,17 +166,24 @@ func (gv *Golingvu) RunAsGoTest() bool {
 	return gv.runTestsInternal(gv.t)
 }
 
-// runTestsInternal executes tests and reports results to testing.T
-func (gv *Golingvu) runTestsInternal(t *testing.T) bool {
-	// Create a test resource configuration for local execution
-	// Note: This is currently not used but kept for future compatibility
-	_ = ITTestResourceConfiguration{
+// RunTests executes tests and returns results for interoperability
+// This can be called directly from Go tests or other runners
+func (gv *Golingvu) RunTests() (map[string]interface{}, error) {
+	// Create a default test resource configuration
+	config := ITTestResourceConfiguration{
 		Name: "go-test-runner",
 		Fs:   ".",
 	}
-
+	gv.TestResourceConfiguration = &config
+	
 	// Run tests and collect results
-	results, err := gv.runActualTests()
+	return gv.runActualTests()
+}
+
+// runTestsInternal executes tests and reports results to testing.T
+func (gv *Golingvu) runTestsInternal(t *testing.T) bool {
+	// Run tests and collect results
+	results, err := gv.RunTests()
 	if err != nil {
 		if t != nil {
 			t.Errorf("Failed to run tests: %v", err)
@@ -223,6 +243,25 @@ func (gv *Golingvu) CreateGoTest(name string) func(*testing.T) {
 
 		// Run the test
 		testInstance.RunAsGoTest()
+	}
+}
+
+// RunSimpleTest is a convenience method for running a simple test without complex setup
+// This is useful for interoperability with standard Go testing
+func (gv *Golingvu) RunSimpleTest(t *testing.T, testFunc func() error) {
+	if t == nil {
+		// Run without testing.T
+		if err := testFunc(); err != nil {
+			fmt.Printf("Test failed: %v\n", err)
+		}
+		return
+	}
+	
+	// Run with testing.T
+	if err := testFunc(); err != nil {
+		t.Errorf("Test failed: %v", err)
+	} else {
+		t.Log("Test passed")
 	}
 }
 
@@ -500,14 +539,12 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 	var testResourceConfig ITTestResourceConfiguration
 	err := json.Unmarshal([]byte(partialTestResource), &testResourceConfig)
 	if err != nil {
-		return IFinalResults{
-			Failed:       true,
-			Fails:        -1,
-			Artifacts:    []interface{}{},
-			Features:     []string{},
-			Tests:        0,
-			RunTimeTests: -1,
-		}, err
+		// If parsing fails, try with a minimal configuration
+		// This helps with interoperability when the format isn't exact
+		testResourceConfig = ITTestResourceConfiguration{
+			Name: "interop-runner",
+			Fs:   ".",
+		}
 	}
 
 	// Store the test resource configuration for use in tests
@@ -527,30 +564,16 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 		}, fmt.Errorf("failed to run tests: %v", err)
 	}
 
-	data, err := json.MarshalIndent(testResults, "", "  ")
-	if err != nil {
-		return IFinalResults{
-			Failed:       true,
-			Fails:        -1,
-			Artifacts:    []interface{}{},
-			Features:     []string{},
-			Tests:        0,
-			RunTimeTests: -1,
-		}, fmt.Errorf("failed to marshal tests.json: %v", err)
+	// Calculate total fails from test results
+	totalFails := 0
+	if fails, exists := testResults["fails"].(int); exists {
+		totalFails = fails
 	}
 
-	// Follow the same pattern as tiposkripto: write to ${testResourceConfig.Fs}/tests.json
-	// Ensure the path ends with /tests.json
-	filePath := testResourceConfig.Fs
-	if !strings.HasSuffix(filePath, "/") {
-		filePath = filePath + "/"
-	}
-	filePath = filepath.Join(filePath, "tests.json")
-
-	// Ensure the directory exists
-	dirPath := filepath.Dir(filePath)
-	if dirPath != "" && dirPath != "." {
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
+	// Only write tests.json if we have a valid filesystem path
+	if testResourceConfig.Fs != "" && testResourceConfig.Fs != "." {
+		data, err := json.MarshalIndent(testResults, "", "  ")
+		if err != nil {
 			return IFinalResults{
 				Failed:       true,
 				Fails:        -1,
@@ -558,29 +581,41 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 				Features:     []string{},
 				Tests:        0,
 				RunTimeTests: -1,
-			}, fmt.Errorf("failed to create directory %s: %v", dirPath, err)
+			}, fmt.Errorf("failed to marshal tests.json: %v", err)
 		}
-	}
 
-	fmt.Printf("writing tests.json to ->: %s\n", filePath)
+		// Follow the same pattern as tiposkripto: write to ${testResourceConfig.Fs}/tests.json
+		filePath := filepath.Join(testResourceConfig.Fs, "tests.json")
 
-	// Write the file directly using the artifactory approach
-	err = os.WriteFile(filePath, data, 0644)
-	if err != nil {
-		return IFinalResults{
-			Failed:       true,
-			Fails:        -1,
-			Artifacts:    []interface{}{},
-			Features:     []string{},
-			Tests:        0,
-			RunTimeTests: -1,
-		}, fmt.Errorf("failed to write tests.json: %v", err)
-	}
+		// Ensure the directory exists
+		dirPath := filepath.Dir(filePath)
+		if dirPath != "" && dirPath != "." {
+			if err := os.MkdirAll(dirPath, 0755); err != nil {
+				return IFinalResults{
+					Failed:       true,
+					Fails:        -1,
+					Artifacts:    []interface{}{},
+					Features:     []string{},
+					Tests:        0,
+					RunTimeTests: -1,
+				}, fmt.Errorf("failed to create directory %s: %v", dirPath, err)
+			}
+		}
 
-	// Calculate total fails from test results
-	totalFails := 0
-	if fails, exists := testResults["fails"].(int); exists {
-		totalFails = fails
+		fmt.Printf("writing tests.json to ->: %s\n", filePath)
+
+		// Write the file directly using the artifactory approach
+		err = os.WriteFile(filePath, data, 0644)
+		if err != nil {
+			return IFinalResults{
+				Failed:       true,
+				Fails:        -1,
+				Artifacts:    []interface{}{},
+				Features:     []string{},
+				Tests:        0,
+				RunTimeTests: -1,
+			}, fmt.Errorf("failed to write tests.json: %v", err)
+		}
 	}
 
 	result := IFinalResults{
@@ -603,13 +638,23 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 	// Initialize the results structure with proper types
 	results["givens"] = make([]interface{}, 0)
 	results["features"] = make([]string, 0)
+	results["key"] = "default"
 
 	// Track total failures
 	totalFails := 0
 
 	// Parse the specs and actually execute the tests
-	specs, ok := gv.Specs.([]interface{})
-	if !ok {
+	var specs []interface{}
+	switch s := gv.Specs.(type) {
+	case []interface{}:
+		specs = s
+	case []map[string]interface{}:
+		// Convert to []interface{}
+		specs = make([]interface{}, len(s))
+		for i, v := range s {
+			specs[i] = v
+		}
+	default:
 		// Handle case where specs might not be a slice
 		if gv.Specs != nil {
 			// Wrap single spec in a slice
@@ -622,8 +667,14 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 	for _, suite := range specs {
 		suiteMap, ok := suite.(map[string]interface{})
 		if !ok {
-			// Skip non-map entries
-			continue
+			// Try to see if it's a BaseSuite
+			if suiteObj, ok := suite.(*BaseSuite); ok {
+				// Convert BaseSuite to map
+				suiteMap = suiteObj.ToObj()
+			} else {
+				// Skip non-map entries
+				continue
+			}
 		}
 
 		// Set the key from the suite
@@ -632,15 +683,29 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 		}
 
 		// Process givens
-		givensMap, exists := suiteMap["givens"].(map[string]interface{})
-		if !exists {
+		var givensMap map[string]interface{}
+		if g, exists := suiteMap["givens"].(map[string]interface{}); exists {
+			givensMap = g
+		} else if g, exists := suiteMap["givens"].(map[string]*BaseGiven); exists {
+			// Convert to map[string]interface{}
+			givensMap = make(map[string]interface{})
+			for k, v := range g {
+				givensMap[k] = v
+			}
+		} else {
 			continue
 		}
 
 		for key, given := range givensMap {
-			givenObj, ok := given.(*BaseGiven)
-			if !ok {
-				// Try to handle other types if possible
+			var givenObj *BaseGiven
+			switch g := given.(type) {
+			case *BaseGiven:
+				givenObj = g
+			case map[string]interface{}:
+				// Try to convert map to BaseGiven
+				// This is a simplified conversion - in reality, we'd need more logic
+				continue
+			default:
 				continue
 			}
 
@@ -659,8 +724,7 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 			results["givens"] = append(givensSlice, processedGiven)
 
 			// Add features to overall features (deduplicated)
-			features, exists := processedGiven["features"].([]string)
-			if exists {
+			if features, exists := processedGiven["features"].([]string); exists {
 				existingFeatures := results["features"].([]string)
 				featureSet := make(map[string]bool)
 

@@ -4,20 +4,27 @@ import { TerminalManager } from "./TerminalManager";
 import { TestTreeItem } from "./TestTreeItem";
 import { TreeItemType } from "./types";
 import { StatusBarManager } from "./statusBarManager";
+import { DockerProcessTreeDataProvider } from "./providers/DockerProcessTreeDataProvider";
 
 export class CommandManager {
     private terminalManager: TerminalManager;
     private statusBarManager: StatusBarManager;
     private runtimeProvider: vscode.TreeDataProvider<any> | null;
+    private dockerProcessProvider: vscode.TreeDataProvider<any> | null;
 
     constructor(terminalManager: TerminalManager, statusBarManager: StatusBarManager) {
         this.terminalManager = terminalManager;
         this.statusBarManager = statusBarManager;
         this.runtimeProvider = null;
+        this.dockerProcessProvider = null;
     }
 
     public setRuntimeProvider(provider: vscode.TreeDataProvider<any>): void {
         this.runtimeProvider = provider;
+    }
+
+    public setDockerProcessProvider(provider: vscode.TreeDataProvider<any>): void {
+        this.dockerProcessProvider = provider;
     }
 
     public registerCommands(context: vscode.ExtensionContext): vscode.Disposable[] {
@@ -88,6 +95,62 @@ export class CommandManager {
                         await vscode.window.showTextDocument(doc);
                     } catch (err) {
                         vscode.window.showWarningMessage("Could not open allTests.ts configuration file");
+                    }
+                }
+            )
+        );
+
+        disposables.push(
+            vscode.commands.registerCommand(
+                "testeranto.openTesterantoConfig",
+                async () => {
+                    try {
+                        const workspaceFolders = vscode.workspace.workspaceFolders;
+                        if (workspaceFolders && workspaceFolders.length > 0) {
+                            const workspaceRoot = workspaceFolders[0].uri;
+                            
+                            // Try to find the testeranto/testeranto.ts file
+                            const configUri = vscode.Uri.joinPath(workspaceRoot, "testeranto", "testeranto.ts");
+                            
+                            try {
+                                const doc = await vscode.workspace.openTextDocument(configUri);
+                                await vscode.window.showTextDocument(doc);
+                            } catch (err) {
+                                // If not found, try alternative locations
+                                const alternativePaths = [
+                                    vscode.Uri.joinPath(workspaceRoot, "testeranto.ts"),
+                                    vscode.Uri.file("testeranto/testeranto.ts"),
+                                    vscode.Uri.file("testeranto.ts")
+                                ];
+                                
+                                let opened = false;
+                                for (const uri of alternativePaths) {
+                                    try {
+                                        const doc = await vscode.workspace.openTextDocument(uri);
+                                        await vscode.window.showTextDocument(doc);
+                                        opened = true;
+                                        break;
+                                    } catch (e) {
+                                        // Continue to next path
+                                    }
+                                }
+                                
+                                if (!opened) {
+                                    // Search for the file in the workspace
+                                    const files = await vscode.workspace.findFiles("**/testeranto.ts", "**/node_modules/**", 1);
+                                    if (files.length > 0) {
+                                        const doc = await vscode.workspace.openTextDocument(files[0]);
+                                        await vscode.window.showTextDocument(doc);
+                                    } else {
+                                        vscode.window.showWarningMessage("Could not find testeranto/testeranto.ts configuration file");
+                                    }
+                                }
+                            }
+                        } else {
+                            vscode.window.showWarningMessage("No workspace folder open");
+                        }
+                    } catch (err) {
+                        vscode.window.showErrorMessage(`Error opening testeranto config: ${err}`);
                     }
                 }
             )
@@ -187,6 +250,63 @@ export class CommandManager {
                     }
                 }, 5000);
             })
+        );
+
+        // Docker processes commands
+        disposables.push(
+            vscode.commands.registerCommand(
+                "testeranto.refreshDockerProcesses",
+                async () => {
+                    try {
+                        if (this.dockerProcessProvider && typeof (this.dockerProcessProvider as any).refresh === 'function') {
+                            await (this.dockerProcessProvider as any).refresh();
+                            vscode.window.showInformationMessage("Docker processes refreshed");
+                        } else {
+                            vscode.window.showWarningMessage("Docker process provider not available");
+                        }
+                    } catch (err) {
+                        vscode.window.showErrorMessage(`Error refreshing Docker processes: ${err}`);
+                    }
+                }
+            )
+        );
+
+        disposables.push(
+            vscode.commands.registerCommand(
+                "testeranto.showProcessLogs",
+                async (processId: string, processName: string) => {
+                    try {
+                        // Create output channel for process logs
+                        const outputChannel = vscode.window.createOutputChannel(`Process: ${processName || processId}`);
+                        outputChannel.show(true);
+                        
+                        // Fetch logs from server
+                        const response = await fetch(`http://localhost:3000/~/process-logs/${processId}`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        const data = await response.json();
+                        
+                        outputChannel.appendLine(`=== Logs for ${processName || processId} ===`);
+                        outputChannel.appendLine(`Process ID: ${processId}`);
+                        outputChannel.appendLine(`Status: ${data.status || 'unknown'}`);
+                        outputChannel.appendLine(`Exit Code: ${data.exitCode || 'N/A'}`);
+                        outputChannel.appendLine(`\n--- Logs ---\n`);
+                        
+                        if (data.logs && Array.isArray(data.logs)) {
+                            data.logs.forEach((log: string) => {
+                                outputChannel.appendLine(log);
+                            });
+                        } else {
+                            outputChannel.appendLine('No logs available');
+                        }
+                        
+                        outputChannel.appendLine(`\n=== End of logs ===`);
+                    } catch (err) {
+                        vscode.window.showErrorMessage(`Error fetching process logs: ${err}`);
+                    }
+                }
+            )
         );
 
         return disposables;

@@ -13,21 +13,34 @@ export const addLogFilesToTestNode = (
     (f) => f.endsWith(".log") && !f.includes("build.log")
   );
 
-  const logGroups: Record<string, { logFile: string; exitCodeFile?: string }> = {};
+  if (logFiles.length === 0) {
+    return;
+  }
 
+  if (!testNode.children) {
+    testNode.children = {};
+  }
+
+  // Create a logs directory to contain all log files
+  const logsDirKey = "logs";
+  if (!testNode.children[logsDirKey]) {
+    testNode.children[logsDirKey] = {
+      type: "directory",
+      name: "Logs",
+      children: {},
+    };
+  }
+
+  const logsDir = testNode.children[logsDirKey];
+  if (!logsDir.children) {
+    logsDir.children = {};
+  }
+
+  // Add each log file individually
   for (const logFile of logFiles) {
     const baseName = path.basename(logFile);
-    let groupName = "Other Logs";
-
-    if (baseName.includes("-bdd.log")) {
-      groupName = "BDD";
-    } else if (baseName.includes("-check-")) {
-      const match = baseName.match(/check-(\d+)\.log/);
-      if (match) {
-        groupName = `check${match[1]}`;
-      }
-    }
-
+    
+    // Find corresponding exit code file
     const exitCodeFile = outputFiles.find((f) => {
       const fBase = path.basename(f);
       return (
@@ -36,34 +49,32 @@ export const addLogFilesToTestNode = (
       );
     });
 
-    logGroups[groupName] = {
-      logFile,
-      exitCodeFile,
-    };
-  }
-
-  if (!testNode.children) {
-    testNode.children = {};
-  }
-
-  for (const [groupName, files] of Object.entries(logGroups)) {
-    const exitCodeInfo = files.exitCodeFile
-      ? getExitCodeFromFile(files.exitCodeFile)
+    const exitCodeInfo = exitCodeFile
+      ? getExitCodeFromFile(exitCodeFile)
       : { code: "unknown", color: "gray" };
 
-    const label = `${groupName} - ${exitCodeInfo.code}`;
+    // Create a descriptive label
+    let label = baseName;
+    if (exitCodeInfo.code !== "unknown") {
+      label = `${baseName} (exit: ${exitCodeInfo.code})`;
+    }
 
-    testNode.children[label] = {
+    // Use the filename as the key, but ensure it's unique
+    const fileKey = baseName.replace(/[^a-zA-Z0-9]/g, "_");
+    
+    logsDir.children[fileKey] = {
       type: "file",
-      path: files.logFile,
+      path: logFile,
       runtime,
       runtimeKey,
       testName,
       fileType: "log",
       exitCode: exitCodeInfo.code,
       exitCodeColor: exitCodeInfo.color,
-      groupName,
-      description: `Click to show ${path.basename(files.logFile)}`,
+      description: `Log file: ${baseName}`,
     };
   }
+
+  // Note: BDD logs are already added to the "logs" directory above
+  // No need to add them again at the top level
 };

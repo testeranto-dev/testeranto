@@ -11,14 +11,32 @@ export function convertTreeToItems(
   const items: TestTreeItem[] = [];
 
   const createFileItem = (file: any): TestTreeItem => {
-    const fileName = path.basename(file.path);
+    // Ensure file has required properties
+    if (!file || typeof file !== 'object') {
+      console.error('[treeConverter] Invalid file object:', file);
+      // Return a placeholder item
+      return new TestTreeItem(
+        'Invalid file',
+        TreeItemType.File,
+        vscode.TreeItemCollapsibleState.None,
+        {
+          runtime,
+          testName,
+          isFile: true,
+          fileType: 'unknown'
+        },
+        undefined,
+        new vscode.ThemeIcon('error')
+      );
+    }
+    
+    const filePath = file.path || '';
+    const fileName = path.basename(filePath);
     let fileUri: vscode.Uri | undefined;
     const workspaceFolders = vscode.workspace.workspaceFolders;
 
     if (workspaceFolders && workspaceFolders.length > 0) {
       const workspaceRoot = workspaceFolders[0].uri;
-      let filePath = file.path;
-
       if (filePath.startsWith("/")) {
         fileUri = vscode.Uri.file(filePath);
       } else {
@@ -27,11 +45,12 @@ export function convertTreeToItems(
     }
 
     let icon: vscode.ThemeIcon;
-    if (file.fileType === "source") {
+    const fileType = file.fileType || '';
+    if (fileType === "source") {
       icon = new vscode.ThemeIcon("file-code");
-    } else if (file.fileType === "documentation") {
+    } else if (fileType === "documentation") {
       icon = new vscode.ThemeIcon("book");
-    } else if (file.fileType === "log") {
+    } else if (fileType === "log") {
       if (file.exitCodeColor) {
         let colorId: string;
         switch (file.exitCodeColor) {
@@ -51,14 +70,14 @@ export function convertTreeToItems(
       } else {
         icon = new vscode.ThemeIcon("output");
       }
-    } else if (file.fileType === "test-results") {
+    } else if (fileType === "test-results") {
       icon = new vscode.ThemeIcon("json");
-    } else if (file.fileType === "input") {
+    } else if (fileType === "input") {
       icon = new vscode.ThemeIcon(
         "arrow-down",
         new vscode.ThemeColor("testing.iconQueued"),
       );
-    } else if (file.fileType === "output") {
+    } else if (fileType === "output") {
       icon = new vscode.ThemeIcon(
         "arrow-up",
         new vscode.ThemeColor("testing.iconPassed"),
@@ -180,13 +199,18 @@ export function convertTreeToItems(
       console.log(
         `[DEBUG] Processing directory: ${nodeName} with ${Object.keys(node.children).length} children`,
       );
-      if (nodeName === "source" || nodeName === "output") {
+      if (nodeName === "source" || nodeName === "output" || nodeName === "logs") {
+        let displayName = nodeName;
+        if (nodeName === "source") displayName = "Source Files";
+        else if (nodeName === "output") displayName = "Output Files";
+        else if (nodeName === "logs") displayName = "Logs";
+        
         console.log(
-          `[DEBUG] Creating directory item for ${nodeName === "source" ? "Source Files" : "Output Files"}`,
+          `[DEBUG] Creating directory item for ${displayName}`,
         );
         items.push(
           createDirectoryItem(
-            nodeName === "source" ? "Source Files" : "Output Files",
+            displayName,
             node,
           ),
         );

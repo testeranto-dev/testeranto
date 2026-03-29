@@ -1,17 +1,18 @@
 import type { ITestconfigV2 } from "../src/Types";
 
 export const golangciLintCommand = (files: string[]): string => {
-  if (files.length === 0) return "golangci-lint run ./...";
-
-  // Escape dots and join files into apru regex: (file1\.go|file2\.go)
-  const pattern = files.map((f) => f.replace(/\./g, "\\.")).join("|");
-
-  // We use ./... to ensure the linter sees all dependencies,
-  // but '--include' ensures it only outputs issues for your list.
-  return `golangci-lint run ./... --include "^(${pattern})$" --issues-exit-code=0`;
+  // Simple implementation - just run on all Go files
+  return "golangci-lint run ./... --timeout=5m --issues-exit-code=0";
 };
 
 const config: ITestconfigV2 = {
+
+  volumes: [
+    `${process.cwd()}/src:/workspace/src`,
+    `${process.cwd()}/test:/workspace/test`,
+    // Note: node_modules is NOT mounted to avoid platform incompatibility
+  ],
+
   featureIngestor: function (s: string): Promise<string> {
     throw new Error("Function not implemented.");
   },
@@ -61,7 +62,10 @@ const config: ITestconfigV2 = {
       runtime: "node",
       tests: [
         "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-        "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+        "src/vscode/providers/utils/testTree/debugTest.js"
+        // "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       ],
       checks: [
         (x) => `yarn eslint ${x.join(" ")} `,
@@ -69,6 +73,10 @@ const config: ITestconfigV2 = {
         // Run Jest tests
         (x) =>
           `yarn jest ${x.filter((f) => f.includes("jest.test")).join(" ")} --passWithNoTests`,
+
+        // () => `yarn node test/logFilesTest.js`, // you can run regular tests too!
+
+        // () => `src/vscode/providers/utils/testTree/debugTest.js`
       ],
       dockerfile: `testeranto/runtimes/node/node.Dockerfile`,
       buildOptions: `testeranto/runtimes/node/node.mjs`,
@@ -118,26 +126,56 @@ const config: ITestconfigV2 = {
     //   outputs: [],
     // },
 
-    // golangtests: {
-    //   runtime: "golang",
-    //   tests: [
-    //     // "src/golang/cmd/calculator-test/main.go",
-    //     // "src/golang/cmd/calculator-native-test/main.go", // Standard Go test
-    //   ],
-    //   checks: [
-    //     (x) => `go vet ./...`,
-    //     // Run Go tests
-    //     (x) =>
-    //       `go test ${x.filter((f) => f.includes("native-test")).join(" ")}`,
-    //     golangciLintCommand
-    //   ],
-    //   dockerfile: `testeranto/runtimes/golang/golang.Dockerfile`,
-    //   buildOptions: `testeranto/runtimes/golang/golang.ts`,
-    //   buildKitOptions: {
-    //     // Single-stage Dockerfile, no targetStage needed
-    //   },
-    //   outputs: [],
-    // },
+    golangtests: {
+      runtime: "golang",
+      tests: [
+        // Way 1: Golingvu tests on Testeranto
+        "src/lib/golingvu/examples/calculator/golingvu_test.go",
+
+        // Way 2: Standard Go tests on Testeranto  
+        // "src/lib/golingvu/examples/calculator/native_test.go",
+
+        // // Additional test files
+        // "src/lib/golingvu/golingvu_test.go",
+        // "src/lib/golingvu/interopt_test.go",
+        // "src/lib/golingvu/integration_test.go",
+        // "src/lib/golingvu/package_test.go",
+      ],
+      checks: [
+        // Simple syntax check
+        // () => "go fmt ./...",
+
+        // // Simple vet check
+        // () => "go vet ./...",
+
+        // // Way 1 & 4: Run Golingvu tests
+        // () => "go test -v ./src/lib/golingvu/examples/calculator/golingvu_test.go ./src/lib/golingvu/golingvu_test.go ./src/lib/golingvu/interopt_test.go ./src/lib/golingvu/integration_test.go",
+
+        // // Way 2 & 3: Run standard Go tests
+        // () => "go test -v ./src/lib/golingvu/examples/calculator/native_test.go ./src/lib/golingvu/package_test.go",
+
+        // // All tests together
+        // () => "go test -v ./src/lib/golingvu/...",
+
+        // // Coverage report
+        // () => "go test -coverprofile=coverage.out ./src/lib/golingvu/... && go tool cover -func=coverage.out",
+
+        // // Lint check - use version compatible with Go 1.22
+        // () => "golangci-lint run ./src/lib/golingvu/... --timeout=5m"
+      ],
+      dockerfile: `testeranto/runtimes/golang/golang.Dockerfile`,
+      buildOptions: `testeranto/runtimes/golang/golang.ts`,
+      buildKitOptions: {
+        cacheMounts: [
+          "/go/pkg/mod",
+          "/root/.cache/go-build"
+        ],
+      },
+      outputs: [
+        "coverage.out",
+        "coverage.html"
+      ],
+    },
 
     // rusttests: {
     //   runtime: "rust",

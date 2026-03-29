@@ -1,3 +1,4 @@
+import type { IChecks, ICheck } from "../../../../lib/tiposkripto/dist/types/Types";
 import { RUN_TIMES } from "../../../../runtimes";
 import type {
   ITestconfigV2,
@@ -51,11 +52,7 @@ export const generateServicesPure = (
 
     if (!processedRuntimes.has(runtime)) {
       processedRuntimes.add(runtime);
-      let builderServiceName = getBuilderServiceName(runtime);
-      // For web runtime, use 'webtests' as the service name to match the code expectations
-      if (runtime === "web") {
-        builderServiceName = "webtests";
-      }
+      const builderServiceName = getBuilderServiceName(runtime);
 
       const composeFunc = runTimeToCompose[runtime][0];
       const projectConfigPath = "testeranto/testeranto.ts";
@@ -73,6 +70,9 @@ export const generateServicesPure = (
         services[builderServiceName].environment = {};
       }
       services[builderServiceName].environment.MODE = mode;
+      
+      // Add restart: "no" policy to prevent automatic restarts
+      services[builderServiceName].restart = "no";
 
       if (runtimeTests.buildKitOptions) {
         // Keep the build section, but also set the image name
@@ -102,19 +102,7 @@ export const generateServicesPure = (
         f = tName;
       }
 
-      // For web runtime, we need to pass the container name as the fourth parameter
-      let bddCommand;
-      if (runtime === "web") {
-        // The web builder service name is 'webtests'
-        const webBuilderServiceName = "webtests";
-        bddCommand = bddCommandFunc(
-          f,
-          buildOptions,
-          runtimeTestsName,
-        );
-      } else {
-        bddCommand = bddCommandFunc(f, buildOptions, runtimeTestsName);
-      }
+      const bddCommand = bddCommandFunc(f, buildOptions, runtimeTestsName);
 
       services[getBddServiceName(uid)] = bddTestDockerComposeFile(
         configs,
@@ -122,9 +110,15 @@ export const generateServicesPure = (
         getBddServiceName(uid),
         bddCommand,
       );
+      // Add restart: "no" policy to prevent automatic restarts
+      services[getBddServiceName(uid)].restart = "no";
+      
       services[getAiderServiceName(uid)] = aiderDockerComposeFile(
         getAiderServiceName(uid),
+        configs
       );
+      // Add restart: "no" policy to prevent automatic restarts
+      services[getAiderServiceName(uid)].restart = "no";
 
       checks.forEach((check: ICheck, ndx: number) => {
         const command = check([]);
@@ -135,6 +129,8 @@ export const generateServicesPure = (
           configs,
           runtimeTestsName,
         );
+        // Add restart: "no" policy to prevent automatic restarts
+        services[getCheckServiceName(uid, ndx)].restart = "no";
       });
     }
   }
@@ -155,6 +151,7 @@ export const generateServicesPure = (
       expose: ["3000"],
       ports: ["9222:3000"],
       networks: ["allTests_network"],
+      restart: "no",
     };
   }
 

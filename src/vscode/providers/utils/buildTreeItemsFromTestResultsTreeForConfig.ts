@@ -8,7 +8,7 @@ export function buildTreeItemsFromTestResultsTreeForConfig(
 ): TestTreeItem[] {
     const items: TestTreeItem[] = [];
     const configNode = tree[configKey];
-    
+
     if (!configNode) {
         return items;
     }
@@ -19,7 +19,7 @@ export function buildTreeItemsFromTestResultsTreeForConfig(
         const bNode = children[b];
         const aIsDir = aNode.type === 'directory';
         const bIsDir = bNode.type === 'directory';
-        
+
         if (aIsDir && !bIsDir) return -1;
         if (!aIsDir && bIsDir) return 1;
         return a.localeCompare(b);
@@ -27,7 +27,7 @@ export function buildTreeItemsFromTestResultsTreeForConfig(
 
     for (const key of childKeys) {
         const node = children[key];
-        
+
         if (node.type === 'directory') {
             items.push(
                 new TestTreeItem(

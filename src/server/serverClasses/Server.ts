@@ -42,6 +42,17 @@ export class Server extends Server_Docker {
   }
 
   async start(): Promise<void> {
+    // Handle unhandled promise rejections to prevent crashes
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('[Server] Unhandled Rejection at:', promise, 'reason:', reason);
+      // Don't exit the process
+    });
+
+    process.on('uncaughtException', (error) => {
+      console.error('[Server] Uncaught Exception:', error);
+      // Don't exit the process
+    });
+
     await this.embedConfigInHtml();
 
     if (this.configs && this.configs.runtimes) {
@@ -61,8 +72,12 @@ export class Server extends Server_Docker {
     }
 
     // Then start the parent server
-    await super.start();
-
+    try {
+      await super.start();
+    } catch (error) {
+      console.error('[Server] Error in super.start():', error);
+      // Don't rethrow - continue with the application
+    }
   }
 
   private async generateStaticDataFile(): Promise<void> {

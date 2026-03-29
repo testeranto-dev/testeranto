@@ -1,0 +1,33 @@
+# Ignore go.mod and go.sum during Docker build
+go.mod
+go.sum
+# Ignore node_modules
+node_modules/
+# Ignore test artifacts
+coverage.out
+coverage.html
+# Ignore git files
+.git/
+.gitignore
+# Ignore go.mod and go.sum during Docker build
+go.mod
+go.sum
+
+# Ignore node_modules
+node_modules/
+
+# Ignore test artifacts
+coverage.out
+coverage.html
+
+# Ignore git files
+.git/
+.gitignore
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db

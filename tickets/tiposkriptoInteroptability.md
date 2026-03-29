@@ -1,0 +1,1 @@
+implement interoptablity for tiposkripto

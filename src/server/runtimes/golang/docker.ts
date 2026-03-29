@@ -37,8 +37,9 @@ export const golangDockerComposeFile = (
     },
     working_dir: "/workspace",
     volumes: [
-      `${process.cwd()}/src:/workspace/src`,
-      `${process.cwd()}/dist:/workspace/dist`,
+      ...config.volumes,
+      // `${process.cwd()}/src:/workspace/src`,
+      // `${process.cwd()}/dist:/workspace/dist`,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
     command: golangBuildCommand(projectConfigPath, golangConfigPath, testName, tests),

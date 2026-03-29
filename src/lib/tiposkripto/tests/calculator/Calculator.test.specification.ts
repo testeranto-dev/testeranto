@@ -2,6 +2,25 @@
 import type { ITestSpecification } from "../../src/CoreTypes";
 import type { ICalculatorNode, O } from "./Calculator.test.types";
 
+
+const x = [
+  [
+    "someMarkdownFile.md",
+    "documentation.md"
+  ], [
+    Describe["another simple calculator"](
+      [
+        It[
+          "can save 1 memory"
+        ](),
+        It[
+          "can save 2 memories"
+        ](),
+      ],
+    )
+  ]
+]
+
 export const specification: ITestSpecification<ICalculatorNode, O> = (
   Suite,
   Given,
@@ -14,9 +33,9 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
   Should,
 ) => {
   return [
-    Suite.Default("Comprehensive Calculator Tests", {
+    Suite.Default("Comprehensive Calculator Test", {
       // ========== TDT (Table-Driven Testing) Tests ==========
-  
+
       tdtAdditionTable: Confirm["addition"](
         ["TDT addition table"],
         [
@@ -26,7 +45,7 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
       ),
 
       // ========== AAA (Describe-It) Tests ==========
-      aaaBasicOperations: Describe["another simple caclulator"](
+      aaaBasicOperations: Describe["another simple calculator"](
         ["AAA basic operations"],
         [
           It["can save 1 memory"](),
@@ -34,7 +53,7 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
         ],
       ),
 
-      aaaDisplayTests: Describe["another simple caclulator"](
+      aaaDisplayTests: Describe["another simple calculator"](
         ["AAA display functionality"],
         [
           // We'll need to add more its in the implementation
@@ -44,7 +63,7 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
         ],
       ),
 
-      aaaNestedDescribes: Describe["another simple caclulator"](
+      aaaNestedDescribes: Describe["another simple calculator"](
         ["AAA nested structure"],
         [
           It["can save 1 memory"](),
