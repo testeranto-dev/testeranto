@@ -33,3 +33,4 @@ src/lib/rusto/target
 node_modules
 
 *.bun-build
+src/grafeovidajo/dist/
