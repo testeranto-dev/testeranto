@@ -10,8 +10,8 @@ We will use a frequent pattern
 
 ONLY DO WHAT I TELL YOU TO. DO ONE THING, THEN WAIT FOR MY APPROVAL. MAKE SMALL, CONCISE CHANGES. YOU ARE TO DO WHAT I SAY, AND ONLY WHAT I SAY. YOU WILL NOT PRESUME TO WRITE CODE WHICH I DID NOT ASK FOR. DO NOT USE FALLBACKS OR DEFAULT VALUES. ALLOW ERRORS TO GO UNCAUGHT UNLESS I TELL YOU OTHERWISE. YOU WILL LET ME KNOW WHEN A FILE IS NOT NEEDED IN YOUR CONTEXT FOR THE TASK AT HAND.
 
-REMINDER: The following pattern is absolutely unacceptable and you are NEVER to write such code:
-```
+REMINDER: The following pattern is not unacceptable:
+```ts
 // Try to guess the container name
 const guessedConfigKey = runtime.toLowerCase().includes('web') ? 'webtests' : runtime;
 const containerName = this.getAiderContainerName(guessedConfigKey, testName);
@@ -24,3 +24,25 @@ return terminal;
 This pattern represents guessing and fallback behavior which is not allowed. When configuration cannot be found, the code should fail immediately and propagate the error, not attempt to guess and continue with potentially incorrect assumptions.
 
 REMINDER: It is not acceptable to catch an error, log it, and then throw it. We do not want to use try/catch unless there is a clear reason to catch and handle the error. Catching just to log and rethrow is dumb and adds unnecessary complexity. Allow errors to propagate naturally.
+
+```ts
+try{
+  doSomething()
+} catch (e){
+  // THIS IS FUCKING BULLSHIT. DON'T DO THIS
+  console.error(e)
+  throw e
+}
+```
+
+Remember: problems get easier by removing code, not adding it! DO NOT USE FALLBACKS OR DEFAULT VALUES.
+
+Remember: problems get easier by removing code, not adding it! DO NOT USE FALLBACKS OR DEFAULT VALUES.
+
+Remember: problems get easier by removing code, not adding it! DO NOT USE FALLBACKS OR DEFAULT VALUES.
+
+IMPORTANT: Passing empty objects `{}`, empty arrays `[]`, or other default values as function arguments when actual data should be collected is using fallbacks/default values which is against SOUL.md principles. Functions should collect the actual data they need instead of accepting placeholders.
+
+IMPORTANT: Do not add tautological, useless, pedantic comments. Comments that merely repeat what the code already says add no value and violate the KISS principle. The function name should be descriptive enough; if it's not, rename the function instead of adding a comment.
+
+Always check that your work aligns with SOUL.md!!!

@@ -4,9 +4,10 @@ import { GraphData, Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph }
 export interface RenderVisualizationProps {
   data: {
     featureGraph?: GraphData;
+    fileTreeGraph?: GraphData;
     vizConfig?: any;
   };
-  vizType: 'eisenhower' | 'gantt' | 'kanban' | 'tree';
+  vizType: 'eisenhower' | 'gantt' | 'kanban' | 'tree' | 'file-tree';
   onNodeClick?: (node: Node) => void;
   onNodeHover?: (node: Node | null) => void;
 }
@@ -168,6 +169,64 @@ export function renderVisualization({
               nodeSeparation: 100,
               levelSeparation: 80
             }}
+          />
+        </div>
+      );
+    case 'file-tree':
+      // Use fileTreeGraph if available, otherwise fall back to featureGraph
+      const fileTreeData = data.fileTreeGraph || data.featureGraph;
+      if (!fileTreeData || !fileTreeData.nodes || fileTreeData.nodes.length === 0) {
+        return (
+          <div style={{ padding: "40px", textAlign: "center" }}>
+            <h3>No File Tree Graph Available</h3>
+            <p>File tree data needs to be extracted to create visualizations.</p>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <h3>File Tree Structure</h3>
+          <p>Hierarchical view of files and directories</p>
+          <TreeGraph
+            data={fileTreeData}
+            config={{
+              projection: {
+                layout: 'tree',
+                xAttribute: 'depth',
+                yAttribute: 'name',
+                xType: 'continuous',
+                yType: 'categorical'
+              },
+              style: {
+                nodeSize: (node: any) => {
+                  const type = node.attributes.type;
+                  if (type === 'directory') return 15;
+                  if (type === 'file') return 10;
+                  return 8;
+                },
+                nodeColor: (node: any) => {
+                  const type = node.attributes.type;
+                  if (type === 'directory') return '#007acc';
+                  if (type === 'file') return '#4caf50';
+                  if (type === 'documentation') return '#ff9800';
+                  return '#9e9e9e';
+                },
+                nodeShape: (node: any) => {
+                  const type = node.attributes.type;
+                  if (type === 'directory') return 'square';
+                  return 'circle';
+                },
+                labels: {
+                  show: true,
+                  attribute: 'name',
+                  fontSize: 12
+                }
+              }
+            }}
+            width={800}
+            height={500}
+            onNodeClick={onNodeClick || (() => {})}
+            onNodeHover={onNodeHover || (() => {})}
           />
         </div>
       );

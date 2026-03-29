@@ -4,9 +4,8 @@
 //  for instance, the columns in a kanban chart and to which attribute they map
 
 import React, { useState } from "react";
-import type { Node } from "typescript";
-import type { window } from "vscode";
-import type { GraphData } from "../../grafeovidajo";
+import ReactDOM from "react-dom/client";
+import type { GraphData, Node } from "../../grafeovidajo";
 import { createFileContentFromNode } from "./stateless/createFileContentFromNode";
 import { togglePathInSet } from "./stateless/setUtils";
 import { TabNavigation } from "./TabNavigation";
@@ -50,17 +49,33 @@ export interface StakeholderData {
   };
   // Add feature graph for visualization
   featureGraph?: GraphData;
+  // Add file tree graph for visualization
+  fileTreeGraph?: GraphData;
   // Add viz configuration
   vizConfig?: any;
 }
 
 export interface StakeholderAppProps {
-  data: StakeholderData;
+  // Data is no longer passed as props - always use embedded data from window.TESTERANTO_EMBEDDED_DATA
+  data?: StakeholderData;
 }
 
-export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
-  data,
-}) => {
+export const DefaultStakeholderApp: React.FC = () => {
+  // Always use embedded data from window
+  const embeddedData = (window as any).TESTERANTO_EMBEDDED_DATA;
+  
+  if (!embeddedData) {
+    return (
+      <div style={{ padding: "40px", textAlign: "center" }}>
+        <h1 style={{ color: "#d32f2f" }}>Error Loading Report</h1>
+        <p>No embedded data found. The server may not have generated the report properly.</p>
+        <p>Please make sure the Testeranto server has generated the report files.</p>
+      </div>
+    );
+  }
+
+  const data: StakeholderData = embeddedData;
+  
   const [expandedPaths, setExpandedPaths] = useState<Set<string>>(
     new Set([".", "root"]),
   );
@@ -68,8 +83,8 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
   const [selectedFileContent, setSelectedFileContent] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<"tree" | "viz">("tree");
   const [vizType, setVizType] = useState<
-    "eisenhower" | "gantt" | "kanban" | "tree"
-  >("eisenhower");
+    "eisenhower" | "gantt" | "kanban" | "tree" | "file-tree"
+  >("file-tree");
 
   const toggleExpand = (path: string) => {
     setExpandedPaths(togglePathInSet(expandedPaths, path));
@@ -77,7 +92,6 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
 
   const handleFileSelect = (node: any) => {
     setSelectedFile(node.path);
-    const embeddedData = (window as any).TESTERANTO_EMBEDDED_DATA;
     const content = createFileContentFromNode(node, embeddedData);
     setSelectedFileContent(content);
   };
@@ -147,21 +161,26 @@ export const DefaultStakeholderApp: React.FC<StakeholderAppProps> = ({
 };
 
 // Function to render the app
-export function renderApp(rootElement: HTMLElement, data?: StakeholderData) {
-  // If no data is provided, try to get it from window
-  const appData =
-    data ||
-    (typeof window !== "undefined" && (window as any).TESTERANTO_EMBEDDED_DATA);
+export function renderApp(rootElement: HTMLElement) {
+  // Always use embedded data from window
+  const embeddedData = (window as any).TESTERANTO_EMBEDDED_DATA;
 
-  if (!appData) {
+  if (!embeddedData) {
     console.error("No stakeholder data available");
+    rootElement.innerHTML = `
+      <div style="padding: 40px; text-align: center;">
+        <h1 style="color: #d32f2f;">Error Loading Report</h1>
+        <p>No embedded data found. The server may not have generated the report properly.</p>
+        <p>Please make sure the Testeranto server has generated the report files.</p>
+      </div>
+    `;
     return;
   }
 
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <React.StrictMode>
-      <DefaultStakeholderApp data={appData} />
+      <DefaultStakeholderApp />
     </React.StrictMode>,
   );
 }

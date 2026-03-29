@@ -6,9 +6,7 @@ import { handleOptions } from "./Server_Http/handleOptions";
 import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
 
 import {
-  addTestResultsFilesToTree,
   getFileType,
-  collectAllTestResults,
   serveStaticFile,
 } from "./Server_Http/utils/utils";
 
@@ -163,20 +161,20 @@ export abstract class Server_HTTP extends Server_Base {
     return generateCollatedFilesTree(this.configs);
   }
 
-  private addTestResultsFilesToTree(
-    treeRoot: Record<string, any>,
-    reportsDir: string,
-  ): void {
-    addTestResultsFilesToTree(treeRoot, reportsDir);
-  }
+  // private addTestResultsFilesToTree(
+  //   treeRoot: Record<string, any>,
+  //   reportsDir: string,
+  // ): void {
+  //   addTestResultsFilesToTree(treeRoot, reportsDir);
+  // }
 
   private getFileType(filename: string): string {
     return getFileType(filename);
   }
 
-  private async collectAllTestResults(): Promise<Record<string, any>> {
-    return collectAllTestResults(this.configs);
-  }
+  // private async collectAllTestResults(): Promise<Record<string, any>> {
+  //   return collectAllTestResults(this.configs);
+  // }
 
   router(a: any): any {
     return a;

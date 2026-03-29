@@ -11,7 +11,6 @@ import { addSourceFilesToTree } from "./utils/addSourceFilesToTree";
 import { addTestResultsToSourceFiles } from "./utils/addTestResultsToSourceFiles";
 import { addTestResultStructureToNode } from "./utils/addTestResultStructureToNode";
 import { collectTestResults } from "./utils/collectTestResults";
-import { embedConfigInHtml } from "./utils/embedConfigInHtml";
 import { extractLocalFilePath } from "./utils/extractLocalFilePath";
 import { findSourceFileForTest } from "./utils/findSourceFileForTest";
 import { generateFeatureTree } from "./utils/generateFeatureTree";
@@ -33,10 +32,6 @@ export class Server extends Server_Docker {
     super(configs, mode);
   }
 
-  private async embedConfigInHtml(): Promise<void> {
-    return embedConfigInHtml(this.configs);
-  }
-
   private getDocumentationFilesFromGlob(): string[] {
     return getDocumentationFilesFromGlob(this.configs?.documentationGlob);
   }
@@ -52,8 +47,6 @@ export class Server extends Server_Docker {
       console.error('[Server] Uncaught Exception:', error);
       // Don't exit the process
     });
-
-    await this.embedConfigInHtml();
 
     if (this.configs && this.configs.runtimes) {
       for (const [configKey, runtimeConfig] of Object.entries(

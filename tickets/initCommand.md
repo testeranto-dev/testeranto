@@ -1,0 +1,1 @@
+we need to add a new command `init` to complement `dev` and `once`. This command sets up the `testeranto` folder.

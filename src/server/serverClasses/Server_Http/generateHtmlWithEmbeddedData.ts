@@ -23,6 +23,9 @@ export async function generateHtmlWithEmbeddedData(
     const documentationWithContent =
       await readDocumentationFiles(documentationFiles);
 
+    // Convert the collated files tree to a graph structure
+    const fileTreeGraph = convertTreeToGraph(collatedFilesTree);
+    
     // Prepare the data to embed in the format expected by the stakeholder app
     const embeddedData = {
       configs,
@@ -44,6 +47,8 @@ export async function generateHtmlWithEmbeddedData(
       fileContents: await extractFileContentsFromTree(collatedFilesTree),
       // Add feature graph for visualization (with fallback)
       featureGraph: featureGraph || { nodes: [], edges: [] },
+      // Add file tree graph for visualization
+      fileTreeGraph: fileTreeGraph,
       // Add grafeovidajo configuration
       vizConfig: {
         projection: {
@@ -124,6 +129,53 @@ async function readDocumentationFiles(
   }
 
   return contents;
+}
+
+function convertTreeToGraph(tree: any): any {
+  const nodes: any[] = [];
+  const edges: any[] = [];
+  let nodeCounter = 0;
+  
+  const traverse = (node: any, parentId: string | null = null, depth: number = 0) => {
+    if (!node) return;
+    
+    // Generate a unique ID for the node
+    const nodeId = `node-${nodeCounter++}`;
+    
+    nodes.push({
+      id: nodeId,
+      attributes: {
+        name: node.name || 'root',
+        type: node.type || 'directory',
+        fileType: node.fileType || 'directory',
+        path: node.path || '',
+        depth: depth
+      }
+    });
+    
+    if (parentId !== null) {
+      edges.push({
+        source: parentId,
+        target: nodeId,
+        attributes: {
+          relationship: 'parent-child'
+        }
+      });
+    }
+    
+    if (node.children) {
+      for (const [key, child] of Object.entries(node.children)) {
+        traverse(child, nodeId, depth + 1);
+      }
+    }
+  };
+  
+  traverse(tree);
+  
+  return {
+    nodes,
+    edges
+  };
 }
 
 async function extractFileContentsFromTree(

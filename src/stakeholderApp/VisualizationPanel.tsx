@@ -1,13 +1,13 @@
 import React from "react";
-import type { Node } from "typescript";
+import type { Node } from "../../grafeovidajo";
 import { getFeatureGraphStats } from "./stateless/featureGraphStats";
 import { renderVisualization } from "./stateless/renderVisualization";
 import { getVizButtonStyle } from "./stateless/buttonStyleUtils";
 
 export interface VisualizationPanelProps {
   data: any;
-  vizType: "eisenhower" | "gantt" | "kanban" | "tree";
-  onVizTypeChange: (type: "eisenhower" | "gantt" | "kanban" | "tree") => void;
+  vizType: "eisenhower" | "gantt" | "kanban" | "tree" | "file-tree";
+  onVizTypeChange: (type: "eisenhower" | "gantt" | "kanban" | "tree" | "file-tree") => void;
   onNodeClick: (node: Node) => void;
   onNodeHover: (node: Node | null) => void;
 }
@@ -46,7 +46,13 @@ export const VisualizationPanel: React.FC<VisualizationPanelProps> = ({
           style={getVizButtonStyle(vizType === "tree")}
           onClick={() => onVizTypeChange("tree")}
         >
-          Dependency Tree
+          Feature Tree
+        </button>
+        <button
+          style={getVizButtonStyle(vizType === "file-tree")}
+          onClick={() => onVizTypeChange("file-tree")}
+        >
+          File Tree
         </button>
       </div>
 

@@ -79,6 +79,7 @@ export class Server_Docker extends Server_Docker_Compose {
       this.testFileManager.inputFiles,
       this.testFileManager.outputFiles,
     );
+
     // Initialize aiderMessageManager
     this.aiderMessageManager = new AiderMessageManager(
       configs,
@@ -90,11 +91,13 @@ export class Server_Docker extends Server_Docker_Compose {
       (message: string) => consoleLog(message),
       (message: string, error?: any) => consoleError(message, error),
     );
+
     // Initialize stakeholderAppBundler
     this.stakeholderAppBundler = new StakeholderAppBundler(
       configs,
       (message: string) => console.warn(message),
     );
+
     // Initialize builder services manager
     this.builderServicesManager = new BuilderServicesManager(
       configs,
@@ -102,6 +105,7 @@ export class Server_Docker extends Server_Docker_Compose {
       (serviceName: string, runtime: string, runtimeConfigKey: string) =>
         this.startServiceLogging(serviceName, runtime, runtimeConfigKey),
     );
+
     // Initialize aider image builder
     this.aiderImageBuilder = new AiderImageBuilder(
       (message: string) => consoleLog(message),
@@ -120,12 +124,20 @@ export class Server_Docker extends Server_Docker_Compose {
   }
 
   async start() {
+    // Bundle the stakeholder app BEFORE starting the HTTP server
+    // await this.bundleStakeholderApp();
+    try {
+      await this.stakeholderAppBundler.bundleStakeholderApp();
+    } catch (e) {
+      console.error(e)
+      processExit(0)
+    }
+
+
     await super.start();
 
     this.dockerComposeManager.writeConfigForExtension(this.getProcessSummary());
     await this.dockerComposeManager.setupDockerCompose();
-
-    await this.bundleStakeholderApp();
 
     getReportDirPure();
 
@@ -462,23 +474,23 @@ export class Server_Docker extends Server_Docker_Compose {
     // Launch aider service
     const uid = generateUid(configKey, testName);
     const aiderServiceName = getAiderServiceName(uid);
-    
+
     // Start the aider service
     const { processCwd } = await import("./Server_Docker/Server_Docker_Dependents");
-    
+
     try {
       // Start the aider service
       execSync(`docker compose -f "${processCwd()}/testeranto/docker-compose.yml" up -d ${aiderServiceName}`, {
         stdio: "inherit",
         cwd: processCwd(),
       });
-      
+
       // Start logging for the aider service
       this.startServiceLogging(aiderServiceName, runtime, configKey, testName);
-      
+
       this.resourceChanged("/~/processes");
       this.writeConfigForExtension();
-      
+
       consoleLog(`[Server_Docker] Started aider service: ${aiderServiceName}`);
     } catch (error: any) {
       consoleError(`[Server_Docker] Failed to start aider service ${aiderServiceName}:`, error);
@@ -655,7 +667,4 @@ export class Server_Docker extends Server_Docker_Compose {
     await this.testCompletionWaiter.waitForAllTestsToComplete();
   }
 
-  private async bundleStakeholderApp(): Promise<void> {
-    await this.stakeholderAppBundler.bundleStakeholderApp();
-  }
 }

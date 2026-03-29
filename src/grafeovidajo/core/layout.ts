@@ -33,24 +33,63 @@ export function layoutTree(
   edges: Edge[],
   rootId?: string
 ): ProjectedNode[] {
-  // Stub implementation - would use tree layout algorithm
-  const root = rootId ? nodes.find(n => n.id === rootId) : nodes[0];
+  // Find root node
+  let root = rootId ? nodes.find(n => n.id === rootId) : null;
+  if (!root) {
+    // Find nodes with no incoming edges (roots)
+    const nodeIds = new Set(nodes.map(n => n.id));
+    const targetIds = new Set(edges.map(e => e.target));
+    const rootIds = [...nodeIds].filter(id => !targetIds.has(id));
+    root = nodes.find(n => n.id === rootIds[0]) || nodes[0];
+  }
   
-  return nodes.map((node, index) => ({
-    ...node,
-    screenX: index * 60,
-    screenY: getDepth(node, edges, nodes) * 80
-  }));
-}
-
-function getDepth(node: ProjectedNode, edges: Edge[], allNodes: ProjectedNode[]): number {
-  // Simple depth calculation - would be more sophisticated in real implementation
-  const incomingEdges = edges.filter(e => e.target === node.id);
-  if (incomingEdges.length === 0) return 0;
+  // Calculate depth for each node
+  const depthMap = new Map<string, number>();
   
-  const sourceNodes = incomingEdges.map(e => allNodes.find(n => n.id === e.source));
-  const maxDepth = Math.max(...sourceNodes.map(n => getDepth(n!, edges, allNodes)));
-  return maxDepth + 1;
+  const calculateDepth = (nodeId: string): number => {
+    if (depthMap.has(nodeId)) return depthMap.get(nodeId)!;
+    
+    const incomingEdges = edges.filter(e => e.target === nodeId);
+    if (incomingEdges.length === 0) {
+      depthMap.set(nodeId, 0);
+      return 0;
+    }
+    
+    // Get max depth of parents + 1
+    const parentDepths = incomingEdges.map(e => calculateDepth(e.source));
+    const depth = Math.max(...parentDepths) + 1;
+    depthMap.set(nodeId, depth);
+    return depth;
+  };
+  
+  nodes.forEach(node => calculateDepth(node.id));
+  
+  // Group nodes by depth
+  const nodesByDepth = new Map<number, ProjectedNode[]>();
+  nodes.forEach(node => {
+    const depth = depthMap.get(node.id) || 0;
+    if (!nodesByDepth.has(depth)) {
+      nodesByDepth.set(depth, []);
+    }
+    nodesByDepth.get(depth)!.push(node);
+  });
+  
+  // Position nodes
+  const maxDepth = Math.max(...Array.from(nodesByDepth.keys()));
+  const levelSeparation = 100;
+  const nodeSeparation = 80;
+  
+  return nodes.map(node => {
+    const depth = depthMap.get(node.id) || 0;
+    const nodesAtDepth = nodesByDepth.get(depth) || [];
+    const index = nodesAtDepth.findIndex(n => n.id === node.id);
+    
+    return {
+      ...node,
+      screenX: index * nodeSeparation,
+      screenY: depth * levelSeparation
+    };
+  });
 }
 
 export function layoutTimeline(
