@@ -4,4 +4,5 @@ export { createFileContentFromNode, togglePathInSet } from "./stakeholderApp/uti
 // Export React components
 export { TreePanel } from "./stakeholderApp/TreePanel";
 export { TestResultsSummary } from "./stakeholderApp/TestResultsSummary";
-
+export { VisualizationPanel } from "./stakeholderApp/VisualizationPanel";
+export { VisualizationTabs } from "./stakeholderApp/VisualizationTabs";

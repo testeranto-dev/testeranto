@@ -1,7 +1,6 @@
 import React from "react";
 import { getFeatureGraphStats } from "./stateless/featureGraphStats";
 import { renderVisualization } from "./stateless/renderVisualization";
-import { getVizButtonStyle } from "./stateless/buttonStyleUtils";
 import type { Node } from "grafeovidajo/core";
 
 export interface VisualizationPanelProps {
@@ -23,63 +22,63 @@ export const VisualizationPanel: React.FC<VisualizationPanelProps> = ({
 
   return (
     <div>
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-        <button
-          style={getVizButtonStyle(vizType === "eisenhower")}
-          onClick={() => onVizTypeChange("eisenhower")}
-        >
-          Eisenhower Matrix
-        </button>
-        <button
-          style={getVizButtonStyle(vizType === "gantt")}
-          onClick={() => onVizTypeChange("gantt")}
-        >
-          Gantt Chart
-        </button>
-        <button
-          style={getVizButtonStyle(vizType === "kanban")}
-          onClick={() => onVizTypeChange("kanban")}
-        >
-          Kanban Board
-        </button>
-        <button
-          style={getVizButtonStyle(vizType === "tree")}
-          onClick={() => onVizTypeChange("tree")}
-        >
-          Feature Tree
-        </button>
-        <button
-          style={getVizButtonStyle(vizType === "file-tree")}
-          onClick={() => onVizTypeChange("file-tree")}
-        >
-          File Tree
-        </button>
+      <div style={{ marginBottom: "20px" }}>
+        <h3>Select Visualization Type</h3>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          {["tree", "file-tree", "eisenhower", "gantt", "kanban"].map((type) => (
+            <button
+              key={type}
+              onClick={() => onVizTypeChange(type as any)}
+              style={{
+                padding: "10px 20px",
+                backgroundColor: vizType === type ? "#007acc" : "#f0f0f0",
+                color: vizType === type ? "white" : "black",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontWeight: vizType === type ? "bold" : "normal",
+              }}
+            >
+              {type.charAt(0).toUpperCase() + type.slice(1).replace("-", " ")}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {renderVisualization({
-        data,
-        vizType,
-        onNodeClick,
-        onNodeHover,
-      })}
+      <div style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "20px", marginBottom: "20px" }}>
+        {renderVisualization({
+          data,
+          vizType,
+          onNodeClick,
+          onNodeHover,
+        })}
+      </div>
 
       <div
         style={{
-          marginTop: "30px",
           padding: "20px",
           backgroundColor: "#f5f5f5",
           borderRadius: "4px",
         }}
       >
         <h4>Feature Graph Statistics</h4>
-        <p>Total Features: {stats.totalFeatures}</p>
-        <p>Dependencies: {stats.dependencies}</p>
-        <p>Features with status:</p>
-        <ul>
-          <li>Todo: {stats.todo}</li>
-          <li>Doing: {stats.doing}</li>
-          <li>Done: {stats.done}</li>
-        </ul>
+        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+          <div>
+            <strong>Total Features:</strong> {stats.totalFeatures}
+          </div>
+          <div>
+            <strong>Dependencies:</strong> {stats.dependencies}
+          </div>
+          <div>
+            <strong>Todo:</strong> {stats.todo}
+          </div>
+          <div>
+            <strong>Doing:</strong> {stats.doing}
+          </div>
+          <div>
+            <strong>Done:</strong> {stats.done}
+          </div>
+        </div>
       </div>
     </div>
   );

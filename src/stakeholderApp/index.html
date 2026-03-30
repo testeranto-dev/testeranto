@@ -41,17 +41,9 @@
       const root = document.getElementById('root');
 
       try {
-        const embeddedData = window.TESTERANTO_EMBEDDED_DATA;
-        if (!embeddedData) {
-          throw new Error('No embedded data found. The server may not have generated the report properly.');
-        }
-
-        console.log('Loaded embedded data:', embeddedData);
-
         // Import the stakeholder app module
         const { renderApp } = await import('/testeranto/reports/index.js');
         renderApp(root);
-
       } catch (error) {
         console.error('Failed to load stakeholder report:', error);
         root.innerHTML = `

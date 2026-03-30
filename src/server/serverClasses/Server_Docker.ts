@@ -219,6 +219,11 @@ export class Server_Docker extends Server_Docker_Compose {
         logMessage(
           "[Server_Docker] Tests completed, waiting for pending operations...",
         );
+        
+        // Generate graph-data.json for dual-mode operation
+        const { embedConfigInHtml } = await import("./utils/embedConfigInHtml");
+        await embedConfigInHtml(this.configs);
+        
         await new Promise((resolve) => setTimeout(resolve, 5000));
         await this.stop();
         processExit(0);
