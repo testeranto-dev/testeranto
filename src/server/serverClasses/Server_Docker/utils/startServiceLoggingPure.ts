@@ -5,18 +5,14 @@ import {
   DOCKER_COMPOSE_BASE,
 } from "../Server_Docker_Constants";
 import {
-  spawnWrapper,
   execSyncWrapper,
   consoleWarn,
-  createWriteStream,
   writeFileSync,
+  spawnWrapper,
+  consoleLog,
 } from "../Server_Docker_Dependents";
-
-// TODO: TICKET-001 - Refactor logging system to separate test and builder services
-// Current hack: Using testName presence to distinguish between test services (BDD/check) and builder services
-// Problem: This is a fragile heuristic that mixes two different concepts
-// Solution needed: Create separate functions for startTestLogging and startBuilderLogging
-// with clear interfaces and separate path generation logic
+import fs from 'fs';
+import { spawn } from 'child_process';
 
 // Helper to clean test name for file paths (preserves directory structure)
 const cleanTestNameForPath = (testName: string): string => {
@@ -33,107 +29,150 @@ const cleanTestNameForPath = (testName: string): string => {
   return result;
 };
 
-export const startServiceLoggingPure = (
+export const startServiceLoggingPure = async (
   serviceName: string,
   runtime: string,
   cwd: string,
   logProcesses: Map<string, { process: any; serviceName: string }>,
   runtimeConfigKey: string,
   testName?: string,
-): Map<string, { process: any; serviceName: string }> => {
+): Promise<Map<string, { process: any; serviceName: string }>> => {
+  // First, properly stop any existing logging processes for this service
+  for (const [trackingId, logProcess] of logProcesses.entries()) {
+    if (logProcess.serviceName === serviceName) {
+      try {
+        if (!logProcess.process.killed) {
+          // Kill the process and wait for it to exit
+          const exitPromise = new Promise<void>((resolve) => {
+            logProcess.process.once('close', () => {
+              resolve();
+            });
+          });
+          logProcess.process.kill('SIGTERM');
+          // Wait up to 1 second for the process to exit
+          await Promise.race([
+            exitPromise,
+            new Promise(resolve => setTimeout(resolve, 1000))
+          ]);
+          consoleLog(`[startServiceLoggingPure] Stopped existing log process for ${serviceName}`);
+        }
+      } catch (error) {
+        consoleWarn(`[startServiceLoggingPure] Error stopping existing log process for ${serviceName}:`, error);
+      }
+      // Remove from tracking
+      logProcesses.delete(trackingId);
+    }
+  }
+
   // Determine the base name for file paths
-  // If testName is provided, it's a test service → use test-based paths
-  // If testName is not provided, it's a builder service → use serviceName-based paths
   let baseName: string;
   if (testName) {
-    // For test services, we need to extract the suffix from serviceName and append it with underscore
     const cleanedTestName = cleanTestNameForPath(testName);
-    
-    // Extract suffix from serviceName (e.g., "-bdd", "-check-0")
-    // serviceName format: {configKey}-{cleanedTestName}-{suffix}
-    // where suffix can be "bdd", "check-0", etc.
     const suffixMatch = serviceName.match(/-(bdd|check-\d+|aider|builder)$/);
     if (suffixMatch) {
-      const suffix = suffixMatch[1]; // "bdd", "check-0", etc.
+      const suffix = suffixMatch[1];
       baseName = `${cleanedTestName}_${suffix}`;
     } else {
-      // Fallback: use serviceName
       baseName = serviceName;
     }
   } else {
-    // For builder services, use serviceName as is
     baseName = serviceName;
   }
   
   const logFilePath = `${cwd}/testeranto/reports/${runtimeConfigKey}/${baseName}.log`;
-  const exitCodeFilePath = `${cwd}/testeranto/reports/${runtimeConfigKey}/${baseName}.exitcode`;
+  
+  // Always start with a fresh log file
+  try {
+    const timestamp = new Date().toISOString();
+    const startMarker = `=== Log started at ${timestamp} for service ${serviceName} (runtime: ${runtime}) ===\n\n`;
+    writeFileSync(logFilePath, startMarker);
+  } catch (error) {
+    consoleWarn(`[startServiceLoggingPure] Failed to create log file: ${error}`);
+  }
 
-  // Start a process to capture logs - use a more robust approach
-  // We'll use a shell script that handles waiting for the container
-  const logScript = `
-      # Wait for container to exist
-      for i in {1..30}; do
-        if docker compose -f "testeranto/docker-compose.yml" ps -q ${serviceName} > /dev/null 2>&1; then
-          break
-        fi
-        sleep 1
-      done
-      # Capture logs from the beginning
-      docker compose -f "testeranto/docker-compose.yml" logs --no-color -f ${serviceName}
-    `;
-
-  // Open in overwrite mode to replace old logs
-  const logStream = createWriteStream(logFilePath, { flags: "w" });
-  const timestamp = new Date().toISOString();
-  logStream.write(
-    `=== Log started at ${timestamp} for service ${runtime} ===\n\n`,
-  );
-
-  const child = spawnWrapper("bash", ["-c", logScript], {
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-
-  const containerId = execSyncWrapper(
-    `${DOCKER_COMPOSE_BASE} ps -q ${serviceName}`,
-    {
-      cwd: cwd,
-    },
-  ).trim();
-
-  child.stdout?.on("data", (data: any) => {
-    logStream.write(data);
-  });
-
-  child.stderr?.on("data", (data: any) => {
-    logStream.write(data);
-  });
-
-  child.on("error", (error: { message: any }) => {
-    logStream.write(`\n=== Log process error: ${error.message} ===\n`);
-    logStream.end();
-    writeFileSync(exitCodeFilePath, "-1");
-  });
-
-  child.on("close", (code: { toString: () => any }) => {
-    const endTimestamp = new Date().toISOString();
-    logStream.write(
-      `\n=== Log ended at ${endTimestamp}, process exited with code ${code} ===\n`,
-    );
-    logStream.end();
-
-    writeFileSync(exitCodeFilePath, code?.toString() || "0");
-
-    captureContainerExitCode(serviceName, runtime, runtimeConfigKey, testName);
-
-    if (containerId) {
-      logProcesses.delete(containerId);
-    } else {
-      consoleWarn("containerId should exist");
+  // Get the Docker container ID and its start time
+  let dockerContainerId: string;
+  let containerStartTime: string;
+  try {
+    const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${serviceName}`;
+    dockerContainerId = execSyncWrapper(containerIdCmd, { cwd: cwd }).trim();
+    if (!dockerContainerId) {
+      // Container doesn't exist yet, wait for it
+      for (let i = 0; i < 10; i++) { // Reduced from 30 to 10 seconds
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        dockerContainerId = execSyncWrapper(containerIdCmd, { cwd: cwd }).trim();
+        if (dockerContainerId) break;
+      }
     }
-  });
+    
+    if (dockerContainerId) {
+      // Get container start time
+      const startTimeCmd = `docker inspect --format='{{.State.StartedAt}}' ${dockerContainerId}`;
+      containerStartTime = execSyncWrapper(startTimeCmd, { cwd: cwd }).trim();
+    }
+  } catch (error) {
+    consoleWarn(`[startServiceLoggingPure] Error getting container info for ${serviceName}:`, error);
+    // Still try to capture exit code
+    captureContainerExitCode(serviceName, runtime, runtimeConfigKey, testName);
+    return new Map(); // Return empty map, no processes to track
+  }
 
-  const trackingKey = containerId || serviceName;
-  const newLogProcesses = new Map(logProcesses);
-  newLogProcesses.set(trackingKey, { process: child, serviceName });
-  return newLogProcesses;
+  if (!dockerContainerId) {
+    consoleWarn(`[startServiceLoggingPure] Container not found for ${serviceName}, skipping logging`);
+    // Still try to capture exit code
+    captureContainerExitCode(serviceName, runtime, runtimeConfigKey, testName);
+    return new Map(); // Return empty map, no processes to track
+  }
+
+  // Wait for container to exit (with timeout)
+  let status = 'running';
+  for (let i = 0; i < 120; i++) { // Wait up to 2 minutes
+    try {
+      const statusCmd = `docker inspect --format='{{.State.Status}}' ${dockerContainerId}`;
+      status = execSyncWrapper(statusCmd, { cwd: cwd }).trim();
+      if (status === 'exited' || status === 'dead') {
+        break;
+      }
+    } catch (error) {
+      // Container might have been removed
+      consoleWarn(`[startServiceLoggingPure] Error checking container status:`, error);
+      break;
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
+  // Capture logs from container start time
+  try {
+    let logs = '';
+    if (containerStartTime) {
+      // Use --since to get logs only from this container's start time
+      const logsCmd = `docker logs --since "${containerStartTime}" ${dockerContainerId}`;
+      logs = execSyncWrapper(logsCmd, { cwd: cwd });
+    } else {
+      // Fallback to all logs if we couldn't get start time
+      const logsCmd = `docker logs ${dockerContainerId}`;
+      logs = execSyncWrapper(logsCmd, { cwd: cwd });
+    }
+    
+    if (logs && logs.trim().length > 0) {
+      fs.appendFileSync(logFilePath, logs);
+    } else {
+      fs.appendFileSync(logFilePath, '\n=== No logs captured ===\n');
+    }
+  } catch (error) {
+    consoleWarn(`[startServiceLoggingPure] Error capturing logs for ${serviceName}:`, error);
+    fs.appendFileSync(logFilePath, `\n=== Error capturing logs: ${error} ===\n`);
+  }
+
+  // Add end marker
+  const endTimestamp = new Date().toISOString();
+  fs.appendFileSync(logFilePath, `\n=== Log captured at ${endTimestamp} (container status: ${status}) ===\n`);
+
+  // Capture exit code
+  captureContainerExitCode(serviceName, runtime, runtimeConfigKey, testName);
+  
+  consoleLog(`[startServiceLoggingPure] Captured logs for ${serviceName}, status: ${status}`);
+
+  // No background processes to track
+  return new Map();
 };

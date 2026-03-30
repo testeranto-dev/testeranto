@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testeranto - Stakeholder Report</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    #root {
+      min-height: 100vh;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 1.2rem;
+      color: #666;
+    }
+  </style>
+<script>
+window.TESTERANTO_EMBEDDED_DATA = JSON.parse(atob('eyJjb25maWdzIjp7InZvbHVtZXMiOlsiL1VzZXJzL2FkYW0vQ29kZS90ZXN0ZXJhbnRvL3NyYzovd29ya3NwYWNlL3NyYyIsIi9Vc2Vycy9hZGFtL0NvZGUvdGVzdGVyYW50by90ZXN0Oi93b3Jrc3BhY2UvdGVzdCJdLCJydW50aW1lcyI6eyJub2RldGVzdHMiOnsicnVudGltZSI6Im5vZGUiLCJ0ZXN0cyI6WyJzcmMvbGliL3RpcG9za3JpcHRvL3Rlc3RzL2Fic3RyYWN0QmFzZS50ZXN0L2luZGV4LnRzIiwic3JjL2xpYi90aXBvc2tyaXB0by90ZXN0cy9jYWxjdWxhdG9yL0NhbGN1bGF0b3IudGVzdC5ub2RlLnRzIiwic3JjL3ZzY29kZS9wcm92aWRlcnMvdXRpbHMvdGVzdFRyZWUvZGVidWdUZXN0LmpzIl0sImNoZWNrcyI6W251bGwsbnVsbCxudWxsXSwiZG9ja2VyZmlsZSI6InRlc3RlcmFudG8vcnVudGltZXMvbm9kZS9ub2RlLkRvY2tlcmZpbGUiLCJidWlsZE9wdGlvbnMiOiJ0ZXN0ZXJhbnRvL3J1bnRpbWVzL25vZGUvbm9kZS5tanMiLCJidWlsZEtpdE9wdGlvbnMiOnt9LCJvdXRwdXRzIjpbXX0sImdvbGFuZ3Rlc3RzIjp7InJ1bnRpbWUiOiJnb2xhbmciLCJ0ZXN0cyI6WyJzcmMvbGliL2dvbGluZ3Z1L2V4YW1wbGVzL2NhbGN1bGF0b3IvZ29saW5ndnVfdGVzdC5nbyJdLCJjaGVja3MiOltdLCJkb2NrZXJmaWxlIjoidGVzdGVyYW50by9ydW50aW1lcy9nb2xhbmcvZ29sYW5nLkRvY2tlcmZpbGUiLCJidWlsZE9wdGlvbnMiOiJ0ZXN0ZXJhbnRvL3J1bnRpbWVzL2dvbGFuZy9nb2xhbmcudHMiLCJidWlsZEtpdE9wdGlvbnMiOnsiY2FjaGVNb3VudHMiOlsiL2dvL3BrZy9tb2QiLCIvcm9vdC8uY2FjaGUvZ28tYnVpbGQiXX0sIm91dHB1dHMiOlsiY292ZXJhZ2Uub3V0IiwiY292ZXJhZ2UuaHRtbCJdfX0sImRvY3VtZW50YXRpb25HbG9iIjoiLi8qKi8qLm1kIn0sImZlYXR1cmVUcmVlIjp7fSwiZG9jdW1lbnRhdGlvbiI6eyJmaWxlcyI6W10sInRpbWVzdGFtcCI6MTc3NDgzODAxMzg2NCwiY29udGVudHMiOnt9fSwiZmVhdHVyZXMiOltdLCJiZGRTdGF0dXMiOnt9LCJ0ZXN0UmVzdWx0cyI6e30sImVycm9ycyI6W10sInRpbWVzdGFtcCI6IjIwMjYtMDMtMzBUMDI6MzM6MzMuODY0WiIsIndvcmtzcGFjZVJvb3QiOiIvVXNlcnMvYWRhbS9Db2RlL3Rlc3RlcmFudG8iLCJhbGxUZXN0UmVzdWx0cyI6e30sImZpbGVDb250ZW50cyI6e30sImZlYXR1cmVHcmFwaCI6eyJub2RlcyI6W119LCJmaWxlVHJlZUdyYXBoIjp7Im5vZGVzIjpbeyJpZCI6Im5vZGUtMCIsImF0dHJpYnV0ZXMiOnsibmFtZSI6InJvb3QiLCJ0eXBlIjoiZGlyZWN0b3J5IiwiZmlsZVR5cGUiOiJkaXJlY3RvcnkiLCJwYXRoIjoiIiwiZGVwdGgiOjB9fV0sImVkZ2VzIjpbXX0sInZpekNvbmZpZyI6eyJwcm9qZWN0aW9uIjp7InhBdHRyaWJ1dGUiOiJzdGF0dXMiLCJ5QXR0cmlidXRlIjoicG9pbnRzIiwieFR5cGUiOiJjYXRlZ29yaWNhbCIsInlUeXBlIjoiY29udGludW91cyIsImxheW91dCI6ImdyaWQifSwic3R5bGUiOnsibm9kZVNoYXBlIjoiY2lyY2xlIiwibGFiZWxzIjp7InNob3ciOnRydWUsImF0dHJpYnV0ZSI6Im5hbWUiLCJmb250U2l6ZSI6MTJ9fX19'));
+</script>
+</head>
+
+<body>
+  <div id="root">
+    <div class="loading">
+      <h2>Loading Testeranto Stakeholder Report...</h2>
+    </div>
+  </div>
+
+  <script type="module">
+    // Wait for the stakeholder app to be loaded
+    async function initApp() {
+      const root = document.getElementById('root');
+
+      try {
+        // Import the stakeholder app module
+        const { renderApp } = await import('/testeranto/reports/index.js');
+        renderApp(root);
+      } catch (error) {
+        console.error('Failed to load stakeholder report:', error);
+        root.innerHTML = `
+          <div style="padding: 40px; text-align: center;">
+            <h1 style="color: #d32f2f;">Error Loading Report</h1>
+            <p>${error.message}</p>
+            <p>Please make sure the Testeranto server has generated the report files.</p>
+            <details style="text-align: left; max-width: 800px; margin: 20px auto;">
+              <summary>Technical Details</summary>
+              <pre style="background: #f5f5f5; padding: 10px; overflow: auto;">${error.stack}</pre>
+            </details>
+          </div>
+        `;
+      }
+    }
+
+    // Start the app when the DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+  </script>
+</body>
+
+</html>

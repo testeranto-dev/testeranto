@@ -1,12 +1,6 @@
 {
-  "src/lib/tiposkripto/tests/abstractBase.test/index.ts": {
-    "hash": "003aa4604923953e2df1b46bc30f61de",
-    "files": [
-      "/src/lib/tiposkripto/tests/abstractBase.test/index.ts"
-    ]
-  },
   "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
-    "hash": "e577f8eb8357a691a3cacf94a985045d",
+    "hash": "4ef7dd626f670e615e71af3deab5c800",
     "files": [
       "/src/lib/tiposkripto/src/Node.ts",
       "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
@@ -15,7 +9,6 @@
       "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
       "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
       "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-      "/src/lib/tiposkripto/src/verbs/BaseSuite.ts",
       "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
       "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
       "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
@@ -28,13 +21,6 @@
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
-    ]
-  },
-  "src/vscode/providers/utils/testTree/debugTest.js": {
-    "hash": "f47e3694fe9f3fda96ac10d948c3ee7d",
-    "files": [
-      "/src/vscode/providers/utils/testTree/debugTest.js",
-      "/src/vscode/providers/utils/testTree/treeFilter.ts"
     ]
   }
 }

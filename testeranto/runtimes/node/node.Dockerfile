@@ -12,6 +12,7 @@ ENV ENV=node
 COPY ./tsconfig*.json ./
 COPY ./.yarnrc.yml ./
 COPY ./eslint.config.mjs ./
+COPY .eslintrc.js ./
 COPY package.json /workspace
 
 RUN yarn install

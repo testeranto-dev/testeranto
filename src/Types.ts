@@ -108,10 +108,10 @@ export type ConfirmSpecification<
   I extends Ibdd_in_any,
   O extends Ibdd_out_any,
 > = {
-    [K in keyof O["confirms"]]: (
+    [K in keyof O["confirms"]]: (input: O["confirms"][K]) => (
+      tableRows: [v: BaseValue, s: BaseShould][],
       features: string[],
-      tableRows: any[][],
-      ...xtras: O["confirms"][K]
+
     ) => BaseConfirm<I>
   };
 
@@ -120,9 +120,9 @@ export type ValueSpecification<
   O extends Ibdd_out_any,
 > = {
     [K in keyof O["values"]]: (
-      features: string[],
-      tableRows: any[][],
-      ...xtras: O["values"][K]
+      // features: string[],
+      // tableRows: any[][],
+      // ...xtras: O["values"][K]
     ) => BaseValue<I>;
   };
 
@@ -233,10 +233,9 @@ export type TestThenShape = Record<string, any>;
 export type TestDescribeShape = Record<string, any>;
 export type TestItShape = Record<string, any>;
 
-export type TestBaseConfirm = Record<string, any>;
-export type TestBaseValue = Record<string, any>;
-export type TestExpectShape = Record<string, any>;
-export type TestExpectVerify = Record<string, any>;
+export type TestConfirmShape = Record<string, any>;
+export type TestValueShape = Record<string, any>;
+export type TestShouldShape = Record<string, any>;
 
 export type IPluginFactory = (
   register?: (entrypoint: string, sources: string[]) => any,

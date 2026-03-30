@@ -25,14 +25,22 @@ export class BaseShould<I extends TestTypeParams_any> {
 
   // Process the current row
   async processRow(
-    store: I["istore"],
+    actualResult: any,
     testResourceConfiguration: any,
     artifactory?: any,
   ) {
     try {
-      const result = await this.shouldCB(store as any);
-      this.status = true;
-      return result;
+      let success = false;
+      if (typeof this.shouldCB === 'function') {
+        // The shouldCB expects a store, but we pass actualResult as store
+        const result = await this.shouldCB(actualResult);
+        success = !!result;
+      } else {
+        // shouldCB is the expected value
+        success = actualResult === this.shouldCB;
+      }
+      this.status = success;
+      return success;
     } catch (e: any) {
       this.status = false;
       this.error = e;

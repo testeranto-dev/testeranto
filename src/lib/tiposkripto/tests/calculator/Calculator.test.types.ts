@@ -28,12 +28,13 @@ export type ICalculatorWebReact = Ibdd_in<
 >;
 
 export type O = Ibdd_out<
-  {
-    Default: [string];
-  },
+
+  // Given
   {
     Default: [];
   },
+
+  // When
   {
     press: [string];
     enter: [];
@@ -42,8 +43,37 @@ export type O = Ibdd_out<
     memoryClear: [];
     memoryAdd: [];
   },
+
+  // Then
   {
     result: [string];
+  },
+
+  // Describe
+  {
+    "a simple calculator": [];
+  },
+  // It
+  {
+    "can save 1 memory": [],
+    "can save 2 memories": [],
+  },
+
+  // Confirm
+  {
+    addition: [],
+  },
+
+  // Value
+  {
+    of: [number[]],
+    "one and two": []
+  },
+
+  // Should
+  {
+    beEqualTo: [number],
+    beGreaterThan: [number]
   }
 >;
 

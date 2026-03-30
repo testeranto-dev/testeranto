@@ -1,19 +1,49 @@
-import { IGivens, ITestResourceConfiguration } from "./types";
+import type {
+  ConfirmSpecification,
+  DescribeSpecification,
+  GivenSpecification,
+  ItSpecification,
+  Modify,
+  ShouldSpecification,
+  TestConfirmImplementation,
+  TestConfirmShape,
+  TestDescribeImplementation,
+  TestDescribeShape,
+  TestExpectedImplementation,
+  TestGivenImplementation,
+  TestGivenShape,
+  TestItImplementation,
+  TestItShape,
+  TestShouldImplementation,
+  TestShouldShape,
+  TestSuiteImplementation,
+  TestSuiteShape,
+  TestThenImplementation,
+  TestThenShape,
+  TestValueImplementation,
+  TestValueShape,
+  TestWhenImplementation,
+  TestWhenShape,
+  ThenSpecification,
+  ValueSpecification,
+  WhenSpecification
+} from "./../../../Types";
+import { ITestResourceConfiguration } from "./types";
 import { BaseSuite } from "./verbs/BaseSuite";
+import { BaseGiven } from "./verbs/bdd/BaseGiven";
 
 export type IArtifactory = {
   writeFileSync: (a: string, b: string) => any;
 };
 
-export type SuiteSpecification<
-  I extends Ibdd_in_any,
-  O extends Ibdd_out_any,
-> = {
-    [K in keyof O["suites"]]: (
-      name: string,
-      givens: IGivens<I>,
-    ) => BaseSuite<I, O>;
-  };
+// export type SuiteSpecification<
+//   I extends Ibdd_in_any,
+//   O extends Ibdd_out_any,
+// > = {
+//     [K in keyof O["suites"]]: (
+//       givens: BaseGiven<I>,
+//     ) => BaseSuite<I, O>;
+//   };
 
 // Universal test adapter with methodology-agnostic terminology
 export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
@@ -67,7 +97,6 @@ export type ITestSpecification<
   I extends Ibdd_in_any,
   O extends Ibdd_out_any,
 > = (
-  Suite: SuiteSpecification<I, O>,
   Given: GivenSpecification<I, O>,
   When: WhenSpecification<I, O>,
   Then: ThenSpecification<I, O>,
@@ -76,8 +105,7 @@ export type ITestSpecification<
   Confirm: ConfirmSpecification<I, O>,
   Value: ValueSpecification<I, O>,
   Should: ShouldSpecification<I, O>,
-  Expected: ExpectSpecification<I, O>,
-) => BaseSuite<I, O>[];
+) => any[];
 
 export type ITestImplementation<
   I extends Ibdd_in_any,
@@ -108,27 +136,25 @@ export type ITestImplementation<
 >;
 
 export type TestSpecShape<
-  ISuites extends TestSuiteShape = TestSuiteShape,
+  // ISuites extends TestSuiteShape = TestSuiteShape,
   ISetups extends TestGivenShape = TestGivenShape,
   IActions extends TestWhenShape = TestWhenShape,
   IChecks extends TestThenShape = TestThenShape,
   IDescribes extends TestGivenShape = TestGivenShape,
   IIts extends TestWhenShape = TestWhenShape,
+  IConfirms extends TestGivenShape = TestGivenShape,
   IValues extends TestGivenShape = TestGivenShape,
   IShoulds extends TestWhenShape = TestWhenShape,
-  IExpecteds extends TestThenShape = TestThenShape,
-  IConfirms extends TestGivenShape = TestGivenShape,
 > = {
-  suites: ISuites;
+  // suites: ISuites;
   givens: ISetups;
   whens: IActions;
   thens: IChecks;
-  describes?: IDescribes;
-  its?: IIts;
-  values?: IValues;
-  shoulds?: IShoulds;
-  expecteds?: IExpecteds;
-  confirms?: IConfirms;
+  describes: IDescribes;
+  its: IIts;
+  confirms: IConfirms;
+  values: IValues;
+  should?: IShoulds;
 };
 
 export type TestSpecShape_any = TestSpecShape<
@@ -139,14 +165,26 @@ export type TestSpecShape_any = TestSpecShape<
 >;
 
 export type Ibdd_out<
-  ISuites extends TestSuiteShape,
+  // ISuites extends TestSuiteShape,  
   IGivens extends TestGivenShape,
   IWhens extends TestWhenShape,
   IThens extends TestThenShape,
-// ISetup,
-// IAction,
-// ICheck,
-> = TestSpecShape<ISuites, IGivens, IWhens, IThens>;
+  IDescribes extends TestDescribeShape,
+  IIts extends TestItShape,
+  IConfirms extends TestConfirmShape,
+  IValues extends TestValueShape,
+  IShoulds extends TestShouldShape,
+
+> = TestSpecShape<
+  IGivens,
+  IWhens,
+  IThens,
+  IDescribes,
+  IIts,
+  IConfirms,
+  IValues,
+  IShoulds
+>;
 export type Ibdd_out_any = TestSpecShape_any;
 
 export type TestTypeParams<

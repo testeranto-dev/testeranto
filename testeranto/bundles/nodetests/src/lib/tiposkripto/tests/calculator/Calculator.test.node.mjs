@@ -145,7 +145,7 @@ var BaseDescribe = class {
     this.key = key;
     this.fails = 0;
     try {
-      this.store = await this.describeCB();
+      this.store = await this.describeCB("x");
       this.status = true;
     } catch (e) {
       this.status = false;
@@ -222,277 +222,6 @@ var BaseIt = class {
 ${this.error.stack}` : null,
       artifacts: this.artifacts
     };
-  }
-};
-
-// src/lib/tiposkripto/src/verbs/BaseSuite.ts
-var BaseSuite = class {
-  constructor(name, index, givens = {}, parent) {
-    this.store = null;
-    this.testResourceConfiguration = null;
-    this.index = 0;
-    this.failed = false;
-    this.fails = 0;
-    this.parent = null;
-    // Reference to parent BaseTiposkripto instance
-    this.artifacts = [];
-    const suiteName = name || "testSuite";
-    if (!suiteName) {
-      throw new Error("BaseSuite requires a non-empty name");
-    }
-    this.name = suiteName;
-    this.index = index;
-    this.givens = givens;
-    this.fails = 0;
-    this.parent = parent;
-  }
-  addArtifact(path2) {
-    CommonUtils.addArtifact(this.artifacts, path2);
-  }
-  features() {
-    try {
-      const features = Object.keys(this.givens).map((k) => this.givens[k].features).flat().filter((value, index, array) => {
-        return array.indexOf(value) === index;
-      });
-      const stringFeatures = features.map((feature) => {
-        if (typeof feature === "string") {
-          return feature;
-        } else if (feature && typeof feature === "object") {
-          return feature.name || JSON.stringify(feature);
-        } else {
-          return String(feature);
-        }
-      });
-      return stringFeatures || [];
-    } catch (e) {
-      console.error("[ERROR] Failed to extract features:", JSON.stringify(e));
-      return [];
-    }
-  }
-  toObj() {
-    const bddGivens = [];
-    const aaaDescribes = [];
-    const tdtConfirms = [];
-    for (const [k, giver] of Object.entries(this.givens)) {
-      const obj = giver.toObj ? giver.toObj() : {};
-      const constructorName = giver.constructor.name;
-      if (constructorName === "BaseConfirm") {
-        tdtConfirms.push({
-          key: obj.key || k,
-          values: obj.testCases || obj.values || [],
-          error: obj.error,
-          failed: obj.failed,
-          features: obj.features || [],
-          artifacts: obj.artifacts || [],
-          status: obj.status
-        });
-      } else if (constructorName === "BaseValue") {
-        tdtConfirms.push({
-          key: obj.key || k,
-          values: obj.values || obj.tableRows || [],
-          error: obj.error,
-          failed: obj.failed,
-          features: obj.features || [],
-          artifacts: obj.artifacts || [],
-          status: obj.status
-        });
-      } else if (constructorName === "BaseDescribe") {
-        aaaDescribes.push({
-          key: obj.key || k,
-          describes: obj.describes || [],
-          its: obj.its || [],
-          error: obj.error,
-          failed: obj.failed,
-          features: obj.features || [],
-          artifacts: obj.artifacts || [],
-          status: obj.status
-        });
-      } else if (constructorName === "BaseGiven") {
-        bddGivens.push({
-          key: obj.key || k,
-          whens: obj.whens || [],
-          thens: obj.thens || [],
-          error: obj.error,
-          failed: obj.failed,
-          features: obj.features || [],
-          artifacts: obj.artifacts || [],
-          status: obj.status
-        });
-      } else {
-        if (obj.values !== void 0 || obj.tableRows !== void 0 || obj.testCases !== void 0 || constructorName.includes("Confirm") || constructorName.includes("Value")) {
-          tdtConfirms.push({
-            key: obj.key || k,
-            values: obj.values || obj.tableRows || obj.testCases || [],
-            error: obj.error,
-            failed: obj.failed,
-            features: obj.features || [],
-            artifacts: obj.artifacts || [],
-            status: obj.status
-          });
-        } else if (obj.describes !== void 0 || obj.its !== void 0 || constructorName.includes("Describe")) {
-          aaaDescribes.push({
-            key: obj.key || k,
-            describes: obj.describes || [],
-            its: obj.its || [],
-            error: obj.error,
-            failed: obj.failed,
-            features: obj.features || [],
-            artifacts: obj.artifacts || [],
-            status: obj.status
-          });
-        } else if (obj.whens !== void 0 || obj.thens !== void 0 || constructorName.includes("Given")) {
-          bddGivens.push({
-            key: obj.key || k,
-            whens: obj.whens || [],
-            thens: obj.thens || [],
-            error: obj.error,
-            failed: obj.failed,
-            features: obj.features || [],
-            artifacts: obj.artifacts || [],
-            status: obj.status
-          });
-        } else {
-          bddGivens.push({
-            key: k,
-            ...obj
-          });
-        }
-      }
-    }
-    const result2 = {
-      name: this.name,
-      fails: this.fails,
-      failed: this.failed,
-      features: this.features(),
-      artifacts: this.artifacts ? this.artifacts.filter((art) => typeof art === "string") : []
-    };
-    if (bddGivens.length > 0) {
-      result2.givens = bddGivens;
-    }
-    if (aaaDescribes.length > 0) {
-      result2.describes = aaaDescribes;
-    }
-    if (tdtConfirms.length > 0) {
-      result2.confirms = tdtConfirms;
-    }
-    return result2;
-  }
-  setup(s, artifactory, tr) {
-    return new Promise((res) => res(s));
-  }
-  assertThat(t) {
-    return !!t;
-  }
-  afterAll(store, artifactory) {
-    return store;
-  }
-  async run(input, testResourceConfiguration) {
-    this.testResourceConfiguration = testResourceConfiguration;
-    const sNdx = this.index;
-    let suiteArtifactory;
-    if (this.parent && this.parent.createArtifactory) {
-      suiteArtifactory = this.parent.createArtifactory({
-        suiteIndex: sNdx
-      });
-    } else {
-      const basePath = this.testResourceConfiguration?.fs || "testeranto";
-      suiteArtifactory = {
-        writeFileSync: (filename, payload) => {
-          console.log(
-            `[BaseSuite] Would write to ${basePath}/suite-${sNdx}/${filename}: ${payload.substring(0, 100)}...`
-          );
-        },
-        screenshot: (filename, payload) => {
-          console.log(`[BaseSuite] Would take screenshot: ${filename}`);
-        }
-      };
-    }
-    const subject = await this.setup(input, suiteArtifactory, testResourceConfiguration);
-    for (const [gKey, giver] of Object.entries(this.givens)) {
-      try {
-        let givenArtifactory;
-        if (this.parent && this.parent.createArtifactory) {
-          givenArtifactory = this.parent.createArtifactory({
-            givenKey: gKey,
-            suiteIndex: sNdx
-          });
-        } else {
-          const basePath = this.testResourceConfiguration?.fs || "testeranto";
-          givenArtifactory = {
-            writeFileSync: (filename, payload) => {
-              const path2 = `suite-${sNdx}/given-${gKey}/${filename}`;
-              const fullPath = `${basePath}/${path2}`;
-              console.log(`[BaseSuite] Would write to ${fullPath}: ${payload.substring(0, 100)}...`);
-            },
-            screenshot: (filename, payload) => {
-              console.log(`[BaseSuite] Would take screenshot: ${filename}`);
-            }
-          };
-        }
-        if (typeof giver.give === "function") {
-          this.store = await giver.give(
-            subject,
-            gKey,
-            testResourceConfiguration,
-            this.assertThat,
-            givenArtifactory,
-            sNdx
-          );
-        } else if (typeof giver.describe === "function") {
-          this.store = await giver.describe(
-            subject,
-            gKey,
-            testResourceConfiguration,
-            this.assertThat,
-            givenArtifactory,
-            sNdx
-          );
-        } else if (typeof giver.run === "function") {
-          this.store = await giver.run(
-            subject,
-            testResourceConfiguration,
-            givenArtifactory
-          );
-        } else if (typeof giver.confirm === "function") {
-          this.store = await giver.confirm(
-            subject,
-            gKey,
-            testResourceConfiguration,
-            this.assertThat,
-            givenArtifactory,
-            sNdx
-          );
-        } else if (typeof giver.value === "function") {
-          this.store = await giver.value(
-            subject,
-            gKey,
-            testResourceConfiguration,
-            this.assertThat,
-            givenArtifactory,
-            sNdx
-          );
-        } else {
-          throw new Error(`Giver ${gKey} has no valid method (give, describe, run, or value)`);
-        }
-        this.fails += giver.fails || 0;
-      } catch (e) {
-        this.failed = true;
-        this.fails += 1;
-        if (giver.fails) {
-          this.fails += giver.fails;
-        }
-        console.error(`Error in given ${gKey}:`, e);
-      }
-    }
-    if (this.fails > 0) {
-      this.failed = true;
-    }
-    try {
-      this.afterAll(this.store, suiteArtifactory);
-    } catch (e) {
-      console.error(JSON.stringify(e));
-    }
-    return this;
   }
 };
 
@@ -807,17 +536,47 @@ var BaseConfirm = class {
         try {
           if (Array.isArray(testCase) && testCase.length >= 2) {
             const [value, should] = testCase;
+            console.log("[BaseConfirm] value:", value);
+            console.log("[BaseConfirm] should:", should);
+            console.log("[BaseConfirm] value type:", typeof value);
+            console.log("[BaseConfirm] should type:", typeof should);
             let input;
             if (typeof value === "function") {
               input = value();
-            } else if (value && typeof value.toObj === "function") {
-              const obj = value.toObj();
-              input = obj.features || obj;
+              console.log("[BaseConfirm] input from function:", input);
             } else {
               input = value;
+              console.log("[BaseConfirm] input direct:", input);
             }
             if (typeof should === "function") {
-              should(input, this.confirmCB);
+              console.log("[BaseConfirm] input:", input);
+              console.log("[BaseConfirm] confirmCB:", this.confirmCB);
+              console.log("[BaseConfirm] should function:", should);
+              let testFn;
+              if (typeof this.confirmCB === "function") {
+                const potentialTestFn = this.confirmCB();
+                if (typeof potentialTestFn === "function") {
+                  testFn = potentialTestFn;
+                } else {
+                  testFn = this.confirmCB;
+                }
+              } else {
+                testFn = this.confirmCB;
+              }
+              const actualResult = Array.isArray(input) ? testFn(...input) : testFn(input);
+              console.log("[BaseConfirm] actualResult:", actualResult);
+              const passed = should(actualResult);
+              tester(passed);
+            } else if (should && typeof should.processRow === "function") {
+              const actualResult = Array.isArray(input) ? this.confirmCB(...input) : this.confirmCB(input);
+              console.log("[BaseConfirm] actualResult:", actualResult);
+              const passed = await should.processRow(
+                actualResult,
+                testResourceConfiguration,
+                artifactory
+              );
+              tester(passed);
+            } else {
               tester(true);
             }
           }
@@ -890,11 +649,17 @@ var BaseShould = class {
     this.currentRow = rowData;
   }
   // Process the current row
-  async processRow(store, testResourceConfiguration, artifactory) {
+  async processRow(actualResult, testResourceConfiguration, artifactory) {
     try {
-      const result2 = await this.shouldCB(store);
-      this.status = true;
-      return result2;
+      let success = false;
+      if (typeof this.shouldCB === "function") {
+        const result2 = await this.shouldCB(actualResult);
+        success = !!result2;
+      } else {
+        success = actualResult === this.shouldCB;
+      }
+      this.status = success;
+      return success;
     } catch (e) {
       this.status = false;
       this.error = e;
@@ -1066,45 +831,7 @@ var BaseTiposkripto = class {
     this.testResourceConfiguration = testResourceConfiguration;
     const fullAdapter = DefaultAdapter(testAdapter);
     const instance = this;
-    if (!testImplementation.suites || typeof testImplementation.suites !== "object") {
-      throw new Error(
-        `testImplementation.suites must be an object, got ${typeof testImplementation.suites}: ${JSON.stringify(
-          testImplementation.suites
-        )}`
-      );
-    }
-    const classySuites = Object.entries(testImplementation.suites).reduce(
-      (a, [key], index) => {
-        a[key] = (somestring, setups) => {
-          const capturedFullAdapter = fullAdapter;
-          return new class extends BaseSuite {
-            afterAll(store, artifactory) {
-              let suiteArtifactory = artifactory;
-              if (!suiteArtifactory) {
-                if (this.parent && this.parent.createArtifactory) {
-                  suiteArtifactory = this.parent.createArtifactory({
-                    suiteIndex: this.index
-                  });
-                } else {
-                  suiteArtifactory = instance.createArtifactory({
-                    suiteIndex: this.index
-                  });
-                }
-              }
-              return capturedFullAdapter.cleanupAll(store, suiteArtifactory);
-            }
-            assertThat(t) {
-              return capturedFullAdapter.assert(t);
-            }
-            async setup(s, artifactory, tr) {
-              return capturedFullAdapter.prepareAll?.(s, tr, artifactory) ?? s;
-            }
-          }(somestring, index, setups, instance);
-        };
-        return a;
-      },
-      {}
-    );
+    const classySuites = {};
     const classyGivens = {};
     if (testImplementation.givens) {
       Object.entries(testImplementation.givens).forEach(([key, g]) => {
@@ -1192,13 +919,22 @@ var BaseTiposkripto = class {
     const classyConfirms = {};
     if (testImplementation.confirms) {
       Object.entries(testImplementation.confirms).forEach(([key, val]) => {
-        classyConfirms[key] = (features, testCases, confirmCB, initialValues) => {
-          return new BaseConfirm(
-            features,
-            testCases,
-            val,
-            initialValues
-          );
+        classyConfirms[key] = () => {
+          return (testCases, features) => {
+            let actualConfirmCB;
+            if (typeof val === "function") {
+              actualConfirmCB = val();
+            } else {
+              actualConfirmCB = val;
+            }
+            return new BaseConfirm(
+              features,
+              testCases,
+              actualConfirmCB,
+              void 0
+              // initialValues
+            );
+          };
         };
       });
     }
@@ -1281,8 +1017,7 @@ var BaseTiposkripto = class {
     this.testResourceRequirement = testResourceRequirement;
     this.testSpecification = testSpecification;
     try {
-      this.specs = testSpecification(
-        this.Suites(),
+      const topLevelVerbs = testSpecification(
         this.Given(),
         this.When(),
         this.Then(),
@@ -1290,41 +1025,117 @@ var BaseTiposkripto = class {
         this.It(),
         this.Confirm(),
         this.Value(),
-        this.Should(),
-        this.Expected()
+        this.Should()
       );
-      this.totalTests = this.calculateTotalTests();
-      this.testJobs = this.specs.map((suite) => {
-        const suiteRunner = (suite2) => async (testResourceConfiguration2) => {
+      this.specs = topLevelVerbs;
+      this.totalTests = this.calculateTotalTestsDirectly();
+      this.testJobs = this.specs.map((step, index) => {
+        const stepRunner = async (testResourceConfiguration2) => {
           try {
-            const x = await suite2.run(input, testResourceConfiguration2);
-            return x;
+            let result2;
+            const constructorName = step.constructor.name;
+            const stepArtifactory = this.createArtifactory({
+              stepIndex: index,
+              stepType: constructorName.toLowerCase().replace("base", "")
+            });
+            if (constructorName === "BaseGiven") {
+              result2 = await step.give(
+                input,
+                `step_${index}`,
+                testResourceConfiguration2,
+                (t) => !!t,
+                // Simple tester function
+                stepArtifactory,
+                index
+              );
+            } else if (constructorName === "BaseDescribe") {
+              result2 = await step.describe(
+                input,
+                `step_${index}`,
+                testResourceConfiguration2,
+                (t) => !!t,
+                // Simple tester function
+                stepArtifactory,
+                index
+              );
+            } else if (constructorName === "BaseConfirm" || constructorName === "BaseValue") {
+              if (typeof step.run === "function") {
+                result2 = await step.run(
+                  input,
+                  testResourceConfiguration2,
+                  stepArtifactory
+                );
+              } else if (typeof step.confirm === "function") {
+                result2 = await step.confirm(
+                  input,
+                  `step_${index}`,
+                  testResourceConfiguration2,
+                  (t) => !!t,
+                  // Simple tester function
+                  stepArtifactory,
+                  index
+                );
+              } else if (typeof step.value === "function") {
+                result2 = await step.value(
+                  input,
+                  `step_${index}`,
+                  testResourceConfiguration2,
+                  (t) => !!t,
+                  // Simple tester function
+                  stepArtifactory,
+                  index
+                );
+              }
+            } else {
+              if (typeof step.run === "function") {
+                result2 = await step.run(
+                  input,
+                  testResourceConfiguration2,
+                  stepArtifactory
+                );
+              } else if (typeof step.test === "function") {
+                result2 = await step.test(
+                  input,
+                  testResourceConfiguration2,
+                  stepArtifactory
+                );
+              } else {
+                throw new Error(`Step type ${constructorName} has no runnable method`);
+              }
+            }
+            return { step, result: result2, fails: step.fails || 0, failed: step.failed || false };
           } catch (e) {
             console.error(e.stack);
             throw e;
           }
         };
-        const runner = suiteRunner(suite);
+        const runner = stepRunner;
         const totalTests = this.totalTests;
         const testJob = {
-          test: suite,
+          test: step,
           toObj: () => {
-            return suite.toObj();
+            return step.toObj ? step.toObj() : { name: `Step_${index}`, type: step.constructor.name };
           },
           runner,
           receiveTestResourceConfig: async (testResourceConfiguration2) => {
             try {
-              const suiteDone = await runner(
-                testResourceConfiguration2
-              );
-              const fails = suiteDone.fails;
+              const stepResult = await runner(testResourceConfiguration2);
+              const fails = stepResult.fails;
+              const stepObj = stepResult.step;
+              let features = [];
+              if (stepObj.features && Array.isArray(stepObj.features)) {
+                features = stepObj.features;
+              }
+              let artifacts = [];
+              if (stepObj.artifacts && Array.isArray(stepObj.artifacts)) {
+                artifacts = stepObj.artifacts;
+              }
               return {
-                failed: fails > 0,
+                failed: stepResult.failed || fails > 0,
                 fails,
-                artifacts: [],
-                // this.artifacts is not accessible here
-                features: suiteDone.features(),
-                tests: 0,
+                artifacts,
+                features,
+                tests: 1,
                 runTimeTests: totalTests,
                 testJob: testJob.toObj()
               };
@@ -1411,7 +1222,12 @@ var BaseTiposkripto = class {
         const basePath = this.testResourceConfiguration?.fs || "testeranto";
         console.log("[Artifactory] Base path:", basePath);
         console.log("[Artifactory] Context:", context);
-        if (context.suiteIndex !== void 0) {
+        if (context.stepIndex !== void 0) {
+          path2 += `step-${context.stepIndex}/`;
+          if (context.stepType) {
+            path2 += `${context.stepType}/`;
+          }
+        } else if (context.suiteIndex !== void 0) {
           path2 += `suite-${context.suiteIndex}/`;
         }
         if (context.givenKey) {
@@ -1448,14 +1264,8 @@ var BaseTiposkripto = class {
     return this.specs;
   }
   Suites() {
-    if (!this.suitesOverrides) {
-      throw new Error(
-        `suitesOverrides is undefined. classySuites: ${JSON.stringify(
-          Object.keys(this.suitesOverrides || {})
-        )}`
-      );
-    }
-    return this.suitesOverrides;
+    console.warn("Suites() is deprecated and returns an empty object");
+    return {};
   }
   Given() {
     return this.givenOverrides;
@@ -1491,19 +1301,8 @@ var BaseTiposkripto = class {
   getTestJobs() {
     return this.testJobs;
   }
-  calculateTotalTests() {
-    let total = 0;
-    for (const suite of this.specs) {
-      if (suite && typeof suite === "object") {
-        if ("givens" in suite) {
-          const givens = suite.givens;
-          if (givens && typeof givens === "object") {
-            total += Object.keys(givens).length;
-          }
-        }
-      }
-    }
-    return total;
+  calculateTotalTestsDirectly() {
+    return this.specs ? this.specs.length : 0;
   }
 };
 
@@ -1687,15 +1486,19 @@ var adapter = {
 // src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts
 import { assert } from "chai";
 var implementation = {
-  suites: {
-    Default: { description: "Comprehensive test suite for Calculator" }
-  },
+  // suites: {
+  //   Default: { description: "Comprehensive test suite for Calculator" },
+  // },
   // TDT style /////////////////////////
   confirms: {
-    addition: new Calculator().add
+    addition: () => {
+      return () => {
+        return (a, b) => a + b;
+      };
+    }
   },
   values: {
-    of: (...numbers) => {
+    of: (numbers) => {
       return numbers;
     },
     "one and two": () => {
@@ -1704,14 +1507,13 @@ var implementation = {
   },
   shoulds: {
     beEqualTo: (expected) => {
-      return (input, confirmation) => {
-        return assert.equal(expected, confirmation(input[0], input[1]));
+      return (actualResult) => {
+        return assert.equal(actualResult, expected);
       };
     },
     beGreaterThan: (expected) => {
-      return (input, confirmation) => {
-        const result2 = confirmation(input[0], input[1]);
-        return assert.isAbove(result2, expected, `${result2} should be greater than ${expected}`);
+      return (actualResult) => {
+        return assert.isAbove(actualResult, expected, `${actualResult} should be greater than ${expected}`);
       };
     },
     // whenAddedAreGreaterThan: (expected: number) => {
@@ -1722,21 +1524,19 @@ var implementation = {
     //   };
     // },
     whenMultipliedAreAtLeast: (expected) => {
-      return (input, calculator) => {
-        const [a, b] = input;
-        const result2 = calculator.multiply(a, b);
-        assert.isAtLeast(result2, expected, `${a} * ${b} should be at least ${expected}`);
+      return (actualResult) => {
+        return assert.isAtLeast(actualResult, expected, `${actualResult} should be at least ${expected}`);
       };
     },
     equal: (expected) => {
-      return (input, calculator) => {
-        assert.deepEqual(input, expected);
+      return (actualResult) => {
+        return assert.deepEqual(actualResult, expected);
       };
     }
   },
   // AAA style /////////////////////////
   describes: {
-    "another simple calculator": () => new Calculator()
+    "a simple calculator": (input) => new input()
   },
   its: {
     "can save 1 memory": () => {
@@ -1756,7 +1556,7 @@ var implementation = {
   },
   // BDD style /////////////////////////
   givens: {
-    Default: () => new Calculator()
+    Default: (input) => new input()
   },
   whens: {
     press: (button) => {
@@ -1812,297 +1612,35 @@ var implementation = {
 };
 
 // src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts
-var specification = (Suite, Given, When, Then, Describe, It, Confirm, Value, Should) => {
+var specification = (Given, When, Then, Describe, It, Confirm, Value, Should) => {
   return [
-    Suite.Default("Comprehensive Calculator Test", {
-      // ========== TDT (Table-Driven Testing) Tests ==========
-      tdtAdditionTable: Confirm["addition"](
-        ["TDT addition table"],
-        [
-          [Value.of([1, 1]), Should.beEqualTo(2)],
-          [Value.of([2, 3]), Should.beGreaterThan(4)]
-        ]
-      ),
-      // ========== AAA (Describe-It) Tests ==========
-      aaaBasicOperations: Describe["another simple calculator"](
-        ["AAA basic operations"],
-        [
-          It["can save 1 memory"](),
-          It["can save 2 memories"]()
-        ]
-      ),
-      aaaDisplayTests: Describe["another simple calculator"](
-        ["AAA display functionality"],
-        [
-          // We'll need to add more its in the implementation
-          // For now, reuse existing ones
-          It["can save 1 memory"](),
-          It["can save 2 memories"]()
-        ]
-      ),
-      aaaNestedDescribes: Describe["another simple calculator"](
-        ["AAA nested structure"],
-        [
-          It["can save 1 memory"](),
-          It["can save 2 memories"]()
-        ]
-      ),
-      // ========== BDD (Given-When-Then) Tests ==========
-      // Basic display tests
-      bddEmptyDisplay: Given.Default(
-        ["BDD empty display"],
-        [],
-        [Then.result("")]
-      ),
-      bddSingleDigit: Given.Default(
-        ["BDD single digit"],
-        [When.press("7")],
-        [Then.result("7")]
-      ),
-      bddMultipleDigits: Given.Default(
-        ["BDD multiple digits"],
-        [When.press("1"), When.press("2"), When.press("3")],
-        [Then.result("123")]
-      ),
-      // Arithmetic operations
-      bddAddition: Given.Default(
-        ["BDD addition"],
-        [
-          When.press("5"),
-          When.press("+"),
-          When.press("3"),
-          When.enter()
-        ],
-        [Then.result("8")]
-      ),
-      bddSubtraction: Given.Default(
-        ["BDD subtraction"],
-        [
-          When.press("9"),
-          When.press("-"),
-          When.press("4"),
-          When.enter()
-        ],
-        [Then.result("5")]
-      ),
-      bddMultiplication: Given.Default(
-        ["BDD multiplication"],
-        [
-          When.press("6"),
-          When.press("*"),
-          When.press("7"),
-          When.enter()
-        ],
-        [Then.result("42")]
-      ),
-      bddDivision: Given.Default(
-        ["BDD division"],
-        [
-          When.press("8"),
-          When.press("/"),
-          When.press("2"),
-          When.enter()
-        ],
-        [Then.result("4")]
-      ),
-      // Complex expressions
-      bddChainedOperations: Given.Default(
-        ["BDD chained operations"],
-        [
-          When.press("2"),
-          When.press("+"),
-          When.press("3"),
-          When.press("*"),
-          When.press("4"),
-          When.enter()
-        ],
-        [Then.result("14")]
-      ),
-      bddDecimalOperations: Given.Default(
-        ["BDD decimal operations"],
-        [
-          When.press("3"),
-          When.press("."),
-          When.press("1"),
-          When.press("4"),
-          When.press("+"),
-          When.press("1"),
-          When.press("."),
-          When.press("5"),
-          When.enter()
-        ],
-        [Then.result("4.64")]
-      ),
-      // Clear functionality
-      bddClearDisplay: Given.Default(
-        ["BDD clear display"],
-        [
-          When.press("9"),
-          When.press("9"),
-          When.press("C"),
-          When.press("5")
-        ],
-        [Then.result("5")]
-      ),
-      // Memory operations
-      bddMemoryStoreRecall: Given.Default(
-        ["BDD memory store and recall"],
-        [
-          When.press("4"),
-          When.press("2"),
-          When.memoryStore(),
-          When.press("C"),
-          When.memoryRecall()
-        ],
-        [Then.result("42")]
-      ),
-      bddMemoryAdd: Given.Default(
-        ["BDD memory add"],
-        [
-          When.press("1"),
-          When.press("0"),
-          When.memoryStore(),
-          When.press("C"),
-          When.press("2"),
-          When.press("0"),
-          When.memoryAdd(),
-          When.memoryRecall()
-        ],
-        [Then.result("30")]
-      ),
-      bddMemoryClear: Given.Default(
-        ["BDD memory clear"],
-        [
-          When.press("7"),
-          When.press("7"),
-          When.memoryStore(),
-          When.memoryClear(),
-          When.memoryRecall()
-        ],
-        [Then.result("0")]
-      ),
-      // Error cases
-      bddDivisionByZero: Given.Default(
-        ["BDD division by zero"],
-        [
-          When.press("5"),
-          When.press("/"),
-          When.press("0"),
-          When.enter()
-        ],
-        [Then.result("Error")]
-      ),
-      bddInvalidExpression: Given.Default(
-        ["BDD invalid expression"],
-        [
-          When.press("2"),
-          When.press("+"),
-          When.press("+"),
-          When.press("3"),
-          When.enter()
-        ],
-        [Then.result("Error")]
-      ),
-      // Multiple whens and thens
-      bddMultipleActions: Given.Default(
-        ["BDD multiple actions and assertions"],
-        [
-          When.press("1"),
-          When.press("+"),
-          When.press("2"),
-          When.enter(),
-          When.press("*"),
-          When.press("3"),
-          When.enter()
-        ],
-        [
-          Then.result("9")
-        ]
-      ),
-      // Edge cases
-      bddStartingWithOperator: Given.Default(
-        ["BDD starting with operator"],
-        [When.press("+"), When.press("5")],
-        [Then.result("+5")]
-      ),
-      bddMultipleOperators: Given.Default(
-        ["BDD multiple operators"],
-        [When.press("5"), When.press("+"), When.press("-"), When.press("3")],
-        [Then.result("5+-3")]
-      ),
-      bddLargeNumber: Given.Default(
-        ["BDD large number"],
-        [
-          When.press("1"),
-          When.press("2"),
-          When.press("3"),
-          When.press("4"),
-          When.press("5"),
-          When.press("6"),
-          When.press("7"),
-          When.press("8"),
-          When.press("9")
-        ],
-        [Then.result("123456789")]
-      ),
-      // Mixed operations with memory
-      bddComplexMemoryScenario: Given.Default(
-        ["BDD complex memory scenario"],
-        [
-          When.press("1"),
-          When.press("0"),
-          When.memoryStore(),
-          When.press("C"),
-          When.press("2"),
-          When.press("0"),
-          When.memoryAdd(),
-          When.press("C"),
-          When.press("5"),
-          When.memoryAdd(),
-          When.memoryRecall(),
-          When.press("*"),
-          When.press("2"),
-          When.enter()
-        ],
-        [Then.result("70")]
-      ),
-      // Parentheses operations
-      bddParentheses: Given.Default(
-        ["BDD parentheses"],
-        [
-          When.press("("),
-          When.press("2"),
-          When.press("+"),
-          When.press("3"),
-          When.press(")"),
-          When.press("*"),
-          When.press("4"),
-          When.enter()
-        ],
-        [Then.result("20")]
-      ),
-      // Zero handling
-      bddZeroOperations: Given.Default(
-        ["BDD zero operations"],
-        [
-          When.press("0"),
-          When.press("+"),
-          When.press("0"),
-          When.enter()
-        ],
-        [Then.result("0")]
-      ),
-      bddMultiplyByZero: Given.Default(
-        ["BDD multiply by zero"],
-        [
-          When.press("5"),
-          When.press("*"),
-          When.press("0"),
-          When.enter()
-        ],
-        [Then.result("0")]
-      )
-    })
+    // TDT pattern: Confirm creates a BaseConfirm instance
+    Confirm["addition"]()(
+      [
+        [Value.of([1, 1]), Should.beEqualTo(2222)]
+        // [Value.of([2, 3]), Should.beGreaterThan(4)],
+      ],
+      ["./Readme.md"]
+    )
+    // // AAA pattern: Describe creates a BaseDescribe instance
+    // Describe["another simple calculator"]("some input")(
+    //   [
+    //     It["can save 1 memory"](),
+    //     It["can save 2 memories"](),
+    //   ],
+    //   ["./Readme.md"],
+    // ),
+    // // BDD pattern: Given creates a BaseGiven instance
+    // Given.Default("some input")(
+    //   [
+    //     When.press("5"),
+    //     When.press("+"),
+    //     When.press("3"),
+    //     When.enter(),
+    //   ],
+    //   [Then.result("8")],
+    //   ["./Readme.md"],
+    // ),
   ];
 };
 

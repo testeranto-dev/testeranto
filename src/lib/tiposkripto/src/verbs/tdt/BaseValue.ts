@@ -1,5 +1,5 @@
 import type { TestTypeParams_any } from "../../CoreTypes.js";
-import type { ITestArtifactory, ITestResourceConfiguration } from "../types.js";
+import { ITestResourceConfiguration } from "../../types.js";
 import { CommonUtils } from "../internal/CommonUtils.js";
 
 /**

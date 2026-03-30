@@ -50,7 +50,7 @@ export class BaseDescribe<I extends TestTypeParams_any> {
     try {
       // Setup phase (Arrange)
       // describeCB is I["given"] which is () => Calculator
-      this.store = await this.describeCB();
+      this.store = await this.describeCB("x");
       this.status = true;
     } catch (e: any) {
       this.status = false;

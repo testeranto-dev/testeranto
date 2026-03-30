@@ -1,0 +1,7 @@
+[2026-03-30T03:45:01.177Z] Build log for test: src/vscode/providers/utils/testTree/debugTest.js
+Output: testeranto/bundles/nodetests/src/vscode/providers/utils/testTree/debugTest.mjs
+Entry point: src/vscode/providers/utils/testTree/debugTest.js
+
+[2026-03-30T03:45:01.156Z] INFO: Build started for nodetests
+
+[2026-03-30T03:45:01.177Z] Build completed for: src/vscode/providers/utils/testTree/debugTest.js

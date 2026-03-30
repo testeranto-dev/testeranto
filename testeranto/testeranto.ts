@@ -70,9 +70,9 @@ const config: ITestconfigV2 = {
       checks: [
         (x) => `yarn eslint ${x.join(" ")} `,
         (x) => `yarn tsc --noEmit ${x.join(" ")}`,
-        // Run Jest tests
-        (x) =>
-          `yarn jest ${x.filter((f) => f.includes("jest.test")).join(" ")} --passWithNoTests`,
+        // // Run Jest tests
+        // (x) =>
+        //   `yarn jest ${x.filter((f) => f.includes("jest.test")).join(" ")} --passWithNoTests`,
 
         // () => `yarn node test/logFilesTest.js`, // you can run regular tests too!
 

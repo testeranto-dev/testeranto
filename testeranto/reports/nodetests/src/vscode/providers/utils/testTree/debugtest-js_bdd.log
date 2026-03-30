@@ -1,0 +1,159 @@
+=== Log started at 2026-03-30T02:33:39.469Z for service node ===
+
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | yarn run v1.22.22
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | warning testeranto@0.233.9: The engine "vscode" appears to be invalid.
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | warning testeranto@0.233.9: The engine "bun" appears to be invalid.
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/vscode/providers/utils/testTree/debugTest.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/vscode/providers/utils/testTree/debugTest.ts/"}'
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | Testing filterTreeForRuntimeAndTest...
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | [treeFilter] ==========================================
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | [treeFilter] filterTreeForRuntimeAndTest called with runtime="nodetests", testName="src/lib/tiposkripto/tests/abstractBase.test/index.ts"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | [treeFilter] Full tree structure: {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   "nodetests": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       "src/lib/tiposkripto/tests/abstractBase.test/index.ts": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           "source": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             "name": "Source Files",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "index.ts": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "type": "file",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "path": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "fileType": "source"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           },
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           "logs": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             "name": "Logs",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "calculator_test_node_ts_check_3_log": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "type": "file",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/calculator-test-node-ts_check-3.log",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "runtime": "node",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "runtimeKey": "nodetests",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "fileType": "log",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "exitCode": "0",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "exitCodeColor": "green",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |                 "description": "Log"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | [treeFilter] normalizedTestName: "src_lib_tiposkripto_tests_abstractbase.test_index", testBaseName: "index"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | [treeFilter] Runtime node structure: {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "src/lib/tiposkripto/tests/abstractBase.test/index.ts": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "source": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           "name": "Source Files",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             "index.ts": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "type": "file",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "path": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "fileType": "source"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         },
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "logs": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           "name": "Logs",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             "calculator_test_node_ts_check_3_log": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "type": "file",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/calculator-test-node-ts_check-3.log",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "runtime": "node",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "runtimeKey": "nodetests",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "fileType": "log",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "exitCode": "0",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "exitCodeColor": "green",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |               "description": "Log"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |             }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |           }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | [treeFilter] Found test by exact key match: "src/lib/tiposkripto/tests/abstractBase.test/index.ts"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | [treeFilter] Test node children: {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   "source": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "name": "Source Files",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       "index.ts": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "type": "file",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "path": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "fileType": "source"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   },
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   "logs": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "name": "Logs",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       "calculator_test_node_ts_check_3_log": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "type": "file",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/calculator-test-node-ts_check-3.log",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "runtime": "node",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "runtimeKey": "nodetests",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "fileType": "log",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "exitCode": "0",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "exitCodeColor": "green",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "description": "Log"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | Result 1 keys: [ 'source', 'logs' ]
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | Result 1 structure: {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   "source": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "name": "Source Files",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       "index.ts": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "type": "file",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "path": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "fileType": "source"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   },
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   "logs": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "type": "directory",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "name": "Logs",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     "children": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       "calculator_test_node_ts_check_3_log": {
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "type": "file",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/calculator-test-node-ts_check-3.log",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "runtime": "node",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "runtimeKey": "nodetests",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "fileType": "log",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "exitCode": "0",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "exitCodeColor": "green",
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |         "description": "Log"
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |       }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |     }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  |   }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | }
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | Source files: [ 'index.ts' ]
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | All tests passed!
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | 
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | ✅ Test completed successfully!
+nodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd  | Done in 0.33s.
+[Knodetests-src_vscode_providers_utils_testtree_debugtest-js-bdd exited with code 0
+
+=== Log ended at 2026-03-30T02:33:40.103Z, process exited with code 0 ===

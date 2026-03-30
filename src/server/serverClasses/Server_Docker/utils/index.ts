@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import fs, { writeFileSync, unlinkSync } from "fs";
 import {
   getFullReportDir,
   getLogFilePath,
@@ -24,56 +24,12 @@ export const captureExistingLogs: IR = (
   runtimeConfigKey: string,
   testName?: string,
 ): void => {
-  const reportDir = getFullReportDir(processCwd(), runtime);
-  
-  // Generate log file path using the same logic as startServiceLoggingPure
-  let baseName: string;
-  if (testName) {
-    const cleanedTestName = cleanTestNameForPath(testName);
-    const suffixMatch = serviceName.match(/-(bdd|check-\d+|aider|builder)$/);
-    if (suffixMatch) {
-      const suffix = suffixMatch[1];
-      baseName = `${cleanedTestName}_${suffix}`;
-    } else {
-      baseName = serviceName;
-    }
-  } else {
-    baseName = serviceName;
-  }
-  const logFilePath = `${processCwd()}/testeranto/reports/${runtimeConfigKey}/${baseName}.log`;
-
-  try {
-    // First, check if the container exists (including stopped ones)
-    const checkCmd = `docker compose -f "testeranto/docker-compose.yml" ps -a -q ${serviceName}`;
-    const containerId = execSyncWrapper(checkCmd, {
-      cwd: processCwd(),
-      encoding: "utf-8",
-    }).trim();
-
-    const cmd = `${DOCKER_COMPOSE_LOGS} ${serviceName} 2>/dev/null || true`;
-    const existingLogs = execSyncWrapper(cmd, {
-      cwd: processCwd(),
-      encoding: "utf-8",
-    });
-
-    if (existingLogs && existingLogs.trim().length > 0) {
-      writeFileSync(logFilePath, existingLogs);
-      consoleLog(
-        `[Server_Docker] Captured ${existingLogs.length} bytes of existing logs for ${serviceName}`,
-      );
-    } else {
-      // If no logs exist, create an empty file
-      writeFileSync(logFilePath, "");
-    }
-
-    // Also try to capture the container exit code if it has exited
-    captureContainerExitCode(serviceName, runtime, runtimeConfigKey, testName);
-  } catch (error: any) {
-    // It's okay if this fails - the container might not exist yet
-    consoleLog(
-      `[Server_Docker] No existing logs for ${serviceName}: ${error.message}`,
-    );
-  }
+  // This function is called before starting service logging
+  // We don't need to capture old logs since startServiceLoggingPure
+  // will create fresh log files
+  // However, we might want to clean up any old log files
+  // For now, just log that we're starting fresh
+  consoleLog(`[captureExistingLogs] Starting fresh logs for ${serviceName}`);
 };
 
 export const executeDockerComposeCommand = async (

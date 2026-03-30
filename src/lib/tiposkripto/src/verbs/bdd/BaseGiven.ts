@@ -10,10 +10,10 @@ import { CommonUtils } from "../internal/CommonUtils.js";
  * - This allows for better organization and reuse of setup logic
  * - The BDD pattern often involves multiple named Given scenarios
  */
-export type IGivens<I extends TestTypeParams_any> = Record<
-  string,
-  BaseGiven<I>
->;
+// export type IGivens<I extends TestTypeParams_any> = Record<
+//   string,
+//   BaseGiven<I>
+// >;
 
 /**
  * BaseGiven for BDD pattern - independent implementation

@@ -36,7 +36,6 @@ export default abstract class BaseTiposkripto<
   testResourceConfiguration: ITestResourceConfiguration;
   describeOverrides: Record<string, any>;
   itOverrides: Record<string, any>;
-
   confirmOverrides: Record<string, any>;
   valuesOverrides: Record<string, any>;
   shouldsOverrides: Record<string, any>;
@@ -51,6 +50,8 @@ export default abstract class BaseTiposkripto<
       whenIndex?: number;
       thenIndex?: number;
       suiteIndex?: number;
+      stepIndex?: number;
+      stepType?: string;
     } = {},
   ) {
     return {
@@ -65,8 +66,15 @@ export default abstract class BaseTiposkripto<
         console.log("[Artifactory] Base path:", basePath);
         console.log("[Artifactory] Context:", context);
 
-        // Add suite context if available
-        if (context.suiteIndex !== undefined) {
+        // Use step context if available (new approach)
+        if (context.stepIndex !== undefined) {
+          path += `step-${context.stepIndex}/`;
+          if (context.stepType) {
+            path += `${context.stepType}/`;
+          }
+        }
+        // Fallback to suite context for backward compatibility
+        else if (context.suiteIndex !== undefined) {
           path += `suite-${context.suiteIndex}/`;
         }
 
@@ -113,24 +121,26 @@ export default abstract class BaseTiposkripto<
     input: I["iinput"],
     testSpecification: ITestSpecification<I, O>,
     testImplementation: ITestImplementation<I, O, M> & {
-      suites: Record<string, object>;
+
       // BDD pattern
       givens?: Record<string, any>;
       whens?: Record<string, any>;
       thens?: Record<string, any>;
-      // TDT pattern
-      values?: Record<string, any>;
-      shoulds?: Record<string, any>;
-      expecteds?: Record<string, any>;
+
       // Describe-It pattern
       describes?: Record<string, any>;
       its?: Record<string, any>;
+
+      // TDT pattern
+      confirms?: Record<string, any>;
+      values?: Record<string, any>;
+      shoulds?: Record<string, any>;
+
+
     },
     testResourceRequirement: ITTestResourceRequest = defaultTestResourceRequirement,
     testAdapter: Partial<ITestAdapter<I>> = {},
     testResourceConfiguration: ITestResourceConfiguration,
-    // wsPort: string = "3456",
-    // wsHost: string = "localhost",
   ) {
     this.testResourceConfiguration = testResourceConfiguration;
 
@@ -138,60 +148,19 @@ export default abstract class BaseTiposkripto<
     // Capture this for use in inner functions
     const instance = this;
 
-    if (
-      !testImplementation.suites ||
-      typeof testImplementation.suites !== "object"
-    ) {
-      throw new Error(
-        `testImplementation.suites must be an object, got ${typeof testImplementation.suites}: ${JSON.stringify(
-          testImplementation.suites,
-        )}`,
-      );
-    }
+    // if (
+    //   !testImplementation.suites ||
+    //   typeof testImplementation.suites !== "object"
+    // ) {
+    //   throw new Error(
+    //     `testImplementation.suites must be an object, got ${typeof testImplementation.suites}: ${JSON.stringify(
+    //       testImplementation.suites,
+    //     )}`,
+    //   );
+    // }
 
-    // Create classy implementations for all patterns
-    const classySuites = Object.entries(testImplementation.suites).reduce(
-      (a: Record<string, any>, [key], index) => {
-        a[key] = (somestring: string, setups: any) => {
-          const capturedFullAdapter = fullAdapter;
-
-          return new (class extends BaseSuite<I, O> {
-            afterAll(store: I["istore"], artifactory: any) {
-              let suiteArtifactory = artifactory;
-              if (!suiteArtifactory) {
-                if (this.parent && this.parent.createArtifactory) {
-                  suiteArtifactory = this.parent.createArtifactory({
-                    suiteIndex: this.index,
-                  });
-                } else {
-                  suiteArtifactory = instance.createArtifactory({
-                    suiteIndex: this.index,
-                  });
-                }
-              }
-              return capturedFullAdapter.cleanupAll(store, suiteArtifactory);
-            }
-
-            assertThat(t: Awaited<I["check"]>): boolean {
-              return capturedFullAdapter.assert(t);
-            }
-
-            async setup(
-              s: I["iinput"],
-              artifactory: any,
-              tr: ITestResourceConfiguration,
-            ): Promise<I["isubject"]> {
-              return (
-                capturedFullAdapter.prepareAll?.(s, tr, artifactory) ??
-                (s as unknown as Promise<I["isubject"]>)
-              );
-            }
-          })(somestring, index, setups, instance);
-        };
-        return a;
-      },
-      {},
-    );
+    // Suites are deprecated, so we don't create classySuites anymore
+    const classySuites = {};
 
     // BDD Pattern: Givens
     const classyGivens: Record<string, any> = {};
@@ -318,19 +287,27 @@ export default abstract class BaseTiposkripto<
     const classyConfirms: Record<string, any> = {};
     if (testImplementation.confirms) {
       Object.entries(testImplementation.confirms).forEach(([key, val]) => {
-        classyConfirms[key] = (
-          features: string[],
-          testCases: any[][],
-          confirmCB: I["setup"],
-          initialValues: any,
-        ) => {
-          // Create a BaseConfirm instance
-          return new BaseConfirm<I>(
-            features,
-            testCases,
-            val as I["setup"],
-            initialValues,
-          );
+        // Create a function that matches the specification pattern:
+        // Confirm["addition"]() returns a function that takes (testCases, features)
+        // and creates a BaseConfirm instance
+        classyConfirms[key] = () => {
+          return (testCases: any[][], features: string[]) => {
+            // val should be a function that creates the confirmCB
+            // If val is a function, call it to get the confirmCB
+            let actualConfirmCB;
+            if (typeof val === 'function') {
+              // The implementation function might return the confirmCB
+              actualConfirmCB = val();
+            } else {
+              actualConfirmCB = val;
+            }
+            return new BaseConfirm<I>(
+              features,
+              testCases,
+              actualConfirmCB,
+              undefined, // initialValues
+            );
+          };
         };
       });
     }
@@ -439,8 +416,8 @@ export default abstract class BaseTiposkripto<
     this.testSpecification = testSpecification;
 
     try {
-      this.specs = testSpecification(
-        this.Suites() as any,
+      // Call the specification with the verb implementations
+      const topLevelVerbs = testSpecification(
         this.Given() as any,
         this.When() as any,
         this.Then() as any,
@@ -449,35 +426,111 @@ export default abstract class BaseTiposkripto<
         this.Confirm() as any,
         this.Value() as any,
         this.Should() as any,
-        this.Expected() as any,
       );
 
-      this.totalTests = this.calculateTotalTests();
+      // The specification returns an array of top-level verb instances
+      // We'll handle them directly without BaseSuite
+      this.specs = topLevelVerbs;
 
-      this.testJobs = this.specs.map((suite: BaseSuite<I, O>) => {
-        const suiteRunner =
-          (suite: BaseSuite<I, O>) =>
-            async (
-              testResourceConfiguration: ITestResourceConfiguration,
-            ): Promise<BaseSuite<I, O>> => {
-              try {
-                const x = await suite.run(input, testResourceConfiguration);
+      // Calculate total tests
+      this.totalTests = this.calculateTotalTestsDirectly();
 
-                return x;
-              } catch (e) {
-                console.error((e as Error).stack);
-                throw e;
+      // Create test jobs for each step
+      this.testJobs = this.specs.map((step: any, index: number) => {
+        const stepRunner = async (
+          testResourceConfiguration: ITestResourceConfiguration,
+        ): Promise<any> => {
+          try {
+            // Determine the step type and run it appropriately
+            let result;
+            const constructorName = step.constructor.name;
+            
+            // Create artifactory for the step
+            const stepArtifactory = this.createArtifactory({
+              stepIndex: index,
+              stepType: constructorName.toLowerCase().replace('base', ''),
+            });
+            
+            if (constructorName === 'BaseGiven') {
+              // Run the given step
+              result = await step.give(
+                input,
+                `step_${index}`,
+                testResourceConfiguration,
+                (t: any) => !!t, // Simple tester function
+                stepArtifactory,
+                index,
+              );
+            } else if (constructorName === 'BaseDescribe') {
+              // Run the describe step
+              result = await step.describe(
+                input,
+                `step_${index}`,
+                testResourceConfiguration,
+                (t: any) => !!t, // Simple tester function
+                stepArtifactory,
+                index,
+              );
+            } else if (constructorName === 'BaseConfirm' || constructorName === 'BaseValue') {
+              // Run the confirm/value step
+              if (typeof step.run === 'function') {
+                result = await step.run(
+                  input,
+                  testResourceConfiguration,
+                  stepArtifactory,
+                );
+              } else if (typeof step.confirm === 'function') {
+                result = await step.confirm(
+                  input,
+                  `step_${index}`,
+                  testResourceConfiguration,
+                  (t: any) => !!t, // Simple tester function
+                  stepArtifactory,
+                  index,
+                );
+              } else if (typeof step.value === 'function') {
+                result = await step.value(
+                  input,
+                  `step_${index}`,
+                  testResourceConfiguration,
+                  (t: any) => !!t, // Simple tester function
+                  stepArtifactory,
+                  index,
+                );
               }
-            };
+            } else {
+              // Try to run using common method names
+              if (typeof step.run === 'function') {
+                result = await step.run(
+                  input,
+                  testResourceConfiguration,
+                  stepArtifactory,
+                );
+              } else if (typeof step.test === 'function') {
+                result = await step.test(
+                  input,
+                  testResourceConfiguration,
+                  stepArtifactory,
+                );
+              } else {
+                throw new Error(`Step type ${constructorName} has no runnable method`);
+              }
+            }
+            return { step, result, fails: step.fails || 0, failed: step.failed || false };
+          } catch (e) {
+            console.error((e as Error).stack);
+            throw e;
+          }
+        };
 
-        const runner = suiteRunner(suite);
+        const runner = stepRunner;
 
         const totalTests = this.totalTests;
         const testJob = {
-          test: suite,
+          test: step,
 
           toObj: () => {
-            return suite.toObj();
+            return step.toObj ? step.toObj() : { name: `Step_${index}`, type: step.constructor.name };
           },
 
           runner,
@@ -486,16 +539,28 @@ export default abstract class BaseTiposkripto<
             testResourceConfiguration: ITestResourceConfiguration,
           ): Promise<IFinalResults> => {
             try {
-              const suiteDone: BaseSuite<I, O> = await runner(
-                testResourceConfiguration,
-              );
-              const fails = suiteDone.fails;
+              const stepResult = await runner(testResourceConfiguration);
+              const fails = stepResult.fails;
+              const stepObj = stepResult.step;
+              
+              // Extract features from the step
+              let features: string[] = [];
+              if (stepObj.features && Array.isArray(stepObj.features)) {
+                features = stepObj.features;
+              }
+              
+              // Extract artifacts from the step
+              let artifacts: any[] = [];
+              if (stepObj.artifacts && Array.isArray(stepObj.artifacts)) {
+                artifacts = stepObj.artifacts;
+              }
+              
               return {
-                failed: fails > 0,
+                failed: stepResult.failed || fails > 0,
                 fails,
-                artifacts: [], // this.artifacts is not accessible here
-                features: suiteDone.features(),
-                tests: 0,
+                artifacts,
+                features,
+                tests: 1,
                 runTimeTests: totalTests,
                 testJob: testJob.toObj(),
               };
@@ -597,14 +662,9 @@ export default abstract class BaseTiposkripto<
     return this.specs;
   }
   Suites() {
-    if (!this.suitesOverrides) {
-      throw new Error(
-        `suitesOverrides is undefined. classySuites: ${JSON.stringify(
-          Object.keys(this.suitesOverrides || {}),
-        )}`,
-      );
-    }
-    return this.suitesOverrides;
+    // Suites are deprecated
+    console.warn("Suites() is deprecated and returns an empty object");
+    return {};
   }
 
   Given(): Record<
@@ -667,20 +727,8 @@ export default abstract class BaseTiposkripto<
     return this.testJobs;
   }
 
-  private calculateTotalTests(): number {
-    let total = 0;
-    for (const suite of this.specs) {
-      if (suite && typeof suite === "object") {
-        // Access the givens property which should be a record of test names to BaseGiven instances
-        // The givens property is typically on the suite instance
-        if ("givens" in suite) {
-          const givens = (suite as any).givens;
-          if (givens && typeof givens === "object") {
-            total += Object.keys(givens).length;
-          }
-        }
-      }
-    }
-    return total;
+  private calculateTotalTestsDirectly(): number {
+    // Each step in specs is a test
+    return this.specs ? this.specs.length : 0;
   }
 }

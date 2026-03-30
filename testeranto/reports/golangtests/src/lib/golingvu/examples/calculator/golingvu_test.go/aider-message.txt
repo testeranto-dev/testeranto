@@ -1,0 +1,18 @@
+/read Users/adam/Code/testeranto/testeranto/reports/.DS_Store
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/golang-builder.container.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/golang-builder.container.status
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/golang-builder.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/golang-builder.log
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test-go_aider.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test-go_aider.log
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test-go_bdd.container.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test-go_bdd.container.status
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test-go_bdd.log
+/read Users/adam/Code/testeranto/testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/aider-message.txt
+/read Users/adam/Code/testeranto/testeranto/reports/graph-data.json
+/read Users/adam/Code/testeranto/testeranto/reports/index.html
+/read Users/adam/Code/testeranto/testeranto/reports/index.js
+/read Users/adam/Code/testeranto/testeranto/reports/index.tsx
+
+Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.
+

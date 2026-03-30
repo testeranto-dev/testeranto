@@ -10,6 +10,7 @@ import {
 import {
   consoleError,
   consoleLog,
+  consoleWarn,
   processCwd,
   processExit,
 } from "./Server_Docker/Server_Docker_Dependents";
@@ -24,6 +25,7 @@ import {
 } from "./Server_Docker/utils";
 import { generateUid, getAiderServiceName } from "./Server_Docker/Server_Docker_Constants";
 import { execSync } from "child_process";
+import process from "process";
 import { TestFileManager } from "./Server_Docker/TestFileManager";
 import { TestResultsCollector } from "./Server_Docker/TestResultsCollector";
 import { AiderMessageManager } from "./Server_Docker/AiderMessageManager";
@@ -240,21 +242,7 @@ export class Server_Docker extends Server_Docker_Compose {
   }
 
   public async stop(): Promise<void> {
-    // First, stop all log processes
-    for (const [containerId, logProcess] of this.logProcesses.entries()) {
-      try {
-        logProcess.process.kill("SIGTERM");
-      } catch (error) {
-        consoleError(
-          `[Server_Docker] Error stopping log process ${containerId}:`,
-          error,
-        );
-      }
-    }
-
-    // Wait a bit for log processes to finish
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
+    // Clear any tracked processes (though there shouldn't be any with the new approach)
     this.logProcesses.clear();
     this.failedBuilderConfigs.clear();
 
@@ -392,7 +380,7 @@ export class Server_Docker extends Server_Docker_Compose {
       configValue,
       (serviceName, runtime, configKey, testName) => {
         // Clear stored logs before capturing existing logs
-        this.clearStoredLogs(serviceName, configKey);
+        this.clearStoredLogs(serviceName, configKey, testName);
         return captureExistingLogs(serviceName, runtime, configKey, testName);
       },
       (serviceName, runtime, configKey, testName) =>
@@ -430,7 +418,7 @@ export class Server_Docker extends Server_Docker_Compose {
       configValue,
       (serviceName, runtime, configKey, testName) => {
         // Clear stored logs before capturing existing logs
-        this.clearStoredLogs(serviceName, configKey);
+        this.clearStoredLogs(serviceName, configKey, testName);
         return captureExistingLogs(serviceName, runtime, configKey, testName);
       },
       (serviceName, runtime, configKey, testName) =>
@@ -475,7 +463,7 @@ export class Server_Docker extends Server_Docker_Compose {
       });
 
       // Start logging for the aider service
-      this.startServiceLogging(aiderServiceName, runtime, configKey, testName);
+      await this.startServiceLogging(aiderServiceName, runtime, configKey, testName);
 
       this.resourceChanged("/~/processes");
       this.writeConfigForExtension();
@@ -557,14 +545,42 @@ export class Server_Docker extends Server_Docker_Compose {
     ];
   };
 
-  private clearStoredLogs(serviceName: string, configKey: string): void {
-    // Clear any stored logs for this service to prevent accumulation
-    // This is a placeholder implementation - actual implementation depends on where logs are stored
-    // For now, we'll log that we would clear logs
-
-    // TODO: Implement actual log clearing based on your storage mechanism
-    // For example, if logs are stored in memory, clear the relevant data structure
-    // If logs are stored in files, delete or truncate the log files
+  private clearStoredLogs(serviceName: string, configKey: string, testName?: string): void {
+    // Clear any stored log files for this service
+    const reportsDir = `${processCwd()}/testeranto/reports/${configKey}`;
+    try {
+      if (fs.existsSync(reportsDir)) {
+        const files = fs.readdirSync(reportsDir);
+        
+        // Determine which files to delete
+        for (const file of files) {
+          let shouldDelete = false;
+          
+          if (testName) {
+            // Try to match the file naming pattern
+            const cleanedTestName = testName.toLowerCase().replace(/\./g, '-').replace(/[^a-z0-9_\-/]/g, '');
+            // The file should contain the cleaned test name and end with .log
+            if (file.includes(cleanedTestName) && file.endsWith('.log')) {
+              shouldDelete = true;
+            }
+          } else {
+            // If no testName, delete files that might be related to the service
+            // This is less precise but necessary for builder services
+            if (file.includes(serviceName) && file.endsWith('.log')) {
+              shouldDelete = true;
+            }
+          }
+          
+          if (shouldDelete) {
+            const filePath = path.join(reportsDir, file);
+            fs.unlinkSync(filePath);
+            consoleLog(`[clearStoredLogs] Deleted old log file: ${filePath}`);
+          }
+        }
+      }
+    } catch (error) {
+      consoleWarn(`[clearStoredLogs] Error clearing logs for ${serviceName}: ${error}`);
+    }
   }
 
   private async clearBuilderLogs(): Promise<void> {
@@ -595,33 +611,19 @@ export class Server_Docker extends Server_Docker_Compose {
     // This would depend on your implementation
   }
 
-  private stopServiceLogging(serviceName: string): void {
-    // Find and stop any existing log processes for this service
-    for (const [containerId, logProcess] of this.logProcesses.entries()) {
-      if (logProcess.serviceName === serviceName) {
-        try {
-          logProcess.process.kill('SIGTERM');
-          this.logProcesses.delete(containerId);
-          consoleLog(`[Server_Docker] Stopped existing log process for service: ${serviceName}`);
-        } catch (error) {
-          consoleError(`[Server_Docker] Error stopping log process for service ${serviceName}:`, error);
-        }
-      }
-    }
-  }
 
-  startServiceLogging = (
+  startServiceLogging = async (
     serviceName: string,
     runtime: string,
     runtimeConfigKey: string,
     testName?: string,
   ) => {
-    // First, clear any stored logs for this service to prevent log accumulation
-    this.clearStoredLogs(serviceName, runtimeConfigKey);
-    // Then, stop any existing logging processes for this service
-    this.stopServiceLogging(serviceName);
+    // Clear any stored logs for this service
+    this.clearStoredLogs(serviceName, runtimeConfigKey, testName);
 
-    this.logProcesses = startServiceLoggingPure(
+    // Run logging (captures logs once and exits immediately)
+    // We don't need to track processes anymore
+    await startServiceLoggingPure(
       serviceName,
       runtime,
       processCwd(),

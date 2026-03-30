@@ -137,24 +137,69 @@ export class BaseConfirm<I extends TestTypeParams_any> {
           // Each test case is now [Value, Should] where Should is already called with expected value
           if (Array.isArray(testCase) && testCase.length >= 2) {
             const [value, should] = testCase;
+            console.log('[BaseConfirm] value:', value);
+            console.log('[BaseConfirm] should:', should);
+            console.log('[BaseConfirm] value type:', typeof value);
+            console.log('[BaseConfirm] should type:', typeof should);
 
             // Get the input from value
             let input: any;
             if (typeof value === 'function') {
               input = value();
-            } else if (value && typeof value.toObj === 'function') {
-              const obj = value.toObj();
-              input = obj.features || obj;
+              console.log('[BaseConfirm] input from function:', input);
             } else {
+              // assume value is the input directly
               input = value;
+              console.log('[BaseConfirm] input direct:', input);
             }
             
-            // should is already a function that expects (input, fn)
-            // where fn is the confirmCB (e.g., new Calculator().add)
+            // should is a function that expects the actual result
             if (typeof should === 'function') {
-              // Directly call the should function with input and this.confirmCB
-              // The confirmCB is the function to test
-              should(input, this.confirmCB);
+              // Log for debugging
+              console.log('[BaseConfirm] input:', input);
+              console.log('[BaseConfirm] confirmCB:', this.confirmCB);
+              console.log('[BaseConfirm] should function:', should);
+              // Compute actual result using confirmCB
+              // For TDT, confirmCB might be:
+              // 1. A function that returns the test function: () => (a, b) => a + b
+              // 2. The test function itself: (a, b) => a + b
+              let testFn;
+              if (typeof this.confirmCB === 'function') {
+                // Try to get the test function
+                const potentialTestFn = this.confirmCB();
+                if (typeof potentialTestFn === 'function') {
+                  testFn = potentialTestFn;
+                } else {
+                  // this.confirmCB is the test function itself
+                  testFn = this.confirmCB;
+                }
+              } else {
+                testFn = this.confirmCB;
+              }
+            
+              // Now call the test function with input
+              const actualResult = Array.isArray(input) 
+                ? testFn(...input) 
+                : testFn(input);
+              console.log('[BaseConfirm] actualResult:', actualResult);
+              // Call should with the actual result
+              const passed = should(actualResult);
+              tester(passed);
+            } else if (should && typeof should.processRow === 'function') {
+              // should is a BaseShould instance
+              // Compute actual result using confirmCB
+              const actualResult = Array.isArray(input) 
+                ? this.confirmCB(...input) 
+                : this.confirmCB(input);
+              console.log('[BaseConfirm] actualResult:', actualResult);
+              const passed = await should.processRow(
+                actualResult,
+                testResourceConfiguration,
+                artifactory,
+              );
+              tester(passed);
+            } else {
+              // No validation performed
               tester(true);
             }
           }

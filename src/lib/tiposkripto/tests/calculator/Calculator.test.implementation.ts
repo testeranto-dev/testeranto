@@ -4,17 +4,21 @@ import type { ICalculatorNode, O, M } from "./Calculator.test.types.js";
 import type { ITestImplementation } from "../../src/CoreTypes.js";
 
 export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
-  suites: {
-    Default: { description: "Comprehensive test suite for Calculator" },
-  },
+  // suites: {
+  //   Default: { description: "Comprehensive test suite for Calculator" },
+  // },
 
   // TDT style /////////////////////////
   confirms: {
-    addition: new Calculator().add,
+    addition: () => {
+      return () => {
+        return (a: number, b: number) => a + b;
+      };
+    },
   },
 
   values: {
-    of: (...numbers: number[]) => {
+    of: (numbers: number[]) => {
       return numbers;
     },
     "one and two": () => {
@@ -24,15 +28,14 @@ export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
 
   shoulds: {
     beEqualTo: (expected: number) => {
-      return (input: number[], confirmation: (a: number, b: number) => number) => {
-        return assert.equal(expected, confirmation(input[0], input[1]))
+      return (actualResult: number) => {
+        return assert.equal(actualResult, expected);
       };
     },
 
     beGreaterThan: (expected: number) => {
-      return (input: number[], confirmation: (a: number, b: number) => number) => {
-        const result = confirmation(input[0], input[1]);
-        return assert.isAbove(result, expected, `${result} should be greater than ${expected}`)
+      return (actualResult: number) => {
+        return assert.isAbove(actualResult, expected, `${actualResult} should be greater than ${expected}`);
       };
     },
 
@@ -44,22 +47,20 @@ export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
     //   };
     // },
     whenMultipliedAreAtLeast: (expected: number) => {
-      return (input: number[], calculator: Calculator) => {
-        const [a, b] = input;
-        const result = calculator.multiply(a, b);
-        assert.isAtLeast(result, expected, `${a} * ${b} should be at least ${expected}`);
+      return (actualResult: number) => {
+        return assert.isAtLeast(actualResult, expected, `${actualResult} should be at least ${expected}`);
       };
     },
     equal: (expected: any) => {
-      return (input: any, calculator: Calculator) => {
-        assert.deepEqual(input, expected);
+      return (actualResult: any) => {
+        return assert.deepEqual(actualResult, expected);
       };
     },
   },
 
   // AAA style /////////////////////////
   describes: {
-    "another simple calculator": () => new Calculator(),
+    "a simple calculator": (input: typeof Calculator) => new input(),
   },
 
   its: {
@@ -81,7 +82,7 @@ export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
 
   // BDD style /////////////////////////
   givens: {
-    Default: () => new Calculator(),
+    Default: (input: typeof Calculator) => new input(),
   },
 
   whens: {

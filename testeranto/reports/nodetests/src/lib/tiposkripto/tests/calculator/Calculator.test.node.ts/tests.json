@@ -1,0 +1,42 @@
+{
+  "failed": true,
+  "fails": 1,
+  "artifacts": [],
+  "features": [
+    "./Readme.md"
+  ],
+  "tests": 1,
+  "runTimeTests": 1,
+  "testJob": {
+    "key": "confirm",
+    "error": [
+      {
+        "message": "expected [Function] to equal 2222",
+        "expected": 2222,
+        "showDiff": true,
+        "operator": "strictEqual",
+        "name": "AssertionError",
+        "ok": false,
+        "stack": "AssertionError: expected [Function] to equal 2222\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1511:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:656:36)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:573:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:594:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1063:38)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1122:40)\n    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1159:26)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1314:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1648:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)"
+      },
+      "AssertionError: expected [Function] to equal 2222\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1511:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:656:36)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:573:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:594:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1063:38)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1122:40)\n    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1159:26)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1314:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1648:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)"
+    ],
+    "failed": true,
+    "features": [
+      "./Readme.md"
+    ],
+    "artifacts": [],
+    "status": true,
+    "fails": 1,
+    "testCases": [
+      {
+        "input": [
+          1,
+          1
+        ],
+        "test": "beEqualTo: 2222"
+      }
+    ]
+  },
+  "timestamp": 1774913030398
+}

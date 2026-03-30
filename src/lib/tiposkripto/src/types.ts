@@ -1,15 +1,17 @@
 import { TestTypeParams_any, Ibdd_in_any, Ibdd_out_any } from "./CoreTypes";
+import { BaseDescribe } from "./verbs/aaa/BaseDescribe";
 import { BaseSuite } from "./verbs/BaseSuite";
-import { BaseGiven, IGivens } from "./verbs/bdd/BaseGiven";
+import { BaseGiven } from "./verbs/bdd/BaseGiven";
 import { BaseThen } from "./verbs/bdd/BaseThen";
 import { BaseWhen } from "./verbs/bdd/BaseWhen";
+import { BaseConfirm } from "./verbs/tdt/BaseConfirm";
 
 
-export type ISuiteKlasser<I extends Ibdd_in_any, O extends Ibdd_out_any> = (
-  name: string,
-  index: number,
-  givens: IGivens<I>,
-) => BaseSuite<I, O>;
+// export type ISuiteKlasser<I extends Ibdd_in_any, O extends Ibdd_out_any> = (
+//   name: string,
+//   index: number,
+//   givens: IGivens<I>,
+// ) => BaseSuite<I, O>;
 
 export type IGivenKlasser<I extends Ibdd_in_any> = (
   name: string,
@@ -52,7 +54,11 @@ export type ITTestResourceRequest = {
 type ITest = {
   toObj(): object;
   name: string;
-  givens: IGivens<Ibdd_in_any>;
+  steps:
+  (BaseGiven<Ibdd_in_any> |
+    BaseDescribe<Ibdd_in_any> |
+    BaseConfirm<Ibdd_in_any>)[];
+
   testResourceConfiguration: ITestResourceConfiguration;
 };
 
@@ -74,12 +80,12 @@ export const defaultTestResourceRequirement: ITTestResourceRequest = {
 
 export type ITestArtifactory = (key: string, value: unknown) => unknown;
 
-export type IRunnables = {
-  golangEntryPoints: Record<string, string>;
-  nodeEntryPoints: Record<string, string>;
-  pythonEntryPoints: Record<string, string>;
-  webEntryPoints: Record<string, string>;
-};
+// export type IRunnables = {
+//   golangEntryPoints: Record<string, string>;
+//   nodeEntryPoints: Record<string, string>;
+//   pythonEntryPoints: Record<string, string>;
+//   webEntryPoints: Record<string, string>;
+// };
 
 export type IFinalResults = {
   features: string[];
