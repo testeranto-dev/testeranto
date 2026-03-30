@@ -1,25 +1,5 @@
-
 import type { ITestSpecification } from "../../src/CoreTypes";
 import type { ICalculatorNode, O } from "./Calculator.test.types";
-
-
-const x = [
-  [
-    "someMarkdownFile.md",
-    "documentation.md"
-  ], [
-    Describe["another simple calculator"](
-      [
-        It[
-          "can save 1 memory"
-        ](),
-        It[
-          "can save 2 memories"
-        ](),
-      ],
-    )
-  ]
-]
 
 export const specification: ITestSpecification<ICalculatorNode, O> = (
   Suite,

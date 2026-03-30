@@ -18,7 +18,7 @@ var BaseAdapter = () => ({
   execute: async (store, actionCB, testResource, artifactory) => {
     return actionCB(store);
   },
-  assert: (x2) => x2
+  assert: (x) => x
 });
 var DefaultAdapter = (p) => {
   const base = BaseAdapter();
@@ -649,7 +649,7 @@ var BaseThen = class {
   }
   async test(store, testResourceConfiguration, filepath, artifactory) {
     try {
-      const x2 = await this.butThen(
+      const x = await this.butThen(
         store,
         async (s) => {
           try {
@@ -668,7 +668,7 @@ var BaseThen = class {
         artifactory
       );
       this.status = true;
-      return x2;
+      return x;
     } catch (e) {
       this.status = false;
       this.error = e;
@@ -1297,8 +1297,8 @@ var BaseTiposkripto = class {
       this.testJobs = this.specs.map((suite) => {
         const suiteRunner = (suite2) => async (testResourceConfiguration2) => {
           try {
-            const x2 = await suite2.run(input, testResourceConfiguration2);
-            return x2;
+            const x = await suite2.run(input, testResourceConfiguration2);
+            return x;
           } catch (e) {
             console.error(e.stack);
             throw e;
@@ -1812,21 +1812,7 @@ var implementation = {
 };
 
 // src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts
-var x = [
-  [
-    "someMarkdownFile.md",
-    "documentation.md"
-  ],
-  [
-    Describe["another simple calculator"](
-      [
-        It["can save 1 memory"](),
-        It["can save 2 memories"]()
-      ]
-    )
-  ]
-];
-var specification = (Suite, Given, When, Then, Describe2, It2, Confirm, Value, Should) => {
+var specification = (Suite, Given, When, Then, Describe, It, Confirm, Value, Should) => {
   return [
     Suite.Default("Comprehensive Calculator Test", {
       // ========== TDT (Table-Driven Testing) Tests ==========
@@ -1838,27 +1824,27 @@ var specification = (Suite, Given, When, Then, Describe2, It2, Confirm, Value, S
         ]
       ),
       // ========== AAA (Describe-It) Tests ==========
-      aaaBasicOperations: Describe2["another simple calculator"](
+      aaaBasicOperations: Describe["another simple calculator"](
         ["AAA basic operations"],
         [
-          It2["can save 1 memory"](),
-          It2["can save 2 memories"]()
+          It["can save 1 memory"](),
+          It["can save 2 memories"]()
         ]
       ),
-      aaaDisplayTests: Describe2["another simple calculator"](
+      aaaDisplayTests: Describe["another simple calculator"](
         ["AAA display functionality"],
         [
           // We'll need to add more its in the implementation
           // For now, reuse existing ones
-          It2["can save 1 memory"](),
-          It2["can save 2 memories"]()
+          It["can save 1 memory"](),
+          It["can save 2 memories"]()
         ]
       ),
-      aaaNestedDescribes: Describe2["another simple calculator"](
+      aaaNestedDescribes: Describe["another simple calculator"](
         ["AAA nested structure"],
         [
-          It2["can save 1 memory"](),
-          It2["can save 2 memories"]()
+          It["can save 1 memory"](),
+          It["can save 2 memories"]()
         ]
       ),
       // ========== BDD (Given-When-Then) Tests ==========
