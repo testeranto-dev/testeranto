@@ -12,3 +12,8 @@ We have a roughed out stakeholder app but we need to address somethings
 
 - Use the same data to power the other grapheovidajo components
 - Establish "flavors" of edges between nodes. The first flavor is "file-structure
+
+## status
+
+we have the stakeholderApp working again and we need to convert from our homemade graph implementation to the npm package graphology.
+

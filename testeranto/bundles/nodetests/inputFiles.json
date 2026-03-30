@@ -1,0 +1,40 @@
+{
+  "src/lib/tiposkripto/tests/abstractBase.test/index.ts": {
+    "hash": "003aa4604923953e2df1b46bc30f61de",
+    "files": [
+      "/src/lib/tiposkripto/tests/abstractBase.test/index.ts"
+    ]
+  },
+  "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
+    "hash": "eb42565ed3ccb87e70ae39fe0680ad4b",
+    "files": [
+      "/src/lib/tiposkripto/src/Node.ts",
+      "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "/src/lib/tiposkripto/src/Adapters.ts",
+      "/src/lib/tiposkripto/src/types.ts",
+      "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "/src/lib/tiposkripto/src/verbs/BaseSuite.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+    ]
+  },
+  "src/vscode/providers/utils/testTree/debugTest.js": {
+    "hash": "f47e3694fe9f3fda96ac10d948c3ee7d",
+    "files": [
+      "/src/vscode/providers/utils/testTree/debugTest.js",
+      "/src/vscode/providers/utils/testTree/treeFilter.ts"
+    ]
+  }
+}

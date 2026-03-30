@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.233.9",
+  "version": "0.234.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -104,7 +104,8 @@
     "Other"
   ],
   "scripts": {
-    "dev2": "bun build ./src/index.ts --compile --outfile ./dist/testeranto && bun link",
+    "serve": "testeranto dev",
+    "dev2": "yarn bundle && bun build ./src/index.ts --compile --outfile ./dist/testeranto && bun link",
     "dev": "yarn build:server && yarn link:server",
     "summarizeLicenses": "yarn licenses list > ALL_LICENSES.txt; yarn license-checker >> ALL_LICENSES.txt; yarn license-checker --summary >> ALL_LICENSES.txt",
     "compile-docs": "node scripts/compile-docs.js",
@@ -318,6 +319,7 @@
     "file-saver": "^2.0.5",
     "fs-extra": "^11.2.0",
     "fs.promises.exists": "^1.1.4",
+    "graphology": "^0.26.0",
     "jiti": "*",
     "js-yaml": "^4.1.0",
     "license-checker": "^25.0.1",

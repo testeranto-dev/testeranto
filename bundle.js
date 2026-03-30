@@ -3,32 +3,32 @@ import fs from "fs"
 import path from "path"
 import * as esbuild from 'esbuild'
 
-await esbuild.build({
-  outExtension: { '.js': '.mjs' },
-  entryPoints: [
-    'src/server/runtimes/node/node.ts',
-    'src/server/runtimes/web/web.ts',
-    'src/server/runtimes/web/hoist.ts'
-  ],
-  bundle: true,
-  format: "esm",
-  splitting: false,
-  platform: "node",
-  target: "node20",
-  outdir: "dist/prebuild",
-  packages: "external",
-  external: ['./src/server/serverClasses/index.tsx'],
-  // supported: {
-  //   "dynamic-import": true,
-  // },
-  // external: [
-  //   "fs", "path", "child_process", "util", "os", "events", "stream",
-  //   "http", "https", "zlib", "crypto", "buffer", "net", "dns", "tls",
-  //   "assert", "querystring", "punycode", "readline", "repl", "vm",
-  //   "perf_hooks", "async_hooks", "timers", "console", "module", "process",
-  //   "vscode"
-  // ],
-})
+// await esbuild.build({
+//   outExtension: { '.js': '.mjs' },
+//   entryPoints: [
+//     'src/server/runtimes/node/node.ts',
+//     'src/server/runtimes/web/web.ts',
+//     'src/server/runtimes/web/hoist.ts'
+//   ],
+//   bundle: true,
+//   format: "esm",
+//   splitting: false,
+//   platform: "node",
+//   target: "node20",
+//   outdir: "dist/prebuild",
+//   packages: "external",
+//   external: ['./src/server/serverClasses/index.tsx'],
+//   // supported: {
+//   //   "dynamic-import": true,
+//   // },
+//   // external: [
+//   //   "fs", "path", "child_process", "util", "os", "events", "stream",
+//   //   "http", "https", "zlib", "crypto", "buffer", "net", "dns", "tls",
+//   //   "assert", "querystring", "punycode", "readline", "repl", "vm",
+//   //   "perf_hooks", "async_hooks", "timers", "console", "module", "process",
+//   //   "vscode"
+//   // ],
+// })
 
 await esbuild.build({
   outExtension: { '.js': '.mjs' },
@@ -51,7 +51,7 @@ await esbuild.build({
     "dynamic-import": true,
   },
   external: [
-    './src/server/serverClasses/index.tsx',
+    // './src/server/serverClasses/index.tsx',
     "fs", "path", "child_process", "util", "os", "events", "stream",
     "http", "https", "zlib", "crypto", "buffer", "net", "dns", "tls",
     "assert", "querystring", "punycode", "readline", "repl", "vm",
@@ -83,7 +83,7 @@ try {
 try {
   console.log("Building grafeovidajo...");
   const { execSync } = await import('child_process');
-  
+
   // First, ensure dependencies are installed
   console.log("Installing grafeovidajo dependencies...");
   try {
@@ -98,31 +98,31 @@ try {
       stdio: 'inherit'
     });
   }
-  
+
   // Then run grafeovidajo's own build script (which uses esbuild)
   console.log("Running grafeovidajo build...");
   execSync('npm run build', {
     cwd: 'src/grafeovidajo',
     stdio: 'inherit'
   });
-  
+
   console.log("grafeovidajo built successfully");
-  
+
   // Link grafeovidajo to node_modules so it can be resolved
   console.log("Linking grafeovidajo...");
   try {
     // Create a symlink from node_modules/grafeovidajo to src/grafeovidajo/dist
     const fs = await import('fs');
     const path = await import('path');
-    
+
     const targetDir = path.join(process.cwd(), 'node_modules', 'grafeovidajo');
     const sourceDir = path.join(process.cwd(), 'src', 'grafeovidajo', 'dist');
-    
+
     // Remove existing symlink or directory
     try {
       fs.rmSync(targetDir, { recursive: true, force: true });
-    } catch (e) {}
-    
+    } catch (e) { }
+
     // Create symlink
     fs.symlinkSync(sourceDir, targetDir, 'dir');
     console.log(`Created symlink: ${targetDir} -> ${sourceDir}`);
@@ -130,7 +130,7 @@ try {
     console.warn("Could not create symlink for grafeovidajo:", linkError.message);
     console.log("Continuing without symlink...");
   }
-  
+
 } catch (error) {
   console.error("Failed to build grafeovidajo:", error);
   // Try fallback to tsc if esbuild fails
@@ -148,40 +148,11 @@ try {
   }
 }
 
-// Build stakeholder app bundle
-try {
-  const stakeholderResult = await esbuild.build({
-    entryPoints: ['src/server/serverClasses/index.tsx'],
-    bundle: true,
-    format: "esm",
-    platform: "browser",
-    target: "es2020",
-    outdir: "dist/stakeholder",
-    external: ["react", "react-dom", "grafeovidajo"],
-    outExtension: { '.js': '.mjs' },
-    logLevel: 'info',
-  });
-  console.log("Stakeholder app built successfully to dist/stakeholder/index.mjs");
-} catch (error) {
-  console.error("Failed to build stakeholder app:", error);
-  process.exit(1);
-}
-
-// Copy stakeholder app source for reference
-const stakeholderSrcPath = 'src/stakeholder/DefaultStakeholderApp.tsx';
-const stakeholderDistDir = 'dist/stakeholder';
-const stakeholderDestPath = path.join(stakeholderDistDir, 'DefaultStakeholderApp.tsx');
-
-if (!fs.existsSync(stakeholderDistDir)) {
-  fs.mkdirSync(stakeholderDistDir, { recursive: true });
-}
-
-if (fs.existsSync(stakeholderSrcPath)) {
-  fs.copyFileSync(stakeholderSrcPath, stakeholderDestPath);
-  console.log(`Copied stakeholder app source from ${stakeholderSrcPath} to ${stakeholderDestPath}`);
-} else {
-  console.warn(`Stakeholder source file not found: ${stakeholderSrcPath}`);
-}
+// Copy stakeholder tsx. Will bundle it the fly
+// No need to copy html, we generate it from a template on the fly
+const stakeholderSrcPath = 'src/stakeholderApp/index.tsx';
+const stakeholderDistDir = 'dist/stakeholder/index.tsx';
+fs.copyFileSync(stakeholderSrcPath, stakeholderDistDir);
 
 // Copy media files for webview
 const mediaDir = 'media';

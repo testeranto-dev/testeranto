@@ -1,8 +1,8 @@
 import React from "react";
-import type { Node } from "../../grafeovidajo";
 import { getFeatureGraphStats } from "./stateless/featureGraphStats";
 import { renderVisualization } from "./stateless/renderVisualization";
 import { getVizButtonStyle } from "./stateless/buttonStyleUtils";
+import type { Node } from "grafeovidajo/core";
 
 export interface VisualizationPanelProps {
   data: any;

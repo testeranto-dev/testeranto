@@ -34,3 +34,4 @@ node_modules
 
 *.bun-build
 src/grafeovidajo/dist/
+dist

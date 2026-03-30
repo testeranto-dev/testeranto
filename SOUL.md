@@ -35,12 +35,6 @@ try{
 }
 ```
 
-Remember: problems get easier by removing code, not adding it! DO NOT USE FALLBACKS OR DEFAULT VALUES.
-
-Remember: problems get easier by removing code, not adding it! DO NOT USE FALLBACKS OR DEFAULT VALUES.
-
-Remember: problems get easier by removing code, not adding it! DO NOT USE FALLBACKS OR DEFAULT VALUES.
-
 IMPORTANT: Passing empty objects `{}`, empty arrays `[]`, or other default values as function arguments when actual data should be collected is using fallbacks/default values which is against SOUL.md principles. Functions should collect the actual data they need instead of accepting placeholders.
 
 IMPORTANT: Do not add tautological, useless, pedantic comments. Comments that merely repeat what the code already says add no value and violate the KISS principle. The function name should be descriptive enough; if it's not, rename the function instead of adding a comment.

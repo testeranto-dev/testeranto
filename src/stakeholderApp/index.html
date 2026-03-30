@@ -49,7 +49,7 @@
         console.log('Loaded embedded data:', embeddedData);
 
         // Import the stakeholder app module
-        const { renderApp } = await import('./index.js');
+        const { renderApp } = await import('/testeranto/reports/index.js');
         renderApp(root);
 
       } catch (error) {

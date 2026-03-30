@@ -1,17 +1,14 @@
-// NOTE: this file is not a part of our build process, but a odwnstream process run by the user
-// this file is copied to the users project where they can cutomize it
-// This is where a used configure the vizualization.
-//  for instance, the columns in a kanban chart and to which attribute they map
+// NOTE: this file is not a part of our build process, but a downstream process run by the user
+// this file is copied to the users project where they can customize it
+// for instance, the columns in a kanban chart and to which attribute they map
 
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import type { GraphData, Node } from "../../grafeovidajo";
-import { createFileContentFromNode } from "./stateless/createFileContentFromNode";
-import { togglePathInSet } from "./stateless/setUtils";
-import { TabNavigation } from "./TabNavigation";
-import { TestResultsSummary } from "./TestResultsSummary";
-import { TreePanel } from "./TreePanel";
-import { VisualizationPanel } from "./VisualizationPanel";
+
+import {
+  TreePanel, TestResultsSummary,
+  createFileContentFromNode, togglePathInSet
+} from "../../src/stakeholderExports";
 
 export interface StakeholderData {
   documentation: {
@@ -41,29 +38,16 @@ export interface StakeholderData {
   timestamp: string;
   workspaceRoot: string;
   featureTree?: any;
-  // Add test results data
   allTestResults?: {
     [configKey: string]: {
-      [testName: string]: any; // The content of tests.json
+      [testName: string]: any;
     };
   };
-  // Add feature graph for visualization
-  featureGraph?: GraphData;
-  // Add file tree graph for visualization
-  fileTreeGraph?: GraphData;
-  // Add viz configuration
-  vizConfig?: any;
-}
-
-export interface StakeholderAppProps {
-  // Data is no longer passed as props - always use embedded data from window.TESTERANTO_EMBEDDED_DATA
-  data?: StakeholderData;
 }
 
 export const DefaultStakeholderApp: React.FC = () => {
-  // Always use embedded data from window
   const embeddedData = (window as any).TESTERANTO_EMBEDDED_DATA;
-  
+
   if (!embeddedData) {
     return (
       <div style={{ padding: "40px", textAlign: "center" }}>
@@ -75,16 +59,12 @@ export const DefaultStakeholderApp: React.FC = () => {
   }
 
   const data: StakeholderData = embeddedData;
-  
+
   const [expandedPaths, setExpandedPaths] = useState<Set<string>>(
     new Set([".", "root"]),
   );
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [selectedFileContent, setSelectedFileContent] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<"tree" | "viz">("tree");
-  const [vizType, setVizType] = useState<
-    "eisenhower" | "gantt" | "kanban" | "tree" | "file-tree"
-  >("file-tree");
 
   const toggleExpand = (path: string) => {
     setExpandedPaths(togglePathInSet(expandedPaths, path));
@@ -105,15 +85,6 @@ export const DefaultStakeholderApp: React.FC = () => {
     setSelectedFileContent(testData);
   };
 
-  const handleNodeClick = (node: Node) => {
-    console.log("Node clicked:", node);
-    // You could implement node selection here
-  };
-
-  const handleNodeHover = (node: Node | null) => {
-    // Handle hover
-  };
-
   return (
     <div
       style={{
@@ -122,38 +93,22 @@ export const DefaultStakeholderApp: React.FC = () => {
       }}
     >
       <div style={{ marginBottom: "20px" }}>
-        <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-
-        {activeTab === "viz" && (
-          <VisualizationPanel
-            data={data}
-            vizType={vizType}
-            onVizTypeChange={setVizType}
-            onNodeClick={handleNodeClick}
-            onNodeHover={handleNodeHover}
+        <TreePanel
+          featureTree={data.featureTree}
+          expandedPaths={expandedPaths}
+          selectedFile={selectedFile}
+          onToggleExpand={toggleExpand}
+          onFileSelect={handleFileSelect}
+          selectedFileContent={selectedFileContent}
+          configs={data.configs}
+          allTestResults={data.allTestResults}
+          onTestResultClick={handleTestResultClick}
+        />
+        {!selectedFile && data.allTestResults && (
+          <TestResultsSummary
+            allTestResults={data.allTestResults}
+            onTestResultClick={handleTestResultClick}
           />
-        )}
-
-        {activeTab === "tree" && (
-          <>
-            <TreePanel
-              featureTree={data.featureTree}
-              expandedPaths={expandedPaths}
-              selectedFile={selectedFile}
-              onToggleExpand={toggleExpand}
-              onFileSelect={handleFileSelect}
-              selectedFileContent={selectedFileContent}
-              configs={data.configs}
-              allTestResults={data.allTestResults}
-              onTestResultClick={handleTestResultClick}
-            />
-            {!selectedFile && data.allTestResults && (
-              <TestResultsSummary
-                allTestResults={data.allTestResults}
-                onTestResultClick={handleTestResultClick}
-              />
-            )}
-          </>
         )}
       </div>
     </div>

@@ -29,3 +29,6 @@ This app is compiled by the user and hence, it has no build steps!
 This app is compiled by the user and hence, it has no build steps!
 This app is compiled by the user and hence, it has no build steps!
 
+## how it works
+
+We have a file `src/stakeholderApp/index.tsx` which we copy to the user's `testeranto` folder during the initialization of the project . The user can edit this file to taste, and during the server start up, this file is bundled (along with the user's changes) by `src/server/serverClasses/Server_Docker/StakeholderAppBundler.ts`. `src/server/serverClasses/utils/embedConfigInHtml.ts` is used to regenerate `testeranto/reports/index.html` dynamically. It computes a graph network and encodes it into the html. Finally, that html loads the compiled stake holder `testeranto/reports/index.js` and the stakeholder app can load.

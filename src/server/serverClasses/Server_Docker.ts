@@ -27,7 +27,6 @@ import { execSync } from "child_process";
 import { TestFileManager } from "./Server_Docker/TestFileManager";
 import { TestResultsCollector } from "./Server_Docker/TestResultsCollector";
 import { AiderMessageManager } from "./Server_Docker/AiderMessageManager";
-import { StakeholderAppBundler } from "./Server_Docker/StakeholderAppBundler";
 import { BuilderServicesManager } from "./Server_Docker/BuilderServicesManager";
 import { AiderImageBuilder } from "./Server_Docker/AiderImageBuilder";
 import { TestCompletionWaiter } from "./Server_Docker/TestCompletionWaiter";
@@ -53,14 +52,12 @@ export class Server_Docker extends Server_Docker_Compose {
   private testFileManager: TestFileManager;
   private testResultsCollector: TestResultsCollector;
   private aiderMessageManager: AiderMessageManager;
-  private stakeholderAppBundler: StakeholderAppBundler;
   private builderServicesManager: BuilderServicesManager;
   private aiderImageBuilder: AiderImageBuilder;
   private testCompletionWaiter: TestCompletionWaiter;
   private inputFiles: any;
   private hashs: any;
   private outputFiles: any;
-  // Track which builder configs failed - don't launch any services for these
   private failedBuilderConfigs: Set<string> = new Set();
 
   constructor(configs: ITestconfigV2, mode: IMode) {
@@ -92,11 +89,7 @@ export class Server_Docker extends Server_Docker_Compose {
       (message: string, error?: any) => consoleError(message, error),
     );
 
-    // Initialize stakeholderAppBundler
-    this.stakeholderAppBundler = new StakeholderAppBundler(
-      configs,
-      (message: string) => console.warn(message),
-    );
+
 
     // Initialize builder services manager
     this.builderServicesManager = new BuilderServicesManager(
@@ -124,15 +117,6 @@ export class Server_Docker extends Server_Docker_Compose {
   }
 
   async start() {
-    // Bundle the stakeholder app BEFORE starting the HTTP server
-    // await this.bundleStakeholderApp();
-    try {
-      await this.stakeholderAppBundler.bundleStakeholderApp();
-    } catch (e) {
-      console.error(e)
-      processExit(0)
-    }
-
 
     await super.start();
 
