@@ -1,48 +1,12 @@
-=== Log started at 2026-03-30T23:23:50.063Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
+=== Log started at 2026-03-31T00:49:08.315Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
 
 yarn run v1.22.22
 $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}'
 [NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}
-[BaseConfirm] value: BaseValue {
-  key: '',
-  failed: false,
-  artifacts: [],
-  fails: 0,
-  error: null,
-  store: null,
-  testResourceConfiguration: null,
-  features: [ 1, 1 ],
-  tableRows: undefined,
-  confirmCB: undefined,
-  initialValues: undefined
-}
-[BaseConfirm] should: BaseShould {
-  currentRow: [],
-  rowIndex: -1,
-  error: null,
-  name: 'beEqualTo: 2222',
-  shouldCB: [Function (anonymous)]
-}
-[BaseConfirm] value type: object
-[BaseConfirm] should type: object
-[BaseConfirm] input direct: BaseValue {
-  key: '',
-  failed: false,
-  artifacts: [],
-  fails: 0,
-  error: null,
-  store: null,
-  testResourceConfiguration: null,
-  features: [ 1, 1 ],
-  tableRows: undefined,
-  confirmCB: undefined,
-  initialValues: undefined
-}
-[BaseConfirm] actualResult: [Function (anonymous)]
 testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/'
 }
-Done in 0.34s.
+Done in 0.33s.
 
-=== Log captured at 2026-03-30T23:23:51.349Z (container status: exited) ===
+=== Log captured at 2026-03-31T00:49:09.585Z (container status: exited) ===

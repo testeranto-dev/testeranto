@@ -1,4 +1,4 @@
-=== Log started at 2026-03-30T22:19:56.702Z for service node-builder (runtime: node) ===
+=== Log started at 2026-03-31T00:23:12.794Z for service node-builder (runtime: node) ===
 
 yarn run v1.22.22
 $ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs nodetests src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts
@@ -13,20 +13,26 @@ $ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /worksp
 [NODE BUILDER] Running in dev mode - starting watch mode
 node > build ended with 0 errors
 [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 460822cb7c68c07ed13c72bf939952c2
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: de977b95de54c58e1c028a665861b044
 [node Builder] Wrote inputFiles.json for 1 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 460822cb7c68c07ed13c72bf939952c2
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: de977b95de54c58e1c028a665861b044
 [node Builder] Wrote inputFiles.json for 1 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Watch mode active - waiting for file changes...
 [NODE BUILDER] Using onEnd plugin for rebuild detection
 [NODE BUILDER] Keeping process alive for continuous watching...
 node > build ended with 0 errors
 [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 460822cb7c68c07ed13c72bf939952c2
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: de977b95de54c58e1c028a665861b044
+[node Builder] Wrote inputFiles.json for 1 tests to testeranto/bundles/nodetests/inputFiles.json
+[NODE BUILDER] Metafile updated
+[NODE BUILDER] Triggered inputFiles.json update
+node > build ended with 0 errors
+[node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: a356392ce2d03f2e53e0e0998e9b2971
 [node Builder] Wrote inputFiles.json for 1 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
 
-=== Log captured at 2026-03-30T22:22:02.707Z (container status: running) ===
+=== Log captured at 2026-03-31T00:25:18.097Z (container status: running) ===

@@ -91,8 +91,16 @@ export type IFinalResults = {
   features: string[];
   failed: boolean;
   fails: number;
-  artifacts: Promise<unknown>[];
+  artifacts: any[];
   tests: number;
   runTimeTests: number;
   testJob: object;
+  error?: {
+    message: string;
+    stack?: string;
+    name: string;
+  };
+  stepName?: string;
+  stepType?: string;
+  [key: string]: any;
 };
