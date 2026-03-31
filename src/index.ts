@@ -1,4 +1,6 @@
-// TODO auto add correct version instead of hardcode
+import pkg from "../package.json";
+
+const version = pkg.version;
 
 import readline from "readline";
 import { Server } from "./server/serverClasses/Server";
@@ -32,7 +34,7 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
 
 (async () => {
   if (mode === "-v") {
-    console.log(`v${"0.233.7"} `);
+    console.log(`v${version} `);
     process.exit(0);
   }
 
@@ -41,7 +43,7 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
     process.exit(0);
   }
 
-  console.log(`hello testeranto v0.233.7 - running in ${mode} mode\n Press 'q' to initiate a graceful shutdown.\nPress 'CTRL + c' to quit forcefully.\n`);
+  console.log(`hello testeranto v${version} - running in ${mode} mode\n Press 'q' to initiate a graceful shutdown.\nPress 'CTRL + c' to quit forcefully.\n`);
 
   if (mode !== "once" && mode !== "dev" && mode != "-v") {
     console.error(`The 3rd argument should be '-v', 'init', 'dev' or 'once', not '${mode}'.`);

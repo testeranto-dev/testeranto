@@ -8,7 +8,7 @@ import ReactDOM from "react-dom/client";
 // IMPORTANT : all imports need tog through stakeholderExports
 import {
   VisualizationTabs,
-} from "../../src/stakeholderExports";
+} from "testeranto/stakeholderExports";
 
 
 export interface StakeholderData {

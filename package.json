@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the Dockerized, AI powered, BDD test framework for polyglot projects",
-  "version": "0.234.0",
+  "version": "0.235.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -130,8 +130,8 @@
     "ATDD"
   ],
   "exports": {
-    "./src/server/serverClasses/StakeholderUtils": {
-      "import": "./src/server/serverClasses/StakeholderUtils.tsx"
+    "./src/server/serverClasses/stakeholderExports": {
+      "import": "./src/stakeholderExports.ts"
     },
     "./src/cjs-shim.ts": {
       "import": "./dist/cjs-shim.js",
