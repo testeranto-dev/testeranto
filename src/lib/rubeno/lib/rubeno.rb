@@ -343,20 +343,6 @@ module Rubeno
       def result.features; @features; end
       
       result
-    rescue => e
-      puts "Error in test job: #{e.message}"
-      puts e.backtrace
-      
-      result = Object.new
-      result.instance_variable_set(:@fails, 1)
-      result.instance_variable_set(:@artifacts, [])
-      result.instance_variable_set(:@features, [])
-      
-      def result.fails; @fails; end
-      def result.artifacts; @artifacts; end
-      def result.features; @features; end
-      
-      result
     end
     
     # Create an artifactory that tracks context
@@ -448,19 +434,13 @@ module Rubeno
       puts "  Number of test jobs: #{@test_jobs.length}"
       @test_jobs.each_with_index do |job, i|
         puts "  Processing job #{i}"
-        begin
-          # Update the job's receiveTestResourceConfig to pass test_resource_config
-          result = run_test_job(job[:suite], test_resource_config)
-          puts "    Job #{i} result: fails=#{result.fails}, features=#{result.features.length}, artifacts=#{result.artifacts.length}"
-          total_fails += result.fails
-          all_features.concat(result.features)
-          all_artifacts.concat(result.artifacts)
-          suite_results << job[:to_obj].call
-        rescue => e
-          puts "Error running test job: #{e.message}"
-          puts e.backtrace
-          total_fails += 1
-        end
+        # Update the job's receiveTestResourceConfig to pass test_resource_config
+        result = run_test_job(job[:suite], test_resource_config)
+        puts "    Job #{i} result: fails=#{result.fails}, features=#{result.features.length}, artifacts=#{result.artifacts.length}"
+        total_fails += result.fails
+        all_features.concat(result.features)
+        all_artifacts.concat(result.artifacts)
+        suite_results << job[:to_obj].call
       end
       
       puts "  Total fails: #{total_fails}"

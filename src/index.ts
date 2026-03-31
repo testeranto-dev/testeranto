@@ -51,8 +51,6 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
     process.exit(-1);
   }
 
-  await init();
-
   const config = (await import(process.cwd() + '/testeranto/testeranto.ts')).default;
   const server = new Server(config, mode);
 

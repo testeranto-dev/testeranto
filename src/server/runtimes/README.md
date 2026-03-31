@@ -70,13 +70,6 @@ Every builder produces a single inputFiles.json file for all tests in a runtime,
 
 The hash is obtained by concatenating the contents of all the relevant input files and running it through MD5.
 
-## Success Metrics
-
-- Native tests run without modification
-- Test results accurately captured and reported
-- Performance overhead < 20%
-- # Support for 80% of popular test frameworks in each language
-
 ## Three-Parameter Architecture for Native Test Integration
 
 Each runtime builder must generate three canonical components when translating native test frameworks to testeranto's BDD structure:
