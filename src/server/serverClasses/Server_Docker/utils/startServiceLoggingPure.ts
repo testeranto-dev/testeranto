@@ -54,7 +54,7 @@ export const startServiceLoggingPure = async (
             exitPromise,
             new Promise(resolve => setTimeout(resolve, 1000))
           ]);
-          consoleLog(`[startServiceLoggingPure] Stopped existing log process for ${serviceName}`);
+          // consoleLog(`[startServiceLoggingPure] Stopped existing log process for ${serviceName}`);
         }
       } catch (error) {
         consoleWarn(`[startServiceLoggingPure] Error stopping existing log process for ${serviceName}:`, error);
@@ -78,17 +78,8 @@ export const startServiceLoggingPure = async (
   } else {
     baseName = serviceName;
   }
-  
+
   const logFilePath = `${cwd}/testeranto/reports/${runtimeConfigKey}/${baseName}.log`;
-  
-  // Always start with a fresh log file
-  try {
-    const timestamp = new Date().toISOString();
-    const startMarker = `=== Log started at ${timestamp} for service ${serviceName} (runtime: ${runtime}) ===\n\n`;
-    writeFileSync(logFilePath, startMarker);
-  } catch (error) {
-    consoleWarn(`[startServiceLoggingPure] Failed to create log file: ${error}`);
-  }
 
   // Get the Docker container ID and its start time
   let dockerContainerId: string;
@@ -104,7 +95,7 @@ export const startServiceLoggingPure = async (
         if (dockerContainerId) break;
       }
     }
-    
+
     if (dockerContainerId) {
       // Get container start time
       const startTimeCmd = `docker inspect --format='{{.State.StartedAt}}' ${dockerContainerId}`;
@@ -124,14 +115,38 @@ export const startServiceLoggingPure = async (
     return new Map(); // Return empty map, no processes to track
   }
 
-  // Wait for container to exit (with timeout)
+  // Always start with a fresh log file with more context
+  try {
+    const timestamp = new Date().toISOString();
+    const startMarker = `=== Log started at ${timestamp} for service ${serviceName} (runtime: ${runtime}) ===\n` +
+      `=== Container ID: ${dockerContainerId || 'unknown'} ===\n` +
+      `=== Test: ${testName || 'N/A'} ===\n` +
+      `=== Config Key: ${runtimeConfigKey} ===\n\n`;
+    writeFileSync(logFilePath, startMarker);
+  } catch (error) {
+    consoleWarn(`[startServiceLoggingPure] Failed to create log file: ${error}`);
+  }
+
+  // Wait for container to exit (with timeout) and ensure all output is flushed
   let status = 'running';
-  for (let i = 0; i < 120; i++) { // Wait up to 2 minutes
+  let exitCode = null;
+
+  for (let i = 0; i < 180; i++) { // Wait up to 3 minutes (increased from 2)
     try {
       const statusCmd = `docker inspect --format='{{.State.Status}}' ${dockerContainerId}`;
       status = execSyncWrapper(statusCmd, { cwd: cwd }).trim();
+
+      // Also get exit code if container has exited
       if (status === 'exited' || status === 'dead') {
-        break;
+        try {
+          const exitCodeCmd = `docker inspect --format='{{.State.ExitCode}}' ${dockerContainerId}`;
+          exitCode = parseInt(execSyncWrapper(exitCodeCmd, { cwd: cwd }).trim());
+          // Wait a bit more to ensure all logs are flushed to Docker daemon
+          await new Promise(resolve => setTimeout(resolve, 500));
+          break;
+        } catch (exitError) {
+          // Continue with status check
+        }
       }
     } catch (error) {
       // Container might have been removed
@@ -141,36 +156,136 @@ export const startServiceLoggingPure = async (
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  // Capture logs from container start time
+  // Additional wait for builder services which might have buffered output
+  if (serviceName.includes('builder') || serviceName.includes('build')) {
+    consoleLog(`[startServiceLoggingPure] Builder service detected, waiting extra for log flush...`);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+
+  // Capture logs - always capture both stdout and stderr
   try {
-    let logs = '';
-    if (containerStartTime) {
-      // Use --since to get logs only from this container's start time
-      const logsCmd = `docker logs --since "${containerStartTime}" ${dockerContainerId}`;
-      logs = execSyncWrapper(logsCmd, { cwd: cwd });
-    } else {
-      // Fallback to all logs if we couldn't get start time
-      const logsCmd = `docker logs ${dockerContainerId}`;
-      logs = execSyncWrapper(logsCmd, { cwd: cwd });
+    // First, try to get all logs (both stdout and stderr) without time filtering
+    // This ensures we capture everything, especially for quickly exiting containers
+    let allLogs = '';
+    try {
+      const allLogsCmd = `docker logs ${dockerContainerId} 2>&1`;
+      allLogs = execSyncWrapper(allLogsCmd, { cwd: cwd });
+    } catch (allLogsError: any) {
+      consoleWarn(`[startServiceLoggingPure] Error capturing all logs for ${serviceName}:`, allLogsError);
     }
-    
-    if (logs && logs.trim().length > 0) {
-      fs.appendFileSync(logFilePath, logs);
-    } else {
-      fs.appendFileSync(logFilePath, '\n=== No logs captured ===\n');
+
+    // Also try to get logs with --since if we have a start time (for completeness)
+    let sinceLogs = '';
+    if (containerStartTime) {
+      try {
+        const sinceLogsCmd = `docker logs --since "${containerStartTime}" ${dockerContainerId} 2>&1`;
+        sinceLogs = execSyncWrapper(sinceLogsCmd, { cwd: cwd });
+      } catch (sinceLogsError: any) {
+        // Ignore this error, we already have allLogs
+      }
+    }
+
+    // Write captured logs to file
+    let hasLogs = false;
+
+    // Use allLogs if available, otherwise use sinceLogs
+    const logsToWrite = allLogs || sinceLogs;
+
+    if (logsToWrite && logsToWrite.trim().length > 0) {
+      fs.appendFileSync(logFilePath, "=== ALL LOGS (stdout + stderr) ===\n");
+      fs.appendFileSync(logFilePath, logsToWrite);
+      if (!logsToWrite.endsWith('\n')) {
+        fs.appendFileSync(logFilePath, '\n');
+      }
+      hasLogs = true;
+    }
+
+    // Also try to capture stdout and stderr separately for better visibility
+    if (!hasLogs) {
+      // Try separate capture as fallback
+      let stdoutLogs = '';
+      let stderrLogs = '';
+
+      try {
+        const stdoutCmd = `docker logs ${dockerContainerId}`;
+        stdoutLogs = execSyncWrapper(stdoutCmd, { cwd: cwd });
+      } catch (stdoutError: any) {
+        // Ignore
+      }
+
+      try {
+        const stderrCmd = `docker logs ${dockerContainerId} 2>&1 1>/dev/null`;
+        stderrLogs = execSyncWrapper(stderrCmd, { cwd: cwd });
+      } catch (stderrError: any) {
+        // Ignore
+      }
+
+      if (stdoutLogs && stdoutLogs.trim().length > 0) {
+        fs.appendFileSync(logFilePath, "=== STDOUT ===\n");
+        fs.appendFileSync(logFilePath, stdoutLogs);
+        if (!stdoutLogs.endsWith('\n')) {
+          fs.appendFileSync(logFilePath, '\n');
+        }
+        hasLogs = true;
+      }
+
+      if (stderrLogs && stderrLogs.trim().length > 0) {
+        fs.appendFileSync(logFilePath, "=== STDERR ===\n");
+        fs.appendFileSync(logFilePath, stderrLogs);
+        if (!stderrLogs.endsWith('\n')) {
+          fs.appendFileSync(logFilePath, '\n');
+        }
+        hasLogs = true;
+      }
+    }
+
+    if (!hasLogs) {
+      fs.appendFileSync(logFilePath, '\n=== No logs captured (container may have exited without output) ===\n');
+
+      // Try one more time with different options
+      try {
+        const finalTryCmd = `docker logs --timestamps ${dockerContainerId} 2>&1 || true`;
+        const finalLogs = execSyncWrapper(finalTryCmd, { cwd: cwd });
+        if (finalLogs && finalLogs.trim().length > 0) {
+          fs.appendFileSync(logFilePath, "=== FINAL ATTEMPT (with --timestamps) ===\n");
+          fs.appendFileSync(logFilePath, finalLogs);
+          if (!finalLogs.endsWith('\n')) {
+            fs.appendFileSync(logFilePath, '\n');
+          }
+        }
+      } catch (finalError: any) {
+        // Ignore final attempt errors
+      }
     }
   } catch (error) {
     consoleWarn(`[startServiceLoggingPure] Error capturing logs for ${serviceName}:`, error);
     fs.appendFileSync(logFilePath, `\n=== Error capturing logs: ${error} ===\n`);
+
+    // Try to get any available logs even if there was an error
+    try {
+      const emergencyCmd = `docker logs ${dockerContainerId} 2>&1 || echo "Failed to get emergency logs"`;
+      const emergencyLogs = execSyncWrapper(emergencyCmd, { cwd: cwd });
+      fs.appendFileSync(logFilePath, "=== EMERGENCY LOG ATTEMPT ===\n");
+      fs.appendFileSync(logFilePath, emergencyLogs);
+      if (!emergencyLogs.endsWith('\n')) {
+        fs.appendFileSync(logFilePath, '\n');
+      }
+    } catch (emergencyError: any) {
+      fs.appendFileSync(logFilePath, `\n=== Emergency log attempt failed: ${emergencyError} ===\n`);
+    }
   }
 
-  // Add end marker
+  // Add end marker with exit code information
   const endTimestamp = new Date().toISOString();
-  fs.appendFileSync(logFilePath, `\n=== Log captured at ${endTimestamp} (container status: ${status}) ===\n`);
+  let statusMessage = `container status: ${status}`;
+  if (exitCode !== null) {
+    statusMessage += `, exit code: ${exitCode}`;
+  }
+  fs.appendFileSync(logFilePath, `\n=== Log captured at ${endTimestamp} (${statusMessage}) ===\n`);
 
   // Capture exit code
   captureContainerExitCode(serviceName, runtime, runtimeConfigKey, testName);
-  
+
   consoleLog(`[startServiceLoggingPure] Captured logs for ${serviceName}, status: ${status}`);
 
   // No background processes to track

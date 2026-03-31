@@ -25,7 +25,7 @@ const init = async () => {
   // Copy stakeholder index.tsx if it doesn't exist
   const stakeholderIndexPath = join(reportsDir, "index.tsx");
 
-  console.log(stakeholderIndexPath, stakeholderTsx);
+  // console.log(stakeholderIndexPath, stakeholderTsx);
   await fs.writeFile(stakeholderIndexPath, stakeholderTsx);
 
 }
