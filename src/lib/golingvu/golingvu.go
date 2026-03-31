@@ -539,12 +539,15 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 	var testResourceConfig ITTestResourceConfiguration
 	err := json.Unmarshal([]byte(partialTestResource), &testResourceConfig)
 	if err != nil {
-		// If parsing fails, try with a minimal configuration
-		// This helps with interoperability when the format isn't exact
-		testResourceConfig = ITTestResourceConfiguration{
-			Name: "interop-runner",
-			Fs:   ".",
-		}
+		// According to SOUL.md, we should propagate errors, not use fallbacks
+		return IFinalResults{
+			Failed:       true,
+			Fails:        -1,
+			Artifacts:    []interface{}{},
+			Features:     []string{},
+			Tests:        0,
+			RunTimeTests: -1,
+		}, fmt.Errorf("failed to parse test resource configuration: %v", err)
 	}
 
 	// Store the test resource configuration for use in tests
@@ -552,7 +555,6 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 
 	// Run the actual tests and capture results
 	testResults, err := gv.runActualTests()
-
 	if err != nil {
 		return IFinalResults{
 			Failed:       true,
@@ -570,10 +572,38 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 		totalFails = fails
 	}
 
-	// Only write tests.json if we have a valid filesystem path
-	if testResourceConfig.Fs != "" && testResourceConfig.Fs != "." {
-		data, err := json.MarshalIndent(testResults, "", "  ")
-		if err != nil {
+	// Write tests.json to the specified filesystem path
+	// The path must be provided and valid
+	if testResourceConfig.Fs == "" {
+		return IFinalResults{
+			Failed:       true,
+			Fails:        -1,
+			Artifacts:    []interface{}{},
+			Features:     []string{},
+			Tests:        0,
+			RunTimeTests: -1,
+		}, fmt.Errorf("filesystem path (Fs) is required in test resource configuration")
+	}
+
+	data, err := json.MarshalIndent(testResults, "", "  ")
+	if err != nil {
+		return IFinalResults{
+			Failed:       true,
+			Fails:        -1,
+			Artifacts:    []interface{}{},
+			Features:     []string{},
+			Tests:        0,
+			RunTimeTests: -1,
+		}, fmt.Errorf("failed to marshal tests.json: %v", err)
+	}
+
+	// Follow the same pattern as tiposkripto: write to ${testResourceConfig.Fs}/tests.json
+	filePath := filepath.Join(testResourceConfig.Fs, "tests.json")
+
+	// Ensure the directory exists
+	dirPath := filepath.Dir(filePath)
+	if dirPath != "" && dirPath != "." {
+		if err := os.MkdirAll(dirPath, 0755); err != nil {
 			return IFinalResults{
 				Failed:       true,
 				Fails:        -1,
@@ -581,41 +611,23 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 				Features:     []string{},
 				Tests:        0,
 				RunTimeTests: -1,
-			}, fmt.Errorf("failed to marshal tests.json: %v", err)
+			}, fmt.Errorf("failed to create directory %s: %v", dirPath, err)
 		}
+	}
 
-		// Follow the same pattern as tiposkripto: write to ${testResourceConfig.Fs}/tests.json
-		filePath := filepath.Join(testResourceConfig.Fs, "tests.json")
+	fmt.Printf("writing tests.json to ->: %s\n", filePath)
 
-		// Ensure the directory exists
-		dirPath := filepath.Dir(filePath)
-		if dirPath != "" && dirPath != "." {
-			if err := os.MkdirAll(dirPath, 0755); err != nil {
-				return IFinalResults{
-					Failed:       true,
-					Fails:        -1,
-					Artifacts:    []interface{}{},
-					Features:     []string{},
-					Tests:        0,
-					RunTimeTests: -1,
-				}, fmt.Errorf("failed to create directory %s: %v", dirPath, err)
-			}
-		}
-
-		fmt.Printf("writing tests.json to ->: %s\n", filePath)
-
-		// Write the file directly using the artifactory approach
-		err = os.WriteFile(filePath, data, 0644)
-		if err != nil {
-			return IFinalResults{
-				Failed:       true,
-				Fails:        -1,
-				Artifacts:    []interface{}{},
-				Features:     []string{},
-				Tests:        0,
-				RunTimeTests: -1,
-			}, fmt.Errorf("failed to write tests.json: %v", err)
-		}
+	// Write the file directly
+	err = os.WriteFile(filePath, data, 0644)
+	if err != nil {
+		return IFinalResults{
+			Failed:       true,
+			Fails:        -1,
+			Artifacts:    []interface{}{},
+			Features:     []string{},
+			Tests:        0,
+			RunTimeTests: -1,
+		}, fmt.Errorf("failed to write tests.json: %v", err)
 	}
 
 	result := IFinalResults{
@@ -655,13 +667,8 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 			specs[i] = v
 		}
 	default:
-		// Handle case where specs might not be a slice
-		if gv.Specs != nil {
-			// Wrap single spec in a slice
-			specs = []interface{}{gv.Specs}
-		} else {
-			specs = []interface{}{}
-		}
+		// According to SOUL.md, propagate errors rather than using fallbacks
+		return nil, fmt.Errorf("invalid specs type: %T", gv.Specs)
 	}
 
 	for _, suite := range specs {
@@ -702,11 +709,10 @@ func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
 			case *BaseGiven:
 				givenObj = g
 			case map[string]interface{}:
-				// Try to convert map to BaseGiven
-				// This is a simplified conversion - in reality, we'd need more logic
-				continue
+				// According to SOUL.md, propagate errors
+				return nil, fmt.Errorf("invalid given type for key %s: %T", key, given)
 			default:
-				continue
+				return nil, fmt.Errorf("invalid given type for key %s: %T", key, given)
 			}
 
 			// Execute the test and record actual results
