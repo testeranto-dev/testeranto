@@ -47,23 +47,25 @@ echo "Updating version to $NEW_VERSION..."
 update_pom_version "$NEW_VERSION"
 
 echo "Building Java package..."
-# Use Maven to build
-mvn clean compile
+# Use Maven to build with minimal dependencies
+mvn clean compile -DskipTests
 
 echo "Packaging..."
-mvn package
+mvn package -DskipTests
 
 echo "Publishing Java package..."
-read -p "Deploy $NEW_VERSION to Maven Central? (y/n): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Note: Maven Central deployment requires proper setup (settings.xml, GPG signing, etc.)"
-    echo "To deploy manually, run: mvn clean deploy -P release"
-    echo "For now, skipping automatic deployment."
-else
-    echo "Skipping deploy. You can deploy manually later with:"
-    echo "  mvn clean deploy -P release"
-fi
+echo "Installing version $NEW_VERSION to local Maven repository..."
+mvn clean install -DskipTests
+
+echo "Local installation complete."
+echo "To use this version in your projects, add to build.gradle:"
+echo "  implementation 'com.testeranto:testeranto.kafe:$NEW_VERSION'"
+echo ""
+echo "Note: For Docker builds, ensure the Kafe source is mounted at /workspace/kafe-src"
+echo "      or the local Maven repository is mounted at /root/.m2/repository"
 
 echo "Build complete. JAR file created in target/ directory."
-echo "To run Kafe: java -jar target/kafe-${NEW_VERSION}.jar"
+echo "To run Kafe: java -jar target/testeranto.kafe-${NEW_VERSION}.jar"
+echo ""
+echo "To verify installation:"
+echo "  ls ~/.m2/repository/com/testeranto/testeranto.kafe/${NEW_VERSION}/"

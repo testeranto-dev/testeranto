@@ -1,0 +1,57 @@
+@options
+@packages
+-classpath
+'/Users/adam/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar:/Users/adam/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar:/Users/adam/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar:/Users/adam/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.0/junit-jupiter-api-5.10.0.jar:/Users/adam/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/adam/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/adam/.m2/repository/org/junit/platform/junit-platform-commons/1.10.0/junit-platform-commons-1.10.0.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.8'
+-sourcepath
+'/Users/adam/Code/testeranto/src/lib/kafe/src/main/java:/Users/adam/Code/testeranto/src/lib/kafe/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'Kafe - Java Implementation of Testeranto 0.3.4 API'
+-linkoffline
+'https://docs.oracle.com/javase/8/docs/api' '/Users/adam/Code/testeranto/src/lib/kafe/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'Kafe - Java Implementation of Testeranto 0.3.4 API'
+kafe
+/Users/adam/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar = 1685489257000
+/Users/adam/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar = 1685478841000
+/Users/adam/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar = 1685485055000
+/Users/adam/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.0/junit-jupiter-api-5.10.0.jar = 1690116754000
+/Users/adam/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar = 1688646332000
+/Users/adam/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar = 1624798415000
+/Users/adam/.m2/repository/org/junit/platform/junit-platform-commons/1.10.0/junit-platform-commons-1.10.0.jar = 1690116754000
+/Users/adam/Code/testeranto/src/lib/kafe/src/main/java = 1771518262114
+/Users/adam/Code/testeranto/src/lib/kafe/target/generated-sources/annotations = 1774985912690
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/constant-values.html = 1774985914962
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/member-search-index.zip = 1774985915016
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/overview-tree.html = 1774985915000
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/index.html = 1774985915027
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/package-search-index.js = 1774985915013
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/package-search-index.zip = 1774985915015
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/type-search-index.zip = 1774985915015
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/index-all.html = 1774985915017
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/allpackages-index.html = 1774985915022
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/deprecated-list.html = 1774985915025
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/member-search-index.js = 1774985915015
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/allclasses.html = 1774985915026
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/script.js = 1774985915029
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/stylesheet.css = 1774985915029
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/help-doc.html = 1774985915028
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/element-list = 1774985914954
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/allclasses-index.html = 1774985915021
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/type-search-index.js = 1774985915015
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/search.js = 1774985915030
