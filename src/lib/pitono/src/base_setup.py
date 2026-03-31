@@ -81,82 +81,54 @@ class BaseSetup:
         key: str,
         test_resource_configuration: ITestResourceConfiguration,
         tester: Callable[[Any], bool],
-        artifactory: Optional[ITestArtifactory] = None,
-        suite_ndx: Optional[int] = None
+        artifactory: ITestArtifactory,
+        suite_ndx: int
     ) -> Any:
         self.key = key
         self.fails = 0
         
-        actual_artifactory = artifactory or (lambda f_path, value: None)
         def setup_artifactory(f_path: str, value: Any):
-            return actual_artifactory(f"setup-{key}/{f_path}", value)
+            return artifactory(f"setup-{key}/{f_path}", value)
         
-        try:
-            self.store = await self.setup_that(
-                subject,
+        self.store = await self.setup_that(
+            subject,
+            test_resource_configuration,
+            setup_artifactory,
+            self.setup_cb,
+            self.initial_values
+        )
+        self.status = True
+        
+        # Process actions
+        for action_ndx, action_step in enumerate(self.actions):
+            # Create artifactory for action context
+            action_artifactory = self._create_artifactory_for_action(key, action_ndx, suite_ndx)
+            self.store = await action_step.test(
+                self.store,
                 test_resource_configuration,
-                setup_artifactory,
-                self.setup_cb,
-                self.initial_values
+                action_artifactory
             )
-            self.status = True
-        except Exception as e:
-            self.status = False
-            self.failed = True
-            self.fails += 1
-            self.error = e
-            return self.store
         
-        try:
-            # Process actions
-            for action_ndx, action_step in enumerate(self.actions):
-                try:
-                    # Create artifactory for action context
-                    action_artifactory = self._create_artifactory_for_action(key, action_ndx, suite_ndx)
-                    self.store = await action_step.test(
-                        self.store,
-                        test_resource_configuration,
-                        action_artifactory
-                    )
-                except Exception as e:
-                    self.failed = True
-                    self.fails += 1
-                    self.error = e
+        # Process checks
+        for check_ndx, check_step in enumerate(self.checks):
+            if suite_ndx is not None:
+                filepath = f"suite-{suite_ndx}/setup-{key}/check-{check_ndx}"
+            else:
+                filepath = f"setup-{key}/check-{check_ndx}"
             
-            # Process checks
-            for check_ndx, check_step in enumerate(self.checks):
-                try:
-                    if suite_ndx is not None:
-                        filepath = f"suite-{suite_ndx}/setup-{key}/check-{check_ndx}"
-                    else:
-                        filepath = f"setup-{key}/check-{check_ndx}"
-                    
-                    # Create artifactory for check context
-                    check_artifactory = self._create_artifactory_for_check(key, check_ndx, suite_ndx)
-                    result = await check_step.test(
-                        self.store,
-                        test_resource_configuration,
-                        filepath,
-                        check_artifactory
-                    )
-                    if not tester(result):
-                        self.failed = True
-                        self.fails += 1
-                except Exception as e:
-                    self.failed = True
-                    self.fails += 1
-                    self.error = e
-        except Exception as e:
-            self.error = e
-            self.failed = True
-            self.fails += 1
-        finally:
-            try:
-                await self.after_each(self.store, self.key, setup_artifactory)
-            except Exception as e:
+            # Create artifactory for check context
+            check_artifactory = self._create_artifactory_for_check(key, check_ndx, suite_ndx)
+            result = await check_step.test(
+                self.store,
+                test_resource_configuration,
+                filepath,
+                check_artifactory
+            )
+            if not tester(result):
                 self.failed = True
                 self.fails += 1
-                self.error = e
+        
+        await self.after_each(self.store, self.key, setup_artifactory)
         
         return self.store
     

@@ -9,22 +9,11 @@ import hashlib
 
 import time
 
-# Import native detection module
-try:
-    from native_detection import PythonNativeTestDetection
-except ImportError:
-    # Create a dummy class if module not found
-    class PythonNativeTestDetection:
-        @staticmethod
-        def detect_native_test(file_path: str) -> Dict[str, Any]:
-            return {"is_native_test": False, "framework_type": None, "test_structure": {}}
-        
-        @staticmethod
-        def translate_to_testeranto(detection_result: Dict[str, Any]) -> Dict[str, str]:
-            return {"specification": "", "implementation": "", "adapter": ""}
+# Import native detection module - no fallback
+from native_detection import PythonNativeTestDetection
 
-def resolve_python_import(import_path: str, current_file: str) -> str | None:
-    """Resolve a Python import to a file path."""
+def resolve_python_import(import_path: str, current_file: str) -> str:
+    """Resolve a Python import to a file path. Raises ImportError if not found."""
     # Handle relative imports
     if import_path.startswith('.'):
         current_dir = os.path.dirname(current_file)
@@ -49,7 +38,7 @@ def resolve_python_import(import_path: str, current_file: str) -> str | None:
             init_path = os.path.join(base_dir, '__init__.py')
             if os.path.exists(init_path):
                 return init_path
-            return None
+            raise ImportError(f"Cannot resolve import '{import_path}' from '{current_file}'")
         
         # Resolve full path
         resolved = os.path.join(base_dir, remaining)
@@ -65,7 +54,7 @@ def resolve_python_import(import_path: str, current_file: str) -> str | None:
             init_path = os.path.join(resolved, '__init__.py')
             if os.path.exists(init_path):
                 return init_path
-        return None
+        raise ImportError(f"Cannot resolve import '{import_path}' from '{current_file}'")
     
     # Handle absolute imports
     # Look in various directories
@@ -86,7 +75,7 @@ def resolve_python_import(import_path: str, current_file: str) -> str | None:
         for potential in potential_paths:
             if os.path.exists(potential):
                 return potential
-    return None
+    raise ImportError(f"Cannot resolve import '{import_path}' from '{current_file}'")
 
 def parse_python_imports(file_path: str) -> List[Dict[str, Any]]:
     """Parse import statements from a Python file."""

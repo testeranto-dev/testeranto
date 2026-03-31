@@ -492,27 +492,14 @@ class PitonoClass:
     async def receiveTestResourceConfig(self, partialTestResource: str) -> IFinalResults:
         print(f"[Pitono] receiveTestResourceConfig called with: {partialTestResource}")
         
-        # Parse test resource configuration
-        try:
-            test_resource_config = json.loads(partialTestResource)
-        except json.JSONDecodeError:
-            # If not JSON, try to parse as a file path
-            if os.path.exists(partialTestResource):
-                with open(partialTestResource, 'r') as f:
-                    test_resource_config = json.load(f)
-            else:
-                # Default configuration
-                test_resource_config = {
-                    "name": "default",
-                    "fs": "./testeranto_results",
-                    "ports": [],
-                    "files": []
-                }
+        # Parse test resource configuration - no fallbacks
+        test_resource_config = json.loads(partialTestResource)
         
+        # Require all necessary fields - no defaults
         self.test_resource_configuration = ITTestResourceConfiguration(
-            name=test_resource_config.get("name", "default"),
-            fs=test_resource_config.get("fs", "./testeranto_results"),
-            ports=test_resource_config.get("ports", []),
+            name=test_resource_config["name"],
+            fs=test_resource_config["fs"],
+            ports=test_resource_config["ports"],
             browser_ws_endpoint=test_resource_config.get("browserWsEndpoint"),
             timeout=test_resource_config.get("timeout"),
             retries=test_resource_config.get("retries"),
