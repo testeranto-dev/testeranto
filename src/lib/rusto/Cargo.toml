@@ -6,6 +6,7 @@ description = "Rust implementation of Testeranto"
 authors = ["Testeranto Team"]
 license = "MIT"
 readme = "README.md"
+publish = false  # Prevent accidental publishing
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
