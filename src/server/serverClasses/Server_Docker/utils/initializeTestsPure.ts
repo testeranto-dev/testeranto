@@ -1,8 +1,8 @@
-import type { IRunTime, ITestconfigV2 } from "../../../../Types";
+import type { IRunTime, ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 
 export const initializeTestsPure = async (
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
   mode: IMode,
   inputFiles: Record<string, Record<string, string[]>>,
   watchInputFile: (runtime: IRunTime, testName: string) => Promise<void>,

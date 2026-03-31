@@ -1,12 +1,12 @@
 import fs from "fs";
 import path from "path";
-import type { IRunTime, ITestconfigV2 } from "../../../Types";
+import type { IRunTime, ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { makeReportDirectory } from "../Server_Docker/utils";
 
 export class AiderMessageManager {
   constructor(
-    private configs: ITestconfigV2,
+    private configs: ITesterantoConfig,
     private mode: IMode,
     private getInputFilesForTest: (configKey: string, testName: string) => string[],
     private getOutputFilesForTest: (configKey: string, testName: string) => string[],

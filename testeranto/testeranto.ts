@@ -1,11 +1,11 @@
-import type { ITestconfigV2 } from "../src/Types";
+import type { ITesterantoConfig } from "../src/Types";
 
 export const golangciLintCommand = (files: string[]): string => {
   // Simple implementation - just run on all Go files
   return "golangci-lint run ./... --timeout=5m --issues-exit-code=0";
 };
 
-const config: ITestconfigV2 = {
+const config: ITesterantoConfig = {
 
   volumes: [
     `${process.cwd()}/src:/workspace/src`,

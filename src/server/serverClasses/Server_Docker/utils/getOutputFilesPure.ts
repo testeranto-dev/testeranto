@@ -1,8 +1,8 @@
-import type { ITestconfigV2 } from "../../../../Types";
+import type { ITesterantoConfig } from "../../../../Types";
 import { consoleLog } from "../Server_Docker_Dependents";
 
 export const getOutputFilesPure = (
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
   outputFiles: Record<string, Record<string, string[]>>,
   runtime: string,
   testName: string,

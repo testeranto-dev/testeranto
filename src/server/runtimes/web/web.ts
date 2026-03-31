@@ -4,7 +4,7 @@ import configer from "./esbuild";
 import { processMetafile } from "../common";
 import * as fs from "fs";
 import * as path from "path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 
 // Setup logging to file
 const projectConfigPath = process.argv[2];
@@ -96,7 +96,7 @@ process.on("uncaughtException", (error) => {
 
 async function startBundling(
   webConfigs: any,
-  projectConfig: ITestconfigV2,
+  projectConfig: ITesterantoConfig,
   entryPoints: string[],
 ) {
   console.log(`[WEB BUILDER] is now bundling: ${testName}`);

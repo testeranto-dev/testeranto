@@ -1,4 +1,4 @@
-import type { IRunTime, ITestconfigV2 } from "../../../Types";
+import type { IRunTime, ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { getInputFilesPure } from "./utils/getInputFilesPure.ts";
 import { getOutputFilesPure } from "./utils/getOutputFilesPure";
@@ -17,7 +17,7 @@ export interface TestResult {
 
 export class TestResultsCollector {
   constructor(
-    private configs: ITestconfigV2,
+    private configs: ITesterantoConfig,
     private mode: IMode,
     private inputFiles: any,
     private outputFiles: any

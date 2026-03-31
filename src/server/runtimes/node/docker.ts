@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the node runtime file as text
@@ -16,7 +16,7 @@ const nativeDetectionPath = join(process.cwd(), "testeranto", "runtimes", "node"
 await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 export const nodeDockerComposeFile = (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   nodeConfigPath: string,
@@ -77,7 +77,7 @@ export const nodeBddCommand = (
   // for the directory structure. The original test file has .ts extension.
   // Convert .mjs back to .ts for the fs path to match the directory we created.
   const originalPath = fpath.replace(/\.mjs$/, '.ts');
-  
+
   const jsonStr = JSON.stringify({
     ports: [1111],
     fs: `testeranto/reports/${configKey}/${originalPath}/`,
@@ -87,7 +87,7 @@ export const nodeBddCommand = (
 
 // BuildKit-based building
 export const nodeBuildKitBuild = async (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   configKey: string,
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];

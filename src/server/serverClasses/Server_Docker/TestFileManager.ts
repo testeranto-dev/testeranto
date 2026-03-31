@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { IRunTime, ITestconfigV2 } from "../../../Types";
+import type { IRunTime, ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { watchInputFilePure, watchOutputFilePure } from "../Server_Docker/utils/watch";
 import { updateOutputFilesList } from "./utils/updateOutputFilesList";
@@ -12,7 +12,7 @@ export class TestFileManager {
   hashs: Record<string, Record<string, string>> = {};
 
   constructor(
-    private configs: ITestconfigV2,
+    private configs: ITesterantoConfig,
     private mode: IMode,
     private resourceChanged: (path: string) => void
   ) { }

@@ -17,7 +17,7 @@ import type { BaseConfirm } from "./lib/tiposkripto/src/verbs/tdt/BaseConfirm";
 import type { BaseValue } from "./lib/tiposkripto/src/verbs/tdt/BaseValue";
 import type { BaseShould } from "./lib/tiposkripto/src/verbs/tdt/BaseShould";
 
-export type ITestconfigV2 = {
+export type ITesterantoConfig = {
   volumes: string[],
   featureIngestor: (s: string) => Promise<string>;
   runtimes: Record<string, IBaseTestConfig>;

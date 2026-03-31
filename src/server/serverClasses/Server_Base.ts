@@ -1,11 +1,11 @@
-import type { ITestconfigV2 } from "../../Types";
+import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 
 export abstract class Server_Base {
   mode: IMode;
-  configs: ITestconfigV2;
+  configs: ITesterantoConfig;
 
-  constructor(configs: ITestconfigV2, mode: IMode) {
+  constructor(configs: ITesterantoConfig, mode: IMode) {
     this.configs = configs;
     this.mode = mode;
   }

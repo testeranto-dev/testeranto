@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the rust runtime file as text
@@ -35,7 +35,7 @@ serde = { version = "1.0", features = ["derive"] }`;
 await Bun.write(cargoTomlPath, cargoTomlContent);
 
 export const rustDockerComposeFile = (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   rustConfigPath: string,
@@ -118,7 +118,7 @@ export const rustBddCommand = (
 
 // BuildKit-based building for rust runtime
 export const rustBuildKitBuild = async (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   configKey: string,
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];

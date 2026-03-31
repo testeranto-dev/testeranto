@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 
 export async function collectAllTestResults(
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
 ): Promise<Record<string, any>> {
   if (!configs || !configs.runtimes) {
     return {};

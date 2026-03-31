@@ -1,22 +1,29 @@
-import { BaseGiven } from "./lib/tiposkripto/src/BaseGiven";
-import { BaseThen } from "./lib/tiposkripto/src/BaseThen";
-import { BaseWhen } from "./lib/tiposkripto/src/BaseWhen";
+import type { Plugin } from "esbuild";
 import type { Ibdd_in_any, Ibdd_out_any } from "./lib/tiposkripto/src/CoreTypes";
 import type { ITestResourceConfiguration } from "./lib/tiposkripto/src/types";
+import type { BaseGiven } from "./lib/tiposkripto/src/verbs/bdd/BaseGiven";
+import type { BaseThen } from "./lib/tiposkripto/src/verbs/bdd/BaseThen";
+import type { BaseWhen } from "./lib/tiposkripto/src/verbs/bdd/BaseWhen";
+import type { BaseDescribe } from "./lib/tiposkripto/src/verbs/aaa/BaseDescribe";
+import type { BaseIt } from "./lib/tiposkripto/src/verbs/aaa/BaseIt";
+import type { BaseConfirm } from "./lib/tiposkripto/src/verbs/tdt/BaseConfirm";
+import type { BaseValue } from "./lib/tiposkripto/src/verbs/tdt/BaseValue";
+import type { BaseShould } from "./lib/tiposkripto/src/verbs/tdt/BaseShould";
 export type ITestconfigV2 = {
+    volumes: string[];
     featureIngestor: (s: string) => Promise<string>;
     runtimes: Record<string, IBaseTestConfig>;
     documentationGlob?: string;
     stakeholderReactModule?: string;
 };
-export type ICheck = ((x: any) => string);
-export type IChecks = ICheck[];
+export type IOtherTest = (x: any) => string;
+export type IOtherTests = IOtherTest[];
 export type IBaseTestConfig = {
     runtime: string;
     tests: string[];
     dockerfile: string;
     buildOptions: string;
-    checks: IChecks;
+    checks: IOtherTests;
     outputs: string[];
     buildKitOptions?: {
         cacheMounts?: string[];
@@ -36,12 +43,12 @@ export type TestSummary = {
     failedFeatures: string[];
 };
 export type TestLifecycle<Subject, State, Selection> = {
-    beforeAll?: (input: any) => Promise<Subject>;
-    beforeEach?: (subject: Subject) => Promise<State>;
+    prepareAll?: (input: any) => Promise<Subject>;
+    prepareEach?: (subject: Subject) => Promise<State>;
     executeStep?: (state: State) => Promise<State>;
     verifyStep?: (state: State) => Promise<Selection>;
-    afterEach?: (state: State) => Promise<void>;
-    afterAll?: (state: State) => Promise<void>;
+    cleanupEach?: (state: State) => Promise<void>;
+    cleanupAll?: (state: State) => Promise<void>;
     assert?: (result: Selection) => void;
 };
 export type GivenSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
@@ -52,6 +59,21 @@ export type WhenSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
 };
 export type ThenSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
     [K in keyof O["thens"]]: (...xtrasD: O["thens"][K]) => BaseThen<I>;
+};
+export type DescribeSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["describes"]]: (features: string[], its: BaseIt<I>[], ...xtras: O["describes"][K]) => BaseDescribe<I>;
+};
+export type ItSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["its"]]: (...xtras: O["its"][K]) => BaseIt<I>;
+};
+export type ConfirmSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["confirms"]]: (input: O["confirms"][K]) => (tableRows: [v: BaseValue, s: BaseShould][], features: string[]) => BaseConfirm<I>;
+};
+export type ValueSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["values"]]: () => BaseValue<I>;
+};
+export type ShouldSpecification<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["shoulds"]]: (...xtras: O["shoulds"][K]) => BaseShould<I>;
 };
 export type TestSuiteImplementation<O extends Ibdd_out_any> = {
     [K in keyof O["suites"]]: string;
@@ -65,11 +87,34 @@ export type TestWhenImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any
 export type TestThenImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
     [K in keyof O["thens"]]: (...It: O["thens"][K]) => (ssel: I["iselection"]) => I["then"];
 };
+export type TestDescribeImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["describes"]]: (...Id: O["describes"][K]) => I["given"];
+};
+export type TestItImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["its"]]: (...Ii: O["its"][K]) => (sel: I["iselection"]) => I["then"];
+};
+export type TestValueImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["values"]]: (...Iv: O["values"][K]) => I["given"];
+};
+export type TestShouldImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["shoulds"]]: (...Is: O["shoulds"][K]) => (sel: I["iselection"]) => I["then"];
+};
+export type TestExpectedImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["expecteds"]]: (...Ie: O["expecteds"][K]) => (sel: I["iselection"]) => Promise<I["then"]>;
+};
+export type TestConfirmImplementation<I extends Ibdd_in_any, O extends Ibdd_out_any> = {
+    [K in keyof O["confirms"]]: (...Ic: O["confirms"][K]) => I["given"];
+};
 export type Modify<T, R> = Omit<T, keyof R> & R;
 export type TestSuiteShape = Record<string, any>;
 export type TestGivenShape = Record<string, any>;
 export type TestWhenShape = Record<string, any>;
 export type TestThenShape = Record<string, any>;
+export type TestDescribeShape = Record<string, any>;
+export type TestItShape = Record<string, any>;
+export type TestConfirmShape = Record<string, any>;
+export type TestValueShape = Record<string, any>;
+export type TestShouldShape = Record<string, any>;
 export type IPluginFactory = (register?: (entrypoint: string, sources: string[]) => any, entrypoints?: string[]) => Plugin;
 export type IRunTime = `node` | `web` | `golang` | `python` | `ruby` | `java` | `rust`;
 export type ITestTypes = [string, IRunTime, {

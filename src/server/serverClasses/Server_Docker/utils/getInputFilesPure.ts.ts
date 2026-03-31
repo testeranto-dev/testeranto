@@ -1,10 +1,10 @@
 import { existsSync, readFileSync } from "fs";
-import type { ITestconfigV2 } from "../../../../Types";
+import type { ITesterantoConfig } from "../../../../Types";
 import { getInputFilePath } from "../Server_Docker_Constants";
 import { consoleLog } from "../Server_Docker_Dependents";
 
 export const getInputFilesPure = (
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
   inputFiles: Record<string, Record<string, string[]>>,
   runtime: string,
   testName: string,

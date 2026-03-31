@@ -1,7 +1,7 @@
-import type { ITestconfigV2 } from "../../Types";
+import type { ITesterantoConfig } from "../../Types";
 
 export const dockerComposeFile = (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   nodeConfigPath: string,

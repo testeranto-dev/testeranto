@@ -1,4 +1,4 @@
-import type { ITestconfigV2 } from "../../Types";
+import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_Base } from "./Server_Base";
 import { generateCollatedFilesTree } from "./Server_Http/generateCollatedFilesTree";
@@ -19,7 +19,7 @@ export abstract class Server_HTTP extends Server_Base {
   protected bunServer: any | null = null;
   private routesHandler: Server_HTTP_Routes;
 
-  constructor(configs: ITestconfigV2, mode: IMode) {
+  constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
     // this.http = new HttpManager();
     this.routesHandler = new Server_HTTP_Routes(this);

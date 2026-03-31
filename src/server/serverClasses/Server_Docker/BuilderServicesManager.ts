@@ -1,10 +1,10 @@
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { startBuilderServicesPure } from "./utils/startBuilderServicesPure";
 
 export class BuilderServicesManager {
   constructor(
-    private configs: ITestconfigV2,
+    private configs: ITesterantoConfig,
     private mode: IMode,
     private startServiceLogging: (serviceName: string, runtime: string, runtimeConfigKey: string) => Promise<void>
   ) { }

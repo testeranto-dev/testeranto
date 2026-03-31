@@ -1,7 +1,7 @@
 
 import fs from "fs";
 import path from "path";
-import type { ITestconfigV2 } from "../../../../Types";
+import type { ITesterantoConfig } from "../../../../Types";
 import { getContentType } from "./../getContentType";
 import { embedConfigInHtml } from "../../utils/embedConfigInHtml";
 
@@ -137,7 +137,7 @@ export const getFileType = (filename: string): string => {
 export const serveStaticFile = async (
   request: Request,
   url: URL,
-  configs?: ITestconfigV2,
+  configs?: ITesterantoConfig,
 ): Promise<Response> => {
   const normalizedPath = decodeURIComponent(url.pathname);
 
@@ -196,7 +196,7 @@ export const serveFile = async (filePath: string): Promise<Response> => {
 };
 
 const generateAndWriteStakeholderHtml = async (
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
 ): Promise<void> => {
   await embedConfigInHtml(configs);
 };

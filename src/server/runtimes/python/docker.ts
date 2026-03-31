@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the python runtime file as text
@@ -16,7 +16,7 @@ const nativeDetectionPath = join(process.cwd(), "testeranto", "runtimes", "pytho
 await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 export const pythonDockerComposeFile = (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   pythonConfigPath: string,
@@ -79,7 +79,7 @@ export const pythonBddCommand = (
 
 // BuildKit-based building for python runtime
 export const pythonBuildKitBuild = async (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   configKey: string,
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];

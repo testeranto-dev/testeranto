@@ -23,7 +23,7 @@ The BuildKit migration is currently underway. The goal is to replace hot builder
 ## Configuration Example (Target)
 
 ```typescript
-const config: ITestconfigV2 = {
+const config: ITesterantoConfig = {
   runtimes: {
     nodetests: {
       runtime: "node",

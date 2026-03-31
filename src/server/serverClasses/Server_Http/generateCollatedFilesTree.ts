@@ -1,11 +1,11 @@
 import fs from "fs";
 import path from "path";
 // import { glob } from "glob";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import { getFileType } from "./getFileType";
 
 export async function generateCollatedFilesTree(
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
 ): Promise<Record<string, any>> {
   if (!configs || !configs.runtimes) {
     return {

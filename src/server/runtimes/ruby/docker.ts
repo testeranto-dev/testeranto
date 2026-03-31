@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 import rubyContent from "./ruby.rb" with { type: "text" };
@@ -17,7 +17,7 @@ const nativeDetectionPath = join(process.cwd(), "testeranto", "native_detection.
 await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 export const rubyDockerComposeFile = (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   rubyConfigPath: string,
@@ -83,7 +83,7 @@ export const rubyBddCommand = (
 
 // BuildKit-based building for ruby runtime
 export const rubyBuildKitBuild = async (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   configKey: string,
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];

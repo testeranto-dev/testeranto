@@ -3,7 +3,7 @@
 
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import type { ITestconfigV2 } from '../../Types';
+import type { ITesterantoConfig } from '../../Types';
 
 const execAsync = promisify(exec);
 
@@ -93,7 +93,7 @@ export class BuildKitBuilder {
     configKey: string,
     testName: string,
     command: string,
-    config: ITestconfigV2
+    config: ITesterantoConfig
   ): any {
     const serviceName = `${configKey}-${testName}-buildkit`;
 

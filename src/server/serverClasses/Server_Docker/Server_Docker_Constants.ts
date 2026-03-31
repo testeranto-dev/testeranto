@@ -1,7 +1,7 @@
 // Server_Docker_Constants: this file contains constants, types, string interpolations and very simple functions
 // This file should not contain anything that needs to be tested
 
-import type { IRunTime, ITestconfigV2 } from "../../../Types";
+import type { IRunTime, ITesterantoConfig } from "../../../Types";
 import {
   golangBddCommand,
   golangBuildCommand,
@@ -105,7 +105,7 @@ export const runTimeToCompose: Record<
   IRunTime,
   [
     (
-      config: ITestconfigV2,
+      config: ITesterantoConfig,
       container_name: string,
       projectConfigPath: string,
       nodeConfigPath: string,

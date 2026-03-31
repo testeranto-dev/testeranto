@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the golang runtime file as text
@@ -16,7 +16,7 @@ const nativeDetectionPath = join(process.cwd(), "testeranto", "runtimes", "golan
 await Bun.write(nativeDetectionPath, nativeDetectionContent);
 
 export const golangDockerComposeFile = (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   golangConfigPath: string,
@@ -79,7 +79,7 @@ export const golangBddCommand = (fpath: string, golangConfigPath: string, config
 
 // BuildKit-based building for golang runtime
 export const golangBuildKitBuild = async (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   configKey: string
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];

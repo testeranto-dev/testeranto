@@ -1,13 +1,13 @@
 import fs from "fs";
 import path from "path";
 import { generateHtmlWithEmbeddedData } from "../Server_Http/generateHtmlWithEmbeddedData";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 
 /**
  * Embed configuration in HTML for stakeholder app using modern graph-based approach
  * Note: The stakeholder app should already be bundled by Server_Docker.ts
  */
-export async function embedConfigInHtml(configs: ITestconfigV2): Promise<void> {
+export async function embedConfigInHtml(configs: ITesterantoConfig): Promise<void> {
   const reportsDir = path.join(process.cwd(), "testeranto", "reports");
 
   // Always create directory if needed
@@ -22,7 +22,7 @@ export async function embedConfigInHtml(configs: ITestconfigV2): Promise<void> {
     "stakeholderApp",
     "index.html"
   );
-  
+
   if (!fs.existsSync(htmlTemplatePath)) {
     throw new Error(`Stakeholder app HTML template not found at ${htmlTemplatePath}`);
   }

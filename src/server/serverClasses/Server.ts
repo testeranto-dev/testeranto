@@ -1,12 +1,12 @@
 import esbuild from 'esbuild';
 import path, { join } from "path";
 import { Server_Docker } from "./Server_Docker";
-import type { ITestconfigV2 } from "../../Types";
+import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 
 export class Server extends Server_Docker {
 
-  constructor(configs: ITestconfigV2, mode: IMode) {
+  constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
   }
 

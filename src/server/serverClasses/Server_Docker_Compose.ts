@@ -1,4 +1,4 @@
-import type { ITestconfigV2 } from "../../Types";
+import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { DockerComposeManager } from "./Server_Docker/DockerComposeManager";
 import { type IDockerComposeResult } from "./Server_Docker/Server_Docker_Constants";
@@ -19,7 +19,7 @@ import { Server_WS } from "./Server_WS";
 export abstract class Server_Docker_Compose extends Server_WS {
   dockerComposeManager: DockerComposeManager;
 
-  constructor(configs: ITestconfigV2, mode: IMode) {
+  constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
 
     this.dockerComposeManager = new DockerComposeManager(

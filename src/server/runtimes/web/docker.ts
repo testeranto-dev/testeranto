@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 import webContent from "../../../../dist/prebuild/web/web.mjs" with { type: "text" };
@@ -13,7 +13,7 @@ const webHoistScriptPath = join(process.cwd(), "testeranto", "web_hoist.ts");
 await Bun.write(webHoistScriptPath, hoistContent);
 
 export const webDockerComposeFile = (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   webConfigPath: string,
@@ -107,7 +107,7 @@ export const webBddCommand = (
 
 // BuildKit-based building for web runtime
 export const webBuildKitBuild = async (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   configKey: string,
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];

@@ -1,5 +1,5 @@
-// import type { ITestconfigV2 } from "../../../../Types";
-import type { ITestconfigV2 } from "../../../../Types";
+// import type { ITesterantoConfig } from "../../../../Types";
+import type { ITesterantoConfig } from "../../../../Types";
 import { BuildKitBuilder } from "../../../buildkit/BuildKit_Utils";
 import { processCwd } from "../Server_Docker_Dependents";
 
@@ -8,7 +8,7 @@ const failedBuilds = new Set<string>();
 
 // Pure function to build with BuildKit
 export const buildWithBuildKitPure = async (
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
   logError: (error: any) => void,
 ): Promise<Set<string>> => {
   const buildErrors: string[] = [];
@@ -25,10 +25,10 @@ export const buildWithBuildKitPure = async (
   for (const [configKey, configValue] of Object.entries(configs.runtimes)) {
     const runtime = configValue.runtime;
     const buildKitOptions = configValue.buildKitOptions;
-    
+
     // Create a unique identifier for this build
     const buildId = `${configKey}-${runtime}`;
-    
+
     // Skip if this build has already failed
     if (failedBuilds.has(buildId)) {
       const skipMsg = `[Server_Docker] ⏭️ Skipping previously failed build for ${configKey} (${runtime})`;
@@ -67,7 +67,7 @@ export const buildWithBuildKitPure = async (
       // Mark this build as failed
       failedBuilds.add(buildId);
       failedConfigs.add(configKey);
-      
+
       const errorMsg = `[Server_Docker] ❌ BuildKit build failed for ${configKey} (${runtime}): ${error.message}`;
       logError(errorMsg);
       buildErrors.push(`${configKey} (${runtime}): ${error.message}`);
@@ -81,6 +81,6 @@ export const buildWithBuildKitPure = async (
     consoleLog(`[buildWithBuildKitPure] Build failures: ${errorMessage}`);
     // Don't throw - return which configs failed
   }
-  
+
   return failedConfigs;
 };

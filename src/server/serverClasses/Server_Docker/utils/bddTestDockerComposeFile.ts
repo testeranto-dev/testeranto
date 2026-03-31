@@ -1,8 +1,8 @@
-import type { ITestconfigV2 } from "../../../../Types";
+import type { ITesterantoConfig } from "../../../../Types";
 import { processCwd } from "../Server_Docker_Dependents";
 
 export const bddTestDockerComposeFile = (
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
   runtime: string,
   container_name: string,
   command: string,

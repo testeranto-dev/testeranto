@@ -1,6 +1,6 @@
-import type { TestTypeParams_any, TestSpecShape_any, ITestAdapter, ITestImplementation, ITestSpecification } from "./CoreTypes.js";
 import BaseTiposkripto from "./BaseTiposkripto";
-import type { ITTestResourceRequest } from "./types";
+import { TestTypeParams_any, TestSpecShape_any, ITestSpecification, ITestImplementation, ITestAdapter } from "./CoreTypes";
+import { ITTestResourceRequest } from "./types";
 declare global {
     interface Window {
         testResourceConfig?: any;
@@ -15,10 +15,16 @@ export declare class WebTiposkripto<I extends TestTypeParams_any, O extends Test
     openScreencast(filename: string): Promise<void>;
     closeScreencast(filename: string): Promise<void>;
     createArtifactory(context?: {
+        suiteIndex?: number;
         givenKey?: string;
         whenIndex?: number;
         thenIndex?: number;
-        suiteIndex?: number;
+        describeIndex?: number;
+        itIndex?: number;
+        confirmKey?: string;
+        valueKey?: string;
+        shouldIndex?: number;
+        expectKey?: number;
     }): {
         screenshot: (filename: string, payload?: string) => void;
         openScreencast: (filename: string) => Promise<void>;

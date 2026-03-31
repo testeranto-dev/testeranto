@@ -1,4 +1,4 @@
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { executeDockerComposeCommand, spawnPromise } from "./utils";
 import { BuilderServicesManager } from "./BuilderServicesManager";
@@ -23,7 +23,7 @@ export class DockerComposeManager {
   private aiderImageBuilder: AiderImageBuilder;
 
   constructor(
-    private configs: ITestconfigV2,
+    private configs: ITesterantoConfig,
     private mode: IMode,
     private logError: (message: string, error?: any) => void,
     private logMessage: (message: string) => void,
@@ -61,7 +61,7 @@ export class DockerComposeManager {
       this.logError('[DockerComposeManager] Failed to build aider image:', error);
       // Continue despite aider image failure
     }
-    
+
     try {
       const failedConfigs = await buildWithBuildKitPure(this.configs, (error: any) => {
         this.logError(error);

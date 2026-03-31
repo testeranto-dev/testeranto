@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the java runtime file as text
@@ -10,7 +10,7 @@ const javaScriptPath = join(process.cwd(), "testeranto", "java_runtime.java");
 await Bun.write(javaScriptPath, javaContent);
 
 export const javaDockerComposeFile = (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   javaConfigPath: string,
@@ -117,7 +117,7 @@ export const javaBddCommand = (fpath: string, javaConfigPath: string, configKey:
 
 // BuildKit-based building for java runtime
 export const javaBuildKitBuild = async (
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   configKey: string
 ): Promise<void> => {
   const runtimeConfig = config.runtimes[configKey];

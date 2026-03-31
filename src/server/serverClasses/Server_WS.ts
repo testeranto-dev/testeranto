@@ -1,4 +1,4 @@
-import type { ITestconfigV2 } from "../../Types";
+import type { ITesterantoConfig } from "../../Types";
 import { WsManager } from "./WsManager";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
@@ -7,7 +7,7 @@ export class Server_WS extends Server_HTTP {
   protected wsClients: Set<WebSocket> = new Set();
   wsManager: WsManager;
 
-  constructor(configs: ITestconfigV2, mode: IMode) {
+  constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
     this.wsManager = new WsManager();
   }

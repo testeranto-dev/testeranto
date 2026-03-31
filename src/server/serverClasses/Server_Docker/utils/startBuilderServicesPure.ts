@@ -1,5 +1,5 @@
 import { spawnPromise } from ".";
-import type { ITestconfigV2 } from "../../../../Types";
+import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { getBuilderServiceName } from "../Server_Docker_Constants";
 import {
@@ -13,7 +13,7 @@ import {
 
 // Pure function to start builder services
 export const startBuilderServicesPure = async (
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
   mode: IMode,
   startServiceLogging: (
     serviceName: string,

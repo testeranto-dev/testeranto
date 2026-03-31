@@ -1,13 +1,8 @@
-import { BaseGiven } from "./BaseGiven";
-import { BaseThen } from "./BaseThen";
-import { BaseWhen } from "./BaseWhen";
-import type { Ibdd_in_any, Ibdd_out_any, ITestSpecification, ITestImplementation, ITestAdapter } from "./CoreTypes.js";
-import type { ITestJob, ITTestResourceRequest, ITestResourceConfiguration } from "./types.js";
-type IExtenstions = Record<string, unknown>;
+import { Ibdd_in_any, Ibdd_out_any, ITestSpecification, ITestImplementation, ITestAdapter } from "./CoreTypes";
+import { ITestJob, ITTestResourceRequest, ITestResourceConfiguration } from "./types";
 export default abstract class BaseTiposkripto<I extends Ibdd_in_any = Ibdd_in_any, O extends Ibdd_out_any = Ibdd_out_any, M = unknown> {
     totalTests: number;
     artifacts: Promise<unknown>[];
-    assertThis: (t: I["then"]) => any;
     givenOverrides: Record<string, any>;
     specs: any;
     suitesOverrides: Record<string, any>;
@@ -17,32 +12,39 @@ export default abstract class BaseTiposkripto<I extends Ibdd_in_any = Ibdd_in_an
     thenOverrides: Record<string, any>;
     whenOverrides: Record<string, any>;
     testResourceConfiguration: ITestResourceConfiguration;
+    describeOverrides: Record<string, any>;
+    itOverrides: Record<string, any>;
+    confirmOverrides: Record<string, any>;
+    valuesOverrides: Record<string, any>;
+    shouldsOverrides: Record<string, any>;
+    expectedsOverrides: Record<string, any>;
     abstract writeFileSync(filename: string, payload: string): void;
     createArtifactory(context?: {
         givenKey?: string;
         whenIndex?: number;
         thenIndex?: number;
         suiteIndex?: number;
+        stepIndex?: number;
+        stepType?: string;
     }): {
         writeFileSync: (filename: string, payload: string) => void;
     };
     constructor(webOrNode: "web" | "node", input: I["iinput"], testSpecification: ITestSpecification<I, O>, testImplementation: ITestImplementation<I, O, M> & {
-        suites: Record<string, object>;
         givens?: Record<string, any>;
         whens?: Record<string, any>;
         thens?: Record<string, any>;
-        values?: Record<string, any>;
-        shoulds?: Record<string, any>;
-        expecteds?: Record<string, any>;
         describes?: Record<string, any>;
         its?: Record<string, any>;
-    }, testResourceRequirement: ITTestResourceRequest | undefined, testAdapter: Partial<ITestAdapter<I>> | undefined, testResourceConfiguration: ITestResourceConfiguration, wsPort?: string, wsHost?: string);
+        confirms?: Record<string, any>;
+        values?: Record<string, any>;
+        shoulds?: Record<string, any>;
+    }, testResourceRequirement: ITTestResourceRequest | undefined, testAdapter: Partial<ITestAdapter<I>> | undefined, testResourceConfiguration: ITestResourceConfiguration);
     receiveTestResourceConfig(testResourceConfig: ITestResourceConfiguration): Promise<any>;
     Specs(): any;
-    Suites(): Record<string, any>;
-    Given(): Record<keyof IExtenstions, (name: string, features: string[], whens: BaseWhen<I>[], thens: BaseThen<I>[], gcb: I["given"]) => BaseGiven<I>>;
-    When(): Record<keyof IExtenstions, (arg0: I["istore"], ...arg1: any) => BaseWhen<I>>;
-    Then(): Record<keyof IExtenstions, (selection: I["iselection"], expectation: any) => BaseThen<I>>;
+    Suites(): {};
+    Given(): Record<string, any>;
+    When(): Record<string, any>;
+    Then(): Record<string, any>;
     Describe(): Record<string, any>;
     It(): Record<string, any>;
     Confirm(): Record<string, any>;
@@ -51,6 +53,7 @@ export default abstract class BaseTiposkripto<I extends Ibdd_in_any = Ibdd_in_an
     Expect(): Record<string, any>;
     Expected(): Record<string, any>;
     getTestJobs(): ITestJob[];
-    private calculateTotalTests;
+    private createTestJobForStep;
+    private createErrorTestJob;
+    private calculateTotalTestsDirectly;
 }
-export {};

@@ -1,22 +1,46 @@
-// src/BaseSetup.ts
-var BaseSetup = class {
-  constructor(features, actions, checks, setupCB, initialValues) {
-    this.recommendedFsPath = "";
-    this.artifacts = [];
-    this.fails = 0;
-    this.features = features;
-    this.actions = actions;
-    this.checks = checks;
-    this.setupCB = setupCB;
-    this.initialValues = initialValues;
-    this.fails = 0;
-    this.failed = false;
-    this.error = null;
-    this.store = null;
-    this.key = "";
-    this.status = void 0;
-  }
-  addArtifact(path) {
+// src/Adapters.ts
+var BaseAdapter = () => ({
+  prepareAll: async (input, testResource, artifactory) => {
+    return input;
+  },
+  prepareEach: async function(subject, initializer, testResource, initialValues, artifactory) {
+    return subject;
+  },
+  cleanupEach: async (store, key, artifactory) => Promise.resolve(store),
+  cleanupAll: (store, artifactory) => void 0,
+  verify: async (store, checkCb, testResource, artifactory) => {
+    return checkCb(store);
+  },
+  execute: async (store, actionCB, testResource, artifactory) => {
+    return actionCB(store);
+  },
+  assert: (x) => x
+});
+var DefaultAdapter = (p) => {
+  const base = BaseAdapter();
+  const adapter = {
+    prepareAll: p.prepareAll || base.prepareAll,
+    prepareEach: p.prepareEach || base.prepareEach,
+    execute: p.execute || base.execute,
+    verify: p.verify || base.verify,
+    cleanupEach: p.cleanupEach || base.cleanupEach,
+    cleanupAll: p.cleanupAll || base.cleanupAll,
+    assert: p.assert || base.assert
+  };
+  return adapter;
+};
+
+// src/types.ts
+var defaultTestResourceRequirement = {
+  ports: 0
+};
+
+// src/verbs/internal/CommonUtils.ts
+var CommonUtils = class {
+  /**
+   * Normalize a path string for consistent artifact storage
+   */
+  static normalizePath(path) {
     if (typeof path !== "string") {
       throw new Error(
         `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
@@ -24,42 +48,100 @@ var BaseSetup = class {
         )}`
       );
     }
-    const normalizedPath = path.replace(/\\/g, "/");
-    this.artifacts.push(normalizedPath);
+    return path.replace(/\\/g, "/");
   }
-  toObj() {
+  /**
+   * Add an artifact with path normalization
+   */
+  static addArtifact(artifacts, path) {
+    artifacts.push(this.normalizePath(path));
+  }
+  /**
+   * Create a fallback artifactory for logging
+   */
+  static createFallbackArtifactory(context, basePath) {
+    const { suiteIndex, givenKey, whenIndex, thenIndex, valueKey, rowIndex } = context;
+    const actualBasePath = basePath || "testeranto";
     return {
-      key: this.key,
-      actions: (this.actions || []).map((a) => {
-        if (a && a.toObj) return a.toObj();
-        console.error("Action step is not as expected!", JSON.stringify(a));
-        return {};
-      }),
-      checks: (this.checks || []).map((c) => c && c.toObj ? c.toObj() : {}),
-      error: this.error ? [this.error, this.error.stack] : null,
-      failed: this.failed,
-      features: this.features || [],
-      artifacts: this.artifacts,
-      status: this.status
+      writeFileSync: (filename, payload) => {
+        let path = "";
+        if (suiteIndex !== void 0) {
+          path += `suite-${suiteIndex}/`;
+        }
+        if (givenKey !== void 0) {
+          path += `given-${givenKey}/`;
+        }
+        if (whenIndex !== void 0) {
+          path += `when-${whenIndex}/`;
+        }
+        if (thenIndex !== void 0) {
+          path += `then-${thenIndex}/`;
+        }
+        if (valueKey !== void 0) {
+          path += `value-${valueKey}/`;
+        }
+        if (rowIndex !== void 0) {
+          path += `row-${rowIndex}/`;
+        }
+        path += filename;
+        const fullPath = `${actualBasePath}/${path}`;
+        console.log(`[Artifactory] Would write to ${fullPath}: ${payload.substring(0, 100)}...`);
+      },
+      screenshot: (filename, payload) => {
+        console.log(`[Artifactory] Would take screenshot: ${filename}`);
+      }
     };
   }
-  async afterEach(store, key, artifactory) {
-    return store;
+  /**
+   * Standard error handling for test operations
+   */
+  static handleTestError(error, target) {
+    target.failed = true;
+    target.fails++;
+    target.error = error;
   }
-  async setup(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
+  /**
+   * Standard method to create an object representation
+   */
+  static toObj(target, additionalProps = {}) {
+    const baseObj = {
+      key: target.key,
+      name: target.name,
+      error: target.error ? [target.error, target.error.stack] : null,
+      failed: target.failed,
+      features: target.features || [],
+      artifacts: target.artifacts,
+      status: target.status
+    };
+    if (target.fails !== void 0) {
+      baseObj.fails = target.fails;
+    }
+    return { ...baseObj, ...additionalProps };
+  }
+};
+
+// src/verbs/aaa/BaseDescribe.ts
+var BaseDescribe = class {
+  constructor(features, its, describeCB, initialValues) {
+    this.error = null;
+    this.store = null;
+    this.key = "";
+    this.failed = false;
+    this.artifacts = [];
+    this.fails = 0;
+    this.features = features;
+    this.its = its;
+    this.describeCB = describeCB;
+    this.initialValues = initialValues;
+  }
+  addArtifact(path) {
+    CommonUtils.addArtifact(this.artifacts, path);
+  }
+  async describe(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
     this.key = key;
     this.fails = 0;
-    const actualArtifactory = artifactory || ((fPath, value) => {
-    });
-    const setupArtifactory = (fPath, value) => actualArtifactory(`setup-${key}/${fPath}`, value);
     try {
-      this.store = await this.setupThat(
-        subject,
-        testResourceConfiguration,
-        setupArtifactory,
-        this.setupCB,
-        this.initialValues
-      );
+      this.store = await this.describeCB("x");
       this.status = true;
     } catch (e) {
       this.status = false;
@@ -69,39 +151,16 @@ var BaseSetup = class {
       return this.store;
     }
     try {
-      for (const [actionNdx, actionStep] of (this.actions || []).entries()) {
+      for (const [itNdx, it] of this.its.entries()) {
         try {
-          const actionArtifactory = this.createArtifactoryForAction(
-            key,
-            actionNdx,
-            suiteNdx
-          );
-          this.store = await actionStep.test(
+          const result = await it.test(
             this.store,
             testResourceConfiguration,
-            actionArtifactory
+            artifactory
           );
-        } catch (e) {
-          this.failed = true;
-          this.fails++;
-          this.error = e;
-        }
-      }
-      for (const [checkNdx, checkStep] of this.checks.entries()) {
-        try {
-          const filepath = suiteNdx !== void 0 ? `suite-${suiteNdx}/setup-${key}/check-${checkNdx}` : `setup-${key}/check-${checkNdx}`;
-          const checkArtifactory = this.createArtifactoryForCheck(
-            key,
-            checkNdx,
-            suiteNdx
-          );
-          const t = await checkStep.test(
-            this.store,
-            testResourceConfiguration,
-            filepath,
-            checkArtifactory
-          );
-          tester(t);
+          if (result !== void 0) {
+            tester(result);
+          }
         } catch (e) {
           this.failed = true;
           this.fails++;
@@ -112,128 +171,89 @@ var BaseSetup = class {
       this.error = e;
       this.failed = true;
       this.fails++;
-    } finally {
-      try {
-        await this.afterEach(this.store, this.key, setupArtifactory);
-      } catch (e) {
-        this.failed = true;
-        this.fails++;
-        this.error = e;
-      }
     }
     return this.store;
   }
-  createArtifactoryForAction(key, actionIndex, suiteNdx) {
-    const self = this;
-    if (self._parent && self._parent.createArtifactory) {
-      return self._parent.createArtifactory({
-        givenKey: key,
-        whenIndex: actionIndex,
-        suiteIndex: suiteNdx
-      });
-    }
+  toObj() {
     return {
-      writeFileSync: (filename, payload) => {
-        let path = "";
-        if (suiteNdx !== void 0) {
-          path += `suite-${suiteNdx}/`;
-        }
-        path += `setup-${key}/`;
-        path += `action-${actionIndex} ${filename}`;
-        console.log(`[Artifactory] Would write to: ${path}`);
-        console.log(`[Artifactory] Content: ${payload.substring(0, 100)}...`);
-      },
-      screenshot: (filename, payload) => {
-        console.log(`[Artifactory] Would take screenshot: ${filename}`);
-      }
-    };
-  }
-  createArtifactoryForCheck(key, checkIndex, suiteNdx) {
-    const self = this;
-    if (self._parent && self._parent.createArtifactory) {
-      return self._parent.createArtifactory({
-        givenKey: key,
-        thenIndex: checkIndex,
-        suiteIndex: suiteNdx
-      });
-    }
-    return {
-      writeFileSync: (filename, payload) => {
-        let path = "";
-        if (suiteNdx !== void 0) {
-          path += `suite-${suiteNdx}/`;
-        }
-        path += `setup-${key}/`;
-        path += `check-${checkIndex} ${filename}`;
-        console.log(`[Artifactory] Would write to: ${path}`);
-        console.log(`[Artifactory] Content: ${payload.substring(0, 100)}...`);
-      },
-      screenshot: (filename, payload) => {
-        console.log(`[Artifactory] Would take screenshot: ${filename}`);
-      }
+      key: this.key,
+      its: this.its.map((it) => it.toObj()),
+      error: this.error ? [this.error.message, this.error.stack] : null,
+      failed: this.failed,
+      features: this.features || [],
+      artifacts: this.artifacts,
+      status: this.status,
+      fails: this.fails
     };
   }
 };
 
-// src/BaseGiven.ts
-var BaseGiven = class extends BaseSetup {
-  constructor(features, whens, thens, givenCB, initialValues) {
-    super(features, whens, thens, givenCB, initialValues);
+// src/verbs/aaa/BaseIt.ts
+var BaseIt = class {
+  constructor(name, itCB) {
+    this.error = null;
     this.artifacts = [];
-    this.fails = 0;
-    this._parent = null;
-    this.whens = whens || [];
-    this.thens = thens || [];
-    console.log(`[BaseGiven.constructor] _parent initialized to null`);
-    console.log(`[BaseGiven.constructor] whens:`, this.whens.length);
-    console.log(`[BaseGiven.constructor] thens:`, this.thens.length);
+    this.name = name;
+    this.itCB = itCB;
   }
   addArtifact(path) {
-    if (typeof path !== "string") {
-      throw new Error(
-        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
-      );
-    }
-    const normalizedPath = path.replace(/\\/g, "/");
-    this.artifacts.push(normalizedPath);
+    CommonUtils.addArtifact(this.artifacts, path);
   }
-  // Set the parent explicitly
+  async test(store, testResourceConfiguration, artifactory) {
+    try {
+      const result = await this.itCB(store);
+      this.status = true;
+      return result;
+    } catch (e) {
+      this.status = false;
+      this.error = e;
+      throw e;
+    }
+  }
+  toObj() {
+    return {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}
+${this.error.stack}` : null,
+      artifacts: this.artifacts
+    };
+  }
+};
+
+// src/verbs/bdd/BaseGiven.ts
+var BaseGiven = class {
+  constructor(features, whens, thens, givenCB, initialValues) {
+    this.error = null;
+    this.store = null;
+    this.key = "";
+    this.failed = false;
+    this.artifacts = [];
+    this.fails = 0;
+    this.testResourceConfiguration = null;
+    this.features = features;
+    this.whens = whens || [];
+    this.thens = thens || [];
+    this.givenCB = givenCB;
+    this.initialValues = initialValues;
+  }
+  addArtifact(path) {
+    CommonUtils.addArtifact(this.artifacts, path);
+  }
   setParent(parent) {
     this._parent = parent;
-    console.log(`[BaseGiven.setParent] _parent set to:`, parent);
-  }
-  beforeAll(store) {
-    return store;
   }
   toObj() {
     const whens = this.whens || [];
     const thens = this.thens || [];
-    return {
-      key: this.key,
-      actions: whens.map((w) => {
+    return CommonUtils.toObj(this, {
+      whens: whens.map((w) => {
         if (w && w.toObj) return w.toObj();
         console.error("When step is not as expected!", JSON.stringify(w));
         return {};
       }),
-      checks: thens.map((t) => t && t.toObj ? t.toObj() : {}),
-      error: this.error ? [this.error, this.error.stack] : null,
-      failed: this.failed,
-      features: this.features || [],
-      artifacts: this.artifacts,
-      status: this.status
-    };
-  }
-  // Implement BaseSetup's abstract method
-  async setupThat(subject, testResourceConfiguration, artifactory, setupCB, initialValues) {
-    return this.givenThat(
-      subject,
-      testResourceConfiguration,
-      artifactory,
-      setupCB,
-      initialValues
-    );
+      thens: thens.map((t) => t && t.toObj ? t.toObj() : {})
+    });
   }
   async afterEach(store, key, artifactory) {
     return store;
@@ -241,8 +261,9 @@ var BaseGiven = class extends BaseSetup {
   async give(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
     this.key = key;
     this.fails = 0;
+    this.testResourceConfiguration = testResourceConfiguration;
     this._suiteIndex = suiteNdx;
-    const actualArtifactory = artifactory || this.createDefaultArtifactory(key, suiteNdx);
+    const actualArtifactory = artifactory;
     try {
       this.store = await this.givenThat(
         subject,
@@ -254,9 +275,7 @@ var BaseGiven = class extends BaseSetup {
       this.status = true;
     } catch (e) {
       this.status = false;
-      this.failed = true;
-      this.fails++;
-      this.error = e;
+      CommonUtils.handleTestError(e, this);
       return this.store;
     }
     try {
@@ -275,9 +294,7 @@ var BaseGiven = class extends BaseSetup {
               whenArtifactory
             );
           } catch (e) {
-            this.failed = true;
-            this.fails++;
-            this.error = e;
+            CommonUtils.handleTestError(e, this);
           }
         }
       } else {
@@ -301,204 +318,103 @@ var BaseGiven = class extends BaseSetup {
             );
             tester(t);
           } catch (e) {
-            this.failed = true;
-            this.fails++;
-            this.error = e;
+            CommonUtils.handleTestError(e, this);
           }
         }
       } else {
         console.warn(`[BaseGiven.give] thens is not an array:`, thens);
       }
     } catch (e) {
-      this.error = e;
-      this.failed = true;
-      this.fails++;
+      CommonUtils.handleTestError(e, this);
     } finally {
       try {
         await this.afterEach(this.store, this.key, actualArtifactory);
       } catch (e) {
-        this.failed = true;
-        this.fails++;
-        this.error = e;
+        CommonUtils.handleTestError(e, this);
       }
     }
     return this.store;
   }
-  createDefaultArtifactory(givenKey, suiteNdx) {
-    const self = this;
-    console.log(`[BaseGiven.createDefaultArtifactory] self._parent:`, self._parent);
-    console.log(`[BaseGiven.createDefaultArtifactory] self._parent.createArtifactory:`, self._parent?.createArtifactory);
-    if (self._parent && self._parent.createArtifactory) {
-      const artifactory = self._parent.createArtifactory({
-        givenKey,
-        suiteIndex: suiteNdx
-      });
-      console.log(`[BaseGiven.createDefaultArtifactory] Created artifactory from parent:`, artifactory);
-      return artifactory;
-    }
-    let basePath = "testeranto";
-    if (self._parent && self._parent.testResourceConfiguration?.fs) {
-      basePath = self._parent.testResourceConfiguration.fs;
-      console.log(`[BaseGiven.createDefaultArtifactory] Using base path from parent: ${basePath}`);
-    } else {
-      console.log(`[BaseGiven.createDefaultArtifactory] Using default base path: ${basePath}`);
-    }
-    return {
-      writeFileSync: (filename, payload) => {
-        let path = "";
-        if (suiteNdx !== void 0) {
-          path += `suite-${suiteNdx}/`;
-        }
-        path += `given-${givenKey}/`;
-        path += filename;
-        if (!path.match(/\.[a-zA-Z0-9]+$/)) {
-          path += ".txt";
-        }
-        const fullPath = `${basePath}/${path}`;
-        console.log(`[Artifactory] Writing to: ${fullPath}`);
-        if (self._parent && typeof self._parent.writeFileSync === "function") {
-          self._parent.writeFileSync(fullPath, payload);
-        } else {
-          console.log(`[Artifactory] Would write to: ${fullPath}`);
-          console.log(`[Artifactory] Content: ${payload.substring(0, 100)}...`);
-        }
-      },
-      screenshot: (filename, payload) => {
-        let path = "";
-        if (suiteNdx !== void 0) {
-          path += `suite-${suiteNdx}/`;
-        }
-        path += `given-${givenKey}/`;
-        path += filename;
-        if (!path.match(/\.[a-zA-Z0-9]+$/)) {
-          path += ".png";
-        }
-        const fullPath = `${basePath}/${path}`;
-        console.log(`[Artifactory] Would take screenshot: ${fullPath}`);
-        if (self._parent && typeof self._parent.screenshot === "function") {
-          self._parent.screenshot(fullPath, payload || "");
-        }
-      }
-    };
-  }
   createArtifactoryForWhen(givenKey, whenIndex, suiteNdx) {
     const self = this;
-    console.log(`[BaseGiven.createArtifactoryForWhen] self._parent:`, self._parent);
-    console.log(`[BaseGiven.createArtifactoryForWhen] self._parent.createArtifactory:`, self._parent?.createArtifactory);
     if (self._parent && self._parent.createArtifactory) {
-      const artifactory = self._parent.createArtifactory({
+      return self._parent.createArtifactory({
         givenKey,
         whenIndex,
         suiteIndex: suiteNdx
       });
-      console.log(`[BaseGiven.createArtifactoryForWhen] Created artifactory:`, artifactory);
-      return artifactory;
     }
-    console.log(`[BaseGiven.createArtifactoryForWhen] Using fallback artifactory`);
-    return {
-      writeFileSync: (filename, payload) => {
-        let path = "";
-        if (suiteNdx !== void 0) {
-          path += `suite-${suiteNdx}/`;
-        }
-        path += `given-${givenKey}/`;
-        path += `when-${whenIndex} ${filename}`;
-        console.log(`[Artifactory] Would write to: ${path}`);
-        console.log(`[Artifactory] Content: ${payload.substring(0, 100)}...`);
-      },
-      screenshot: (filename, payload) => {
-        console.log(`[Artifactory] Would take screenshot: ${filename}`);
-      }
-    };
+    return CommonUtils.createFallbackArtifactory(
+      { givenKey, whenIndex, suiteIndex: suiteNdx },
+      this.testResourceConfiguration?.fs
+    );
   }
   createArtifactoryForThen(givenKey, thenIndex, suiteNdx) {
     const self = this;
-    console.log(`[BaseGiven.createArtifactoryForThen] self._parent:`, self._parent);
-    console.log(`[BaseGiven.createArtifactoryForThen] self._parent.createArtifactory:`, self._parent?.createArtifactory);
     if (self._parent && self._parent.createArtifactory) {
-      const artifactory = self._parent.createArtifactory({
+      return self._parent.createArtifactory({
         givenKey,
         thenIndex,
         suiteIndex: suiteNdx
       });
-      console.log(`[BaseGiven.createArtifactoryForThen] Created artifactory:`, artifactory);
-      return artifactory;
     }
-    console.log(`[BaseGiven.createArtifactoryForThen] Using fallback artifactory`);
-    return {
-      writeFileSync: (filename, payload) => {
-        let path = "";
-        if (suiteNdx !== void 0) {
-          path += `suite-${suiteNdx}/`;
-        }
-        path += `given-${givenKey}/`;
-        path += `then-${thenIndex} ${filename}`;
-        console.log(`[Artifactory] Would write to: ${path}`);
-        console.log(`[Artifactory] Content: ${payload.substring(0, 100)}...`);
-      },
-      screenshot: (filename, payload) => {
-        console.log(`[Artifactory] Would take screenshot: ${filename}`);
-      }
-    };
+    return CommonUtils.createFallbackArtifactory(
+      { givenKey, thenIndex, suiteIndex: suiteNdx },
+      this.testResourceConfiguration?.fs
+    );
   }
 };
 
-// src/BaseAction.ts
-var BaseAction = class {
-  constructor(name, actionCB) {
+// src/verbs/bdd/BaseThen.ts
+var BaseThen = class {
+  constructor(name, thenCB) {
     this.error = null;
-    this.artifacts = [];
     this.name = name;
-    this.actionCB = actionCB;
+    this.thenCB = thenCB;
   }
-  addArtifact(path) {
-    if (typeof path !== "string") {
-      throw new Error(
-        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
-      );
-    }
-    const normalizedPath = path.replace(/\\/g, "/");
-    this.artifacts.push(normalizedPath);
-  }
-  toObj() {
-    const obj = {
-      name: this.name,
-      status: this.status,
-      error: this.error ? `${this.error.name}: ${this.error.message}
-${this.error.stack}` : null,
-      artifacts: this.artifacts
-    };
-    return obj;
-  }
-  async test(store, testResourceConfiguration, artifactory) {
+  async test(store, testResourceConfiguration, filepath, artifactory) {
     try {
-      const result = await this.performAction(
+      const x = await this.butThen(
         store,
-        this.actionCB,
+        async (s) => {
+          try {
+            if (typeof this.thenCB === "function") {
+              const result = await this.thenCB(s);
+              return result;
+            } else {
+              return this.thenCB;
+            }
+          } catch (e) {
+            this.error = e;
+            throw e;
+          }
+        },
         testResourceConfiguration,
         artifactory
       );
       this.status = true;
-      return result;
+      return x;
     } catch (e) {
       this.status = false;
       this.error = e;
       throw e;
     }
   }
+  toObj() {
+    return {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null
+    };
+  }
 };
 
-// src/BaseWhen.ts
-var BaseWhen = class extends BaseAction {
+// src/verbs/bdd/BaseWhen.ts
+var BaseWhen = class {
   constructor(name, whenCB) {
-    super(name, whenCB);
+    this.error = null;
+    this.name = name;
     this.whenCB = whenCB;
-  }
-  // Implement BaseAction's abstract method
-  async performAction(store, actionCB, testResource) {
-    return this.andWhen(store, actionCB, testResource);
   }
   async test(store, testResourceConfiguration, artifactory) {
     try {
@@ -516,416 +432,402 @@ var BaseWhen = class extends BaseAction {
       throw e;
     }
   }
+  toObj() {
+    return {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null
+    };
+  }
 };
 
-// src/BaseCheck.ts
-var BaseCheck = class {
-  constructor(name, checkCB) {
+// src/verbs/tdt/BaseConfirm.ts
+var BaseConfirm = class {
+  constructor(features, testCases, confirmCB, initialValues) {
+    this.key = "";
+    this.failed = false;
     this.artifacts = [];
-    this.name = name;
-    this.checkCB = checkCB;
-    this.error = false;
-    this.artifacts = [];
+    this.fails = 0;
+    this.error = null;
+    this.store = null;
+    this.features = features;
+    this.testCases = testCases || [];
+    this.confirmCB = confirmCB;
+    this.initialValues = initialValues;
   }
   addArtifact(path) {
-    if (typeof path !== "string") {
-      throw new Error(
-        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
-      );
-    }
-    const normalizedPath = path.replace(/\\/g, "/");
-    this.artifacts.push(normalizedPath);
+    CommonUtils.addArtifact(this.artifacts, path);
+  }
+  setParent(parent) {
+    this._parent = parent;
   }
   toObj() {
-    const obj = {
+    const testCases = this.testCases || [];
+    return CommonUtils.toObj(this, {
+      testCases: testCases.map((testCase) => {
+        if (Array.isArray(testCase) && testCase.length >= 2) {
+          const [value, should] = testCase;
+          let inputData = null;
+          try {
+            if (typeof value === "function") {
+              inputData = value();
+            } else if (value && typeof value.toObj === "function") {
+              const obj = value.toObj();
+              inputData = obj.features || obj;
+            } else {
+              inputData = value;
+            }
+          } catch (e) {
+            inputData = `Error: ${e.message}`;
+          }
+          let testDescription = null;
+          try {
+            if (should) {
+              if (typeof should === "function") {
+                if (should.name && should.name !== "") {
+                  testDescription = should.name;
+                } else {
+                  const funcStr = should.toString();
+                  if (funcStr.includes("beEqualTo")) {
+                    testDescription = "beEqualTo";
+                  } else if (funcStr.includes("beGreaterThan")) {
+                    testDescription = "beGreaterThan";
+                  } else if (funcStr.includes("whenMultipliedAreAtLeast")) {
+                    testDescription = "whenMultipliedAreAtLeast";
+                  } else if (funcStr.includes("equal")) {
+                    testDescription = "equal";
+                  } else {
+                    testDescription = "Test function";
+                  }
+                }
+              } else if (should && typeof should.toObj === "function") {
+                const obj = should.toObj();
+                testDescription = obj.name || "Should";
+              } else {
+                testDescription = String(should);
+              }
+            }
+          } catch (e) {
+            testDescription = `Error: ${e.message}`;
+          }
+          return {
+            input: inputData,
+            test: testDescription
+          };
+        }
+        return testCase;
+      })
+    });
+  }
+  async confirm(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
+    this.key = key;
+    this.fails = 0;
+    this.testResourceConfiguration = testResourceConfiguration;
+    this._suiteIndex = suiteNdx;
+    const actualArtifactory = artifactory;
+    this.store = null;
+    this.status = true;
+    try {
+      for (const [caseIndex, testCase] of this.testCases.entries()) {
+        try {
+          if (Array.isArray(testCase) && testCase.length >= 2) {
+            const [value, should] = testCase;
+            console.log("[BaseConfirm] value:", value);
+            console.log("[BaseConfirm] should:", should);
+            console.log("[BaseConfirm] value type:", typeof value);
+            console.log("[BaseConfirm] should type:", typeof should);
+            let input;
+            if (typeof value === "function") {
+              input = value();
+              console.log("[BaseConfirm] input from function:", input);
+            } else {
+              input = value;
+              console.log("[BaseConfirm] input direct:", input);
+            }
+            if (typeof should === "function") {
+              console.log("[BaseConfirm] input:", input);
+              console.log("[BaseConfirm] confirmCB:", this.confirmCB);
+              console.log("[BaseConfirm] should function:", should);
+              let testFn;
+              if (typeof this.confirmCB === "function") {
+                const potentialTestFn = this.confirmCB();
+                if (typeof potentialTestFn === "function") {
+                  testFn = potentialTestFn;
+                } else {
+                  testFn = this.confirmCB;
+                }
+              } else {
+                testFn = this.confirmCB;
+              }
+              const actualResult = Array.isArray(input) ? testFn(...input) : testFn(input);
+              console.log("[BaseConfirm] actualResult:", actualResult);
+              const passed = should(actualResult);
+              tester(passed);
+            } else if (should && typeof should.processRow === "function") {
+              const actualResult = Array.isArray(input) ? this.confirmCB(...input) : this.confirmCB(input);
+              console.log("[BaseConfirm] actualResult:", actualResult);
+              const passed = await should.processRow(
+                actualResult,
+                testResourceConfiguration,
+                artifactory
+              );
+              tester(passed);
+            } else {
+              tester(true);
+            }
+          }
+        } catch (e) {
+          CommonUtils.handleTestError(e, this);
+        }
+      }
+    } catch (e) {
+      CommonUtils.handleTestError(e, this);
+    }
+    return this.store;
+  }
+  // Alias for run to match BaseSuite expectations
+  async run(subject, testResourceConfiguration, artifactory) {
+    return this.confirm(
+      subject,
+      this.key || "confirm",
+      testResourceConfiguration,
+      (t) => !!t,
+      artifactory
+    );
+  }
+};
+
+// src/verbs/tdt/BaseExpected.ts
+var BaseExpected = class {
+  constructor(name, expectedCB) {
+    this.expectedValue = null;
+    this.error = null;
+    this.name = name;
+    this.expectedCB = expectedCB;
+  }
+  // Set expected value for current row
+  setExpectedValue(expected) {
+    this.expectedValue = expected;
+  }
+  async test(store, testResourceConfiguration, filepath, artifactory) {
+    try {
+      const result = await this.expectedCB(store);
+      this.status = true;
+      return result;
+    } catch (e) {
+      this.status = false;
+      this.error = e;
+      throw e;
+    }
+  }
+  toObj() {
+    return {
       name: this.name,
-      error: this.error,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null,
+      expectedValue: this.expectedValue
+    };
+  }
+};
+
+// src/verbs/tdt/BaseShould.ts
+var BaseShould = class {
+  constructor(name, shouldCB) {
+    this.currentRow = [];
+    this.rowIndex = -1;
+    this.error = null;
+    this.name = name;
+    this.shouldCB = shouldCB;
+  }
+  // Set current row data
+  setRowData(rowIndex, rowData) {
+    this.rowIndex = rowIndex;
+    this.currentRow = rowData;
+  }
+  // Process the current row
+  async processRow(actualResult, testResourceConfiguration, artifactory) {
+    try {
+      let success = false;
+      if (typeof this.shouldCB === "function") {
+        const result = await this.shouldCB(actualResult);
+        success = !!result;
+      } else {
+        success = actualResult === this.shouldCB;
+      }
+      this.status = success;
+      return success;
+    } catch (e) {
+      this.status = false;
+      this.error = e;
+      throw e;
+    }
+  }
+  toObj() {
+    return {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null,
+      rowIndex: this.rowIndex,
+      currentRow: this.currentRow
+    };
+  }
+};
+
+// src/verbs/tdt/BaseValue.ts
+var BaseValue = class {
+  constructor(features, tableRows, confirmCB, initialValues) {
+    this.key = "";
+    this.failed = false;
+    this.artifacts = [];
+    this.fails = 0;
+    this.error = null;
+    this.store = null;
+    this.testResourceConfiguration = null;
+    this.features = features;
+    this.tableRows = tableRows;
+    this.confirmCB = confirmCB;
+    this.initialValues = initialValues;
+  }
+  setParent(parent) {
+    this._parent = parent;
+  }
+  addArtifact(path) {
+    CommonUtils.addArtifact(this.artifacts, path);
+  }
+  async value(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
+    this.key = key;
+    this.fails = 0;
+    this.testResourceConfiguration = testResourceConfiguration;
+    const actualArtifactory = artifactory || ((fPath, value) => {
+    });
+    const valueArtifactory = (fPath, value) => actualArtifactory(`value-${key}/${fPath}`, value);
+    try {
+      const result = this.confirmCB();
+      if (typeof result === "function") {
+        this.store = await result();
+      } else {
+        this.store = await result;
+      }
+      this.status = true;
+    } catch (e) {
+      this.status = false;
+      this.failed = true;
+      this.fails++;
+      this.error = e;
+      return this.store;
+    }
+    try {
+      for (const [rowIndex, row] of (this.tableRows || []).entries()) {
+        try {
+          const rowArtifactory = this.createArtifactoryForRow(
+            key,
+            rowIndex,
+            suiteNdx
+          );
+          const rowResult = await this.processRow(
+            row,
+            rowIndex,
+            rowArtifactory,
+            testResourceConfiguration
+          );
+          if (rowResult !== void 0) {
+            tester(rowResult);
+          }
+        } catch (e) {
+          this.failed = true;
+          this.fails++;
+          this.error = e;
+        }
+      }
+    } catch (e) {
+      this.error = e;
+      this.failed = true;
+      this.fails++;
+    } finally {
+      try {
+        await this.afterEach(this.store, this.key, valueArtifactory);
+      } catch (e) {
+        this.failed = true;
+        this.fails++;
+        this.error = e;
+      }
+    }
+    return this.store;
+  }
+  async processRow(row, rowIndex, artifactory, testResourceConfiguration) {
+    return row;
+  }
+  createArtifactoryForRow(key, rowIndex, suiteNdx) {
+    const self = this;
+    if (self._parent && self._parent.createArtifactory) {
+      return self._parent.createArtifactory({
+        valueKey: key,
+        rowIndex,
+        suiteIndex: suiteNdx
+      });
+    }
+    return {
+      writeFileSync: (filename, payload) => {
+        let path = "";
+        if (suiteNdx !== void 0) {
+          path += `suite-${suiteNdx}/`;
+        }
+        path += `value-${key}/`;
+        path += `row-${rowIndex} ${filename}`;
+        console.log(`[Artifactory] Would write to: ${path}`);
+        console.log(`[Artifactory] Content: ${payload.substring(0, 100)}...`);
+      },
+      screenshot: (filename, payload) => {
+        console.log(`[Artifactory] Would take screenshot: ${filename}`);
+      }
+    };
+  }
+  async afterEach(store, key, artifactory) {
+    return store;
+  }
+  toObj() {
+    const processedRows = (this.tableRows || []).map((row) => {
+      if (Array.isArray(row)) {
+        return row.map((item) => {
+          if (item && typeof item === "object") {
+            if (item.toObj) {
+              return item.toObj();
+            }
+            const result = {};
+            for (const [key, value] of Object.entries(item)) {
+              if (key !== "_parent" && key !== "testResourceConfiguration") {
+                result[key] = value;
+              }
+            }
+            return result;
+          }
+          return item;
+        });
+      }
+      return row;
+    });
+    return {
+      key: this.key,
+      values: processedRows,
+      tableRows: this.tableRows || [],
+      error: this.error ? [this.error, this.error.stack] : null,
+      failed: this.failed,
+      features: this.features || [],
       artifacts: this.artifacts,
       status: this.status
     };
-    return obj;
   }
-  async test(store, testResourceConfiguration, filepath, artifactory) {
-    const addArtifact = this.addArtifact.bind(this);
-    try {
-      const x = await this.verifyCheck(
-        store,
-        async (s) => {
-          try {
-            if (typeof this.checkCB === "function") {
-              const result = await this.checkCB(s);
-              return result;
-            } else {
-              return this.checkCB;
-            }
-          } catch (e) {
-            this.error = true;
-            throw e;
-          }
-        },
-        testResourceConfiguration,
-        artifactory
-      );
-      this.status = true;
-      return x;
-    } catch (e) {
-      this.status = false;
-      this.error = true;
-      throw e;
-    }
-  }
-};
-
-// src/BaseThen.ts
-var BaseThen = class extends BaseCheck {
-  constructor(name, thenCB) {
-    super(name, thenCB);
-    this.thenCB = thenCB;
-  }
-  async test(store, testResourceConfiguration, filepath, artifactory) {
-    try {
-      const x = await this.butThen(
-        store,
-        async (s) => {
-          try {
-            if (typeof this.thenCB === "function") {
-              const result = await this.thenCB(s);
-              return result;
-            } else {
-              return this.thenCB;
-            }
-          } catch (e) {
-            this.error = true;
-            throw e;
-          }
-        },
-        testResourceConfiguration,
-        artifactory
-      );
-      this.status = true;
-      return x;
-    } catch (e) {
-      this.status = false;
-      this.error = true;
-      throw e;
-    }
-  }
-};
-
-// src/index.ts
-var BaseAdapter = () => ({
-  prepareAll: async (input, testResource, artifactory) => {
-    return input;
-  },
-  prepareEach: async function(subject, initializer, testResource, initialValues, artifactory) {
-    return subject;
-  },
-  cleanupEach: async (store, key, artifactory) => Promise.resolve(store),
-  cleanupAll: (store, artifactory) => void 0,
-  verify: async (store, checkCb, testResource, artifactory) => {
-    return checkCb(store);
-  },
-  execute: async (store, actionCB, testResource, artifactory) => {
-    return actionCB(store);
-  },
-  assert: (x) => x
-});
-var DefaultAdapter = (p) => {
-  const base = BaseAdapter();
-  const mapped = { ...p };
-  if (p.beforeAll && !p.prepareAll) {
-    mapped.prepareAll = async (input, testResource, artifactory) => {
-      if (p.beforeAll.length >= 3) {
-        return await p.beforeAll(input, testResource, artifactory);
-      } else if (p.beforeAll.length >= 2) {
-        return await p.beforeAll(input, testResource);
-      } else {
-        return await p.beforeAll(input);
-      }
-    };
-  }
-  if (p.beforeEach && !p.prepareEach) {
-    mapped.prepareEach = async (subject, initializer, testResource, initialValues, artifactory) => {
-      if (p.beforeEach.length >= 5) {
-        return await p.beforeEach(subject, initializer, testResource, initialValues, artifactory);
-      } else if (p.beforeEach.length >= 4) {
-        return await p.beforeEach(subject, initializer, testResource, initialValues);
-      } else if (p.beforeEach.length >= 3) {
-        return await p.beforeEach(subject, initializer, testResource);
-      } else if (p.beforeEach.length >= 2) {
-        return await p.beforeEach(subject, initializer);
-      } else {
-        return await p.beforeEach(subject);
-      }
-    };
-  }
-  if (p.afterEach && !p.cleanupEach) {
-    mapped.cleanupEach = async (store, key, artifactory) => {
-      if (p.afterEach.length >= 3) {
-        return await p.afterEach(store, key, artifactory);
-      } else if (p.afterEach.length >= 2) {
-        return await p.afterEach(store, key);
-      } else {
-        return await p.afterEach(store);
-      }
-    };
-  }
-  if (p.afterAll && !p.cleanupAll) {
-    mapped.cleanupAll = (store, artifactory) => {
-      if (p.afterAll.length >= 2) {
-        return p.afterAll(store, artifactory);
-      } else {
-        return p.afterAll(store);
-      }
-    };
-  }
-  if (p.andWhen && !p.execute) {
-    mapped.execute = async (store, actionCB, testResource, artifactory) => {
-      if (p.andWhen.length >= 4) {
-        return await p.andWhen(store, actionCB, testResource, artifactory);
-      } else if (p.andWhen.length >= 3) {
-        return await p.andWhen(store, actionCB, testResource);
-      } else if (p.andWhen.length >= 2) {
-        return await p.andWhen(store, actionCB);
-      } else {
-        return await p.andWhen(store);
-      }
-    };
-  }
-  if (p.butThen && !p.verify) {
-    mapped.verify = async (store, checkCB, testResource, artifactory) => {
-      if (p.butThen.length >= 4) {
-        return await p.butThen(store, checkCB, testResource, artifactory);
-      } else if (p.butThen.length >= 3) {
-        return await p.butThen(store, checkCB, testResource);
-      } else if (p.butThen.length >= 2) {
-        return await p.butThen(store, checkCB);
-      } else {
-        return await p.butThen(store);
-      }
-    };
-  }
-  if (p.assertThis && !p.assert) {
-    mapped.assert = (x) => {
-      if (p.assertThis.length >= 1) {
-        return p.assertThis(x);
-      } else {
-        return p.assertThis();
-      }
-    };
-  }
-  return {
-    ...base,
-    ...mapped
-  };
-};
-
-// src/BaseSuite.ts
-var BaseSuite = class {
-  constructor(name, index, givens = {}, parent) {
-    this.store = null;
-    this.testResourceConfiguration = null;
-    this.index = 0;
-    this.failed = false;
-    this.fails = 0;
-    this.parent = null;
-    // Reference to parent BaseTiposkripto instance
-    this.artifacts = [];
-    const suiteName = name || "testSuite";
-    if (!suiteName) {
-      throw new Error("BaseSuite requires a non-empty name");
-    }
-    this.name = suiteName;
-    this.index = index;
-    this.givens = givens;
-    this.fails = 0;
-    this.parent = parent;
-  }
-  addArtifact(path) {
-    if (typeof path !== "string") {
-      throw new Error(
-        `[ARTIFACT ERROR] Expected string, got ${typeof path}: ${JSON.stringify(
-          path
-        )}`
-      );
-    }
-    const normalizedPath = path.replace(/\\/g, "/");
-    this.artifacts.push(normalizedPath);
-  }
-  features() {
-    try {
-      const features = Object.keys(this.givens).map((k) => this.givens[k].features).flat().filter((value, index, array) => {
-        return array.indexOf(value) === index;
-      });
-      const stringFeatures = features.map((feature) => {
-        if (typeof feature === "string") {
-          return feature;
-        } else if (feature && typeof feature === "object") {
-          return feature.name || JSON.stringify(feature);
-        } else {
-          return String(feature);
-        }
-      });
-      return stringFeatures || [];
-    } catch (e) {
-      console.error("[ERROR] Failed to extract features:", JSON.stringify(e));
-      return [];
-    }
-  }
-  toObj() {
-    const givens = Object.keys(this.givens).map((k) => {
-      const givenObj = this.givens[k].toObj();
-      return givenObj;
-    });
-    return {
-      name: this.name,
-      givens,
-      fails: this.fails,
-      failed: this.failed,
-      features: this.features(),
-      artifacts: this.artifacts ? this.artifacts.filter((art) => typeof art === "string") : []
-    };
-  }
-  setup(s, artifactory, tr) {
-    console.log("mark9");
-    return new Promise((res) => res(s));
-  }
-  assertThat(t) {
-    return !!t;
-  }
-  afterAll(store, artifactory) {
-    return store;
-  }
-  async run(input, testResourceConfiguration) {
-    this.testResourceConfiguration = testResourceConfiguration;
-    const sNdx = this.index;
-    let suiteArtifactory;
-    if (this.parent && this.parent.createArtifactory) {
-      suiteArtifactory = this.parent.createArtifactory({
-        suiteIndex: sNdx
-      });
-    } else {
-      const basePath = this.testResourceConfiguration?.fs || "testeranto";
-      suiteArtifactory = {
-        writeFileSync: (filename, payload) => {
-          console.log(
-            `[BaseSuite] Would write to ${basePath}/suite-${sNdx}/${filename}: ${payload.substring(0, 100)}...`
-          );
-        },
-        screenshot: (filename, payload) => {
-          console.log(`[BaseSuite] Would take screenshot: ${filename}`);
-        }
-      };
-    }
-    const subject = await this.setup(input, suiteArtifactory, testResourceConfiguration);
-    for (const [gKey, g] of Object.entries(this.givens)) {
-      const giver = this.givens[gKey];
-      try {
-        let givenArtifactory;
-        if (this.parent && this.parent.createArtifactory) {
-          givenArtifactory = this.parent.createArtifactory({
-            givenKey: gKey,
-            suiteIndex: sNdx
-          });
-        } else {
-          const basePath = this.testResourceConfiguration?.fs || "testeranto";
-          givenArtifactory = {
-            writeFileSync: (filename, payload) => {
-              const path = `suite-${sNdx}/given-${gKey}/${filename}`;
-              const fullPath = `${basePath}/${path}`;
-              console.log(`[BaseSuite] Would write to ${fullPath}: ${payload.substring(0, 100)}...`);
-            },
-            screenshot: (filename, payload) => {
-              console.log(`[BaseSuite] Would take screenshot: ${filename}`);
-            }
-          };
-        }
-        this.store = await giver.give(
-          subject,
-          gKey,
-          testResourceConfiguration,
-          this.assertThat,
-          givenArtifactory,
-          sNdx
-        );
-        this.fails += giver.fails || 0;
-      } catch (e) {
-        this.failed = true;
-        this.fails += 1;
-        if (giver.fails) {
-          this.fails += giver.fails;
-        }
-        console.error(`Error in given ${gKey}:`, e);
-      }
-    }
-    if (this.fails > 0) {
-      this.failed = true;
-    }
-    try {
-      this.afterAll(this.store, suiteArtifactory);
-    } catch (e) {
-      console.error(JSON.stringify(e));
-    }
-    return this;
-  }
-};
-
-// src/types.ts
-var defaultTestResourceRequirement = {
-  ports: 0
 };
 
 // src/BaseTiposkripto.ts
 var BaseTiposkripto = class {
-  constructor(webOrNode, input, testSpecification, testImplementation, testResourceRequirement = defaultTestResourceRequirement, testAdapter = {}, testResourceConfiguration, wsPort = "3456", wsHost = "localhost") {
+  constructor(webOrNode, input, testSpecification, testImplementation, testResourceRequirement = defaultTestResourceRequirement, testAdapter = {}, testResourceConfiguration) {
     this.totalTests = 0;
     this.artifacts = [];
-    this.assertThis = () => {
-    };
     this.testResourceConfiguration = testResourceConfiguration;
     const fullAdapter = DefaultAdapter(testAdapter);
     const instance = this;
-    if (!testImplementation.suites || typeof testImplementation.suites !== "object") {
-      throw new Error(
-        `testImplementation.suites must be an object, got ${typeof testImplementation.suites}: ${JSON.stringify(
-          testImplementation.suites
-        )}`
-      );
-    }
-    const classySuites = Object.entries(testImplementation.suites).reduce(
-      (a, [key], index) => {
-        a[key] = (somestring, setups) => {
-          const capturedFullAdapter = fullAdapter;
-          return new class extends BaseSuite {
-            afterAll(store, artifactory) {
-              let suiteArtifactory = artifactory;
-              if (!suiteArtifactory) {
-                if (this.parent && this.parent.createArtifactory) {
-                  suiteArtifactory = this.parent.createArtifactory({
-                    suiteIndex: this.index
-                  });
-                } else {
-                  suiteArtifactory = instance.createArtifactory({
-                    suiteIndex: this.index
-                  });
-                }
-              }
-              return capturedFullAdapter.cleanupAll(store, suiteArtifactory);
-            }
-            assertThat(t) {
-              return capturedFullAdapter.assert(t);
-            }
-            async setup(s, artifactory, tr) {
-              return capturedFullAdapter.prepareAll?.(s, tr, artifactory) ?? s;
-            }
-          }(somestring, index, setups, instance);
-        };
-        return a;
-      },
-      {}
-    );
+    const classySuites = {};
     const classyGivens = {};
     if (testImplementation.givens) {
       Object.entries(testImplementation.givens).forEach(([key, g]) => {
@@ -970,52 +872,65 @@ var BaseTiposkripto = class {
     }
     const classyWhens = {};
     if (testImplementation.whens) {
-      Object.entries(testImplementation.whens).forEach(([key, whEn]) => {
-        classyWhens[key] = (...payload) => {
-          const capturedFullAdapter = fullAdapter;
-          const whenInstance = new class extends BaseWhen {
-            async andWhen(store, whenCB, testResource, artifactory) {
-              return await capturedFullAdapter.execute(
-                store,
-                whenCB,
-                testResource,
-                artifactory
-              );
-            }
-          }(`${key}: ${payload && payload.toString()}`, whEn(...payload));
-          return whenInstance;
-        };
-      });
+      Object.entries(testImplementation.whens).forEach(
+        ([key, whEn]) => {
+          classyWhens[key] = (...payload) => {
+            const capturedFullAdapter = fullAdapter;
+            const whenInstance = new class extends BaseWhen {
+              async andWhen(store, whenCB, testResource, artifactory) {
+                return await capturedFullAdapter.execute(
+                  store,
+                  whenCB,
+                  testResource,
+                  artifactory
+                );
+              }
+            }(`${key}: ${payload && payload.toString()}`, whEn(...payload));
+            return whenInstance;
+          };
+        }
+      );
     }
     const classyThens = {};
     if (testImplementation.thens) {
-      Object.entries(testImplementation.thens).forEach(([key, thEn]) => {
-        classyThens[key] = (...args) => {
-          const capturedFullAdapter = fullAdapter;
-          const thenInstance = new class extends BaseThen {
-            verifyCheck(store, checkCB, testResourceConfiguration2, artifactory) {
-              return capturedFullAdapter.verify(
-                store,
-                checkCB,
-                testResourceConfiguration2,
-                artifactory
-              );
-            }
-          }(`${key}: ${args && args.toString()}`, thEn(...args));
-          return thenInstance;
-        };
-      });
+      Object.entries(testImplementation.thens).forEach(
+        ([key, thEn]) => {
+          classyThens[key] = (...args) => {
+            const capturedFullAdapter = fullAdapter;
+            const thenInstance = new class extends BaseThen {
+              async butThen(store, thenCB, testResourceConfiguration2, artifactory) {
+                return capturedFullAdapter.verify(
+                  store,
+                  thenCB,
+                  testResourceConfiguration2,
+                  artifactory
+                );
+              }
+            }(`${key}: ${args && args.toString()}`, thEn(...args));
+            return thenInstance;
+          };
+        }
+      );
     }
     const classyConfirms = {};
     if (testImplementation.confirms) {
       Object.entries(testImplementation.confirms).forEach(([key, val]) => {
-        classyConfirms[key] = (features, tableRows, confirmCB, initialValues) => {
-          return new BaseValue(
-            features,
-            tableRows,
-            val,
-            initialValues
-          );
+        classyConfirms[key] = () => {
+          return (testCases, features) => {
+            let actualConfirmCB;
+            if (typeof val === "function") {
+              actualConfirmCB = val();
+            } else {
+              actualConfirmCB = val;
+            }
+            return new BaseConfirm(
+              features,
+              testCases,
+              actualConfirmCB,
+              void 0
+              // initialValues
+            );
+          };
         };
       });
     }
@@ -1034,40 +949,83 @@ var BaseTiposkripto = class {
     }
     const classyShoulds = {};
     if (testImplementation.shoulds) {
-      Object.entries(testImplementation.shoulds).forEach(([key, shouldCB]) => {
-        classyShoulds[key] = (...args) => {
-          return new BaseShould(`${key}: ${args && args.toString()}`, shouldCB(...args));
-        };
-      });
+      Object.entries(testImplementation.shoulds).forEach(
+        ([key, shouldCB]) => {
+          classyShoulds[key] = (...args) => {
+            return new BaseShould(
+              `${key}: ${args && args.toString()}`,
+              shouldCB(...args)
+            );
+          };
+        }
+      );
     }
     const classyExpecteds = {};
     if (testImplementation.expecteds) {
-      Object.entries(testImplementation.expecteds).forEach(([key, expectedCB]) => {
-        classyExpecteds[key] = (...args) => {
-          return new BaseExpected(`${key}: ${args && args.toString()}`, expectedCB(...args));
-        };
-      });
+      Object.entries(testImplementation.expecteds).forEach(
+        ([key, expectedCB]) => {
+          classyExpecteds[key] = (...args) => {
+            return new BaseExpected(
+              `${key}: ${args && args.toString()}`,
+              expectedCB(...args)
+            );
+          };
+        }
+      );
     }
     const classyDescribes = {};
-    if (testImplementation.describes) {
+    if (testImplementation.describes && typeof testImplementation.describes === "object") {
       Object.entries(testImplementation.describes).forEach(([key, desc]) => {
         classyDescribes[key] = (features, its, describeCB, initialValues) => {
-          return new BaseDescribe(
-            features,
-            its,
-            describeCB,
-            initialValues
-          );
+          try {
+            let actualDescribeCB;
+            if (describeCB) {
+              actualDescribeCB = describeCB;
+            } else if (typeof desc === "function") {
+              actualDescribeCB = desc();
+            } else {
+              actualDescribeCB = desc;
+            }
+            if (typeof actualDescribeCB !== "function") {
+              console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
+              actualDescribeCB = () => {
+                throw new Error(`Describe implementation for "${key}" is not a valid function`);
+              };
+            }
+            return new BaseDescribe(
+              features,
+              its,
+              actualDescribeCB,
+              initialValues
+            );
+          } catch (error) {
+            console.error(`Error creating Describe for "${key}":`, error);
+            return new BaseDescribe(
+              features,
+              its,
+              () => {
+                throw new Error(`Describe implementation for "${key}" failed: ${error.message}`);
+              },
+              initialValues
+            );
+          }
         };
       });
+    } else {
+      console.warn("testImplementation.describes is not defined or not an object");
     }
     const classyIts = {};
     if (testImplementation.its) {
-      Object.entries(testImplementation.its).forEach(([key, itCB]) => {
-        classyIts[key] = (...args) => {
-          return new BaseIt(`${key}: ${args && args.toString()}`, itCB(...args));
-        };
-      });
+      Object.entries(testImplementation.its).forEach(
+        ([key, itCB]) => {
+          classyIts[key] = (...args) => {
+            return new BaseIt(
+              `${key}: ${args && args.toString()}`,
+              itCB(...args)
+            );
+          };
+        }
+      );
     }
     this.suitesOverrides = classySuites;
     this.givenOverrides = classyGivens;
@@ -1081,76 +1039,192 @@ var BaseTiposkripto = class {
     this.confirmsOverrides = classyConfirms;
     this.testResourceRequirement = testResourceRequirement;
     this.testSpecification = testSpecification;
-    this.specs = testSpecification(
-      this.Suites(),
-      this.Given(),
-      this.When(),
-      this.Then(),
-      this.Describe(),
-      this.It(),
-      this.Confirm(),
-      this.Value(),
-      this.Should(),
-      this.Expected()
-    );
-    this.totalTests = this.calculateTotalTests();
-    this.testJobs = this.specs.map((suite) => {
-      const suiteRunner = (suite2) => async (testResourceConfiguration2) => {
-        try {
-          const x = await suite2.run(input, testResourceConfiguration2);
-          return x;
-        } catch (e) {
-          console.error(e.stack);
-          throw e;
-        }
+    let topLevelVerbs = [];
+    let specError = null;
+    try {
+      topLevelVerbs = testSpecification(
+        this.Given(),
+        this.When(),
+        this.Then(),
+        this.Describe(),
+        this.It(),
+        this.Confirm(),
+        this.Value(),
+        this.Should()
+      );
+    } catch (error) {
+      console.error("Error during test specification:", error);
+      specError = error;
+      topLevelVerbs = [];
+    }
+    this.specs = topLevelVerbs;
+    this.totalTests = this.calculateTotalTestsDirectly();
+    this.testJobs = [];
+    for (let index = 0; index < this.specs.length; index++) {
+      const step = this.specs[index];
+      try {
+        const testJob = this.createTestJobForStep(step, index, input);
+        this.testJobs.push(testJob);
+      } catch (stepError) {
+        console.error(`Error creating test job for step ${index}:`, stepError);
+        const errorMessage = `Step ${index} failed to create test job: ${stepError.message}`;
+        const errorStep = {
+          constructor: { name: "ErrorStep" },
+          features: [],
+          artifacts: [],
+          fails: 1,
+          failed: true,
+          error: new Error(errorMessage),
+          toObj: () => ({
+            name: `Step_${index}_Error`,
+            type: "Error",
+            error: errorMessage
+          })
+        };
+        const errorTestJob = this.createErrorTestJob(errorStep, index, new Error(errorMessage));
+        this.testJobs.push(errorTestJob);
+      }
+    }
+    if (this.testJobs.length === 0) {
+      const errorMessage = specError ? `Test specification failed: ${specError.message}` : "No test steps were created by the specification";
+      const errorStep = {
+        constructor: { name: "ErrorStep" },
+        features: [],
+        artifacts: [],
+        fails: 1,
+        failed: true,
+        error: new Error(errorMessage),
+        toObj: () => ({
+          name: "Specification_Error",
+          type: "Error",
+          error: errorMessage
+        })
       };
-      const runner = suiteRunner(suite);
-      const totalTests = this.totalTests;
-      const testJob = {
-        test: suite,
-        toObj: () => {
-          return suite.toObj();
-        },
-        runner,
-        receiveTestResourceConfig: async (testResourceConfiguration2) => {
+      const errorTestJob = this.createErrorTestJob(errorStep, 0, new Error(errorMessage));
+      this.testJobs.push(errorTestJob);
+    }
+    if (this.testJobs.length > 0) {
+      const runAllTests = async () => {
+        const allResults = [];
+        let totalFails = 0;
+        let anyFailed = false;
+        const allFeatures = [];
+        const allArtifacts = [];
+        for (let i = 0; i < this.testJobs.length; i++) {
           try {
-            const suiteDone = await runner(
-              testResourceConfiguration2
-            );
-            const fails = suiteDone.fails;
-            return {
-              failed: fails > 0,
-              fails,
-              artifacts: [],
-              // this.artifacts is not accessible here
-              features: suiteDone.features(),
-              tests: 0,
-              runTimeTests: totalTests,
-              testJob: testJob.toObj()
-            };
+            const result = await this.testJobs[i].receiveTestResourceConfig(testResourceConfiguration);
+            allResults.push(result);
+            totalFails += result.fails;
+            anyFailed = anyFailed || result.failed;
+            if (result.features && Array.isArray(result.features)) {
+              allFeatures.push(...result.features);
+            }
+            if (result.artifacts && Array.isArray(result.artifacts)) {
+              allArtifacts.push(...result.artifacts);
+            }
           } catch (e) {
-            console.error(e.stack);
-            return {
+            console.error(`Error running test job ${i}:`, e);
+            totalFails++;
+            anyFailed = true;
+            allResults.push({
               failed: true,
-              fails: -1,
-              artifacts: [],
+              fails: 1,
               features: [],
-              tests: 0,
-              runTimeTests: -1,
-              testJob: testJob.toObj()
-            };
+              artifacts: [],
+              error: {
+                message: e.message,
+                stack: e.stack,
+                name: e.name
+              },
+              stepName: `Job_${i}`,
+              stepType: "Error",
+              testJob: { name: `Job_${i}_Error` }
+            });
           }
         }
+        const combinedResults = {
+          failed: anyFailed,
+          fails: totalFails,
+          artifacts: allArtifacts,
+          features: [...new Set(allFeatures)],
+          // Remove duplicates
+          tests: this.testJobs.length,
+          runTimeTests: this.totalTests,
+          testJob: { name: "CombinedResults" },
+          timestamp: Date.now(),
+          individualResults: allResults.map((result, idx) => ({
+            index: idx,
+            failed: result.failed,
+            fails: result.fails,
+            features: result.features || [],
+            error: result.error,
+            stepName: result.stepName,
+            stepType: result.stepType,
+            testJob: result.testJob
+          }))
+        };
+        combinedResults.summary = {
+          totalTests: this.testJobs.length,
+          passed: this.testJobs.length - totalFails,
+          failed: totalFails,
+          successRate: totalFails === this.testJobs.length ? "0%" : ((this.testJobs.length - totalFails) / this.testJobs.length * 100).toFixed(2) + "%"
+        };
+        console.log("testResourceConfiguration", testResourceConfiguration);
+        const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+        this.writeFileSync(reportJson, JSON.stringify(combinedResults, null, 2));
       };
-      return testJob;
-    });
-    this.testJobs[0].receiveTestResourceConfig(
-      testResourceConfiguration
-    ).then((results) => {
-      console.log("testResourceConfiguration", testResourceConfiguration);
+      runAllTests().catch((error) => {
+        console.error("Error running all test jobs:", error);
+        const errorResults = {
+          failed: true,
+          fails: -1,
+          artifacts: [],
+          features: [],
+          tests: 0,
+          runTimeTests: -1,
+          testJob: {},
+          timestamp: Date.now(),
+          error: {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+          },
+          individualResults: [],
+          summary: {
+            totalTests: 0,
+            passed: 0,
+            failed: 1,
+            successRate: "0%"
+          }
+        };
+        const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+        this.writeFileSync(reportJson, JSON.stringify(errorResults, null, 2));
+      });
+    } else {
+      const emptyResults = {
+        failed: true,
+        fails: -1,
+        artifacts: [],
+        features: [],
+        tests: 0,
+        runTimeTests: -1,
+        testJob: {},
+        timestamp: Date.now(),
+        error: {
+          message: "No test jobs were created",
+          name: "ConfigurationError"
+        },
+        individualResults: [],
+        summary: {
+          totalTests: 0,
+          passed: 0,
+          failed: 1,
+          successRate: "0%"
+        }
+      };
       const reportJson = `${testResourceConfiguration.fs}/tests.json`;
-      this.writeFileSync(reportJson, JSON.stringify(results));
-    });
+      this.writeFileSync(reportJson, JSON.stringify(emptyResults, null, 2));
+    }
   }
   // Create an artifactory that tracks context
   createArtifactory(context = {}) {
@@ -1160,7 +1234,12 @@ var BaseTiposkripto = class {
         const basePath = this.testResourceConfiguration?.fs || "testeranto";
         console.log("[Artifactory] Base path:", basePath);
         console.log("[Artifactory] Context:", context);
-        if (context.suiteIndex !== void 0) {
+        if (context.stepIndex !== void 0) {
+          path += `step-${context.stepIndex}/`;
+          if (context.stepType) {
+            path += `${context.stepType}/`;
+          }
+        } else if (context.suiteIndex !== void 0) {
           path += `suite-${context.suiteIndex}/`;
         }
         if (context.givenKey) {
@@ -1188,7 +1267,56 @@ var BaseTiposkripto = class {
   }
   async receiveTestResourceConfig(testResourceConfig) {
     if (this.testJobs && this.testJobs.length > 0) {
-      return this.testJobs[0].receiveTestResourceConfig(testResourceConfig);
+      const allResults = [];
+      let totalFails = 0;
+      let anyFailed = false;
+      const allFeatures = [];
+      const allArtifacts = [];
+      for (let i = 0; i < this.testJobs.length; i++) {
+        try {
+          const result = await this.testJobs[i].receiveTestResourceConfig(testResourceConfig);
+          allResults.push(result);
+          totalFails += result.fails;
+          anyFailed = anyFailed || result.failed;
+          if (result.features && Array.isArray(result.features)) {
+            allFeatures.push(...result.features);
+          }
+          if (result.artifacts && Array.isArray(result.artifacts)) {
+            allArtifacts.push(...result.artifacts);
+          }
+        } catch (e) {
+          console.error(`Error running test job ${i}:`, e);
+          totalFails++;
+          anyFailed = true;
+        }
+      }
+      return {
+        failed: anyFailed,
+        fails: totalFails,
+        artifacts: allArtifacts,
+        features: [...new Set(allFeatures)],
+        // Remove duplicates
+        tests: this.testJobs.length,
+        runTimeTests: this.totalTests,
+        testJob: { name: "CombinedResults" },
+        timestamp: Date.now(),
+        individualResults: allResults.map((result, idx) => ({
+          index: idx,
+          failed: result.failed,
+          fails: result.fails,
+          features: result.features || [],
+          error: result.error,
+          stepName: result.stepName,
+          stepType: result.stepType,
+          testJob: result.testJob
+        })),
+        summary: {
+          totalTests: this.testJobs.length,
+          passed: this.testJobs.length - totalFails,
+          failed: totalFails,
+          successRate: totalFails === 0 ? "100%" : ((this.testJobs.length - totalFails) / this.testJobs.length * 100).toFixed(2) + "%"
+        }
+      };
     } else {
       throw new Error("No test jobs available");
     }
@@ -1197,62 +1325,501 @@ var BaseTiposkripto = class {
     return this.specs;
   }
   Suites() {
-    if (!this.suitesOverrides) {
-      throw new Error(
-        `suitesOverrides is undefined. classySuites: ${JSON.stringify(
-          Object.keys(this.suitesOverrides || {})
-        )}`
-      );
-    }
-    return this.suitesOverrides;
+    console.warn("Suites() is deprecated and returns an empty object");
+    return {};
   }
   Given() {
-    return this.givenOverrides;
+    const overrides = this.givenOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return (features = [], whens = [], thens = [], givenCB = () => {
+            }, initialValues = void 0) => {
+              console.error(`Given.${prop} is not defined in test implementation`);
+              try {
+                return new class extends BaseGiven {
+                  async givenThat(subject, testResource, artifactory, initializer, initialValues2) {
+                    throw new Error(`Given.${prop} is not implemented`);
+                  }
+                }(
+                  features,
+                  whens,
+                  thens,
+                  givenCB,
+                  initialValues
+                );
+              } catch (e) {
+                console.error(`Error creating Given.${prop}:`, e);
+                return {
+                  features,
+                  whens,
+                  thens,
+                  givenCB,
+                  initialValues,
+                  give: async () => {
+                    throw new Error(`Given.${prop} creation failed: ${e.message}`);
+                  },
+                  toObj: () => ({
+                    key: `Given_${prop}_error`,
+                    error: `Given.${prop} creation failed: ${e.message}`,
+                    failed: true,
+                    features
+                  })
+                };
+              }
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   When() {
-    return this.whenOverrides;
+    const overrides = this.whenOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return (...args) => {
+              console.error(`When.${prop} is not defined in test implementation`);
+              try {
+                return new class extends BaseWhen {
+                  async andWhen(store, whenCB, testResource, artifactory) {
+                    throw new Error(`When.${prop} is not implemented`);
+                  }
+                }(`${prop}: ${args && args.toString()}`, () => {
+                  throw new Error(`When.${prop} is not implemented`);
+                });
+              } catch (e) {
+                console.error(`Error creating When.${prop}:`, e);
+                return {
+                  name: `${prop}_error`,
+                  test: async () => {
+                    throw new Error(`When.${prop} creation failed: ${e.message}`);
+                  },
+                  toObj: () => ({
+                    name: `When_${prop}_error`,
+                    error: `When.${prop} creation failed: ${e.message}`,
+                    status: false
+                  })
+                };
+              }
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   Then() {
-    return this.thenOverrides;
+    const overrides = this.thenOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return (...args) => {
+              console.error(`Then.${prop} is not defined in test implementation`);
+              return new class extends BaseThen {
+                async butThen(store, thenCB, testResourceConfiguration, artifactory) {
+                  throw new Error(`Then.${prop} is not implemented`);
+                }
+              }(`${prop}: ${args && args.toString()}`, async () => {
+                throw new Error(`Then.${prop} is not implemented`);
+              });
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   Describe() {
-    return this.describesOverrides || {};
+    const overrides = this.describesOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return () => {
+              console.error(`Describe.${prop} is not defined in test implementation`);
+              return (features, its, describeCB, initialValues) => {
+                return new BaseDescribe(
+                  features,
+                  its,
+                  () => {
+                    throw new Error(`Describe.${prop} is not implemented`);
+                  },
+                  initialValues
+                );
+              };
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   It() {
-    return this.itsOverrides || {};
+    const overrides = this.itsOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return (...args) => {
+              console.error(`It.${prop} is not defined in test implementation`);
+              return new class extends BaseIt {
+                constructor(name, itCB) {
+                  super(name, itCB);
+                }
+              }(`${prop}: ${args && args.toString()}`, () => {
+                throw new Error(`It.${prop} is not implemented`);
+              });
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   Confirm() {
-    return this.confirmsOverrides || {};
+    const overrides = this.confirmsOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return () => {
+              console.error(`Confirm.${prop} is not defined in test implementation`);
+              return (testCases, features) => {
+                return new class extends BaseConfirm {
+                  constructor(features2, testCases2, confirmCB, initialValues) {
+                    super(features2, testCases2, confirmCB, initialValues);
+                  }
+                }(
+                  features,
+                  testCases,
+                  () => {
+                    throw new Error(`Confirm.${prop} is not implemented`);
+                  },
+                  void 0
+                );
+              };
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   Value() {
-    return this.valuesOverrides || {};
+    const overrides = this.valuesOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return () => {
+              console.error(`Value.${prop} is not defined in test implementation`);
+              return (features, tableRows, confirmCB, initialValues) => {
+                return new class extends BaseValue {
+                  constructor(features2, tableRows2, confirmCB2, initialValues2) {
+                    super(features2, tableRows2, confirmCB2, initialValues2);
+                  }
+                }(
+                  features,
+                  tableRows,
+                  () => {
+                    throw new Error(`Value.${prop} is not implemented`);
+                  },
+                  initialValues
+                );
+              };
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   Should() {
-    return this.shouldsOverrides || {};
+    const overrides = this.shouldsOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return (...args) => {
+              console.error(`Should.${prop} is not defined in test implementation`);
+              return new class extends BaseShould {
+                constructor(name, shouldCB) {
+                  super(name, shouldCB);
+                }
+              }(`${prop}: ${args && args.toString()}`, () => {
+                throw new Error(`Should.${prop} is not implemented`);
+              });
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   Expect() {
-    return this.expectedsOverrides || {};
+    const overrides = this.expectedsOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return (...args) => {
+              console.error(`Expect.${prop} is not defined in test implementation`);
+              return new class extends BaseExpected {
+                constructor(name, expectedCB) {
+                  super(name, expectedCB);
+                }
+                async validateRow(store, testResourceConfiguration, filepath, expectedValue, artifactory) {
+                  throw new Error(`Expect.${prop} is not implemented`);
+                }
+              }(`${prop}: ${args && args.toString()}`, async () => {
+                throw new Error(`Expect.${prop} is not implemented`);
+              });
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   Expected() {
-    return this.expectedsOverrides || {};
+    const overrides = this.expectedsOverrides || {};
+    return new Proxy(overrides, {
+      get(target, prop) {
+        if (typeof prop === "string") {
+          if (prop in target) {
+            return target[prop];
+          } else {
+            return (...args) => {
+              console.error(`Expected.${prop} is not defined in test implementation`);
+              return new class extends BaseExpected {
+                constructor(name, expectedCB) {
+                  super(name, expectedCB);
+                }
+                async validateRow(store, testResourceConfiguration, filepath, expectedValue, artifactory) {
+                  throw new Error(`Expected.${prop} is not implemented`);
+                }
+              }(`${prop}: ${args && args.toString()}`, async () => {
+                throw new Error(`Expected.${prop} is not implemented`);
+              });
+            };
+          }
+        }
+        return target[prop];
+      }
+    });
   }
   // Add a method to access test jobs which can be used by receiveTestResourceConfig
   getTestJobs() {
     return this.testJobs;
   }
-  calculateTotalTests() {
-    let total = 0;
-    for (const suite of this.specs) {
-      if (suite && typeof suite === "object") {
-        if ("givens" in suite) {
-          const givens = suite.givens;
-          if (givens && typeof givens === "object") {
-            total += Object.keys(givens).length;
+  createTestJobForStep(step, index, input) {
+    const stepRunner = async (testResourceConfiguration) => {
+      try {
+        let result;
+        const constructorName = step.constructor.name;
+        const stepArtifactory = this.createArtifactory({
+          stepIndex: index,
+          stepType: constructorName.toLowerCase().replace("base", "")
+        });
+        if (constructorName === "BaseGiven") {
+          result = await step.give(
+            input,
+            `step_${index}`,
+            testResourceConfiguration,
+            (t) => !!t,
+            // Simple tester function
+            stepArtifactory,
+            index
+          );
+        } else if (constructorName === "BaseDescribe") {
+          result = await step.describe(
+            input,
+            `step_${index}`,
+            testResourceConfiguration,
+            (t) => !!t,
+            // Simple tester function
+            stepArtifactory,
+            index
+          );
+        } else if (constructorName === "BaseConfirm" || constructorName === "BaseValue") {
+          if (typeof step.run === "function") {
+            result = await step.run(
+              input,
+              testResourceConfiguration,
+              stepArtifactory
+            );
+          } else if (typeof step.confirm === "function") {
+            result = await step.confirm(
+              input,
+              `step_${index}`,
+              testResourceConfiguration,
+              (t) => !!t,
+              // Simple tester function
+              stepArtifactory,
+              index
+            );
+          } else if (typeof step.value === "function") {
+            result = await step.value(
+              input,
+              `step_${index}`,
+              testResourceConfiguration,
+              (t) => !!t,
+              // Simple tester function
+              stepArtifactory,
+              index
+            );
+          }
+        } else {
+          if (typeof step.run === "function") {
+            result = await step.run(
+              input,
+              testResourceConfiguration,
+              stepArtifactory
+            );
+          } else if (typeof step.test === "function") {
+            result = await step.test(
+              input,
+              testResourceConfiguration,
+              stepArtifactory
+            );
+          } else {
+            throw new Error(`Step type ${constructorName} has no runnable method`);
           }
         }
+        return { step, result, fails: step.fails || 0, failed: step.failed || false };
+      } catch (e) {
+        console.error(e.stack);
+        throw e;
       }
-    }
-    return total;
+    };
+    const runner = stepRunner;
+    const totalTests = this.totalTests;
+    const testJob = {
+      test: step,
+      toObj: () => {
+        return step.toObj ? step.toObj() : { name: `Step_${index}`, type: step.constructor.name };
+      },
+      runner,
+      receiveTestResourceConfig: async (testResourceConfiguration) => {
+        try {
+          const stepResult = await runner(testResourceConfiguration);
+          const fails = stepResult.fails;
+          const stepObj = stepResult.step;
+          let features = [];
+          if (stepObj.features && Array.isArray(stepObj.features)) {
+            features = stepObj.features;
+          }
+          let artifacts = [];
+          if (stepObj.artifacts && Array.isArray(stepObj.artifacts)) {
+            artifacts = stepObj.artifacts;
+          }
+          let errorDetails = null;
+          if (stepObj.error) {
+            errorDetails = {
+              message: stepObj.error.message,
+              stack: stepObj.error.stack,
+              name: stepObj.error.name
+            };
+          } else if (stepResult.error) {
+            errorDetails = {
+              message: stepResult.error.message,
+              stack: stepResult.error.stack,
+              name: stepResult.error.name
+            };
+          }
+          return {
+            failed: stepResult.failed || fails > 0,
+            fails,
+            artifacts,
+            features,
+            tests: 1,
+            runTimeTests: totalTests,
+            testJob: testJob.toObj(),
+            error: errorDetails,
+            stepName: stepObj.key || stepObj.name || `Step_${index}`,
+            stepType: stepObj.constructor?.name || "Unknown"
+          };
+        } catch (e) {
+          console.error(e.stack);
+          return {
+            failed: true,
+            fails: -1,
+            artifacts: [],
+            features: [],
+            tests: 0,
+            runTimeTests: -1,
+            testJob: testJob.toObj(),
+            error: {
+              message: e.message,
+              stack: e.stack,
+              name: e.name
+            },
+            stepName: `Step_${index}`,
+            stepType: "Error"
+          };
+        }
+      }
+    };
+    return testJob;
+  }
+  createErrorTestJob(errorStep, index, error) {
+    const totalTests = this.totalTests;
+    const uniqueError = new Error(error.message);
+    uniqueError.stack = error.stack;
+    uniqueError.name = error.name;
+    return {
+      test: errorStep,
+      toObj: () => {
+        return errorStep.toObj();
+      },
+      runner: async () => {
+        throw uniqueError;
+      },
+      receiveTestResourceConfig: async (testResourceConfiguration) => {
+        return {
+          failed: true,
+          fails: 1,
+          artifacts: [],
+          features: [],
+          tests: 1,
+          runTimeTests: totalTests,
+          testJob: errorStep.toObj(),
+          error: {
+            message: uniqueError.message,
+            stack: uniqueError.stack,
+            name: uniqueError.name
+          },
+          stepName: errorStep.toObj().name || `ErrorStep_${index}`,
+          stepType: "Error"
+        };
+      }
+    };
+  }
+  calculateTotalTestsDirectly() {
+    return this.specs ? this.specs.length : 0;
   }
 };
 
@@ -1272,7 +1839,9 @@ var WebTiposkripto = class extends BaseTiposkripto {
           const encodedConfig = urlParams.get("config");
           if (encodedConfig) {
             try {
-              testResourceConfig = JSON.parse(decodeURIComponent(encodedConfig));
+              testResourceConfig = JSON.parse(
+                decodeURIComponent(encodedConfig)
+              );
             } catch (e) {
               console.error("Failed to parse config from URL:", e);
               testResourceConfig = {};
@@ -1307,9 +1876,14 @@ var WebTiposkripto = class extends BaseTiposkripto {
         }
       }
       testResourceConfig.fs = `testeranto/reports/webtests/${testPath}`;
-      console.log(`[WebTiposkripto] Constructed default fs path: ${testResourceConfig.fs}`);
+      console.log(
+        `[WebTiposkripto] Constructed default fs path: ${testResourceConfig.fs}`
+      );
     }
-    console.log("[WebTiposkripto] testResourceConfig:", JSON.stringify(testResourceConfig));
+    console.log(
+      "[WebTiposkripto] testResourceConfig:",
+      JSON.stringify(testResourceConfig)
+    );
     super(
       "web",
       input,
@@ -1319,7 +1893,10 @@ var WebTiposkripto = class extends BaseTiposkripto {
       testAdapter,
       testResourceConfig
     );
-    console.log("[WebTiposkripto] testResourceConfiguration.fs:", this.testResourceConfiguration?.fs);
+    console.log(
+      "[WebTiposkripto] testResourceConfiguration.fs:",
+      this.testResourceConfiguration?.fs
+    );
   }
   writeFileSync(filename, payload) {
     if (isBrowser) {

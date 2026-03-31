@@ -1,5 +1,5 @@
 import React from "react";
-import { getNodeIcon } from "testeranto/src/server/serverClasses/StakeholderUtils";
+import { getNodeIcon } from "testeranto/StakeholderUtils";
 import { getNodeBackgroundColor } from "./nodeStyleUtils";
 
 export interface TreeViewProps {

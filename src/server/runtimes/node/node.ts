@@ -1,5 +1,5 @@
 import esbuild from "esbuild";
-import type { ITestconfigV2 } from "../../../Types";
+import type { ITesterantoConfig } from "../../../Types";
 import {
   processMetafile
 } from "../common";
@@ -171,7 +171,7 @@ function generateNativeTestWrapper(
 // run esbuild in watch mode using esbuildConfigs. Write to fs the bundle and metafile
 async function startBundling(
   nodeConfigs: any,
-  projectConfig: ITestconfigV2,
+  projectConfig: ITesterantoConfig,
   entryPoints: string[]
 ) {
   console.log(`[NODE BUILDER] is now bundling:  ${testName}`);

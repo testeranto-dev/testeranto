@@ -3,13 +3,13 @@ import featuresPlugin from "../../../esbuildConfigs/featuresPlugin.js";
 import baseEsBuildConfig from "../../../esbuildConfigs/index.js";
 import inputFilesPlugin from "../../../esbuildConfigs/inputFilesPlugin.js";
 import rebuildPlugin from "../../../esbuildConfigs/rebuildPlugin.js";
-import type { ITestconfigV2 } from "../../../Types.js";
+import type { ITesterantoConfig } from "../../../Types.js";
 import { testLoggingPlugin } from "./esbuildLoggingPlugin.js";
 
 export default (
   nodeConfig: object,
   testName: string,
-  projectConfig: ITestconfigV2,
+  projectConfig: ITesterantoConfig,
   entryPoints: string[]
 ): BuildOptions => {
 

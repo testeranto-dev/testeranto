@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, mkdirSync, watchFile, watch } from "fs";
 import { join } from "path";
-import type { IRunTime, ITestconfigV2 } from "../../../../Types";
+import type { IRunTime, ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { getInputFilePath, getFullReportDir } from "../Server_Docker_Constants";
 import {
@@ -13,7 +13,7 @@ import {
 export const watchInputFilePure = async (
   runtime: IRunTime,
   testsName: string,
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
   mode: IMode,
   inputFiles: Record<string, Record<string, string[]>>,
   hashs: Record<string, Record<string, string>>,

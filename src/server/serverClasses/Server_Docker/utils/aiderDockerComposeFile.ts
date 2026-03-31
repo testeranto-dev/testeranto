@@ -1,7 +1,7 @@
-import type { ITestconfigV2 } from "../../../../Types";
+import type { ITesterantoConfig } from "../../../../Types";
 import { processCwd } from "../Server_Docker_Dependents";
 
-export const aiderDockerComposeFile = (container_name: string, config: ITestconfigV2) => {
+export const aiderDockerComposeFile = (container_name: string, config: ITesterantoConfig) => {
   return {
     image: "testeranto-aider:latest",
     container_name,

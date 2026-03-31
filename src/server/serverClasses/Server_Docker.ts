@@ -1,6 +1,6 @@
 import fs, { existsSync } from "fs";
 import path from "path";
-import type { IRunTime, ITestconfigV2 } from "../../Types";
+import type { IRunTime, ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import {
   getDockerComposeDownPure,
@@ -62,7 +62,7 @@ export class Server_Docker extends Server_Docker_Compose {
   private outputFiles: any;
   private failedBuilderConfigs: Set<string> = new Set();
 
-  constructor(configs: ITestconfigV2, mode: IMode) {
+  constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
     this.inputFiles = {};
     this.hashs = {};
@@ -221,11 +221,11 @@ export class Server_Docker extends Server_Docker_Compose {
         logMessage(
           "[Server_Docker] Tests completed, waiting for pending operations...",
         );
-        
+
         // Generate graph-data.json for dual-mode operation
         const { embedConfigInHtml } = await import("./utils/embedConfigInHtml");
         await embedConfigInHtml(this.configs);
-        
+
         await new Promise((resolve) => setTimeout(resolve, 5000));
         await this.stop();
         processExit(0);
@@ -551,11 +551,11 @@ export class Server_Docker extends Server_Docker_Compose {
     try {
       if (fs.existsSync(reportsDir)) {
         const files = fs.readdirSync(reportsDir);
-        
+
         // Determine which files to delete
         for (const file of files) {
           let shouldDelete = false;
-          
+
           if (testName) {
             // Try to match the file naming pattern
             const cleanedTestName = testName.toLowerCase().replace(/\./g, '-').replace(/[^a-z0-9_\-/]/g, '');
@@ -570,7 +570,7 @@ export class Server_Docker extends Server_Docker_Compose {
               shouldDelete = true;
             }
           }
-          
+
           if (shouldDelete) {
             const filePath = path.join(reportsDir, file);
             fs.unlinkSync(filePath);

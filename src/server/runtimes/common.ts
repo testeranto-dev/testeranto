@@ -1,10 +1,10 @@
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
-import type { ITestconfigV2 } from "../../Types";
+import type { ITesterantoConfig } from "../../Types";
 
 export interface BuildOptions {
-  config: ITestconfigV2;
+  config: ITesterantoConfig;
   entryPoints: string[];
   configPath: string;
   bundlesDir: string;
@@ -79,7 +79,7 @@ export function extractInputFilesFromMetafile(metafile: any): string[] {
 }
 
 export async function processMetafile(
-  config: ITestconfigV2,
+  config: ITesterantoConfig,
   metafile: any,
   runtime: 'node' | 'web',
   configKey: string

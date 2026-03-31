@@ -1,7 +1,7 @@
 import type { IChecks, ICheck } from "../../../../lib/tiposkripto/dist/types/Types";
 import { RUN_TIMES } from "../../../../runtimes";
 import type {
-  ITestconfigV2,
+  ITesterantoConfig,
   IRunTime,
 
 } from "../../../../Types";
@@ -25,7 +25,7 @@ import { staticTestDockerComposeFile } from "./staticTestDockerComposeFile";
 
 
 export const generateServicesPure = (
-  configs: ITestconfigV2,
+  configs: ITesterantoConfig,
   mode: IMode,
 ): Record<string, any> => {
 
@@ -70,7 +70,7 @@ export const generateServicesPure = (
         services[builderServiceName].environment = {};
       }
       services[builderServiceName].environment.MODE = mode;
-      
+
       // Add restart: "no" policy to prevent automatic restarts
       services[builderServiceName].restart = "no";
 
@@ -112,7 +112,7 @@ export const generateServicesPure = (
       );
       // Add restart: "no" policy to prevent automatic restarts
       services[getBddServiceName(uid)].restart = "no";
-      
+
       services[getAiderServiceName(uid)] = aiderDockerComposeFile(
         getAiderServiceName(uid),
         configs

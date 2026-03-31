@@ -5,10 +5,10 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 
-// IMPORTANT : all imports need tog through stakeholderExports
+// IMPORTANT : all imports need tog through stakeholderApp
 import {
   VisualizationTabs,
-} from "testeranto/stakeholderExports";
+} from "testeranto/stakeholderApp";
 
 
 export interface StakeholderData {
