@@ -1,11 +1,12 @@
-import { vscodeHttpAPI, type VscodeHttpEndpoint, type VscodeHttpResponse } from '../../../api';
+import type { VscodeHttpEndpoint } from "../../../api";
+import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
 
 export class ApiUtils {
     private static baseUrl = 'http://localhost:3000';
 
     static getUrl<T extends VscodeHttpEndpoint>(
-        endpointKey: T, 
-        params?: Record<string, string>, 
+        endpointKey: T,
+        params?: Record<string, string>,
         query?: Record<string, string>
     ): string {
         const endpoint = vscodeHttpAPI[endpointKey];
@@ -14,7 +15,7 @@ export class ApiUtils {
         }
 
         let path = endpoint.path;
-        
+
         // Replace path parameters
         if (params && endpoint.params) {
             for (const [key, value] of Object.entries(params)) {
@@ -39,6 +40,26 @@ export class ApiUtils {
             }
         }
         return url;
+    }
+
+    static async fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 5000): Promise<Response> {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            return response;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            if (error.name === 'AbortError') {
+                throw new Error(`Request to ${url} timed out after ${timeout}ms`);
+            }
+            throw error;
+        }
     }
 
     static getConfigsUrl(): string {

@@ -1,7 +1,8 @@
 import path from "path";
 import fs from "fs";
 import { jsonResponse } from "./jsonResponse";
-import { vscodeHttpAPI, VscodeHttpResponse } from "../../../api";
+import type { VscodeHttpResponse } from "../../../api";
+import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
 
 export const handleOutputFiles = (url: URL, server: any, request?: Request): Response => {
   // Validate against API definition

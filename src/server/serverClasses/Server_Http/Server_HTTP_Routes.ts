@@ -1,7 +1,8 @@
-import { handleRoutePure } from "./handleRoutePure";
 import fs from 'fs';
 import path from 'path';
-import { stakeholderHttpAPI } from '../../../api';
+import { stakeholderHttpAPI } from "../../../api/stakeholderHttp";
+import { handleRoutePure } from "./handleRoutePure";
+
 
 // Helper to extract route name from API path
 const extractRouteNameFromPath = (path: string): string => {
@@ -17,23 +18,35 @@ export class Server_HTTP_Routes {
     request: Request,
     url: URL,
   ): Promise<Response> {
-    // Handle API endpoints for graph data using API definitions
-    const stakeholderApi = stakeholderHttpAPI;
+    try {
+      // Handle API endpoints for graph data using API definitions
+      const stakeholderApi = stakeholderHttpAPI;
 
-    // Check for graph-data API endpoint
-    const graphDataApiRoute = extractRouteNameFromPath(stakeholderApi.getGraphData.path);
-    if (routeName === graphDataApiRoute) {
-      return this.handleGraphDataApi(request);
+      // Check for graph-data API endpoint
+      const graphDataApiRoute = extractRouteNameFromPath(stakeholderApi.getGraphData.path);
+      if (routeName === graphDataApiRoute) {
+        return await this.handleGraphDataApi(request);
+      }
+
+      // Check for graph-data.json static file
+      const graphDataJsonRoute = extractRouteNameFromPath(stakeholderApi.getGraphDataJson.path);
+      if (routeName === graphDataJsonRoute) {
+        return await this.handleGraphDataJson(request);
+      }
+
+      // Fall back to the pure route handler
+      return handleRoutePure(routeName, request, url, this.server);
+    } catch (error) {
+      console.error('[Server_HTTP_Routes] Error handling route:', error);
+      return new Response(JSON.stringify({
+        error: "Internal server error",
+        message: error.message,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
     }
-
-    // Check for graph-data.json static file
-    const graphDataJsonRoute = extractRouteNameFromPath(stakeholderApi.getGraphDataJson.path);
-    if (routeName === graphDataJsonRoute) {
-      return this.handleGraphDataJson(request);
-    }
-
-    // Fall back to the pure route handler
-    return handleRoutePure(routeName, request, url, this.server);
   }
 
   private async handleGraphDataApi(request: Request): Promise<Response> {

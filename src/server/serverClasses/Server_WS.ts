@@ -1,8 +1,10 @@
+import { stakeholderWsAPI } from "../../api";
+import type { vscodeWsAPI } from "../../api/vscodeExtensionWs";
 import type { ITesterantoConfig } from "../../Types";
-import { WsManager } from "./WsManager";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
-import { stakeholderWsAPI, vscodeWsAPI } from "../../api";
+import { WsManager } from "./WsManager";
+
 
 export class Server_WS extends Server_HTTP {
   protected wsClients: Set<WebSocket> = new Set();

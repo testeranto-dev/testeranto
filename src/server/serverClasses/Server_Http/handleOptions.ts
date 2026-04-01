@@ -1,4 +1,5 @@
-import { vscodeHttpAPI, stakeholderHttpAPI } from "../../../api";
+import { stakeholderHttpAPI } from "../../../api/stakeholderHttp";
+import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
 
 export const handleOptions = (request?: Request, routeName?: string): Response => {
   // Default allowed methods

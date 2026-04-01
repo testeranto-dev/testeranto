@@ -1,5 +1,5 @@
-=== Log started at 2026-04-01T19:15:44.619Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (runtime: node) ===
-=== Container ID: 7d196d67e933a2c89ecab1fe917e098c24a1c52c4ab8e8dde4c0c0eb3dc4e04e ===
+=== Log started at 2026-04-01T20:18:25.540Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (runtime: node) ===
+=== Container ID: e3d04dc78fe38955d58811c96bd2e5334913c4c3db703adbaa95870581f0db0f ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -14,4 +14,4 @@ src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression 
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
 
-=== Log captured at 2026-04-01T19:15:49.387Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-01T20:18:29.434Z (container status: exited, exit code: 2) ===

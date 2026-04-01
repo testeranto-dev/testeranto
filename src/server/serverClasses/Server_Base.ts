@@ -6,6 +6,8 @@ export abstract class Server_Base {
   configs: ITesterantoConfig;
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
+    console.log('[Server_Base] Constructor called with configs:', 
+      configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
     this.configs = configs;
     this.mode = mode;
   }

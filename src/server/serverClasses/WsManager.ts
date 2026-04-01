@@ -1,4 +1,4 @@
-import { vscodeWsAPI } from '../../api';
+import { vscodeWsAPI } from '../../api/vscodeExtensionWs';
 
 export class WsManager {
   escapeXml(unsafe: string): string {
@@ -18,7 +18,7 @@ export class WsManager {
   public processMessage(type: string, data: any, getProcessSummary?: () => any, getProcessLogs?: (processId: string) => any[]): any {
     // Check if message type is defined in vscodeWsAPI
     const messageConfig = (vscodeWsAPI as any)[type];
-    
+
     if (!messageConfig) {
       return {
         type: "error",

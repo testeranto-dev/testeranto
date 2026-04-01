@@ -1,9 +1,9 @@
-=== Log started at 2026-04-01T19:15:49.206Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (runtime: node) ===
-=== Container ID: ffd915520ce04b063a3a1ea964873687a3772c8940b90ef704a793147263a565 ===
+=== Log started at 2026-04-01T19:38:41.773Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (runtime: node) ===
+=== Container ID: b7db30c489d0eb205ef5b8ecbbcbb9f71ba28d72ec79b355bb19d42deb02f704 ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
 
 === No logs captured (container may have exited without output) ===
 
-=== Log captured at 2026-04-01T19:16:10.558Z (container status: running) ===
+=== Log captured at 2026-04-01T19:39:03.388Z (container status: running) ===

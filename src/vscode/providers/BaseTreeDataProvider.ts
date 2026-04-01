@@ -28,6 +28,7 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
     protected setupWebSocket(): void {
         // Don't create WebSocket if we're not in a browser-like environment
         if (typeof WebSocket === 'undefined') {
+            console.log('[BaseTreeDataProvider] WebSocket not available in this environment');
             return;
         }
 
@@ -35,34 +36,50 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
             this.ws.close();
         }
 
-        // Use the same base URL as HTTP, but with ws:// protocol
-        const wsUrl = ApiUtils.getWebSocketUrl();
-        this.ws = new WebSocket(wsUrl);
-        
-        this.ws.onopen = () => {
-            this.isConnected = true;
-            this._onDidChangeTreeData.fire();
-        };
+        try {
+            // Use the same base URL as HTTP, but with ws:// protocol
+            const wsUrl = ApiUtils.getWebSocketUrl();
+            console.log(`[BaseTreeDataProvider] Attempting to connect to WebSocket at ${wsUrl}`);
+            
+            this.ws = new WebSocket(wsUrl);
+            
+            this.ws.onopen = () => {
+                console.log('[BaseTreeDataProvider] WebSocket connection established');
+                this.isConnected = true;
+                this._onDidChangeTreeData.fire();
+            };
 
-        this.ws.onmessage = (event) => {
-            try {
-                const message = JSON.parse(event.data);
-                this.handleWebSocketMessage(message);
-            } catch (error) {
-                console.error('Error parsing WebSocket message:', error);
-            }
-        };
+            this.ws.onmessage = (event) => {
+                try {
+                    const message = JSON.parse(event.data);
+                    console.log('[BaseTreeDataProvider] WebSocket message received:', message.type);
+                    this.handleWebSocketMessage(message);
+                } catch (error) {
+                    console.error('[BaseTreeDataProvider] Error parsing WebSocket message:', error);
+                }
+            };
 
-        this.ws.onerror = () => {
+            this.ws.onerror = (error) => {
+                console.error('[BaseTreeDataProvider] WebSocket error:', error);
+                this.isConnected = false;
+                this._onDidChangeTreeData.fire();
+            };
+
+            this.ws.onclose = (event) => {
+                console.log(`[BaseTreeDataProvider] WebSocket closed: code=${event.code}, reason=${event.reason}`);
+                this.isConnected = false;
+                this.ws = null;
+                // Attempt to reconnect after a delay
+                setTimeout(() => {
+                    console.log('[BaseTreeDataProvider] Attempting to reconnect WebSocket...');
+                    this.setupWebSocket();
+                }, 5000);
+                this._onDidChangeTreeData.fire();
+            };
+        } catch (error) {
+            console.error('[BaseTreeDataProvider] Error setting up WebSocket:', error);
             this.isConnected = false;
-            this._onDidChangeTreeData.fire();
-        };
-
-        this.ws.onclose = () => {
-            this.isConnected = false;
-            this.ws = null;
-            this._onDidChangeTreeData.fire();
-        };
+        }
     }
 
     protected handleWebSocketMessage(message: any): void {

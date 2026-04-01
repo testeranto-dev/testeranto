@@ -15,7 +15,6 @@ export function filterTreeForRuntimeAndTest(
 
   console.log(`[treeFilter] ==========================================`);
   console.log(`[treeFilter] filterTreeForRuntimeAndTest called with runtime="${runtime}", testName="${testName}"`);
-  console.log(`[treeFilter] Full tree structure:`, JSON.stringify(tree, null, 2));
   
   // Helper to normalize test names for comparison
   const normalizeTestName = (name) => {
@@ -83,15 +82,12 @@ export function filterTreeForRuntimeAndTest(
     }
   }
 
-  console.log(`[treeFilter] Runtime node structure:`, JSON.stringify(runtimeNode, null, 2));
-
   // If runtimeNode has children, look for the test in them
   if (runtimeNode.children) {
     // First, try exact match
     if (runtimeNode.children[testName]) {
       console.log(`[treeFilter] Found test by exact key match: "${testName}"`);
-      console.log(`[treeFilter] Test node children:`, JSON.stringify(runtimeNode.children[testName].children, null, 2));
-      return runtimeNode.children[testName].children || {};
+      return filterNodeByTestName(runtimeNode.children[testName], testName);
     }
     
     // Try to find test by normalized name
@@ -106,8 +102,7 @@ export function filterTreeForRuntimeAndTest(
           normalizedChildKey.includes(normalizedTestName) ||
           normalizedTestName.includes(normalizedChildKey)) {
         console.log(`[treeFilter] Found test by pattern match: "${childKey}" for "${testName}"`);
-        console.log(`[treeFilter] Matched node children:`, JSON.stringify(childNode.children, null, 2));
-        return childNode.children || {};
+        return filterNodeByTestName(childNode, testName);
       }
     }
     
@@ -122,17 +117,69 @@ export function filterTreeForRuntimeAndTest(
               normalizedFileKey.includes(normalizedTestName) ||
               normalizedTestName.includes(normalizedFileKey)) {
             console.log(`[treeFilter] Found test in directory "${childKey}": "${fileKey}"`);
-            console.log(`[treeFilter] Directory node children:`, JSON.stringify(node.children, null, 2));
-            return node.children || {};
+            return filterNodeByTestName(node, testName);
           }
         }
       }
     }
   } else if (runtimeNode.type === 'directory' && runtimeNode.children) {
     // If runtimeNode itself is a directory node with children
-    return filterTreeForRuntimeAndTest(runtimeNode.children, '', testName);
+    // Filter all children to find those belonging to the test
+    const filteredChildren = {};
+    for (const [childKey, childNode] of Object.entries(runtimeNode.children)) {
+      const childrenForTest = filterNodeByTestName(childNode, testName);
+      if (Object.keys(childrenForTest).length > 0) {
+        filteredChildren[childKey] = {
+          ...childNode,
+          children: childrenForTest
+        };
+      }
+    }
+    return filteredChildren;
   }
 
   console.log(`[treeFilter] No test node found for "${testName}" in runtime "${runtime}"`);
   return {};
+}
+
+// Filter a node and its children to only include files that belong to the specified test
+// Returns the filtered children object
+function filterNodeByTestName(node, testName) {
+  if (!node || typeof node !== 'object') {
+    return {};
+  }
+  
+  // Get the children to filter
+  const children = node.children || {};
+  const filteredChildren = {};
+  
+  for (const [childName, childNode] of Object.entries(children)) {
+    // For file nodes, check if they belong to this test
+    if (childNode.type === 'file') {
+      // Check if the file has a testName property that matches
+      if (childNode.testName === testName) {
+        filteredChildren[childName] = childNode;
+      }
+      // Also check if the file path contains the test name
+      else if (childNode.path && childNode.path.includes(testName)) {
+        filteredChildren[childName] = childNode;
+      }
+    }
+    // For directory nodes, recursively filter their children
+    else if (childNode.type === 'directory' && childNode.children) {
+      const filteredDirChildren = filterNodeByTestName(childNode, testName);
+      if (Object.keys(filteredDirChildren).length > 0) {
+        filteredChildren[childName] = {
+          ...childNode,
+          children: filteredDirChildren
+        };
+      }
+    }
+    // For other node types (like 'feature'), check if they belong to the test
+    else if (childNode.testName === testName) {
+      filteredChildren[childName] = childNode;
+    }
+  }
+  
+  return filteredChildren;
 }

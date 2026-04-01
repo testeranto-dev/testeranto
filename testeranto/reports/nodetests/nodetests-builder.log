@@ -1,13 +1,13 @@
-=== Log started at 2026-04-01T19:15:10.899Z for service nodetests-builder (runtime: node) ===
-=== Container ID: e0d976d625c959090a97f40065ee9411407fe8f5f72da6ef7c0be196e5dd09fa ===
+=== Log started at 2026-04-01T20:17:51.706Z for service nodetests-builder (runtime: node) ===
+=== Container ID: 2a93d5213ce2537c07415d8d29616df080166d52d07c9674779b5e762dab49d7 ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
 === ALL LOGS (stdout + stderr) ===
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-warning testeranto@0.237.0: The engine "vscode" appears to be invalid.
-warning testeranto@0.237.0: The engine "bun" appears to be invalid.
+warning testeranto@0.238.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.238.0: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs nodetests src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts src/lib/tiposkripto/tests/circle/Circle.test.ts
 [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
 [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
@@ -98,4 +98,4 @@ node > build ended with 0 errors
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
 
-=== Log captured at 2026-04-01T19:15:31.961Z (container status: running) ===
+=== Log captured at 2026-04-01T20:18:12.733Z (container status: running) ===

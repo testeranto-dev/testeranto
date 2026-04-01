@@ -1,7 +1,8 @@
 import type { TreeNode } from "../StakeholderUtils";
 import { jsonResponse } from "./jsonResponse";
 import { processTest } from "./utils/handleCollatedFilesUtils";
-import { vscodeHttpAPI, VscodeHttpResponse } from "../../../api";
+import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
+import type { VscodeHttpResponse } from "../../../api";
 
 export const handleCollatedFiles = (server: any, request?: Request): Response => {
   // Validate against API definition

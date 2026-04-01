@@ -4,7 +4,7 @@ import * as vscode11 from "vscode";
 // src/vscode/TerminalManager.ts
 import * as vscode from "vscode";
 
-// src/api.ts
+// src/api/vscodeExtensionHttp.ts
 var vscodeHttpAPI = {
   // Configuration and metadata
   getConfigs: {
@@ -149,6 +149,24 @@ var ApiUtils = class {
       }
     }
     return url;
+  }
+  static async fetchWithTimeout(url, options = {}, timeout = 5e3) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      return response;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === "AbortError") {
+        throw new Error(`Request to ${url} timed out after ${timeout}ms`);
+      }
+      throw error;
+    }
   }
   static getConfigsUrl() {
     return this.getUrl("getConfigs");
@@ -460,10 +478,18 @@ var TestTreeItem = class extends vscode2.TreeItem {
 // src/vscode/providers/utils/testTree/configFetcher.ts
 var configData = null;
 async function fetchConfigsViaHttp() {
-  const response = await fetch(ApiUtils.getConfigsUrl());
-  const data = await response.json();
-  configData = data;
-  return data;
+  try {
+    const response = await ApiUtils.fetchWithTimeout(ApiUtils.getConfigsUrl(), {}, 3e3);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    const data = await response.json();
+    configData = data;
+    return data;
+  } catch (error) {
+    console.error("[configFetcher] Error fetching configs:", error);
+    throw error;
+  }
 }
 function getConfigData() {
   return configData;
@@ -538,16 +564,16 @@ function createTestItem(runtimeKey, testName) {
   item.tooltip = `Click to launch aider for this test.`;
   return item;
 }
-function createNoFilesItem(runtime, testName) {
+function createNoFilesItem(runtimeKey, testName) {
   return [
     new TestTreeItem(
       "No files found for this test",
       2 /* File */,
       vscode3.TreeItemCollapsibleState.None,
       {
-        runtime,
+        runtimeKey,
         testName,
-        description: `Check server logs for ${runtime}/${testName}`
+        description: `Check server logs for ${runtimeKey}/${testName}`
       },
       void 0,
       new vscode3.ThemeIcon("info")
@@ -557,7 +583,7 @@ function createNoFilesItem(runtime, testName) {
       3 /* Info */,
       vscode3.TreeItemCollapsibleState.None,
       {
-        runtime,
+        runtimeKey,
         testName,
         refresh: true
       },
@@ -570,14 +596,14 @@ function createNoFilesItem(runtime, testName) {
     )
   ];
 }
-function createErrorItems(runtime, testName, error) {
+function createErrorItems(runtimeKey, testName, error) {
   return [
     new TestTreeItem(
       "Error loading files",
       2 /* File */,
       vscode3.TreeItemCollapsibleState.None,
       {
-        runtime,
+        runtimeKey,
         testName,
         description: error.message
       },
@@ -589,7 +615,7 @@ function createErrorItems(runtime, testName, error) {
       3 /* Info */,
       vscode3.TreeItemCollapsibleState.None,
       {
-        runtime,
+        runtimeKey,
         testName,
         serverCheck: true
       },
@@ -614,7 +640,6 @@ function filterTreeForRuntimeAndTest(tree, runtime, testName) {
   assert.ok(typeof testName === "string", "Test name must be a string");
   console.log(`[treeFilter] ==========================================`);
   console.log(`[treeFilter] filterTreeForRuntimeAndTest called with runtime="${runtime}", testName="${testName}"`);
-  console.log(`[treeFilter] Full tree structure:`, JSON.stringify(tree, null, 2));
   const normalizeTestName = (name) => {
     if (!name) return "";
     const nameStr = String(name);
@@ -651,20 +676,17 @@ function filterTreeForRuntimeAndTest(tree, runtime, testName) {
       return {};
     }
   }
-  console.log(`[treeFilter] Runtime node structure:`, JSON.stringify(runtimeNode, null, 2));
   if (runtimeNode.children) {
     if (runtimeNode.children[testName]) {
       console.log(`[treeFilter] Found test by exact key match: "${testName}"`);
-      console.log(`[treeFilter] Test node children:`, JSON.stringify(runtimeNode.children[testName].children, null, 2));
-      return runtimeNode.children[testName].children || {};
+      return filterNodeByTestName(runtimeNode.children[testName], testName);
     }
     for (const [childKey, childNode] of Object.entries(runtimeNode.children)) {
       const normalizedChildKey = normalizeTestName(childKey);
       const childBaseName = getTestBaseName(childKey);
       if (normalizedChildKey === normalizedTestName || childBaseName === testBaseName || childKey.includes(testName) || testName.includes(childKey) || normalizedChildKey.includes(normalizedTestName) || normalizedTestName.includes(normalizedChildKey)) {
         console.log(`[treeFilter] Found test by pattern match: "${childKey}" for "${testName}"`);
-        console.log(`[treeFilter] Matched node children:`, JSON.stringify(childNode.children, null, 2));
-        return childNode.children || {};
+        return filterNodeByTestName(childNode, testName);
       }
     }
     for (const [childKey, childNode] of Object.entries(runtimeNode.children)) {
@@ -674,17 +696,53 @@ function filterTreeForRuntimeAndTest(tree, runtime, testName) {
           const normalizedFileKey = normalizeTestName(fileKey);
           if (normalizedFileKey === normalizedTestName || normalizedFileKey.includes(normalizedTestName) || normalizedTestName.includes(normalizedFileKey)) {
             console.log(`[treeFilter] Found test in directory "${childKey}": "${fileKey}"`);
-            console.log(`[treeFilter] Directory node children:`, JSON.stringify(node.children, null, 2));
-            return node.children || {};
+            return filterNodeByTestName(node, testName);
           }
         }
       }
     }
   } else if (runtimeNode.type === "directory" && runtimeNode.children) {
-    return filterTreeForRuntimeAndTest(runtimeNode.children, "", testName);
+    const filteredChildren = {};
+    for (const [childKey, childNode] of Object.entries(runtimeNode.children)) {
+      const childrenForTest = filterNodeByTestName(childNode, testName);
+      if (Object.keys(childrenForTest).length > 0) {
+        filteredChildren[childKey] = {
+          ...childNode,
+          children: childrenForTest
+        };
+      }
+    }
+    return filteredChildren;
   }
   console.log(`[treeFilter] No test node found for "${testName}" in runtime "${runtime}"`);
   return {};
+}
+function filterNodeByTestName(node, testName) {
+  if (!node || typeof node !== "object") {
+    return {};
+  }
+  const children = node.children || {};
+  const filteredChildren = {};
+  for (const [childName, childNode] of Object.entries(children)) {
+    if (childNode.type === "file") {
+      if (childNode.testName === testName) {
+        filteredChildren[childName] = childNode;
+      } else if (childNode.path && childNode.path.includes(testName)) {
+        filteredChildren[childName] = childNode;
+      }
+    } else if (childNode.type === "directory" && childNode.children) {
+      const filteredDirChildren = filterNodeByTestName(childNode, testName);
+      if (Object.keys(filteredDirChildren).length > 0) {
+        filteredChildren[childName] = {
+          ...childNode,
+          children: filteredDirChildren
+        };
+      }
+    } else if (childNode.testName === testName) {
+      filteredChildren[childName] = childNode;
+    }
+  }
+  return filteredChildren;
 }
 
 // src/vscode/providers/utils/testTree/treeConverter.ts
@@ -1142,34 +1200,49 @@ var BaseTreeDataProvider = class {
   }
   setupWebSocket() {
     if (typeof WebSocket === "undefined") {
+      console.log("[BaseTreeDataProvider] WebSocket not available in this environment");
       return;
     }
     if (this.ws) {
       this.ws.close();
     }
-    const wsUrl = ApiUtils.getWebSocketUrl();
-    this.ws = new WebSocket(wsUrl);
-    this.ws.onopen = () => {
-      this.isConnected = true;
-      this._onDidChangeTreeData.fire();
-    };
-    this.ws.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        this.handleWebSocketMessage(message);
-      } catch (error) {
-        console.error("Error parsing WebSocket message:", error);
-      }
-    };
-    this.ws.onerror = () => {
+    try {
+      const wsUrl = ApiUtils.getWebSocketUrl();
+      console.log(`[BaseTreeDataProvider] Attempting to connect to WebSocket at ${wsUrl}`);
+      this.ws = new WebSocket(wsUrl);
+      this.ws.onopen = () => {
+        console.log("[BaseTreeDataProvider] WebSocket connection established");
+        this.isConnected = true;
+        this._onDidChangeTreeData.fire();
+      };
+      this.ws.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          console.log("[BaseTreeDataProvider] WebSocket message received:", message.type);
+          this.handleWebSocketMessage(message);
+        } catch (error) {
+          console.error("[BaseTreeDataProvider] Error parsing WebSocket message:", error);
+        }
+      };
+      this.ws.onerror = (error) => {
+        console.error("[BaseTreeDataProvider] WebSocket error:", error);
+        this.isConnected = false;
+        this._onDidChangeTreeData.fire();
+      };
+      this.ws.onclose = (event) => {
+        console.log(`[BaseTreeDataProvider] WebSocket closed: code=${event.code}, reason=${event.reason}`);
+        this.isConnected = false;
+        this.ws = null;
+        setTimeout(() => {
+          console.log("[BaseTreeDataProvider] Attempting to reconnect WebSocket...");
+          this.setupWebSocket();
+        }, 5e3);
+        this._onDidChangeTreeData.fire();
+      };
+    } catch (error) {
+      console.error("[BaseTreeDataProvider] Error setting up WebSocket:", error);
       this.isConnected = false;
-      this._onDidChangeTreeData.fire();
-    };
-    this.ws.onclose = () => {
-      this.isConnected = false;
-      this.ws = null;
-      this._onDidChangeTreeData.fire();
-    };
+    }
   }
   handleWebSocketMessage(message) {
     if (message.type === "resourceChanged") {
@@ -1198,10 +1271,22 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
   }
   refresh() {
     console.log("[TestTreeDataProvider] Manual refresh requested");
-    fetchConfigsViaHttp().catch((error) => {
-      console.log("[TestTreeDataProvider] HTTP refresh failed:", error);
-    }).then(() => {
-      this._onDidChangeTreeData.fire();
+    vscode7.window.withProgress({
+      location: vscode7.ProgressLocation.Notification,
+      title: "Refreshing Testeranto...",
+      cancellable: false
+    }, async (progress) => {
+      progress.report({ increment: 0 });
+      try {
+        await fetchConfigsViaHttp();
+        progress.report({ increment: 100 });
+        this._onDidChangeTreeData.fire();
+        vscode7.window.showInformationMessage("Testeranto refreshed successfully");
+      } catch (error) {
+        console.error("[TestTreeDataProvider] HTTP refresh failed:", error);
+        vscode7.window.showErrorMessage(`Failed to refresh: ${error.message}`);
+        this._onDidChangeTreeData.fire();
+      }
     });
   }
   setupConfigWatcher() {
@@ -1241,8 +1326,8 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
       const runtime = element.data?.runtime;
       return Promise.resolve(this.getTestItems(runtime));
     } else if (element.type === 1 /* Test */) {
-      const { runtime, testName } = element.data || {};
-      return this.getTestFileItems(runtime, testName);
+      const { runtimeKey, testName } = element.data || {};
+      return this.getTestFileItems(runtimeKey, testName);
     } else if (element.type === 2 /* File */) {
       const {
         runtime,
@@ -1264,37 +1349,94 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
     const items = [];
     items.push(this.createConfigFileItem());
     items.push(createRefreshItem());
-    const configData2 = getConfigData();
-    if (configData2?.configs?.runtimes) {
-      const runtimes = configData2.configs.runtimes;
-      const runtimeEntries = Object.entries(runtimes);
-      if (runtimeEntries.length > 0) {
-        items.push(createRuntimeCountItem(runtimeEntries.length));
-        for (const [runtimeKey, runtimeConfig] of runtimeEntries) {
-          const config = runtimeConfig;
-          if (config?.runtime) {
-            items.push(createRuntimeItem(runtimeKey, config));
+    const connectionStatusItem = this.createConnectionStatusItem();
+    items.push(connectionStatusItem);
+    try {
+      const configData2 = await fetchConfigsViaHttp();
+      if (configData2?.configs?.runtimes) {
+        const runtimes = configData2.configs.runtimes;
+        const runtimeEntries = Object.entries(runtimes);
+        if (runtimeEntries.length > 0) {
+          items.push(createRuntimeCountItem(runtimeEntries.length));
+          for (const [runtimeKey, runtimeConfig] of runtimeEntries) {
+            const config = runtimeConfig;
+            if (config?.runtime) {
+              items.push(createRuntimeItem(runtimeKey, config));
+            }
           }
+        } else {
+          items.push(new TestTreeItem(
+            "No tests configured",
+            3 /* Info */,
+            vscode7.TreeItemCollapsibleState.None,
+            {
+              description: "Add tests to testeranto/testeranto.ts"
+            },
+            {
+              command: "testeranto.openTesterantoConfig",
+              title: "Open Config",
+              arguments: []
+            },
+            new vscode7.ThemeIcon("info")
+          ));
         }
+      } else {
+        items.push(new TestTreeItem(
+          "Server returned empty configuration",
+          3 /* Info */,
+          vscode7.TreeItemCollapsibleState.None,
+          {
+            description: "Check server logs"
+          },
+          {
+            command: "testeranto.startServer",
+            title: "Start Server",
+            arguments: []
+          },
+          new vscode7.ThemeIcon("warning")
+        ));
       }
-    } else {
+    } catch (error) {
+      console.error("[TestTreeDataProvider] Error fetching configs:", error);
       items.push(new TestTreeItem(
-        "No configuration available",
+        "Cannot connect to server",
         3 /* Info */,
         vscode7.TreeItemCollapsibleState.None,
         {
-          description: "Server may not be running",
-          startServer: true
+          description: "Click to start the server",
+          startServer: true,
+          error: error.message
         },
         {
           command: "testeranto.startServer",
           title: "Start Server",
           arguments: []
         },
-        new vscode7.ThemeIcon("info")
+        new vscode7.ThemeIcon("error")
       ));
     }
     return items;
+  }
+  createConnectionStatusItem() {
+    const isConnected = this.isConnected;
+    const description = isConnected ? "WebSocket connected" : "WebSocket disconnected";
+    const icon = isConnected ? new vscode7.ThemeIcon("radio-tower", new vscode7.ThemeColor("testing.iconPassed")) : new vscode7.ThemeIcon("radio-tower", new vscode7.ThemeColor("testing.iconFailed"));
+    return new TestTreeItem(
+      "Connection Status",
+      3 /* Info */,
+      vscode7.TreeItemCollapsibleState.None,
+      {
+        description,
+        connected: isConnected,
+        disconnected: !isConnected
+      },
+      {
+        command: "testeranto.retryConnection",
+        title: "Retry Connection",
+        arguments: [this]
+      },
+      icon
+    );
   }
   createConfigFileItem() {
     const item = new TestTreeItem(
@@ -1336,8 +1478,8 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
     }
     return [];
   }
-  async getTestFileItems(runtime, testName) {
-    console.log(`[TestTreeDataProvider] getTestFileItems START for ${runtime}/${testName}`);
+  async getTestFileItems(runtimeKey, testName) {
+    console.log(`[TestTreeDataProvider] getTestFileItems START for ${runtimeKey}/${testName}`);
     try {
       console.log(`[TestTreeDataProvider] Fetching collated files from server...`);
       const response = await fetch(ApiUtils.getCollatedFilesUrl());
@@ -1350,11 +1492,11 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
       console.log(`[TestTreeDataProvider] Received collated files data, has tree: ${!!collatedFilesResponse.tree}`);
       const tree = collatedFilesResponse.tree || {};
       console.log(`[TestTreeDataProvider] Tree has ${Object.keys(tree).length} top-level keys:`, Object.keys(tree));
-      console.log(`[TestTreeDataProvider] Looking for runtime "${runtime}" in tree keys:`);
+      console.log(`[TestTreeDataProvider] Looking for runtime "${runtimeKey}" in tree keys:`);
       Object.keys(tree).forEach((key) => {
         console.log(`  - "${key}"`);
       });
-      const safeRuntime = runtime || "";
+      const safeRuntime = runtimeKey || "";
       const safeTestName = testName || "";
       let filteredTree = {};
       try {
@@ -1365,11 +1507,11 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
         );
       } catch (filterError) {
         console.error(`[TestTreeDataProvider] Error in filterTreeForRuntimeAndTest:`, filterError);
-        return createErrorItems(runtime, testName, filterError);
+        return createErrorItems(runtimeKey, testName, filterError);
       }
       console.log(`[TestTreeDataProvider] After filtering, got tree with ${Object.keys(filteredTree).length} keys`);
       if (Object.keys(filteredTree).length === 0) {
-        console.log(`[TestTreeDataProvider] No files found for ${runtime}/${testName}`);
+        console.log(`[TestTreeDataProvider] No files found for ${runtimeKey}/${testName}`);
         console.log(`[TestTreeDataProvider] This could mean:`);
         console.log(`  1. The test hasn't been run yet`);
         console.log(`  2. The test name doesn't match the tree structure`);
@@ -1390,21 +1532,21 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
       try {
         fileItems = convertTreeToItems(
           filteredTree,
-          runtime,
+          runtimeKey,
           testName
         );
       } catch (convertError) {
         console.error(`[TestTreeDataProvider] Error in convertTreeToItems:`, convertError);
-        return createErrorItems(runtime, testName, convertError);
+        return createErrorItems(runtimeKey, testName, convertError);
       }
       console.log(`[TestTreeDataProvider] Converted ${fileItems.length} file items`);
       if (fileItems.length > 0) {
         return fileItems;
       }
-      return createNoFilesItem(runtime, testName);
+      return createNoFilesItem(runtimeKey, testName);
     } catch (error) {
       console.error("[TestTreeDataProvider] Error fetching collated files:", error);
-      return createErrorItems(runtime, testName, error);
+      return createErrorItems(runtimeKey, testName, error);
     }
   }
   handleWebSocketMessage(message) {
@@ -2107,6 +2249,20 @@ var CommandManager = class {
           }
         }
       )
+    );
+    disposables.push(
+      vscode10.commands.registerCommand("testeranto.checkServerStatus", async () => {
+        try {
+          const response = await ApiUtils.fetchWithTimeout(ApiUtils.getConfigsUrl(), {}, 2e3);
+          if (response.ok) {
+            vscode10.window.showInformationMessage("\u2705 Server is running and reachable");
+          } else {
+            vscode10.window.showWarningMessage(`\u26A0\uFE0F Server responded with status: ${response.status}`);
+          }
+        } catch (error) {
+          vscode10.window.showErrorMessage(`\u274C Cannot connect to server: ${error.message}`);
+        }
+      })
     );
     return disposables;
   }

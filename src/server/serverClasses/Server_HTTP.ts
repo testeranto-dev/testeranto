@@ -17,6 +17,8 @@ export abstract class Server_HTTP extends Server_Base {
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
+    console.log('[Server_HTTP] Constructor called with configs:', 
+      configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
     this.routesHandler = new Server_HTTP_Routes(this);
   }
 
@@ -29,22 +31,29 @@ export abstract class Server_HTTP extends Server_Base {
       port,
       idleTimeout: 60,
       fetch: async (request: Request, server: any) => {
-        const response = this.handleRequest(request, server);
-
-        if (response instanceof Response) {
-          return response;
-        } else if (response && typeof response.then === "function") {
-          return await response;
-        } else if (response === undefined || response === null) {
-          return undefined;
-        } else {
-          return new Response(
-            `Server Error: handleRequest did not return a Response`,
-            {
-              status: 500,
-              headers: { "Content-Type": "text/plain" },
-            },
-          );
+        try {
+          const response = await this.handleRequest(request, server);
+          
+          if (response instanceof Response) {
+            return response;
+          } else if (response === undefined || response === null) {
+            // This happens for successful WebSocket upgrades
+            return undefined;
+          } else {
+            return new Response(
+              `Server Error: handleRequest did not return a Response`,
+              {
+                status: 500,
+                headers: { "Content-Type": "text/plain" },
+              },
+            );
+          }
+        } catch (error) {
+          console.error('[Server_HTTP] Error in fetch handler:', error);
+          return new Response(`Server Error: ${error.message}`, {
+            status: 500,
+            headers: { "Content-Type": "text/plain" },
+          });
         }
       },
       error: (error: Error) => {
@@ -100,11 +109,13 @@ export abstract class Server_HTTP extends Server_Base {
     await super.stop();
   }
 
-  protected handleRequest(
+  protected async handleRequest(
     request: Request,
     server?: any,
-  ): Response | Promise<Response> | undefined {
+  ): Promise<Response | undefined> {
     const url = new URL(request.url);
+    
+    console.log(`[Server_HTTP] Handling request: ${request.method} ${url.pathname}`);
 
     if (request.headers.get("upgrade") === "websocket") {
       if (this instanceof Server_WS && server) {
@@ -120,32 +131,39 @@ export abstract class Server_HTTP extends Server_Base {
     }
 
     if (url.pathname.startsWith("/~/")) {
-      return this.handleRouteRequest(request, url);
+      return await this.handleRouteRequest(request, url);
     } else {
-      return this.serveStaticFile(request, url);
+      return await this.serveStaticFile(request, url);
     }
   }
 
-  private handleRouteRequest(request: Request, url: URL): Response {
+  private async handleRouteRequest(request: Request, url: URL): Promise<Response> {
     const routeName = url.pathname.slice(3);
 
     if (request.method === "OPTIONS") {
       return handleOptions();
     }
 
-    const result = this.routesHandler.handleRoute(routeName, request, url);
-    // Ensure we always return a Response
-    if (result instanceof Promise) {
-      // Return a Response that will be resolved later
-      return new Response(null, { status: 202 });
+    try {
+      const result = await this.routesHandler.handleRoute(routeName, request, url);
+      // Ensure we always return a Response
+      if (result instanceof Response) {
+        return result;
+      }
+      return new Response(JSON.stringify({ error: "Invalid response" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error('[Server_HTTP] Error handling route:', error);
+      return new Response(JSON.stringify({ 
+        error: "Internal server error",
+        message: error.message 
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
     }
-    if (result instanceof Response) {
-      return result;
-    }
-    return new Response(JSON.stringify({ error: "Invalid response" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
   }
 
   private async serveStaticFile(request: Request, url: URL): Promise<Response> {

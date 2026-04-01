@@ -312,6 +312,22 @@ export class CommandManager {
             )
         );
 
+        // Add server status check command
+        disposables.push(
+            vscode.commands.registerCommand("testeranto.checkServerStatus", async () => {
+                try {
+                    const response = await ApiUtils.fetchWithTimeout(ApiUtils.getConfigsUrl(), {}, 2000);
+                    if (response.ok) {
+                        vscode.window.showInformationMessage('✅ Server is running and reachable');
+                    } else {
+                        vscode.window.showWarningMessage(`⚠️ Server responded with status: ${response.status}`);
+                    }
+                } catch (error) {
+                    vscode.window.showErrorMessage(`❌ Cannot connect to server: ${error.message}`);
+                }
+            })
+        );
+
         return disposables;
     }
 }

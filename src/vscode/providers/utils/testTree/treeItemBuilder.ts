@@ -73,16 +73,16 @@ export function createTestItem(runtimeKey: string, testName: string): TestTreeIt
   return item;
 }
 
-export function createNoFilesItem(runtime: string, testName: string): TestTreeItem[] {
+export function createNoFilesItem(runtimeKey: string, testName: string): TestTreeItem[] {
   return [
     new TestTreeItem(
       "No files found for this test",
       TreeItemType.File,
       vscode.TreeItemCollapsibleState.None,
       {
-        runtime,
+        runtimeKey,
         testName,
-        description: `Check server logs for ${runtime}/${testName}`,
+        description: `Check server logs for ${runtimeKey}/${testName}`,
       },
       undefined,
       new vscode.ThemeIcon("info"),
@@ -92,7 +92,7 @@ export function createNoFilesItem(runtime: string, testName: string): TestTreeIt
       TreeItemType.Info,
       vscode.TreeItemCollapsibleState.None,
       {
-        runtime,
+        runtimeKey,
         testName,
         refresh: true,
       },
@@ -106,14 +106,14 @@ export function createNoFilesItem(runtime: string, testName: string): TestTreeIt
   ];
 }
 
-export function createErrorItems(runtime: string, testName: string, error: any): TestTreeItem[] {
+export function createErrorItems(runtimeKey: string, testName: string, error: any): TestTreeItem[] {
   return [
     new TestTreeItem(
       "Error loading files",
       TreeItemType.File,
       vscode.TreeItemCollapsibleState.None,
       {
-        runtime,
+        runtimeKey,
         testName,
         description: error.message,
       },
@@ -125,7 +125,7 @@ export function createErrorItems(runtime: string, testName: string, error: any):
       TreeItemType.Info,
       vscode.TreeItemCollapsibleState.None,
       {
-        runtime,
+        runtimeKey,
         testName,
         serverCheck: true,
       },

@@ -1,11 +1,13 @@
+import type { VscodeHttpEndpoint } from "../../../api";
+import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
 import { handleCollatedFiles } from "./handleCollatedFiles";
 import { handleConfigs } from "./handleConfigs";
 import { handleInputFiles } from "./handleInputFiles";
+import { handleOptions } from "./handleOptions";
 import { handleOutputFiles } from "./handleOutputFiles";
 import { handleTestResults } from "./handleTestResults";
 import { jsonResponse } from "./jsonResponse";
-import { handleOptions } from "./handleOptions";
-import { vscodeHttpAPI, VscodeHttpEndpoint } from "../../../api";
+
 
 // Helper function to extract route name from API path
 const extractRouteNameFromPath = (path: string): string => {
