@@ -1,23 +1,3 @@
-/add src/lib/tiposkripto/src/Node.ts
-/add src/lib/tiposkripto/src/BaseTiposkripto.ts
-/add src/lib/tiposkripto/src/Adapters.ts
-/add src/lib/tiposkripto/src/types.ts
-/add src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts
-/add src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts
-/add src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts
-/add src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts
-/add src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts
-/add src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts
-/add src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts
-/add src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts
-/add src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts
-/add src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts
-/add src/lib/tiposkripto/tests/calculator/Calculator.ts
-/add src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts
-/add src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts
-/add src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts
-/add src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts
-
 /read Users/adam/Code/testeranto/testeranto/reports/.DS_Store
 /read Users/adam/Code/testeranto/testeranto/reports/graph-data.json
 /read Users/adam/Code/testeranto/testeranto/reports/index.html
@@ -28,6 +8,9 @@
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/node-builder.container.status
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/node-builder.exitcode
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/node-builder.log
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.container.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.container.status
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/abstractBase.test/index.ts/aider-message.txt
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/aider-message.txt
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/suite-0/fizz.txt
@@ -52,6 +35,20 @@
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/calculator-test-node-ts_check-2.container.status
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/calculator-test-node-ts_check-2.exitcode
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/calculator-test-node-ts_check-2.log
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/aider-message.txt
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_aider.container.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_aider.container.status
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_aider.log
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_bdd.container.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_bdd.container.status
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_bdd.log
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-0.container.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-0.container.status
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-0.log
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-1.container.exitcode
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-1.container.status
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-1.log
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/utils/testTree/debugTest.js/aider-message.txt
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/utils/testTree/debugtest-js_aider.exitcode
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/utils/testTree/debugtest-js_aider.log
@@ -71,6 +68,7 @@
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/utils/testTree/debugtest-js_check-2.container.status
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/utils/testTree/debugtest-js_check-2.log
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+/read Users/adam/Code/testeranto/testeranto/reports/nodetests/test-logs/Circle.test.build.log
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/test-logs/debugTest.build.log
 /read Users/adam/Code/testeranto/testeranto/reports/nodetests/test-logs/index.build.log
 

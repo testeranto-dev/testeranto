@@ -3,6 +3,8 @@ import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import * as TestTreeUtils from './utils/testTree';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
+import { ApiUtils } from './utils/apiUtils';
+import type { CollatedFilesResponse } from '../../../api';
 
 export class TestTreeDataProvider extends BaseTreeDataProvider {
   private configWatcher: vscode.FileSystemWatcher | undefined;
@@ -75,10 +77,10 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       const { runtime, testName } = element.data || {};
       return this.getTestFileItems(runtime, testName);
     } else if (element.type === TreeItemType.File) {
-      const { 
-        runtime, 
-        testName, 
-        path, 
+      const {
+        runtime,
+        testName,
+        path,
         isFile
       } = element.data || {};
 
@@ -102,7 +104,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
     // Add config file item at the root
     items.push(this.createConfigFileItem());
-    
+
     items.push(TestTreeUtils.createRefreshItem());
 
     const configData = TestTreeUtils.getConfigData();
@@ -188,114 +190,116 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
   private async getTestFileItems(
     runtime: string,
     testName: string,
-  ): Promise<TestTreeItem[]> {
+  ): Promise < TestTreeItem[] > {
     console.log(`[TestTreeDataProvider] getTestFileItems START for ${runtime}/${testName}`);
-    
+
     try {
       console.log(`[TestTreeDataProvider] Fetching collated files from server...`);
-      const response = await fetch("http://localhost:3000/~/collated-files");
+      const response = await fetch(ApiUtils.getCollatedFilesUrl());
       console.log(`[TestTreeDataProvider] Fetch response status: ${response.status}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      console.log(`[TestTreeDataProvider] Received collated files data, has tree: ${!!data.tree}`);
-      
-      const tree = data.tree || {};
-      console.log(`[TestTreeDataProvider] Tree has ${Object.keys(tree).length} top-level keys:`, Object.keys(tree));
-      
-      // Log all runtime keys for debugging
-      console.log(`[TestTreeDataProvider] Looking for runtime "${runtime}" in tree keys:`);
-      Object.keys(tree).forEach(key => {
-        console.log(`  - "${key}"`);
-      });
-      
-      // Ensure runtime and testName are valid strings
-      const safeRuntime = runtime || '';
-      const safeTestName = testName || '';
-      
-      let filteredTree = {};
-      try {
-        filteredTree = TestTreeUtils.filterTreeForRuntimeAndTest(
-          tree,
-          safeRuntime,
-          safeTestName,
-        );
-      } catch (filterError) {
-        console.error(`[TestTreeDataProvider] Error in filterTreeForRuntimeAndTest:`, filterError);
-        // Return error items instead of crashing
-        return TestTreeUtils.createErrorItems(runtime, testName, filterError);
-      }
-      
-      console.log(`[TestTreeDataProvider] After filtering, got tree with ${Object.keys(filteredTree).length} keys`);
-      
-      if (Object.keys(filteredTree).length === 0) {
-        console.log(`[TestTreeDataProvider] No files found for ${runtime}/${testName}`);
-        console.log(`[TestTreeDataProvider] This could mean:`);
-        console.log(`  1. The test hasn't been run yet`);
-        console.log(`  2. The test name doesn't match the tree structure`);
-        console.log(`  3. The server hasn't generated files for this test`);
-        
-        // Try to get configs to see what tests are available
-        try {
-          const configResponse = await fetch("http://localhost:3000/~/configs");
-          if (configResponse.ok) {
-            const configData = await configResponse.json();
-            console.log(`[TestTreeDataProvider] Available configs:`, Object.keys(configData.configs?.runtimes || {}));
-          }
-        } catch (configError) {
-          console.log(`[TestTreeDataProvider] Could not fetch configs:`, configError);
-        }
-      } else {
-        console.log(`[TestTreeDataProvider] Filtered tree keys:`, Object.keys(filteredTree));
-      }
 
-      let fileItems: TestTreeItem[] = [];
-      try {
-        fileItems = TestTreeUtils.convertTreeToItems(
-          filteredTree,
-          runtime,
-          testName,
-        );
-      } catch (convertError) {
-        console.error(`[TestTreeDataProvider] Error in convertTreeToItems:`, convertError);
-        return TestTreeUtils.createErrorItems(runtime, testName, convertError);
-      }
-      
-      console.log(`[TestTreeDataProvider] Converted ${fileItems.length} file items`);
-      
-      if (fileItems.length > 0) {
-        return fileItems;
-      }
+      if(!response.ok) {
+  throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+}
 
-      return TestTreeUtils.createNoFilesItem(runtime, testName);
-    } catch (error) {
-      console.error("[TestTreeDataProvider] Error fetching collated files:", error);
-      return TestTreeUtils.createErrorItems(runtime, testName, error);
+const data = await response.json();
+// Use type assertion for the response
+const collatedFilesResponse = data as CollatedFilesResponse;
+console.log(`[TestTreeDataProvider] Received collated files data, has tree: ${!!collatedFilesResponse.tree}`);
+
+const tree = collatedFilesResponse.tree || {};
+console.log(`[TestTreeDataProvider] Tree has ${Object.keys(tree).length} top-level keys:`, Object.keys(tree));
+
+// Log all runtime keys for debugging
+console.log(`[TestTreeDataProvider] Looking for runtime "${runtime}" in tree keys:`);
+Object.keys(tree).forEach(key => {
+  console.log(`  - "${key}"`);
+});
+
+// Ensure runtime and testName are valid strings
+const safeRuntime = runtime || '';
+const safeTestName = testName || '';
+
+let filteredTree = {};
+try {
+  filteredTree = TestTreeUtils.filterTreeForRuntimeAndTest(
+    tree,
+    safeRuntime,
+    safeTestName,
+  );
+} catch (filterError) {
+  console.error(`[TestTreeDataProvider] Error in filterTreeForRuntimeAndTest:`, filterError);
+  // Return error items instead of crashing
+  return TestTreeUtils.createErrorItems(runtime, testName, filterError);
+}
+
+console.log(`[TestTreeDataProvider] After filtering, got tree with ${Object.keys(filteredTree).length} keys`);
+
+if (Object.keys(filteredTree).length === 0) {
+  console.log(`[TestTreeDataProvider] No files found for ${runtime}/${testName}`);
+  console.log(`[TestTreeDataProvider] This could mean:`);
+  console.log(`  1. The test hasn't been run yet`);
+  console.log(`  2. The test name doesn't match the tree structure`);
+  console.log(`  3. The server hasn't generated files for this test`);
+
+  // Try to get configs to see what tests are available
+  try {
+    const configResponse = await fetch(ApiUtils.getConfigsUrl());
+    if (configResponse.ok) {
+      const configData = await configResponse.json();
+      console.log(`[TestTreeDataProvider] Available configs:`, Object.keys(configData.configs?.runtimes || {}));
     }
+  } catch (configError) {
+    console.log(`[TestTreeDataProvider] Could not fetch configs:`, configError);
+  }
+} else {
+  console.log(`[TestTreeDataProvider] Filtered tree keys:`, Object.keys(filteredTree));
+}
+
+let fileItems: TestTreeItem[] = [];
+try {
+  fileItems = TestTreeUtils.convertTreeToItems(
+    filteredTree,
+    runtime,
+    testName,
+  );
+} catch (convertError) {
+  console.error(`[TestTreeDataProvider] Error in convertTreeToItems:`, convertError);
+  return TestTreeUtils.createErrorItems(runtime, testName, convertError);
+}
+
+console.log(`[TestTreeDataProvider] Converted ${fileItems.length} file items`);
+
+if (fileItems.length > 0) {
+  return fileItems;
+}
+
+return TestTreeUtils.createNoFilesItem(runtime, testName);
+    } catch (error) {
+  console.error("[TestTreeDataProvider] Error fetching collated files:", error);
+  return TestTreeUtils.createErrorItems(runtime, testName, error);
+}
   }
 
   protected handleWebSocketMessage(message: any): void {
-    console.log('[TestTreeDataProvider] Received WebSocket message:', message.type);
+  console.log('[TestTreeDataProvider] Received WebSocket message:', message.type);
 
-    switch (message.type) {
+  switch(message.type) {
       case 'connected':
-        console.log('[TestTreeDataProvider] WebSocket connection confirmed');
-        break;
+  console.log('[TestTreeDataProvider] WebSocket connection confirmed');
+  break;
       case 'resourceChanged':
-        console.log('[TestTreeDataProvider] Resource changed, fetching updated configs:', message.url);
-        if (message.url === '/~/configs') {
-          TestTreeUtils.fetchConfigsViaHttp().catch(error => {
-            console.log('[TestTreeDataProvider] HTTP fetch after resource change failed:', error);
-          }).then(() => {
-            this._onDidChangeTreeData.fire();
-          });
-        }
-        break;
+  console.log('[TestTreeDataProvider] Resource changed, fetching updated configs:', message.url);
+  if (message.url === '/~/configs') {
+    TestTreeUtils.fetchConfigsViaHttp().catch(error => {
+      console.log('[TestTreeDataProvider] HTTP fetch after resource change failed:', error);
+    }).then(() => {
+      this._onDidChangeTreeData.fire();
+    });
+  }
+  break;
       default:
-        console.log('[TestTreeDataProvider] Unhandled message type:', message.type);
-    }
+  console.log('[TestTreeDataProvider] Unhandled message type:', message.type);
+}
   }
 }

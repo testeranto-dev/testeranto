@@ -173,29 +173,29 @@ export class Server_Docker extends Server_Docker_Compose {
     while (Date.now() - startTime < maxWaitTime && !bundlesReady) {
       // Use the imported checkBundlesReady function, but exclude failed configs
       bundlesReady = checkBundlesReady(this.configs, processCwd(), this.failedBuilderConfigs);
-      
+
       if (bundlesReady) {
         consoleLog('[Server_Docker] ✅ All bundles are ready');
         break;
       }
-      
+
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      
+
       // Report progress more frequently
       if (elapsed % 3 === 0 && elapsed !== lastProgressReport) {
         consoleLog(`[Server_Docker] Still waiting for bundles... (${elapsed}s elapsed)`);
         lastProgressReport = elapsed;
-        
+
         // Also check builder container status
         try {
           const psCmd = 'docker compose -f "testeranto/docker-compose.yml" ps --format json';
           const psOutput = execSync(psCmd, { cwd: processCwd() }).toString();
           const containers = JSON.parse(psOutput);
-          
-          const builderContainers = containers.filter((c: any) => 
+
+          const builderContainers = containers.filter((c: any) =>
             c.Service.includes('builder') || c.Service.includes('build')
           );
-          
+
           if (builderContainers.length > 0) {
             consoleLog(`[Server_Docker] Builder containers status:`);
             builderContainers.forEach((c: any) => {
@@ -206,7 +206,7 @@ export class Server_Docker extends Server_Docker_Compose {
           // Ignore errors in status check
         }
       }
-      
+
       // Wait before checking again
       await new Promise(resolve => setTimeout(resolve, checkInterval));
     }
@@ -218,10 +218,10 @@ export class Server_Docker extends Server_Docker_Compose {
         if (this.failedBuilderConfigs.has(configKey)) {
           continue; // Skip already failed configs
         }
-        
+
         const bundleDir = `${processCwd()}/testeranto/bundles/${configKey}`;
         const inputFilesPath = `${bundleDir}/inputFiles.json`;
-        
+
         if (!existsSync(inputFilesPath)) {
           consoleWarn(`[Server_Docker] ❌ Bundle missing for config ${configKey}`);
           this.failedBuilderConfigs.add(configKey);
@@ -240,7 +240,7 @@ export class Server_Docker extends Server_Docker_Compose {
         consoleLog(`[Server_Docker] Skipping test services for failed config ${configKey}`);
         continue;
       }
-      
+
       const runtime: IRunTime = configValue.runtime as IRunTime;
       const tests = configValue.tests;
 
@@ -599,11 +599,6 @@ export class Server_Docker extends Server_Docker_Compose {
     return this.testResultsCollector.getTestResults(runtime, testName);
   };
 
-  private collectAllTestResults = async (): Promise<Record<string, any>> => {
-    const results = this.testResultsCollector.collectAllTestResults();
-    return { results };
-  };
-
   public getProcessSummary = (): any => {
     const processSummary = this.testResultsCollector.getProcessSummary();
     // Add build errors if available
@@ -668,35 +663,6 @@ export class Server_Docker extends Server_Docker_Compose {
     }
   }
 
-  private async clearBuilderLogs(): Promise<void> {
-    // Clear logs for all builder services
-    // Builder services are typically prefixed with 'builder_' or can be identified from configs
-    // For now, we'll clear logs for services that are likely to be builder services
-
-    // We can identify builder services from the configuration
-    // Since we don't have direct access to builder service names, we'll clear logs for all services
-    // that have been logged before
-    // This is a temporary implementation
-    for (const [containerId, logProcess] of this.logProcesses.entries()) {
-      if (logProcess.serviceName.includes('builder') ||
-        logProcess.serviceName.includes('build')) {
-
-        // Stop the logging process
-        try {
-          logProcess.process.kill('SIGTERM');
-        } catch (error) {
-          consoleError(`[Server_Docker] Error stopping log process for ${logProcess.serviceName}:`, error);
-        }
-        // Remove from the map
-        this.logProcesses.delete(containerId);
-      }
-    }
-
-    // Also clear any stored log files if they exist
-    // This would depend on your implementation
-  }
-
-
   startServiceLogging = async (
     serviceName: string,
     runtime: string,
@@ -719,28 +685,67 @@ export class Server_Docker extends Server_Docker_Compose {
     this.writeConfigForExtension();
   };
 
-  private async buildAiderImage(): Promise<void> {
-    try {
-      await this.aiderImageBuilder.buildAiderImage();
-    } catch (error) {
-      consoleError('[Server_Docker] Failed to build aider image:', error);
-      // Continue without the aider image
-    }
-  }
-
-  private async startBuilderServices(): Promise<void> {
-    // Clear builder logs before starting services
-    await this.clearBuilderLogs();
-    try {
-      await this.builderServicesManager.startBuilderServices();
-    } catch (error) {
-      consoleError('[Server_Docker] Failed to start builder services:', error);
-      // Don't rethrow - allow other services to continue
-    }
-  }
-
   private async waitForAllTestsToComplete(): Promise<void> {
     await this.testCompletionWaiter.waitForAllTestsToComplete();
   }
+
+
+
+  // private async buildAiderImage(): Promise<void> {
+  //   try {
+  //     await this.aiderImageBuilder.buildAiderImage();
+  //   } catch (error) {
+  //     consoleError('[Server_Docker] Failed to build aider image:', error);
+  //     // Continue without the aider image
+  //   }
+  // }
+
+  // private async startBuilderServices(): Promise<void> {
+  //   // Clear builder logs before starting services
+  //   await this.clearBuilderLogs();
+  //   try {
+  //     await this.builderServicesManager.startBuilderServices();
+  //   } catch (error) {
+  //     consoleError('[Server_Docker] Failed to start builder services:', error);
+  //     // Don't rethrow - allow other services to continue
+  //   }
+  // }
+
+
+  // private collectAllTestResults = async (): Promise<Record<string, any>> => {
+  //   const results = this.testResultsCollector.collectAllTestResults();
+  //   return { results };
+  // };
+
+
+  // private async clearBuilderLogs(): Promise<void> {
+  //   // Clear logs for all builder services
+  //   // Builder services are typically prefixed with 'builder_' or can be identified from configs
+  //   // For now, we'll clear logs for services that are likely to be builder services
+
+  //   // We can identify builder services from the configuration
+  //   // Since we don't have direct access to builder service names, we'll clear logs for all services
+  //   // that have been logged before
+  //   // This is a temporary implementation
+  //   for (const [containerId, logProcess] of this.logProcesses.entries()) {
+  //     if (logProcess.serviceName.includes('builder') ||
+  //       logProcess.serviceName.includes('build')) {
+
+  //       // Stop the logging process
+  //       try {
+  //         logProcess.process.kill('SIGTERM');
+  //       } catch (error) {
+  //         consoleError(`[Server_Docker] Error stopping log process for ${logProcess.serviceName}:`, error);
+  //       }
+  //       // Remove from the map
+  //       this.logProcesses.delete(containerId);
+  //     }
+  //   }
+
+  //   // Also clear any stored log files if they exist
+  //   // This would depend on your implementation
+  // }
+
+
 
 }

@@ -1,8 +1,21 @@
 import fs from "fs";
 import path from "path";
 import { jsonResponse } from "./jsonResponse";
+import { vscodeHttpAPI, VscodeHttpResponse } from "../../../api";
 
-export const handleTestResults = (url: URL, server: any): Response => {
+export const handleTestResults = (url: URL, server: any, request?: Request): Response => {
+  // Validate against API definition
+  const apiDef = vscodeHttpAPI.getTestResults;
+
+  if (request && request.method !== apiDef.method) {
+    return jsonResponse(
+      {
+        error: `Method ${request.method} not allowed for testresults. Expected ${apiDef.method}`,
+      },
+      405,
+    );
+  }
+
   const runtime = url.searchParams.get("runtime");
   const testName = url.searchParams.get("testName");
 
@@ -10,10 +23,11 @@ export const handleTestResults = (url: URL, server: any): Response => {
   const reportsDir = path.join(process.cwd(), "testeranto", "reports");
 
   if (!fs.existsSync(reportsDir)) {
-    return jsonResponse({
+    const response: VscodeHttpResponse<'getTestResults'> = {
       testResults: [],
       message: "No reports directory found",
-    });
+    };
+    return jsonResponse(response, 200, vscodeHttpAPI.getTestResults);
   }
 
   const testResults: any[] = [];
@@ -124,8 +138,9 @@ export const handleTestResults = (url: URL, server: any): Response => {
     }
   }
 
-  return jsonResponse({
+  const response: VscodeHttpResponse<'getTestResults'> = {
     testResults,
     message: "Success",
-  });
+  };
+  return jsonResponse(response, 200, vscodeHttpAPI.getTestResults);
 };

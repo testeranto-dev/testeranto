@@ -1,6 +1,155 @@
 {
-  "runtimes": [],
-  "timestamp": "2026-03-31T15:48:08.780Z",
+  "runtimes": [
+    {
+      "key": "nodetests",
+      "runtime": "node",
+      "label": "Node",
+      "tests": [
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "src/lib/tiposkripto/tests/circle/Circle.test.ts"
+      ]
+    }
+  ],
+  "timestamp": "2026-04-01T19:16:11.926Z",
   "source": "testeranto.ts",
-  "serverStarted": false
+  "serverStarted": true,
+  "processes": [
+    {
+      "processId": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+      "containerId": "95d6cff42cb3",
+      "command": "\"tail -f /dev/null\"",
+      "image": "testeranto-aider:latest",
+      "timestamp": "2026-04-01T19:16:11.792Z",
+      "status": "Up 21 seconds",
+      "state": "running",
+      "ports": "",
+      "exitCode": 0,
+      "startedAt": "2026-04-01T19:15:49.863885424Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "isActive": true,
+      "health": "unknown"
+    },
+    {
+      "processId": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+      "containerId": "ffd915520ce0",
+      "command": "\"tail -f /dev/null\"",
+      "image": "testeranto-aider:latest",
+      "timestamp": "2026-04-01T19:16:11.810Z",
+      "status": "Up 22 seconds",
+      "state": "running",
+      "ports": "",
+      "exitCode": 0,
+      "startedAt": "2026-04-01T19:15:48.974668549Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "isActive": true,
+      "health": "unknown"
+    },
+    {
+      "processId": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+      "containerId": "7d196d67e933",
+      "command": "\"docker-entrypoint.s…\"",
+      "image": "testeranto-nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+      "timestamp": "2026-04-01T19:16:11.828Z",
+      "status": "Exited (2) 23 seconds ago",
+      "state": "exited",
+      "ports": "",
+      "exitCode": 2,
+      "startedAt": "2026-04-01T19:15:44.11110738Z",
+      "finishedAt": "2026-04-01T19:15:48.232570382Z",
+      "isActive": false,
+      "health": "unknown"
+    },
+    {
+      "processId": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+      "containerId": "720a8b246eb4",
+      "command": "\"docker-entrypoint.s…\"",
+      "image": "testeranto-nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+      "timestamp": "2026-04-01T19:16:11.846Z",
+      "status": "Exited (2) 24 seconds ago",
+      "state": "exited",
+      "ports": "",
+      "exitCode": 2,
+      "startedAt": "2026-04-01T19:15:44.073931171Z",
+      "finishedAt": "2026-04-01T19:15:46.871740298Z",
+      "isActive": false,
+      "health": "unknown"
+    },
+    {
+      "processId": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+      "containerId": "b2a994f4d42a",
+      "command": "\"docker-entrypoint.s…\"",
+      "image": "testeranto-nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+      "timestamp": "2026-04-01T19:16:11.863Z",
+      "status": "Exited (2) 25 seconds ago",
+      "state": "exited",
+      "ports": "",
+      "exitCode": 2,
+      "startedAt": "2026-04-01T19:15:43.328744171Z",
+      "finishedAt": "2026-04-01T19:15:46.133428839Z",
+      "isActive": false,
+      "health": "unknown"
+    },
+    {
+      "processId": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+      "containerId": "586e44f0199c",
+      "command": "\"docker-entrypoint.s…\"",
+      "image": "testeranto-nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+      "timestamp": "2026-04-01T19:16:11.879Z",
+      "status": "Exited (2) 23 seconds ago",
+      "state": "exited",
+      "ports": "",
+      "exitCode": 2,
+      "startedAt": "2026-04-01T19:15:43.323630004Z",
+      "finishedAt": "2026-04-01T19:15:47.843603048Z",
+      "isActive": false,
+      "health": "unknown"
+    },
+    {
+      "processId": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "containerId": "3b16ebbfbc09",
+      "command": "\"docker-entrypoint.s…\"",
+      "image": "testeranto-nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "timestamp": "2026-04-01T19:16:11.895Z",
+      "status": "Exited (0) 38 seconds ago",
+      "state": "exited",
+      "ports": "",
+      "exitCode": 0,
+      "startedAt": "2026-04-01T19:15:32.378154722Z",
+      "finishedAt": "2026-04-01T19:15:33.052550555Z",
+      "isActive": false,
+      "health": "unknown"
+    },
+    {
+      "processId": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "containerId": "550b7f534896",
+      "command": "\"docker-entrypoint.s…\"",
+      "image": "testeranto-nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "timestamp": "2026-04-01T19:16:11.910Z",
+      "status": "Exited (0) 38 seconds ago",
+      "state": "exited",
+      "ports": "",
+      "exitCode": 0,
+      "startedAt": "2026-04-01T19:15:32.304451388Z",
+      "finishedAt": "2026-04-01T19:15:33.008341347Z",
+      "isActive": false,
+      "health": "unknown"
+    },
+    {
+      "processId": "nodetests-builder",
+      "containerId": "e0d976d625c9",
+      "command": "\"docker-entrypoint.s…\"",
+      "image": "testeranto-node-nodetests:latest",
+      "timestamp": "2026-04-01T19:16:11.926Z",
+      "status": "Up About a minute",
+      "state": "running",
+      "ports": "",
+      "exitCode": 0,
+      "startedAt": "2026-04-01T19:15:08.670309294Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "isActive": true,
+      "health": "unknown"
+    }
+  ],
+  "totalProcesses": 9,
+  "lastUpdated": "2026-04-01T19:16:11.926Z"
 }

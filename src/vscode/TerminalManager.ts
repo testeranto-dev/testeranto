@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import type { IRunTime } from '../Types';
+import { ApiUtils } from './providers/utils/apiUtils';
+import type { AiderProcessesResponse } from '../api';
 
 export class TerminalManager {
   private terminals: Map<string, vscode.Terminal> = new Map();
@@ -54,12 +56,14 @@ export class TerminalManager {
   // Fetch aider processes from the server
   async fetchAiderProcesses(): Promise<any[]> {
     try {
-      const response = await fetch('http://localhost:3000/~/aider-processes');
+      const response = await fetch(ApiUtils.getAiderProcessesUrl());
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      return data.aiderProcesses || [];
+      // Use type assertion for the response
+      const aiderResponse = data as AiderProcessesResponse;
+      return aiderResponse.aiderProcesses || [];
     } catch (error) {
       console.error('Failed to fetch aider processes:', error);
       return [];
@@ -162,7 +166,7 @@ export class TerminalManager {
 
   private async getConfigKeyForTest(runtime: string, testName: string): Promise<string | null> {
     try {
-      const response = await fetch('http://localhost:3000/~/configs');
+      const response = await fetch(ApiUtils.getConfigsUrl());
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

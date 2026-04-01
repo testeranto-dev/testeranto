@@ -1,7 +1,12 @@
 {
   "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
-    "hash": "570e543cebebad5f75694c26e693bddd",
+    "hash": "c36e671f98f1bef70ce5ac7711891887",
     "files": [
+      "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "/src/lib/tiposkripto/src/Node.ts",
       "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
       "/src/lib/tiposkripto/src/Adapters.ts",
@@ -15,12 +20,31 @@
       "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
       "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
       "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-      "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-      "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
-      "/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
-      "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
-      "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-      "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+    ]
+  },
+  "src/lib/tiposkripto/tests/circle/Circle.test.ts": {
+    "hash": "e87de8ab2b5005cc905ca311f9592f2a",
+    "files": [
+      "/src/lib/tiposkripto/tests/circle/Circle.ts",
+      "/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
+      "/src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
+      "/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "/src/lib/tiposkripto/src/Node.ts",
+      "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "/src/lib/tiposkripto/src/Adapters.ts",
+      "/src/lib/tiposkripto/src/types.ts",
+      "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
     ]
   }
 }

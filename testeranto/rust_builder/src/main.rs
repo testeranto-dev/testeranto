@@ -59,6 +59,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Change to the Rust project directory
         env::set_current_dir(&rust_project_dir)?;
         println!("📁 Changed to Rust project directory: {}", rust_project_dir.display());
+        
+        // Ensure the testeranto_rusto dependency is accessible
+        // The path in Cargo.toml points to ../../../testeranto/src/lib/rusto
+        // which should resolve correctly from /workspace/src/rust
+        let rusto_path = workspace.join("testeranto/src/lib/rusto");
+        if !rusto_path.exists() {
+            eprintln!("⚠️  Warning: testeranto_rusto not found at: {}", rusto_path.display());
+            eprintln!("   This may cause build errors if the path in Cargo.toml is incorrect");
+        } else {
+            println!("✅ Found testeranto_rusto at: {}", rusto_path.display());
+        }
     }
     
     // Create bundles directory
@@ -67,6 +78,32 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     // Create a map to store all tests' information
     let mut all_tests_info: HashMap<String, serde_json::Value> = HashMap::new();
+    
+    // First, check if the rusto dependency builds
+    println!("🔨 Checking testeranto_rusto dependency...");
+    let rusto_path = workspace.join("testeranto/src/lib/rusto");
+    if rusto_path.exists() {
+        let rusto_check = Command::new("cargo")
+            .current_dir(&rusto_path)
+            .args(&["check"])
+            .status();
+        
+        match rusto_check {
+            Ok(status) => {
+                if status.success() {
+                    println!("✅ testeranto_rusto dependency checks out");
+                } else {
+                    println!("⚠️  testeranto_rusto has issues, but continuing");
+                }
+            }
+            Err(e) => {
+                println!("⚠️  Failed to check testeranto_rusto: {}, but continuing", e);
+            }
+        }
+    } else {
+        println!("❌ testeranto_rusto not found at: {}", rusto_path.display());
+        std::process::exit(1);
+    }
     
     // Check if we can build the main project (but don't include test files)
     // First, check if there's a Cargo.toml and it's valid

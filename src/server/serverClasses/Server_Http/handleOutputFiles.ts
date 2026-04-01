@@ -1,8 +1,21 @@
 import path from "path";
 import fs from "fs";
 import { jsonResponse } from "./jsonResponse";
+import { vscodeHttpAPI, VscodeHttpResponse } from "../../../api";
 
-export const handleOutputFiles = (url: URL, server: any): Response => {
+export const handleOutputFiles = (url: URL, server: any, request?: Request): Response => {
+  // Validate against API definition
+  const apiDef = vscodeHttpAPI.getOutputFiles;
+
+  if (request && request.method !== apiDef.method) {
+    return jsonResponse(
+      {
+        error: `Method ${request.method} not allowed for outputfiles. Expected ${apiDef.method}`,
+      },
+      405,
+    );
+  }
+
   const runtime = url.searchParams.get("runtime");
   const testName = url.searchParams.get("testName");
 
@@ -20,12 +33,13 @@ export const handleOutputFiles = (url: URL, server: any): Response => {
   if (typeof getOutputFiles === "function") {
     const outputFiles = getOutputFiles(runtime, testName);
     if (outputFiles && outputFiles.length > 0) {
-      return jsonResponse({
+      const response: VscodeHttpResponse<'getOutputFiles'> = {
         runtime,
         testName,
         outputFiles: outputFiles,
         message: "Success",
-      });
+      };
+      return jsonResponse(response, 200, vscodeHttpAPI.getOutputFiles);
     }
   }
 
@@ -35,12 +49,13 @@ export const handleOutputFiles = (url: URL, server: any): Response => {
   const outputFiles: string[] = [];
 
   if (!fs.existsSync(reportsBaseDir)) {
-    return jsonResponse({
+    const response: VscodeHttpResponse<'getOutputFiles'> = {
       runtime,
       testName,
       outputFiles: [],
       message: "No reports directory found",
-    });
+    };
+    return jsonResponse(response, 200, vscodeHttpAPI.getOutputFiles);
   }
 
   // Get all directories in reports
@@ -155,10 +170,11 @@ export const handleOutputFiles = (url: URL, server: any): Response => {
   // Remove duplicates
   const uniqueFiles = [...new Set(outputFiles)];
 
-  return jsonResponse({
+  const response: VscodeHttpResponse<'getOutputFiles'> = {
     runtime,
     testName,
     outputFiles: uniqueFiles,
     message: `Found ${uniqueFiles.length} output files for runtime ${runtime}`,
-  });
+  };
+  return jsonResponse(response, 200, vscodeHttpAPI.getOutputFiles);
 };

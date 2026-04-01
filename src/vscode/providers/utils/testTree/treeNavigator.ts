@@ -1,8 +1,8 @@
 import { TestTreeItem } from "../../../TestTreeItem";
 import { convertNodeToItem } from "./nodeConverter";
 import { filterTreeForRuntimeAndTest } from "./treeFilter";
-// import { convertNodeToItem } from "./../../u";
-// import { filterTreeForRuntimeAndTest } from "./treeFilter";
+import { ApiUtils } from '../apiUtils';
+import type { CollatedFilesResponse } from '../../../../api';
 
 export async function getDirectoryChildren(
   runtime: string,
@@ -10,12 +10,14 @@ export async function getDirectoryChildren(
   dirPath: string,
 ): Promise<TestTreeItem[]> {
   try {
-    const response = await fetch("http://localhost:3000/~/collated-files");
+    const response = await fetch(ApiUtils.getCollatedFilesUrl());
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     const data = await response.json();
-    const tree = data.tree || {};
+    // Use type assertion for the response
+    const collatedFilesResponse = data as CollatedFilesResponse;
+    const tree = collatedFilesResponse.tree || {};
 
     const filteredTree = filterTreeForRuntimeAndTest(
       tree,

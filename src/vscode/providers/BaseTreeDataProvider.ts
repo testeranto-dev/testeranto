@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
+import { ApiUtils } from './utils/apiUtils';
 
 export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<TestTreeItem> {
     protected _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> = 
@@ -34,7 +35,9 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
             this.ws.close();
         }
 
-        this.ws = new WebSocket('ws://localhost:3000');
+        // Use the same base URL as HTTP, but with ws:// protocol
+        const wsUrl = ApiUtils.getWebSocketUrl();
+        this.ws = new WebSocket(wsUrl);
         
         this.ws.onopen = () => {
             this.isConnected = true;

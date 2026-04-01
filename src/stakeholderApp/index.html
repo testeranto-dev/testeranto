@@ -37,11 +37,13 @@
 
   <script type="module">
     // Wait for the stakeholder app to be loaded
+    // Note: Paths must match those defined in src/api.ts
     async function initApp() {
       const root = document.getElementById('root');
 
       try {
         // Import the stakeholder app module
+        // This path should be consistent with static file serving configuration
         const { renderApp } = await import('/testeranto/reports/index.js');
         renderApp(root);
       } catch (error) {

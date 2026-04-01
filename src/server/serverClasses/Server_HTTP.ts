@@ -1,27 +1,22 @@
 import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_Base } from "./Server_Base";
-import { generateCollatedFilesTree } from "./Server_Http/generateCollatedFilesTree";
 import { handleOptions } from "./Server_Http/handleOptions";
 import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
-
 import {
-  getFileType,
   serveStaticFile,
 } from "./Server_Http/utils/utils";
-
 import { Server_WS } from "./Server_WS";
+import { stakeholderWsAPI } from "../../api";
 
 declare const Bun: any;
 
 export abstract class Server_HTTP extends Server_Base {
-  // http: HttpManager;
   protected bunServer: any | null = null;
   private routesHandler: Server_HTTP_Routes;
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
-    // this.http = new HttpManager();
     this.routesHandler = new Server_HTTP_Routes(this);
   }
 
@@ -67,7 +62,7 @@ export abstract class Server_HTTP extends Server_Base {
           (wsThis as any).wsClients?.add?.(ws);
           ws.send(
             JSON.stringify({
-              type: "connected",
+              type: stakeholderWsAPI.connected.type,
               message: "Connected to Process Manager WebSocket",
               timestamp: new Date().toISOString(),
             }),
@@ -157,24 +152,24 @@ export abstract class Server_HTTP extends Server_Base {
     return serveStaticFile(request, url, this.configs);
   }
 
-  private async generateCollatedFilesTree(): Promise<Record<string, any>> {
-    return generateCollatedFilesTree(this.configs);
-  }
-
-  // private addTestResultsFilesToTree(
-  //   treeRoot: Record<string, any>,
-  //   reportsDir: string,
-  // ): void {
-  //   addTestResultsFilesToTree(treeRoot, reportsDir);
+  // private async generateCollatedFilesTree(): Promise<Record<string, any>> {
+  //   return generateCollatedFilesTree(this.configs);
   // }
 
-  private getFileType(filename: string): string {
-    return getFileType(filename);
-  }
+  // // private addTestResultsFilesToTree(
+  // //   treeRoot: Record<string, any>,
+  // //   reportsDir: string,
+  // // ): void {
+  // //   addTestResultsFilesToTree(treeRoot, reportsDir);
+  // // }
 
-  // private async collectAllTestResults(): Promise<Record<string, any>> {
-  //   return collectAllTestResults(this.configs);
+  // private getFileType(filename: string): string {
+  //   return getFileType(filename);
   // }
+
+  // // private async collectAllTestResults(): Promise<Record<string, any>> {
+  // //   return collectAllTestResults(this.configs);
+  // // }
 
   router(a: any): any {
     return a;

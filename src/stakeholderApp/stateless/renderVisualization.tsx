@@ -1,5 +1,5 @@
 import React from "react";
-import { GraphData, Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph } from "grafeovidajo";
+import { type GraphData, type Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph } from "../../grafeovidajo/index";
 
 export interface RenderVisualizationProps {
   data: {
@@ -66,8 +66,8 @@ export function renderVisualization({
     data: graphData,
     width: 800,
     height: 500,
-    onNodeClick: onNodeClick || (() => {}),
-    onNodeHover: onNodeHover || (() => {})
+    onNodeClick: onNodeClick || (() => { }),
+    onNodeHover: onNodeHover || (() => { })
   };
 
   switch (vizType) {
@@ -225,8 +225,8 @@ export function renderVisualization({
             }}
             width={800}
             height={500}
-            onNodeClick={onNodeClick || (() => {})}
-            onNodeHover={onNodeHover || (() => {})}
+            onNodeClick={onNodeClick || (() => { })}
+            onNodeHover={onNodeHover || (() => { })}
           />
         </div>
       );

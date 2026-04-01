@@ -5,7 +5,7 @@
 require 'json'
 require 'fileutils'
 
-puts "Ruby builder starting with native detection..."
+# puts "Ruby builder starting with native detection..."
 
 if ARGV.length < 3
   puts "Usage: ruby ruby.rb <project_config_path> <ruby_config_path> <test_name> [entry_points...]"
@@ -37,15 +37,15 @@ rescue => e
 end
 
 # Delegate to native detection
-require_relative 'native_detection'
+# require_relative 'native_detection'
 
-detector = RubyNativeDetection.new(
-  project_config_file_path,
-  ruby_config_file_path,
-  test_name,
-  entry_points
-)
+# detector = RubyNativeDetection.new(
+#   project_config_file_path,
+#   ruby_config_file_path,
+#   test_name,
+#   entry_points
+# )
 
-detector.run
+# detector.run
 
 puts "Ruby builder completed successfully"

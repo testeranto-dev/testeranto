@@ -3,6 +3,219 @@ import * as vscode11 from "vscode";
 
 // src/vscode/TerminalManager.ts
 import * as vscode from "vscode";
+
+// src/api.ts
+var vscodeHttpAPI = {
+  // Configuration and metadata
+  getConfigs: {
+    method: "GET",
+    path: "/~/configs",
+    description: "Get server configuration",
+    response: {}
+  },
+  getProcesses: {
+    method: "GET",
+    path: "/~/processes",
+    description: "Get running processes summary",
+    response: {}
+  },
+  getProcessLogs: {
+    method: "GET",
+    path: "/~/process-logs/:processId",
+    description: "Get logs for a specific process",
+    params: {
+      processId: "string"
+    },
+    response: {}
+  },
+  getAiderProcesses: {
+    method: "GET",
+    path: "/~/aider-processes",
+    description: "Get aider processes",
+    response: {}
+  },
+  // Test file management
+  getInputFiles: {
+    method: "GET",
+    path: "/~/inputfiles",
+    description: "Get input files for a test",
+    query: {
+      runtime: "string",
+      testName: "string"
+    },
+    response: {}
+  },
+  getOutputFiles: {
+    method: "GET",
+    path: "/~/outputfiles",
+    description: "Get output files for a test",
+    query: {
+      runtime: "string",
+      testName: "string"
+    },
+    response: {}
+  },
+  // Test results
+  getTestResults: {
+    method: "GET",
+    path: "/~/testresults",
+    description: "Get test results",
+    query: {
+      runtime: "string?",
+      testName: "string?"
+    },
+    response: {}
+  },
+  getCollatedTestResults: {
+    method: "GET",
+    path: "/~/collated-testresults",
+    description: "Get collated test results",
+    response: {}
+  },
+  getCollatedInputFiles: {
+    method: "GET",
+    path: "/~/collated-inputfiles",
+    description: "Get collated input files",
+    response: {}
+  },
+  getCollatedFiles: {
+    method: "GET",
+    path: "/~/collated-files",
+    description: "Get collated files tree",
+    response: {}
+  },
+  // Documentation
+  getCollatedDocumentation: {
+    method: "GET",
+    path: "/~/collated-documentation",
+    description: "Get collated documentation",
+    response: {}
+  },
+  getDocumentation: {
+    method: "GET",
+    path: "/~/documentation",
+    description: "Get documentation files",
+    response: {}
+  },
+  // Reports
+  getReports: {
+    method: "GET",
+    path: "/~/reports",
+    description: "Get reports tree",
+    response: {}
+  },
+  getHtmlReport: {
+    method: "GET",
+    path: "/~/html-report",
+    description: "Get HTML report info",
+    response: {}
+  },
+  // App state
+  getAppState: {
+    method: "GET",
+    path: "/~/app-state",
+    description: "Get application state",
+    response: {}
+  }
+};
+
+// src/vscode/providers/utils/apiUtils.ts
+var ApiUtils = class {
+  static baseUrl = "http://localhost:3000";
+  static getUrl(endpointKey, params, query) {
+    const endpoint = vscodeHttpAPI[endpointKey];
+    if (!endpoint) {
+      throw new Error(`Endpoint ${endpointKey} not found in vscodeHttpAPI`);
+    }
+    let path3 = endpoint.path;
+    if (params && endpoint.params) {
+      for (const [key, value] of Object.entries(params)) {
+        if (endpoint.params[key]) {
+          path3 = path3.replace(`:${key}`, value);
+        }
+      }
+    }
+    const url = `${this.baseUrl}${path3}`;
+    if (query && Object.keys(query).length > 0) {
+      const queryParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(query)) {
+        if (value !== void 0 && value !== null) {
+          queryParams.append(key, value);
+        }
+      }
+      const queryString = queryParams.toString();
+      if (queryString) {
+        return `${url}?${queryString}`;
+      }
+    }
+    return url;
+  }
+  static getConfigsUrl() {
+    return this.getUrl("getConfigs");
+  }
+  static getProcessesUrl() {
+    return this.getUrl("getProcesses");
+  }
+  static getProcessLogsUrl(processId) {
+    return this.getUrl("getProcessLogs", { processId });
+  }
+  static getAiderProcessesUrl() {
+    return this.getUrl("getAiderProcesses");
+  }
+  static getInputFilesUrl(runtime, testName) {
+    const query = {};
+    if (runtime) query.runtime = runtime;
+    if (testName) query.testName = testName;
+    return this.getUrl("getInputFiles", void 0, query);
+  }
+  static getOutputFilesUrl(runtime, testName) {
+    const query = {};
+    if (runtime) query.runtime = runtime;
+    if (testName) query.testName = testName;
+    return this.getUrl("getOutputFiles", void 0, query);
+  }
+  static getTestResultsUrl(runtime, testName) {
+    const query = {};
+    if (runtime) query.runtime = runtime;
+    if (testName) query.testName = testName;
+    return this.getUrl("getTestResults", void 0, query);
+  }
+  static getCollatedTestResultsUrl() {
+    return this.getUrl("getCollatedTestResults");
+  }
+  static getCollatedInputFilesUrl() {
+    return this.getUrl("getCollatedInputFiles");
+  }
+  static getCollatedFilesUrl() {
+    return this.getUrl("getCollatedFiles");
+  }
+  static getCollatedDocumentationUrl() {
+    return this.getUrl("getCollatedDocumentation");
+  }
+  static getDocumentationUrl() {
+    return this.getUrl("getDocumentation");
+  }
+  static getReportsUrl() {
+    return this.getUrl("getReports");
+  }
+  static getHtmlReportUrl() {
+    return this.getUrl("getHtmlReport");
+  }
+  static getAppStateUrl() {
+    return this.getUrl("getAppState");
+  }
+  static getWebSocketUrl() {
+    const httpUrl = this.baseUrl;
+    if (httpUrl.startsWith("http://")) {
+      return httpUrl.replace("http://", "ws://");
+    } else if (httpUrl.startsWith("https://")) {
+      return httpUrl.replace("https://", "wss://");
+    }
+    return "ws://localhost:3000";
+  }
+};
+
+// src/vscode/TerminalManager.ts
 var TerminalManager = class {
   terminals = /* @__PURE__ */ new Map();
   getTerminalKey(runtime, testName) {
@@ -48,12 +261,13 @@ var TerminalManager = class {
   // Fetch aider processes from the server
   async fetchAiderProcesses() {
     try {
-      const response = await fetch("http://localhost:3000/~/aider-processes");
+      const response = await fetch(ApiUtils.getAiderProcessesUrl());
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      return data.aiderProcesses || [];
+      const aiderResponse = data;
+      return aiderResponse.aiderProcesses || [];
     } catch (error) {
       console.error("Failed to fetch aider processes:", error);
       return [];
@@ -126,7 +340,7 @@ var TerminalManager = class {
   }
   async getConfigKeyForTest(runtime, testName) {
     try {
-      const response = await fetch("http://localhost:3000/~/configs");
+      const response = await fetch(ApiUtils.getConfigsUrl());
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -246,7 +460,7 @@ var TestTreeItem = class extends vscode2.TreeItem {
 // src/vscode/providers/utils/testTree/configFetcher.ts
 var configData = null;
 async function fetchConfigsViaHttp() {
-  const response = await fetch("http://localhost:3000/~/configs");
+  const response = await fetch(ApiUtils.getConfigsUrl());
   const data = await response.json();
   configData = data;
   return data;
@@ -861,12 +1075,13 @@ Status: ${node.status}`;
 // src/vscode/providers/utils/testTree/treeNavigator.ts
 async function getDirectoryChildren(runtime, testName, dirPath) {
   try {
-    const response = await fetch("http://localhost:3000/~/collated-files");
+    const response = await fetch(ApiUtils.getCollatedFilesUrl());
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     const data = await response.json();
-    const tree = data.tree || {};
+    const collatedFilesResponse = data;
+    const tree = collatedFilesResponse.tree || {};
     const filteredTree = filterTreeForRuntimeAndTest(
       tree,
       runtime,
@@ -932,7 +1147,8 @@ var BaseTreeDataProvider = class {
     if (this.ws) {
       this.ws.close();
     }
-    this.ws = new WebSocket("ws://localhost:3000");
+    const wsUrl = ApiUtils.getWebSocketUrl();
+    this.ws = new WebSocket(wsUrl);
     this.ws.onopen = () => {
       this.isConnected = true;
       this._onDidChangeTreeData.fire();
@@ -1124,14 +1340,15 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
     console.log(`[TestTreeDataProvider] getTestFileItems START for ${runtime}/${testName}`);
     try {
       console.log(`[TestTreeDataProvider] Fetching collated files from server...`);
-      const response = await fetch("http://localhost:3000/~/collated-files");
+      const response = await fetch(ApiUtils.getCollatedFilesUrl());
       console.log(`[TestTreeDataProvider] Fetch response status: ${response.status}`);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       const data = await response.json();
-      console.log(`[TestTreeDataProvider] Received collated files data, has tree: ${!!data.tree}`);
-      const tree = data.tree || {};
+      const collatedFilesResponse = data;
+      console.log(`[TestTreeDataProvider] Received collated files data, has tree: ${!!collatedFilesResponse.tree}`);
+      const tree = collatedFilesResponse.tree || {};
       console.log(`[TestTreeDataProvider] Tree has ${Object.keys(tree).length} top-level keys:`, Object.keys(tree));
       console.log(`[TestTreeDataProvider] Looking for runtime "${runtime}" in tree keys:`);
       Object.keys(tree).forEach((key) => {
@@ -1158,7 +1375,7 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
         console.log(`  2. The test name doesn't match the tree structure`);
         console.log(`  3. The server hasn't generated files for this test`);
         try {
-          const configResponse = await fetch("http://localhost:3000/~/configs");
+          const configResponse = await fetch(ApiUtils.getConfigsUrl());
           if (configResponse.ok) {
             const configData2 = await configResponse.json();
             console.log(`[TestTreeDataProvider] Available configs:`, Object.keys(configData2.configs?.runtimes || {}));
@@ -1236,7 +1453,7 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
   }
   async fetchProcesses() {
     try {
-      const response = await fetch("http://localhost:3000/~/processes", {
+      const response = await fetch(ApiUtils.getProcessesUrl(), {
         signal: AbortSignal.timeout(3e3)
         // 3 second timeout
       });
@@ -1244,7 +1461,8 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       const data = await response.json();
-      const rawProcesses = Array.isArray(data.processes) ? data.processes : [];
+      const processesResponse = data;
+      const rawProcesses = Array.isArray(processesResponse.processes) ? processesResponse.processes : [];
       this.processes = rawProcesses.filter(
         (process) => process && typeof process === "object"
       ).map((process) => {
@@ -1862,20 +2080,21 @@ var CommandManager = class {
           try {
             const outputChannel = vscode10.window.createOutputChannel(`Process: ${processName || processId}`);
             outputChannel.show(true);
-            const response = await fetch(`http://localhost:3000/~/process-logs/${processId}`);
+            const response = await fetch(ApiUtils.getProcessLogsUrl(processId));
             if (!response.ok) {
               throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             const data = await response.json();
+            const processLogsResponse = data;
             outputChannel.appendLine(`=== Logs for ${processName || processId} ===`);
             outputChannel.appendLine(`Process ID: ${processId}`);
-            outputChannel.appendLine(`Status: ${data.status || "unknown"}`);
-            outputChannel.appendLine(`Exit Code: ${data.exitCode || "N/A"}`);
+            outputChannel.appendLine(`Status: ${processLogsResponse.status || "unknown"}`);
+            outputChannel.appendLine(`Exit Code: ${processLogsResponse.exitCode || "N/A"}`);
             outputChannel.appendLine(`
 --- Logs ---
 `);
-            if (data.logs && Array.isArray(data.logs)) {
-              data.logs.forEach((log) => {
+            if (processLogsResponse.logs && Array.isArray(processLogsResponse.logs)) {
+              processLogsResponse.logs.forEach((log) => {
                 outputChannel.appendLine(log);
               });
             } else {

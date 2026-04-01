@@ -2,6 +2,7 @@ import type { ITesterantoConfig } from "../../Types";
 import { WsManager } from "./WsManager";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
+import { stakeholderWsAPI, vscodeWsAPI } from "../../api";
 
 export class Server_WS extends Server_HTTP {
   protected wsClients: Set<WebSocket> = new Set();
@@ -30,7 +31,7 @@ export class Server_WS extends Server_HTTP {
 
   resourceChanged(url: string) {
     const message = {
-      type: "resourceChanged",
+      type: stakeholderWsAPI.resourceChanged.type,
       url: url,
       timestamp: new Date().toISOString(),
       message: `Resource at ${url} has been updated`
@@ -39,6 +40,18 @@ export class Server_WS extends Server_HTTP {
   }
 
   public broadcast(message: any): void {
+    // Validate message type against API definitions
+    const validTypes = [
+      stakeholderWsAPI.resourceChanged.type,
+      stakeholderWsAPI.connected.type,
+    ];
+
+    if (message && typeof message === 'object' && message.type) {
+      if (!validTypes.includes(message.type)) {
+        console.warn(`Broadcasting message with unknown type: ${message.type}`);
+      }
+    }
+
     const data = typeof message === "string" ? message : JSON.stringify(message);
     this.wsClients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
@@ -48,7 +61,7 @@ export class Server_WS extends Server_HTTP {
   }
 
   private handleWebSocketMessage(ws: WebSocket, message: any): void {
-    if (message.type === "getProcesses") {
+    if (message.type === vscodeWsAPI.getProcesses.type) {
       this.handleGetProcesses(ws);
       return;
     }
@@ -69,13 +82,13 @@ export class Server_WS extends Server_HTTP {
     ws.send(JSON.stringify(response));
 
     switch (message.type) {
-      case "sourceFilesUpdated":
+      case vscodeWsAPI.sourceFilesUpdated.type:
         this.handleSourceFilesUpdatedSideEffects(ws, message.data, response);
         break;
-      case "getBuildListenerState":
+      case vscodeWsAPI.getBuildListenerState.type:
         this.handleGetBuildListenerStateSideEffects(ws);
         break;
-      case "getBuildEvents":
+      case vscodeWsAPI.getBuildEvents.type:
         this.handleGetBuildEventsSideEffects(ws);
         break;
     }
@@ -91,7 +104,7 @@ export class Server_WS extends Server_HTTP {
     if (typeof sourceFilesUpdated === 'function') {
       sourceFilesUpdated(testName, hash, files, runtime);
       this.broadcast({
-        type: "sourceFilesUpdated",
+        type: vscodeWsAPI.sourceFilesUpdated.type,
         testName,
         hash,
         files,
@@ -108,7 +121,7 @@ export class Server_WS extends Server_HTTP {
     if (typeof getBuildListenerState === 'function') {
       const state = getBuildListenerState();
       ws.send(JSON.stringify({
-        type: "buildListenerState",
+        type: vscodeWsAPI.getBuildListenerState.response.type,
         data: state,
         timestamp: new Date().toISOString()
       }));
@@ -120,7 +133,7 @@ export class Server_WS extends Server_HTTP {
     if (typeof getBuildEvents === 'function') {
       const events = getBuildEvents();
       ws.send(JSON.stringify({
-        type: "buildEvents",
+        type: vscodeWsAPI.getBuildEvents.response.type,
         events: events,
         timestamp: new Date().toISOString()
       }));
@@ -132,7 +145,7 @@ export class Server_WS extends Server_HTTP {
       return;
     }
     ws.send(JSON.stringify({
-      type: "useHttp",
+      type: vscodeWsAPI.getProcesses.response.type,
       message: "Please use HTTP GET /~/processes to fetch processes",
       timestamp: new Date().toISOString()
     }));

@@ -1,11 +1,25 @@
 import path from "path";
 import fs from "fs";
 import { jsonResponse } from "./jsonResponse";
+import { vscodeHttpAPI, VscodeHttpResponse } from "../../../api";
 
-export const handleInputFiles = (url: URL, server: any): Response => {
+export const handleInputFiles = (url: URL, server: any, request?: Request): Response => {
+  // Validate against API definition
+  const apiDef = vscodeHttpAPI.getInputFiles;
+
+  if (request && request.method !== apiDef.method) {
+    return jsonResponse(
+      {
+        error: `Method ${request.method} not allowed for inputfiles. Expected ${apiDef.method}`,
+      },
+      405,
+    );
+  }
+
   const runtime = url.searchParams.get("runtime");
   const testName = url.searchParams.get("testName");
 
+  // Validate required query parameters using API query type
   if (!runtime || !testName) {
     return jsonResponse(
       {
@@ -20,12 +34,13 @@ export const handleInputFiles = (url: URL, server: any): Response => {
   if (typeof getInputFiles === "function") {
     const inputFiles = getInputFiles(runtime, testName);
     if (inputFiles && inputFiles.length > 0) {
-      return jsonResponse({
+      const response: VscodeHttpResponse<'getInputFiles'> = {
         runtime,
         testName,
         inputFiles: inputFiles,
         message: "Success",
-      });
+      };
+      return jsonResponse(response, 200, vscodeHttpAPI.getInputFiles);
     }
   }
 
@@ -39,12 +54,13 @@ export const handleInputFiles = (url: URL, server: any): Response => {
   );
 
   if (!fs.existsSync(inputFilesPath)) {
-    return jsonResponse({
+    const response: VscodeHttpResponse<'getInputFiles'> = {
       runtime,
       testName,
       inputFiles: [],
       message: "Input files not found",
-    });
+    };
+    return jsonResponse(response, 200, vscodeHttpAPI.getInputFiles);
   }
 
   try {
@@ -92,19 +108,21 @@ export const handleInputFiles = (url: URL, server: any): Response => {
       }
     }
 
-    return jsonResponse({
+    const response: VscodeHttpResponse<'getInputFiles'> = {
       runtime,
       testName,
       inputFiles: matchedFiles,
       message:
         matchedFiles.length > 0 ? "Success" : "No matching input files found",
-    });
+    };
+    return jsonResponse(response, 200, vscodeHttpAPI.getInputFiles);
   } catch (error: any) {
-    return jsonResponse({
+    const response: VscodeHttpResponse<'getInputFiles'> = {
       runtime,
       testName,
       inputFiles: [],
       message: `Error reading input files: ${error.message}`,
-    });
+    };
+    return jsonResponse(response, 200, vscodeHttpAPI.getInputFiles);
   }
 };

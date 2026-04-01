@@ -20,8 +20,8 @@ class RubyNativeDetection
     puts "Test name: #{@test_name}"
     puts "Entry points: #{@entry_points.inspect}"
 
-    # Load framework converters
-    require_relative 'framework-converters'
+    # Load source analyzer
+    require_relative 'source_analyzer'
 
     @entry_points.each do |entry_point|
       puts "Processing Ruby test: #{entry_point}"
@@ -39,56 +39,61 @@ class RubyNativeDetection
       # Compute hash of input files
       files_hash = SourceAnalyzer.compute_files_hash(all_dependencies)
       
-      # Detect the appropriate framework converter
-      converter = FrameworkConverters.detect_converter(entry_point_path)
-      puts "Detected framework: #{converter.name} for #{entry_point}"
-      
-      # Store test information with framework detection
+      # Store test information
       @all_tests_info[entry_point] = {
         "hash" => files_hash,
-        "files" => relative_files,
-        "framework" => converter.name
+        "files" => relative_files
       }
       
-      # Create detection result for translation
-      detection_result = {
-        framework_type: converter.name,
-        file_path: entry_point_path,
-        test_structure: {
-          # This would be populated by more sophisticated analysis
-          test_suites: [
-            {
-              name: 'Default',
-              test_cases: [
-                { name: File.basename(entry_point_path, '.rb') }
-              ]
-            }
-          ]
-        }
-      }
-      
-      # Generate framework-specific wrapper
-      wrapper_content = converter.generate_wrapper(
-        entry_point_path,
-        detection_result,
-        {},  # translation_result would be populated by translate_to_testeranto
-        files_hash
-      )
-      
-      # Create the bundle file with framework-specific wrapper
+      # Create the bundle directory structure for the test file
       bundle_path = "testeranto/bundles/#{@test_name}/#{entry_point}"
       
       # Ensure directory exists
       FileUtils.mkdir_p(File.dirname(bundle_path))
       
-      File.write(bundle_path, wrapper_content)
-      puts "Created #{converter.name} wrapper at #{bundle_path}"
+      # Copy the original test file to the bundle location
+      FileUtils.cp(entry_point_path, bundle_path)
+      puts "Copied test file to #{bundle_path}"
       
-      # Optionally generate testeranto translation
-      # translation = converter.translate_to_testeranto(detection_result)
-      # translation_path = "testeranto/bundles/#{@test_name}/#{File.basename(entry_point, '.rb')}_translation.rb"
-      # File.write(translation_path, "#{translation[:specification]}\n\n#{translation[:implementation]}\n\n#{translation[:adapter]}")
-      # puts "Generated translation at #{translation_path}"
+      # Copy all dependencies to the bundle directory, preserving directory structure
+      all_dependencies.each do |dep|
+        # Skip the entry point itself (already copied)
+        next if dep == entry_point_path
+        
+        # Get relative path from workspace root
+        if dep.start_with?(workspace_root)
+          rel_path = dep[workspace_root.length..-1]
+          # Remove leading slash if present
+          rel_path = rel_path[1..-1] if rel_path.start_with?('/')
+        else
+          # If not under workspace, use relative path from current directory
+          rel_path = Pathname.new(dep).relative_path_from(Pathname.new(Dir.pwd)).to_s
+        end
+        
+        # Destination path in bundle
+        dest_path = "testeranto/bundles/#{@test_name}/#{rel_path}"
+        
+        # Ensure destination directory exists
+        FileUtils.mkdir_p(File.dirname(dest_path))
+        
+        # Copy the file
+        FileUtils.cp(dep, dest_path)
+        puts "Copied dependency #{rel_path} to #{dest_path}"
+      end
+      
+      # Also copy the entry point's directory contents to maintain relative paths
+      # This helps with require_relative statements
+      entry_dir = File.dirname(entry_point_path)
+      Dir.glob(File.join(entry_dir, '*.rb')).each do |rb_file|
+        next if rb_file == entry_point_path
+        
+        rel_to_entry = Pathname.new(rb_file).relative_path_from(Pathname.new(File.dirname(entry_point_path))).to_s
+        dest_in_bundle = File.join(File.dirname(bundle_path), rel_to_entry)
+        
+        FileUtils.mkdir_p(File.dirname(dest_in_bundle))
+        FileUtils.cp(rb_file, dest_in_bundle)
+        puts "Copied sibling file #{rel_to_entry} to #{dest_in_bundle}"
+      end
     end
 
     # Write single inputFiles.json for all tests
@@ -97,7 +102,7 @@ class RubyNativeDetection
     File.write(input_files_path, JSON.pretty_generate(@all_tests_info))
     puts "Wrote inputFiles.json for #{@all_tests_info.size} tests to #{input_files_path}"
 
-    puts "Ruby native detection completed with framework detection"
+    puts "Ruby native detection completed"
   end
 end
 

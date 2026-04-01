@@ -1,15 +1,29 @@
 import type { TreeNode } from "../StakeholderUtils";
 import { jsonResponse } from "./jsonResponse";
 import { processTest } from "./utils/handleCollatedFilesUtils";
+import { vscodeHttpAPI, VscodeHttpResponse } from "../../../api";
 
-export const handleCollatedFiles = (server: any): Response => {
+export const handleCollatedFiles = (server: any, request?: Request): Response => {
+  // Validate against API definition
+  const apiDef = vscodeHttpAPI.getCollatedFiles;
+
+  if (request && request.method !== apiDef.method) {
+    return jsonResponse(
+      {
+        error: `Method ${request.method} not allowed for collated-files. Expected ${apiDef.method}`,
+      },
+      405,
+    );
+  }
+
   // Get all runtimes from configs
   const configs = server.configs;
   if (!configs || !configs.runtimes) {
-    return jsonResponse({
+    const response: VscodeHttpResponse<'getCollatedFiles'> = {
       tree: {},
       message: "No runtimes configured",
-    });
+    };
+    return jsonResponse(response, 200, vscodeHttpAPI.getCollatedFiles);
   }
 
   // Build a unified tree of all files across all runtimes
@@ -32,8 +46,9 @@ export const handleCollatedFiles = (server: any): Response => {
     }
   }
 
-  return jsonResponse({
+  const response: VscodeHttpResponse<'getCollatedFiles'> = {
     tree: treeRoot,
     message: "Success",
-  });
+  };
+  return jsonResponse(response, 200, vscodeHttpAPI.getCollatedFiles);
 };

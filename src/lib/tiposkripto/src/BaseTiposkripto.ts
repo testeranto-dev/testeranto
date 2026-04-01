@@ -467,8 +467,23 @@ export default abstract class BaseTiposkripto<
     } catch (error) {
       console.error("Error during test specification:", error);
       specError = error as Error;
-      // Continue with empty specs - we'll create error test jobs for all expected steps
+      // Continue with empty specs - we'll create error test jobs
       topLevelVerbs = [];
+      // Create an error step for the specification failure
+      const errorStep = {
+        constructor: { name: 'SpecificationError' },
+        features: [],
+        artifacts: [],
+        fails: 1,
+        failed: true,
+        error: specError,
+        toObj: () => ({
+          name: 'Specification_Error',
+          type: 'Error',
+          error: `Test specification failed: ${specError?.message}`
+        })
+      };
+      topLevelVerbs.push(errorStep);
     }
 
     // The specification returns an array of top-level verb instances
@@ -752,53 +767,56 @@ export default abstract class BaseTiposkripto<
           if (prop in target) {
             return target[prop];
           } else {
-            // Return a function that never throws and creates a failing BaseGiven
-            return (
-              features: string[] = [],
-              whens: any[] = [],
-              thens: any[] = [],
-              givenCB: any = () => {},
-              initialValues: any = undefined,
-            ) => {
+            // Return a function that can be called with arguments, which returns a function that creates BaseGiven
+            return (...args: any[]) => {
               console.error(`Given.${prop} is not defined in test implementation`);
-              try {
-                return new (class extends BaseGiven<I> {
-                  async givenThat(
-                    subject: any,
-                    testResource: any,
-                    artifactory: any,
-                    initializer: any,
-                    initialValues: any,
-                  ) {
-                    throw new Error(`Given.${prop} is not implemented`);
-                  }
-                })(
-                  features,
-                  whens,
-                  thens,
-                  givenCB,
-                  initialValues,
-                );
-              } catch (e) {
-                console.error(`Error creating Given.${prop}:`, e);
-                // Return a minimal BaseGiven that will fail when run
-                return {
-                  features: features,
-                  whens: whens,
-                  thens: thens,
-                  givenCB: givenCB,
-                  initialValues: initialValues,
-                  give: async () => {
-                    throw new Error(`Given.${prop} creation failed: ${e.message}`);
-                  },
-                  toObj: () => ({
-                    key: `Given_${prop}_error`,
-                    error: `Given.${prop} creation failed: ${e.message}`,
-                    failed: true,
+              // This function should return another function that creates the BaseGiven
+              return (
+                features: string[] = [],
+                whens: any[] = [],
+                thens: any[] = [],
+                givenCB: any = () => {},
+                initialValues: any = undefined,
+              ) => {
+                try {
+                  return new (class extends BaseGiven<I> {
+                    async givenThat(
+                      subject: any,
+                      testResource: any,
+                      artifactory: any,
+                      initializer: any,
+                      initialValues: any,
+                    ) {
+                      throw new Error(`Given.${prop} is not implemented`);
+                    }
+                  })(
+                    features,
+                    whens,
+                    thens,
+                    givenCB,
+                    initialValues,
+                  );
+                } catch (e) {
+                  console.error(`Error creating Given.${prop}:`, e);
+                  // Return a minimal BaseGiven that will fail when run
+                  return {
                     features: features,
-                  })
-                };
-              }
+                    whens: whens,
+                    thens: thens,
+                    givenCB: givenCB,
+                    initialValues: initialValues,
+                    give: async () => {
+                      throw new Error(`Given.${prop} creation failed: ${e.message}`);
+                    },
+                    toObj: () => ({
+                      key: `Given_${prop}_error`,
+                      error: `Given.${prop} creation failed: ${e.message}`,
+                      failed: true,
+                      features: features,
+                    })
+                  };
+                }
+              };
             };
           }
         }
@@ -815,7 +833,7 @@ export default abstract class BaseTiposkripto<
           if (prop in target) {
             return target[prop];
           } else {
-            // Return a function that never throws
+            // Return a function that creates a failing BaseWhen
             return (...args: any[]) => {
               console.error(`When.${prop} is not defined in test implementation`);
               try {
@@ -861,7 +879,7 @@ export default abstract class BaseTiposkripto<
           if (prop in target) {
             return target[prop];
           } else {
-            // Return a function that directly creates a failing BaseThen
+            // Return a function that creates a failing BaseThen
             return (...args: any[]) => {
               console.error(`Then.${prop} is not defined in test implementation`);
               return new (class extends BaseThen<I> {
@@ -893,9 +911,10 @@ export default abstract class BaseTiposkripto<
           if (prop in target) {
             return target[prop];
           } else {
-            // Return a function that creates a failing BaseDescribe
-            return () => {
+            // Return a function that can be called with arguments, which returns a function that creates BaseDescribe
+            return (...args: any[]) => {
               console.error(`Describe.${prop} is not defined in test implementation`);
+              // This function should return another function that creates the BaseDescribe
               return (features: string[], its: any[], describeCB: any, initialValues: any) => {
                 return new BaseDescribe<any>(
                   features,
@@ -948,9 +967,10 @@ export default abstract class BaseTiposkripto<
           if (prop in target) {
             return target[prop];
           } else {
-            // Return a function that creates a failing BaseConfirm
-            return () => {
+            // Return a function that can be called with arguments, which returns a function that creates BaseConfirm
+            return (...args: any[]) => {
               console.error(`Confirm.${prop} is not defined in test implementation`);
+              // This function should return another function that creates the BaseConfirm
               return (testCases: any[][], features: string[]) => {
                 return new (class extends BaseConfirm<I> {
                   constructor(
@@ -986,9 +1006,10 @@ export default abstract class BaseTiposkripto<
           if (prop in target) {
             return target[prop];
           } else {
-            // Return a function that creates a failing BaseValue
-            return () => {
+            // Return a function that can be called with arguments, which returns a function that creates BaseValue
+            return (...args: any[]) => {
               console.error(`Value.${prop} is not defined in test implementation`);
+              // This function should return another function that creates the BaseValue
               return (features: string[], tableRows: any[][], confirmCB: any, initialValues: any) => {
                 return new (class extends BaseValue<I> {
                   constructor(
@@ -1124,7 +1145,7 @@ export default abstract class BaseTiposkripto<
       try {
         // Determine the step type and run it appropriately
         let result;
-        const constructorName = step.constructor.name;
+        const constructorName = step.constructor?.name || 'Unknown';
         
         // Create artifactory for the step
         const stepArtifactory = this.createArtifactory({
@@ -1133,7 +1154,7 @@ export default abstract class BaseTiposkripto<
         });
         
         if (constructorName === 'BaseGiven') {
-          // Run the given step
+          // Run the given step (BDD)
           result = await step.give(
             input,
             `step_${index}`,
@@ -1143,7 +1164,7 @@ export default abstract class BaseTiposkripto<
             index,
           );
         } else if (constructorName === 'BaseDescribe') {
-          // Run the describe step
+          // Run the describe step (AAA)
           result = await step.describe(
             input,
             `step_${index}`,
@@ -1153,7 +1174,7 @@ export default abstract class BaseTiposkripto<
             index,
           );
         } else if (constructorName === 'BaseConfirm' || constructorName === 'BaseValue') {
-          // Run the confirm/value step
+          // Run the confirm/value step (TDT)
           if (typeof step.run === 'function') {
             result = await step.run(
               input,
@@ -1178,7 +1199,12 @@ export default abstract class BaseTiposkripto<
               stepArtifactory,
               index,
             );
+          } else {
+            throw new Error(`TDT step has no runnable method (run, confirm, or value)`);
           }
+        } else if (constructorName === 'SpecificationError') {
+          // This is a specification error step
+          throw step.error || new Error('Test specification failed');
         } else {
           // Try to run using common method names
           if (typeof step.run === 'function') {
@@ -1192,6 +1218,26 @@ export default abstract class BaseTiposkripto<
               input,
               testResourceConfiguration,
               stepArtifactory,
+            );
+          } else if (typeof step.give === 'function') {
+            // Try give method
+            result = await step.give(
+              input,
+              `step_${index}`,
+              testResourceConfiguration,
+              (t: any) => !!t,
+              stepArtifactory,
+              index,
+            );
+          } else if (typeof step.describe === 'function') {
+            // Try describe method
+            result = await step.describe(
+              input,
+              `step_${index}`,
+              testResourceConfiguration,
+              (t: any) => !!t,
+              stepArtifactory,
+              index,
             );
           } else {
             throw new Error(`Step type ${constructorName} has no runnable method`);
@@ -1211,7 +1257,11 @@ export default abstract class BaseTiposkripto<
       test: step,
 
       toObj: () => {
-        return step.toObj ? step.toObj() : { name: `Step_${index}`, type: step.constructor.name };
+        return step.toObj ? step.toObj() : { 
+          name: `Step_${index}`, 
+          type: step.constructor?.name || 'Unknown',
+          key: step.key || `step_${index}`
+        };
       },
 
       runner,
@@ -1268,19 +1318,19 @@ export default abstract class BaseTiposkripto<
           console.error((e as Error).stack);
           return {
             failed: true,
-            fails: -1,
+            fails: 1,
             artifacts: [],
             features: [],
-            tests: 0,
-            runTimeTests: -1,
+            tests: 1,
+            runTimeTests: totalTests,
             testJob: testJob.toObj(),
             error: {
               message: (e as Error).message,
               stack: (e as Error).stack,
               name: (e as Error).name
             },
-            stepName: `Step_${index}`,
-            stepType: 'Error'
+            stepName: step.key || `Step_${index}`,
+            stepType: step.constructor?.name || 'Error'
           };
         }
       },

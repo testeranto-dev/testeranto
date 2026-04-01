@@ -5,6 +5,7 @@ import { TestTreeItem } from "./TestTreeItem";
 import { TreeItemType } from "./types";
 import { StatusBarManager } from "./statusBarManager";
 import { DockerProcessTreeDataProvider } from "./providers/DockerProcessTreeDataProvider";
+import { ApiUtils } from "./providers/utils/apiUtils";
 
 export class CommandManager {
     private terminalManager: TerminalManager;
@@ -281,20 +282,22 @@ export class CommandManager {
                         outputChannel.show(true);
                         
                         // Fetch logs from server
-                        const response = await fetch(`http://localhost:3000/~/process-logs/${processId}`);
+                        const response = await fetch(ApiUtils.getProcessLogsUrl(processId));
                         if (!response.ok) {
                             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                         }
                         const data = await response.json();
+                        // Use type assertion for the response
+                        const processLogsResponse = data as import('../../api').ProcessLogsResponse;
                         
                         outputChannel.appendLine(`=== Logs for ${processName || processId} ===`);
                         outputChannel.appendLine(`Process ID: ${processId}`);
-                        outputChannel.appendLine(`Status: ${data.status || 'unknown'}`);
-                        outputChannel.appendLine(`Exit Code: ${data.exitCode || 'N/A'}`);
+                        outputChannel.appendLine(`Status: ${processLogsResponse.status || 'unknown'}`);
+                        outputChannel.appendLine(`Exit Code: ${processLogsResponse.exitCode || 'N/A'}`);
                         outputChannel.appendLine(`\n--- Logs ---\n`);
                         
-                        if (data.logs && Array.isArray(data.logs)) {
-                            data.logs.forEach((log: string) => {
+                        if (processLogsResponse.logs && Array.isArray(processLogsResponse.logs)) {
+                            processLogsResponse.logs.forEach((log: string) => {
                                 outputChannel.appendLine(log);
                             });
                         } else {

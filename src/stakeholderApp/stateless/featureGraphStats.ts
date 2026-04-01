@@ -1,4 +1,4 @@
-import { GraphData } from "grafeovidajo";
+import { type GraphData } from "../../grafeovidajo";
 
 export interface FeatureGraphStats {
   totalFeatures: number;

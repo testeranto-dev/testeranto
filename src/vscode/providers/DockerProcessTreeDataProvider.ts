@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
+import { ApiUtils } from './utils/apiUtils';
+import type { ProcessesResponse } from '../../../api';
 
 interface DockerProcess {
     // The server returns these fields (based on curl output)
@@ -55,14 +57,16 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
 
     private async fetchProcesses(): Promise<void> {
         try {
-            const response = await fetch('http://localhost:3000/~/processes', {
+            const response = await fetch(ApiUtils.getProcessesUrl(), {
                 signal: AbortSignal.timeout(3000) // 3 second timeout
             });
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             const data = await response.json();
-            const rawProcesses = Array.isArray(data.processes) ? data.processes : [];
+            // Use type assertion for the response
+            const processesResponse = data as ProcessesResponse;
+            const rawProcesses = Array.isArray(processesResponse.processes) ? processesResponse.processes : [];
             // Filter out invalid entries and map to our interface
             this.processes = rawProcesses.filter(process => 
                 process && typeof process === 'object'

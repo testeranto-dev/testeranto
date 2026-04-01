@@ -4,11 +4,11 @@
   "artifacts": [],
   "features": [],
   "tests": 1,
-  "runTimeTests": 0,
+  "runTimeTests": 1,
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1774918148662,
+  "timestamp": 1775070932988,
   "individualResults": [
     {
       "index": 0,
@@ -16,12 +16,12 @@
       "fails": 1,
       "features": [],
       "error": {
-        "message": "Test specification failed: Given.Default(...) is not a function",
-        "stack": "Error: Test specification failed: Given.Default(...) is not a function\n    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1107:66)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:1835:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:2187:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
-        "name": "Error"
+        "message": "Given.Default(...) is not a function",
+        "stack": "TypeError: Given.Default(...) is not a function\n    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)\n    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs:1049:23)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs:1877:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+        "name": "TypeError"
       },
-      "stepName": "Specification_Error",
-      "stepType": "Error",
+      "stepName": "Step_0",
+      "stepType": "SpecificationError",
       "testJob": {
         "name": "Specification_Error",
         "type": "Error",
