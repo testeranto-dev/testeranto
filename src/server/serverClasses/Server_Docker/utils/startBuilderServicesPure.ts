@@ -8,7 +8,12 @@ import {
   consoleWarn,
   execSyncWrapper,
   processCwd,
+  spawnWrapper,
+  existsSync,
+  readFileSync,
+  readdirSync,
 } from "../Server_Docker_Dependents";
+import { spawn } from "child_process";
 
 
 // Pure function to start builder services
@@ -20,7 +25,8 @@ export const startBuilderServicesPure = async (
     runtime: string,
     runtimeConfigKey: string,
   ) => Promise<void>,
-): Promise<void> => {
+): Promise<Set<string>> => {
+  const failedConfigs = new Set<string>();
   const builderServices: Array<{
     serviceName: string;
     runtime: string;
@@ -33,26 +39,36 @@ export const startBuilderServicesPure = async (
     configs.runtimes,
   )) {
     const runtime = runtimeTests.runtime;
-
-    if (!processedRuntimes.has(runtime)) {
-      processedRuntimes.add(runtime);
-      const builderServiceName = getBuilderServiceName(runtime);
-      builderServices.push({
-        serviceName: builderServiceName,
-        runtime: runtime,
-        configKey: runtimeTestsName,
-      });
-    }
+    
+    // Each config gets its own builder service
+    const builderServiceName = getBuilderServiceName(runtimeTestsName);
+    builderServices.push({
+      serviceName: builderServiceName,
+      runtime: runtime,
+      configKey: runtimeTestsName,
+    });
 
     if (runtime === "web") {
       hasWebRuntime = true;
     }
   }
 
-  for (const { serviceName, runtime, configKey } of builderServices) {
+  consoleLog(`[Server_Docker] Starting ${builderServices.length} builder services in parallel...`);
+
+  // Create promises for all builder services
+  const servicePromises = builderServices.map(async ({ serviceName, runtime, configKey }) => {
+    consoleLog(`[Server_Docker] Processing builder service: ${serviceName} (runtime: ${runtime}, config: ${configKey})`);
+    
     try {
-      // For web runtime, the service name might be 'webtests' instead of 'web-builder'
-      const actualServiceName = runtime === "web" ? "webtests" : serviceName;
+      // Add a timeout for the entire service startup
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error(`Timeout starting ${serviceName}`)), 300000) // 5 minutes
+      );
+      
+      const servicePromise = (async () => {
+        // Use the service name as-is (it's already based on configKey)
+        const actualServiceName = serviceName;
+        consoleLog(`[Server_Docker] Starting builder service: ${actualServiceName}`);
 
       // First, try to build the image locally if it doesn't exist
       const imageName = `testeranto-${runtime}-${configKey}:latest`;
@@ -63,33 +79,176 @@ export const startBuilderServicesPure = async (
         consoleLog(`[Server_Docker] Image ${imageName} exists locally`);
       } catch (imageError) {
         consoleLog(
-          `[Server_Docker] Image ${imageName} not found locally, trying to build...`,
+          `[Server_Docker] Image ${imageName} not found locally, building...`,
         );
-        // Try to build the image
+        // Try to build the image with real-time output
         const buildCmd = `docker build -f ${configs.runtimes[configKey].dockerfile} -t ${imageName} .`;
         try {
-          execSyncWrapper(buildCmd, { cwd: processCwd() });
-          consoleLog(`[Server_Docker] Built image ${imageName}`);
-        } catch (buildError) {
+          consoleLog(`[Server_Docker] Starting build for ${imageName}`);
+          consoleLog(`[Server_Docker] Build command: ${buildCmd}`);
+          
+          // Use spawnWrapper to show real-time output
+          const buildProcess = spawnWrapper('docker', [
+            'build',
+            '-f', configs.runtimes[configKey].dockerfile,
+            '-t', imageName,
+            '.'
+          ], {
+            cwd: processCwd(),
+            stdio: 'inherit' // This will show output in real-time
+          });
+          
+          // Wait for the build to complete
+          await new Promise<void>((resolve, reject) => {
+            buildProcess.on('close', (code) => {
+              if (code === 0) {
+                consoleLog(`[Server_Docker] ✅ Built image ${imageName}`);
+                resolve();
+              } else {
+                reject(new Error(`Build failed with exit code ${code}`));
+              }
+            });
+            buildProcess.on('error', (error) => {
+              reject(error);
+            });
+          });
+        } catch (buildError: any) {
           consoleWarn(
-            `[Server_Docker] Could not build image ${imageName}: ${buildError}`,
+            `[Server_Docker] Could not build image ${imageName}: ${buildError.message}`,
           );
           // Continue anyway - docker-compose will try to build it
         }
       }
 
       // Start the service
-      await spawnPromise(
-        `docker compose -f "testeranto/docker-compose.yml" up -d ${actualServiceName}`,
-      );
+      consoleLog(`[Server_Docker] Starting builder service: ${actualServiceName}`);
+      
+      // Check if the service is already running
+      const checkRunningCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${actualServiceName}`;
+      try {
+        const existingContainer = execSyncWrapper(checkRunningCmd, { cwd: processCwd() }).trim();
+        if (existingContainer) {
+          consoleLog(`[Server_Docker] Builder service ${actualServiceName} is already running`);
+        } else {
+          await spawnPromise(
+            `docker compose -f "testeranto/docker-compose.yml" up -d ${actualServiceName}`,
+          );
+          // Wait for the service to fully start (reduced from 5000ms)
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      } catch (error: any) {
+        consoleWarn(`[Server_Docker] Error checking/starting ${actualServiceName}: ${error.message}`);
+        // Try to start it anyway
+        await spawnPromise(
+          `docker compose -f "testeranto/docker-compose.yml" up -d ${actualServiceName}`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
 
-      await startServiceLogging(actualServiceName, runtime, configKey);
+      // Verify the service has produced output files
+      let hasOutputFiles = false;
+      const maxRetries = 10; // Increased retries for file checking
+      const retryDelay = 2000; // 2 seconds between checks
+
+      for (let j = 0; j < maxRetries; j++) {
+        try {
+          // Check for inputFiles.json in the bundle directory
+          const inputFilesPath = `${processCwd()}/testeranto/bundles/${configKey}/inputFiles.json`;
+          const bundleDir = `${processCwd()}/testeranto/bundles/${configKey}`;
+          
+          if (existsSync(inputFilesPath)) {
+            // Check if the file has content
+            const fileContent = readFileSync(inputFilesPath, 'utf-8');
+            if (fileContent.trim().length > 0) {
+              // Also check for bundle files if needed
+              const bundleFiles = readdirSync(bundleDir);
+              const hasBundleFiles = bundleFiles.some(file => 
+                file.endsWith('.js') || file.endsWith('.mjs') || 
+                file.endsWith('.py') || file.endsWith('.go') || 
+                file.endsWith('.rb') || file.endsWith('.rs') || 
+                file.endsWith('.java') || file.endsWith('.class')
+              );
+              
+              if (hasBundleFiles || bundleFiles.length > 0) {
+                hasOutputFiles = true;
+                consoleLog(`[Server_Docker] ✅ Builder service ${actualServiceName} produced output files`);
+                break;
+              }
+            }
+          }
+          
+          consoleLog(`[Server_Docker] Waiting for builder output files (attempt ${j + 1}/${maxRetries})...`);
+        } catch (error) {
+          // Ignore and retry
+          consoleLog(`[Server_Docker] Error checking output files: ${error.message}`);
+        }
+        
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+      }
+
+      if (hasOutputFiles) {
+        await startServiceLogging(actualServiceName, runtime, configKey);
+        consoleLog(`[Server_Docker] ✅ Builder service ${actualServiceName} completed successfully`);
+        return { success: true, serviceName: actualServiceName, configKey: configKey };
+      } else {
+        consoleError(`[Server_Docker] ❌ Builder service ${actualServiceName} failed to produce output files`);
+        failedConfigs.add(configKey);  // Track failed config
+        return { success: false, serviceName: actualServiceName, error: 'No output files produced', configKey: configKey };
+      }
+    })();
+    
+    // Add timeout to the service promise
+    return await Promise.race([servicePromise, timeoutPromise]);
+    
     } catch (error: any) {
       consoleError(
-        `[Server_Docker] ❌ Failed to start builder service ${serviceName}: ${error.message}`,
+        `[Server_Docker] ❌ Error with builder service ${serviceName}: ${error.message}`,
       );
       consoleError(`[Server_Docker] Full error: ${error.stack || error}`);
-      // Continue with other services even if one fails
+      
+      // Even if there was an error, check if output files exist
+      // This handles the case where the builder ran and exited
+      const inputFilesPath = `${processCwd()}/testeranto/bundles/${configKey}/inputFiles.json`;
+      if (existsSync(inputFilesPath)) {
+        const fileContent = readFileSync(inputFilesPath, 'utf-8');
+        if (fileContent.trim().length > 0) {
+          consoleLog(`[Server_Docker] ⚠️ Builder service ${serviceName} had errors but output files exist`);
+          return { success: true, serviceName: serviceName, warning: 'Service had errors but produced output', configKey: configKey };
+        } else {
+          failedConfigs.add(configKey);  // Track failed config even if file exists but is empty
+        }
+      } else {
+        failedConfigs.add(configKey);  // Track failed config when no file exists
+      }
+      
+      return { success: false, serviceName, error: error.message, configKey: configKey };
+    }
+  });
+
+  // Run all services in parallel
+  const results = await Promise.allSettled(servicePromises);
+
+  // Log summary of results
+  const successful = results.filter(r => 
+    r.status === 'fulfilled' && r.value?.success
+  ).length;
+  const failed = results.filter(r => 
+    r.status === 'rejected' || (r.status === 'fulfilled' && !r.value?.success)
+  ).length;
+
+  consoleLog(`[Server_Docker] Builder services summary: ${successful} produced output files, ${failed} failed`);
+
+  // Log which configs succeeded and failed
+  for (const result of results) {
+    if (result.status === 'fulfilled') {
+      const value = result.value;
+      if (value.success) {
+        consoleLog(`[Server_Docker]   ✅ ${value.serviceName}: Success`);
+      } else {
+        consoleLog(`[Server_Docker]   ❌ ${value.serviceName}: ${value.error || 'Failed'}`);
+      }
+    } else {
+      consoleLog(`[Server_Docker]   ❌ Unknown service: ${result.reason}`);
     }
   }
 
@@ -196,5 +355,31 @@ export const startBuilderServicesPure = async (
     }
   }
 
+  // Check and log bundle status
+  consoleLog(`[Server_Docker] Builder services completed. Checking bundle status...`);
+  for (const [configKey] of Object.entries(configs.runtimes)) {
+    // Skip failed configs
+    if (failedConfigs.has(configKey)) {
+      consoleLog(`[Server_Docker]   ${configKey}: ❌ Builder failed, skipping bundle check`);
+      continue;
+    }
+    
+    const inputFilesPath = `${processCwd()}/testeranto/bundles/${configKey}/inputFiles.json`;
+    const bundleDir = `${processCwd()}/testeranto/bundles/${configKey}`;
+    
+    if (existsSync(inputFilesPath)) {
+      try {
+        const fileContent = readFileSync(inputFilesPath, 'utf-8');
+        const bundleFiles = readdirSync(bundleDir);
+        consoleLog(`[Server_Docker]   ${configKey}: ✅ Bundle ready (${bundleFiles.length} files)`);
+      } catch (error) {
+        consoleLog(`[Server_Docker]   ${configKey}: ⚠️ Bundle exists but error reading`);
+      }
+    } else {
+      consoleLog(`[Server_Docker]   ${configKey}: ❌ Bundle not found`);
+    }
+  }
+
   consoleLog("[Server_Docker] ✅ All builder services started");
+  return failedConfigs;  // Return failed configs
 };

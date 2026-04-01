@@ -14,20 +14,24 @@ export const launchChecksPure = async (
 ): Promise<void> => {
   const uid = generateUid(configKey, testName);
   const checks = configValue.checks || [];
-  for (let i = 0; i < checks.length; i++) {
+  
+  // Launch all checks in parallel
+  const checkPromises = checks.map(async (check: any, i: number) => {
     const checkServiceName = getCheckServiceName(uid, i);
     try {
       await spawnPromise(
         `docker compose -f "testeranto/docker-compose.yml" up -d ${checkServiceName}`,
       );
-      // Capture any existing logs first
-      captureExistingLogs(checkServiceName, runtime, configKey, testName);
+      // Start logging immediately
       await startServiceLogging(checkServiceName, runtime, configKey, testName);
-      resourceChanged();
     } catch (error: any) {
       captureExistingLogs(checkServiceName, runtime, configKey, testName);
     }
-  }
+  });
 
+  // Wait for all checks to be launched
+  await Promise.allSettled(checkPromises);
+  
+  resourceChanged();
   writeConfigForExtension();
 };

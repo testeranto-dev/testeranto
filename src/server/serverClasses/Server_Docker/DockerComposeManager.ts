@@ -78,12 +78,14 @@ export class DockerComposeManager {
     await this.aiderImageBuilder.buildAiderImage();
   }
 
-  async startBuilderServices(): Promise<void> {
+  async startBuilderServices(): Promise<Set<string>> {
     try {
-      await this.builderServicesManager.startBuilderServices();
+      const failedConfigs = await this.builderServicesManager.startBuilderServices();
+      return failedConfigs;
     } catch (error) {
       this.logError('[DockerComposeManager] Failed to start builder services:', error);
-      // Don't rethrow - allow the application to continue
+      // Return all configs as failed to be safe
+      return new Set(Object.keys(this.configs.runtimes));
     }
   }
 

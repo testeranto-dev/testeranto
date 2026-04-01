@@ -62,7 +62,7 @@ export const pythonBuildCommand = (
 ) => {
   // MODE is now passed via environment in the service configuration
   // Ensure native detection module is available
-  return `cd /workspace && python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName} ${tests.join(" ")}`;
+  return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName} ${tests.join(" ")}`;
 };
 
 export const pythonBddCommand = (

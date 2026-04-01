@@ -50,10 +50,12 @@ export const generateServicesPure = (
       hasWebRuntime = true;
     }
 
-    if (!processedRuntimes.has(runtime)) {
-      processedRuntimes.add(runtime);
-      const builderServiceName = getBuilderServiceName(runtime);
+    // Create a builder service for each config, not just each runtime
+    // This ensures each config has its own builder service
+    const builderServiceName = getBuilderServiceName(runtimeTestsName);
 
+    // Check if we've already created a builder service for this config
+    if (!services[builderServiceName]) {
       const composeFunc = runTimeToCompose[runtime][0];
       const projectConfigPath = "testeranto/testeranto.ts";
       const runtimeConfigPath = buildOptions;
@@ -87,7 +89,11 @@ export const generateServicesPure = (
           };
         }
       }
-
+    }
+    
+    // Still track processed runtimes for other purposes
+    if (!processedRuntimes.has(runtime)) {
+      processedRuntimes.add(runtime);
     }
 
     for (const tName of testsObj) {

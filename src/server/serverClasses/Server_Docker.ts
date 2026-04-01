@@ -22,6 +22,7 @@ import {
   spawnPromise,
   captureExistingLogs,
   makeReportDirectory,
+  checkBundlesReady,
 } from "./Server_Docker/utils";
 import { generateUid, getAiderServiceName } from "./Server_Docker/Server_Docker_Constants";
 import { execSync } from "child_process";
@@ -147,73 +148,162 @@ export class Server_Docker extends Server_Docker_Compose {
 
     // Start builder services with error handling
     try {
-      await this.dockerComposeManager.startBuilderServices();
+      const failedBuilderConfigs = await this.dockerComposeManager.startBuilderServices();
+      // Store which configs failed
+      for (const configKey of failedBuilderConfigs) {
+        this.failedBuilderConfigs.add(configKey);
+        consoleLog(`[Server_Docker] Builder failed for config ${configKey}, will skip all dependent services`);
+      }
     } catch (error) {
       consoleError('[Server_Docker] Failed to start builder services:', error);
-      // Continue despite builder service failures
+      // Mark all configs as failed to be safe
+      for (const configKey of Object.keys(this.configs.runtimes)) {
+        this.failedBuilderConfigs.add(configKey);
+      }
     }
+
+    // Wait for bundles to be ready before proceeding with tests
+    consoleLog('[Server_Docker] Waiting for bundles to be ready...');
+    const maxWaitTime = 60000; // 1 minute max (reduced from 2 minutes)
+    const checkInterval = 1000; // Check every 1 second (reduced from 2)
+    const startTime = Date.now();
+    let bundlesReady = false;
+    let lastProgressReport = 0;
+
+    while (Date.now() - startTime < maxWaitTime && !bundlesReady) {
+      // Use the imported checkBundlesReady function, but exclude failed configs
+      bundlesReady = checkBundlesReady(this.configs, processCwd(), this.failedBuilderConfigs);
+      
+      if (bundlesReady) {
+        consoleLog('[Server_Docker] ✅ All bundles are ready');
+        break;
+      }
+      
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      
+      // Report progress more frequently
+      if (elapsed % 5 === 0 && elapsed !== lastProgressReport) {
+        consoleLog(`[Server_Docker] Still waiting for bundles... (${elapsed}s elapsed)`);
+        lastProgressReport = elapsed;
+        
+        // Also check builder container status
+        try {
+          const psCmd = 'docker compose -f "testeranto/docker-compose.yml" ps --format json';
+          const psOutput = execSync(psCmd, { cwd: processCwd() }).toString();
+          const containers = JSON.parse(psOutput);
+          
+          const builderContainers = containers.filter((c: any) => 
+            c.Service.includes('builder') || c.Service.includes('build')
+          );
+          
+          if (builderContainers.length > 0) {
+            consoleLog(`[Server_Docker] Builder containers status:`);
+            builderContainers.forEach((c: any) => {
+              consoleLog(`  - ${c.Service}: ${c.State} (${c.Status})`);
+            });
+          }
+        } catch (error) {
+          // Ignore errors in status check
+        }
+      }
+      
+      // Wait before checking again
+      await new Promise(resolve => setTimeout(resolve, checkInterval));
+    }
+
+    if (!bundlesReady) {
+      consoleWarn('[Server_Docker] ⚠️ Bundles not ready after waiting, proceeding anyway...');
+      // Check which bundles are missing (excluding already failed configs)
+      for (const [configKey] of Object.entries(this.configs.runtimes)) {
+        if (this.failedBuilderConfigs.has(configKey)) {
+          continue; // Skip already failed configs
+        }
+        
+        const bundleDir = `${processCwd()}/testeranto/bundles/${configKey}`;
+        const inputFilesPath = `${bundleDir}/inputFiles.json`;
+        
+        if (!existsSync(inputFilesPath)) {
+          consoleWarn(`[Server_Docker] ❌ Bundle missing for config ${configKey}`);
+          this.failedBuilderConfigs.add(configKey);
+        }
+      }
+    }
+
+    // Create an array of all test launch promises
+    const testLaunchPromises: Promise<void>[] = [];
 
     for (const [configKey, configValue] of Object.entries(
       this.configs.runtimes,
     )) {
+      // Skip configs with failed builders
+      if (this.failedBuilderConfigs.has(configKey)) {
+        consoleLog(`[Server_Docker] Skipping test services for failed config ${configKey}`);
+        continue;
+      }
+      
       const runtime: IRunTime = configValue.runtime as IRunTime;
       const tests = configValue.tests;
 
       for (const testName of tests) {
-        try {
-          const reportDir = makeReportDirectory(testName, configKey);
+        testLaunchPromises.push((async () => {
+          try {
+            const reportDir = makeReportDirectory(testName, configKey);
 
-          if (!existsSync(reportDir)) {
-            fs.mkdirSync(reportDir, { recursive: true });
-          }
+            if (!existsSync(reportDir)) {
+              fs.mkdirSync(reportDir, { recursive: true });
+            }
 
-          if (this.mode === "dev") {
-            await this.testFileManager.watchInputFile(
-              runtime,
-              testName,
-              (runtime, testName, configKey, configValue) =>
-                this.launchBddTest(runtime, testName, configKey, configValue),
-              (runtime, testName, configKey, configValue) =>
-                this.launchChecks(runtime, testName, configKey, configValue),
-              (runtime, testName, configKey, configValue, files) =>
-                this.informAider(
-                  runtime,
-                  testName,
-                  configKey,
-                  configValue,
-                  files,
-                ),
-              (runtime, testName, configKey) =>
-                this.testFileManager.loadInputFileOnce(
-                  runtime,
-                  testName,
-                  configKey,
-                ),
-            );
-            await this.testFileManager.watchOutputFile(
+            if (this.mode === "dev") {
+              await this.testFileManager.watchInputFile(
+                runtime,
+                testName,
+                (runtime, testName, configKey, configValue) =>
+                  this.launchBddTest(runtime, testName, configKey, configValue),
+                (runtime, testName, configKey, configValue) =>
+                  this.launchChecks(runtime, testName, configKey, configValue),
+                (runtime, testName, configKey, configValue, files) =>
+                  this.informAider(
+                    runtime,
+                    testName,
+                    configKey,
+                    configValue,
+                    files,
+                  ),
+                (runtime, testName, configKey) =>
+                  this.testFileManager.loadInputFileOnce(
+                    runtime,
+                    testName,
+                    configKey,
+                  ),
+              );
+              await this.testFileManager.watchOutputFile(
+                runtime,
+                testName,
+                configKey,
+              );
+            } else {
+              this.testFileManager.loadInputFileOnce(runtime, testName, configKey);
+            }
+
+            await this.createAiderMessageFile(
               runtime,
               testName,
               configKey,
+              configValue,
             );
-          } else {
-            this.testFileManager.loadInputFileOnce(runtime, testName, configKey);
+            await this.launchBddTest(runtime, testName, configKey, configValue);
+            await this.launchChecks(runtime, testName, configKey, configValue);
+            await this.launchAider(runtime, testName, configKey, configValue);
+          } catch (error) {
+            consoleError(`[Server_Docker] Error processing test ${testName} for config ${configKey}:`, error);
+            // Continue with other tests
           }
-
-          await this.createAiderMessageFile(
-            runtime,
-            testName,
-            configKey,
-            configValue,
-          );
-          await this.launchBddTest(runtime, testName, configKey, configValue);
-          await this.launchChecks(runtime, testName, configKey, configValue);
-          await this.launchAider(runtime, testName, configKey, configValue);
-        } catch (error) {
-          consoleError(`[Server_Docker] Error processing test ${testName} for config ${configKey}:`, error);
-          // Continue with other tests
-        }
+        })());
       }
     }
+
+    // Launch all tests in parallel
+    await Promise.allSettled(testLaunchPromises);
 
     if (this.mode === "once") {
       try {
@@ -440,30 +530,25 @@ export class Server_Docker extends Server_Docker_Compose {
       return;
     }
 
-    // Create aider message file
-    await this.createAiderMessageFile(
-      runtime,
-      testName,
-      configKey,
-      configValue,
-    );
-
-    // Launch aider service
+    // Create aider message file and launch aider in parallel
     const uid = generateUid(configKey, testName);
     const aiderServiceName = getAiderServiceName(uid);
 
-    // Start the aider service
-    const { processCwd } = await import("./Server_Docker/Server_Docker_Dependents");
-
     try {
-      // Start the aider service
-      execSync(`docker compose -f "${processCwd()}/testeranto/docker-compose.yml" up -d ${aiderServiceName}`, {
-        stdio: "inherit",
-        cwd: processCwd(),
-      });
+      // Run both operations in parallel
+      await Promise.all([
+        this.createAiderMessageFile(runtime, testName, configKey, configValue),
+        (async () => {
+          // Start the aider service
+          execSync(`docker compose -f "${processCwd()}/testeranto/docker-compose.yml" up -d ${aiderServiceName}`, {
+            stdio: "inherit",
+            cwd: processCwd(),
+          });
 
-      // Start logging for the aider service
-      await this.startServiceLogging(aiderServiceName, runtime, configKey, testName);
+          // Start logging for the aider service
+          await this.startServiceLogging(aiderServiceName, runtime, configKey, testName);
+        })()
+      ]);
 
       this.resourceChanged("/~/processes");
       this.writeConfigForExtension();

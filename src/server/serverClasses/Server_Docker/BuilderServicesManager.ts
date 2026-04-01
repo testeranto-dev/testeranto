@@ -9,16 +9,18 @@ export class BuilderServicesManager {
     private startServiceLogging: (serviceName: string, runtime: string, runtimeConfigKey: string) => Promise<void>
   ) { }
 
-  async startBuilderServices(): Promise<void> {
+  async startBuilderServices(): Promise<Set<string>> {
     try {
-      await startBuilderServicesPure(
+      const failedConfigs = await startBuilderServicesPure(
         this.configs,
         this.mode,
         this.startServiceLogging
       );
+      return failedConfigs;
     } catch (error) {
       console.error('[BuilderServicesManager] Failed to start builder services:', error);
-      // Don't rethrow - allow the application to continue
+      // Return all configs as failed to be safe
+      return new Set(Object.keys(this.configs.runtimes));
     }
   }
 }

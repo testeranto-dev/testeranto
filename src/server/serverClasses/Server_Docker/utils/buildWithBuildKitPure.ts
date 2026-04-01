@@ -1,7 +1,7 @@
 // import type { ITesterantoConfig } from "../../../../Types";
 import type { ITesterantoConfig } from "../../../../Types";
 import { BuildKitBuilder } from "../../../buildkit/BuildKit_Utils";
-import { processCwd } from "../Server_Docker_Dependents";
+import { consoleLog, processCwd } from "../Server_Docker_Dependents";
 
 // Track failed builds to prevent infinite retries
 const failedBuilds = new Set<string>();
@@ -46,6 +46,7 @@ export const buildWithBuildKitPure = async (
     // }
 
     try {
+      consoleLog(`[Server_Docker] Starting BuildKit build for ${configKey} (${runtime})...`);
       // Build the image using BuildKitBuilder
       const result = await BuildKitBuilder.buildImage({
         runtime: runtime,
@@ -58,9 +59,11 @@ export const buildWithBuildKitPure = async (
       });
 
       if (result.success) {
+        consoleLog(`[Server_Docker] ✅ BuildKit build succeeded for ${configKey} (${runtime}) in ${result.duration}ms`);
         // If build succeeds, remove from failed builds set
         failedBuilds.delete(buildId);
       } else {
+        consoleLog(`[Server_Docker] ❌ BuildKit build failed for ${configKey} (${runtime}): ${result.error}`);
         throw new Error(result.error || "Build failed");
       }
     } catch (error: any) {

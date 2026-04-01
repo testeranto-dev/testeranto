@@ -16,13 +16,19 @@ export const launchBddTestPure = async (
   const bddServiceName = getBddServiceName(uid);
 
   try {
-    await spawnPromise(
-      `docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`,
-    );
+    // Start the service and logging in parallel
+    const [startResult] = await Promise.allSettled([
+      spawnPromise(
+        `docker compose -f "testeranto/docker-compose.yml" up -d ${bddServiceName}`,
+      ),
+      // Start logging immediately without waiting for service to fully start
+      startServiceLogging(bddServiceName, runtime, configKey, testName),
+    ]);
 
-    await captureExistingLogs(bddServiceName, runtime, configKey, testName);
-
-    await startServiceLogging(bddServiceName, runtime, configKey, testName);
+    // Only capture existing logs if the service start failed
+    if (startResult.status === 'rejected') {
+      captureExistingLogs(bddServiceName, runtime, configKey, testName);
+    }
 
     resourceChanged();
     writeConfigForExtension();
