@@ -164,8 +164,8 @@ export class Server_Docker extends Server_Docker_Compose {
 
     // Wait for bundles to be ready before proceeding with tests
     consoleLog('[Server_Docker] Waiting for bundles to be ready...');
-    const maxWaitTime = 60000; // 1 minute max (reduced from 2 minutes)
-    const checkInterval = 1000; // Check every 1 second (reduced from 2)
+    const maxWaitTime = 30000; // 30 seconds max (reduced from 1 minute)
+    const checkInterval = 500; // Check every 500ms (reduced from 1 second)
     const startTime = Date.now();
     let bundlesReady = false;
     let lastProgressReport = 0;
@@ -182,7 +182,7 @@ export class Server_Docker extends Server_Docker_Compose {
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
       
       // Report progress more frequently
-      if (elapsed % 5 === 0 && elapsed !== lastProgressReport) {
+      if (elapsed % 3 === 0 && elapsed !== lastProgressReport) {
         consoleLog(`[Server_Docker] Still waiting for bundles... (${elapsed}s elapsed)`);
         lastProgressReport = elapsed;
         

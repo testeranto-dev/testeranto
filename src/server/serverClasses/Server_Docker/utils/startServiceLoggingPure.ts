@@ -131,7 +131,7 @@ export const startServiceLoggingPure = async (
   let status = 'running';
   let exitCode = null;
 
-  for (let i = 0; i < 30; i++) { // Wait up to 30 seconds (reduced from 60)
+  for (let i = 0; i < 20; i++) { // Wait up to 20 seconds (reduced from 30)
     try {
       const statusCmd = `docker inspect --format='{{.State.Status}}' ${dockerContainerId}`;
       status = execSyncWrapper(statusCmd, { cwd: cwd }).trim();
@@ -142,7 +142,7 @@ export const startServiceLoggingPure = async (
           const exitCodeCmd = `docker inspect --format='{{.State.ExitCode}}' ${dockerContainerId}`;
           exitCode = parseInt(execSyncWrapper(exitCodeCmd, { cwd: cwd }).trim());
           // Wait a bit more to ensure all logs are flushed to Docker daemon
-          await new Promise(resolve => setTimeout(resolve, 200)); // Reduced from 500
+          await new Promise(resolve => setTimeout(resolve, 100)); // Reduced from 200
           break;
         } catch (exitError) {
           // Continue with status check
@@ -159,7 +159,7 @@ export const startServiceLoggingPure = async (
   // Additional wait for builder services which might have buffered output
   if (serviceName.includes('builder') || serviceName.includes('build')) {
     consoleLog(`[startServiceLoggingPure] Builder service detected, waiting extra for log flush...`);
-    await new Promise(resolve => setTimeout(resolve, 500)); // Reduced from 1000
+    await new Promise(resolve => setTimeout(resolve, 200)); // Reduced from 500
   }
 
   // Capture logs - always capture both stdout and stderr

@@ -1,6 +1,7 @@
 import { spawnPromise } from ".";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
+import { BuildKitBuilder } from "../../../buildkit/BuildKit_Utils";
 import { getBuilderServiceName } from "../Server_Docker_Constants";
 import {
   consoleError,
@@ -62,7 +63,7 @@ export const startBuilderServicesPure = async (
     try {
       // Add a timeout for the entire service startup
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error(`Timeout starting ${serviceName}`)), 300000) // 5 minutes
+        setTimeout(() => reject(new Error(`Timeout starting ${serviceName}`)), 120000) // 2 minutes (reduced from 5)
       );
       
       const servicePromise = (async () => {
@@ -70,7 +71,7 @@ export const startBuilderServicesPure = async (
         const actualServiceName = serviceName;
         consoleLog(`[Server_Docker] Starting builder service: ${actualServiceName}`);
 
-      // First, try to build the image locally if it doesn't exist
+      // First, try to build the image using BuildKit if it doesn't exist
       const imageName = `testeranto-${runtime}-${configKey}:latest`;
       const imageExistsCmd = `docker image inspect ${imageName} > /dev/null 2>&1`;
 
@@ -79,44 +80,63 @@ export const startBuilderServicesPure = async (
         consoleLog(`[Server_Docker] Image ${imageName} exists locally`);
       } catch (imageError) {
         consoleLog(
-          `[Server_Docker] Image ${imageName} not found locally, building...`,
+          `[Server_Docker] Image ${imageName} not found locally, building with BuildKit...`,
         );
-        // Try to build the image with real-time output
-        const buildCmd = `docker build -f ${configs.runtimes[configKey].dockerfile} -t ${imageName} .`;
+        
         try {
-          consoleLog(`[Server_Docker] Starting build for ${imageName}`);
-          consoleLog(`[Server_Docker] Build command: ${buildCmd}`);
-          
-          // Use spawnWrapper to show real-time output
-          const buildProcess = spawnWrapper('docker', [
-            'build',
-            '-f', configs.runtimes[configKey].dockerfile,
-            '-t', imageName,
-            '.'
-          ], {
-            cwd: processCwd(),
-            stdio: 'inherit' // This will show output in real-time
+          // Use BuildKitBuilder to build the image
+          const result = await BuildKitBuilder.buildImage({
+            runtime: runtime,
+            configKey: configKey,
+            dockerfilePath: configs.runtimes[configKey].dockerfile,
+            buildContext: processCwd(),
+            cacheMounts: configs.runtimes[configKey].buildKitOptions?.cacheMounts || [],
+            targetStage: configs.runtimes[configKey].buildKitOptions?.targetStage,
+            buildArgs: configs.runtimes[configKey].buildKitOptions?.buildArgs || {},
           });
-          
-          // Wait for the build to complete
-          await new Promise<void>((resolve, reject) => {
-            buildProcess.on('close', (code) => {
-              if (code === 0) {
-                consoleLog(`[Server_Docker] ✅ Built image ${imageName}`);
-                resolve();
-              } else {
-                reject(new Error(`Build failed with exit code ${code}`));
-              }
-            });
-            buildProcess.on('error', (error) => {
-              reject(error);
-            });
-          });
+
+          if (result.success) {
+            consoleLog(`[Server_Docker] ✅ Built image ${imageName} with BuildKit in ${result.duration}ms`);
+          } else {
+            throw new Error(result.error || "BuildKit build failed");
+          }
         } catch (buildError: any) {
           consoleWarn(
-            `[Server_Docker] Could not build image ${imageName}: ${buildError.message}`,
+            `[Server_Docker] Could not build image ${imageName} with BuildKit: ${buildError.message}`,
           );
-          // Continue anyway - docker-compose will try to build it
+          // Fall back to regular docker build
+          try {
+            consoleLog(`[Server_Docker] Falling back to regular docker build for ${imageName}`);
+            
+            const buildProcess = spawnWrapper('docker', [
+              'build',
+              '-f', configs.runtimes[configKey].dockerfile,
+              '-t', imageName,
+              '.'
+            ], {
+              cwd: processCwd(),
+              stdio: 'inherit'
+            });
+            
+            await new Promise<void>((resolve, reject) => {
+              buildProcess.on('close', (code) => {
+                if (code === 0) {
+                  consoleLog(`[Server_Docker] ✅ Built image ${imageName} with fallback docker build`);
+                  resolve();
+                } else {
+                  reject(new Error(`Fallback build failed with exit code ${code}`));
+                }
+              });
+              buildProcess.on('error', (error) => {
+                reject(error);
+              });
+            });
+          } catch (fallbackError: any) {
+            consoleWarn(
+              `[Server_Docker] Fallback docker build also failed for ${imageName}: ${fallbackError.message}`,
+            );
+            // Continue anyway - docker-compose will try to build it
+          }
         }
       }
 
@@ -147,8 +167,8 @@ export const startBuilderServicesPure = async (
 
       // Verify the service has produced output files
       let hasOutputFiles = false;
-      const maxRetries = 10; // Increased retries for file checking
-      const retryDelay = 2000; // 2 seconds between checks
+      const maxRetries = 5; // Reduced from 10 to 5 retries
+      const retryDelay = 1000; // Reduced from 2 seconds to 1 second between checks
 
       for (let j = 0; j < maxRetries; j++) {
         try {

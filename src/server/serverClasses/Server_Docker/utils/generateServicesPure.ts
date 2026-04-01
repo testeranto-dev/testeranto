@@ -76,19 +76,12 @@ export const generateServicesPure = (
       // Add restart: "no" policy to prevent automatic restarts
       services[builderServiceName].restart = "no";
 
-      if (runtimeTests.buildKitOptions) {
-        // Keep the build section, but also set the image name
-        // This way docker-compose can build if the image doesn't exist
-        services[builderServiceName].image =
-          `testeranto-${runtime}-${runtimeTestsName}:latest`;
-        // Ensure build section exists
-        if (!services[builderServiceName].build) {
-          services[builderServiceName].build = {
-            context: processCwd(),
-            dockerfile: runtimeTests.dockerfile,
-          };
-        }
-      }
+      // Always set the image name for builder services
+      services[builderServiceName].image = `testeranto-${runtime}-${runtimeTestsName}:latest`;
+      
+      // Remove build section since BuildKit handles building
+      // Docker-compose will pull or use the pre-built image
+      delete services[builderServiceName].build;
     }
     
     // Still track processed runtimes for other purposes
