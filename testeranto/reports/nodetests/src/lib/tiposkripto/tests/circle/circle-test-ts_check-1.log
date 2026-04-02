@@ -1,5 +1,5 @@
-=== Log started at 2026-04-02T22:21:25.921Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (runtime: node) ===
-=== Container ID: 87b45f1220281d7a307223a8a42d50e749ea715281d5771f681fb6f078271d59 ===
+=== Log started at 2026-04-02T23:52:59.172Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (runtime: node) ===
+=== Container ID: 5390c17785cc8c2e0aa8426daac01236bd2fb14dd4aa40989de2ba8bfa866e83 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -11,7 +11,7 @@ warning testeranto@0.235.9: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsc --noEmit
 src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
 src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
-error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 2.
 
-=== Log captured at 2026-04-02T22:21:31.543Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-02T23:53:03.950Z (container status: exited, exit code: 2) ===

@@ -27149,83 +27149,35 @@ var StakeholderGraphClient = class {
     __publicField(this, "ws", null);
     __publicField(this, "onGraphUpdate");
     this.onGraphUpdate = onGraphUpdate;
-    this.connectWebSocket();
-  }
-  connectWebSocket() {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}`;
-    this.ws = new WebSocket(wsUrl);
-    this.ws.onopen = () => {
-      console.log("[StakeholderGraphClient] WebSocket connected");
-    };
-    this.ws.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        if (message.type === "graphUpdated") {
-          console.log("[StakeholderGraphClient] Graph update received, refreshing...");
-          this.fetchGraphData();
-        }
-      } catch (error) {
-        console.error("[StakeholderGraphClient] Error parsing WebSocket message:", error);
-      }
-    };
-    this.ws.onerror = (error) => {
-      console.error("[StakeholderGraphClient] WebSocket error:", error);
-    };
-    this.ws.onclose = () => {
-      console.log("[StakeholderGraphClient] WebSocket closed, reconnecting in 5s...");
-      setTimeout(() => this.connectWebSocket(), 5e3);
-    };
+    console.log("[StakeholderGraphClient] Stakeholder app uses static files only");
   }
   async fetchGraphData() {
     try {
-      const response = await fetch("/~/graph");
+      const response = await fetch("graph-data.json");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      if (result.graphData) {
-        this.onGraphUpdate(result.graphData);
-        return result.graphData;
+      let graphData;
+      if (result.data && result.data.featureGraph) {
+        graphData = result.data.featureGraph;
+      } else if (result.nodes) {
+        graphData = result;
+      } else {
+        throw new Error("Invalid graph data format");
       }
-      throw new Error("Invalid graph data response");
+      this.onGraphUpdate(graphData);
+      return graphData;
     } catch (error) {
       console.error("[StakeholderGraphClient] Failed to fetch graph data:", error);
       throw error;
     }
   }
   async updateGraph(operations) {
-    const update = {
-      operations,
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
-    };
-    try {
-      const response = await fetch("/~/graph", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(update)
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const result = await response.json();
-      if (result.graphData) {
-        this.onGraphUpdate(result.graphData);
-        return result.graphData;
-      }
-      throw new Error("Invalid graph update response");
-    } catch (error) {
-      console.error("[StakeholderGraphClient] Failed to update graph:", error);
-      throw error;
-    }
+    console.warn("[StakeholderGraphClient] Stakeholder app cannot update graph - read only");
+    throw new Error("Stakeholder app is read-only. Graph updates are not supported.");
   }
   disconnect() {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
   }
 };
 
@@ -27258,60 +27210,44 @@ var DefaultStakeholderApp = () => {
     const loadData = async () => {
       setLoading(true);
       setError(null);
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2e3);
-      let isApiMode = false;
       try {
-        const response = await fetch("/~/graph", {
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
-        if (response.ok) {
-          isApiMode = true;
-          const result = await response.json();
-          if (result.graphData) {
-            const stakeholderData = {
-              configs: result.graphData.configs || {},
-              allTestResults: result.graphData.allTestResults || {},
-              featureTree: result.graphData.featureTree || {},
-              featureGraph: result.graphData.featureGraph || { nodes: [], edges: [] },
-              fileTreeGraph: result.graphData.fileTreeGraph || { nodes: [], edges: [] },
-              vizConfig: result.graphData.vizConfig || {
-                projection: {
-                  xAttribute: "status",
-                  yAttribute: "priority",
-                  xType: "categorical",
-                  yType: "continuous",
-                  layout: "grid"
-                },
-                style: {
-                  nodeSize: 10,
-                  nodeColor: "#007acc",
-                  nodeShape: "circle"
-                }
-              },
-              documentation: { files: [] },
-              testResults: {},
-              errors: [],
-              timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-              workspaceRoot: ""
-            };
-            setData(stakeholderData);
-            setLoading(false);
-            return;
-          }
-        }
-      } catch (error2) {
-        console.log("API mode not available, falling back to static mode:", error2);
-      }
-      clearTimeout(timeoutId);
-      try {
-        const response = await fetch("graph-data.json");
+        const response = await fetch("/testeranto/reports/graph-data.json");
         if (!response.ok) {
           throw new Error(`Failed to load static file: ${response.status} ${response.statusText}`);
         }
         const result = await response.json();
-        setData(result);
+        let stakeholderData;
+        if (result.data) {
+          stakeholderData = {
+            configs: result.data.configs || {},
+            allTestResults: result.data.allTestResults || {},
+            featureTree: result.data.featureTree || {},
+            featureGraph: result.data.featureGraph || { nodes: [], edges: [] },
+            fileTreeGraph: result.data.fileTreeGraph || { nodes: [], edges: [] },
+            vizConfig: result.data.vizConfig || {
+              projection: {
+                xAttribute: "status",
+                yAttribute: "priority",
+                xType: "categorical",
+                yType: "continuous",
+                layout: "grid"
+              },
+              style: {
+                nodeSize: 10,
+                nodeColor: "#007acc",
+                nodeShape: "circle"
+              }
+            },
+            documentation: { files: [] },
+            testResults: {},
+            errors: [],
+            timestamp: result.timestamp || (/* @__PURE__ */ new Date()).toISOString(),
+            workspaceRoot: ""
+          };
+        } else {
+          stakeholderData = result;
+        }
+        setData(stakeholderData);
         setLoading(false);
       } catch (error2) {
         console.error("Failed to load static graph data:", error2);

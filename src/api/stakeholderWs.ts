@@ -1,12 +1,8 @@
-// WebSocket broadcast types
-export interface ResourceChangedData {
-  url: string;
-  timestamp: string;
-  message: string;
-}
+// This file is kept for backward compatibility
+// The types are now defined in src/api.ts
+export type { ResourceChangedData, ConnectedData } from "../api";
 
-export interface ConnectedData {
-  message: string;
-  timestamp: string;
-}
-
+// vscodeWsAPI with proper typing
+export const stakeholderWsAPI = {
+  //  TODO add route for updating the graph
+} as const;

@@ -11,53 +11,34 @@ export class StakeholderGraphClient {
 
   constructor(onGraphUpdate: (data: GraphData) => void) {
     this.onGraphUpdate = onGraphUpdate;
-    this.connectWebSocket();
-  }
-
-  private connectWebSocket(): void {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}`;
-
-    this.ws = new WebSocket(wsUrl);
-
-    this.ws.onopen = () => {
-      console.log('[StakeholderGraphClient] WebSocket connected');
-    };
-
-    this.ws.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        if (message.type === 'graphUpdated') {
-          console.log('[StakeholderGraphClient] Graph update received, refreshing...');
-          this.fetchGraphData();
-        }
-      } catch (error) {
-        console.error('[StakeholderGraphClient] Error parsing WebSocket message:', error);
-      }
-    };
-
-    this.ws.onerror = (error) => {
-      console.error('[StakeholderGraphClient] WebSocket error:', error);
-    };
-
-    this.ws.onclose = () => {
-      console.log('[StakeholderGraphClient] WebSocket closed, reconnecting in 5s...');
-      setTimeout(() => this.connectWebSocket(), 5000);
-    };
+    // Stakeholder app should not use WebSocket or HTTP APIs
+    // It only loads static files
+    console.log('[StakeholderGraphClient] Stakeholder app uses static files only');
   }
 
   async fetchGraphData(): Promise<GraphData> {
     try {
-      const response = await fetch('/~/graph');
+      // Always load baseline from graph-data.json (static file)
+      const response = await fetch('graph-data.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      if (result.graphData) {
-        this.onGraphUpdate(result.graphData);
-        return result.graphData;
+      
+      // Handle both direct GraphData and nested formats
+      let graphData: GraphData;
+      if (result.data && result.data.featureGraph) {
+        // New format with nested data
+        graphData = result.data.featureGraph;
+      } else if (result.nodes) {
+        // Direct GraphData format
+        graphData = result;
+      } else {
+        throw new Error('Invalid graph data format');
       }
-      throw new Error('Invalid graph data response');
+      
+      this.onGraphUpdate(graphData);
+      return graphData;
     } catch (error) {
       console.error('[StakeholderGraphClient] Failed to fetch graph data:', error);
       throw error;
@@ -65,40 +46,13 @@ export class StakeholderGraphClient {
   }
 
   async updateGraph(operations: GraphOperation[]): Promise<GraphData> {
-    const update: GraphUpdate = {
-      operations,
-      timestamp: new Date().toISOString()
-    };
-
-    try {
-      const response = await fetch('/~/graph', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(update)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      if (result.graphData) {
-        this.onGraphUpdate(result.graphData);
-        return result.graphData;
-      }
-      throw new Error('Invalid graph update response');
-    } catch (error) {
-      console.error('[StakeholderGraphClient] Failed to update graph:', error);
-      throw error;
-    }
+    // Stakeholder app should not update graph via HTTP
+    // Graph updates are handled by the server and saved to graph-data.json
+    console.warn('[StakeholderGraphClient] Stakeholder app cannot update graph - read only');
+    throw new Error('Stakeholder app is read-only. Graph updates are not supported.');
   }
 
   disconnect(): void {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
+    // Nothing to disconnect - no WebSocket connection
   }
 }

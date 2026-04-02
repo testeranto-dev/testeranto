@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { stakeholderWsAPI } from "../../api";
-import type { vscodeWsAPI } from "../../api/vscodeExtensionWs";
+import { stakeholderWsAPI, vscodeWsAPI } from "../../api";
 import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";

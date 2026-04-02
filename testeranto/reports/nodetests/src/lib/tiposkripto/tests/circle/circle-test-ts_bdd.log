@@ -1,5 +1,5 @@
-=== Log started at 2026-04-02T22:21:21.862Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 629edd4377a04453c8fede061f27109b3f6ac3247c3c3a7cce3f7f66fdb98a5d ===
+=== Log started at 2026-04-02T23:52:58.068Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: f36b173b48d758305e170eb422868127145ba598c8228e42d27438edaa5c0516 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -22,18 +22,18 @@ Describe implementation for "a circle with radius" is not a function, got: objec
 [Circle adapter] verify called with store: Circle { radius: NaN }
 [Circle adapter] verificationFn: [AsyncFunction (anonymous)]
 [Circle adapter] afterEach called with store: Circle { radius: NaN }
+Error: Step type Function has no runnable method
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
+Error: Step type Function has no runnable method
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
 testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
-Done in 0.70s.
+Done in 0.63s.
 
-=== Log captured at 2026-04-02T22:21:24.044Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-02T23:52:58.357Z (container status: exited, exit code: 0) ===

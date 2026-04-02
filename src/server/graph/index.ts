@@ -31,24 +31,39 @@ export class GraphManager {
   private graphDataPath: string;
 
   constructor(private projectRoot: string) {
+    // Use the same file that the stakeholder app reads from
     this.graphDataPath = path.join(projectRoot, 'testeranto', 'reports', 'graph-data.json');
-    // Always start with a fresh graph on startup
-    this.graph = createGraph();
-    console.log('[GraphManager] Created fresh graph (clearing old data)');
     
-    // Delete the old graph-data.json file if it exists
-    this.clearOldGraphData();
-  }
-
-  // Clear old graph data file
-  private clearOldGraphData(): void {
-    try {
-      if (fs.existsSync(this.graphDataPath)) {
-        fs.unlinkSync(this.graphDataPath);
-        console.log(`[GraphManager] Deleted old graph data file: ${this.graphDataPath}`);
+    // Load existing graph data if available, otherwise create fresh
+    if (fs.existsSync(this.graphDataPath)) {
+      try {
+        const fileContent = fs.readFileSync(this.graphDataPath, 'utf-8');
+        const parsed = JSON.parse(fileContent);
+        
+        // Handle both wrapper format and raw GraphData format
+        let graphData: GraphData;
+        if (parsed.data && parsed.data.featureGraph) {
+          // Wrapper format: {timestamp, version, data: {featureGraph: {...}}}
+          graphData = parsed.data.featureGraph;
+        } else if (parsed.nodes) {
+          // Raw GraphData format
+          graphData = parsed;
+        } else {
+          console.warn('[GraphManager] Invalid graph data format, starting fresh');
+          this.graph = createGraph();
+          return;
+        }
+        
+        this.graph = dataToGraph(graphData);
+        console.log(`[GraphManager] Loaded existing graph with ${this.graph.order} nodes and ${this.graph.size} edges`);
+      } catch (error) {
+        console.error('[GraphManager] Error loading existing graph, starting fresh:', error);
+        this.graph = createGraph();
       }
-    } catch (error) {
-      console.error('[GraphManager] Error deleting old graph data:', error);
+    } else {
+      // Start with a fresh graph if no file exists
+      this.graph = createGraph();
+      console.log('[GraphManager] Created fresh graph (no existing data found)');
     }
   }
 
@@ -69,16 +84,66 @@ export class GraphManager {
     return createGraph();
   }
 
-  // Save graph to file
+  // Save graph to file, preserving existing data in the wrapper format
   public saveGraph(): void {
     try {
-      const data = graphToData(this.graph);
+      const graphData = graphToData(this.graph);
       const dir = path.dirname(this.graphDataPath);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
-      fs.writeFileSync(this.graphDataPath, JSON.stringify(data, null, 2), 'utf-8');
-      console.log(`[GraphManager] Saved graph to ${this.graphDataPath} with ${data.nodes.length} nodes and ${data.edges.length} edges`);
+      
+      let existingData: any = {
+        timestamp: new Date().toISOString(),
+        version: '1.0',
+        data: {
+          featureGraph: graphData,
+          // Default empty values for other fields
+          configs: {},
+          allTestResults: {},
+          featureTree: {},
+          fileTreeGraph: { nodes: [], edges: [] },
+          vizConfig: {
+            projection: {
+              xAttribute: 'status',
+              yAttribute: 'priority',
+              xType: 'categorical',
+              yType: 'continuous',
+              layout: 'grid'
+            },
+            style: {
+              nodeSize: 10,
+              nodeColor: '#007acc',
+              nodeShape: 'circle'
+            }
+          }
+        }
+      };
+      
+      // Try to read existing file to preserve other data
+      if (fs.existsSync(this.graphDataPath)) {
+        try {
+          const fileContent = fs.readFileSync(this.graphDataPath, 'utf-8');
+          const parsed = JSON.parse(fileContent);
+          
+          // If it has the wrapper format, preserve everything except featureGraph
+          if (parsed.data) {
+            existingData = {
+              ...parsed,
+              timestamp: new Date().toISOString(),
+              data: {
+                ...parsed.data,
+                featureGraph: graphData  // Update only the featureGraph
+              }
+            };
+          }
+        } catch (error) {
+          console.warn('[GraphManager] Error reading existing graph-data.json, creating new:', error);
+        }
+      }
+      
+      fs.writeFileSync(this.graphDataPath, JSON.stringify(existingData, null, 2), 'utf-8');
+      console.log(`[GraphManager] Saved graph to ${this.graphDataPath} with ${graphData.nodes.length} nodes and ${graphData.edges.length} edges`);
     } catch (error) {
       console.error('[GraphManager] Error saving graph:', error);
     }

@@ -27,31 +27,8 @@ const GRAPH_DATA_PATHS = {
   static: 'graph-data.json'
 } as const;
 
-// Types from api.ts - for type safety
-// These match the actual types defined in src/api.ts
-// See: src/api.ts -> export interface GraphDataResponse
-interface GraphDataResponse {
-  success: boolean;
-  timestamp: string;
-  data: any;
-}
-
-// GraphData type - should match the definition in grafeovidajo
-interface GraphData {
-  nodes: Node[];
-  edges?: Edge[];
-}
-
-interface Node {
-  id: string;
-  attributes: Record<string, any>;
-}
-
-interface Edge {
-  source: string;
-  target: string;
-  attributes?: Record<string, any>;
-}
+// Import types from the graph module
+import type { GraphData } from '../../graph/index';
 
 // Types that should match those in src/api.ts
 // For proper type safety, these should be imported from a shared location
@@ -126,75 +103,57 @@ export const DefaultStakeholderApp: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // Determine if we're in API mode or static mode
-      // In API mode, the server is running and we can fetch from /~/graph
-      // In static mode, we load from graph-data.json in the same directory
-
-      // First, try to detect if we're in API mode by checking if we can access the server
-      // We'll try to fetch from /~/graph with a short timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-      let isApiMode = false;
-
+      // Always load baseline from graph-data.json first
+      // This ensures consistent baseline across all modes
       try {
-        const response = await fetch('/~/graph', {
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          isApiMode = true;
-          const result = await response.json();
-          if (result.graphData) {
-            // Convert to StakeholderData format
-            const stakeholderData: StakeholderData = {
-              configs: result.graphData.configs || {},
-              allTestResults: result.graphData.allTestResults || {},
-              featureTree: result.graphData.featureTree || {},
-              featureGraph: result.graphData.featureGraph || { nodes: [], edges: [] },
-              fileTreeGraph: result.graphData.fileTreeGraph || { nodes: [], edges: [] },
-              vizConfig: result.graphData.vizConfig || {
-                projection: {
-                  xAttribute: 'status',
-                  yAttribute: 'priority',
-                  xType: 'categorical',
-                  yType: 'continuous',
-                  layout: 'grid'
-                },
-                style: {
-                  nodeSize: 10,
-                  nodeColor: '#007acc',
-                  nodeShape: 'circle'
-                }
-              },
-              documentation: { files: [] },
-              testResults: {},
-              errors: [],
-              timestamp: new Date().toISOString(),
-              workspaceRoot: ''
-            };
-            setData(stakeholderData);
-            setLoading(false);
-            return;
-          }
-        }
-      } catch (error) {
-        // Server is not available or request failed
-        console.log('API mode not available, falling back to static mode:', error);
-      }
-
-      clearTimeout(timeoutId);
-
-      // If we're not in API mode, try static mode
-      try {
-        const response = await fetch('graph-data.json');
+        const response = await fetch('/testeranto/reports/graph-data.json');
         if (!response.ok) {
           throw new Error(`Failed to load static file: ${response.status} ${response.statusText}`);
         }
         const result = await response.json();
-        setData(result as StakeholderData);
+        
+        // Handle both direct StakeholderData format and nested data format
+        let stakeholderData: StakeholderData;
+        if (result.data) {
+          // New format with nested data
+          stakeholderData = {
+            configs: result.data.configs || {},
+            allTestResults: result.data.allTestResults || {},
+            featureTree: result.data.featureTree || {},
+            featureGraph: result.data.featureGraph || { nodes: [], edges: [] },
+            fileTreeGraph: result.data.fileTreeGraph || { nodes: [], edges: [] },
+            vizConfig: result.data.vizConfig || {
+              projection: {
+                xAttribute: 'status',
+                yAttribute: 'priority',
+                xType: 'categorical',
+                yType: 'continuous',
+                layout: 'grid'
+              },
+              style: {
+                nodeSize: 10,
+                nodeColor: '#007acc',
+                nodeShape: 'circle'
+              }
+            },
+            documentation: { files: [] },
+            testResults: {},
+            errors: [],
+            timestamp: result.timestamp || new Date().toISOString(),
+            workspaceRoot: ''
+          };
+        } else {
+          // Direct StakeholderData format
+          stakeholderData = result as StakeholderData;
+        }
+        
+        setData(stakeholderData);
         setLoading(false);
+        
+        // After loading baseline, we can connect to WebSocket for live updates
+        // The WebSocket connection is handled by the graph client initialization
+        // which happens in the other useEffect when data is set
+        
       } catch (error) {
         console.error('Failed to load static graph data:', error);
         setError(error.message || 'Unknown error loading data');

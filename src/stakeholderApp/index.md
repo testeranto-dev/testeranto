@@ -31,4 +31,48 @@ This app is compiled by the user and hence, it has no build steps!
 
 ## how it works
 
-We have a file `src/stakeholderApp/index.tsx` which we copy to the user's `testeranto` folder during the initialization of the project . The user can edit this file to taste, and during the server start up, this file is bundled (along with the user's changes) by `src/server/serverClasses/Server_Docker/StakeholderAppBundler.ts`. `src/server/serverClasses/utils/embedConfigInHtml.ts` is used to regenerate `testeranto/reports/index.html` dynamically. It computes a graph network and encodes it into the html. Finally, that html loads the compiled stake holder `testeranto/reports/index.js` and the stakeholder app can load.
+### **Data Loading Flow:**
+
+1. **Baseline Loading:**
+   - The app always loads baseline graph data from `graph-data.json`
+   - This file contains the complete graph state at server startup
+   - In static mode (GitHub Pages), this is the only data source
+
+2. **Live Updates (Development Mode):**
+   - After loading baseline, the app connects to WebSocket
+   - Server broadcasts `graphUpdated` events when changes occur
+   - The app applies incremental updates in real-time
+
+3. **Update Mechanism:**
+   - User interactions generate graph mutations
+   - Mutations are sent to server via POST `/~/graph`
+   - Server applies mutations and broadcasts to all clients
+   - GET requests to `/~/graph` are no longer supported
+
+### **Synchronization Status:**
+
+#### ✅ **Implemented:**
+- Baseline loading from `graph-data.json`
+- WebSocket connection for real-time updates
+- POST `/~/graph` for sending mutations
+- Server-side broadcast of updates
+
+#### ❌ **Missing (Roadmap):**
+- **State Consistency**: No hash verification between client and server
+- **Robust Updates**: No queue system, retry logic, or offline support
+- **Conflict Resolution**: No handling of concurrent edits
+- **Versioning**: No timestamp-based ordering of mutations
+
+**See the synchronization roadmap in `src/graph/index.md` for detailed plans to address these gaps.**
+
+### **File Generation:**
+
+We have a file `src/stakeholderApp/index.tsx` which we copy to the user's `testeranto` folder during the initialization of the project. The user can edit this file to taste, and during the server start up, this file is bundled (along with the user's changes) by `src/server/serverClasses/Server_Docker/StakeholderAppBundler.ts`. 
+
+`src/server/serverClasses/utils/embedConfigInHtml.ts` is used to regenerate `testeranto/reports/index.html` dynamically. It computes a graph network and encodes it into the html. Finally, that html loads the compiled stake holder `testeranto/reports/index.js` and the stakeholder app can load.
+
+### **Dual-Mode Operation:**
+
+- **Static Mode:** Loads only from `graph-data.json`, no server connection
+- **API Mode:** Loads baseline from `graph-data.json`, then connects to WebSocket for live updates
+- **Update Flow:** All updates go through POST `/~/graph`, with WebSocket broadcasts for real-time sync

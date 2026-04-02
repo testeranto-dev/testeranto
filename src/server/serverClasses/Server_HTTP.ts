@@ -25,14 +25,12 @@ export abstract class Server_HTTP extends Server_Base {
       configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
     this.routesHandler = new Server_HTTP_Routes(this);
     this.graphManager = new GraphManager(process.cwd());
-
-    // Save initial empty graph immediately
-    console.log('[Server_HTTP] Saving initial empty graph...');
-    this.graphManager.saveGraph();
     
-    // Also save static graph data file
-    const initialGraphData = this.graphManager.getGraphData();
-    this.saveGraphDataForStaticMode(initialGraphData);
+    // Don't save initial empty graph here - it will be saved by resetGraphData()
+    // which is called in start()
+
+    // Don't create graph-data.json here - it will be created when generateGraphData() is called
+    // This prevents overwriting existing data on server restart
 
     // Temporarily disabled: Initialize graph with markdown files if available
     // if (configs.documentationGlob) {
@@ -52,11 +50,8 @@ export abstract class Server_HTTP extends Server_Base {
     // Generate and save graph data immediately on startup
     console.log('[Server_HTTP] Generating initial graph data...');
     try {
-      const graphData = this.generateGraphData();
+      const graphData = this.resetGraphData();
       console.log('[Server_HTTP] Initial graph data generated successfully');
-      
-      // Save graph data for static mode access
-      this.saveGraphDataForStaticMode(graphData.featureGraph || { nodes: [], edges: [] });
     } catch (error) {
       console.error('[Server_HTTP] Error generating initial graph data:', error);
     }
@@ -171,9 +166,11 @@ export abstract class Server_HTTP extends Server_Base {
       }
     }
 
+    // Handle /~/ routes (vscode API) - for VS Code extension
     if (url.pathname.startsWith("/~/")) {
       return await this.handleRouteRequest(request, url);
     } else {
+      // Serve static files for everything else - for stakeholder app
       return await this.serveStaticFile(request, url);
     }
   }
@@ -211,19 +208,26 @@ export abstract class Server_HTTP extends Server_Base {
     return serveStaticFile(request, url, this.configs);
   }
 
-  public generateGraphData(): any {
+  public resetGraphData(): any {
+    console.log('[Server_HTTP] resetGraphData() called');
+    
     // Generate graph data based on current configuration and test results
     const configs = this.configs;
+    console.log(`[Server_HTTP] Configs has ${Object.keys(configs?.runtimes || {}).length} runtimes`);
 
     // Get graph data from GraphManager
     const graphData = this.graphManager ? this.graphManager.getGraphData() : { nodes: [], edges: [] };
+    console.log(`[Server_HTTP] Initial graph data from GraphManager: ${graphData.nodes?.length || 0} nodes, ${graphData.edges?.length || 0} edges`);
 
     // Get test results if available
     const testResults = this.getCurrentTestResults ? this.getCurrentTestResults() : {};
+    console.log(`[Server_HTTP] Test results: ${Object.keys(testResults).length} runtimes with results`);
 
     // Update graph with test results
     if (Object.keys(testResults).length > 0) {
+      console.log('[Server_HTTP] Updating graph with test results...');
       for (const [runtime, runtimeResults] of Object.entries(testResults as Record<string, any>)) {
+        console.log(`[Server_HTTP] Processing runtime: ${runtime} with ${Object.keys(runtimeResults).length} tests`);
         for (const [testName, testResult] of Object.entries(runtimeResults as Record<string, any>)) {
           // Create a combined test result object
           const combinedResult = {
@@ -235,6 +239,8 @@ export abstract class Server_HTTP extends Server_Base {
           this.graphManager.applyUpdate(update);
         }
       }
+    } else {
+      console.log('[Server_HTTP] No test results available to update graph');
     }
 
     // If graph has nodes but no edges, generate edges
@@ -244,29 +250,25 @@ export abstract class Server_HTTP extends Server_Base {
       this.graphManager.applyUpdate(update);
     }
 
-    // Save the graph to disk
+    // Log graph statistics (but don't save here - saveGraphDataForStaticMode() will save)
     if (this.graphManager) {
-      this.graphManager.saveGraph();
-      
-      // Log graph statistics
       const stats = this.graphManager.getGraphStats();
       console.log(`[Server_HTTP] Graph stats: ${stats.nodes} nodes, ${stats.edges} edges`);
       console.log(`[Server_HTTP] Node types:`, stats.nodeTypes);
       console.log(`[Server_HTTP] Edge types:`, stats.edgeTypes);
     }
-    
+
     // Get updated graph data
     const updatedGraphData = this.graphManager ? this.graphManager.getGraphData() : { nodes: [], edges: [] };
-    
+    console.log(`[Server_HTTP] Updated graph data: ${updatedGraphData.nodes?.length || 0} nodes, ${updatedGraphData.edges?.length || 0} edges`);
+
     // Log if edges are missing
     if (updatedGraphData.nodes.length > 0 && updatedGraphData.edges.length === 0) {
       console.warn('[Server_HTTP] WARNING: Graph has nodes but no edges!');
     }
 
-    // Also save a standalone graph-data.json file for static mode
-    this.saveGraphDataForStaticMode(updatedGraphData);
-
-    return {
+    // Prepare the full graph data structure
+    const fullGraphData = {
       configs: {
         runtimes: configs?.runtimes || {},
         documentationGlob: configs?.documentationGlob,
@@ -291,45 +293,51 @@ export abstract class Server_HTTP extends Server_Base {
         }
       }
     };
+
+    console.log(`[Server_HTTP] Saving full graph data structure...`);
+    // Also save a standalone graph-data.json file for static mode
+    this.saveGraphDataForStaticMode(fullGraphData);
+
+    return fullGraphData;
   }
 
   // Save graph data for static mode access
-  private saveGraphDataForStaticMode(graphData: any): void {
+  private saveGraphDataForStaticMode(fullGraphData: any): void {
     try {
       const projectRoot = process.cwd();
       const filePath = path.join(projectRoot, 'testeranto', 'reports', 'graph-data.json');
       const dir = path.dirname(filePath);
-      
+
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
+        console.log(`[Server_HTTP] Created directory: ${dir}`);
       }
-      
+
       // Create a standalone graph data object for static mode
       const staticGraphData = {
         timestamp: new Date().toISOString(),
         version: '1.0',
-        data: {
-          featureGraph: graphData,
-          fileTreeGraph: this.generateFileTreeGraph ? this.generateFileTreeGraph() : { nodes: [], edges: [] },
-          vizConfig: {
-            projection: {
-              xAttribute: 'status',
-              yAttribute: 'priority',
-              xType: 'categorical',
-              yType: 'continuous',
-              layout: 'grid'
-            },
-            style: {
-              nodeSize: 10,
-              nodeColor: '#007acc',
-              nodeShape: 'circle'
-            }
-          }
-        }
+        data: fullGraphData
       };
+
+      // Always write the file on startup (as intended)
+      console.log(`[Server_HTTP] Writing graph-data.json to ${filePath}`);
+      console.log(`[Server_HTTP] Graph data structure keys:`, Object.keys(fullGraphData));
+      if (fullGraphData.featureGraph) {
+        console.log(`[Server_HTTP] featureGraph has ${fullGraphData.featureGraph.nodes?.length || 0} nodes, ${fullGraphData.featureGraph.edges?.length || 0} edges`);
+      }
       
       fs.writeFileSync(filePath, JSON.stringify(staticGraphData, null, 2), 'utf-8');
-      console.log(`[Server_HTTP] Saved static graph data to ${filePath}`);
+      console.log(`[Server_HTTP] Successfully saved graph-data.json (${fs.statSync(filePath).size} bytes)`);
+      
+      // Verify the file was written correctly
+      try {
+        const writtenContent = fs.readFileSync(filePath, 'utf-8');
+        const parsed = JSON.parse(writtenContent);
+        console.log(`[Server_HTTP] Verification: file contains ${parsed.data?.featureGraph?.nodes?.length || 0} nodes`);
+      } catch (verifyError) {
+        console.error(`[Server_HTTP] Failed to verify written file:`, verifyError);
+      }
     } catch (error) {
       console.error('[Server_HTTP] Error saving static graph data:', error);
     }
@@ -399,27 +407,27 @@ export abstract class Server_HTTP extends Server_Base {
     const projectRoot = process.cwd();
     const nodes: any[] = [];
     const edges: any[] = [];
-    
+
     // Track which files/URLs we've already added to avoid duplicates
     const addedItems = new Set<string>();
-    
+
     // Helper to add a file node if not already added
     const addFileNode = (filePath: string) => {
       const relativePath = path.relative(projectRoot, filePath);
       if (addedItems.has(relativePath)) {
         return null;
       }
-      
+
       const nodeId = `file:${relativePath}`;
       const isDirectory = fs.existsSync(filePath) && fs.statSync(filePath).isDirectory();
-      
+
       nodes.push({
         id: nodeId,
         type: 'file',
         label: path.basename(filePath),
         description: isDirectory ? `Directory: ${relativePath}` : `File: ${relativePath}`,
-        metadata: { 
-          path: relativePath, 
+        metadata: {
+          path: relativePath,
           isDirectory,
           isEntryFile: false,
           isInputFile: false,
@@ -427,15 +435,15 @@ export abstract class Server_HTTP extends Server_Base {
           isUrl: false
         }
       });
-      
+
       addedItems.add(relativePath);
-      
+
       // Add parent directory structure
       if (!isDirectory) {
         const dirPath = path.dirname(filePath);
         const dirRelativePath = path.relative(projectRoot, dirPath);
         const dirNodeId = `file:${dirRelativePath}`;
-        
+
         // Add parent directory if not already added
         if (!addedItems.has(dirRelativePath) && fs.existsSync(dirPath)) {
           nodes.push({
@@ -443,8 +451,8 @@ export abstract class Server_HTTP extends Server_Base {
             type: 'file',
             label: path.basename(dirPath),
             description: `Directory: ${dirRelativePath}`,
-            metadata: { 
-              path: dirRelativePath, 
+            metadata: {
+              path: dirRelativePath,
               isDirectory: true,
               isEntryFile: false,
               isInputFile: false,
@@ -453,7 +461,7 @@ export abstract class Server_HTTP extends Server_Base {
             }
           });
           addedItems.add(dirRelativePath);
-          
+
           // Connect file to directory
           edges.push({
             source: dirNodeId,
@@ -469,23 +477,23 @@ export abstract class Server_HTTP extends Server_Base {
           });
         }
       }
-      
+
       return nodeId;
     };
-    
+
     // Helper to add a URL node
     const addUrlNode = (url: string) => {
       if (addedItems.has(url)) {
         return null;
       }
-      
+
       const nodeId = `url:${url}`;
       nodes.push({
         id: nodeId,
         type: 'url',
         label: url.split('/').pop() || url,
         description: `URL: ${url}`,
-        metadata: { 
+        metadata: {
           url: url,
           isDirectory: false,
           isEntryFile: false,
@@ -494,11 +502,11 @@ export abstract class Server_HTTP extends Server_Base {
           isUrl: true
         }
       });
-      
+
       addedItems.add(url);
       return nodeId;
     };
-    
+
     // 1. Add entry files (test files from configs)
     const configs = this.configs;
     if (configs?.runtimes) {
@@ -520,7 +528,7 @@ export abstract class Server_HTTP extends Server_Base {
         }
       }
     }
-    
+
     // 2. Add input files used by entry files
     // We need to get input files from the bundles directory
     const bundlesDir = path.join(projectRoot, 'testeranto', 'bundles');
@@ -529,7 +537,7 @@ export abstract class Server_HTTP extends Server_Base {
         const runtimeDirs = fs.readdirSync(bundlesDir, { withFileTypes: true })
           .filter(item => item.isDirectory())
           .map(dir => dir.name);
-        
+
         for (const runtimeDir of runtimeDirs) {
           const inputFilesPath = path.join(bundlesDir, runtimeDir, 'inputFiles.json');
           if (fs.existsSync(inputFilesPath)) {
@@ -563,13 +571,13 @@ export abstract class Server_HTTP extends Server_Base {
         console.error('[Server_HTTP] Error reading bundles directory:', error);
       }
     }
-    
+
     // 3. Add feature references from test results (URLs or files)
     // Get test results to extract feature references
     const testResults = this.getCurrentTestResults();
     if (testResults && typeof testResults === 'object') {
       const featureUrls = new Set<string>();
-      
+
       // Collect all features from test results
       for (const [runtime, runtimeResults] of Object.entries(testResults as Record<string, any>)) {
         if (runtimeResults && typeof runtimeResults === 'object') {
@@ -599,7 +607,7 @@ export abstract class Server_HTTP extends Server_Base {
           }
         }
       }
-      
+
       // Add feature URLs as nodes
       for (const featureUrl of featureUrls) {
         // Check if it's a URL or a local file path
@@ -626,7 +634,7 @@ export abstract class Server_HTTP extends Server_Base {
         }
       }
     }
-    
+
     return { nodes, edges };
   }
 

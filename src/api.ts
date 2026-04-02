@@ -1,9 +1,6 @@
-import type { stakeholderHttpAPI } from "./api/stakeholderHttp";
-import { vscodeHttpAPI } from "./api/vscodeExtensionHttp";
-import type { vscodeWsAPI } from "./api/vscodeExtensionWs";
-
 // Base API definition types
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS';
+export type HttpMethod = 'GET' | 'POST' | 'PUT' |
+  'DELETE' | 'PATCH' | 'OPTIONS';
 
 export interface ApiEndpointDefinition<TParams = any, TQuery = any, TResponse = any> {
   method: HttpMethod;
@@ -27,6 +24,18 @@ export interface WebSocketBroadcastDefinition<TData = any> {
   data?: TData;
 }
 
+// WebSocket broadcast types
+export interface ResourceChangedData {
+  url: string;
+  timestamp: string;
+  message: string;
+}
+
+export interface ConnectedData {
+  message: string;
+  timestamp: string;
+}
+
 // Response type helpers
 export type ApiResponse<T> = {
   success?: boolean;
@@ -35,50 +44,30 @@ export type ApiResponse<T> = {
   timestamp: string;
 } & T;
 
+// Re-export API implementations
+export { vscodeHttpAPI } from "./api/vscodeExtensionHttp";
+export { stakeholderHttpAPI } from "./api/stakeholderHttp";
+export { vscodeWsAPI } from "./api/vscodeExtensionWs";
 
 
-// Type for vscodeHttpAPI
-export type VscodeHttpAPI = typeof vscodeHttpAPI;
+// Type aliases
+export type VscodeHttpAPI = _VscodeHttpAPI;
 export type VscodeHttpEndpoint = keyof VscodeHttpAPI;
 export type VscodeHttpEndpointDefinition<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T];
+export type VscodeHttpResponse<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T]['response'];
+export type VscodeHttpQuery<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T] extends { query: infer Q } ? Q : never;
+export type VscodeHttpParams<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T] extends { params: infer P } ? P : never;
 
-// Helper to get response type for an endpoint
-export type VscodeHttpResponse<T extends VscodeHttpEndpoint> =
-  VscodeHttpAPI[T]['response'];
-
-// Helper to get query params type for an endpoint
-export type VscodeHttpQuery<T extends VscodeHttpEndpoint> =
-  VscodeHttpAPI[T] extends { query: infer Q } ? Q : never;
-
-// Helper to get path params type for an endpoint
-export type VscodeHttpParams<T extends VscodeHttpEndpoint> =
-  VscodeHttpAPI[T] extends { params: infer P } ? P : never;
-
-
-
-// Type for stakeholderHttpAPI
-export type StakeholderHttpAPI = typeof stakeholderHttpAPI;
+export type StakeholderHttpAPI = _StakeholderHttpAPI;
 export type StakeholderHttpEndpoint = keyof StakeholderHttpAPI;
 export type StakeholderHttpEndpointDefinition<T extends StakeholderHttpEndpoint> = StakeholderHttpAPI[T];
+export type StakeholderHttpResponse<T extends StakeholderHttpEndpoint> = StakeholderHttpAPI[T]['response'];
 
-// Helper to get response type for an endpoint
-export type StakeholderHttpResponse<T extends StakeholderHttpEndpoint> =
-  StakeholderHttpAPI[T]['response'];
-
-
-
-// Type for vscodeWsAPI
-export type VscodeWsAPI = typeof vscodeWsAPI;
+export type VscodeWsAPI = _VscodeWsAPI;
 export type VscodeWsMessage = keyof VscodeWsAPI;
 export type VscodeWsMessageDefinition<T extends VscodeWsMessage> = VscodeWsAPI[T];
-
-// Helper to get response type for a message
-export type VscodeWsResponse<T extends VscodeWsMessage> =
-  VscodeWsAPI[T]['response'];
-
-// Helper to get data type for a message
-export type VscodeWsData<T extends VscodeWsMessage> =
-  VscodeWsAPI[T] extends { data: infer D } ? D : never;
+export type VscodeWsResponse<T extends VscodeWsMessage> = VscodeWsAPI[T]['response'];
+export type VscodeWsData<T extends VscodeWsMessage> = VscodeWsAPI[T] extends { data: infer D } ? D : never;
 
 // stakeholderWsAPI with proper typing
 export const stakeholderWsAPI = {

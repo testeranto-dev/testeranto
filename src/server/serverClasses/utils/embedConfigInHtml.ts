@@ -47,44 +47,4 @@ export async function embedConfigInHtml(configs: ITesterantoConfig): Promise<voi
   const htmlPath = path.join(reportsDir, "index.html");
   await fs.promises.writeFile(htmlPath, htmlContent, "utf-8");
 
-  // Generate graph-data.json for static mode
-  // This should contain just the data structure, not wrapped in timestamp/version
-  const graphData = {
-    configs: {
-      runtimes: configs.runtimes || {},
-      documentationGlob: configs.documentationGlob,
-      stakeholderReactModule: configs.stakeholderReactModule
-    },
-    allTestResults: {},
-    featureTree: {},
-    featureGraph: {
-      nodes: [],
-      edges: []
-    },
-    fileTreeGraph: {
-      nodes: [],
-      edges: []
-    },
-    vizConfig: {
-      projection: {
-        xAttribute: 'status',
-        yAttribute: 'priority',
-        xType: 'categorical',
-        yType: 'continuous',
-        layout: 'grid'
-      },
-      style: {
-        nodeSize: 10,
-        nodeColor: '#007acc',
-        nodeShape: 'circle'
-      }
-    }
-  };
-
-  const graphDataPath = path.join(reportsDir, "graph-data.json");
-  await fs.promises.writeFile(
-    graphDataPath,
-    JSON.stringify(graphData, null, 2),
-    "utf-8"
-  );
 }

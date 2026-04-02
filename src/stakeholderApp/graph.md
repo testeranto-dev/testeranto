@@ -15,6 +15,79 @@ feature-to-feature: 'dependsUpon', 'blocks'
 feature-to-test-result: for a feature, see the results of the associated tests.
 file: relate nodes to one another based on their place in the file system
 
+## Synchronization Roadmap
+
+### **Current Synchronization Status:**
+
+#### ✅ **Implemented:**
+1. **Simplified Architecture**: Client loads baseline from `graph-data.json`, server handles updates via POST
+2. **GET `/~/graph` Removed**: Returns 410 Gone with instructions to use `graph-data.json`
+3. **WebSocket Broadcasts**: Server sends `graphUpdated` events to all clients
+4. **Client-Side Graph Client**: `StakeholderGraphClient` with WebSocket connection
+
+#### ❌ **Critical Missing Components:**
+
+1. **No Hashing Function** - Cannot verify state consistency
+2. **No Queue System** - No retry logic or offline capability
+3. **No Conflict Resolution** - Concurrent edits not handled
+4. **No State Verification** - Optimistic updates without verification
+
+### **Immediate Roadmap:**
+
+#### **Phase 1: State Consistency (Next Priority)**
+1. **Implement Common Hashing Function**: SHA-256 hash of sorted JSON
+2. **Add Versioning to Graph Operations**: Include clientId, timestamps, and hash verification
+3. **Server-Side Hash Verification**: Validate client state before applying mutations
+
+#### **Phase 2: Robust Updates**
+1. **Client-Side Queue**: Offline/retry scenarios with optimistic updates
+2. **Server-Side Queue**: Ordered mutation processing
+3. **Exponential Backoff**: For retry scenarios
+
+#### **Phase 3: Conflict Resolution**
+1. **Timestamp-Based Versioning**: Last-write-wins for simple conflicts
+2. **Merge Strategies**: Attribute-level merging and manual intervention
+3. **Collaborative Editing**: Real-time presence and change attribution
+
+#### **Phase 4: Advanced Features**
+1. **Offline Mode**: Local storage and sync on reconnection
+2. **Collaborative Editing**: Locking and presence indicators
+
+### **Current Architecture Flow:**
+
+```
+1. Client loads baseline from graph-data.json
+2. Client connects to WebSocket
+3. User action → Client mutation
+4. Client sends POST /~/graph with mutation
+5. Server applies mutation, saves to graph-data.json
+6. Server broadcasts graphUpdated via WebSocket
+7. All clients refresh from graph-data.json
+```
+
+### **Target Architecture Flow:**
+
+```
+1. Client loads baseline from graph-data.json + computes hash
+2. Client connects to WebSocket
+3. User action → Client creates versioned mutation with hash
+4. Client adds mutation to queue, applies optimistically
+5. Queue sends mutation to server with previousHash
+6. Server verifies previousHash, applies mutation, computes newHash
+7. Server returns confirmation with newHash
+8. Server broadcasts incremental update to all clients
+9. Clients verify hash and apply incremental update
+```
+
+### **Key Technical Debt:**
+
+1. **No hash verification** - State consistency not guaranteed
+2. **No retry logic** - Failed updates are lost
+3. **No offline support** - Requires constant connection
+4. **No conflict handling** - Concurrent edits cause data loss
+
+**The current implementation works for basic use cases but lacks robustness for collaborative editing scenarios. The roadmap prioritizes state consistency first, then robust updates, then conflict resolution.**
+
 ## Data Transport Architecture
 
 ### Dual-Mode System
@@ -33,93 +106,13 @@ The stakeholder app supports two modes of operation:
    - Interactive development experience
    - Supports saving/updating data
 
-### Implementation Plan
+### Implementation
 
-#### 1. Data Transport Layer
-
-```typescript
-// Core data transport interface
-interface DataTransport {
-  mode: 'static' | 'api';
-  loadGraphData(): Promise<GraphData>;
-  saveGraphData(data: GraphData): Promise<void>;
-}
-
-// Static mode implementation
-class StaticDataTransport implements DataTransport {
-  async loadGraphData(): Promise<GraphData> {
-    // Load from static JSON file
-    const response = await fetch('/graph-data.json');
-    return response.json();
-  }
-  
-  async saveGraphData(data: GraphData): Promise<void> {
-    // In static mode, save triggers file download
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'graph-data.json';
-    a.click();
-  }
-}
-
-// API mode implementation  
-class ApiDataTransport implements DataTransport {
-  async loadGraphData(): Promise<GraphData> {
-    // Load from server API
-    const response = await fetch('/api/graph-data');
-    return response.json();
-  }
-  
-  async saveGraphData(data: GraphData): Promise<void> {
-    // Save via server API
-    await fetch('/api/graph-data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-  }
-}
-```
-
-#### 2. Server-Side Changes
-
-```typescript
-// New API endpoints
-GET /api/graph-data     - Returns current graph data
-POST /api/graph-data    - Updates graph data
-GET /api/graph-data/export - Exports as static JSON file
-
-// Static file generation
-function generateStaticSite(graphData: GraphData): void {
-  // 1. Generate index.html with minimal embedded data
-  // 2. Generate graph-data.json with full graph data
-  // 3. Copy bundled stakeholder app
-}
-```
-
-#### 3. Frontend Integration
-
-```typescript
-// Determine mode based on environment
-const mode = window.location.hostname.includes('github.io') 
-  ? 'static' 
-  : 'api';
-
-// Initialize appropriate transport
-const transport = mode === 'static' 
-  ? new StaticDataTransport() 
-  : new ApiDataTransport();
-
-// Load data
-const graphData = await transport.loadGraphData();
-
-// Save data (if in API mode)
-if (mode === 'api') {
-  await transport.saveGraphData(updatedGraphData);
-}
-```
+The current implementation uses:
+- `graph-data.json` for baseline data in all modes
+- WebSocket for real-time updates in API mode
+- POST `/~/graph` for sending mutations
+- Server broadcasts `graphUpdated` events to all connected clients
 
 ### Graph Data Structure
 
@@ -152,49 +145,6 @@ if (mode === 'api') {
     "fileTreeGraph": {...},
     "vizConfig": {...}
   }
-}
-```
-
-### Migration Strategy
-
-#### Phase 1: Core Infrastructure
-1. Create data transport interfaces
-2. Add API endpoints to server
-3. Update HTML generation to support dual mode
-
-#### Phase 2: Frontend Integration
-1. Update stakeholder app to use data transport
-2. Attempt to call server, if that fails fallback to json file in read-only mode
-
-### File Structure
-
-```
-testeranto/
-├── reports/                    # Development reports
-│   ├── index.html             # Main HTML (minimal embedded data)
-│   ├── index.js               # Bundled stakeholder app
-│   └── graph-data.json        # Graph data (static mode)
-└── src/
-    └── server/
-        └── serverClasses/
-            └── utils/
-                ├── dataTransport.ts
-```
-
-### Configuration
-
-```typescript
-// Configuration options
-interface TesterantoConfig {
-  dataTransport: {
-    mode: 'auto' | 'static' | 'api';
-    staticPath?: string;
-    apiEndpoint?: string;
-  };
-  visualization: {
-    defaultView: 'tree' | 'eisenhower' | 'gantt' | 'kanban';
-    enableInteractivity: boolean;
-  };
 }
 ```
 

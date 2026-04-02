@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import type { VscodeHttpEndpoint } from "../../../api";
-import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
+import { vscodeHttpAPI } from "../../../api";
 import { handleConfigs } from "./handleConfigs";
 import { handleOptions } from "./handleOptions";
 import { jsonResponse } from "./jsonResponse";
@@ -39,7 +39,7 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
 
   const tree: Record<string, any> = {};
   const projectRoot = process.cwd();
-  
+
   for (const [runtimeKey, runtimeConfig] of Object.entries(configs.runtimes)) {
     const runtime = runtimeConfig as any;
     tree[runtimeKey] = {
@@ -47,7 +47,7 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
       runtime: runtime.runtime,
       tests: {},
     };
-    
+
     // For each test in this runtime
     const tests = runtime.tests || [];
     for (const testName of tests) {
@@ -58,7 +58,7 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
         results: null,
         outputFiles: [],
       };
-      
+
       // Add the test file itself as a source file
       // testName might be a path relative to project root
       const testPath = path.isAbsolute(testName) ? testName : path.join(projectRoot, testName);
@@ -68,7 +68,7 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
           absolutePath: testPath,
           type: 'test'
         });
-        
+
         // Also add other files in the same directory (source files)
         const testDir = path.dirname(testPath);
         try {
@@ -96,34 +96,34 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
           // Ignore errors reading directory
         }
       }
-      
+
       // Look for logs and results in testeranto/reports/{runtimeKey}/{testName}/
       const testDir = path.dirname(testName);
       const testBaseName = path.basename(testName);
-      
+
       // Try multiple possible locations for logs:
       const possibleLogDirs = [];
-      
+
       // 1. Directory containing the test file (where logs actually are)
       const testFileDir = path.join(projectRoot, 'testeranto', 'reports', runtimeKey, testDir);
       possibleLogDirs.push(testFileDir);
-      
+
       // 2. Directory named after the test file (without extension)
       const testNameWithoutExt = testBaseName.replace(/\.[^/.]+$/, '');
       const testNamedDir = path.join(projectRoot, 'testeranto', 'reports', runtimeKey, testDir, testNameWithoutExt);
       possibleLogDirs.push(testNamedDir);
-      
+
       // 3. The exact testName path as a directory
       const exactTestDir = path.join(projectRoot, 'testeranto', 'reports', runtimeKey, testName);
       possibleLogDirs.push(exactTestDir);
-      
+
       // 4. Also check the reports directory itself for any files matching the test name pattern
       const reportsRootDir = path.join(projectRoot, 'testeranto', 'reports', runtimeKey);
       possibleLogDirs.push(reportsRootDir);
-      
+
       // Track which files we've already added to avoid duplicates
       const addedFiles = new Set<string>();
-      
+
       for (const reportsDir of possibleLogDirs) {
         if (fs.existsSync(reportsDir)) {
           // Recursively collect all files
@@ -141,35 +141,35 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
                     path.join(projectRoot, 'testeranto', 'reports', runtimeKey),
                     fullPath
                   )}`;
-                  
+
                   // Skip if we've already added this file
                   if (addedFiles.has(filePath)) {
                     continue;
                   }
                   addedFiles.add(filePath);
-                  
+
                   // Check if this file belongs to our test
                   // Files for our test should contain the test name (without extension) in their filename
                   const fileName = entry.name;
                   const cleanTestName = testNameWithoutExt.toLowerCase().replace(/[^a-z0-9]/g, '');
                   const cleanFileName = fileName.toLowerCase().replace(/[^a-z0-9]/g, '');
-                  
+
                   // Check if this file is related to our test
-                  const isTestFile = cleanFileName.includes(cleanTestName) || 
-                                     fileName.includes(testNameWithoutExt) ||
-                                     // Also include all .log, .exitcode, .status files in the test directory
-                                     (dir === testFileDir && (
-                                       fileName.endsWith('.log') || 
-                                       fileName.endsWith('.exitcode') || 
-                                       fileName.endsWith('.status') ||
-                                       fileName.endsWith('.txt')
-                                     ));
-                  
+                  const isTestFile = cleanFileName.includes(cleanTestName) ||
+                    fileName.includes(testNameWithoutExt) ||
+                    // Also include all .log, .exitcode, .status files in the test directory
+                    (dir === testFileDir && (
+                      fileName.endsWith('.log') ||
+                      fileName.endsWith('.exitcode') ||
+                      fileName.endsWith('.status') ||
+                      fileName.endsWith('.txt')
+                    ));
+
                   if (fileName === 'test.json' || fileName === 'tests.json') {
                     testEntry.results = filePath;
                   } else if (isTestFile && (
-                    fileName.endsWith('.log') || 
-                    fileName.endsWith('.txt') || 
+                    fileName.endsWith('.log') ||
+                    fileName.endsWith('.txt') ||
                     fileName.includes('log') ||
                     fileName.endsWith('.exitcode') ||
                     fileName.endsWith('.status')
@@ -188,7 +188,7 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
           collectFiles(reportsDir, reportsDir);
         }
       }
-      
+
       // Also look for files in the test directory that match patterns
       // This handles files like calculator-test-node-ts_aider.container.exitcode
       if (fs.existsSync(testFileDir)) {
@@ -202,22 +202,22 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
               if (addedFiles.has(relativePath)) {
                 continue;
               }
-              
+
               // Check if file matches our test pattern
               const cleanTestName = testNameWithoutExt.toLowerCase().replace(/[^a-z0-9]/g, '');
               const cleanFileName = file.toLowerCase().replace(/[^a-z0-9]/g, '');
-              
-              if (cleanFileName.includes(cleanTestName) || 
-                  file.includes(testNameWithoutExt) ||
-                  file.endsWith('.log') || 
-                  file.endsWith('.exitcode') || 
-                  file.endsWith('.status') ||
-                  file.endsWith('.txt')) {
+
+              if (cleanFileName.includes(cleanTestName) ||
+                file.includes(testNameWithoutExt) ||
+                file.endsWith('.log') ||
+                file.endsWith('.exitcode') ||
+                file.endsWith('.status') ||
+                file.endsWith('.txt')) {
                 if (file === 'test.json' || file === 'tests.json') {
                   testEntry.results = relativePath;
                 } else if (
-                  file.endsWith('.log') || 
-                  file.endsWith('.txt') || 
+                  file.endsWith('.log') ||
+                  file.endsWith('.txt') ||
                   file.includes('log') ||
                   file.endsWith('.exitcode') ||
                   file.endsWith('.status')
@@ -233,11 +233,11 @@ const buildUnifiedTestTree = (server: any): Record<string, any> => {
           // Ignore errors
         }
       }
-      
+
       tree[runtimeKey].tests[testName] = testEntry;
     }
   }
-  
+
   return tree;
 };
 
@@ -402,37 +402,32 @@ const createRouteHandlersMap = (): Record<string, (server: any, url?: URL, param
             );
           }
           // Generate graph data
-          const graphData = server.generateGraphData ? server.generateGraphData() : {};
+          const graphData = server.graphData || { nodes: [], edges: [] };
           return jsonResponse({
             graphData: graphData,
             message: "Success",
           });
         };
         break;
-
       case 'getGraph':
       case 'updateGraph':
-        // Combined handler for graph route that handles both GET and POST
+        // Combined handler for graph route that handles only POST for updates
+        // GET requests are no longer supported - clients should load from graph-data.json
         handlers[routeName] = async (server: any, url, request) => {
           const method = request?.method;
-          
+
           if (method === 'GET') {
-            // Handle GET request - generate graph data with test results
-            const graphManager = (server as any).graphManager;
-            if (!graphManager) {
-              return jsonResponse({
-                graphData: { nodes: [], edges: [] },
-                message: "Graph manager not available",
-              });
-            }
-            // Generate graph data which will update and save the graph
-            const graphData = server.generateGraphData ? server.generateGraphData() : graphManager.getGraphData();
-            return jsonResponse({
-              graphData,
-              message: "Success",
-            });
+            // GET is no longer supported - return 410 Gone with instructions
+            return jsonResponse(
+              {
+                error: 'GET method no longer supported for /~/graph endpoint',
+                message: 'Please load baseline graph data from graph-data.json file',
+                instructions: 'Client should always load baseline from graph-data.json and only use POST for updates'
+              },
+              410, // Gone - resource is no longer available
+            );
           } else if (method === 'POST') {
-            // Handle POST request
+            // Handle POST request for graph updates
             try {
               const body = await request.json();
               const graphManager = (server as any).graphManager;
@@ -465,7 +460,7 @@ const createRouteHandlersMap = (): Record<string, (server: any, url?: URL, param
             // Method not allowed
             return jsonResponse(
               {
-                error: `Method ${method} not allowed for graph. Expected GET or POST`,
+                error: `Method ${method} not allowed for graph. Expected POST only`,
               },
               405,
             );
@@ -641,7 +636,7 @@ export const handleRoutePure = (
   // Get route handlers from API definitions
   const routeHandlers = createRouteHandlersMap();
   const handler = routeHandlers[routeName];
-  
+
   if (handler) {
     return handler(server, url, request);
   }
