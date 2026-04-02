@@ -1,6 +1,6 @@
 import {
   NodeTiposkripto
-} from "../../../../../chunk-SJGOGFCL.mjs";
+} from "../../../../../chunk-HBL6D2FK.mjs";
 
 // src/lib/tiposkripto/tests/circle/Circle.ts
 var Circle = class {
@@ -83,25 +83,21 @@ var implementation = {
   // TDT style /////////////////////////
   confirms: {
     circumferenceCalculation: () => {
-      return () => {
-        return (radius) => {
-          const circle = new Circle(radius);
-          return circle.getCircumference();
-        };
+      return (radius) => {
+        const circle = new Circle(radius);
+        return circle.getCircumference();
       };
     },
     areaCalculation: () => {
-      return () => {
-        return (radius) => {
-          const circle = new Circle(radius);
-          return circle.getArea();
-        };
+      return (radius) => {
+        const circle = new Circle(radius);
+        return circle.getArea();
       };
     }
   },
   values: {
     radius: (radius) => {
-      return [radius];
+      return radius;
     },
     radii: (radii) => {
       return radii;
@@ -110,22 +106,42 @@ var implementation = {
   shoulds: {
     beEqualTo: (expected) => {
       return (actualResult) => {
-        return assert.equal(actualResult, expected);
+        try {
+          assert.equal(actualResult, expected);
+          return true;
+        } catch (e) {
+          return false;
+        }
       };
     },
     beCloseTo: (expected, tolerance = 1e-4) => {
       return (actualResult) => {
-        return assert.closeTo(actualResult, expected, tolerance);
+        try {
+          assert.closeTo(actualResult, expected, tolerance);
+          return true;
+        } catch (e) {
+          return false;
+        }
       };
     },
     beGreaterThan: (expected) => {
       return (actualResult) => {
-        return assert.isAbove(actualResult, expected, `${actualResult} should be greater than ${expected}`);
+        try {
+          assert.isAbove(actualResult, expected, `${actualResult} should be greater than ${expected}`);
+          return true;
+        } catch (e) {
+          return false;
+        }
       };
     },
     beLessThan: (expected) => {
       return (actualResult) => {
-        return assert.isBelow(actualResult, expected, `${actualResult} should be less than ${expected}`);
+        try {
+          assert.isBelow(actualResult, expected, `${actualResult} should be less than ${expected}`);
+          return true;
+        } catch (e) {
+          return false;
+        }
       };
     }
   },

@@ -8,15 +8,19 @@ export class TestTreeItem extends vscode.TreeItem {
     public readonly label: string,
     public readonly type: TreeItemType,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-    public readonly data?: TreeItemData,
+    data?: TreeItemData,
     public readonly command?: vscode.Command,
     public readonly iconPath?: vscode.ThemeIcon,
     contextValue?: string
   ) {
     super(label, collapsibleState);
+    // Ensure data is always an object
+    const safeData = data || {};
+    // Use a type assertion to assign to readonly property
+    (this as any).data = safeData;
     this.tooltip = `${this.label}`;
-    if (data?.description) {
-      this.description = data.description;
+    if (safeData.description) {
+      this.description = safeData.description;
     }
     this.iconPath = iconPath || this.getDefaultIcon();
     this.contextValue = contextValue || this.getContextValue();

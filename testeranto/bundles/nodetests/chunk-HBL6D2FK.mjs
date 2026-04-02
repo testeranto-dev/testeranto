@@ -536,22 +536,13 @@ var BaseConfirm = class {
         try {
           if (Array.isArray(testCase) && testCase.length >= 2) {
             const [value, should] = testCase;
-            console.log("[BaseConfirm] value:", value);
-            console.log("[BaseConfirm] should:", should);
-            console.log("[BaseConfirm] value type:", typeof value);
-            console.log("[BaseConfirm] should type:", typeof should);
             let input;
             if (typeof value === "function") {
               input = value();
-              console.log("[BaseConfirm] input from function:", input);
             } else {
               input = value;
-              console.log("[BaseConfirm] input direct:", input);
             }
             if (typeof should === "function") {
-              console.log("[BaseConfirm] input:", input);
-              console.log("[BaseConfirm] confirmCB:", this.confirmCB);
-              console.log("[BaseConfirm] should function:", should);
               let testFn;
               if (typeof this.confirmCB === "function") {
                 const potentialTestFn = this.confirmCB();
@@ -564,12 +555,10 @@ var BaseConfirm = class {
                 testFn = this.confirmCB;
               }
               const actualResult = Array.isArray(input) ? testFn(...input) : testFn(input);
-              console.log("[BaseConfirm] actualResult:", actualResult);
               const passed = should(actualResult);
               tester(passed);
             } else if (should && typeof should.processRow === "function") {
               const actualResult = Array.isArray(input) ? this.confirmCB(...input) : this.confirmCB(input);
-              console.log("[BaseConfirm] actualResult:", actualResult);
               const passed = await should.processRow(
                 actualResult,
                 testResourceConfiguration,

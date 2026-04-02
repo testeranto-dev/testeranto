@@ -1,6 +1,6 @@
 import {
   NodeTiposkripto
-} from "../../../../../chunk-SJGOGFCL.mjs";
+} from "../../../../../chunk-HBL6D2FK.mjs";
 
 // src/lib/tiposkripto/tests/calculator/Calculator.ts
 var Calculator = class {

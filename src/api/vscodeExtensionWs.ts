@@ -47,6 +47,12 @@ export interface LogSubscriptionResponse {
   timestamp: string;
 }
 
+export interface UnifiedTestTreeResponse {
+  type: 'unifiedTestTree';
+  tree: Record<string, any>;
+  timestamp: string;
+}
+
 // vscodeWsAPI with proper typing
 export const vscodeWsAPI = {
   // WebSocket message types
@@ -103,5 +109,12 @@ export const vscodeWsAPI = {
       processId: 'string'
     },
     response: {} as LogSubscriptionResponse
+  },
+
+  // Unified test tree
+  getUnifiedTestTree: {
+    type: 'getUnifiedTestTree' as const,
+    description: 'Get unified test tree organized by runtime and test',
+    response: {} as UnifiedTestTreeResponse
   }
 } as const;

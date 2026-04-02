@@ -1,5 +1,5 @@
-=== Log started at 2026-04-01T17:18:52.811Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
-=== Container ID: fdb809ad1f475485a64f7bbfa7afb990b1ec53a6570cd11996da0b20d2f245e9 ===
+=== Log started at 2026-04-01T21:29:14.412Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
+=== Container ID: 3f868c2c3105e68627b86b859ae0a8096c52c0c3c8cedfe9abbfd2b55f3bad32 ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
@@ -13,8 +13,24 @@ $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkri
 Describe.another simple calculator is not defined in test implementation
 Error during test specification: TypeError: Given.Default(...) is not a function
     at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
-    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-NOL7OQ7V.mjs:1049:23)
-    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-NOL7OQ7V.mjs:1835:5)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1038:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1866:5)
+    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+TypeError: Given.Default(...) is not a function
+    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1038:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1866:5)
+    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+TypeError: Given.Default(...) is not a function
+    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1038:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1866:5)
     at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
@@ -23,42 +39,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/'
 }
-Done in 0.46s.
-yarn run v1.22.22
-warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-warning testeranto@0.233.9: The engine "vscode" appears to be invalid.
-warning testeranto@0.233.9: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}'
-[NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}
-Describe.another simple calculator is not defined in test implementation
-Error during test specification: TypeError: Given.Default(...) is not a function
-    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
-    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs:1049:23)
-    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs:1877:5)
-    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
-    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
-    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
-    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
-TypeError: Given.Default(...) is not a function
-    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
-    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs:1049:23)
-    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs:1877:5)
-    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
-    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
-    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
-    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
-TypeError: Given.Default(...) is not a function
-    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
-    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs:1049:23)
-    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs:1877:5)
-    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
-    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
-    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
-    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
-testResourceConfiguration {
-  ports: [ 1111 ],
-  fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/'
-}
-Done in 1.07s.
+Done in 0.66s.
 
-=== Log captured at 2026-04-01T17:18:54.098Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-01T21:29:15.672Z (container status: exited, exit code: 0) ===

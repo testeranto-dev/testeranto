@@ -84,6 +84,11 @@ export interface AppStateResponse {
   message: string;
 }
 
+export interface UnifiedTestTreeResponse {
+  tree: Record<string, any>;
+  message: string;
+}
+
 // vscodeHttpAPI with proper typing
 export const vscodeHttpAPI = {
   // Configuration and metadata
@@ -92,6 +97,13 @@ export const vscodeHttpAPI = {
     path: '/~/configs',
     description: 'Get server configuration',
     response: {} as ConfigsResponse
+  },
+
+  getUnifiedTestTree: {
+    method: 'GET' as const,
+    path: '/~/unified-test-tree',
+    description: 'Get unified test tree organized by runtime and test',
+    response: {} as UnifiedTestTreeResponse
   },
 
   getProcesses: {

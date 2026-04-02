@@ -7,26 +7,22 @@ export const implementation: ITestImplementation<ICircleNode, O, M> = {
   // TDT style /////////////////////////
   confirms: {
     circumferenceCalculation: () => {
-      return () => {
-        return (radius: number) => {
-          const circle = new Circle(radius);
-          return circle.getCircumference();
-        };
+      return (radius: number) => {
+        const circle = new Circle(radius);
+        return circle.getCircumference();
       };
     },
     areaCalculation: () => {
-      return () => {
-        return (radius: number) => {
-          const circle = new Circle(radius);
-          return circle.getArea();
-        };
+      return (radius: number) => {
+        const circle = new Circle(radius);
+        return circle.getArea();
       };
     },
   },
 
   values: {
     radius: (radius: number) => {
-      return [radius];
+      return radius;
     },
     radii: (radii: number[]) => {
       return radii;
@@ -36,22 +32,42 @@ export const implementation: ITestImplementation<ICircleNode, O, M> = {
   shoulds: {
     beEqualTo: (expected: number) => {
       return (actualResult: number) => {
-        return assert.equal(actualResult, expected);
+        try {
+          assert.equal(actualResult, expected);
+          return true;
+        } catch (e) {
+          return false;
+        }
       };
     },
     beCloseTo: (expected: number, tolerance: number = 0.0001) => {
       return (actualResult: number) => {
-        return assert.closeTo(actualResult, expected, tolerance);
+        try {
+          assert.closeTo(actualResult, expected, tolerance);
+          return true;
+        } catch (e) {
+          return false;
+        }
       };
     },
     beGreaterThan: (expected: number) => {
       return (actualResult: number) => {
-        return assert.isAbove(actualResult, expected, `${actualResult} should be greater than ${expected}`);
+        try {
+          assert.isAbove(actualResult, expected, `${actualResult} should be greater than ${expected}`);
+          return true;
+        } catch (e) {
+          return false;
+        }
       };
     },
     beLessThan: (expected: number) => {
       return (actualResult: number) => {
-        return assert.isBelow(actualResult, expected, `${actualResult} should be less than ${expected}`);
+        try {
+          assert.isBelow(actualResult, expected, `${actualResult} should be less than ${expected}`);
+          return true;
+        } catch (e) {
+          return false;
+        }
       };
     },
   },

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-01T20:17:51.706Z for service nodetests-builder (runtime: node) ===
-=== Container ID: 2a93d5213ce2537c07415d8d29616df080166d52d07c9674779b5e762dab49d7 ===
+=== Log started at 2026-04-01T21:42:51.079Z for service nodetests-builder (runtime: node) ===
+=== Container ID: ec915e3984c8dcbdf12f4b9acc219d49fe2ef2ae6437fbb5967e0842d23059a4 ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
@@ -49,15 +49,15 @@ $ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /worksp
 node > build ended with 0 errors
 [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
 [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: c36e671f98f1bef70ce5ac7711891887
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: e87de8ab2b5005cc905ca311f9592f2a
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: b7c62426050e5b5558b7a08465469599
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: 0b28847ef933811371e3cd4fb3b87262
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs
 [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: c36e671f98f1bef70ce5ac7711891887
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: e87de8ab2b5005cc905ca311f9592f2a
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: b7c62426050e5b5558b7a08465469599
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: 0b28847ef933811371e3cd4fb3b87262
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs
 [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Watch mode active - waiting for file changes...
 [NODE BUILDER] Using onEnd plugin for rebuild detection
@@ -91,11 +91,11 @@ node > build ended with 0 errors
 node > build ended with 0 errors
 [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
 [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: c36e671f98f1bef70ce5ac7711891887
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: e87de8ab2b5005cc905ca311f9592f2a
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-SJGOGFCL.mjs
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: b7c62426050e5b5558b7a08465469599
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: 0b28847ef933811371e3cd4fb3b87262
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs
 [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
 
-=== Log captured at 2026-04-01T20:18:12.733Z (container status: running) ===
+=== Log captured at 2026-04-01T21:43:12.142Z (container status: running) ===

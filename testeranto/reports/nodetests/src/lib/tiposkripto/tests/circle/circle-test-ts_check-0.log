@@ -1,5 +1,5 @@
-=== Log started at 2026-04-01T20:18:25.419Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (runtime: node) ===
-=== Container ID: a6b12d326773a57294da6e2bea860d678ffb0fd122743dc08c45f33249e1ddcf ===
+=== Log started at 2026-04-01T21:43:25.003Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (runtime: node) ===
+=== Container ID: 16a0e71689479649826a68bbe1c2486ca2512a0e9789cbbeafcec96a1a6eafa9 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -24,4 +24,4 @@ Common causes of this problem include:
 error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-01T20:18:26.741Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-01T21:43:26.292Z (container status: exited, exit code: 2) ===

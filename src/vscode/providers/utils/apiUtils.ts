@@ -131,6 +131,10 @@ export class ApiUtils {
         return this.getUrl('getAppState');
     }
 
+    static getUnifiedTestTreeUrl(): string {
+        return this.getUrl('getUnifiedTestTree');
+    }
+
     static getWebSocketUrl(): string {
         // Convert http:// to ws://
         const httpUrl = this.baseUrl;
@@ -141,5 +145,9 @@ export class ApiUtils {
         }
         // Default to ws://localhost:3000 if baseUrl doesn't start with http(s)://
         return 'ws://localhost:3000';
+    }
+
+    static getBaseUrl(): string {
+        return this.baseUrl;
     }
 }

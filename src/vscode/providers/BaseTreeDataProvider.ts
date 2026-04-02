@@ -18,6 +18,13 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
     abstract getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]>;
 
     getTreeItem(element: TestTreeItem): vscode.TreeItem {
+        if (element === null || element === undefined) {
+            console.error('[BaseTreeDataProvider] getTreeItem called with null/undefined element');
+            // Return a placeholder to avoid crashes
+            const item = new vscode.TreeItem('Invalid item', vscode.TreeItemCollapsibleState.None);
+            item.tooltip = 'This item could not be loaded';
+            return item;
+        }
         return element;
     }
 
