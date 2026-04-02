@@ -78,51 +78,6 @@ export class ApiUtils {
         return this.getUrl('getAiderProcesses');
     }
 
-    static getInputFilesUrl(runtime?: string, testName?: string): string {
-        const query: Record<string, string> = {};
-        if (runtime) query.runtime = runtime;
-        if (testName) query.testName = testName;
-        return this.getUrl('getInputFiles', undefined, query);
-    }
-
-    static getOutputFilesUrl(runtime?: string, testName?: string): string {
-        const query: Record<string, string> = {};
-        if (runtime) query.runtime = runtime;
-        if (testName) query.testName = testName;
-        return this.getUrl('getOutputFiles', undefined, query);
-    }
-
-    static getTestResultsUrl(runtime?: string, testName?: string): string {
-        const query: Record<string, string> = {};
-        if (runtime) query.runtime = runtime;
-        if (testName) query.testName = testName;
-        return this.getUrl('getTestResults', undefined, query);
-    }
-
-    static getCollatedTestResultsUrl(): string {
-        return this.getUrl('getCollatedTestResults');
-    }
-
-    static getCollatedInputFilesUrl(): string {
-        return this.getUrl('getCollatedInputFiles');
-    }
-
-    static getCollatedFilesUrl(): string {
-        return this.getUrl('getCollatedFiles');
-    }
-
-    static getCollatedDocumentationUrl(): string {
-        return this.getUrl('getCollatedDocumentation');
-    }
-
-    static getDocumentationUrl(): string {
-        return this.getUrl('getDocumentation');
-    }
-
-    static getReportsUrl(): string {
-        return this.getUrl('getReports');
-    }
-
     static getHtmlReportUrl(): string {
         return this.getUrl('getHtmlReport');
     }

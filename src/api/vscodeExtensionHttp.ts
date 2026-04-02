@@ -22,58 +22,6 @@ export interface AiderProcessesResponse {
   message: string;
 }
 
-export interface InputFilesResponse {
-  runtime: string;
-  testName: string;
-  inputFiles: string[];
-  message: string;
-}
-
-export interface OutputFilesResponse {
-  runtime: string;
-  testName: string;
-  outputFiles: string[];
-  message: string;
-}
-
-export interface TestResultsResponse {
-  testResults: any[];
-  message: string;
-}
-
-export interface CollatedTestResultsResponse {
-  collatedTestResults: Record<string, any>;
-  message: string;
-}
-
-export interface CollatedInputFilesResponse {
-  collatedInputFiles: Record<string, any>;
-  fsTree: any;
-  message: string;
-}
-
-export interface CollatedFilesResponse {
-  tree: Record<string, any>;
-  message: string;
-}
-
-
-export interface CollatedDocumentationResponse {
-  tree: any;
-  files: string[];
-  message: string;
-}
-
-export interface DocumentationResponse {
-  files: string[];
-  message: string;
-}
-
-export interface ReportsResponse {
-  tree: any;
-  message: string;
-}
-
 export interface HtmlReportResponse {
   message: string;
   url: string;
@@ -130,85 +78,7 @@ export const vscodeHttpAPI = {
     response: {} as AiderProcessesResponse
   },
 
-  // Test file management
-  getInputFiles: {
-    method: 'GET' as const,
-    path: '/~/inputfiles',
-    description: 'Get input files for a test',
-    query: {
-      runtime: 'string',
-      testName: 'string'
-    },
-    response: {} as InputFilesResponse
-  },
-
-  getOutputFiles: {
-    method: 'GET' as const,
-    path: '/~/outputfiles',
-    description: 'Get output files for a test',
-    query: {
-      runtime: 'string',
-      testName: 'string'
-    },
-    response: {} as OutputFilesResponse
-  },
-
-  // Test results
-  getTestResults: {
-    method: 'GET' as const,
-    path: '/~/testresults',
-    description: 'Get test results',
-    query: {
-      runtime: 'string?',
-      testName: 'string?'
-    },
-    response: {} as TestResultsResponse
-  },
-
-  getCollatedTestResults: {
-    method: 'GET' as const,
-    path: '/~/collated-testresults',
-    description: 'Get collated test results',
-    response: {} as CollatedTestResultsResponse
-  },
-
-  getCollatedInputFiles: {
-    method: 'GET' as const,
-    path: '/~/collated-inputfiles',
-    description: 'Get collated input files',
-    response: {} as CollatedInputFilesResponse
-  },
-
-  getCollatedFiles: {
-    method: 'GET' as const,
-    path: '/~/collated-files',
-    description: 'Get collated files tree',
-    response: {} as CollatedFilesResponse
-  },
-
-  // Documentation
-  getCollatedDocumentation: {
-    method: 'GET' as const,
-    path: '/~/collated-documentation',
-    description: 'Get collated documentation',
-    response: {} as CollatedDocumentationResponse
-  },
-
-  getDocumentation: {
-    method: 'GET' as const,
-    path: '/~/documentation',
-    description: 'Get documentation files',
-    response: {} as DocumentationResponse
-  },
-
-  // Reports
-  getReports: {
-    method: 'GET' as const,
-    path: '/~/reports',
-    description: 'Get reports tree',
-    response: {} as ReportsResponse
-  },
-
+  // HTML report
   getHtmlReport: {
     method: 'GET' as const,
     path: '/~/html-report',

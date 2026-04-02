@@ -368,51 +368,6 @@ const createRouteHandlersMap = (): Record<string, (server: any, url?: URL, param
           });
         };
         break;
-      case 'getCollatedTestResults':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Not used
-          return jsonResponse({
-            message: "Endpoint deprecated. Not used in current implementation.",
-            deprecated: true
-          }, 410, vscodeHttpAPI.getCollatedTestResults);
-        };
-        break;
-      case 'getCollatedInputFiles':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Not used
-          return jsonResponse({
-            message: "Endpoint deprecated. Not used in current implementation.",
-            deprecated: true
-          }, 410, vscodeHttpAPI.getCollatedInputFiles);
-        };
-        break;
-      case 'getCollatedDocumentation':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Not used
-          return jsonResponse({
-            message: "Endpoint deprecated. Not used in current implementation.",
-            deprecated: true
-          }, 410, vscodeHttpAPI.getCollatedDocumentation);
-        };
-        break;
-      case 'getDocumentation':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Not used
-          return jsonResponse({
-            message: "Endpoint deprecated. Not used in current implementation.",
-            deprecated: true
-          }, 410, vscodeHttpAPI.getDocumentation);
-        };
-        break;
-      case 'getReports':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Not used
-          return jsonResponse({
-            message: "Endpoint deprecated. Not used in current implementation.",
-            deprecated: true
-          }, 410, vscodeHttpAPI.getReports);
-        };
-        break;
       case 'getHtmlReport':
         handlers[routeName] = (server: any, url, request) => {
           // Validate against API definition
