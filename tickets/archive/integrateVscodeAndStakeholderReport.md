@@ -1,5 +1,8 @@
 ---
 status: defunct
+title: integrateVscodeAndStakeholderReport
+description: ''
+priority: medium
 ---
 
 This ticket tracks the final integration of the vscode extension and stakeholders html report.

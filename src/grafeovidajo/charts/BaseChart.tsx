@@ -12,52 +12,46 @@ export const BaseChart: React.FC<VizComponentProps> = ({
   onNodeClick,
   onNodeHover
 }) => {
-  // Project the graph data
-  const projectedGraph = useMemo(() => {
-    return projectGraph(data, config.projection);
-  }, [data, config.projection]);
+  // Project the graph data (without useMemo)
+  const projectedGraph = projectGraph(data, config.projection);
 
-  // Apply layout
-  const laidOutGraph = useMemo(() => {
-    const nodes = projectedGraph.nodes;
-    let laidOutNodes = [...nodes];
-    
-    switch (config.projection.layout) {
-      case 'grid':
-        laidOutNodes = layoutGrid(nodes, config.projection.spacing);
-        break;
-      case 'force':
-        laidOutNodes = layoutForce(nodes, data.edges);
-        break;
-      case 'tree':
-        if (data.edges) {
-          laidOutNodes = layoutTree(nodes, data.edges);
-        }
-        break;
-      case 'timeline':
-        if (config.projection.xAttribute) {
-          laidOutNodes = layoutTimeline(nodes, config.projection.xAttribute);
-        }
-        break;
-      default:
-        // No layout - use projected coordinates directly
-        laidOutNodes = nodes.map(node => ({
-          ...node,
-          screenX: node.x * width,
-          screenY: node.y * height
-        }));
-    }
-    
-    return {
-      ...projectedGraph,
-      nodes: laidOutNodes
-    };
-  }, [projectedGraph, config.projection.layout, data.edges, width, height]);
+  // Apply layout (without useMemo)
+  const nodes = projectedGraph.nodes;
+  let laidOutNodes = [...nodes];
+  
+  switch (config.projection.layout) {
+    case 'grid':
+      laidOutNodes = layoutGrid(nodes, config.projection.spacing);
+      break;
+    case 'force':
+      laidOutNodes = layoutForce(nodes, data.edges);
+      break;
+    case 'tree':
+      if (data.edges) {
+        laidOutNodes = layoutTree(nodes, data.edges);
+      }
+      break;
+    case 'timeline':
+      if (config.projection.xAttribute) {
+        laidOutNodes = layoutTimeline(nodes, config.projection.xAttribute);
+      }
+      break;
+    default:
+      // No layout - use projected coordinates directly
+      laidOutNodes = nodes.map(node => ({
+        ...node,
+        screenX: node.x * width,
+        screenY: node.y * height
+      }));
+  }
+  
+  const laidOutGraph = {
+    ...projectedGraph,
+    nodes: laidOutNodes
+  };
 
-  // Apply styles
-  const styledGraph = useMemo(() => {
-    return applyStyles(laidOutGraph, config.style);
-  }, [laidOutGraph, config.style]);
+  // Apply styles (without useMemo)
+  const styledGraph = applyStyles(laidOutGraph, config.style);
 
   // Render nodes
   const renderNodes = () => {

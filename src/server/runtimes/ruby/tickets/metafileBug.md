@@ -1,5 +1,8 @@
 ---
 status: critical
+title: metafileBug
+description: ''
+priority: medium
 ---
 
 The ruby pseudo-bundler is not reporting the correct inputFiles.json

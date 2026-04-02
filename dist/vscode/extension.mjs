@@ -19,6 +19,12 @@ var vscodeHttpAPI = {
     description: "Get unified test tree organized by runtime and test",
     response: {}
   },
+  getGraphData: {
+    method: "GET",
+    path: "/~/graph-data",
+    description: "Get graph data for visualization",
+    response: {}
+  },
   getProcesses: {
     method: "GET",
     path: "/~/processes",
@@ -52,6 +58,31 @@ var vscodeHttpAPI = {
     method: "GET",
     path: "/~/app-state",
     description: "Get application state",
+    response: {}
+  },
+  // Graph operations
+  getGraph: {
+    method: "GET",
+    path: "/~/graph",
+    description: "Get current graph data",
+    response: {}
+  },
+  updateGraph: {
+    method: "POST",
+    path: "/~/graph",
+    description: "Update graph with operations",
+    response: {}
+  },
+  parseMarkdownToGraph: {
+    method: "POST",
+    path: "/~/graph/parse-markdown",
+    description: "Parse markdown files to update graph",
+    response: {}
+  },
+  serializeGraphToMarkdown: {
+    method: "POST",
+    path: "/~/graph/serialize-markdown",
+    description: "Serialize graph changes back to markdown files",
     response: {}
   }
 };

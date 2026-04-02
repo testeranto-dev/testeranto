@@ -33,36 +33,85 @@ export function layoutTree(
   edges: Edge[],
   rootId?: string
 ): ProjectedNode[] {
-  // Find root node
-  let root = rootId ? nodes.find(n => n.id === rootId) : null;
-  if (!root) {
-    // Find nodes with no incoming edges (roots)
-    const nodeIds = new Set(nodes.map(n => n.id));
-    const targetIds = new Set(edges.map(e => e.target));
-    const rootIds = [...nodeIds].filter(id => !targetIds.has(id));
-    root = nodes.find(n => n.id === rootIds[0]) || nodes[0];
+  // Build adjacency list for faster lookups
+  const incomingEdges = new Map<string, string[]>();
+  const outgoingEdges = new Map<string, string[]>();
+  
+  // Initialize maps
+  nodes.forEach(node => {
+    incomingEdges.set(node.id, []);
+    outgoingEdges.set(node.id, []);
+  });
+  
+  // Build adjacency lists
+  edges.forEach(edge => {
+    // Add to outgoing edges of source
+    const sourceOutgoing = outgoingEdges.get(edge.source) || [];
+    sourceOutgoing.push(edge.target);
+    outgoingEdges.set(edge.source, sourceOutgoing);
+    
+    // Add to incoming edges of target
+    const targetIncoming = incomingEdges.get(edge.target) || [];
+    targetIncoming.push(edge.source);
+    incomingEdges.set(edge.target, targetIncoming);
+  });
+  
+  // Find root node(s) - nodes with no incoming edges
+  let rootNodes: ProjectedNode[] = [];
+  if (rootId) {
+    const rootNode = nodes.find(n => n.id === rootId);
+    if (rootNode) {
+      rootNodes = [rootNode];
+    }
   }
   
-  // Calculate depth for each node
+  if (rootNodes.length === 0) {
+    rootNodes = nodes.filter(node => {
+      const incoming = incomingEdges.get(node.id) || [];
+      return incoming.length === 0;
+    });
+  }
+  
+  // If no root found (cyclic graph), use first node
+  if (rootNodes.length === 0 && nodes.length > 0) {
+    rootNodes = [nodes[0]];
+  }
+  
+  // Calculate depth using BFS to avoid recursion issues
   const depthMap = new Map<string, number>();
+  const queue: { nodeId: string; depth: number }[] = [];
   
-  const calculateDepth = (nodeId: string): number => {
-    if (depthMap.has(nodeId)) return depthMap.get(nodeId)!;
+  // Initialize queue with root nodes at depth 0
+  rootNodes.forEach(root => {
+    depthMap.set(root.id, 0);
+    queue.push({ nodeId: root.id, depth: 0 });
+  });
+  
+  // Process queue
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    const currentDepth = current.depth;
+    const currentNodeId = current.nodeId;
     
-    const incomingEdges = edges.filter(e => e.target === nodeId);
-    if (incomingEdges.length === 0) {
-      depthMap.set(nodeId, 0);
-      return 0;
+    // Get children (outgoing edges)
+    const children = outgoingEdges.get(currentNodeId) || [];
+    
+    for (const childId of children) {
+      // Only update if we found a shorter path (shouldn't happen in a tree)
+      // or if node hasn't been visited yet
+      if (!depthMap.has(childId)) {
+        depthMap.set(childId, currentDepth + 1);
+        queue.push({ nodeId: childId, depth: currentDepth + 1 });
+      }
     }
-    
-    // Get max depth of parents + 1
-    const parentDepths = incomingEdges.map(e => calculateDepth(e.source));
-    const depth = Math.max(...parentDepths) + 1;
-    depthMap.set(nodeId, depth);
-    return depth;
-  };
+  }
   
-  nodes.forEach(node => calculateDepth(node.id));
+  // For any nodes not reached by BFS (disconnected components), assign depth
+  nodes.forEach(node => {
+    if (!depthMap.has(node.id)) {
+      depthMap.set(node.id, 0);
+    }
+  });
   
   // Group nodes by depth
   const nodesByDepth = new Map<number, ProjectedNode[]>();
@@ -75,7 +124,6 @@ export function layoutTree(
   });
   
   // Position nodes
-  const maxDepth = Math.max(...Array.from(nodesByDepth.keys()));
   const levelSeparation = 100;
   const nodeSeparation = 80;
   

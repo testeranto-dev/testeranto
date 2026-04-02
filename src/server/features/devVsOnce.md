@@ -1,6 +1,9 @@
 ---
 status: in progress, status unknown
 error description: changes to source code do not cause the tests to be re-scheduled.
+title: devVsOnce
+description: ''
+priority: medium
 ---
 
 The server runs in 2 modes, dev and once.  

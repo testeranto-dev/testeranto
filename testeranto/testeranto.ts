@@ -199,7 +199,7 @@ const config: ITesterantoConfig = {
     // },
   },
 
-  documentationGlob: "./**/*.md",
+  documentationGlob: "./src/**/*.md",
 };
 
 export default config;

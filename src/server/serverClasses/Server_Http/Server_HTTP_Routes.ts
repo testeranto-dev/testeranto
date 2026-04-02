@@ -64,15 +64,27 @@ export class Server_HTTP_Routes {
       });
     }
 
-    const graphData = await this.loadGraphData();
-    return new Response(JSON.stringify({
-      success: true,
-      timestamp: new Date().toISOString(),
-      data: graphData
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    try {
+      const graphData = this.server.generateGraphData ? this.server.generateGraphData() : {};
+      return new Response(JSON.stringify({
+        graphData: graphData,
+        message: "Success",
+        timestamp: new Date().toISOString()
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (error) {
+      console.error('[Server_HTTP_Routes] Error generating graph data:', error);
+      return new Response(JSON.stringify({
+        error: 'Failed to generate graph data',
+        message: error.message,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
   }
 
   private async handleGraphDataJson(request: Request): Promise<Response> {
@@ -110,32 +122,5 @@ export class Server_HTTP_Routes {
     }
   }
 
-  private async loadGraphData(): Promise<any> {
-    try {
-      const reportsDir = path.join(process.cwd(), 'testeranto', 'reports');
-      const graphDataPath = path.join(reportsDir, 'graph-data.json');
 
-      if (fs.existsSync(graphDataPath)) {
-        const data = await fs.promises.readFile(graphDataPath, 'utf-8');
-        return JSON.parse(data);
-      }
-    } catch (error) {
-      // If any error occurs, return empty structure
-    }
-
-    // Return empty structure if no data found or any error occurred
-    return this.getEmptyGraphData();
-  }
-
-  private getEmptyGraphData(): any {
-    return {
-      timestamp: new Date().toISOString(),
-      version: '1.0',
-      data: {
-        featureGraph: { nodes: [], edges: [] },
-        fileTreeGraph: { nodes: [], edges: [] },
-        vizConfig: {}
-      }
-    };
-  }
 }

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-02T16:29:19.710Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (runtime: node) ===
-=== Container ID: d6b86363f71819aad9cd3369b130179e0dd67615b0ea71a64e694d68fac837c2 ===
+=== Log started at 2026-04-02T22:21:23.945Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (runtime: node) ===
+=== Container ID: 21f4edf377bf5169a682ae1931170b794a649b473479a636703c0883cb52bacc ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
@@ -24,4 +24,4 @@ Common causes of this problem include:
 error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-02T16:29:21.316Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-02T22:21:27.062Z (container status: exited, exit code: 2) ===

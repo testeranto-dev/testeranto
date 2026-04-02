@@ -12,10 +12,19 @@ export function projectGraph(
   let minY = Infinity;
   let maxY = -Infinity;
   
+  // Filter out invalid nodes and ensure they have attributes
+  const validNodes = (graph.nodes || []).filter(node => node && typeof node.id === 'string');
+  
   // Project nodes
-  for (const node of graph.nodes) {
-    const x = getProjectedValue(node, config.xAttribute, config.xType, config.xTransform);
-    const y = getProjectedValue(node, config.yAttribute, config.yType, config.yTransform);
+  for (const node of validNodes) {
+    // Ensure node has attributes
+    const nodeWithAttributes = {
+      ...node,
+      attributes: node.attributes || {}
+    };
+    
+    const x = getProjectedValue(nodeWithAttributes, config.xAttribute, config.xType, config.xTransform);
+    const y = getProjectedValue(nodeWithAttributes, config.yAttribute, config.yType, config.yTransform);
     
     minX = Math.min(minX, x);
     maxX = Math.max(maxX, x);
@@ -23,7 +32,7 @@ export function projectGraph(
     maxY = Math.max(maxY, y);
     
     nodes.push({
-      ...node,
+      ...nodeWithAttributes,
       x,
       y
     });
@@ -32,9 +41,12 @@ export function projectGraph(
   // Project edges if they exist
   if (graph.edges) {
     for (const edge of graph.edges) {
-      edges.push({
-        ...edge
-      });
+      if (edge && edge.source && edge.target) {
+        edges.push({
+          ...edge,
+          attributes: edge.attributes || {}
+        });
+      }
     }
   }
   
@@ -56,7 +68,9 @@ function getProjectedValue(
 ): number {
   if (!attribute) return 0.5; // Default center position
   
-  const value = node.attributes[attribute];
+  // Ensure node.attributes exists
+  const attributes = node.attributes || {};
+  const value = attributes[attribute];
   
   if (transform) {
     return transform(value);

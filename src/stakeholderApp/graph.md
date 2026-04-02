@@ -4,9 +4,9 @@ The graph encodes relationships between entities.
 
 ## nodes
 
-features    - markdown files attached to suites
+features    - markdown files attached to suites/setup steps
 suite       - a collection of tests associated with a list of features
-test        - one of many in a collection.
+test        - one of many in a suite.
 test result - the outcome of a single test
 
 ## edges

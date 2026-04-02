@@ -9,8 +9,52 @@ import ReactDOM from "react-dom/client";
 import {
   VisualizationTabs,
 } from "testeranto/stakeholderApp/VisualizationTabs.tsx";
+// import { window } from "vscode";
+import { StakeholderGraphClient } from "testeranto/stakeholderApp/graph/index.ts";
 
 
+// Determine if we're in development mode (server API available)
+// In development, we can use /api/graph-data for live updates
+// In static mode, we load from graph-data.json file
+const isDevelopmentMode = window.location.hostname.includes('localhost') &&
+  window.location.protocol.startsWith('http');
+
+// Paths for loading graph data
+const GRAPH_DATA_PATHS = {
+  // In development, use API endpoint
+  development: '/api/graph-data',
+  // In static mode, load from file in same directory
+  static: 'graph-data.json'
+} as const;
+
+// Types from api.ts - for type safety
+// These match the actual types defined in src/api.ts
+// See: src/api.ts -> export interface GraphDataResponse
+interface GraphDataResponse {
+  success: boolean;
+  timestamp: string;
+  data: any;
+}
+
+// GraphData type - should match the definition in grafeovidajo
+interface GraphData {
+  nodes: Node[];
+  edges?: Edge[];
+}
+
+interface Node {
+  id: string;
+  attributes: Record<string, any>;
+}
+
+interface Edge {
+  source: string;
+  target: string;
+  attributes?: Record<string, any>;
+}
+
+// Types that should match those in src/api.ts
+// For proper type safety, these should be imported from a shared location
 export interface StakeholderData {
   documentation: {
     files: string[];
@@ -34,7 +78,7 @@ export interface StakeholderData {
         dockerfile: string;
       }
     >;
-    documentationGlob?: string;
+    // documentationGlob?: string;
   };
   timestamp: string;
   workspaceRoot: string;
@@ -49,47 +93,114 @@ export interface StakeholderData {
   vizConfig?: any;
 }
 
+
 export const DefaultStakeholderApp: React.FC = () => {
   const [data, setData] = React.useState<StakeholderData | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [graphClient, setGraphClient] = React.useState<StakeholderGraphClient | null>(null);
+
+  React.useEffect(() => {
+    // Initialize graph client when data is loaded
+    if (data && !graphClient) {
+      const client = new StakeholderGraphClient((updatedGraphData) => {
+        // Update data with new graph
+        setData(prev => prev ? {
+          ...prev,
+          featureGraph: updatedGraphData.featureGraph || prev.featureGraph,
+          fileTreeGraph: updatedGraphData.fileTreeGraph || prev.fileTreeGraph
+        } : prev);
+      });
+      setGraphClient(client);
+    }
+
+    return () => {
+      if (graphClient) {
+        graphClient.disconnect();
+      }
+    };
+  }, [data, graphClient]);
 
   React.useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       setError(null);
 
-      // 1. Try Server API
-      // try {
-      //   const response = await fetch('/api/graph-data');
-      //   if (!response.ok) throw new Error(`API ${response.status}`);
+      // Determine if we're in API mode or static mode
+      // In API mode, the server is running and we can fetch from /~/graph
+      // In static mode, we load from graph-data.json in the same directory
 
-      //   const result = await response.json();
-      //   setData(result.data || result);
-      //   setLoading(false);
-      //   return;
-      // } catch (apiError) {
-      //   console.warn("API failed, trying JSON file...", apiError.message);
-      // }
+      // First, try to detect if we're in API mode by checking if we can access the server
+      // We'll try to fetch from /~/graph with a short timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
 
-      // 2. Try Static JSON
+      let isApiMode = false;
+
       try {
-        const response = await fetch('/testeranto/reports/graph-data.json');
-        if (!response.ok) throw new Error(`JSON file ${response.status}`);
+        const response = await fetch('/~/graph', {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
 
-        const jsonData = await response.json();
-        setData(jsonData);
-        setLoading(false);
-        return;
-      } catch (jsonError) {
-        console.warn("JSON file failed:", jsonError.message);
+        if (response.ok) {
+          isApiMode = true;
+          const result = await response.json();
+          if (result.graphData) {
+            // Convert to StakeholderData format
+            const stakeholderData: StakeholderData = {
+              configs: result.graphData.configs || {},
+              allTestResults: result.graphData.allTestResults || {},
+              featureTree: result.graphData.featureTree || {},
+              featureGraph: result.graphData.featureGraph || { nodes: [], edges: [] },
+              fileTreeGraph: result.graphData.fileTreeGraph || { nodes: [], edges: [] },
+              vizConfig: result.graphData.vizConfig || {
+                projection: {
+                  xAttribute: 'status',
+                  yAttribute: 'priority',
+                  xType: 'categorical',
+                  yType: 'continuous',
+                  layout: 'grid'
+                },
+                style: {
+                  nodeSize: 10,
+                  nodeColor: '#007acc',
+                  nodeShape: 'circle'
+                }
+              },
+              documentation: { files: [] },
+              testResults: {},
+              errors: [],
+              timestamp: new Date().toISOString(),
+              workspaceRoot: ''
+            };
+            setData(stakeholderData);
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (error) {
+        // Server is not available or request failed
+        console.log('API mode not available, falling back to static mode:', error);
       }
 
-      // 3. Final Fail-safe (If everything above failed)
-      setError("All data sources failed.");
-      setLoading(false);
-    };
+      clearTimeout(timeoutId);
 
+      // If we're not in API mode, try static mode
+      try {
+        const response = await fetch('graph-data.json');
+        if (!response.ok) {
+          throw new Error(`Failed to load static file: ${response.status} ${response.statusText}`);
+        }
+        const result = await response.json();
+        setData(result as StakeholderData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to load static graph data:', error);
+        setError(error.message || 'Unknown error loading data');
+        setLoading(false);
+      }
+    };
 
     loadData();
   }, []);
@@ -115,10 +226,15 @@ export const DefaultStakeholderApp: React.FC = () => {
 
   const handleNodeClick = (node: Node) => {
     console.log("Node clicked:", node);
+    // You can access node properties with type safety
+    console.log("Node ID:", node.id);
+    console.log("Node attributes:", node.attributes);
   };
 
   const handleNodeHover = (node: Node | null) => {
-    // Handle hover
+    if (node) {
+      console.log("Node hover:", node.id);
+    }
   };
 
   return (

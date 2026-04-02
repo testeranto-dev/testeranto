@@ -361,6 +361,7 @@
     "fs.promises.exists": "^1.1.4",
     "graphology": "^0.26.0",
     "jiti": "*",
+    "glob": "^10.3.10",
     "js-yaml": "^4.1.0",
     "license-checker": "^25.0.1",
     "marked": "^17.0.1",

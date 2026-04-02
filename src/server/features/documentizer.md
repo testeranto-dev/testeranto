@@ -11,6 +11,9 @@ source:
   - FeaturesTreeDataProvider
   - src/vscode/providers/FeaturesTreeDataProviderUtils.ts
   - src/vscode/providers/FeaturesTreeDataProvider.ts
+title: documentizer
+description: ''
+priority: medium
 ---
 
 We want to enhance the project wide configs with a new field, which glob pattern to find all the documentation pages for a project. For instance, a very common pattern would be a glob patten to find all the markdown documents in a project.

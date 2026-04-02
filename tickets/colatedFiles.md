@@ -1,5 +1,8 @@
 ---
-status:  needs testing
+status: needs testing
+title: colatedFiles
+description: ''
+priority: medium
 ---
 
 colated files are our way of gathering the source, logs and test.json files for test.

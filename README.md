@@ -1,3 +1,9 @@
+---
+title: Readme
+description: 'Feature: ./Readme.md'
+status: todo
+priority: medium
+---
 # Testeranto
 
 ## What is it?

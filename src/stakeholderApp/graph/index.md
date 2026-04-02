@@ -1,0 +1,3 @@
+this folder is dedicated to the stakeholderApp's implementation the graph-data store.
+
+The stakeholder app is based on graph-theoretical data store using the graphology library. The stakeholder app can be served statically and read-only, in which case the graph data lives in a json file. In development mode, however, the Server allows read-write capabilities. While the stakeholder app needs to update and reflect this graph structure, the server must parse the data from the markdown files, serialize it, accepts update and write them back to the markdown files. 

@@ -13,13 +13,17 @@ const extractRouteNameFromPath = (path: string): string => {
   return path.startsWith("/~/") ? path.substring(3) : path;
 };
 
-// Helper function to get API definition for a route
-const getApiDefinitionForRoute = (routeName: string): any => {
+// Helper function to get API definition for a route, optionally filtering by method
+const getApiDefinitionForRoute = (routeName: string, method?: string): any => {
   // Check if routeName matches any API definition path
   for (const [key, definition] of Object.entries(vscodeHttpAPI)) {
     const apiDef = definition as any;
     const apiRouteName = extractRouteNameFromPath(apiDef.path);
     if (apiRouteName === routeName) {
+      // If method is provided, check if it matches
+      if (method && apiDef.method !== method) {
+        continue;
+      }
       return apiDef;
     }
   }
@@ -385,6 +389,156 @@ const createRouteHandlersMap = (): Record<string, (server: any, url?: URL, param
           });
         };
         break;
+      case 'getGraphData':
+        handlers[routeName] = (server: any, url, request) => {
+          // Validate against API definition
+          const apiDef = vscodeHttpAPI.getGraphData;
+          if (request && request.method !== apiDef.method) {
+            return jsonResponse(
+              {
+                error: `Method ${request.method} not allowed for graph-data. Expected ${apiDef.method}`,
+              },
+              405,
+            );
+          }
+          // Generate graph data
+          const graphData = server.generateGraphData ? server.generateGraphData() : {};
+          return jsonResponse({
+            graphData: graphData,
+            message: "Success",
+          });
+        };
+        break;
+
+      case 'getGraph':
+      case 'updateGraph':
+        // Combined handler for graph route that handles both GET and POST
+        handlers[routeName] = async (server: any, url, request) => {
+          const method = request?.method;
+          
+          if (method === 'GET') {
+            // Handle GET request - generate graph data with test results
+            const graphManager = (server as any).graphManager;
+            if (!graphManager) {
+              return jsonResponse({
+                graphData: { nodes: [], edges: [] },
+                message: "Graph manager not available",
+              });
+            }
+            // Generate graph data which will update and save the graph
+            const graphData = server.generateGraphData ? server.generateGraphData() : graphManager.getGraphData();
+            return jsonResponse({
+              graphData,
+              message: "Success",
+            });
+          } else if (method === 'POST') {
+            // Handle POST request
+            try {
+              const body = await request.json();
+              const graphManager = (server as any).graphManager;
+              if (!graphManager) {
+                return jsonResponse({
+                  graphData: { nodes: [], edges: [] },
+                  message: "Graph manager not available",
+                }, 500);
+              }
+              const updatedGraph = graphManager.applyUpdate(body);
+              // Broadcast graph update to WebSocket clients
+              if (server.broadcast) {
+                server.broadcast({
+                  type: 'graphUpdated',
+                  timestamp: new Date().toISOString(),
+                  message: 'Graph has been updated'
+                });
+              }
+              return jsonResponse({
+                graphData: updatedGraph,
+                message: "Graph updated successfully",
+              });
+            } catch (error) {
+              return jsonResponse({
+                error: 'Failed to update graph',
+                message: error.message,
+              }, 400);
+            }
+          } else {
+            // Method not allowed
+            return jsonResponse(
+              {
+                error: `Method ${method} not allowed for graph. Expected GET or POST`,
+              },
+              405,
+            );
+          }
+        };
+        break;
+
+      case 'parseMarkdownToGraph':
+        handlers[routeName] = async (server: any, url, request) => {
+          const apiDef = vscodeHttpAPI.parseMarkdownToGraph;
+          if (request && request.method !== apiDef.method) {
+            return jsonResponse(
+              {
+                error: `Method ${request.method} not allowed for parse-markdown. Expected ${apiDef.method}`,
+              },
+              405,
+            );
+          }
+          try {
+            const graphManager = (server as any).graphManager;
+            if (!graphManager) {
+              return jsonResponse({
+                graphData: { nodes: [], edges: [] },
+                message: "Graph manager not available",
+              }, 500);
+            }
+            const update = graphManager.parseMarkdownFiles('**/*.md');
+            const updatedGraph = graphManager.applyUpdate(update);
+            return jsonResponse({
+              graphData: updatedGraph,
+              message: "Markdown parsed and graph updated",
+            });
+          } catch (error) {
+            return jsonResponse({
+              error: 'Failed to parse markdown',
+              message: error.message,
+            }, 400);
+          }
+        };
+        break;
+
+      case 'serializeGraphToMarkdown':
+        handlers[routeName] = async (server: any, url, request) => {
+          const apiDef = vscodeHttpAPI.serializeGraphToMarkdown;
+          if (request && request.method !== apiDef.method) {
+            return jsonResponse(
+              {
+                error: `Method ${request.method} not allowed for serialize-markdown. Expected ${apiDef.method}`,
+              },
+              405,
+            );
+          }
+          try {
+            const graphManager = (server as any).graphManager;
+            if (!graphManager) {
+              return jsonResponse({
+                message: "Graph manager not available",
+              }, 500);
+            }
+            graphManager.serializeToMarkdown();
+            return jsonResponse({
+              message: "Graph serialized to markdown files",
+              timestamp: new Date().toISOString(),
+            });
+          } catch (error) {
+            return jsonResponse({
+              error: 'Failed to serialize graph',
+              message: error.message,
+            }, 400);
+          }
+        };
+        break;
+
       case 'getAppState':
         handlers[routeName] = (server: any, url, request) => {
           // Validate against API definition
@@ -445,8 +599,8 @@ export const handleRoutePure = (
     return handleOptions(request, routeName);
   }
 
-  // Get API definition for this route
-  const apiDefinition = getApiDefinitionForRoute(routeName);
+  // Get API definition for this route, considering the request method
+  const apiDefinition = getApiDefinitionForRoute(routeName, request.method);
 
   // Validate HTTP method against API definition
   if (apiDefinition && request.method !== apiDefinition.method) {
@@ -487,7 +641,7 @@ export const handleRoutePure = (
   // Get route handlers from API definitions
   const routeHandlers = createRouteHandlersMap();
   const handler = routeHandlers[routeName];
-
+  
   if (handler) {
     return handler(server, url, request);
   }

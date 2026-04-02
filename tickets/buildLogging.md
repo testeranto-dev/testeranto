@@ -1,6 +1,9 @@
 ---
 owner: adam
 status: in progress
+title: buildLogging
+description: ''
+priority: medium
 ---
 
 # Better build logs

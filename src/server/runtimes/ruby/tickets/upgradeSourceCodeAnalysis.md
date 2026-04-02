@@ -1,5 +1,8 @@
 ---
 status: done
+title: upgradeSourceCodeAnalysis
+description: ''
+priority: medium
 ---
 
 Our solution for finding ruby imports is not great.

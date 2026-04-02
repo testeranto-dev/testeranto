@@ -37,6 +37,12 @@ export interface UnifiedTestTreeResponse {
   message: string;
 }
 
+export interface GraphDataResponse {
+  graphData: any;
+  message: string;
+  timestamp?: string;
+}
+
 // vscodeHttpAPI with proper typing
 export const vscodeHttpAPI = {
   // Configuration and metadata
@@ -52,6 +58,13 @@ export const vscodeHttpAPI = {
     path: '/~/unified-test-tree',
     description: 'Get unified test tree organized by runtime and test',
     response: {} as UnifiedTestTreeResponse
+  },
+
+  getGraphData: {
+    method: 'GET' as const,
+    path: '/~/graph-data',
+    description: 'Get graph data for visualization',
+    response: {} as GraphDataResponse
   },
 
   getProcesses: {
@@ -92,5 +105,34 @@ export const vscodeHttpAPI = {
     path: '/~/app-state',
     description: 'Get application state',
     response: {} as AppStateResponse
+  },
+
+  // Graph operations
+  getGraph: {
+    method: 'GET' as const,
+    path: '/~/graph',
+    description: 'Get current graph data',
+    response: {} as GraphDataResponse
+  },
+
+  updateGraph: {
+    method: 'POST' as const,
+    path: '/~/graph',
+    description: 'Update graph with operations',
+    response: {} as GraphDataResponse
+  },
+
+  parseMarkdownToGraph: {
+    method: 'POST' as const,
+    path: '/~/graph/parse-markdown',
+    description: 'Parse markdown files to update graph',
+    response: {} as GraphDataResponse
+  },
+
+  serializeGraphToMarkdown: {
+    method: 'POST' as const,
+    path: '/~/graph/serialize-markdown',
+    description: 'Serialize graph changes back to markdown files',
+    response: {} as { message: string; timestamp: string }
   }
 } as const;

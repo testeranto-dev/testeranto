@@ -47,39 +47,36 @@ export async function embedConfigInHtml(configs: ITesterantoConfig): Promise<voi
   const htmlPath = path.join(reportsDir, "index.html");
   await fs.promises.writeFile(htmlPath, htmlContent, "utf-8");
 
-  // Generate graph-data.json for dual-mode operation
+  // Generate graph-data.json for static mode
+  // This should contain just the data structure, not wrapped in timestamp/version
   const graphData = {
-    timestamp: new Date().toISOString(),
-    version: "1.0",
-    data: {
-      configs: {
-        runtimes: configs.runtimes || {},
-        documentationGlob: configs.documentationGlob,
-        stakeholderReactModule: configs.stakeholderReactModule
+    configs: {
+      runtimes: configs.runtimes || {},
+      documentationGlob: configs.documentationGlob,
+      stakeholderReactModule: configs.stakeholderReactModule
+    },
+    allTestResults: {},
+    featureTree: {},
+    featureGraph: {
+      nodes: [],
+      edges: []
+    },
+    fileTreeGraph: {
+      nodes: [],
+      edges: []
+    },
+    vizConfig: {
+      projection: {
+        xAttribute: 'status',
+        yAttribute: 'priority',
+        xType: 'categorical',
+        yType: 'continuous',
+        layout: 'grid'
       },
-      allTestResults: {},
-      featureTree: {},
-      featureGraph: {
-        nodes: [],
-        edges: []
-      },
-      fileTreeGraph: {
-        nodes: [],
-        edges: []
-      },
-      vizConfig: {
-        projection: {
-          xAttribute: 'status',
-          yAttribute: 'priority',
-          xType: 'categorical',
-          yType: 'continuous',
-          layout: 'grid'
-        },
-        style: {
-          nodeSize: 10,
-          nodeColor: '#007acc',
-          nodeShape: 'circle'
-        }
+      style: {
+        nodeSize: 10,
+        nodeColor: '#007acc',
+        nodeShape: 'circle'
       }
     }
   };

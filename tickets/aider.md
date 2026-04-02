@@ -1,5 +1,8 @@
 ---
 status: doing
+title: aider
+description: ''
+priority: medium
 ---
 
 For every test, there can be a docker service running aider. We need to be sure that we do not create more than 1 aider service per test. The user will launch through the vscode extension which opens a terminal to the aider docker image for that test.

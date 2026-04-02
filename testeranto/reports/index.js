@@ -4,6 +4,7 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
@@ -23,6 +24,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
 // node_modules/react/cjs/react.development.js
 var require_react_development = __commonJS({
@@ -1111,7 +1113,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
-        function useMemo3(create, deps) {
+        function useMemo2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useMemo(create, deps);
         }
@@ -1882,7 +1884,7 @@ var require_react_development = __commonJS({
         exports.useImperativeHandle = useImperativeHandle;
         exports.useInsertionEffect = useInsertionEffect;
         exports.useLayoutEffect = useLayoutEffect;
-        exports.useMemo = useMemo3;
+        exports.useMemo = useMemo2;
         exports.useReducer = useReducer;
         exports.useRef = useRef;
         exports.useState = useState3;
@@ -24622,7 +24624,7 @@ var require_react_development2 = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
-        function useMemo3(create, deps) {
+        function useMemo2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useMemo(create, deps);
         }
@@ -25394,7 +25396,7 @@ var require_react_development2 = __commonJS({
         exports.useImperativeHandle = useImperativeHandle;
         exports.useInsertionEffect = useInsertionEffect;
         exports.useLayoutEffect = useLayoutEffect;
-        exports.useMemo = useMemo3;
+        exports.useMemo = useMemo2;
         exports.useReducer = useReducer;
         exports.useRef = useRef;
         exports.useState = useState3;
@@ -26360,24 +26362,32 @@ function projectGraph(graph, config) {
   let maxX = -Infinity;
   let minY = Infinity;
   let maxY = -Infinity;
-  for (const node of graph.nodes) {
-    const x = getProjectedValue(node, config.xAttribute, config.xType, config.xTransform);
-    const y = getProjectedValue(node, config.yAttribute, config.yType, config.yTransform);
+  const validNodes = (graph.nodes || []).filter((node) => node && typeof node.id === "string");
+  for (const node of validNodes) {
+    const nodeWithAttributes = {
+      ...node,
+      attributes: node.attributes || {}
+    };
+    const x = getProjectedValue(nodeWithAttributes, config.xAttribute, config.xType, config.xTransform);
+    const y = getProjectedValue(nodeWithAttributes, config.yAttribute, config.yType, config.yTransform);
     minX = Math.min(minX, x);
     maxX = Math.max(maxX, x);
     minY = Math.min(minY, y);
     maxY = Math.max(maxY, y);
     nodes.push({
-      ...node,
+      ...nodeWithAttributes,
       x,
       y
     });
   }
   if (graph.edges) {
     for (const edge of graph.edges) {
-      edges.push({
-        ...edge
-      });
+      if (edge && edge.source && edge.target) {
+        edges.push({
+          ...edge,
+          attributes: edge.attributes || {}
+        });
+      }
     }
   }
   return {
@@ -26391,7 +26401,8 @@ function projectGraph(graph, config) {
 }
 function getProjectedValue(node, attribute, type, transform) {
   if (!attribute) return 0.5;
-  const value = node.attributes[attribute];
+  const attributes = node.attributes || {};
+  const value = attributes[attribute];
   if (transform) {
     return transform(value);
   }
@@ -26429,27 +26440,59 @@ function layoutForce(nodes, edges) {
   }));
 }
 function layoutTree(nodes, edges, rootId) {
-  let root = rootId ? nodes.find((n) => n.id === rootId) : null;
-  if (!root) {
-    const nodeIds = new Set(nodes.map((n) => n.id));
-    const targetIds = new Set(edges.map((e) => e.target));
-    const rootIds = [...nodeIds].filter((id) => !targetIds.has(id));
-    root = nodes.find((n) => n.id === rootIds[0]) || nodes[0];
+  const incomingEdges = /* @__PURE__ */ new Map();
+  const outgoingEdges = /* @__PURE__ */ new Map();
+  nodes.forEach((node) => {
+    incomingEdges.set(node.id, []);
+    outgoingEdges.set(node.id, []);
+  });
+  edges.forEach((edge) => {
+    const sourceOutgoing = outgoingEdges.get(edge.source) || [];
+    sourceOutgoing.push(edge.target);
+    outgoingEdges.set(edge.source, sourceOutgoing);
+    const targetIncoming = incomingEdges.get(edge.target) || [];
+    targetIncoming.push(edge.source);
+    incomingEdges.set(edge.target, targetIncoming);
+  });
+  let rootNodes = [];
+  if (rootId) {
+    const rootNode = nodes.find((n) => n.id === rootId);
+    if (rootNode) {
+      rootNodes = [rootNode];
+    }
+  }
+  if (rootNodes.length === 0) {
+    rootNodes = nodes.filter((node) => {
+      const incoming = incomingEdges.get(node.id) || [];
+      return incoming.length === 0;
+    });
+  }
+  if (rootNodes.length === 0 && nodes.length > 0) {
+    rootNodes = [nodes[0]];
   }
   const depthMap = /* @__PURE__ */ new Map();
-  const calculateDepth = (nodeId) => {
-    if (depthMap.has(nodeId)) return depthMap.get(nodeId);
-    const incomingEdges = edges.filter((e) => e.target === nodeId);
-    if (incomingEdges.length === 0) {
-      depthMap.set(nodeId, 0);
-      return 0;
+  const queue = [];
+  rootNodes.forEach((root) => {
+    depthMap.set(root.id, 0);
+    queue.push({ nodeId: root.id, depth: 0 });
+  });
+  while (queue.length > 0) {
+    const current = queue.shift();
+    const currentDepth = current.depth;
+    const currentNodeId = current.nodeId;
+    const children = outgoingEdges.get(currentNodeId) || [];
+    for (const childId of children) {
+      if (!depthMap.has(childId)) {
+        depthMap.set(childId, currentDepth + 1);
+        queue.push({ nodeId: childId, depth: currentDepth + 1 });
+      }
     }
-    const parentDepths = incomingEdges.map((e) => calculateDepth(e.source));
-    const depth = Math.max(...parentDepths) + 1;
-    depthMap.set(nodeId, depth);
-    return depth;
-  };
-  nodes.forEach((node) => calculateDepth(node.id));
+  }
+  nodes.forEach((node) => {
+    if (!depthMap.has(node.id)) {
+      depthMap.set(node.id, 0);
+    }
+  });
   const nodesByDepth = /* @__PURE__ */ new Map();
   nodes.forEach((node) => {
     const depth = depthMap.get(node.id) || 0;
@@ -26458,7 +26501,6 @@ function layoutTree(nodes, edges, rootId) {
     }
     nodesByDepth.get(depth).push(node);
   });
-  const maxDepth = Math.max(...Array.from(nodesByDepth.keys()));
   const levelSeparation = 100;
   const nodeSeparation = 80;
   return nodes.map((node) => {
@@ -26538,44 +26580,38 @@ var BaseChart = ({
   onNodeClick,
   onNodeHover
 }) => {
-  const projectedGraph = (0, import_react6.useMemo)(() => {
-    return projectGraph(data, config.projection);
-  }, [data, config.projection]);
-  const laidOutGraph = (0, import_react6.useMemo)(() => {
-    const nodes = projectedGraph.nodes;
-    let laidOutNodes = [...nodes];
-    switch (config.projection.layout) {
-      case "grid":
-        laidOutNodes = layoutGrid(nodes, config.projection.spacing);
-        break;
-      case "force":
-        laidOutNodes = layoutForce(nodes, data.edges);
-        break;
-      case "tree":
-        if (data.edges) {
-          laidOutNodes = layoutTree(nodes, data.edges);
-        }
-        break;
-      case "timeline":
-        if (config.projection.xAttribute) {
-          laidOutNodes = layoutTimeline(nodes, config.projection.xAttribute);
-        }
-        break;
-      default:
-        laidOutNodes = nodes.map((node) => ({
-          ...node,
-          screenX: node.x * width,
-          screenY: node.y * height
-        }));
-    }
-    return {
-      ...projectedGraph,
-      nodes: laidOutNodes
-    };
-  }, [projectedGraph, config.projection.layout, data.edges, width, height]);
-  const styledGraph = (0, import_react6.useMemo)(() => {
-    return applyStyles(laidOutGraph, config.style);
-  }, [laidOutGraph, config.style]);
+  const projectedGraph = projectGraph(data, config.projection);
+  const nodes = projectedGraph.nodes;
+  let laidOutNodes = [...nodes];
+  switch (config.projection.layout) {
+    case "grid":
+      laidOutNodes = layoutGrid(nodes, config.projection.spacing);
+      break;
+    case "force":
+      laidOutNodes = layoutForce(nodes, data.edges);
+      break;
+    case "tree":
+      if (data.edges) {
+        laidOutNodes = layoutTree(nodes, data.edges);
+      }
+      break;
+    case "timeline":
+      if (config.projection.xAttribute) {
+        laidOutNodes = layoutTimeline(nodes, config.projection.xAttribute);
+      }
+      break;
+    default:
+      laidOutNodes = nodes.map((node) => ({
+        ...node,
+        screenX: node.x * width,
+        screenY: node.y * height
+      }));
+  }
+  const laidOutGraph = {
+    ...projectedGraph,
+    nodes: laidOutNodes
+  };
+  const styledGraph = applyStyles(laidOutGraph, config.style);
   const renderNodes = () => {
     return styledGraph.nodes.map((node) => {
       const x = node.screenX || node.x * width;
@@ -27107,28 +27143,181 @@ var VisualizationTabs = ({
   ] });
 };
 
+// src/stakeholderApp/graph/index.ts
+var StakeholderGraphClient = class {
+  constructor(onGraphUpdate) {
+    __publicField(this, "ws", null);
+    __publicField(this, "onGraphUpdate");
+    this.onGraphUpdate = onGraphUpdate;
+    this.connectWebSocket();
+  }
+  connectWebSocket() {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocol}//${window.location.host}`;
+    this.ws = new WebSocket(wsUrl);
+    this.ws.onopen = () => {
+      console.log("[StakeholderGraphClient] WebSocket connected");
+    };
+    this.ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === "graphUpdated") {
+          console.log("[StakeholderGraphClient] Graph update received, refreshing...");
+          this.fetchGraphData();
+        }
+      } catch (error) {
+        console.error("[StakeholderGraphClient] Error parsing WebSocket message:", error);
+      }
+    };
+    this.ws.onerror = (error) => {
+      console.error("[StakeholderGraphClient] WebSocket error:", error);
+    };
+    this.ws.onclose = () => {
+      console.log("[StakeholderGraphClient] WebSocket closed, reconnecting in 5s...");
+      setTimeout(() => this.connectWebSocket(), 5e3);
+    };
+  }
+  async fetchGraphData() {
+    try {
+      const response = await fetch("/~/graph");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      if (result.graphData) {
+        this.onGraphUpdate(result.graphData);
+        return result.graphData;
+      }
+      throw new Error("Invalid graph data response");
+    } catch (error) {
+      console.error("[StakeholderGraphClient] Failed to fetch graph data:", error);
+      throw error;
+    }
+  }
+  async updateGraph(operations) {
+    const update = {
+      operations,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    try {
+      const response = await fetch("/~/graph", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(update)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      if (result.graphData) {
+        this.onGraphUpdate(result.graphData);
+        return result.graphData;
+      }
+      throw new Error("Invalid graph update response");
+    } catch (error) {
+      console.error("[StakeholderGraphClient] Failed to update graph:", error);
+      throw error;
+    }
+  }
+  disconnect() {
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+  }
+};
+
 // testeranto/reports/index.tsx
 var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+var isDevelopmentMode = window.location.hostname.includes("localhost") && window.location.protocol.startsWith("http");
 var DefaultStakeholderApp = () => {
   const [data, setData] = import_react13.default.useState(null);
   const [loading, setLoading] = import_react13.default.useState(true);
   const [error, setError] = import_react13.default.useState(null);
+  const [graphClient, setGraphClient] = import_react13.default.useState(null);
+  import_react13.default.useEffect(() => {
+    if (data && !graphClient) {
+      const client = new StakeholderGraphClient((updatedGraphData) => {
+        setData((prev) => prev ? {
+          ...prev,
+          featureGraph: updatedGraphData.featureGraph || prev.featureGraph,
+          fileTreeGraph: updatedGraphData.fileTreeGraph || prev.fileTreeGraph
+        } : prev);
+      });
+      setGraphClient(client);
+    }
+    return () => {
+      if (graphClient) {
+        graphClient.disconnect();
+      }
+    };
+  }, [data, graphClient]);
   import_react13.default.useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       setError(null);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2e3);
+      let isApiMode = false;
       try {
-        const response = await fetch("/testeranto/reports/graph-data.json");
-        if (!response.ok) throw new Error(`JSON file ${response.status}`);
-        const jsonData = await response.json();
-        setData(jsonData);
-        setLoading(false);
-        return;
-      } catch (jsonError) {
-        console.warn("JSON file failed:", jsonError.message);
+        const response = await fetch("/~/graph", {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (response.ok) {
+          isApiMode = true;
+          const result = await response.json();
+          if (result.graphData) {
+            const stakeholderData = {
+              configs: result.graphData.configs || {},
+              allTestResults: result.graphData.allTestResults || {},
+              featureTree: result.graphData.featureTree || {},
+              featureGraph: result.graphData.featureGraph || { nodes: [], edges: [] },
+              fileTreeGraph: result.graphData.fileTreeGraph || { nodes: [], edges: [] },
+              vizConfig: result.graphData.vizConfig || {
+                projection: {
+                  xAttribute: "status",
+                  yAttribute: "priority",
+                  xType: "categorical",
+                  yType: "continuous",
+                  layout: "grid"
+                },
+                style: {
+                  nodeSize: 10,
+                  nodeColor: "#007acc",
+                  nodeShape: "circle"
+                }
+              },
+              documentation: { files: [] },
+              testResults: {},
+              errors: [],
+              timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+              workspaceRoot: ""
+            };
+            setData(stakeholderData);
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (error2) {
+        console.log("API mode not available, falling back to static mode:", error2);
       }
-      setError("All data sources failed.");
-      setLoading(false);
+      clearTimeout(timeoutId);
+      try {
+        const response = await fetch("graph-data.json");
+        if (!response.ok) {
+          throw new Error(`Failed to load static file: ${response.status} ${response.statusText}`);
+        }
+        const result = await response.json();
+        setData(result);
+        setLoading(false);
+      } catch (error2) {
+        console.error("Failed to load static graph data:", error2);
+        setError(error2.message || "Unknown error loading data");
+        setLoading(false);
+      }
     };
     loadData();
   }, []);
@@ -27147,8 +27336,13 @@ var DefaultStakeholderApp = () => {
   }
   const handleNodeClick = (node) => {
     console.log("Node clicked:", node);
+    console.log("Node ID:", node.id);
+    console.log("Node attributes:", node.attributes);
   };
   const handleNodeHover = (node) => {
+    if (node) {
+      console.log("Node hover:", node.id);
+    }
   };
   return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: "20px", fontFamily: "sans-serif" }, children: [
     /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h1", { children: "Testeranto Stakeholder Report" }),

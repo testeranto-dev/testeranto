@@ -14,6 +14,9 @@ files:
   - src/vscode/TerminalManager.ts
   - src/vscode/README.md
   - src/vscode/extension.ts
+title: vscodeExtensionV2
+description: ''
+priority: medium
 ---
 
 see [documentizer](./../../server/features/documentizer.md)

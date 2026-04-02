@@ -147,6 +147,61 @@ export const serveStaticFile = async (
 
   const projectRoot = process.cwd();
 
+  // IMPORTANT: The server writes graph-data.json to testeranto/reports/graph-data.json
+  // for static mode. We need to serve it when requested.
+  if (normalizedPath === "/graph-data.json" || normalizedPath === "/testeranto/reports/graph-data.json") {
+    console.log(`[serveStaticFile] Serving graph-data.json from ${normalizedPath}`);
+    const projectRoot = process.cwd();
+    const filePath = path.join(projectRoot, "testeranto", "reports", "graph-data.json");
+    
+    // Check if the file exists
+    if (!fs.existsSync(filePath)) {
+      console.log(`[serveStaticFile] graph-data.json not found at ${filePath}, generating it...`);
+      // Generate graph data if it doesn't exist
+      if (configs && (server as any).generateGraphData) {
+        try {
+          const graphData = (server as any).generateGraphData();
+          // Ensure the directory exists
+          const dir = path.dirname(filePath);
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+          }
+          // Save the graph data
+          fs.writeFileSync(filePath, JSON.stringify(graphData, null, 2), 'utf-8');
+        } catch (error) {
+          console.error(`[serveStaticFile] Error generating graph data:`, error);
+          return new Response(`Graph data not available: ${error.message}`, {
+            status: 404,
+            headers: { "Content-Type": "text/plain" }
+          });
+        }
+      } else {
+        return new Response(`Graph data not available`, {
+          status: 404,
+          headers: { "Content-Type": "text/plain" }
+        });
+      }
+    }
+    
+    // Serve the file
+    try {
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      return new Response(fileContent, {
+        status: 200,
+        headers: { 
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache"
+        }
+      });
+    } catch (error) {
+      console.error(`[serveStaticFile] Error reading graph-data.json:`, error);
+      return new Response(`Error reading graph data: ${error.message}`, {
+        status: 500,
+        headers: { "Content-Type": "text/plain" }
+      });
+    }
+  }
+
   if (normalizedPath === "/" || normalizedPath === "/index.html") {
     await generateAndWriteStakeholderHtml(configs);
 
