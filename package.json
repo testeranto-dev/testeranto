@@ -26,9 +26,13 @@
     "onCommand:testeranto.retryConnection",
     "onCommand:testeranto.startServer",
     "onCommand:testeranto.refreshDockerProcesses",
+    "onCommand:testeranto.refreshAiderProcesses",
     "onCommand:testeranto.showProcessLogs",
+    "onCommand:testeranto.openAiderTerminal",
+    "onCommand:testeranto.openServerWebview",
     "onView:testeranto.runtimeView",
     "onView:testeranto.dockerProcessView",
+    "onView:testeranto.aiderProcessView",
     "workspaceContains:**/testeranto/extension-config.json",
     "workspaceContains:**/testeranto/reports/**/*.json"
   ],
@@ -39,6 +43,25 @@
           "id": "testeranto",
           "title": "Testeranto",
           "icon": "$(beaker)"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "testeranto.openServerWebview",
+          "when": "view == testeranto.runtimeView",
+          "group": "navigation"
+        },
+        {
+          "command": "testeranto.openServerWebview",
+          "when": "view == testeranto.dockerProcessView",
+          "group": "navigation"
+        },
+        {
+          "command": "testeranto.openServerWebview",
+          "when": "view == testeranto.aiderProcessView",
+          "group": "navigation"
         }
       ]
     },
@@ -53,6 +76,11 @@
           "id": "testeranto.dockerProcessView",
           "name": "Docker Processes",
           "icon": "$(server)"
+        },
+        {
+          "id": "testeranto.aiderProcessView",
+          "name": "Aider Processes",
+          "icon": "$(comment-discussion)"
         }
       ]
     },
@@ -90,8 +118,20 @@
         "title": "Testeranto: Refresh Docker Processes"
       },
       {
+        "command": "testeranto.refreshAiderProcesses",
+        "title": "Testeranto: Refresh Aider Processes"
+      },
+      {
         "command": "testeranto.showProcessLogs",
         "title": "Testeranto: Show Process Logs"
+      },
+      {
+        "command": "testeranto.openAiderTerminal",
+        "title": "Testeranto: Open Aider Terminal"
+      },
+      {
+        "command": "testeranto.openServerWebview",
+        "title": "Testeranto: Open Server Webview"
       }
     ]
   },

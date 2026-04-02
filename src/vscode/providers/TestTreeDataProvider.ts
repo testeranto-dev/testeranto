@@ -186,6 +186,23 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
     const connectionStatusItem = this.createConnectionStatusItem();
     items.push(connectionStatusItem);
 
+    // Add webview button
+    items.push(new TestTreeItem(
+        'Open Server Report',
+        TreeItemType.Info,
+        vscode.TreeItemCollapsibleState.None,
+        {
+            description: 'View HTML report in webview',
+            webview: true
+        },
+        {
+            command: 'testeranto.openServerWebview',
+            title: 'Open Server Webview',
+            arguments: []
+        },
+        new vscode.ThemeIcon('globe')
+    ));
+
     try {
       // Try to fetch unified tree to get runtime information
       const response = await fetch(ApiUtils.getUnifiedTestTreeUrl());

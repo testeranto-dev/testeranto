@@ -1,5 +1,5 @@
-=== Log started at 2026-04-01T21:29:14.412Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
-=== Container ID: 3f868c2c3105e68627b86b859ae0a8096c52c0c3c8cedfe9abbfd2b55f3bad32 ===
+=== Log started at 2026-04-02T16:29:17.400Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
+=== Container ID: 6c176151bc0b33cea8fbd24094a4fd0657ea7f565aad5e1e4c9754d80121e847 ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
@@ -11,34 +11,23 @@ warning testeranto@0.233.9: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}'
 [NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}
 Describe.another simple calculator is not defined in test implementation
-Error during test specification: TypeError: Given.Default(...) is not a function
-    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
-    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1038:23)
-    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1866:5)
-    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
-    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
-    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
-    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
-TypeError: Given.Default(...) is not a function
-    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
-    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1038:23)
-    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1866:5)
-    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
-    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
-    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
-    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
-TypeError: Given.Default(...) is not a function
-    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)
-    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1038:23)
-    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1866:5)
-    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36
-    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
-    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
-    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+[adapter] beforeEach called with subject: [class Calculator]
+[adapter] beforeEach created calculator: Calculator { display: '', values: {} }
+[adapter] andWhen called with store: Calculator { display: '', values: {} }
+[adapter] andWhen result: Calculator { display: '5', values: {} }
+[adapter] andWhen called with store: Calculator { display: '5', values: {} }
+[adapter] andWhen result: Calculator { display: '5+', values: {} }
+[adapter] andWhen called with store: Calculator { display: '5+', values: {} }
+[adapter] andWhen result: Calculator { display: '5+3', values: {} }
+[adapter] andWhen called with store: Calculator { display: '5+3', values: {} }
+[adapter] andWhen result: Calculator { display: '8', values: {} }
+[adapter] verify called with store: Calculator { display: '8', values: {} }
+[adapter] verificationFn: [AsyncFunction (anonymous)]
+[adapter] afterEach called with store: Calculator { display: '8', values: {} }
 testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/'
 }
-Done in 0.66s.
+Done in 0.51s.
 
-=== Log captured at 2026-04-01T21:29:15.672Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-02T16:29:18.687Z (container status: exited, exit code: 0) ===

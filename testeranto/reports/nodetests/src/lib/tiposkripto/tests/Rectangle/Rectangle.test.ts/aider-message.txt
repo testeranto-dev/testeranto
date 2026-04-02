@@ -1,0 +1,27 @@
+/add src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts
+/add src/lib/tiposkripto/tests/Rectangle/Rectangle.ts
+/add src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts
+/add src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts
+/add src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+/add src/lib/tiposkripto/src/Node.ts
+/add src/lib/tiposkripto/src/BaseTiposkripto.ts
+/add src/lib/tiposkripto/src/Adapters.ts
+/add src/lib/tiposkripto/src/types.ts
+/add src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts
+/add src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts
+/add src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts
+/add src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts
+/add src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts
+/add src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts
+/add src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts
+/add src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts
+/add src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts
+/add src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts
+
+/read testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/rectangle-test-ts_bdd.log
+/read testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/rectangle-test-ts_check-0.log
+/read testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/rectangle-test-ts_check-1.log
+/read testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json
+
+Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.
+

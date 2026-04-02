@@ -12,12 +12,14 @@ export class CommandManager {
     private statusBarManager: StatusBarManager;
     private runtimeProvider: vscode.TreeDataProvider<any> | null;
     private dockerProcessProvider: vscode.TreeDataProvider<any> | null;
+    private aiderProcessProvider: vscode.TreeDataProvider<any> | null;
 
     constructor(terminalManager: TerminalManager, statusBarManager: StatusBarManager) {
         this.terminalManager = terminalManager;
         this.statusBarManager = statusBarManager;
         this.runtimeProvider = null;
         this.dockerProcessProvider = null;
+        this.aiderProcessProvider = null;
     }
 
     public setRuntimeProvider(provider: vscode.TreeDataProvider<any>): void {
@@ -26,6 +28,10 @@ export class CommandManager {
 
     public setDockerProcessProvider(provider: vscode.TreeDataProvider<any>): void {
         this.dockerProcessProvider = provider;
+    }
+
+    public setAiderProcessProvider(provider: vscode.TreeDataProvider<any>): void {
+        this.aiderProcessProvider = provider;
     }
 
     public registerCommands(context: vscode.ExtensionContext): vscode.Disposable[] {
@@ -298,6 +304,40 @@ export class CommandManager {
             )
         );
 
+        // Aider processes commands
+        disposables.push(
+            vscode.commands.registerCommand(
+                "testeranto.refreshAiderProcesses",
+                async () => {
+                    try {
+                        if (this.aiderProcessProvider && typeof (this.aiderProcessProvider as any).refresh === 'function') {
+                            await (this.aiderProcessProvider as any).refresh();
+                            vscode.window.showInformationMessage("Aider processes refreshed");
+                        } else {
+                            vscode.window.showWarningMessage("Aider process provider not available");
+                        }
+                    } catch (err) {
+                        vscode.window.showErrorMessage(`Error refreshing aider processes: ${err}`);
+                    }
+                }
+            )
+        );
+
+        disposables.push(
+            vscode.commands.registerCommand(
+                "testeranto.openAiderTerminal",
+                async (runtime: string, testName: string, containerId?: string) => {
+                    try {
+                        vscode.window.showInformationMessage(`Opening aider terminal for ${testName} (${runtime})...`);
+                        const terminal = await this.terminalManager.createAiderTerminal(runtime, testName);
+                        terminal.show();
+                    } catch (err) {
+                        vscode.window.showErrorMessage(`Error opening aider terminal: ${err}`);
+                    }
+                }
+            )
+        );
+
         disposables.push(
             vscode.commands.registerCommand(
                 "testeranto.showProcessLogs",
@@ -354,6 +394,234 @@ export class CommandManager {
             })
         );
 
+        // Open server webview command
+        disposables.push(
+            vscode.commands.registerCommand("testeranto.openServerWebview", async () => {
+                try {
+                    const workspaceFolders = vscode.workspace.workspaceFolders;
+                    if (!workspaceFolders || workspaceFolders.length === 0) {
+                        vscode.window.showErrorMessage('No workspace folder open');
+                        return;
+                    }
+                    
+                    const workspaceRoot = workspaceFolders[0].uri;
+                    const reportHtmlUri = vscode.Uri.joinPath(workspaceRoot, 'testeranto', 'reports', 'index.html');
+                    
+                    // Check if the report file exists
+                    try {
+                        await vscode.workspace.fs.stat(reportHtmlUri);
+                    } catch (error) {
+                        vscode.window.showWarningMessage('Report file not found. Starting server to generate it...');
+                        // Start server to generate the report
+                        await vscode.commands.executeCommand('testeranto.startServer');
+                        // Wait for server to generate the report
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                    }
+                    
+                    // Create and show webview
+                    const panel = vscode.window.createWebviewPanel(
+                        'testerantoServer',
+                        'Testeranto Server Report',
+                        vscode.ViewColumn.One,
+                        {
+                            enableScripts: true,
+                            retainContextWhenHidden: true,
+                            localResourceRoots: [vscode.Uri.joinPath(workspaceRoot, 'testeranto', 'reports')]
+                        }
+                    );
+                    
+                    // Get the HTML content
+                    let htmlContent: string;
+                    try {
+                        const fileContent = await vscode.workspace.fs.readFile(reportHtmlUri);
+                        htmlContent = Buffer.from(fileContent).toString('utf-8');
+                    } catch (error) {
+                        htmlContent = getFallbackHtmlContent();
+                    }
+                    
+                    // Replace script src to use webview.asWebviewUri
+                    const reportJsUri = panel.webview.asWebviewUri(
+                        vscode.Uri.joinPath(workspaceRoot, 'testeranto', 'reports', 'index.js')
+                    );
+                    
+                    // Update the script tag in the HTML
+                    const updatedHtmlContent = htmlContent.replace(
+                        /<script type="module">[\s\S]*?<\/script>/,
+                        `<script type="module">
+                            // Wait for the stakeholder app to be loaded
+                            async function initApp() {
+                                const root = document.getElementById('root');
+                                try {
+                                    // Import the stakeholder app module using webview URI
+                                    const { renderApp } = await import('${reportJsUri}');
+                                    renderApp(root);
+                                } catch (error) {
+                                    console.error('Failed to load stakeholder report:', error);
+                                    root.innerHTML = \`
+                                        <div style="padding: 40px; text-align: center;">
+                                            <h1 style="color: #d32f2f;">Error Loading Report</h1>
+                                            <p>\${error.message}</p>
+                                            <p>Please make sure the Testeranto server has generated the report files.</p>
+                                            <details style="text-align: left; max-width: 800px; margin: 20px auto;">
+                                                <summary>Technical Details</summary>
+                                                <pre style="background: #f5f5f5; padding: 10px; overflow: auto;">\${error.stack}</pre>
+                                            </details>
+                                        </div>
+                                    \`;
+                                }
+                            }
+                            
+                            // Start the app when the DOM is ready
+                            if (document.readyState === 'loading') {
+                                document.addEventListener('DOMContentLoaded', initApp);
+                            } else {
+                                initApp();
+                            }
+                        </script>`
+                    );
+                    
+                    panel.webview.html = updatedHtmlContent;
+                    
+                    // Handle messages from the webview
+                    panel.webview.onDidReceiveMessage(
+                        message => {
+                            switch (message.command) {
+                                case 'alert':
+                                    vscode.window.showErrorMessage(message.text);
+                                    return;
+                                case 'refresh':
+                                    // Re-read the HTML file and update
+                                    vscode.workspace.fs.readFile(reportHtmlUri).then(fileContent => {
+                                        const newHtmlContent = Buffer.from(fileContent).toString('utf-8');
+                                        const updatedNewHtmlContent = newHtmlContent.replace(
+                                            /<script type="module">[\s\S]*?<\/script>/,
+                                            `<script type="module">
+                                                // Wait for the stakeholder app to be loaded
+                                                async function initApp() {
+                                                    const root = document.getElementById('root');
+                                                    try {
+                                                        // Import the stakeholder app module using webview URI
+                                                        const { renderApp } = await import('${reportJsUri}');
+                                                        renderApp(root);
+                                                    } catch (error) {
+                                                        console.error('Failed to load stakeholder report:', error);
+                                                        root.innerHTML = \`
+                                                            <div style="padding: 40px; text-align: center;">
+                                                                <h1 style="color: #d32f2f;">Error Loading Report</h1>
+                                                                <p>\${error.message}</p>
+                                                                <p>Please make sure the Testeranto server has generated the report files.</p>
+                                                                <details style="text-align: left; max-width: 800px; margin: 20px auto;">
+                                                                    <summary>Technical Details</summary>
+                                                                    <pre style="background: #f5f5f5; padding: 10px; overflow: auto;">\${error.stack}</pre>
+                                                                </details>
+                                                            </div>
+                                                        \`;
+                                                    }
+                                                }
+                                                
+                                                // Start the app when the DOM is ready
+                                                if (document.readyState === 'loading') {
+                                                    document.addEventListener('DOMContentLoaded', initApp);
+                                                } else {
+                                                    initApp();
+                                                }
+                                            </script>`
+                                        );
+                                        panel.webview.html = updatedNewHtmlContent;
+                                    });
+                                    return;
+                            }
+                        },
+                        undefined,
+                        disposables
+                    );
+                    
+                } catch (error) {
+                    vscode.window.showErrorMessage(`Failed to open server webview: ${error.message}`);
+                }
+            })
+        );
+
         return disposables;
     }
+}
+
+function getFallbackHtmlContent(): string {
+    return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Testeranto - Stakeholder Report</title>
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f5f5f5;
+                }
+                #root {
+                    min-height: 100vh;
+                }
+                .loading {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    font-size: 1.2rem;
+                    color: #666;
+                }
+                .error-container {
+                    padding: 40px;
+                    text-align: center;
+                }
+                .error-title {
+                    color: #d32f2f;
+                    margin-bottom: 20px;
+                }
+                .refresh-button {
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    background-color: #007acc;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 14px;
+                }
+                .refresh-button:hover {
+                    background-color: #005a9e;
+                }
+            </style>
+        </head>
+        <body>
+            <div id="root">
+                <div class="error-container">
+                    <h1 class="error-title">Report Not Found</h1>
+                    <p>The Testeranto report file could not be found.</p>
+                    <p>Please make sure the server is running and has generated the report files.</p>
+                    <button class="refresh-button" onclick="refreshReport()">Refresh Report</button>
+                </div>
+            </div>
+            <script>
+                const vscode = acquireVsCodeApi();
+                
+                function refreshReport() {
+                    vscode.postMessage({
+                        command: 'refresh'
+                    });
+                }
+                
+                // Try to start the server if not running
+                setTimeout(() => {
+                    vscode.postMessage({
+                        command: 'alert',
+                        text: 'Report not found. Please start the server first.'
+                    });
+                }, 1000);
+            </script>
+        </body>
+        </html>
+    `;
 }

@@ -1,38 +1,302 @@
 {
   "failed": true,
-  "fails": 1,
+  "fails": 6,
   "artifacts": [],
-  "features": [],
-  "tests": 1,
-  "runTimeTests": 1,
+  "features": [
+    "./Readme.md"
+  ],
+  "tests": 6,
+  "runTimeTests": 6,
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1775079793104,
+  "timestamp": 1775147357401,
   "individualResults": [
     {
       "index": 0,
       "failed": true,
-      "fails": 1,
-      "features": [],
+      "fails": 2,
+      "features": [
+        "./Readme.md"
+      ],
       "error": {
-        "message": "Given.Default(...) is not a function",
-        "stack": "TypeError: Given.Default(...) is not a function\n    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:304:32)\n    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1038:23)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1866:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:336:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
-        "name": "TypeError"
+        "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
+        "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)",
+        "name": "AssertionError"
       },
-      "stepName": "Step_0",
-      "stepType": "SpecificationError",
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
       "testJob": {
-        "name": "Specification_Error",
-        "type": "Error",
-        "error": "Test specification failed: Given.Default(...) is not a function"
+        "key": "confirm",
+        "error": [
+          {
+            "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)"
+          },
+          "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 2,
+        "testCases": [
+          {
+            "input": [
+              1,
+              1
+            ],
+            "test": "beEqualTo: 2222"
+          },
+          {
+            "input": [
+              2,
+              3
+            ],
+            "test": "beGreaterThan: 4"
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "Describe.another simple calculator is not implemented",
+        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1475:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "name": "Error"
+      },
+      "stepName": "step_1",
+      "stepType": "BaseDescribe",
+      "testJob": {
+        "key": "step_1",
+        "its": [
+          {
+            "name": "can save 1 memory: ",
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "can save 2 memories: ",
+            "error": null,
+            "artifacts": []
+          }
+        ],
+        "error": [
+          "Describe.another simple calculator is not implemented",
+          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1475:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": false,
+        "fails": 1
+      }
+    },
+    {
+      "index": 2,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": null,
+      "stepName": "step_2",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_2",
+        "error": null,
+        "failed": false,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "press: 5",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "press: +",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "press: 3",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "enter: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "result: 8",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "expected [Function] to equal 3",
+        "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "name": "AssertionError"
+      },
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": [
+          {
+            "message": "expected [Function] to equal 3",
+            "expected": 3,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+          },
+          "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "testCases": [
+          {
+            "input": [
+              3,
+              3
+            ],
+            "test": "beEqualTo: 3"
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "expected [Function] to equal 32",
+        "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "name": "AssertionError"
+      },
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": [
+          {
+            "message": "expected [Function] to equal 32",
+            "expected": 32,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+          },
+          "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "testCases": [
+          {
+            "input": [
+              3,
+              32
+            ],
+            "test": "beEqualTo: 32"
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "expected [Function] to equal 332",
+        "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "name": "AssertionError"
+      },
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": [
+          {
+            "message": "expected [Function] to equal 332",
+            "expected": 332,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+          },
+          "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "testCases": [
+          {
+            "input": [
+              3,
+              332
+            ],
+            "test": "beEqualTo: 332"
+          }
+        ]
       }
     }
   ],
   "summary": {
-    "totalTests": 1,
+    "totalTests": 6,
     "passed": 0,
-    "failed": 1,
+    "failed": 6,
     "successRate": "0%"
   }
 }

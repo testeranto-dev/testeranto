@@ -64,6 +64,7 @@ const config: ITesterantoConfig = {
         // "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
         "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
         "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
         // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
         // "src/vscode/providers/utils/testTree/debugTest.js"
         // "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",

@@ -14,7 +14,17 @@ export const adapter: ITestAdapter<ICircleNode> = {
     artifactory,
   ) => {
     console.log("[Circle adapter] beforeEach called with subject:", subject);
-    const circle = initializer();
+    // Call initializer with appropriate arguments
+    let circle;
+    if (initializer.length === 0) {
+      circle = initializer();
+    } else if (initializer.length === 1) {
+      // Try subject first (for implementations like (input: typeof Circle) => new input())
+      circle = initializer(subject);
+    } else {
+      // Default: call with no arguments
+      circle = initializer();
+    }
     console.log("[Circle adapter] beforeEach created circle:", circle);
     return circle;
   },
@@ -29,18 +39,10 @@ export const adapter: ITestAdapter<ICircleNode> = {
     console.log("[Circle adapter] verificationFn:", verificationFn);
     
     if (typeof verificationFn === 'function') {
-      try {
-        const actualVerificationFn = verificationFn();
-        
-        if (typeof actualVerificationFn === 'function') {
-          return actualVerificationFn(store);
-        } else {
-          return verificationFn;
-        }
-      } catch (e) {
-        console.log("[Circle adapter] Error in verify:", e);
-        throw e;
-      }
+      // Call verificationFn with store to perform assertion
+      await verificationFn(store);
+      // Return the store (truthy value) to indicate success
+      return store;
     }
     return store;
   },

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { TerminalManager } from "./TerminalManager";
 import { TestTreeDataProvider } from "./providers/TestTreeDataProvider";
 import { DockerProcessTreeDataProvider } from "./providers/DockerProcessTreeDataProvider";
+import { AiderProcessTreeDataProvider } from "./providers/AiderProcessTreeDataProvider";
 import { StatusBarManager } from "./statusBarManager";
 import { CommandManager } from "./commandManager";
 
@@ -31,12 +32,18 @@ export function activate(context: vscode.ExtensionContext): void {
     const dockerProcessProvider = new DockerProcessTreeDataProvider();
     outputChannel.appendLine("[Testeranto] DockerProcessTreeDataProvider created");
 
+    // Create Aider process provider
+    outputChannel.appendLine("[Testeranto] Creating AiderProcessTreeDataProvider...");
+    const aiderProcessProvider = new AiderProcessTreeDataProvider();
+    outputChannel.appendLine("[Testeranto] AiderProcessTreeDataProvider created");
+
     // Create command manager
     outputChannel.appendLine("[Testeranto] Creating CommandManager...");
     const commandManager = new CommandManager(terminalManager, statusBarManager);
     // Set the providers so commands can refresh them
     commandManager.setRuntimeProvider(runtimeProvider);
     commandManager.setDockerProcessProvider(dockerProcessProvider);
+    commandManager.setAiderProcessProvider(aiderProcessProvider);
     const commandDisposables = commandManager.registerCommands(context);
     outputChannel.appendLine("[Testeranto] CommandManager created and commands registered");
 
@@ -52,12 +59,19 @@ export function activate(context: vscode.ExtensionContext): void {
         showCollapseAll: true
     });
 
+    // Register Aider processes tree view
+    const aiderProcessTreeView = vscode.window.createTreeView("testeranto.aiderProcessView", {
+        treeDataProvider: aiderProcessProvider,
+        showCollapseAll: true
+    });
+
     // Clean up on deactivation
     context.subscriptions.push({
         dispose: () => {
             terminalManager.disposeAll();
             runtimeProvider.dispose();
             dockerProcessProvider.dispose();
+            aiderProcessProvider.dispose();
             statusBarManager.dispose();
             outputChannel.dispose();
         }
@@ -75,6 +89,7 @@ export function activate(context: vscode.ExtensionContext): void {
         ...commandDisposables,
         runtimeTreeView,
         dockerProcessTreeView,
+        aiderProcessTreeView,
         statusBarManager.getMainStatusBarItem(),
         statusBarManager.getServerStatusBarItem(),
         testCommand

@@ -15,8 +15,17 @@ export const adapter: ITestAdapter<ICalculatorNode> = {
     artifactory,
   ) => {
     console.log("[adapter] beforeEach called with subject:", subject);
-    // initializer is () => Calculator, so call it
-    const calculator = initializer();
+    // Call initializer with appropriate arguments
+    let calculator;
+    if (initializer.length === 0) {
+      calculator = initializer();
+    } else if (initializer.length === 1) {
+      // Try subject first (for implementations like (input: typeof Calculator) => new input())
+      calculator = initializer(subject);
+    } else {
+      // Default: call with no arguments
+      calculator = initializer();
+    }
     console.log("[adapter] beforeEach created calculator:", calculator);
     return calculator;
   },
@@ -31,33 +40,11 @@ export const adapter: ITestAdapter<ICalculatorNode> = {
     console.log("[adapter] verify called with store:", store);
     console.log("[adapter] verificationFn:", verificationFn);
     
-    // For TDT pattern, verificationFn might be wrapped differently
-    // It should be a function that returns a verification function
     if (typeof verificationFn === 'function') {
-      try {
-        // Call verificationFn to get the actual verification function
-        const actualVerificationFn = verificationFn();
-        
-        if (typeof actualVerificationFn === 'function') {
-          // The verification function might expect (store) or (input, fn)
-          // Try to call it with store
-          try {
-            return actualVerificationFn(store);
-          } catch (e) {
-            // If that fails, it might expect (input, fn)
-            // For TDT, the input and fn should be provided by BaseConfirm
-            // We'll let BaseConfirm handle this wrapping
-            console.log("[adapter] verificationFn expects different signature:", e.message);
-            throw e;
-          }
-        } else {
-          // If verificationFn doesn't return a function, use it directly
-          return verificationFn;
-        }
-      } catch (e) {
-        console.log("[adapter] Error in verify:", e);
-        throw e;
-      }
+      // Call verificationFn with store to perform assertion
+      await verificationFn(store);
+      // Return the store (truthy value) to indicate success
+      return store;
     }
     return store;
   },

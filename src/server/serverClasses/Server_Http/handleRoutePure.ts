@@ -354,9 +354,8 @@ const createRouteHandlersMap = (): Record<string, (server: any, url?: URL, param
               405,
             );
           }
-          const getAiderProcesses = server.getAiderProcesses;
-          if (typeof getAiderProcesses === "function") {
-            const aiderProcesses = getAiderProcesses();
+          if (server && typeof server.getAiderProcesses === "function") {
+            const aiderProcesses = server.getAiderProcesses();
             return jsonResponse({
               aiderProcesses: aiderProcesses || [],
               message: "Success",

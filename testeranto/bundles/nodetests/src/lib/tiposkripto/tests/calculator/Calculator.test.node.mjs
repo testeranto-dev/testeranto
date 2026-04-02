@@ -1,6 +1,6 @@
 import {
   NodeTiposkripto
-} from "../../../../../chunk-HBL6D2FK.mjs";
+} from "../../../../../chunk-U4RILNIO.mjs";
 
 // src/lib/tiposkripto/tests/calculator/Calculator.ts
 var Calculator = class {
@@ -103,7 +103,14 @@ var adapter = {
   },
   prepareEach: async (subject, initializer, testResource, initialValues, artifactory) => {
     console.log("[adapter] beforeEach called with subject:", subject);
-    const calculator = initializer();
+    let calculator;
+    if (initializer.length === 0) {
+      calculator = initializer();
+    } else if (initializer.length === 1) {
+      calculator = initializer(subject);
+    } else {
+      calculator = initializer();
+    }
     console.log("[adapter] beforeEach created calculator:", calculator);
     return calculator;
   },
@@ -117,22 +124,8 @@ var adapter = {
     console.log("[adapter] verify called with store:", store);
     console.log("[adapter] verificationFn:", verificationFn);
     if (typeof verificationFn === "function") {
-      try {
-        const actualVerificationFn = verificationFn();
-        if (typeof actualVerificationFn === "function") {
-          try {
-            return actualVerificationFn(store);
-          } catch (e) {
-            console.log("[adapter] verificationFn expects different signature:", e.message);
-            throw e;
-          }
-        } else {
-          return verificationFn;
-        }
-      } catch (e) {
-        console.log("[adapter] Error in verify:", e);
-        throw e;
-      }
+      await verificationFn(store);
+      return store;
     }
     return store;
   },

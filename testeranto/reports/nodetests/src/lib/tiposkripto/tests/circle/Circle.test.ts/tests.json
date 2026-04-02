@@ -1,38 +1,225 @@
 {
   "failed": true,
-  "fails": 1,
+  "fails": 4,
   "artifacts": [],
-  "features": [],
-  "tests": 1,
-  "runTimeTests": 1,
+  "features": [
+    "Circle circumference formula: C = 2πr",
+    "Circle area formula: A = πr²",
+    "Testing circle with radius 5",
+    "Testing radius operations"
+  ],
+  "tests": 5,
+  "runTimeTests": 5,
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1775079793171,
+  "timestamp": 1775147357463,
   "individualResults": [
     {
       "index": 0,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Circle circumference formula: C = 2πr"
+      ],
+      "error": null,
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Circle circumference formula: C = 2πr"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "testCases": [
+          {
+            "input": [],
+            "test": "beEqualTo: 0"
+          },
+          {
+            "input": 1,
+            "test": "beCloseTo: 6.283185307179586"
+          },
+          {
+            "input": 2,
+            "test": "beCloseTo: 12.566370614359172"
+          },
+          {
+            "input": 5,
+            "test": "beCloseTo: 31.41592653589793"
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Circle area formula: A = πr²"
+      ],
+      "error": null,
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Circle area formula: A = πr²"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "testCases": [
+          {
+            "input": [],
+            "test": "beEqualTo: 0"
+          },
+          {
+            "input": 1,
+            "test": "beCloseTo: 3.141592653589793"
+          },
+          {
+            "input": 2,
+            "test": "beCloseTo: 12.566370614359172"
+          },
+          {
+            "input": 5,
+            "test": "beCloseTo: 78.53981633974483"
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "Testing circle with radius 5"
+      ],
+      "error": {
+        "message": "Describe implementation for \"a circle with radius\" is not a valid function",
+        "stack": "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:989:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "name": "Error"
+      },
+      "stepName": "step_2",
+      "stepType": "BaseDescribe",
+      "testJob": {
+        "key": "step_2",
+        "its": [
+          {
+            "name": "has correct circumference: ",
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "has correct area: ",
+            "error": null,
+            "artifacts": []
+          }
+        ],
+        "error": [
+          "Describe implementation for \"a circle with radius\" is not a valid function",
+          "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:989:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+        ],
+        "failed": true,
+        "features": [
+          "Testing circle with radius 5"
+        ],
+        "artifacts": [],
+        "status": false,
+        "fails": 1
+      }
+    },
+    {
+      "index": 3,
+      "failed": true,
+      "fails": 2,
+      "features": [
+        "Testing radius operations"
+      ],
+      "error": {
+        "message": "expected NaN to be close to 62.83185307179586 +/- 0.0001",
+        "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:900:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1730:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:28)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_3",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_3",
+        "error": [
+          {
+            "message": "expected NaN to be close to 62.83185307179586 +/- 0.0001",
+            "actual": null,
+            "showDiff": false,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:900:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1730:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:28)"
+          },
+          "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:900:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1730:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:28)"
+        ],
+        "failed": true,
+        "features": [
+          "Testing radius operations"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 2,
+        "whens": [
+          {
+            "name": "doubleRadius: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "halveRadius: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "radiusIs: 10",
+            "status": false,
+            "error": "AssertionError: expected NaN to be close to 10 +/- 0.0001"
+          },
+          {
+            "name": "circumferenceIs: 62.83185307179586",
+            "status": false,
+            "error": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001"
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
       "failed": true,
       "fails": 1,
       "features": [],
       "error": {
-        "message": "Describe.a circle with radius(...) is not a function",
-        "stack": "TypeError: Describe.a circle with radius(...) is not a function\n    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:236:40)\n    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1038:23)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-HBL6D2FK.mjs:1866:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:273:27\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
-        "name": "TypeError"
+        "message": "Step type Function has no runnable method",
+        "stack": "Error: Step type Function has no runnable method\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "name": "Error"
       },
-      "stepName": "Step_0",
-      "stepType": "SpecificationError",
+      "stepName": "Step_4",
+      "stepType": "Function",
       "testJob": {
-        "name": "Specification_Error",
-        "type": "Error",
-        "error": "Test specification failed: Describe.a circle with radius(...) is not a function"
+        "name": "Step_4",
+        "type": "Function",
+        "key": "step_4"
       }
     }
   ],
   "summary": {
-    "totalTests": 1,
-    "passed": 0,
-    "failed": 1,
-    "successRate": "0%"
+    "totalTests": 5,
+    "passed": 1,
+    "failed": 4,
+    "successRate": "20.00%"
   }
 }

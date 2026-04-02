@@ -1,5 +1,5 @@
-=== Log started at 2026-04-01T21:43:24.434Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (runtime: node) ===
-=== Container ID: 61ab266dfcd41d05e935826768e0a621a30b325e2d995596ec5c707062b242ea ===
+=== Log started at 2026-04-02T16:29:19.710Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (runtime: node) ===
+=== Container ID: d6b86363f71819aad9cd3369b130179e0dd67615b0ea71a64e694d68fac837c2 ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
@@ -21,7 +21,7 @@ Common causes of this problem include:
 1. The "import" plugin is not defined in your configuration file.
 2. The "import" plugin is not defined within the same configuration object in which the "import/no-dynamic-require" rule is applied.
 
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-01T21:43:25.728Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-02T16:29:21.316Z (container status: exited, exit code: 2) ===

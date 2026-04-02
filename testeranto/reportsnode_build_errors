@@ -2,10 +2,18 @@
   "errors": [
     {
       "id": "",
-      "location": null,
+      "location": {
+        "column": 0,
+        "file": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+        "length": 1,
+        "line": 33,
+        "lineText": ">;",
+        "namespace": "",
+        "suggestion": ""
+      },
       "notes": [],
       "pluginName": "",
-      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+      "text": "Unexpected \">\""
     }
   ],
   "warnings": [
@@ -15,7 +23,7 @@
         "column": 6,
         "file": "package.json",
         "length": 7,
-        "line": 170,
+        "line": 171,
         "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
         "namespace": "",
         "suggestion": ""
@@ -26,7 +34,7 @@
             "column": 6,
             "file": "package.json",
             "length": 8,
-            "line": 168,
+            "line": 169,
             "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
             "namespace": "",
             "suggestion": ""
@@ -38,7 +46,7 @@
             "column": 6,
             "file": "package.json",
             "length": 9,
-            "line": 169,
+            "line": 170,
             "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
             "namespace": "",
             "suggestion": ""

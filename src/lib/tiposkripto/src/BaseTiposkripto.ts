@@ -7,7 +7,6 @@ import {
 } from "./types";
 import { BaseDescribe } from "./verbs/aaa/BaseDescribe";
 import { BaseIt } from "./verbs/aaa/BaseIt";
-import { BaseSuite } from "./verbs/BaseSuite";
 import { BaseGiven } from "./verbs/bdd/BaseGiven";
 import { BaseThen } from "./verbs/bdd/BaseThen";
 import { BaseWhen } from "./verbs/bdd/BaseWhen";
@@ -15,8 +14,6 @@ import { BaseConfirm } from "./verbs/tdt/BaseConfirm";
 import { BaseExpected } from "./verbs/tdt/BaseExpected";
 import { BaseShould } from "./verbs/tdt/BaseShould";
 import { BaseValue } from "./verbs/tdt/BaseValue";
-
-type IExtenstions = Record<string, unknown>;
 
 export default abstract class BaseTiposkripto<
   I extends Ibdd_in_any = Ibdd_in_any,
@@ -166,62 +163,63 @@ export default abstract class BaseTiposkripto<
     const classyGivens: Record<string, any> = {};
     if (testImplementation.givens) {
       Object.entries(testImplementation.givens).forEach(([key, g]) => {
-        classyGivens[key] = (
-          features: string[],
-          whens: BaseWhen<I>[],
-          thens: BaseThen<I>[],
-          gcb: I["action"],
-          initialValues: any,
-        ) => {
-          const safeFeatures = Array.isArray(features) ? [...features] : [];
-          const safeWhens = Array.isArray(whens) ? [...whens] : [];
-          const safeThens = Array.isArray(thens) ? [...thens] : [];
+        // Create a curried function: Given["key"](initialValues) returns (whens, thens, features)
+        classyGivens[key] = (initialValues: any) => {
+          return (
+            whens: BaseWhen<I>[],
+            thens: BaseThen<I>[],
+            features: string[],
+          ) => {
+            const safeFeatures = Array.isArray(features) ? [...features] : [];
+            const safeWhens = Array.isArray(whens) ? [...whens] : [];
+            const safeThens = Array.isArray(thens) ? [...thens] : [];
 
-          const capturedFullAdapter = fullAdapter;
+            const capturedFullAdapter = fullAdapter;
 
-          const givenInstance = new (class extends BaseGiven<I> {
-            async givenThat(
-              subject: any,
-              testResource: any,
-              artifactory: any,
-              initializer: any,
-              initialValues: any,
-            ) {
-              const givenArtifactory = instance.createArtifactory({
-                givenKey: key,
-                suiteIndex: (this as any)._suiteIndex,
-              });
-              return capturedFullAdapter.prepareEach(
-                subject,
-                initializer,
-                testResource,
-                initialValues,
-                givenArtifactory,
-              );
+            const givenInstance = new (class extends BaseGiven<I> {
+              async givenThat(
+                subject: any,
+                testResource: any,
+                artifactory: any,
+                initializer: any,
+                initialValues: any,
+              ) {
+                const givenArtifactory = instance.createArtifactory({
+                  givenKey: key,
+                  suiteIndex: (this as any)._suiteIndex,
+                });
+                return capturedFullAdapter.prepareEach(
+                  subject,
+                  initializer,
+                  testResource,
+                  initialValues,
+                  givenArtifactory,
+                );
+              }
+
+              afterEach(
+                store: I["istore"],
+                key: string,
+                artifactory: any,
+              ): Promise<unknown> {
+                return Promise.resolve(
+                  capturedFullAdapter.cleanupEach(store, key, artifactory),
+                );
+              }
+            })(
+              safeFeatures,    // features (parameter 3)
+              safeWhens,       // whens (parameter 1)
+              safeThens,       // thens (parameter 2)
+              testImplementation.givens![key],
+              initialValues,
+            );
+
+            (givenInstance as any)._parent = instance;
+            if (givenInstance.setParent) {
+              givenInstance.setParent(instance);
             }
-
-            afterEach(
-              store: I["istore"],
-              key: string,
-              artifactory: any,
-            ): Promise<unknown> {
-              return Promise.resolve(
-                capturedFullAdapter.cleanupEach(store, key, artifactory),
-              );
-            }
-          })(
-            safeFeatures,
-            safeWhens,
-            safeThens,
-            testImplementation.givens![key],
-            initialValues,
-          );
-
-          (givenInstance as any)._parent = instance;
-          if (givenInstance.setParent) {
-            givenInstance.setParent(instance);
-          }
-          return givenInstance;
+            return givenInstance;
+          };
         };
       });
     }
@@ -366,52 +364,50 @@ export default abstract class BaseTiposkripto<
     const classyDescribes: Record<string, any> = {};
     if (testImplementation.describes && typeof testImplementation.describes === 'object') {
       Object.entries(testImplementation.describes).forEach(([key, desc]) => {
-        // Ensure each key is a function that returns a function that creates BaseDescribe
-        classyDescribes[key] = (
-          features: string[],
-          its: any[],
-          describeCB: I["setup"],
-          initialValues: any,
-        ) => {
-          try {
-            // Use the implementation function as describeCB if not provided
-            let actualDescribeCB;
-            if (describeCB) {
-              actualDescribeCB = describeCB;
-            } else if (typeof desc === 'function') {
-              // If desc is a function, it should return the describeCB
-              actualDescribeCB = desc();
-            } else {
-              // If desc is not a function, use it directly
-              actualDescribeCB = desc;
+        // Create a curried function: Describe["key"](initialValues) returns (its, features)
+        classyDescribes[key] = (initialValues: any) => {
+          return (
+            its: any[],
+            features: string[],
+          ) => {
+            try {
+              // Use the implementation function as describeCB
+              let actualDescribeCB;
+              if (typeof desc === 'function') {
+                // If desc is a function, it should return the describeCB
+                actualDescribeCB = desc(initialValues);
+              } else {
+                // If desc is not a function, use it directly
+                actualDescribeCB = desc;
+              }
+
+              // Ensure actualDescribeCB is a function
+              if (typeof actualDescribeCB !== 'function') {
+                console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
+                actualDescribeCB = () => {
+                  throw new Error(`Describe implementation for "${key}" is not a valid function`);
+                };
+              }
+
+              return new BaseDescribe<I>(
+                features,
+                its,
+                actualDescribeCB,
+                initialValues,
+              );
+            } catch (error) {
+              console.error(`Error creating Describe for "${key}":`, error);
+              // Return a BaseDescribe that will fail gracefully
+              return new BaseDescribe<I>(
+                features,
+                its,
+                () => {
+                  throw new Error(`Describe implementation for "${key}" failed: ${error.message}`);
+                },
+                initialValues,
+              );
             }
-            
-            // Ensure actualDescribeCB is a function
-            if (typeof actualDescribeCB !== 'function') {
-              console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
-              actualDescribeCB = () => {
-                throw new Error(`Describe implementation for "${key}" is not a valid function`);
-              };
-            }
-            
-            return new BaseDescribe<I>(
-              features,
-              its,
-              actualDescribeCB,
-              initialValues,
-            );
-          } catch (error) {
-            console.error(`Error creating Describe for "${key}":`, error);
-            // Return a BaseDescribe that will fail gracefully
-            return new BaseDescribe<I>(
-              features,
-              its,
-              () => {
-                throw new Error(`Describe implementation for "${key}" failed: ${error.message}`);
-              },
-              initialValues,
-            );
-          }
+          };
         };
       });
     } else {
@@ -451,7 +447,7 @@ export default abstract class BaseTiposkripto<
 
     let topLevelVerbs: any[] = [];
     let specError: Error | null = null;
-    
+
     try {
       // Call the specification with the verb implementations
       topLevelVerbs = testSpecification(
@@ -495,7 +491,7 @@ export default abstract class BaseTiposkripto<
 
     // Create test jobs for each step
     this.testJobs = [];
-    
+
     // Create test jobs for each spec that was created
     // With our fixed proxies, the specification should create all steps even if they fail
     for (let index = 0; index < this.specs.length; index++) {
@@ -524,11 +520,11 @@ export default abstract class BaseTiposkripto<
         this.testJobs.push(errorTestJob);
       }
     }
-    
+
     // If no specs were created (shouldn't happen with our proxies), create a single error test job
     if (this.testJobs.length === 0) {
-      const errorMessage = specError ? 
-        `Test specification failed: ${specError.message}` : 
+      const errorMessage = specError ?
+        `Test specification failed: ${specError.message}` :
         'No test steps were created by the specification';
       const errorStep = {
         constructor: { name: 'ErrorStep' },
@@ -556,14 +552,14 @@ export default abstract class BaseTiposkripto<
         let anyFailed = false;
         const allFeatures: string[] = [];
         const allArtifacts: any[] = [];
-        
+
         for (let i = 0; i < this.testJobs.length; i++) {
           try {
             const result = await this.testJobs[i].receiveTestResourceConfig(testResourceConfiguration);
             allResults.push(result);
             totalFails += result.fails;
             anyFailed = anyFailed || result.failed;
-            
+
             // Collect features and artifacts
             if (result.features && Array.isArray(result.features)) {
               allFeatures.push(...result.features);
@@ -592,7 +588,7 @@ export default abstract class BaseTiposkripto<
             });
           }
         }
-        
+
         // Create combined results with individual test details
         const combinedResults: any = {
           failed: anyFailed,
@@ -614,21 +610,21 @@ export default abstract class BaseTiposkripto<
             testJob: result.testJob
           }))
         };
-        
+
         // Add summary
         combinedResults.summary = {
           totalTests: this.testJobs.length,
           passed: this.testJobs.length - totalFails,
           failed: totalFails,
-          successRate: totalFails === this.testJobs.length ? '0%' : 
+          successRate: totalFails === this.testJobs.length ? '0%' :
             ((this.testJobs.length - totalFails) / this.testJobs.length * 100).toFixed(2) + '%'
         };
-        
+
         console.log("testResourceConfiguration", testResourceConfiguration);
         const reportJson = `${testResourceConfiguration.fs}/tests.json`;
         this.writeFileSync(reportJson, JSON.stringify(combinedResults, null, 2));
       };
-      
+
       runAllTests().catch((error) => {
         console.error("Error running all test jobs:", error);
         // Write error results
@@ -695,14 +691,14 @@ export default abstract class BaseTiposkripto<
       let anyFailed = false;
       const allFeatures: string[] = [];
       const allArtifacts: any[] = [];
-      
+
       for (let i = 0; i < this.testJobs.length; i++) {
         try {
           const result = await this.testJobs[i].receiveTestResourceConfig(testResourceConfig);
           allResults.push(result);
           totalFails += result.fails;
           anyFailed = anyFailed || result.failed;
-          
+
           // Collect features and artifacts
           if (result.features && Array.isArray(result.features)) {
             allFeatures.push(...result.features);
@@ -716,7 +712,7 @@ export default abstract class BaseTiposkripto<
           anyFailed = true;
         }
       }
-      
+
       return {
         failed: anyFailed,
         fails: totalFails,
@@ -740,7 +736,7 @@ export default abstract class BaseTiposkripto<
           totalTests: this.testJobs.length,
           passed: this.testJobs.length - totalFails,
           failed: totalFails,
-          successRate: totalFails === 0 ? '100%' : 
+          successRate: totalFails === 0 ? '100%' :
             ((this.testJobs.length - totalFails) / this.testJobs.length * 100).toFixed(2) + '%'
         }
       };
@@ -767,16 +763,15 @@ export default abstract class BaseTiposkripto<
           if (prop in target) {
             return target[prop];
           } else {
-            // Return a function that can be called with arguments, which returns a function that creates BaseGiven
-            return (...args: any[]) => {
+            // Return a curried function that matches the specification pattern:
+            // Given["key"](initialValues) returns (whens, thens, features)
+            return (initialValues: any) => {
               console.error(`Given.${prop} is not defined in test implementation`);
               // This function should return another function that creates the BaseGiven
               return (
-                features: string[] = [],
                 whens: any[] = [],
                 thens: any[] = [],
-                givenCB: any = () => {},
-                initialValues: any = undefined,
+                features: string[] = [],
               ) => {
                 try {
                   return new (class extends BaseGiven<I> {
@@ -793,7 +788,7 @@ export default abstract class BaseTiposkripto<
                     features,
                     whens,
                     thens,
-                    givenCB,
+                    () => { throw new Error(`Given.${prop} is not implemented`); },
                     initialValues,
                   );
                 } catch (e) {
@@ -803,7 +798,7 @@ export default abstract class BaseTiposkripto<
                     features: features,
                     whens: whens,
                     thens: thens,
-                    givenCB: givenCB,
+                    givenCB: () => { throw new Error(`Given.${prop} creation failed: ${e.message}`); },
                     initialValues: initialValues,
                     give: async () => {
                       throw new Error(`Given.${prop} creation failed: ${e.message}`);
@@ -911,11 +906,12 @@ export default abstract class BaseTiposkripto<
           if (prop in target) {
             return target[prop];
           } else {
-            // Return a function that can be called with arguments, which returns a function that creates BaseDescribe
-            return (...args: any[]) => {
+            // Return a curried function that matches the specification pattern:
+            // Describe["key"](initialValues) returns (its, features)
+            return (initialValues: any) => {
               console.error(`Describe.${prop} is not defined in test implementation`);
               // This function should return another function that creates the BaseDescribe
-              return (features: string[], its: any[], describeCB: any, initialValues: any) => {
+              return (its: any[], features: string[]) => {
                 return new BaseDescribe<any>(
                   features,
                   its,
@@ -1146,13 +1142,13 @@ export default abstract class BaseTiposkripto<
         // Determine the step type and run it appropriately
         let result;
         const constructorName = step.constructor?.name || 'Unknown';
-        
+
         // Create artifactory for the step
         const stepArtifactory = this.createArtifactory({
           stepIndex: index,
           stepType: constructorName.toLowerCase().replace('base', ''),
         });
-        
+
         if (constructorName === 'BaseGiven') {
           // Run the given step (BDD)
           result = await step.give(
@@ -1257,8 +1253,8 @@ export default abstract class BaseTiposkripto<
       test: step,
 
       toObj: () => {
-        return step.toObj ? step.toObj() : { 
-          name: `Step_${index}`, 
+        return step.toObj ? step.toObj() : {
+          name: `Step_${index}`,
           type: step.constructor?.name || 'Unknown',
           key: step.key || `step_${index}`
         };
@@ -1273,19 +1269,19 @@ export default abstract class BaseTiposkripto<
           const stepResult = await runner(testResourceConfiguration);
           const fails = stepResult.fails;
           const stepObj = stepResult.step;
-          
+
           // Extract features from the step
           let features: string[] = [];
           if (stepObj.features && Array.isArray(stepObj.features)) {
             features = stepObj.features;
           }
-          
+
           // Extract artifacts from the step
           let artifacts: any[] = [];
           if (stepObj.artifacts && Array.isArray(stepObj.artifacts)) {
             artifacts = stepObj.artifacts;
           }
-          
+
           // Extract error information
           let errorDetails: any = null;
           if (stepObj.error) {
@@ -1301,7 +1297,7 @@ export default abstract class BaseTiposkripto<
               name: stepResult.error.name
             };
           }
-          
+
           return {
             failed: stepResult.failed || fails > 0,
             fails,
@@ -1345,7 +1341,7 @@ export default abstract class BaseTiposkripto<
     const uniqueError = new Error(error.message);
     uniqueError.stack = error.stack;
     uniqueError.name = error.name;
-    
+
     return {
       test: errorStep,
 

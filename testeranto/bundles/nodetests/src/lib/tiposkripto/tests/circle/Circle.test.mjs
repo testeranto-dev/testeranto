@@ -1,6 +1,6 @@
 import {
   NodeTiposkripto
-} from "../../../../../chunk-HBL6D2FK.mjs";
+} from "../../../../../chunk-U4RILNIO.mjs";
 
 // src/lib/tiposkripto/tests/circle/Circle.ts
 var Circle = class {
@@ -35,7 +35,14 @@ var adapter = {
   },
   prepareEach: async (subject, initializer, testResource, initialValues, artifactory) => {
     console.log("[Circle adapter] beforeEach called with subject:", subject);
-    const circle = initializer();
+    let circle;
+    if (initializer.length === 0) {
+      circle = initializer();
+    } else if (initializer.length === 1) {
+      circle = initializer(subject);
+    } else {
+      circle = initializer();
+    }
     console.log("[Circle adapter] beforeEach created circle:", circle);
     return circle;
   },
@@ -49,17 +56,8 @@ var adapter = {
     console.log("[Circle adapter] verify called with store:", store);
     console.log("[Circle adapter] verificationFn:", verificationFn);
     if (typeof verificationFn === "function") {
-      try {
-        const actualVerificationFn = verificationFn();
-        if (typeof actualVerificationFn === "function") {
-          return actualVerificationFn(store);
-        } else {
-          return verificationFn;
-        }
-      } catch (e) {
-        console.log("[Circle adapter] Error in verify:", e);
-        throw e;
-      }
+      await verificationFn(store);
+      return store;
     }
     return store;
   },

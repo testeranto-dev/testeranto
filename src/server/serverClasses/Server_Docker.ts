@@ -52,6 +52,7 @@ import { Server_Docker_Compose } from "./Server_Docker_Compose";
 export class Server_Docker extends Server_Docker_Compose {
   private logProcesses: Map<string, { process: any; serviceName: string }> =
     new Map();
+  private aiderProcesses: Map<string, any> = new Map();
   private testFileManager: TestFileManager;
   private testResultsCollector: TestResultsCollector;
   private aiderMessageManager: AiderMessageManager;
@@ -68,11 +69,14 @@ export class Server_Docker extends Server_Docker_Compose {
     this.inputFiles = {};
     this.hashs = {};
     this.outputFiles = {};
+
+    if (!this.aiderProcesses) {
+      this.aiderProcesses = new Map();
+    }
     this.testFileManager = new TestFileManager(configs, mode, (path) =>
       this.resourceChanged(path),
     );
 
-    // Initialize testResultsCollector with inputFiles and outputFiles from testFileManager
     this.testResultsCollector = new TestResultsCollector(
       configs,
       mode,
@@ -80,7 +84,6 @@ export class Server_Docker extends Server_Docker_Compose {
       this.testFileManager.outputFiles,
     );
 
-    // Initialize aiderMessageManager
     this.aiderMessageManager = new AiderMessageManager(
       configs,
       mode,
@@ -545,12 +548,35 @@ export class Server_Docker extends Server_Docker_Compose {
             cwd: processCwd(),
           });
 
+          // Get container info
+          const containerInfo = await this.getContainerInfo(aiderServiceName);
+
+          // Track the aider process
+          const processId = containerInfo?.Id || aiderServiceName;
+          if (!this.aiderProcesses) {
+            consoleWarn('[Server_Docker] aiderProcesses not initialized, initializing now');
+            this.aiderProcesses = new Map();
+          }
+          this.aiderProcesses.set(processId, {
+            id: processId,
+            containerId: containerInfo?.Id || 'unknown',
+            containerName: aiderServiceName,
+            runtime: runtime,
+            testName: testName,
+            configKey: configKey,
+            isActive: true,
+            status: 'running',
+            startedAt: new Date().toISOString(),
+            lastActivity: new Date().toISOString()
+          });
+
           // Start logging for the aider service
           await this.startServiceLogging(aiderServiceName, runtime, configKey, testName);
         })()
       ]);
 
       this.resourceChanged("/~/processes");
+      this.resourceChanged("/~/aider-processes");
       this.writeConfigForExtension();
 
       consoleLog(`[Server_Docker] Started aider service: ${aiderServiceName}`);
@@ -625,6 +651,61 @@ export class Server_Docker extends Server_Docker_Compose {
     ];
   };
 
+  public getAiderProcesses(): any[] {
+    // Ensure this context is valid
+    if (!this) {
+      consoleWarn('[Server_Docker] getAiderProcesses called with invalid this context');
+      return [];
+    }
+
+    // Ensure aiderProcesses is initialized
+    if (!this.aiderProcesses) {
+      consoleWarn('[Server_Docker] aiderProcesses not initialized, returning empty array');
+      return [];
+    }
+
+    // Update status of aider processes
+    for (const [processId, process] of this.aiderProcesses.entries()) {
+      try {
+        const cmd = `docker inspect ${process.containerId || process.containerName} --format='{{.State.Status}}'`;
+        const status = execSync(cmd, { cwd: processCwd() }).toString().trim();
+
+        process.status = status;
+        process.isActive = status === 'running';
+
+        if (!process.isActive) {
+          try {
+            const exitCodeCmd = `docker inspect ${process.containerId || process.containerName} --format='{{.State.ExitCode}}'`;
+            const exitCode = execSync(exitCodeCmd, { cwd: processCwd() }).toString().trim();
+            process.exitCode = parseInt(exitCode) || 0;
+          } catch (error) {
+            process.exitCode = undefined;
+          }
+        }
+
+        process.lastActivity = new Date().toISOString();
+      } catch (error) {
+        // Container might not exist anymore
+        process.status = 'exited';
+        process.isActive = false;
+      }
+    }
+
+    // Remove processes that have been exited for a while
+    const now = new Date();
+    for (const [processId, process] of this.aiderProcesses.entries()) {
+      if (process.status === 'exited' || process.status === 'stopped') {
+        const lastActivity = new Date(process.lastActivity);
+        const hoursDiff = (now.getTime() - lastActivity.getTime()) / (1000 * 60 * 60);
+        if (hoursDiff > 24) { // Remove processes that have been inactive for 24 hours
+          this.aiderProcesses.delete(processId);
+        }
+      }
+    }
+
+    return Array.from(this.aiderProcesses.values());
+  }
+
   private clearStoredLogs(serviceName: string, configKey: string, testName?: string): void {
     // Clear any stored log files for this service
     const reportsDir = `${processCwd()}/testeranto/reports/${configKey}`;
@@ -684,6 +765,20 @@ export class Server_Docker extends Server_Docker_Compose {
     );
     this.writeConfigForExtension();
   };
+
+  private async getContainerInfo(serviceName: string): Promise<any> {
+    try {
+      const cmd = `docker compose -f "${processCwd()}/testeranto/docker-compose.yml" ps ${serviceName} --format json`;
+      const output = execSync(cmd, { cwd: processCwd() }).toString();
+      const containers = JSON.parse(output);
+      if (containers && containers.length > 0) {
+        return containers[0];
+      }
+    } catch (error) {
+      consoleError(`[Server_Docker] Error getting container info for ${serviceName}:`, error);
+    }
+    return null;
+  }
 
   private async waitForAllTestsToComplete(): Promise<void> {
     await this.testCompletionWaiter.waitForAllTestsToComplete();

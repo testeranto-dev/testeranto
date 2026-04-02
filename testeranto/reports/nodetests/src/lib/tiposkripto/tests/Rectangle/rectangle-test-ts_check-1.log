@@ -1,0 +1,35 @@
+=== Log started at 2026-04-02T16:31:59.361Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
+=== Container ID: 49217ea8642d29450306b4228e082ef6e1863f12209f6f098d4734b42d3d720f ===
+=== Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
+=== Config Key: nodetests ===
+
+=== ALL LOGS (stdout + stderr) ===
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+$ /workspace/node_modules/.bin/tsc --noEmit
+warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.239.0: The engine "bun" appears to be invalid.
+src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
+src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 2.
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.239.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsc --noEmit
+src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
+src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 2.
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+$ /workspace/node_modules/.bin/tsc --noEmit
+warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.239.0: The engine "bun" appears to be invalid.
+src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
+src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
+error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+
+=== Log captured at 2026-04-02T16:32:03.025Z (container status: exited, exit code: 2) ===

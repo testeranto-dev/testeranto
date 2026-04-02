@@ -824,42 +824,47 @@ var BaseTiposkripto = class {
     const classyGivens = {};
     if (testImplementation.givens) {
       Object.entries(testImplementation.givens).forEach(([key, g]) => {
-        classyGivens[key] = (features, whens, thens, gcb, initialValues) => {
-          const safeFeatures = Array.isArray(features) ? [...features] : [];
-          const safeWhens = Array.isArray(whens) ? [...whens] : [];
-          const safeThens = Array.isArray(thens) ? [...thens] : [];
-          const capturedFullAdapter = fullAdapter;
-          const givenInstance = new class extends BaseGiven {
-            async givenThat(subject, testResource, artifactory, initializer, initialValues2) {
-              const givenArtifactory = instance.createArtifactory({
-                givenKey: key,
-                suiteIndex: this._suiteIndex
-              });
-              return capturedFullAdapter.prepareEach(
-                subject,
-                initializer,
-                testResource,
-                initialValues2,
-                givenArtifactory
-              );
+        classyGivens[key] = (initialValues) => {
+          return (whens, thens, features) => {
+            const safeFeatures = Array.isArray(features) ? [...features] : [];
+            const safeWhens = Array.isArray(whens) ? [...whens] : [];
+            const safeThens = Array.isArray(thens) ? [...thens] : [];
+            const capturedFullAdapter = fullAdapter;
+            const givenInstance = new class extends BaseGiven {
+              async givenThat(subject, testResource, artifactory, initializer, initialValues2) {
+                const givenArtifactory = instance.createArtifactory({
+                  givenKey: key,
+                  suiteIndex: this._suiteIndex
+                });
+                return capturedFullAdapter.prepareEach(
+                  subject,
+                  initializer,
+                  testResource,
+                  initialValues2,
+                  givenArtifactory
+                );
+              }
+              afterEach(store, key2, artifactory) {
+                return Promise.resolve(
+                  capturedFullAdapter.cleanupEach(store, key2, artifactory)
+                );
+              }
+            }(
+              safeFeatures,
+              // features (parameter 3)
+              safeWhens,
+              // whens (parameter 1)
+              safeThens,
+              // thens (parameter 2)
+              testImplementation.givens[key],
+              initialValues
+            );
+            givenInstance._parent = instance;
+            if (givenInstance.setParent) {
+              givenInstance.setParent(instance);
             }
-            afterEach(store, key2, artifactory) {
-              return Promise.resolve(
-                capturedFullAdapter.cleanupEach(store, key2, artifactory)
-              );
-            }
-          }(
-            safeFeatures,
-            safeWhens,
-            safeThens,
-            testImplementation.givens[key],
-            initialValues
-          );
-          givenInstance._parent = instance;
-          if (givenInstance.setParent) {
-            givenInstance.setParent(instance);
-          }
-          return givenInstance;
+            return givenInstance;
+          };
         };
       });
     }
@@ -969,39 +974,39 @@ var BaseTiposkripto = class {
     const classyDescribes = {};
     if (testImplementation.describes && typeof testImplementation.describes === "object") {
       Object.entries(testImplementation.describes).forEach(([key, desc]) => {
-        classyDescribes[key] = (features, its, describeCB, initialValues) => {
-          try {
-            let actualDescribeCB;
-            if (describeCB) {
-              actualDescribeCB = describeCB;
-            } else if (typeof desc === "function") {
-              actualDescribeCB = desc();
-            } else {
-              actualDescribeCB = desc;
+        classyDescribes[key] = (initialValues) => {
+          return (its, features) => {
+            try {
+              let actualDescribeCB;
+              if (typeof desc === "function") {
+                actualDescribeCB = desc(initialValues);
+              } else {
+                actualDescribeCB = desc;
+              }
+              if (typeof actualDescribeCB !== "function") {
+                console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
+                actualDescribeCB = () => {
+                  throw new Error(`Describe implementation for "${key}" is not a valid function`);
+                };
+              }
+              return new BaseDescribe(
+                features,
+                its,
+                actualDescribeCB,
+                initialValues
+              );
+            } catch (error) {
+              console.error(`Error creating Describe for "${key}":`, error);
+              return new BaseDescribe(
+                features,
+                its,
+                () => {
+                  throw new Error(`Describe implementation for "${key}" failed: ${error.message}`);
+                },
+                initialValues
+              );
             }
-            if (typeof actualDescribeCB !== "function") {
-              console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
-              actualDescribeCB = () => {
-                throw new Error(`Describe implementation for "${key}" is not a valid function`);
-              };
-            }
-            return new BaseDescribe(
-              features,
-              its,
-              actualDescribeCB,
-              initialValues
-            );
-          } catch (error) {
-            console.error(`Error creating Describe for "${key}":`, error);
-            return new BaseDescribe(
-              features,
-              its,
-              () => {
-                throw new Error(`Describe implementation for "${key}" failed: ${error.message}`);
-              },
-              initialValues
-            );
-          }
+          };
         };
       });
     } else {
@@ -1343,10 +1348,9 @@ var BaseTiposkripto = class {
           if (prop in target) {
             return target[prop];
           } else {
-            return (...args) => {
+            return (initialValues) => {
               console.error(`Given.${prop} is not defined in test implementation`);
-              return (features = [], whens = [], thens = [], givenCB = () => {
-              }, initialValues = void 0) => {
+              return (whens = [], thens = [], features = []) => {
                 try {
                   return new class extends BaseGiven {
                     async givenThat(subject, testResource, artifactory, initializer, initialValues2) {
@@ -1356,7 +1360,9 @@ var BaseTiposkripto = class {
                     features,
                     whens,
                     thens,
-                    givenCB,
+                    () => {
+                      throw new Error(`Given.${prop} is not implemented`);
+                    },
                     initialValues
                   );
                 } catch (e) {
@@ -1365,7 +1371,9 @@ var BaseTiposkripto = class {
                     features,
                     whens,
                     thens,
-                    givenCB,
+                    givenCB: () => {
+                      throw new Error(`Given.${prop} creation failed: ${e.message}`);
+                    },
                     initialValues,
                     give: async () => {
                       throw new Error(`Given.${prop} creation failed: ${e.message}`);
@@ -1457,9 +1465,9 @@ var BaseTiposkripto = class {
           if (prop in target) {
             return target[prop];
           } else {
-            return (...args) => {
+            return (initialValues) => {
               console.error(`Describe.${prop} is not defined in test implementation`);
-              return (features, its, describeCB, initialValues) => {
+              return (its, features) => {
                 return new BaseDescribe(
                   features,
                   its,
@@ -1883,7 +1891,25 @@ var NodeTiposkripto = class extends BaseTiposkripto {
   // screenshot, openScreencast, and closeScreencast are not applicable to Node runtime
   // These methods are only for web runtime to capture visual artifacts in browser environments
 };
+var tiposkripto = async (input, testSpecification, testImplementation, testAdapter, testResourceRequirement = defaultTestResourceRequirement) => {
+  try {
+    const t = new NodeTiposkripto(
+      input,
+      testSpecification,
+      testImplementation,
+      testAdapter,
+      testResourceRequirement
+    );
+    return t;
+  } catch (e) {
+    console.error(`[Node] Error creating Tiposkripto:`, e);
+    console.error(e.stack);
+    process.exit(-1);
+  }
+};
+var Node_default = tiposkripto;
 
 export {
-  NodeTiposkripto
+  NodeTiposkripto,
+  Node_default
 };
