@@ -26439,7 +26439,7 @@ function layoutForce(nodes, edges) {
     screenY: node.y * 100
   }));
 }
-function layoutTree(nodes, edges, rootId) {
+function layoutTree(nodes, edges, rootId, orientation, nodeSeparation, levelSeparation) {
   const incomingEdges = /* @__PURE__ */ new Map();
   const outgoingEdges = /* @__PURE__ */ new Map();
   nodes.forEach((node) => {
@@ -26501,17 +26501,26 @@ function layoutTree(nodes, edges, rootId) {
     }
     nodesByDepth.get(depth).push(node);
   });
-  const levelSeparation = 100;
-  const nodeSeparation = 80;
+  const levelSep = levelSeparation || 100;
+  const nodeSep = nodeSeparation || 80;
+  const isHorizontal = orientation === "horizontal";
   return nodes.map((node) => {
     const depth = depthMap.get(node.id) || 0;
     const nodesAtDepth = nodesByDepth.get(depth) || [];
     const index = nodesAtDepth.findIndex((n) => n.id === node.id);
-    return {
-      ...node,
-      screenX: index * nodeSeparation,
-      screenY: depth * levelSeparation
-    };
+    if (isHorizontal) {
+      return {
+        ...node,
+        screenX: depth * levelSep,
+        screenY: index * nodeSep
+      };
+    } else {
+      return {
+        ...node,
+        screenX: index * nodeSep,
+        screenY: depth * levelSep
+      };
+    }
   });
 }
 function layoutTimeline(nodes, timeAttribute) {
@@ -26592,7 +26601,15 @@ var BaseChart = ({
       break;
     case "tree":
       if (data.edges) {
-        laidOutNodes = layoutTree(nodes, data.edges);
+        const treeConfig = config;
+        laidOutNodes = layoutTree(
+          nodes,
+          data.edges,
+          treeConfig.rootId,
+          treeConfig.orientation,
+          treeConfig.nodeSeparation,
+          treeConfig.levelSeparation
+        );
       }
       break;
     case "timeline":
@@ -26774,6 +26791,9 @@ var GanttChart = (props) => {
 
 // src/grafeovidajo/charts/KanbanBoard.tsx
 var import_react9 = __toESM(require_react2(), 1);
+var getSafeNodeAttributes = (node) => {
+  return node.attributes || {};
+};
 var KanbanBoard = (props) => {
   const { config, width, height } = props;
   const renderColumns = () => {
@@ -26782,7 +26802,19 @@ var KanbanBoard = (props) => {
       const columnWidth = column.width / 100 * width;
       const columnX = currentX;
       currentX += columnWidth;
-      const columnNodes = props.data.nodes.filter(column.statusFilter);
+      const columnNodes = props.data.nodes.filter((node) => {
+        if (!node) return false;
+        const safeNode = {
+          id: node.id || "",
+          attributes: getSafeNodeAttributes(node)
+        };
+        try {
+          return column.statusFilter(safeNode);
+        } catch (error) {
+          console.warn(`Error in statusFilter for column "${column.title}":`, error);
+          return false;
+        }
+      });
       return /* @__PURE__ */ import_react9.default.createElement("g", { key: `column-${column.id}` }, /* @__PURE__ */ import_react9.default.createElement(
         "rect",
         {
@@ -26816,7 +26848,26 @@ var KanbanBoard = (props) => {
 // src/grafeovidajo/charts/TreeGraph.tsx
 var import_react10 = __toESM(require_react2(), 1);
 var TreeGraph = (props) => {
-  return /* @__PURE__ */ import_react10.default.createElement(BaseChart, { ...props });
+  const extractTreeData = (graphData) => {
+    const treeEdges = graphData.edges?.filter(
+      (edge) => edge.attributes?.type === "parentOf"
+    ) || [];
+    const treeNodeIds = /* @__PURE__ */ new Set();
+    treeEdges.forEach((edge) => {
+      treeNodeIds.add(edge.source);
+      treeNodeIds.add(edge.target);
+    });
+    const treeNodes = graphData.nodes.filter(
+      (node) => treeNodeIds.has(node.id) || node.attributes?.type === "feature"
+    );
+    return {
+      nodes: treeNodes,
+      edges: treeEdges,
+      metadata: graphData.metadata
+    };
+  };
+  const treeData = extractTreeData(props.data);
+  return /* @__PURE__ */ import_react10.default.createElement(BaseChart, { ...props, data: treeData });
 };
 
 // src/stakeholderApp/stateless/renderVisualization.tsx
@@ -27221,7 +27272,7 @@ var DefaultStakeholderApp = () => {
           stakeholderData = {
             configs: result.data.configs || {},
             allTestResults: result.data.allTestResults || {},
-            featureTree: result.data.featureTree || {},
+            // featureTree is no longer included - tree structure is encoded in featureGraph via parentOf edges
             featureGraph: result.data.featureGraph || { nodes: [], edges: [] },
             fileTreeGraph: result.data.fileTreeGraph || { nodes: [], edges: [] },
             vizConfig: result.data.vizConfig || {

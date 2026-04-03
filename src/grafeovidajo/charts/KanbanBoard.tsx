@@ -11,6 +11,11 @@ export interface KanbanConfig extends VizConfig {
   }>;
 }
 
+// Helper function to safely get node attributes
+const getSafeNodeAttributes = (node: Node): Record<string, any> => {
+  return node.attributes || {};
+};
+
 export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }> = (props) => {
   const { config, width, height } = props;
   
@@ -23,7 +28,23 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
       const columnX = currentX;
       currentX += columnWidth;
       
-      const columnNodes = props.data.nodes.filter(column.statusFilter);
+      // Safely filter nodes with defensive programming
+      const columnNodes = props.data.nodes.filter(node => {
+        if (!node) return false;
+        
+        // Create a safe node object with guaranteed attributes
+        const safeNode = {
+          id: node.id || '',
+          attributes: getSafeNodeAttributes(node)
+        };
+        
+        try {
+          return column.statusFilter(safeNode);
+        } catch (error) {
+          console.warn(`Error in statusFilter for column "${column.title}":`, error);
+          return false;
+        }
+      });
       
       return (
         <g key={`column-${column.id}`}>

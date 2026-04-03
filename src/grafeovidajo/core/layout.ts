@@ -31,7 +31,10 @@ export function layoutForce(
 export function layoutTree(
   nodes: ProjectedNode[],
   edges: Edge[],
-  rootId?: string
+  rootId?: string,
+  orientation?: 'horizontal' | 'vertical',
+  nodeSeparation?: number,
+  levelSeparation?: number
 ): ProjectedNode[] {
   // Build adjacency list for faster lookups
   const incomingEdges = new Map<string, string[]>();
@@ -123,20 +126,33 @@ export function layoutTree(
     nodesByDepth.get(depth)!.push(node);
   });
   
-  // Position nodes
-  const levelSeparation = 100;
-  const nodeSeparation = 80;
+  // Use provided separation values or defaults
+  const levelSep = levelSeparation || 100;
+  const nodeSep = nodeSeparation || 80;
+  
+  // Handle orientation
+  const isHorizontal = orientation === 'horizontal';
   
   return nodes.map(node => {
     const depth = depthMap.get(node.id) || 0;
     const nodesAtDepth = nodesByDepth.get(depth) || [];
     const index = nodesAtDepth.findIndex(n => n.id === node.id);
     
-    return {
-      ...node,
-      screenX: index * nodeSeparation,
-      screenY: depth * levelSeparation
-    };
+    if (isHorizontal) {
+      // Horizontal orientation: depth maps to x, index maps to y
+      return {
+        ...node,
+        screenX: depth * levelSep,
+        screenY: index * nodeSep
+      };
+    } else {
+      // Vertical orientation (default): depth maps to y, index maps to x
+      return {
+        ...node,
+        screenX: index * nodeSep,
+        screenY: depth * levelSep
+      };
+    }
   });
 }
 

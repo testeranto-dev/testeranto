@@ -4,6 +4,14 @@ import { projectGraph } from '../core/projection';
 import { applyStyles } from '../core/styling';
 import { layoutGrid, layoutForce, layoutTree, layoutTimeline } from '../core/layout';
 
+// Define TreeConfig interface locally since we need it for type checking
+interface TreeConfig extends VizConfig {
+  rootId?: string;
+  orientation?: 'horizontal' | 'vertical';
+  nodeSeparation?: number;
+  levelSeparation?: number;
+}
+
 export const BaseChart: React.FC<VizComponentProps> = ({
   data,
   config,
@@ -28,7 +36,16 @@ export const BaseChart: React.FC<VizComponentProps> = ({
       break;
     case 'tree':
       if (data.edges) {
-        laidOutNodes = layoutTree(nodes, data.edges);
+        // Cast config to TreeConfig to access tree-specific properties
+        const treeConfig = config as TreeConfig;
+        laidOutNodes = layoutTree(
+          nodes, 
+          data.edges, 
+          treeConfig.rootId,
+          treeConfig.orientation,
+          treeConfig.nodeSeparation,
+          treeConfig.levelSeparation
+        );
       }
       break;
     case 'timeline':

@@ -59,7 +59,7 @@ export interface StakeholderData {
   };
   timestamp: string;
   workspaceRoot: string;
-  featureTree?: any;
+  // featureTree is now encoded in featureGraph via parentOf edges
   allTestResults?: {
     [configKey: string]: {
       [testName: string]: any;
@@ -119,7 +119,7 @@ export const DefaultStakeholderApp: React.FC = () => {
           stakeholderData = {
             configs: result.data.configs || {},
             allTestResults: result.data.allTestResults || {},
-            featureTree: result.data.featureTree || {},
+            // featureTree is no longer included - tree structure is encoded in featureGraph via parentOf edges
             featureGraph: result.data.featureGraph || { nodes: [], edges: [] },
             fileTreeGraph: result.data.fileTreeGraph || { nodes: [], edges: [] },
             vizConfig: result.data.vizConfig || {

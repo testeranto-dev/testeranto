@@ -1,5 +1,5 @@
-=== Log started at 2026-04-02T23:53:10.903Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
-=== Container ID: 64ea47db613ae1d8ceb73a81c6f933e5eb3c84267bbd94be2880d8305c997154 ===
+=== Log started at 2026-04-03T00:16:10.593Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
+=== Container ID: 395a413214c4ca6aa87dae30b96d84dab1d6619acd8a23251d12a6fc659eadc7 ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
@@ -11,7 +11,7 @@ warning testeranto@0.239.0: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsc --noEmit
 src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
 src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-02T23:53:14.203Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-03T00:16:16.434Z (container status: exited, exit code: 2) ===

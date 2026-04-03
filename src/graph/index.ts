@@ -22,6 +22,7 @@ export type GraphEdgeType =
   | 'hasResult'    // Test has a result
   | 'belongsTo'    // Test belongs to a suite
   | 'locatedIn'    // Node located in file/directory
+  | 'parentOf'     // Parent-child relationship for tree structure
   | 'runsOn'       // Suite/test runs on runtime
   | 'configuredBy'; // Configured by config
 

@@ -56,6 +56,16 @@ export class GraphManager {
         
         this.graph = dataToGraph(graphData);
         console.log(`[GraphManager] Loaded existing graph with ${this.graph.order} nodes and ${this.graph.size} edges`);
+        
+        // Convert featureTree to graph edges if it exists
+        if (parsed.data && parsed.data.featureTree) {
+          console.log('[GraphManager] Converting featureTree to graph edges');
+          this.convertTreeToGraphEdges(parsed.data.featureTree);
+          
+          // Remove featureTree from data since it's now encoded in the graph
+          // We'll save this updated structure
+          this.saveGraph();
+        }
       } catch (error) {
         console.error('[GraphManager] Error loading existing graph, starting fresh:', error);
         this.graph = createGraph();
@@ -133,9 +143,13 @@ export class GraphManager {
               timestamp: new Date().toISOString(),
               data: {
                 ...parsed.data,
-                featureGraph: graphData  // Update only the featureGraph
+                featureGraph: graphData,  // Update only the featureGraph
+                // Remove featureTree since it's now encoded in the graph
+                featureTree: undefined
               }
             };
+            // Clean up the undefined field
+            delete existingData.data.featureTree;
           }
         } catch (error) {
           console.warn('[GraphManager] Error reading existing graph-data.json, creating new:', error);
@@ -544,6 +558,66 @@ export class GraphManager {
       nodeTypes,
       edgeTypes
     };
+  }
+
+  // Convert featureTree structure to graph edges
+  private convertTreeToGraphEdges(featureTree: any): void {
+    const timestamp = new Date().toISOString();
+    
+    const traverse = (node: any, parentId?: string) => {
+      if (!node || !node.id) return;
+      
+      // Ensure the node exists in the graph
+      if (!this.graph.hasNode(node.id)) {
+        try {
+          this.graph.addNode(node.id, {
+            id: node.id,
+            type: 'feature',
+            label: node.label || node.id,
+            description: node.description || '',
+            status: node.status || 'todo',
+            metadata: node.metadata || {}
+          });
+        } catch (error) {
+          // Node might already exist, which is fine
+        }
+      }
+      
+      // Add parent-child edge if parent exists
+      if (parentId && this.graph.hasNode(parentId)) {
+        // Check if edge already exists
+        let edgeExists = false;
+        if (this.graph.hasEdge(parentId, node.id)) {
+          edgeExists = true;
+        }
+        
+        if (!edgeExists) {
+          try {
+            this.graph.addEdge(parentId, node.id, {
+              type: 'parentOf',
+              weight: 1,
+              metadata: { treeLevel: node.level || 0 }
+            });
+            console.log(`[GraphManager] Added parentOf edge: ${parentId} -> ${node.id}`);
+          } catch (error) {
+            console.error(`[GraphManager] Error adding edge ${parentId} -> ${node.id}:`, error);
+          }
+        }
+      }
+      
+      // Recursively process children
+      if (node.children && Array.isArray(node.children)) {
+        node.children.forEach((child: any) => traverse(child, node.id));
+      }
+    };
+    
+    if (Array.isArray(featureTree)) {
+      featureTree.forEach(root => traverse(root));
+    } else if (featureTree) {
+      traverse(featureTree);
+    }
+    
+    console.log(`[GraphManager] Converted featureTree to graph edges`);
   }
 
   // Serialize graph changes back to markdown frontmatter
