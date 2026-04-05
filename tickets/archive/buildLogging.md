@@ -1,6 +1,6 @@
 ---
 owner: adam
-status: in progress
+status: done-ish
 title: buildLogging
 description: ''
 priority: medium

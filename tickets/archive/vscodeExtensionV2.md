@@ -1,5 +1,5 @@
 ---
-status: done but needs more attention
+status: done, to be deprecated
 files:
   - src/vscode/types.ts
   - src/vscode/TestTreeItem.ts

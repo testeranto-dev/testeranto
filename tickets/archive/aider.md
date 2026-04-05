@@ -1,5 +1,5 @@
 ---
-status: doing
+status: done
 title: aider
 description: ''
 priority: medium

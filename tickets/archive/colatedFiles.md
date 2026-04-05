@@ -1,5 +1,5 @@
 ---
-status: needs testing
+status: to be deprecated
 title: colatedFiles
 description: ''
 priority: medium
