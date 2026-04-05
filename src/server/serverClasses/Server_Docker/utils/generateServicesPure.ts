@@ -1,28 +1,21 @@
-import type { IChecks, ICheck } from "../../../../lib/tiposkripto/dist/types/Types";
+import type { IChecks } from "../../../../lib/tiposkripto/trash/internal/BaseCheck";
 import { RUN_TIMES } from "../../../../runtimes";
 import type {
-  ITesterantoConfig,
   IRunTime,
-
+  ITesterantoConfig,
 } from "../../../../Types";
 import type { IMode } from "../../../types";
 import {
-  getBuilderServiceName,
-  runTimeToCompose,
   cleanTestName,
-  getBddServiceName,
   getAiderServiceName,
+  getBddServiceName,
+  getBuilderServiceName,
   getCheckServiceName,
+  runTimeToCompose,
 } from "../Server_Docker_Constants";
-import {
-  consoleLog,
-  consoleWarn,
-  processCwd,
-} from "../Server_Docker_Dependents";
 import { aiderDockerComposeFile } from "./aiderDockerComposeFile";
 import { bddTestDockerComposeFile } from "./bddTestDockerComposeFile";
 import { staticTestDockerComposeFile } from "./staticTestDockerComposeFile";
-
 
 export const generateServicesPure = (
   configs: ITesterantoConfig,
@@ -40,7 +33,7 @@ export const generateServicesPure = (
     const runtime: IRunTime = runtimeTests.runtime as IRunTime;
     const buildOptions = runtimeTests.buildOptions;
     const testsObj = runtimeTests.tests;
-    const checks: IChecks = runtimeTests.checks;
+    const checks: IChecks<any> = runtimeTests.checks;
 
     if (!RUN_TIMES.includes(runtime)) {
       throw `unknown runtime ${runtime}`;
@@ -78,12 +71,12 @@ export const generateServicesPure = (
 
       // Always set the image name for builder services
       services[builderServiceName].image = `testeranto-${runtime}-${runtimeTestsName}:latest`;
-      
+
       // Remove build section since BuildKit handles building
       // Docker-compose will pull or use the pre-built image
       delete services[builderServiceName].build;
     }
-    
+
     // Still track processed runtimes for other purposes
     if (!processedRuntimes.has(runtime)) {
       processedRuntimes.add(runtime);

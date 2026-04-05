@@ -16,16 +16,16 @@ import { spawn } from 'child_process';
 
 // Helper to clean test name for file paths (preserves directory structure)
 const cleanTestNameForPath = (testName: string): string => {
-  // Convert to lowercase
-  let result = testName.toLowerCase();
-  // Replace dots with hyphens in the filename part only
-  const parts = result.split('/');
+  // Keep original case for directory parts, only clean the filename part
+  const parts = testName.split('/');
   const lastPart = parts[parts.length - 1];
-  const cleanedLastPart = lastPart.replace(/\./g, '-');
+  // Clean the filename part: replace dots with hyphens and remove invalid chars
+  const cleanedLastPart = lastPart.replace(/\./g, '-').replace(/[^a-zA-Z0-9_-]/g, '');
   parts[parts.length - 1] = cleanedLastPart;
-  result = parts.join('/');
-  // Remove any other invalid characters (keep slashes, hyphens, underscores, alphanumeric)
-  result = result.replace(/[^a-z0-9_\-/]/g, '');
+  let result = parts.join('/');
+  // Remove any other invalid characters from the full path (keep slashes, hyphens, underscores, alphanumeric)
+  // But preserve the case for directory names
+  result = result.replace(/[^a-zA-Z0-9_/-]/g, '');
   return result;
 };
 
@@ -36,6 +36,7 @@ export const startServiceLoggingPure = async (
   logProcesses: Map<string, { process: any; serviceName: string }>,
   runtimeConfigKey: string,
   testName?: string,
+  onLogFileCreated?: (logFilePath: string, serviceName: string, runtime: string, runtimeConfigKey: string, testName?: string) => void,
 ): Promise<Map<string, { process: any; serviceName: string }>> => {
   // First, properly stop any existing logging processes for this service
   for (const [trackingId, logProcess] of logProcesses.entries()) {
@@ -80,6 +81,11 @@ export const startServiceLoggingPure = async (
   }
 
   const logFilePath = `${cwd}/testeranto/reports/${runtimeConfigKey}/${baseName}.log`;
+
+  // Call the callback if provided to notify about log file creation
+  if (onLogFileCreated) {
+    onLogFileCreated(logFilePath, serviceName, runtime, runtimeConfigKey, testName);
+  }
 
   // Get the Docker container ID and its start time
   let dockerContainerId: string;

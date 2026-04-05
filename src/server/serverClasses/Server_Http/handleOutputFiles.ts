@@ -1,2 +1,1 @@
-// Please import from the new location
-export { handleOutputFiles } from "../../vscode/handleOutputFiles";
+// This endpoint has been removed. Use the unified graph-based API instead.

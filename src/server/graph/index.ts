@@ -21,6 +21,7 @@ import { hasFeatureUpdatesPure } from './hasFeatureUpdatesPure';
 import { loadGraphPure } from './loadGraphPure';
 import { processFeatureUrlPure } from './processFeatureUrlPure';
 import { updateFromTestResultsPure } from './updateFromTestResultsPure';
+import { createAiderNodeGraphOperationsPure } from '../serverClasses/Server_Docker/utils/launchAiderPure';
 
 export class GraphManager {
   private graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>;
@@ -89,25 +90,25 @@ export class GraphManager {
               // Merge the new attributes, but preserve existing metadata if not provided
               const currentMetadata = existingAttrs.metadata || {};
               const updatedMetadata = op.data.metadata || {};
-              
+
               // Create merged metadata
               const mergedMetadata = {
                 ...currentMetadata,
                 ...updatedMetadata
               };
-              
+
               // Create merged attributes
               const mergedAttrs = {
                 ...op.data,
                 metadata: mergedMetadata
               };
-              
+
               // Merge the attributes
               this.graph.mergeNodeAttributes(op.data.id, mergedAttrs);
-              
+
               // Get the updated attributes
               const updatedAttrs = this.graph.getNodeAttributes(op.data.id);
-              
+
               // Generate updated markdown content
               const content = this.generateMarkdownContent(updatedAttrs);
               if (content) {
@@ -115,7 +116,7 @@ export class GraphManager {
                 const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
                 const match = content.match(frontmatterRegex);
                 let newFrontmatter: Record<string, any> = {};
-                
+
                 if (match) {
                   try {
                     const yamlContent = match[1];
@@ -124,7 +125,7 @@ export class GraphManager {
                     console.error(`[GraphManager] Error parsing YAML frontmatter from generated content:`, error);
                   }
                 }
-                
+
                 // Update metadata.content and metadata.frontmatter
                 this.graph.mergeNodeAttributes(op.data.id, {
                   metadata: {
@@ -143,7 +144,7 @@ export class GraphManager {
             break;
           case 'addEdge':
             this.graph.addEdge(op.data.source, op.data.target, op.data.attributes);
-            console.log(`[GraphManager] Added edge: ${op.data.source} -> ${op.data.target} (${op.data.attributes.type})`);
+            // console.log(`[GraphManager] Added edge: ${op.data.source} -> ${op.data.target} (${op.data.attributes.type})`);
             break;
           case 'updateEdge':
             const edge = this.graph.edge(op.data.source, op.data.target);
@@ -159,7 +160,7 @@ export class GraphManager {
             break;
         }
       } catch (error) {
-        console.error(`[GraphManager] Error applying operation ${op.type}:`, error);
+        // console.warn(`[GraphManager] Error applying operation ${op.type}:`, error);
       }
     });
 
@@ -188,7 +189,7 @@ export class GraphManager {
       // Find all markdown files matching the glob pattern
       const files = glob.sync(globPattern, { cwd: this.projectRoot });
 
-      console.log(`[GraphManager] Found ${files.length} markdown files to parse`);
+      // console.log(`[GraphManager] Found ${files.length} markdown files to parse`);
 
       for (const file of files) {
         try {
@@ -237,7 +238,7 @@ export class GraphManager {
               timestamp
             });
 
-            console.log(`[GraphManager] Created feature node from ${file} with status: ${status}`);
+            // console.log(`[GraphManager] Created feature node from ${file} with status: ${status}`);
           }
         } catch (error) {
           console.error(`[GraphManager] Error parsing markdown file ${file}:`, error);
@@ -296,13 +297,13 @@ export class GraphManager {
   ): Promise<GraphUpdate> {
     const timestamp = new Date().toISOString();
     const operations: GraphOperation[] = [];
-    
-    console.log(`[GraphManager] updateGraphWithInputFiles called for ${configKey}/${testName} with ${inputFiles.length} files`);
-    
+
+    // console.log(`[GraphManager] updateGraphWithInputFiles called for ${configKey}/${testName} with ${inputFiles.length} files`);
+
     // Find or create the entrypoint node for this test
     const entrypointId = `entrypoint:${testName}`;
     const existingEntrypointNode = this.graph.hasNode(entrypointId);
-    
+
     if (!existingEntrypointNode) {
       // Create entrypoint node if it doesn't exist
       operations.push({
@@ -324,15 +325,15 @@ export class GraphManager {
         timestamp
       });
     }
-    
+
     // Process each input file
     for (const inputFile of inputFiles) {
       console.log(`[GraphManager] Processing input file: ${inputFile}`);
-      
+
       // Create file node for input file
       const fileNodeId = `file:${inputFile}`;
       const existingFileNode = this.graph.hasNode(fileNodeId);
-      
+
       if (!existingFileNode) {
         console.log(`[GraphManager] Creating file node: ${fileNodeId}`);
         operations.push({
@@ -352,7 +353,7 @@ export class GraphManager {
           timestamp
         });
       } else {
-        console.log(`[GraphManager] File node already exists: ${fileNodeId}`);
+        // console.log(`[GraphManager] File node already exists: ${fileNodeId}`);
       }
 
       // Create folder nodes for the input file's path
@@ -398,15 +399,15 @@ export class GraphManager {
         });
       }
     }
-    
+
     // Apply the operations
     if (operations.length > 0) {
       const update = { operations, timestamp };
       this.applyUpdate(update);
-      console.log(`[GraphManager] Applied ${operations.length} operations for input files`);
+      // console.log(`[GraphManager] Applied ${operations.length} operations for input files`);
       return update;
     }
-    
+
     return { operations: [], timestamp };
   }
 
@@ -430,9 +431,9 @@ export class GraphManager {
   public getGraphStats(): { nodes: number; edges: number; nodeTypes: Record<string, number>; edgeTypes: Record<string, number> } {
     const stats = getGraphStatsPure(this.graph);
 
-    console.log(`[GraphManager] Graph stats: ${stats.nodes} nodes, ${stats.edges} edges`);
-    console.log(`[GraphManager] Node types:`, stats.nodeTypes);
-    console.log(`[GraphManager] Edge types:`, stats.edgeTypes);
+    // console.log(`[GraphManager] Graph stats: ${stats.nodes} nodes, ${stats.edges} edges`);
+    // console.log(`[GraphManager] Node types:`, stats.nodeTypes);
+    // console.log(`[GraphManager] Edge types:`, stats.edgeTypes);
 
     return stats;
   }
@@ -488,7 +489,7 @@ export class GraphManager {
           }
         });
 
-        console.log(`[GraphManager] Wrote feature content to ${localPath}`);
+        // console.log(`[GraphManager] Wrote feature content to ${localPath}`);
         writtenCount++;
 
       } catch (error) {
@@ -497,7 +498,7 @@ export class GraphManager {
       }
     }
 
-    console.log(`[GraphManager] Serialized ${writtenCount} feature files, ${errorCount} errors`);
+    // console.log(`[GraphManager] Serialized ${writtenCount} feature files, ${errorCount} errors`);
   }
 
   // Generate markdown content with YAML frontmatter from node attributes
@@ -511,7 +512,7 @@ export class GraphManager {
       // Generate content from node attributes
       return this.generateContentFromAttributes(attrs, metadata);
     }
-    
+
     if (originalContent === '') {
       console.log(`[GraphManager] Feature ${attrs.id} has empty content, generating from attributes`);
       // Generate content from node attributes
@@ -658,5 +659,79 @@ export class GraphManager {
     }
 
     return newContent;
+  }
+
+  // Update graph with aider node
+  public async updateGraphWithAiderNode(params: {
+    runtime: string;
+    testName: string;
+    configKey: string;
+    aiderServiceName: string;
+    containerId?: string;
+  }): Promise<void> {
+    console.log(`[GraphManager] updateGraphWithAiderNode called with params:`, params);
+    const timestamp = new Date().toISOString();
+    const operations = createAiderNodeGraphOperationsPure({
+      ...params,
+      timestamp
+    });
+
+    console.log(`[GraphManager] Created ${operations.length} operations for aider node`);
+    const update: GraphUpdate = {
+      operations,
+      timestamp
+    };
+
+    this.applyUpdate(update);
+    console.log(`[GraphManager] Updated graph with aider node for ${params.aiderServiceName}`);
+    
+    // Also save the graph explicitly
+    this.saveGraph();
+    console.log(`[GraphManager] Graph saved after aider node update`);
+  }
+
+  // Create aider node for an entrypoint (for manual testing)
+  public createAiderNodeForEntrypoint(entrypointId: string, aiderServiceName: string, containerId?: string): void {
+    const timestamp = new Date().toISOString();
+    const aiderNodeId = `aider:${aiderServiceName}`;
+    
+    // Create aider node
+    this.graph.addNode(aiderNodeId, {
+      id: aiderNodeId,
+      type: 'aider',
+      label: `Aider: ${aiderServiceName}`,
+      description: `Aider instance for ${entrypointId}`,
+      status: 'done',
+      icon: 'aider',
+      metadata: {
+        aiderServiceName,
+        containerId,
+        timestamp
+      }
+    });
+
+    // Connect entrypoint to aider node
+    if (this.graph.hasNode(entrypointId)) {
+      this.graph.addEdge(entrypointId, aiderNodeId, {
+        type: 'hasAider',
+        weight: 1,
+        timestamp
+      });
+    }
+
+    // Connect aider to docker process if containerId exists
+    if (containerId) {
+      const dockerProcessId = `docker_process:${containerId}`;
+      if (this.graph.hasNode(dockerProcessId)) {
+        this.graph.addEdge(aiderNodeId, dockerProcessId, {
+          type: 'hasProcess',
+          weight: 1,
+          timestamp
+        });
+      }
+    }
+
+    this.saveGraph();
+    console.log(`[GraphManager] Created aider node ${aiderNodeId} for entrypoint ${entrypointId}`);
   }
 }

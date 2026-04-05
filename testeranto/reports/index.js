@@ -13737,7 +13737,7 @@ var TesterantoStakeholderApp = (() => {
       height = 600,
       strength = -300,
       distance = 100,
-      iterations = 150,
+      iterations = 250,
       center = { x: width / 2, y: height / 2 }
     } = options;
     if (nodes.length === 0) {
@@ -15337,6 +15337,18 @@ var TesterantoStakeholderApp = (() => {
             // Orange for URL folders (virtual)
             "domain": Palette.rust,
             // Purple for domain nodes
+            "aider": Palette.rust,
+            // Purple for aider nodes
+            "aider_process": Palette.rust,
+            // Purple for aider process nodes
+            "docker_process": Palette.warmGrey,
+            // Grey for docker process nodes
+            "bdd_process": Palette.amberGold,
+            // Orange for BDD process nodes
+            "check_process": Palette.amberGold,
+            // Orange for check process nodes
+            "builder_process": Palette.charcoal,
+            // Charcoal for builder process nodes
             "unknown": Palette.charcoal
             // Grey
           };
@@ -15442,6 +15454,7 @@ var TesterantoStakeholderApp = (() => {
           if (icon === "circle") return "\u2B55";
           if (icon === "play") return "\u25B6\uFE0F";
           if (icon === "check") return "\u2705";
+          if (icon === "aider") return "\u{1F916}";
           return "\u2753";
         })()), node.id, node.attributes?.isAttributeNode && /* @__PURE__ */ import_react14.default.createElement("span", { style: {
           marginLeft: "5px",

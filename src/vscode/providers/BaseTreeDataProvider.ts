@@ -12,7 +12,9 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
     protected isConnected: boolean = false;
 
     constructor() {
+        console.log('[BaseTreeDataProvider] Constructor called');
         this.setupWebSocket();
+        console.log('[BaseTreeDataProvider] Constructor completed');
     }
 
     abstract getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]>;

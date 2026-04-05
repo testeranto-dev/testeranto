@@ -20,7 +20,7 @@ export function layoutForceWithD3(
     height = 600,
     strength = -300,
     distance = 100,
-    iterations = 150,
+    iterations = 250,
     center = { x: width / 2, y: height / 2 }
   } = options;
 
@@ -44,13 +44,13 @@ export function layoutForceWithD3(
   }));
 
   // Prepare links for d3-force, filtering out edges that reference non-existent nodes
-  const d3Links: Array<{source: number; target: number; distance: number}> = [];
-  
+  const d3Links: Array<{ source: number; target: number; distance: number }> = [];
+
   if (edges && edges.length > 0) {
     for (const edge of edges) {
       const sourceIndex = nodeIdMap.get(edge.source);
       const targetIndex = nodeIdMap.get(edge.target);
-      
+
       // Only add the link if both source and target nodes exist
       if (sourceIndex !== undefined && targetIndex !== undefined) {
         d3Links.push({

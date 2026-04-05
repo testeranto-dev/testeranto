@@ -31,7 +31,16 @@ export class CommandManager {
     }
 
     public registerCommands(context: vscode.ExtensionContext): vscode.Disposable[] {
-        return registerCommands(context, this.terminalManager, this.dockerProcessProvider)
+        const disposables = registerCommands(context, this.terminalManager, this.dockerProcessProvider);
+        
+        // Add a test command for debugging
+        const testCommand = vscode.commands.registerCommand('testeranto.testLogging', () => {
+            vscode.window.showInformationMessage('Testeranto test command works!');
+            console.log('[Testeranto] Test command executed successfully');
+        });
+        disposables.push(testCommand);
+        
+        return disposables;
     }
 }
 

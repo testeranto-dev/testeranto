@@ -11,13 +11,25 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   constructor() {
     super();
-    // Show a visible message to prove logging works
-    vscode.window.showInformationMessage('TestTreeDataProvider constructor called!');
     console.log('[TestTreeDataProvider] CONSTRUCTOR CALLED - LOGGING FROM TestTreeDataProvider.ts');
+    
+    // Show a visible message to prove logging works
+    try {
+      vscode.window.showInformationMessage('TestTreeDataProvider constructor called!');
+    } catch (error) {
+      console.log('[TestTreeDataProvider] Could not show information message:', error);
+    }
+    
+    console.log('[TestTreeDataProvider] Calling super() completed');
+    
+    // Try to fetch configs
     TestTreeUtils.fetchConfigsViaHttp().catch(error => {
       console.log('[TestTreeDataProvider] Initial HTTP fetch failed:', error);
     });
+    
+    console.log('[TestTreeDataProvider] Setting up config watcher...');
     this.setupConfigWatcher();
+    console.log('[TestTreeDataProvider] Constructor completed');
   }
 
   refresh(): void {
@@ -176,7 +188,21 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
   }
 
   private async getRuntimeItems(): Promise<TestTreeItem[]> {
+    console.log("[TestTreeDataProvider] getRuntimeItems called - MINIMAL TEST");
+    
     const items: TestTreeItem[] = [];
+
+    // SIMPLE TEST ITEM - Always show this to prove the tree works
+    items.push(new TestTreeItem(
+      'Testeranto Test Item',
+      TreeItemType.Info,
+      vscode.TreeItemCollapsibleState.None,
+      {
+        description: 'Test item to show extension works'
+      },
+      undefined,
+      new vscode.ThemeIcon('check')
+    ));
 
     // Add config file item at the root
     items.push(this.createConfigFileItem());
@@ -315,7 +341,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
           {
             description: 'Click to start the server',
             startServer: true,
-            error: error.message
+            error: configError.message
           },
           {
             command: 'testeranto.startServer',
@@ -323,6 +349,21 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
             arguments: []
           },
           new vscode.ThemeIcon('error')
+        ));
+        // Add a help item
+        items.push(new TestTreeItem(
+          'Need help?',
+          TreeItemType.Info,
+          vscode.TreeItemCollapsibleState.None,
+          {
+            description: 'Check the output channel for details'
+          },
+          {
+            command: 'testeranto.testLogging',
+            title: 'Test Logging',
+            arguments: []
+          },
+          new vscode.ThemeIcon('question')
         ));
       }
     }
@@ -436,7 +477,157 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
     try {
       console.log(`[TestTreeDataProvider] Fetching unified test tree from server...`);
-      const items = this.getTestFileItems(runtimeKey, testName);
+      const response = await fetch(ApiUtils.getUnifiedTestTreeUrl());
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      const unifiedTree = data.tree || {};
+      const runtimeEntry = unifiedTree[runtimeKey];
+      if (!runtimeEntry) {
+        return [];
+      }
+      const tests = runtimeEntry.tests || {};
+      const testEntry = tests[testName];
+      if (!testEntry) {
+        return [];
+      }
+
+      const items: TestTreeItem[] = [];
+      
+      // Add source files section
+      if (testEntry.sourceFiles && testEntry.sourceFiles.length > 0) {
+        const sourceFilesItem = new TestTreeItem(
+          'Source Files',
+          TreeItemType.Info,
+          vscode.TreeItemCollapsibleState.Collapsed,
+          {
+            description: `${testEntry.sourceFiles.length} file(s)`,
+            count: testEntry.sourceFiles.length
+          },
+          undefined,
+          new vscode.ThemeIcon('file-code')
+        );
+        
+        // Create children for source files
+        sourceFilesItem.children = testEntry.sourceFiles.map((file: any) => {
+          return new TestTreeItem(
+            file.path,
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              fileName: file.path,
+              runtime: runtimeKey,
+              testName: testName,
+              isFile: true,
+              fileType: file.type || 'source'
+            },
+            {
+              command: 'testeranto.openFile',
+              title: 'Open File',
+              arguments: [{ fileName: file.path, runtime: runtimeKey, testName: testName, isFile: true }]
+            },
+            new vscode.ThemeIcon('file')
+          );
+        });
+        items.push(sourceFilesItem);
+      }
+
+      // Add logs section
+      if (testEntry.logs && testEntry.logs.length > 0) {
+        const logsItem = new TestTreeItem(
+          'Logs',
+          TreeItemType.Info,
+          vscode.TreeItemCollapsibleState.Collapsed,
+          {
+            description: `${testEntry.logs.length} log file(s)`,
+            count: testEntry.logs.length
+          },
+          undefined,
+          new vscode.ThemeIcon('output')
+        );
+        
+        logsItem.children = testEntry.logs.map((logPath: string) => {
+          return new TestTreeItem(
+            logPath.split('/').pop() || logPath,
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              fileName: logPath,
+              runtime: runtimeKey,
+              testName: testName,
+              isFile: true,
+              fileType: 'log'
+            },
+            {
+              command: 'testeranto.openFile',
+              title: 'Open Log File',
+              arguments: [{ fileName: logPath, runtime: runtimeKey, testName: testName, isFile: true }]
+            },
+            new vscode.ThemeIcon('output')
+          );
+        });
+        items.push(logsItem);
+      }
+
+      // Add output files section
+      if (testEntry.outputFiles && testEntry.outputFiles.length > 0) {
+        const outputFilesItem = new TestTreeItem(
+          'Output Files',
+          TreeItemType.Info,
+          vscode.TreeItemCollapsibleState.Collapsed,
+          {
+            description: `${testEntry.outputFiles.length} file(s)`,
+            count: testEntry.outputFiles.length
+          },
+          undefined,
+          new vscode.ThemeIcon('folder-opened')
+        );
+        
+        outputFilesItem.children = testEntry.outputFiles.map((filePath: string) => {
+          return new TestTreeItem(
+            filePath.split('/').pop() || filePath,
+            TreeItemType.File,
+            vscode.TreeItemCollapsibleState.None,
+            {
+              fileName: filePath,
+              runtime: runtimeKey,
+              testName: testName,
+              isFile: true,
+              fileType: 'output'
+            },
+            {
+              command: 'testeranto.openFile',
+              title: 'Open Output File',
+              arguments: [{ fileName: filePath, runtime: runtimeKey, testName: testName, isFile: true }]
+            },
+            new vscode.ThemeIcon('file')
+          );
+        });
+        items.push(outputFilesItem);
+      }
+
+      // Add test results if available
+      if (testEntry.results) {
+        items.push(new TestTreeItem(
+          'Test Results',
+          TreeItemType.File,
+          vscode.TreeItemCollapsibleState.None,
+          {
+            fileName: testEntry.results,
+            runtime: runtimeKey,
+            testName: testName,
+            isFile: true,
+            fileType: 'test-results'
+          },
+          {
+            command: 'testeranto.openFile',
+            title: 'Open Test Results',
+            arguments: [{ fileName: testEntry.results, runtime: runtimeKey, testName: testName, isFile: true }]
+          },
+          new vscode.ThemeIcon('graph')
+        ));
+      }
 
       console.log(`[TestTreeDataProvider] Built ${items.length} top-level items for ${runtimeKey}/${testName}`);
       return items;

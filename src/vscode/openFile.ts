@@ -1,4 +1,5 @@
-import path from "path";
+import * as vscode from "vscode";
+import * as path from "path";
 import type { TestTreeItem } from "./TestTreeItem";
 import { TreeItemType } from "./types";
 

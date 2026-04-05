@@ -86,6 +86,12 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
           'folder': Palette.oliveDark,         // Dark Green for folders
           'url-folder': Palette.amberGold,     // Orange for URL folders (virtual)
           'domain': Palette.rust,              // Purple for domain nodes
+          'aider': Palette.rust,               // Purple for aider nodes
+          'aider_process': Palette.rust,       // Purple for aider process nodes
+          'docker_process': Palette.warmGrey,  // Grey for docker process nodes
+          'bdd_process': Palette.amberGold,    // Orange for BDD process nodes
+          'check_process': Palette.amberGold,  // Orange for check process nodes
+          'builder_process': Palette.charcoal, // Charcoal for builder process nodes
           'unknown': Palette.charcoal          // Grey
         };
         return typeColors[type] || typeColors.unknown;
@@ -209,6 +215,7 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
                         if (icon === 'circle') return '⭕';
                         if (icon === 'play') return '▶️';
                         if (icon === 'check') return '✅';
+                        if (icon === 'aider') return '🤖';
                         return '❓';
                       })()}
                     </span>

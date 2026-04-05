@@ -1,7 +1,8 @@
+import * as vscode from "vscode";
 import { getFallbackHtmlContent } from "./getFallbackHtmlContent";
 
 export const openServerWebview = () => {
-    vscode.commands.registerCommand("testeranto.openServerWebview", async () => {
+    return vscode.commands.registerCommand("testeranto.openServerWebview", async () => {
         try {
             const workspaceFolders = vscode.workspace.workspaceFolders;
             if (!workspaceFolders || workspaceFolders.length === 0) {

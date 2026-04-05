@@ -10,7 +10,7 @@ export async function createFeatureFolderConnectionsPure(
   timestamp: string
 ): Promise<void> {
   const { featureId } = extractFeatureInfoPure(featureUrl);
-  
+
   // Always create folder nodes for both URLs and local file paths
   // Create folder nodes for the feature's path and connect them
   const parentFolderId = createFolderNodesAndEdgesPure(
@@ -20,8 +20,6 @@ export async function createFeatureFolderConnectionsPure(
     timestamp
   );
 
-  console.log(`[GraphManager] Parent folder ID for feature ${featureId}: ${parentFolderId}`);
-
   // Connect feature to its immediate parent folder
   if (parentFolderId !== '') {
     // Check if edge already exists
@@ -29,8 +27,6 @@ export async function createFeatureFolderConnectionsPure(
     if (graph.hasEdge(parentFolderId, featureId)) {
       folderEdgeExists = true;
     }
-
-    console.log(`[GraphManager] Edge from folder ${parentFolderId} to feature ${featureId} exists: ${folderEdgeExists}`);
 
     if (!folderEdgeExists) {
       operations.push({
@@ -45,7 +41,6 @@ export async function createFeatureFolderConnectionsPure(
         },
         timestamp
       });
-      console.log(`[GraphManager] Added edge from folder ${parentFolderId} to feature ${featureId}`);
     }
   }
 }

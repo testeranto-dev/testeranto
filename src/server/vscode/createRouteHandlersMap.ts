@@ -43,45 +43,9 @@ export const createRouteHandlersMap = (): Record<string, (server: any, url?: URL
           }, 200, apiDef);
         };
         break;
-      case 'getInputFiles':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Use getUnifiedTestTree instead
-          return jsonResponse({
-            message: "Endpoint deprecated. Use /~/unified-test-tree instead.",
-            deprecated: true,
-            alternative: "/~/unified-test-tree"
-          }, 410, vscodeHttpAPI.getInputFiles);
-        };
-        break;
-      case 'getOutputFiles':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Use getUnifiedTestTree instead
-          return jsonResponse({
-            message: "Endpoint deprecated. Use /~/unified-test-tree instead.",
-            deprecated: true,
-            alternative: "/~/unified-test-tree"
-          }, 410, vscodeHttpAPI.getOutputFiles);
-        };
-        break;
-      case 'getTestResults':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Use getUnifiedTestTree instead
-          return jsonResponse({
-            message: "Endpoint deprecated. Use /~/unified-test-tree instead.",
-            deprecated: true,
-            alternative: "/~/unified-test-tree"
-          }, 410, vscodeHttpAPI.getTestResults);
-        };
-        break;
-      case 'getCollatedFiles':
-        handlers[routeName] = (server: any, url, request) => {
-          // Deprecated: Not used
-          return jsonResponse({
-            message: "Endpoint deprecated. Not used in current implementation.",
-            deprecated: true
-          }, 410, vscodeHttpAPI.getCollatedFiles);
-        };
-        break;
+      // Note: getInputFiles, getOutputFiles, getTestResults, and getCollatedFiles
+      // have been removed as they are deprecated in favor of getUnifiedTestTree
+      // and the graph-based API
       case 'getProcesses':
         handlers[routeName] = (server: any, url, request) => {
           // Validate against API definition

@@ -1,3 +1,4 @@
+import * as vscode from "vscode";
 import { getFallbackHtmlContent } from './getFallbackHtmlContent';
 import { ApiUtils } from './providers/utils/apiUtils';
 import type { TerminalManager } from './TerminalManager';
@@ -10,8 +11,6 @@ import { showProcessLogs } from './showProcessLogs';
 import { openFile } from './openFile';
 import { openServerWebview } from './openServerWebview';
 
-let vscode: any;
-type vscode = any
 export const registerCommands = (
     context: vscode.ExtensionContext,
     terminalManager: TerminalManager,
@@ -235,8 +234,8 @@ export const registerCommands = (
             "testeranto.refreshAiderProcesses",
             async () => {
                 try {
-                    if (aiderProcessProvider && typeof (this.aiderProcessProvider as any).refresh === 'function') {
-                        await (this.aiderProcessProvider as any).refresh();
+                    if (aiderProcessProvider && typeof (aiderProcessProvider as any).refresh === 'function') {
+                        await (aiderProcessProvider as any).refresh();
                         vscode.window.showInformationMessage("Aider processes refreshed");
                     } else {
                         vscode.window.showWarningMessage("Aider process provider not available");
@@ -254,7 +253,7 @@ export const registerCommands = (
             async (runtime: string, testName: string, containerId?: string) => {
                 try {
                     vscode.window.showInformationMessage(`Opening aider terminal for ${testName} (${runtime})...`);
-                    const terminal = await this.terminalManager.createAiderTerminal(runtime, testName);
+                    const terminal = await terminalManager.createAiderTerminal(runtime, testName);
                     terminal.show();
                 } catch (err) {
                     vscode.window.showErrorMessage(`Error opening aider terminal: ${err}`);

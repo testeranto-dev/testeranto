@@ -1,3 +1,4 @@
+import * as vscode from "vscode";
 import { ApiUtils } from "./providers/utils/apiUtils";
 
 export const showProcessLogs = () => {

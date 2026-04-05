@@ -43,6 +43,10 @@ import {
 import { writeConfigForExtensionOnStop } from "./Server_Docker/utils/writeConfigForExtensionOnStop";
 import { writeConfigForExtensionPure } from "./Server_Docker/utils/writeConfigForExtensionPure";
 import { Server_Docker_Compose } from "./Server_Docker_Compose";
+import { addProcessNodeToGraphPure } from "./Server_Docker/addProcessNodeToGraphPure";
+import { createLogFileNodePure } from "./Server_Docker/createLogFileNodePure";
+import { updateGraphWithInputFilesPure } from "./Server_Docker/updateGraphWithInputFilesPure";
+
 // Note: waitForBundlesPure is imported dynamically to avoid circular dependencies
 
 // TODO: TICKET-001 - Refactor logging system to separate test and builder services
@@ -154,7 +158,7 @@ export class Server_Docker extends Server_Docker_Compose {
         this.failedBuilderConfigs.add(configKey);
         consoleLog(`[Server_Docker] Builder failed for config ${configKey}, will skip all dependent services`);
       }
-      
+
       // Add builder process nodes for all configs
       for (const configKey of Object.keys(this.configs.runtimes)) {
         if (!failedBuilderConfigs.has(configKey)) {
@@ -367,10 +371,10 @@ export class Server_Docker extends Server_Docker_Compose {
     testName: string,
     configKey: string,
     configValue: any,
-    inputFiles?: any,
+    // inputFiles?: any,
   ) {
     consoleLog(`[Server_Docker] Input files changed for ${testName}, updating aider`);
-    
+
     await this.createAiderMessageFile(
       runtime,
       testName,
@@ -387,124 +391,90 @@ export class Server_Docker extends Server_Docker_Compose {
     configKey: string,
     inputFiles: string[],
   ): Promise<void> {
-    console.log(`[Server_Docker] updateGraphWithInputFiles called:`, {
+    const serverHttp = this as any;
+    await updateGraphWithInputFilesPure(
       runtime,
       testName,
       configKey,
-      inputFilesCount: inputFiles?.length || 0,
-      inputFiles
-    });
-    
-    if (!inputFiles || inputFiles.length === 0) {
-      console.log(`[Server_Docker] No input files provided, skipping`);
-      return;
-    }
-    
-    // We need to update the graph with input file nodes
-    // Create a test result-like object with input files
-    // Ensure testName is treated as a file path for proper entrypoint creation
-    const processedTestName = testName.includes('.') ? testName : `${configKey}:${testName}`;
-    const testResult = {
-      configKey,
-      runtime,
-      testName: processedTestName,
       inputFiles,
-      // Add required fields for TestResult interface
-      failed: false,
-      // Add empty individualResults to satisfy the interface
-      individualResults: [],
-      timestamp: new Date().toISOString()
-    };
-
-    console.log(`[Server_Docker] Created test result for graph update:`, testResult);
-
-    // Update the graph using the graph manager
-    // The graph manager is in the parent class Server_HTTP
-    const serverHttp = this as any;
-    if (serverHttp.graphManager && typeof serverHttp.graphManager.updateFromTestResults === 'function') {
-      console.log(`[Server_Docker] Graph manager available, calling updateFromTestResults`);
-      try {
-        await serverHttp.graphManager.updateFromTestResults(testResult);
-        console.log(`[Server_Docker] Updated graph with ${inputFiles.length} input files for ${testName}`);
-      } catch (error) {
-        console.error(`[Server_Docker] Error updating graph with input files:`, error);
-      }
-    } else {
-      console.warn(`[Server_Docker] Graph manager not available for updating input files`);
-    }
+      serverHttp.graphManager,
+      consoleLog,
+      consoleError,
+      consoleWarn
+    );
   }
 
-  private async updateProcessNodeStatus(
-    processId: string,
-    status: 'running' | 'completed' | 'failed' | 'stopped',
-    exitCode?: number
-  ): Promise<void> {
-    try {
-      const serverHttp = this as any;
-      if (serverHttp.graphManager && typeof serverHttp.graphManager.applyUpdate === 'function') {
-        // Get current graph data to find the node
-        const graphData = serverHttp.graphManager.getGraphData();
-        const node = graphData.nodes.find((n: any) => n.id === processId);
-        
-        if (node) {
-          const timestamp = new Date().toISOString();
-          const update = {
-            operations: [{
-              type: 'updateNode',
-              data: {
-                id: processId,
-                status,
-                metadata: {
-                  ...node.metadata,
-                  exitCode,
-                  completedAt: status !== 'running' ? timestamp : undefined
-                }
-              },
-              timestamp
-            }],
-            timestamp
-          };
-          
-          serverHttp.graphManager.applyUpdate(update);
-          consoleLog(`[Server_Docker] Updated process node ${processId} status to ${status}`);
-          
-          // Save the graph after updating process status
-          if (typeof serverHttp.graphManager.saveGraph === 'function') {
-            serverHttp.graphManager.saveGraph();
-            consoleLog(`[Server_Docker] Saved graph after updating process node status`);
-            
-            // Also save to graph-data.json
-            if (typeof serverHttp.saveCurrentGraph === 'function') {
-              try {
-                serverHttp.saveCurrentGraph();
-                consoleLog(`[Server_Docker] Updated graph-data.json with process status update`);
-              } catch (error) {
-                consoleError(`[Server_Docker] Error saving graph-data.json:`, error);
-              }
-            }
-          }
-          
-          // Broadcast update
-          if (serverHttp.broadcast && typeof serverHttp.broadcast === 'function') {
-            serverHttp.broadcast({
-              type: 'graphUpdated',
-              message: `Process node ${processId} status updated to ${status}`,
-              timestamp: new Date().toISOString(),
-              data: {
-                nodeUpdated: processId,
-                status,
-                exitCode
-              }
-            });
-          }
-        } else {
-          consoleWarn(`[Server_Docker] Process node ${processId} not found in graph`);
-        }
-      }
-    } catch (error) {
-      consoleError(`[Server_Docker] Error updating process node status:`, error);
-    }
-  }
+  // private async updateProcessNodeStatus(
+  //   processId: string,
+  //   status: 'running' | 'completed' | 'failed' | 'stopped',
+  //   exitCode?: number
+  // ): Promise<void> {
+  //   try {
+  //     const serverHttp = this as any;
+  //     if (serverHttp.graphManager && typeof serverHttp.graphManager.applyUpdate === 'function') {
+  //       // Get current graph data to find the node
+  //       const graphData = serverHttp.graphManager.getGraphData();
+  //       const node = graphData.nodes.find((n: any) => n.id === processId);
+
+  //       if (node) {
+  //         const timestamp = new Date().toISOString();
+  //         const update = {
+  //           operations: [{
+  //             type: 'updateNode',
+  //             data: {
+  //               id: processId,
+  //               status,
+  //               metadata: {
+  //                 ...node.metadata,
+  //                 exitCode,
+  //                 completedAt: status !== 'running' ? timestamp : undefined
+  //               }
+  //             },
+  //             timestamp
+  //           }],
+  //           timestamp
+  //         };
+
+  //         serverHttp.graphManager.applyUpdate(update);
+  //         consoleLog(`[Server_Docker] Updated process node ${processId} status to ${status}`);
+
+  //         // Save the graph after updating process status
+  //         if (typeof serverHttp.graphManager.saveGraph === 'function') {
+  //           serverHttp.graphManager.saveGraph();
+  //           consoleLog(`[Server_Docker] Saved graph after updating process node status`);
+
+  //           // Also save to graph-data.json
+  //           if (typeof serverHttp.saveCurrentGraph === 'function') {
+  //             try {
+  //               serverHttp.saveCurrentGraph();
+  //               consoleLog(`[Server_Docker] Updated graph-data.json with process status update`);
+  //             } catch (error) {
+  //               consoleError(`[Server_Docker] Error saving graph-data.json:`, error);
+  //             }
+  //           }
+  //         }
+
+  //         // Broadcast update
+  //         if (serverHttp.broadcast && typeof serverHttp.broadcast === 'function') {
+  //           serverHttp.broadcast({
+  //             type: 'graphUpdated',
+  //             message: `Process node ${processId} status updated to ${status}`,
+  //             timestamp: new Date().toISOString(),
+  //             data: {
+  //               nodeUpdated: processId,
+  //               status,
+  //               exitCode
+  //             }
+  //           });
+  //         }
+  //       } else {
+  //         consoleWarn(`[Server_Docker] Process node ${processId} not found in graph`);
+  //       }
+  //     }
+  //   } catch (error: any) {
+  //     consoleError(`[Server_Docker] Error updating process node status:`, error);
+  //   }
+  // }
 
   private async createAiderMessageFile(
     runtime: IRunTime,
@@ -528,14 +498,12 @@ export class Server_Docker extends Server_Docker_Compose {
     configValue: any,
   ) {
     consoleLog(`[Server_Docker] Launching BDD test for ${testName}`);
-    
-    // Check if builder failed for this config
+
     if (this.failedBuilderConfigs.has(configKey)) {
       consoleLog(`[Server_Docker] Skipping BDD test ${testName} because builder failed for config ${configKey}`);
       return;
     }
 
-    // Create aider message file when test is launched
     await this.createAiderMessageFile(
       runtime,
       testName,
@@ -554,16 +522,16 @@ export class Server_Docker extends Server_Docker_Compose {
       configValue,
       (serviceName, runtime, configKey, testName) => {
         // Clear stored logs before capturing existing logs
-        this.clearStoredLogs(serviceName, configKey, testName);
+        this.clearStoredLogs(serviceName, configKey, testName as string);
         return captureExistingLogs(serviceName, runtime, configKey, testName);
       },
       (serviceName, runtime, configKey, testName) =>
-        this.startServiceLogging(serviceName, runtime, configKey, testName),
+        this.startServiceLogging(serviceName, runtime, configKey, testName as string),
       () => this.resourceChanged("/~/processes"),
       () => this.writeConfigForExtension(),
     );
 
-    // Add BDD process node to graph
+
     await this.addProcessNodeToGraph('bdd', runtime, testName, configKey, configValue);
   }
 
@@ -575,180 +543,19 @@ export class Server_Docker extends Server_Docker_Compose {
     configValue: any,
     checkIndex?: number
   ): Promise<void> {
-    consoleLog(`[Server_Docker] addProcessNodeToGraph called: ${processType} for ${testName} (${configKey})`);
-    try {
-      // Get the graph manager from parent class
-      const serverHttp = this as any;
-      consoleLog(`[Server_Docker] graphManager exists: ${!!serverHttp.graphManager}`);
-      consoleLog(`[Server_Docker] graphManager.applyUpdate is function: ${typeof serverHttp.graphManager?.applyUpdate === 'function'}`);
-      
-      if (serverHttp.graphManager && typeof serverHttp.graphManager.applyUpdate === 'function') {
-        // Generate process ID
-        let processId: string;
-        let label: string;
-        
-        switch (processType) {
-          case 'bdd':
-            processId = `bdd_process:${configKey}:${testName}`;
-            label = `BDD Process: ${testName}`;
-            break;
-          case 'check':
-            processId = `check_process:${configKey}:${testName}:${checkIndex}`;
-            label = `Check Process ${checkIndex}: ${testName}`;
-            break;
-          case 'aider':
-            processId = `aider_process:${configKey}:${testName}`;
-            label = `Aider Process: ${testName}`;
-            break;
-          case 'builder':
-            processId = `builder_process:${configKey}`;
-            label = `Builder Process: ${configKey}`;
-            break;
-          default:
-            return;
-        }
-
-        const timestamp = new Date().toISOString();
-        const operations = [];
-
-        // Create process node operation
-        const nodeAttributes = {
-          id: processId,
-          type: processType === 'bdd' ? 'bdd_process' : 
-                processType === 'check' ? 'check_process' :
-                processType === 'aider' ? 'aider_process' : 'builder_process',
-          label: label,
-          description: `${processType} process for ${testName} (${configKey})`,
-          status: 'running',
-          priority: 'medium',
-          metadata: {
-            runtime,
-            testName,
-            configKey,
-            processType,
-            checkIndex,
-            timestamp
-          }
-        };
-
-        operations.push({
-          type: 'addNode',
-          data: nodeAttributes,
-          timestamp
-        });
-
-        // Create edge from entrypoint to process (for non-builder processes)
-        if (processType !== 'builder') {
-          const entrypointId = `entrypoint:${testName}`;
-          const edgeType = processType === 'bdd' ? 'hasBddProcess' :
-                          processType === 'check' ? 'hasCheckProcess' :
-                          processType === 'aider' ? 'hasAiderProcess' : 'hasBuilderProcess';
-          
-          operations.push({
-            type: 'addEdge',
-            data: {
-              source: entrypointId,
-              target: processId,
-              attributes: {
-                type: edgeType,
-                weight: 1,
-                timestamp
-              }
-            },
-            timestamp
-          });
-        } else {
-          // For builder processes, first ensure config node exists
-          const configNodeId = `config:${configKey}`;
-          
-          // Check if config node exists by trying to get it from the graph
-          // We need to check if the node exists in the current graph data
-          const graphData = serverHttp.graphManager.getGraphData();
-          const configNodeExists = graphData.nodes.some((node: any) => node.id === configNodeId);
-          
-          if (!configNodeExists) {
-            const configNodeAttributes = {
-              id: configNodeId,
-              type: 'config' as const,
-              label: `Config: ${configKey}`,
-              description: `Configuration for ${configKey}`,
-              status: 'todo',
-              priority: 'medium',
-              metadata: {
-                configKey,
-                runtime: configValue.runtime,
-                timestamp
-              }
-            };
-            operations.push({
-              type: 'addNode',
-              data: configNodeAttributes,
-              timestamp
-            });
-            consoleLog(`[Server_Docker] Created config node: ${configNodeId}`);
-          }
-          
-          // Link builder process to config node
-          operations.push({
-            type: 'addEdge',
-            data: {
-              source: configNodeId,
-              target: processId,
-              attributes: {
-                type: 'hasBuilderProcess',
-                weight: 1,
-                timestamp
-              }
-            },
-            timestamp
-          });
-        }
-
-        // Apply all operations at once
-        const update = {
-          operations,
-          timestamp
-        };
-        
-        serverHttp.graphManager.applyUpdate(update);
-        consoleLog(`[Server_Docker] Added ${processType} process node to graph: ${processId}`);
-
-        // Save the graph data after adding process nodes
-        if (typeof serverHttp.graphManager.saveGraph === 'function') {
-          serverHttp.graphManager.saveGraph();
-          consoleLog(`[Server_Docker] Saved graph after adding ${processType} process node`);
-          
-          // Also save to graph-data.json
-          if (typeof serverHttp.saveCurrentGraph === 'function') {
-            try {
-              serverHttp.saveCurrentGraph();
-              consoleLog(`[Server_Docker] Updated graph-data.json with ${processType} process node`);
-            } catch (error) {
-              consoleError(`[Server_Docker] Error saving graph-data.json:`, error);
-            }
-          }
-        }
-
-        // Broadcast graph update via WebSocket if available
-        if (serverHttp.broadcast && typeof serverHttp.broadcast === 'function') {
-          serverHttp.broadcast({
-            type: 'graphUpdated',
-            message: `Graph updated with ${processType} process node`,
-            timestamp: new Date().toISOString(),
-            data: {
-              nodeAdded: processId,
-              processType,
-              testName,
-              configKey
-            }
-          });
-        }
-      } else {
-        consoleLog(`[Server_Docker] Graph manager or applyUpdate not available`);
-      }
-    } catch (error) {
-      consoleError(`[Server_Docker] Error adding process node to graph:`, error);
-    }
+    const serverHttp = this as any;
+    await addProcessNodeToGraphPure(
+      processType,
+      runtime,
+      testName,
+      configKey,
+      configValue,
+      checkIndex,
+      serverHttp.graphManager,
+      consoleLog,
+      consoleError,
+      consoleWarn
+    );
   }
 
   // each test has zero or more "check" tests to be launched when inputFiles.json changes
@@ -759,14 +566,12 @@ export class Server_Docker extends Server_Docker_Compose {
     configValue: any,
   ) {
     consoleLog(`[Server_Docker] Launching checks for ${testName}`);
-    
-    // Check if builder failed for this config
+
     if (this.failedBuilderConfigs.has(configKey)) {
       consoleLog(`[Server_Docker] Skipping checks for ${testName} because builder failed for config ${configKey}`);
       return;
     }
 
-    // Create aider message file when checks are launched
     await this.createAiderMessageFile(
       runtime,
       testName,
@@ -780,7 +585,6 @@ export class Server_Docker extends Server_Docker_Compose {
       configKey,
       configValue,
       (serviceName, runtime, configKey, testName) => {
-        // Clear stored logs before capturing existing logs
         this.clearStoredLogs(serviceName, configKey, testName);
         return captureExistingLogs(serviceName, runtime, configKey, testName);
       },
@@ -803,7 +607,6 @@ export class Server_Docker extends Server_Docker_Compose {
     configKey: string,
     configValue: any,
   ) {
-
     await launchAiderPure({
       runtime,
       testName,
@@ -816,9 +619,16 @@ export class Server_Docker extends Server_Docker_Compose {
       writeConfigForExtension: this.writeConfigForExtension.bind(this),
       getContainerInfo: this.getContainerInfo.bind(this),
       aiderProcesses: this.aiderProcesses,
+      updateGraphWithAiderNode: async (params) => {
+        const serverHttp = this as any;
+        if (serverHttp.graphManager && typeof serverHttp.graphManager.updateGraphWithAiderNode === 'function') {
+          await serverHttp.graphManager.updateGraphWithAiderNode(params);
+        } else {
+          consoleWarn('[Server_Docker] GraphManager or updateGraphWithAiderNode not available');
+        }
+      },
     });
 
-    // Add aider process node to graph
     await this.addProcessNodeToGraph('aider', runtime, testName, configKey, configValue);
   }
 
@@ -860,16 +670,15 @@ export class Server_Docker extends Server_Docker_Compose {
 
   public getProcessSummary = (): any => {
     const processSummary = this.testResultsCollector.getProcessSummary();
-    // Add build errors if available
-    if (this.dockerComposeManager) {
-      const buildErrors = (this.dockerComposeManager as any).getBuildErrors?.();
-      if (buildErrors && buildErrors.length > 0) {
-        return {
-          ...processSummary,
-          buildErrors: buildErrors
-        };
-      }
+
+    const buildErrors = (this.dockerComposeManager as any).getBuildErrors?.();
+    if (buildErrors && buildErrors.length > 0) {
+      return {
+        ...processSummary,
+        buildErrors: buildErrors
+      };
     }
+
     return processSummary;
   };
 
@@ -885,17 +694,6 @@ export class Server_Docker extends Server_Docker_Compose {
   };
 
   public getAiderProcesses(): any[] {
-    // Ensure this context is valid
-    if (!this) {
-      consoleWarn('[Server_Docker] getAiderProcesses called with invalid this context');
-      return [];
-    }
-
-    // Ensure aiderProcesses is initialized
-    if (!this.aiderProcesses) {
-      consoleWarn('[Server_Docker] aiderProcesses not initialized, returning empty array');
-      return [];
-    }
 
     return getAiderProcessesPure({
       aiderProcesses: this.aiderProcesses,
@@ -924,13 +722,33 @@ export class Server_Docker extends Server_Docker_Compose {
       this.logProcesses,
       runtimeConfigKey,
       testName,
+      (logFilePath, serviceName, runtime, runtimeConfigKey, testName) => {
+        this.createLogFileNode(logFilePath, serviceName, runtime, runtimeConfigKey, testName);
+      }
     );
     this.writeConfigForExtension();
   };
 
+  private async createLogFileNode(
+    logFilePath: string,
+    serviceName: string,
+    runtime: string,
+    runtimeConfigKey: string,
+    testName?: string
+  ): Promise<void> {
+    const serverHttp = this as any;
+    await createLogFileNodePure(
+      logFilePath,
+      serviceName,
+      runtime,
+      runtimeConfigKey,
+      testName,
+      serverHttp.graphManager
+    );
+  }
+
   private async getContainerInfo(serviceName: string): Promise<any> {
     return getContainerInfo(serviceName)
   }
-
 
 }

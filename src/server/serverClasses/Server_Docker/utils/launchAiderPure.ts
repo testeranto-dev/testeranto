@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import type { IRunTime } from "../../../../Types";
 import { generateUid, getAiderServiceName } from "../Server_Docker_Constants";
 import { consoleError, consoleLog, consoleWarn, processCwd } from "../Server_Docker_Dependents";
+import type { GraphOperation } from "../../../../graph/index";
 
 export async function launchAiderPure({
   runtime,
@@ -15,6 +16,7 @@ export async function launchAiderPure({
   writeConfigForExtension,
   getContainerInfo,
   aiderProcesses,
+  updateGraphWithAiderNode,
 }: {
   runtime: IRunTime;
   testName: string;
@@ -27,6 +29,20 @@ export async function launchAiderPure({
   writeConfigForExtension: () => void;
   getContainerInfo: (serviceName: string) => Promise<any>;
   aiderProcesses: Map<string, any>;
+  updateGraphWithAiderNode: (params: {
+    runtime: IRunTime;
+    testName: string;
+    configKey: string;
+    aiderServiceName: string;
+    containerId?: string;
+  }) => Promise<void>;
+  // This callback should update the graph with aider nodes and edges.
+  // Use createAiderNodeGraphOperationsPure to generate the operations.
+  // Example implementation using GraphManager:
+  //   updateGraphWithAiderNode: async (params) => {
+  //     const graphManager = getGraphManager(); // Get your GraphManager instance
+  //     await graphManager.updateGraphWithAiderNode(params);
+  //   }
 }): Promise<void> {
   // Check if builder failed for this config
   if (failedBuilderConfigs.has(configKey)) {
@@ -71,6 +87,17 @@ export async function launchAiderPure({
           lastActivity: new Date().toISOString()
         });
 
+        // Update graph with aider node
+        if (updateGraphWithAiderNode) {
+          await updateGraphWithAiderNode({
+            runtime,
+            testName,
+            configKey,
+            aiderServiceName,
+            containerId: containerInfo?.Id
+          });
+        }
+
         // Start logging for the aider service
         await startServiceLogging(aiderServiceName, runtime, configKey, testName);
       })()
@@ -84,4 +111,86 @@ export async function launchAiderPure({
   } catch (error: any) {
     consoleError(`[Server_Docker] Failed to start aider service ${aiderServiceName}:`, error);
   }
+}
+
+// Pure function to create graph operations for aider nodes
+export function createAiderNodeGraphOperationsPure(params: {
+  runtime: IRunTime;
+  testName: string;
+  configKey: string;
+  aiderServiceName: string;
+  containerId?: string;
+  timestamp?: string;
+}): GraphOperation[] {
+  const operations: GraphOperation[] = [];
+  const timestamp = params.timestamp || new Date().toISOString();
+
+  // Create aider node ID
+  const aiderNodeId = `aider:${params.aiderServiceName}`;
+  
+  // Create aider node
+  operations.push({
+    type: 'addNode',
+    data: {
+      id: aiderNodeId,
+      type: 'aider',
+      label: `Aider: ${params.aiderServiceName}`,
+      description: `Aider instance for ${params.testName}`,
+      status: 'done',
+      icon: 'aider',
+      metadata: {
+        runtime: params.runtime,
+        testName: params.testName,
+        configKey: params.configKey,
+        aiderServiceName: params.aiderServiceName,
+        containerId: params.containerId,
+        timestamp
+      }
+    },
+    timestamp
+  });
+
+  // Create entrypoint node ID (derived from testName) - must match createEntrypointNodeOperationsPure logic
+  let entrypointId: string;
+  if (params.testName.includes('.') || params.testName.includes('/') || params.testName.includes('\\')) {
+    entrypointId = `entrypoint:${params.testName}`;
+  } else {
+    entrypointId = `entrypoint:${params.configKey}:${params.testName}`;
+  }
+  
+  // Create edge from entrypoint to aider node
+  operations.push({
+    type: 'addEdge',
+    data: {
+      source: entrypointId,
+      target: aiderNodeId,
+      attributes: {
+        type: 'hasAider',
+        weight: 1,
+        timestamp
+      }
+    },
+    timestamp
+  });
+
+  // If we have a containerId, create edge from aider node to docker process
+  if (params.containerId) {
+    const dockerProcessId = `docker_process:${params.containerId}`;
+    
+    operations.push({
+      type: 'addEdge',
+      data: {
+        source: aiderNodeId,
+        target: dockerProcessId,
+        attributes: {
+          type: 'hasProcess',
+          weight: 1,
+          timestamp
+        }
+      },
+      timestamp
+    });
+  }
+
+  return operations;
 }

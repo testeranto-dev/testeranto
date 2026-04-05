@@ -32,6 +32,7 @@ export type GraphNodeType =
   | 'check_process' // Check process
   | 'aider_process' // Aider process
   | 'builder_process' // Builder process
+  | 'aider'        // Aider instance node
 
 // Array of valid GraphNodeType values for validation
 export const graphNodeTypeValues: GraphNodeType[] = [
@@ -61,7 +62,8 @@ export const graphNodeTypeValues: GraphNodeType[] = [
   'bdd_process',
   'check_process',
   'aider_process',
-  'builder_process'
+  'builder_process',
+  'aider'
 ];
 
 // Edge types in our graph
@@ -93,6 +95,7 @@ export type GraphEdgeType =
   | 'hasAiderProcess' // Entrypoint has an aider process
   | 'hasBuilderProcess' // Config has a builder process
   | 'processOf'    // Process belongs to entrypoint
+  | 'hasAider'     // Entrypoint has an aider node
 
 // Base node attributes
 export interface GraphNodeAttributes extends Attributes {
