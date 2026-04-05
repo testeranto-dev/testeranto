@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-05T01:52:29.986Z",
+  "timestamp": "2026-04-05T02:47:01.434Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -14,7 +14,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": 1775353830429,
+            "timestamp": 1775357198708,
             "fails": 6,
             "artifacts": [],
             "features": [
@@ -121,85 +121,336 @@
         {
           "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
           "type": "test",
-          "label": "confirm",
-          "description": "Test: confirm",
+          "label": "Calculator.test.node.ts",
+          "description": "Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
           "status": "blocked",
           "priority": "high",
           "icon": "test",
           "metadata": {
-            "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "stepIndex": 0,
-            "stepName": "confirm",
+            "configKey": "nodetests",
             "failed": true,
+            "fails": 6,
+            "artifacts": [],
             "features": [
               "./Readme.md"
             ],
-            "index": 0,
-            "fails": 2,
-            "error": {
-              "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
-              "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)",
-              "name": "AssertionError"
-            },
-            "stepType": "BaseConfirm",
+            "tests": 6,
+            "runTimeTests": 6,
             "testJob": {
-              "key": "confirm",
-              "error": [
-                {
+              "name": "CombinedResults"
+            },
+            "timestamp": 1775357198708,
+            "individualResults": [
+              {
+                "index": 0,
+                "failed": true,
+                "fails": 2,
+                "features": [
+                  "./Readme.md"
+                ],
+                "error": {
                   "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
-                  "name": "AssertionError",
-                  "ok": false,
-                  "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)"
+                  "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)",
+                  "name": "AssertionError"
                 },
-                "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)"
-              ],
-              "failed": true,
-              "features": [
-                "./Readme.md"
-              ],
-              "artifacts": [],
-              "status": true,
-              "fails": 2,
-              "testCases": [
-                {
-                  "input": [
-                    1,
-                    1
+                "stepName": "confirm",
+                "stepType": "BaseConfirm",
+                "testJob": {
+                  "key": "confirm",
+                  "error": [
+                    {
+                      "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
+                      "name": "AssertionError",
+                      "ok": false,
+                      "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)"
+                    },
+                    "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)"
                   ],
-                  "test": "beEqualTo: 2222"
-                },
-                {
-                  "input": [
-                    2,
-                    3
+                  "failed": true,
+                  "features": [
+                    "./Readme.md"
                   ],
-                  "test": "beGreaterThan: 4"
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 2,
+                  "testCases": [
+                    {
+                      "input": [
+                        1,
+                        1
+                      ],
+                      "test": "beEqualTo: 2222"
+                    },
+                    {
+                      "input": [
+                        2,
+                        3
+                      ],
+                      "test": "beGreaterThan: 4"
+                    }
+                  ]
                 }
-              ]
+              },
+              {
+                "index": 1,
+                "failed": true,
+                "fails": 1,
+                "features": [
+                  "./Readme.md"
+                ],
+                "error": {
+                  "message": "Describe.another simple calculator is not implemented",
+                  "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1475:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+                  "name": "Error"
+                },
+                "stepName": "step_1",
+                "stepType": "BaseDescribe",
+                "testJob": {
+                  "key": "step_1",
+                  "its": [
+                    {
+                      "name": "can save 1 memory: ",
+                      "error": null,
+                      "artifacts": []
+                    },
+                    {
+                      "name": "can save 2 memories: ",
+                      "error": null,
+                      "artifacts": []
+                    }
+                  ],
+                  "error": [
+                    "Describe.another simple calculator is not implemented",
+                    "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1475:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+                  ],
+                  "failed": true,
+                  "features": [
+                    "./Readme.md"
+                  ],
+                  "artifacts": [],
+                  "status": false,
+                  "fails": 1
+                }
+              },
+              {
+                "index": 2,
+                "failed": false,
+                "fails": 0,
+                "features": [
+                  "./Readme.md"
+                ],
+                "error": null,
+                "stepName": "step_2",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_2",
+                  "error": null,
+                  "failed": false,
+                  "features": [
+                    "./Readme.md"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 0,
+                  "whens": [
+                    {
+                      "name": "press: 5",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "press: +",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "press: 3",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "enter: ",
+                      "status": true,
+                      "error": null
+                    }
+                  ],
+                  "thens": [
+                    {
+                      "name": "result: 8",
+                      "status": true,
+                      "error": null
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 3,
+                "failed": true,
+                "fails": 1,
+                "features": [
+                  "./Readme.md"
+                ],
+                "error": {
+                  "message": "expected [Function] to equal 3",
+                  "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+                  "name": "AssertionError"
+                },
+                "stepName": "confirm",
+                "stepType": "BaseConfirm",
+                "testJob": {
+                  "key": "confirm",
+                  "error": [
+                    {
+                      "message": "expected [Function] to equal 3",
+                      "expected": 3,
+                      "showDiff": true,
+                      "operator": "strictEqual",
+                      "name": "AssertionError",
+                      "ok": false,
+                      "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+                    },
+                    "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+                  ],
+                  "failed": true,
+                  "features": [
+                    "./Readme.md"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 1,
+                  "testCases": [
+                    {
+                      "input": [
+                        3,
+                        3
+                      ],
+                      "test": "beEqualTo: 3"
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 4,
+                "failed": true,
+                "fails": 1,
+                "features": [
+                  "./Readme.md"
+                ],
+                "error": {
+                  "message": "expected [Function] to equal 32",
+                  "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+                  "name": "AssertionError"
+                },
+                "stepName": "confirm",
+                "stepType": "BaseConfirm",
+                "testJob": {
+                  "key": "confirm",
+                  "error": [
+                    {
+                      "message": "expected [Function] to equal 32",
+                      "expected": 32,
+                      "showDiff": true,
+                      "operator": "strictEqual",
+                      "name": "AssertionError",
+                      "ok": false,
+                      "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+                    },
+                    "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+                  ],
+                  "failed": true,
+                  "features": [
+                    "./Readme.md"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 1,
+                  "testCases": [
+                    {
+                      "input": [
+                        3,
+                        32
+                      ],
+                      "test": "beEqualTo: 32"
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 5,
+                "failed": true,
+                "fails": 1,
+                "features": [
+                  "./Readme.md"
+                ],
+                "error": {
+                  "message": "expected [Function] to equal 332",
+                  "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+                  "name": "AssertionError"
+                },
+                "stepName": "confirm",
+                "stepType": "BaseConfirm",
+                "testJob": {
+                  "key": "confirm",
+                  "error": [
+                    {
+                      "message": "expected [Function] to equal 332",
+                      "expected": 332,
+                      "showDiff": true,
+                      "operator": "strictEqual",
+                      "name": "AssertionError",
+                      "ok": false,
+                      "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+                    },
+                    "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+                  ],
+                  "failed": true,
+                  "features": [
+                    "./Readme.md"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 1,
+                  "testCases": [
+                    {
+                      "input": [
+                        3,
+                        332
+                      ],
+                      "test": "beEqualTo: 332"
+                    }
+                  ]
+                }
+              }
+            ],
+            "summary": {
+              "totalTests": 6,
+              "passed": 0,
+              "failed": 6,
+              "successRate": "0%"
             },
             "result": -1
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0:0",
-          "type": "given",
-          "label": "Given: confirm",
-          "description": "Given condition for test step 0",
+          "id": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0:0",
+          "type": "test_result",
+          "label": "Step: confirm",
+          "description": "Test step 0",
           "status": "blocked",
           "priority": "high",
           "icon": "circle",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
             "stepIndex": 0,
-            "givenKey": "confirm",
+            "verbKey": "confirm",
             "failed": true,
             "features": [
               "./Readme.md"
             ],
             "status": true,
             "fails": 2,
-            "pattern": "bdd"
+            "pattern": "generic"
           }
         },
         {
@@ -270,24 +521,58 @@
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
-          "type": "given",
-          "label": "Given: step_1",
-          "description": "Given condition for test step 0",
+          "id": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "type": "describe",
+          "label": "Describe: step_1",
+          "description": "Describe context for test step 0",
           "status": "blocked",
           "priority": "high",
-          "icon": "circle",
+          "icon": "document",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
             "stepIndex": 0,
-            "givenKey": "step_1",
+            "describeKey": "step_1",
             "failed": true,
             "features": [
               "./Readme.md"
             ],
             "status": false,
             "fails": 1,
-            "pattern": "bdd"
+            "pattern": "aaa"
+          }
+        },
+        {
+          "id": "it:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0:0",
+          "type": "it",
+          "label": "It: can save 1 memory: ",
+          "description": "It test for step 0, test 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "test",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+            "stepIndex": 0,
+            "itIndex": 0,
+            "name": "can save 1 memory: ",
+            "error": null,
+            "pattern": "aaa"
+          }
+        },
+        {
+          "id": "it:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0:1",
+          "type": "it",
+          "label": "It: can save 2 memories: ",
+          "description": "It test for step 0, test 1",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "test",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+            "stepIndex": 0,
+            "itIndex": 1,
+            "name": "can save 2 memories: ",
+            "error": null,
+            "pattern": "aaa"
           }
         },
         {
@@ -525,24 +810,24 @@
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3:0",
-          "type": "given",
-          "label": "Given: confirm",
-          "description": "Given condition for test step 0",
+          "id": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3:0",
+          "type": "test_result",
+          "label": "Step: confirm",
+          "description": "Test step 0",
           "status": "blocked",
           "priority": "high",
           "icon": "circle",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
             "stepIndex": 0,
-            "givenKey": "confirm",
+            "verbKey": "confirm",
             "failed": true,
             "features": [
               "./Readme.md"
             ],
             "status": true,
             "fails": 1,
-            "pattern": "bdd"
+            "pattern": "generic"
           }
         },
         {
@@ -605,24 +890,24 @@
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4:0",
-          "type": "given",
-          "label": "Given: confirm",
-          "description": "Given condition for test step 0",
+          "id": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4:0",
+          "type": "test_result",
+          "label": "Step: confirm",
+          "description": "Test step 0",
           "status": "blocked",
           "priority": "high",
           "icon": "circle",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
             "stepIndex": 0,
-            "givenKey": "confirm",
+            "verbKey": "confirm",
             "failed": true,
             "features": [
               "./Readme.md"
             ],
             "status": true,
             "fails": 1,
-            "pattern": "bdd"
+            "pattern": "generic"
           }
         },
         {
@@ -685,24 +970,24 @@
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5:0",
-          "type": "given",
-          "label": "Given: confirm",
-          "description": "Given condition for test step 0",
+          "id": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5:0",
+          "type": "test_result",
+          "label": "Step: confirm",
+          "description": "Test step 0",
           "status": "blocked",
           "priority": "high",
           "icon": "circle",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
             "stepIndex": 0,
-            "givenKey": "confirm",
+            "verbKey": "confirm",
             "failed": true,
             "features": [
               "./Readme.md"
             ],
             "status": true,
             "fails": 1,
-            "pattern": "bdd"
+            "pattern": "generic"
           }
         },
         {
@@ -715,7 +1000,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": 1775353830419,
+            "timestamp": 1775357198697,
             "fails": 4,
             "artifacts": [],
             "features": [],
@@ -749,69 +1034,236 @@
         {
           "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
           "type": "test",
-          "label": "confirm",
-          "description": "Test: confirm",
-          "status": "done",
-          "priority": "low",
+          "label": "Circle.test.ts",
+          "description": "Test: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "status": "blocked",
+          "priority": "high",
           "icon": "test",
           "metadata": {
-            "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "stepIndex": 0,
-            "stepName": "confirm",
-            "failed": false,
+            "configKey": "nodetests",
+            "failed": true,
+            "fails": 4,
+            "artifacts": [],
             "features": [],
-            "index": 0,
-            "fails": 0,
-            "error": null,
-            "stepType": "BaseConfirm",
+            "tests": 5,
+            "runTimeTests": 5,
             "testJob": {
-              "key": "confirm",
-              "error": null,
-              "failed": false,
-              "features": [],
-              "artifacts": [],
-              "status": true,
-              "fails": 0,
-              "testCases": [
-                {
-                  "input": [],
-                  "test": "beEqualTo: 0"
-                },
-                {
-                  "input": 1,
-                  "test": "beCloseTo: 6.283185307179586"
-                },
-                {
-                  "input": 2,
-                  "test": "beCloseTo: 12.566370614359172"
-                },
-                {
-                  "input": 5,
-                  "test": "beCloseTo: 31.41592653589793"
-                }
-              ]
+              "name": "CombinedResults"
             },
-            "result": 0
+            "timestamp": 1775357198697,
+            "individualResults": [
+              {
+                "index": 0,
+                "failed": false,
+                "fails": 0,
+                "features": [],
+                "error": null,
+                "stepName": "confirm",
+                "stepType": "BaseConfirm",
+                "testJob": {
+                  "key": "confirm",
+                  "error": null,
+                  "failed": false,
+                  "features": [],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 0,
+                  "testCases": [
+                    {
+                      "input": [],
+                      "test": "beEqualTo: 0"
+                    },
+                    {
+                      "input": 1,
+                      "test": "beCloseTo: 6.283185307179586"
+                    },
+                    {
+                      "input": 2,
+                      "test": "beCloseTo: 12.566370614359172"
+                    },
+                    {
+                      "input": 5,
+                      "test": "beCloseTo: 31.41592653589793"
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 1,
+                "failed": false,
+                "fails": 0,
+                "features": [],
+                "error": null,
+                "stepName": "confirm",
+                "stepType": "BaseConfirm",
+                "testJob": {
+                  "key": "confirm",
+                  "error": null,
+                  "failed": false,
+                  "features": [],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 0,
+                  "testCases": [
+                    {
+                      "input": [],
+                      "test": "beEqualTo: 0"
+                    },
+                    {
+                      "input": 1,
+                      "test": "beCloseTo: 3.141592653589793"
+                    },
+                    {
+                      "input": 2,
+                      "test": "beCloseTo: 12.566370614359172"
+                    },
+                    {
+                      "input": 5,
+                      "test": "beCloseTo: 78.53981633974483"
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 2,
+                "failed": true,
+                "fails": 1,
+                "features": [],
+                "error": {
+                  "message": "Describe implementation for \"a circle with radius\" is not a valid function",
+                  "stack": "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:989:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+                  "name": "Error"
+                },
+                "stepName": "step_2",
+                "stepType": "BaseDescribe",
+                "testJob": {
+                  "key": "step_2",
+                  "its": [
+                    {
+                      "name": "has correct circumference: ",
+                      "error": null,
+                      "artifacts": []
+                    },
+                    {
+                      "name": "has correct area: ",
+                      "error": null,
+                      "artifacts": []
+                    }
+                  ],
+                  "error": [
+                    "Describe implementation for \"a circle with radius\" is not a valid function",
+                    "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:989:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+                  ],
+                  "failed": true,
+                  "features": [],
+                  "artifacts": [],
+                  "status": false,
+                  "fails": 1
+                }
+              },
+              {
+                "index": 3,
+                "failed": true,
+                "fails": 2,
+                "features": [],
+                "error": {
+                  "message": "expected NaN to be close to 62.83185307179586 +/- 0.0001",
+                  "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:900:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1730:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:28)",
+                  "name": "AssertionError"
+                },
+                "stepName": "step_3",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_3",
+                  "error": [
+                    {
+                      "message": "expected NaN to be close to 62.83185307179586 +/- 0.0001",
+                      "actual": null,
+                      "showDiff": false,
+                      "operator": "strictEqual",
+                      "name": "AssertionError",
+                      "ok": false,
+                      "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:900:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1730:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:28)"
+                    },
+                    "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:900:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1730:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:28)"
+                  ],
+                  "failed": true,
+                  "features": [],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 2,
+                  "whens": [
+                    {
+                      "name": "doubleRadius: ",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "halveRadius: ",
+                      "status": true,
+                      "error": null
+                    }
+                  ],
+                  "thens": [
+                    {
+                      "name": "radiusIs: 10",
+                      "status": false,
+                      "error": "AssertionError: expected NaN to be close to 10 +/- 0.0001"
+                    },
+                    {
+                      "name": "circumferenceIs: 62.83185307179586",
+                      "status": false,
+                      "error": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001"
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 4,
+                "failed": true,
+                "fails": 1,
+                "features": [],
+                "error": {
+                  "message": "Step type Function has no runnable method",
+                  "stack": "Error: Step type Function has no runnable method\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+                  "name": "Error"
+                },
+                "stepName": "Step_4",
+                "stepType": "Function",
+                "testJob": {
+                  "name": "Step_4",
+                  "type": "Function",
+                  "key": "step_4"
+                }
+              }
+            ],
+            "summary": {
+              "totalTests": 5,
+              "passed": 1,
+              "failed": 4,
+              "successRate": "20.00%"
+            },
+            "result": -1
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0:0",
-          "type": "given",
-          "label": "Given: confirm",
-          "description": "Given condition for test step 0",
+          "id": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0:0",
+          "type": "test_result",
+          "label": "Step: confirm",
+          "description": "Test step 0",
           "status": "done",
           "priority": "low",
           "icon": "circle",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
             "stepIndex": 0,
-            "givenKey": "confirm",
+            "verbKey": "confirm",
             "failed": false,
             "features": [],
             "status": true,
             "fails": 0,
-            "pattern": "bdd"
+            "pattern": "generic"
           }
         },
         {
@@ -864,22 +1316,22 @@
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1:0",
-          "type": "given",
-          "label": "Given: confirm",
-          "description": "Given condition for test step 0",
+          "id": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1:0",
+          "type": "test_result",
+          "label": "Step: confirm",
+          "description": "Test step 0",
           "status": "done",
           "priority": "low",
           "icon": "circle",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
             "stepIndex": 0,
-            "givenKey": "confirm",
+            "verbKey": "confirm",
             "failed": false,
             "features": [],
             "status": true,
             "fails": 0,
-            "pattern": "bdd"
+            "pattern": "generic"
           }
         },
         {
@@ -933,22 +1385,56 @@
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
-          "type": "given",
-          "label": "Given: step_2",
-          "description": "Given condition for test step 0",
+          "id": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "type": "describe",
+          "label": "Describe: step_2",
+          "description": "Describe context for test step 0",
           "status": "blocked",
           "priority": "high",
-          "icon": "circle",
+          "icon": "document",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
             "stepIndex": 0,
-            "givenKey": "step_2",
+            "describeKey": "step_2",
             "failed": true,
             "features": [],
             "status": false,
             "fails": 1,
-            "pattern": "bdd"
+            "pattern": "aaa"
+          }
+        },
+        {
+          "id": "it:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0:0",
+          "type": "it",
+          "label": "It: has correct circumference: ",
+          "description": "It test for step 0, test 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "test",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
+            "stepIndex": 0,
+            "itIndex": 0,
+            "name": "has correct circumference: ",
+            "error": null,
+            "pattern": "aaa"
+          }
+        },
+        {
+          "id": "it:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0:1",
+          "type": "it",
+          "label": "It: has correct area: ",
+          "description": "It test for step 0, test 1",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "test",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
+            "stepIndex": 0,
+            "itIndex": 1,
+            "name": "has correct area: ",
+            "error": null,
+            "pattern": "aaa"
           }
         },
         {
@@ -1144,19 +1630,19 @@
           }
         },
         {
-          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4:0",
-          "type": "given",
-          "label": "Given: step_4",
-          "description": "Given condition for test step 0",
+          "id": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4:0",
+          "type": "test_result",
+          "label": "Step: step_4",
+          "description": "Test step 0",
           "status": "blocked",
           "priority": "high",
           "icon": "circle",
           "metadata": {
             "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
             "stepIndex": 0,
-            "givenKey": "step_4",
+            "verbKey": "step_4",
             "features": [],
-            "pattern": "bdd"
+            "pattern": "generic"
           }
         },
         {
@@ -1169,7 +1655,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": 1775353830575,
+            "timestamp": 1775357198752,
             "fails": 0,
             "artifacts": [],
             "features": [
@@ -1208,58 +1694,335 @@
         {
           "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
           "type": "test",
-          "label": "step_0",
-          "description": "Test: step_0",
+          "label": "Rectangle.test.ts",
+          "description": "Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
           "status": "done",
           "priority": "low",
           "icon": "test",
           "metadata": {
-            "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "stepIndex": 0,
-            "stepName": "step_0",
+            "configKey": "nodetests",
             "failed": false,
-            "features": [
-              "https://api.github.com/repos/adamwong246/testeranto/issues/888"
-            ],
-            "index": 0,
             "fails": 0,
-            "error": null,
-            "stepType": "Unknown",
+            "artifacts": [],
+            "features": [
+              "https://api.github.com/repos/adamwong246/testeranto/issues/888",
+              "src/lib/tiposkripto/tests/Rectangle/README.md",
+              "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+              "src/lib/tiposkripto/README.md"
+            ],
+            "tests": 7,
+            "runTimeTests": 7,
             "testJob": {
-              "key": "step_0",
-              "error": null,
-              "failed": false,
-              "features": [
-                "https://api.github.com/repos/adamwong246/testeranto/issues/888"
-              ],
-              "artifacts": [],
-              "status": true,
-              "fails": 0,
-              "whens": [
-                {
-                  "name": "setWidth: 4",
+              "name": "CombinedResults"
+            },
+            "timestamp": 1775357198752,
+            "individualResults": [
+              {
+                "index": 0,
+                "failed": false,
+                "fails": 0,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/888"
+                ],
+                "error": null,
+                "stepName": "step_0",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_0",
+                  "error": null,
+                  "failed": false,
+                  "features": [
+                    "https://api.github.com/repos/adamwong246/testeranto/issues/888"
+                  ],
+                  "artifacts": [],
                   "status": true,
-                  "error": null
-                },
-                {
-                  "name": "setHeight: 19",
-                  "status": true,
-                  "error": null
+                  "fails": 0,
+                  "whens": [
+                    {
+                      "name": "setWidth: 4",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "setHeight: 19",
+                      "status": true,
+                      "error": null
+                    }
+                  ],
+                  "thens": [
+                    {
+                      "name": "getWidth: 4",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "getHeight: 19",
+                      "status": true,
+                      "error": null
+                    }
+                  ]
                 }
-              ],
-              "thens": [
-                {
-                  "name": "getWidth: 4",
+              },
+              {
+                "index": 1,
+                "failed": false,
+                "fails": 0,
+                "features": [
+                  "src/lib/tiposkripto/tests/Rectangle/README.md"
+                ],
+                "error": null,
+                "stepName": "step_1",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_1",
+                  "error": null,
+                  "failed": false,
+                  "features": [
+                    "src/lib/tiposkripto/tests/Rectangle/README.md"
+                  ],
+                  "artifacts": [],
                   "status": true,
-                  "error": null
-                },
-                {
-                  "name": "getHeight: 19",
-                  "status": true,
-                  "error": null
+                  "fails": 0,
+                  "whens": [
+                    {
+                      "name": "setWidth: 4",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "setHeight: 5",
+                      "status": true,
+                      "error": null
+                    }
+                  ],
+                  "thens": [
+                    {
+                      "name": "getWidth: 4",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "getHeight: 5",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "area: 20",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "AreaPlusCircumference: 38",
+                      "status": true,
+                      "error": null
+                    }
+                  ]
                 }
-              ]
+              },
+              {
+                "index": 2,
+                "failed": false,
+                "fails": 0,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "error": null,
+                "stepName": "step_2",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_2",
+                  "error": null,
+                  "failed": false,
+                  "features": [
+                    "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                    "src/lib/tiposkripto/README.md"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 0,
+                  "whens": [
+                    {
+                      "name": "setHeight: 4",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "setWidth: 33",
+                      "status": true,
+                      "error": null
+                    }
+                  ],
+                  "thens": [
+                    {
+                      "name": "area: 132",
+                      "status": true,
+                      "error": null
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 3,
+                "failed": false,
+                "fails": 0,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "error": null,
+                "stepName": "step_3",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_3",
+                  "error": null,
+                  "failed": false,
+                  "features": [
+                    "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                    "src/lib/tiposkripto/README.md"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 0,
+                  "whens": [],
+                  "thens": [
+                    {
+                      "name": "getWidth: 2",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "getHeight: 2",
+                      "status": true,
+                      "error": null
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 4,
+                "failed": false,
+                "fails": 0,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "error": null,
+                "stepName": "step_4",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_4",
+                  "error": null,
+                  "failed": false,
+                  "features": [
+                    "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 0,
+                  "whens": [
+                    {
+                      "name": "setHeight: 5",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "setWidth: 5",
+                      "status": true,
+                      "error": null
+                    }
+                  ],
+                  "thens": [
+                    {
+                      "name": "area: 25",
+                      "status": true,
+                      "error": null
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 5,
+                "failed": false,
+                "fails": 0,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "error": null,
+                "stepName": "step_5",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_5",
+                  "error": null,
+                  "failed": false,
+                  "features": [
+                    "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 0,
+                  "whens": [
+                    {
+                      "name": "setHeight: 6",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "setWidth: 6",
+                      "status": true,
+                      "error": null
+                    }
+                  ],
+                  "thens": [
+                    {
+                      "name": "area: 36",
+                      "status": true,
+                      "error": null
+                    }
+                  ]
+                }
+              },
+              {
+                "index": 6,
+                "failed": false,
+                "fails": 0,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "error": null,
+                "stepName": "step_6",
+                "stepType": "Unknown",
+                "testJob": {
+                  "key": "step_6",
+                  "error": null,
+                  "failed": false,
+                  "features": [
+                    "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                  ],
+                  "artifacts": [],
+                  "status": true,
+                  "fails": 0,
+                  "whens": [],
+                  "thens": [
+                    {
+                      "name": "getWidth: 2",
+                      "status": true,
+                      "error": null
+                    },
+                    {
+                      "name": "getHeight: 2",
+                      "status": true,
+                      "error": null
+                    }
+                  ]
+                }
+              }
+            ],
+            "summary": {
+              "totalTests": 7,
+              "passed": 7,
+              "failed": 0,
+              "successRate": "100.00%"
             },
             "result": 0
           }
@@ -1659,9 +2422,9 @@
           "status": "todo",
           "icon": "document",
           "metadata": {
-            "url": "src/lib/tiposkripto/tests/Rectangle/README.md",
-            "contentPreview": "# Testing a single class with `TesterantoClassic`\n\nIf you want to test a single javascript class, you can use `TesterantoClassic` class to skip some boilerplate. \n\n## a plain old javascript class\n\n```...",
-            "localPath": "/Users/adam/Code/testeranto/src/lib/tiposkripto/tests/Rectangle/README.md"
+            "url": "src/lib/tiposkripto/README.md",
+            "contentPreview": "# tiposkripto\n\n## the typescript implementation of testeranto\n\n## Supported Patterns\n\n1. **BDD (Behavior Driven Development)**: Given, When, Then (3 verbs) - fully implemented and production-ready\n2. ...",
+            "localPath": "/Users/adam/Code/testeranto/src/lib/tiposkripto/README.md"
           }
         },
         {
@@ -2340,9 +3103,9 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0:0",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasResult",
             "weight": 1
           }
         },
@@ -2372,9 +3135,25 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "target": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasDescribe",
+            "weight": 1
+          }
+        },
+        {
+          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "target": "it:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0:0",
+          "attributes": {
+            "type": "hasIt",
+            "weight": 1
+          }
+        },
+        {
+          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "target": "it:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0:1",
+          "attributes": {
+            "type": "hasIt",
             "weight": 1
           }
         },
@@ -2460,9 +3239,9 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3:0",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasResult",
             "weight": 1
           }
         },
@@ -2484,9 +3263,9 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4:0",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasResult",
             "weight": 1
           }
         },
@@ -2508,9 +3287,9 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5:0",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasResult",
             "weight": 1
           }
         },
@@ -2548,9 +3327,9 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0:0",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasResult",
             "weight": 1
           }
         },
@@ -2564,9 +3343,9 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1:0",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasResult",
             "weight": 1
           }
         },
@@ -2580,9 +3359,25 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "target": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasDescribe",
+            "weight": 1
+          }
+        },
+        {
+          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "target": "it:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0:0",
+          "attributes": {
+            "type": "hasIt",
+            "weight": 1
+          }
+        },
+        {
+          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "target": "it:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0:1",
+          "attributes": {
+            "type": "hasIt",
             "weight": 1
           }
         },
@@ -2644,9 +3439,9 @@
         },
         {
           "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4:0",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4:0",
           "attributes": {
-            "type": "hasGiven",
+            "type": "hasResult",
             "weight": 1
           }
         },
@@ -3125,7 +3920,7 @@
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-05T01:52:29.986Z"
+        "timestamp": "2026-04-05T02:47:01.434Z"
       }
     },
     "vizConfig": {

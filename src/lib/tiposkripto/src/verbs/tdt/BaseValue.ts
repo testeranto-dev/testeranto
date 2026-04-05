@@ -169,27 +169,30 @@ export class BaseValue<I extends TestTypeParams_any> {
 
   toObj() {
     // Process table rows to include actual values
-    const processedRows = (this.tableRows || []).map(row => {
+    const processedRows = (this.tableRows || []).map((row, index) => {
       if (Array.isArray(row)) {
-        return row.map(item => {
-          if (item && typeof item === 'object') {
-            // If it has a toObj method, call it
-            if (item.toObj) {
-              return item.toObj();
-            }
-            // Otherwise, return key properties
-            const result: any = {};
-            for (const [key, value] of Object.entries(item)) {
-              if (key !== '_parent' && key !== 'testResourceConfiguration') {
-                result[key] = value;
+        return {
+          index,
+          values: row.map(item => {
+            if (item && typeof item === 'object') {
+              // If it has a toObj method, call it
+              if (item.toObj) {
+                return item.toObj();
               }
+              // Otherwise, return key properties
+              const result: any = {};
+              for (const [key, value] of Object.entries(item)) {
+                if (key !== '_parent' && key !== 'testResourceConfiguration') {
+                  result[key] = value;
+                }
+              }
+              return result;
             }
-            return result;
-          }
-          return item;
-        });
+            return item;
+          })
+        };
       }
-      return row;
+      return { index, values: [row] };
     });
 
     return {
@@ -209,3 +212,6 @@ export type IValues<I extends TestTypeParams_any> = Record<
   string,
   BaseValue<I>
 >;
+
+// Export the BaseValue class as named export
+export { BaseValue };

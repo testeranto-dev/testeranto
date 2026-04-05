@@ -4,7 +4,8 @@ import { BaseSuite } from "./verbs/BaseSuite";
 import { BaseGiven } from "./verbs/bdd/BaseGiven";
 import { BaseThen } from "./verbs/bdd/BaseThen";
 import { BaseWhen } from "./verbs/bdd/BaseWhen";
-import { BaseConfirm } from "./verbs/tdt/BaseConfirm";
+// Note: TDT verb classes are defined in ./verbs/tdt/
+// They are not imported here to avoid circular dependencies
 
 
 // export type ISuiteKlasser<I extends Ibdd_in_any, O extends Ibdd_out_any> = (

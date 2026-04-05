@@ -55,8 +55,12 @@ export class BaseShould<I extends TestTypeParams_any> {
       error: this.error ? `${this.error.name}: ${this.error.message}` : null,
       rowIndex: this.rowIndex,
       currentRow: this.currentRow,
+      pattern: 'tdt'
     };
   }
 }
 
 export type IShoulds<I extends TestTypeParams_any> = Record<string, BaseShould<I>>;
+
+// Export the BaseShould class as named export
+export { BaseShould };

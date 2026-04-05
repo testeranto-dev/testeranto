@@ -5,8 +5,8 @@ import type { Node } from "grafeovidajo/core";
 
 export interface VisualizationPanelProps {
   data: any;
-  vizType: "eisenhower" | "gantt" | "kanban" | "tree" | "file-tree";
-  onVizTypeChange: (type: "eisenhower" | "gantt" | "kanban" | "tree" | "file-tree") => void;
+  vizType: "eisenhower" | "gantt" | "kanban" | "tree" | "uncategorized";
+  onVizTypeChange: (type: "eisenhower" | "gantt" | "kanban" | "tree" | "uncategorized") => void;
   onNodeClick: (node: Node) => void;
   onNodeHover: (node: Node | null) => void;
 }
@@ -18,14 +18,14 @@ export const VisualizationPanel: React.FC<VisualizationPanelProps> = ({
   onNodeClick,
   onNodeHover,
 }) => {
-  const stats = getFeatureGraphStats(data.featureGraph);
+  const stats = getFeatureGraphStats(data.unifiedGraph);
 
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
         <h3>Select Visualization Type</h3>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          {["tree", "file-tree", "eisenhower", "gantt", "kanban"].map((type) => (
+          {["tree", "eisenhower", "gantt", "kanban", "uncategorized"].map((type) => (
             <button
               key={type}
               onClick={() => onVizTypeChange(type as any)}

@@ -64,3 +64,6 @@ export abstract class BaseExpected<I extends TestTypeParams_any> {
 }
 
 export type IExpecteds<I extends TestTypeParams_any> = Record<string, BaseExpected<I>>;
+
+// Export the BaseExpected class as named export
+export { BaseExpected };

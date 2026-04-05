@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BaseChart, VizComponentProps } from './BaseChart';
+import { NodeDetailsModal } from './NodeDetailsModal';
 import { VizConfig, GraphData, Node, Edge } from '../core/types';
 import { Palette } from '../../colors';
 
@@ -22,6 +23,8 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
   const [useForceLayout, setUseForceLayout] = useState<boolean>(
     props.config.projection?.layout === 'force' || false
   );
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Create a simple projection for debugging
   const debugConfig: VizConfig = {
@@ -142,6 +145,20 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
     })
   };
 
+  // Handle node click to open modal
+  const handleNodeClick = (node: Node) => {
+    setSelectedNode(node);
+    setIsModalOpen(true);
+    // Also call the original onNodeClick if provided
+    props.onNodeClick?.(node);
+  };
+
+  // Handle modal close
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedNode(null);
+  };
+
   // Render HTML/markup view
   const renderHtmlView = () => {
     const { nodes, edges } = props.data;
@@ -177,7 +194,7 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
                 }}
                 onMouseEnter={() => props.onNodeHover?.(node)}
                 onMouseLeave={() => props.onNodeHover?.(null)}
-                onClick={() => props.onNodeClick?.(node)}
+                onClick={() => handleNodeClick(node)}
               >
                 <div style={{ fontWeight: 'bold', marginBottom: '3px', display: 'flex', alignItems: 'center', gap: '5px' }}>
                   {(node.icon || node.attributes?.icon) && (
@@ -296,7 +313,12 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
   const renderSvgView = () => {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <BaseChart {...props} data={debugData} config={debugConfig} />
+        <BaseChart 
+          {...props} 
+          data={debugData} 
+          config={debugConfig}
+          onNodeClick={handleNodeClick}
+        />
 
         {/* Debug overlay with statistics */}
         <div style={{
@@ -456,6 +478,11 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       {renderViewModeSelector()}
       {renderContent()}
+      <NodeDetailsModal
+        node={selectedNode}
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+      />
     </div>
   );
 };

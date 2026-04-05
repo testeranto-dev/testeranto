@@ -1,5 +1,5 @@
-=== Log started at 2026-04-05T01:52:37.328Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 7d26b9f9e2288865cbdf099503380dd0c4f7e168ce623b1332e8fabbed4bc668 ===
+=== Log started at 2026-04-05T02:47:08.625Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: ece251319b978eb15edaab65ce7683aaf7160364a7cc39db40e75c1210014a3e ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -9,8 +9,8 @@ warning package.json: "dependencies" has dependency "typescript" with range "^5.
 warning testeranto@0.235.9: The engine "vscode" appears to be invalid.
 warning testeranto@0.235.9: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}'
-[NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}
 Describe implementation for "a circle with radius" is not a function, got: object
+[NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}
 [Circle adapter] beforeEach called with subject: [class Circle]
 [Circle adapter] beforeEach created circle: Circle { radius: [class Circle] }
 [Circle adapter] andWhen called with store: Circle { radius: [class Circle] }
@@ -18,22 +18,22 @@ Describe implementation for "a circle with radius" is not a function, got: objec
 [Circle adapter] andWhen called with store: Circle { radius: NaN }
 [Circle adapter] andWhen result: Circle { radius: NaN }
 [Circle adapter] verify called with store: Circle { radius: NaN }
+Error: Step type Function has no runnable method
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
+Error: Step type Function has no runnable method
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
 [Circle adapter] verificationFn: [AsyncFunction (anonymous)]
 [Circle adapter] verify called with store: Circle { radius: NaN }
 [Circle adapter] verificationFn: [AsyncFunction (anonymous)]
 [Circle adapter] afterEach called with store: Circle { radius: NaN }
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
 testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 0.85s.
+Done in 0.67s.
 
-=== Log captured at 2026-04-05T01:52:38.892Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-05T02:47:09.880Z (container status: exited, exit code: 0) ===

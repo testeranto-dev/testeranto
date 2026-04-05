@@ -775,7 +775,7 @@ var TesterantoStakeholderApp = (() => {
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React16 = require_react();
+      var React18 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -815,7 +815,7 @@ var TesterantoStakeholderApp = (() => {
           implementation
         };
       }
-      var ReactSharedInternals = React16.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React18.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if ("font" === as) return "";
         if ("string" === typeof input)
@@ -951,7 +951,7 @@ var TesterantoStakeholderApp = (() => {
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler();
-      var React16 = require_react();
+      var React18 = require_react();
       var ReactDOM2 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
@@ -1142,7 +1142,7 @@ var TesterantoStakeholderApp = (() => {
         return null;
       }
       var isArrayImpl = Array.isArray;
-      var ReactSharedInternals = React16.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React18.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var ReactDOMSharedInternals = ReactDOM2.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var sharedNotPendingObject = {
         pending: false,
@@ -12588,7 +12588,7 @@ var TesterantoStakeholderApp = (() => {
           0 === i && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_1840 = React16.version;
+      var isomorphicReactPackageVersion$jscomp$inline_1840 = React18.version;
       if ("19.2.4" !== isomorphicReactPackageVersion$jscomp$inline_1840)
         throw Error(
           formatProdErrorMessage(
@@ -12762,11 +12762,11 @@ var TesterantoStakeholderApp = (() => {
     default: () => index_default,
     renderApp: () => renderApp
   });
-  var import_react15 = __toESM(require_react(), 1);
+  var import_react17 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/stakeholderApp/VisualizationTabs.tsx
-  var import_react14 = __toESM(require_react(), 1);
+  var import_react16 = __toESM(require_react(), 1);
 
   // node_modules/d3-force/src/center.js
   function center_default(x3, y3) {
@@ -13635,6 +13635,7 @@ var TesterantoStakeholderApp = (() => {
   var import_react4 = __toESM(require_react(), 1);
   var import_react5 = __toESM(require_react(), 1);
   var import_react6 = __toESM(require_react(), 1);
+  var import_react7 = __toESM(require_react(), 1);
 
   // src/stakeholderApp/stateless/featureGraphStats.ts
   function getFeatureGraphStats(featureGraph) {
@@ -13661,7 +13662,7 @@ var TesterantoStakeholderApp = (() => {
   }
 
   // src/stakeholderApp/stateless/renderVisualization.tsx
-  var import_react13 = __toESM(require_react(), 1);
+  var import_react15 = __toESM(require_react(), 1);
 
   // src/grafeovidajo/core/projection.ts
   function projectGraph(graph, config) {
@@ -14029,18 +14030,18 @@ var TesterantoStakeholderApp = (() => {
   }
 
   // src/grafeovidajo/charts/BaseChart.tsx
-  var import_react7 = __toESM(require_react(), 1);
+  var import_react8 = __toESM(require_react(), 1);
   var BaseChart = (props) => {
     const { data, config, width, height, onNodeClick, onNodeHover } = props;
-    const [camera, setCamera] = (0, import_react7.useState)({
+    const [camera, setCamera] = (0, import_react8.useState)({
       x: 0,
       y: 0,
       scale: 1
     });
-    const [isDragging, setIsDragging] = (0, import_react7.useState)(false);
-    const [dragStart, setDragStart] = (0, import_react7.useState)({ x: 0, y: 0 });
-    const [spacePressed, setSpacePressed] = (0, import_react7.useState)(false);
-    const svgRef = (0, import_react7.useRef)(null);
+    const [isDragging, setIsDragging] = (0, import_react8.useState)(false);
+    const [dragStart, setDragStart] = (0, import_react8.useState)({ x: 0, y: 0 });
+    const [spacePressed, setSpacePressed] = (0, import_react8.useState)(false);
+    const svgRef = (0, import_react8.useRef)(null);
     const projectedGraph = projectGraph(data, config.projection);
     const nodes = projectedGraph.nodes;
     let laidOutNodes = [...nodes];
@@ -14096,7 +14097,7 @@ var TesterantoStakeholderApp = (() => {
       nodes: laidOutNodes
     };
     const styledGraph = applyStyles(laidOutGraph, config.style);
-    const bounds = (0, import_react7.useMemo)(() => {
+    const bounds = (0, import_react8.useMemo)(() => {
       if (styledGraph.nodes.length === 0) {
         return { minX: 0, maxX: width, minY: 0, maxY: height };
       }
@@ -14120,7 +14121,7 @@ var TesterantoStakeholderApp = (() => {
         maxY: maxY + padding
       };
     }, [styledGraph.nodes, width, height]);
-    (0, import_react7.useEffect)(() => {
+    (0, import_react8.useEffect)(() => {
       const handleKeyDown = (e) => {
         if (e.code === "Space") {
           e.preventDefault();
@@ -14192,7 +14193,7 @@ var TesterantoStakeholderApp = (() => {
       const y3 = height / 2 - centerY * scale;
       setCamera({ x: x3, y: y3, scale });
     };
-    (0, import_react7.useEffect)(() => {
+    (0, import_react8.useEffect)(() => {
       resetCamera();
     }, [data, width, height]);
     const toScreenCoords = (x3, y3) => {
@@ -14228,7 +14229,7 @@ var TesterantoStakeholderApp = (() => {
             "check": "\u2705"
           };
           const emoji = iconEmojiMap[icon] || "\u2753";
-          iconElement = /* @__PURE__ */ import_react7.default.createElement(
+          iconElement = /* @__PURE__ */ import_react8.default.createElement(
             "text",
             {
               x: screenCoords.x,
@@ -14245,7 +14246,7 @@ var TesterantoStakeholderApp = (() => {
         let shapeElement;
         switch (node.shape) {
           case "square":
-            shapeElement = /* @__PURE__ */ import_react7.default.createElement(
+            shapeElement = /* @__PURE__ */ import_react8.default.createElement(
               "rect",
               {
                 ...nodeProps,
@@ -14259,7 +14260,7 @@ var TesterantoStakeholderApp = (() => {
             );
             break;
           case "diamond":
-            shapeElement = /* @__PURE__ */ import_react7.default.createElement(
+            shapeElement = /* @__PURE__ */ import_react8.default.createElement(
               "polygon",
               {
                 ...nodeProps,
@@ -14275,7 +14276,7 @@ var TesterantoStakeholderApp = (() => {
             );
             break;
           default:
-            shapeElement = /* @__PURE__ */ import_react7.default.createElement(
+            shapeElement = /* @__PURE__ */ import_react8.default.createElement(
               "circle",
               {
                 ...nodeProps,
@@ -14287,7 +14288,7 @@ var TesterantoStakeholderApp = (() => {
               }
             );
         }
-        return /* @__PURE__ */ import_react7.default.createElement("g", { key: node.id }, shapeElement, iconElement);
+        return /* @__PURE__ */ import_react8.default.createElement("g", { key: node.id }, shapeElement, iconElement);
       });
     };
     const renderEdges = () => {
@@ -14302,7 +14303,7 @@ var TesterantoStakeholderApp = (() => {
         const targetY = targetNode.screenY || targetNode.y * height;
         const sourceScreen = toScreenCoords(sourceX, sourceY);
         const targetScreen = toScreenCoords(targetX, targetY);
-        return /* @__PURE__ */ import_react7.default.createElement(
+        return /* @__PURE__ */ import_react8.default.createElement(
           "line",
           {
             key: `edge-${index2}`,
@@ -14324,7 +14325,7 @@ var TesterantoStakeholderApp = (() => {
         const graphY = node.screenY || node.y * height;
         const screenCoords = toScreenCoords(graphX, graphY);
         const screenSize = node.size * camera.scale;
-        return /* @__PURE__ */ import_react7.default.createElement(
+        return /* @__PURE__ */ import_react8.default.createElement(
           "text",
           {
             key: `label-${node.id}`,
@@ -14340,7 +14341,7 @@ var TesterantoStakeholderApp = (() => {
     };
     const renderSpaceIndicator = () => {
       if (!spacePressed) return null;
-      return /* @__PURE__ */ import_react7.default.createElement("g", null, /* @__PURE__ */ import_react7.default.createElement(
+      return /* @__PURE__ */ import_react8.default.createElement("g", null, /* @__PURE__ */ import_react8.default.createElement(
         "rect",
         {
           x: 10,
@@ -14352,7 +14353,7 @@ var TesterantoStakeholderApp = (() => {
           stroke: Palette.rust,
           strokeWidth: 1
         }
-      ), /* @__PURE__ */ import_react7.default.createElement(
+      ), /* @__PURE__ */ import_react8.default.createElement(
         "text",
         {
           x: 70,
@@ -14366,7 +14367,7 @@ var TesterantoStakeholderApp = (() => {
       ));
     };
     const renderCameraControls = () => {
-      return /* @__PURE__ */ import_react7.default.createElement("g", null, /* @__PURE__ */ import_react7.default.createElement(
+      return /* @__PURE__ */ import_react8.default.createElement("g", null, /* @__PURE__ */ import_react8.default.createElement(
         "rect",
         {
           x: 10,
@@ -14378,7 +14379,7 @@ var TesterantoStakeholderApp = (() => {
           onClick: resetCamera,
           style: { cursor: "pointer" }
         }
-      ), /* @__PURE__ */ import_react7.default.createElement(
+      ), /* @__PURE__ */ import_react8.default.createElement(
         "text",
         {
           x: 60,
@@ -14390,7 +14391,7 @@ var TesterantoStakeholderApp = (() => {
           style: { cursor: "pointer" }
         },
         "Reset View"
-      ), renderSpaceIndicator(), /* @__PURE__ */ import_react7.default.createElement(
+      ), renderSpaceIndicator(), /* @__PURE__ */ import_react8.default.createElement(
         "text",
         {
           x: width - 10,
@@ -14402,7 +14403,7 @@ var TesterantoStakeholderApp = (() => {
         "Scale: ",
         camera.scale.toFixed(2),
         "x"
-      ), /* @__PURE__ */ import_react7.default.createElement(
+      ), /* @__PURE__ */ import_react8.default.createElement(
         "text",
         {
           x: width - 10,
@@ -14412,7 +14413,7 @@ var TesterantoStakeholderApp = (() => {
           fontSize: 11
         },
         "Pan: Space+Click or Middle Click"
-      ), /* @__PURE__ */ import_react7.default.createElement(
+      ), /* @__PURE__ */ import_react8.default.createElement(
         "text",
         {
           x: width - 10,
@@ -14425,7 +14426,7 @@ var TesterantoStakeholderApp = (() => {
       ));
     };
     const cursorStyle = isDragging ? "grabbing" : spacePressed ? "grab" : "default";
-    return /* @__PURE__ */ import_react7.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, /* @__PURE__ */ import_react7.default.createElement(
+    return /* @__PURE__ */ import_react8.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, /* @__PURE__ */ import_react8.default.createElement(
       "svg",
       {
         ref: svgRef,
@@ -14438,7 +14439,7 @@ var TesterantoStakeholderApp = (() => {
         onMouseLeave: handleMouseUp,
         onWheel: handleWheel
       },
-      /* @__PURE__ */ import_react7.default.createElement("defs", null, /* @__PURE__ */ import_react7.default.createElement(
+      /* @__PURE__ */ import_react8.default.createElement("defs", null, /* @__PURE__ */ import_react8.default.createElement(
         "pattern",
         {
           id: "grid",
@@ -14446,7 +14447,7 @@ var TesterantoStakeholderApp = (() => {
           height: 50 * camera.scale,
           patternUnits: "userSpaceOnUse"
         },
-        /* @__PURE__ */ import_react7.default.createElement(
+        /* @__PURE__ */ import_react8.default.createElement(
           "path",
           {
             d: `M ${50 * camera.scale} 0 L 0 0 0 ${50 * camera.scale}`,
@@ -14456,7 +14457,7 @@ var TesterantoStakeholderApp = (() => {
           }
         )
       )),
-      /* @__PURE__ */ import_react7.default.createElement(
+      /* @__PURE__ */ import_react8.default.createElement(
         "rect",
         {
           width: "100%",
@@ -14464,19 +14465,19 @@ var TesterantoStakeholderApp = (() => {
           fill: "url(#grid)"
         }
       ),
-      /* @__PURE__ */ import_react7.default.createElement("g", null, renderEdges(), renderNodes(), renderLabels()),
+      /* @__PURE__ */ import_react8.default.createElement("g", null, renderEdges(), renderNodes(), renderLabels()),
       renderCameraControls()
     ));
   };
 
   // src/grafeovidajo/charts/EisenhowerMatrix.tsx
-  var import_react8 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
   var EisenhowerMatrix = (props) => {
     const { config, width, height } = props;
     const renderQuadrantLines = () => {
       const midX = width / 2;
       const midY = height / 2;
-      return /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, /* @__PURE__ */ import_react8.default.createElement(
+      return /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, /* @__PURE__ */ import_react9.default.createElement(
         "line",
         {
           x1: midX,
@@ -14487,7 +14488,7 @@ var TesterantoStakeholderApp = (() => {
           strokeWidth: 2,
           strokeDasharray: "5,5"
         }
-      ), /* @__PURE__ */ import_react8.default.createElement(
+      ), /* @__PURE__ */ import_react9.default.createElement(
         "line",
         {
           x1: 0,
@@ -14498,13 +14499,13 @@ var TesterantoStakeholderApp = (() => {
           strokeWidth: 2,
           strokeDasharray: "5,5"
         }
-      ), /* @__PURE__ */ import_react8.default.createElement("text", { x: width * 0.25, y: 20, textAnchor: "middle", fontWeight: "bold" }, "Urgent"), /* @__PURE__ */ import_react8.default.createElement("text", { x: width * 0.75, y: 20, textAnchor: "middle", fontWeight: "bold" }, "Not Urgent"), /* @__PURE__ */ import_react8.default.createElement("text", { x: 10, y: height * 0.25, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.25})` }, "Important"), /* @__PURE__ */ import_react8.default.createElement("text", { x: 10, y: height * 0.75, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.75})` }, "Not Important"));
+      ), /* @__PURE__ */ import_react9.default.createElement("text", { x: width * 0.25, y: 20, textAnchor: "middle", fontWeight: "bold" }, "Urgent"), /* @__PURE__ */ import_react9.default.createElement("text", { x: width * 0.75, y: 20, textAnchor: "middle", fontWeight: "bold" }, "Not Urgent"), /* @__PURE__ */ import_react9.default.createElement("text", { x: 10, y: height * 0.25, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.25})` }, "Important"), /* @__PURE__ */ import_react9.default.createElement("text", { x: 10, y: height * 0.75, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.75})` }, "Not Important"));
     };
-    return /* @__PURE__ */ import_react8.default.createElement("svg", { width, height, style: { border: "1px solid #ccc" } }, renderQuadrantLines(), /* @__PURE__ */ import_react8.default.createElement(BaseChart, { ...props }));
+    return /* @__PURE__ */ import_react9.default.createElement("svg", { width, height, style: { border: "1px solid #ccc" } }, renderQuadrantLines(), /* @__PURE__ */ import_react9.default.createElement(BaseChart, { ...props }));
   };
 
   // src/grafeovidajo/charts/GanttChart.tsx
-  var import_react9 = __toESM(require_react(), 1);
+  var import_react10 = __toESM(require_react(), 1);
   var GanttChart = (props) => {
     const { config, width, height } = props;
     const [startTime, endTime] = config.timeRange;
@@ -14515,7 +14516,7 @@ var TesterantoStakeholderApp = (() => {
       return Array.from({ length: segments }).map((_, i) => {
         const x3 = i / segments * width;
         const time = new Date(startTime.getTime() + i / segments * totalDuration);
-        return /* @__PURE__ */ import_react9.default.createElement("g", { key: `timeline-${i}` }, /* @__PURE__ */ import_react9.default.createElement(
+        return /* @__PURE__ */ import_react10.default.createElement("g", { key: `timeline-${i}` }, /* @__PURE__ */ import_react10.default.createElement(
           "line",
           {
             x1: x3,
@@ -14525,7 +14526,7 @@ var TesterantoStakeholderApp = (() => {
             stroke: "#eee",
             strokeWidth: 1
           }
-        ), /* @__PURE__ */ import_react9.default.createElement(
+        ), /* @__PURE__ */ import_react10.default.createElement(
           "text",
           {
             x: x3,
@@ -14539,23 +14540,321 @@ var TesterantoStakeholderApp = (() => {
         ));
       });
     };
-    return /* @__PURE__ */ import_react9.default.createElement("svg", { width, height, style: { border: "1px solid #ccc" } }, renderTimeline(), /* @__PURE__ */ import_react9.default.createElement(BaseChart, { ...props }));
+    return /* @__PURE__ */ import_react10.default.createElement("svg", { width, height, style: { border: "1px solid #ccc" } }, renderTimeline(), /* @__PURE__ */ import_react10.default.createElement(BaseChart, { ...props }));
   };
 
   // src/grafeovidajo/charts/KanbanBoard.tsx
-  var import_react10 = __toESM(require_react(), 1);
+  var import_react12 = __toESM(require_react(), 1);
+
+  // src/grafeovidajo/charts/NodeDetailsModal.tsx
+  var import_react11 = __toESM(require_react(), 1);
+  var NodeDetailsModal = ({ node, isOpen, onClose }) => {
+    if (!isOpen || !node) return null;
+    const handleBackgroundClick = (e) => {
+      if (e.target === e.currentTarget) {
+        onClose();
+      }
+    };
+    const formatAttributes = (attributes2) => {
+      const result = [];
+      for (const [key, value] of Object.entries(attributes2)) {
+        if (key.startsWith("_") || key === "debugLabel" || key === "debugType" || key === "isAttributeNode") {
+          continue;
+        }
+        let displayValue = value;
+        if (value === null || value === void 0) {
+          displayValue = "null";
+        } else if (typeof value === "object") {
+          displayValue = JSON.stringify(value, null, 2);
+        } else if (typeof value === "boolean") {
+          displayValue = value.toString();
+        }
+        result.push({ key, value: displayValue });
+      }
+      return result.sort((a2, b) => a2.key.localeCompare(b.key));
+    };
+    const attributes = node.attributes ? formatAttributes(node.attributes) : [];
+    return /* @__PURE__ */ import_react11.default.createElement(
+      "div",
+      {
+        style: {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1e3
+        },
+        onClick: handleBackgroundClick
+      },
+      /* @__PURE__ */ import_react11.default.createElement(
+        "div",
+        {
+          style: {
+            backgroundColor: "white",
+            borderRadius: "8px",
+            padding: "24px",
+            maxWidth: "600px",
+            maxHeight: "80vh",
+            width: "90%",
+            overflow: "auto",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)"
+          }
+        },
+        /* @__PURE__ */ import_react11.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" } }, /* @__PURE__ */ import_react11.default.createElement("h2", { style: { margin: 0, color: Palette.rust } }, "Node Details"), /* @__PURE__ */ import_react11.default.createElement(
+          "button",
+          {
+            onClick: onClose,
+            style: {
+              background: "none",
+              border: "none",
+              fontSize: "24px",
+              cursor: "pointer",
+              color: "#666",
+              padding: "0",
+              width: "30px",
+              height: "30px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "4px"
+            },
+            onMouseEnter: (e) => e.currentTarget.style.backgroundColor = "#f0f0f0",
+            onMouseLeave: (e) => e.currentTarget.style.backgroundColor = "transparent"
+          },
+          "\xD7"
+        )),
+        /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "20px" } }, /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "ID:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
+          fontFamily: "monospace",
+          backgroundColor: "#f5f5f5",
+          padding: "8px",
+          borderRadius: "4px",
+          marginTop: "4px",
+          wordBreak: "break-all"
+        } }, node.id)), node.attributes?.type && /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "Type:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
+          display: "inline-block",
+          backgroundColor: Palette.rustSubtle,
+          color: Palette.rust,
+          padding: "4px 8px",
+          borderRadius: "4px",
+          marginLeft: "8px",
+          fontSize: "14px",
+          fontWeight: "bold"
+        } }, node.attributes.type)), node.attributes?.label && /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "Label:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
+          padding: "8px",
+          marginTop: "4px",
+          backgroundColor: "#f9f9f9",
+          borderRadius: "4px"
+        } }, node.attributes.label))),
+        attributes.length > 0 && /* @__PURE__ */ import_react11.default.createElement("div", null, /* @__PURE__ */ import_react11.default.createElement("h3", { style: { marginBottom: "12px", color: Palette.charcoal } }, "Attributes"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
+          border: "1px solid #e0e0e0",
+          borderRadius: "6px",
+          overflow: "hidden"
+        } }, attributes.map((attr) => /* @__PURE__ */ import_react11.default.createElement(
+          "div",
+          {
+            key: attr.key,
+            style: {
+              display: "flex",
+              borderBottom: "1px solid #e0e0e0",
+              padding: "12px",
+              backgroundColor: "#fff"
+            }
+          },
+          /* @__PURE__ */ import_react11.default.createElement("div", { style: {
+            flex: "0 0 150px",
+            fontWeight: "bold",
+            color: Palette.rust
+          } }, attr.key),
+          /* @__PURE__ */ import_react11.default.createElement("div", { style: {
+            flex: 1,
+            fontFamily: typeof attr.value === "string" && attr.value.includes("{") ? "monospace" : "inherit",
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-all",
+            maxHeight: "200px",
+            overflow: "auto"
+          } }, attr.value)
+        )))),
+        /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginTop: "20px", display: "flex", justifyContent: "flex-end" } }, /* @__PURE__ */ import_react11.default.createElement(
+          "button",
+          {
+            onClick: onClose,
+            style: {
+              backgroundColor: Palette.rust,
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: "bold"
+            },
+            onMouseEnter: (e) => e.currentTarget.style.backgroundColor = Palette.rustDark,
+            onMouseLeave: (e) => e.currentTarget.style.backgroundColor = Palette.rust
+          },
+          "Close"
+        ))
+      )
+    );
+  };
+
+  // src/grafeovidajo/charts/KanbanBoard.tsx
   var getSafeNodeAttributes = (node) => {
     return node.attributes || {};
   };
   var KanbanBoard = (props) => {
-    const { config, width, height } = props;
+    const { config, height } = props;
+    const width = props.width || "100%";
+    const [selectedNode, setSelectedNode] = (0, import_react12.useState)(null);
+    const [isModalOpen, setIsModalOpen] = (0, import_react12.useState)(false);
+    const [columnWidths, setColumnWidths] = (0, import_react12.useState)([]);
+    const [isResizing, setIsResizing] = (0, import_react12.useState)(false);
+    const [resizeStartX, setResizeStartX] = (0, import_react12.useState)(0);
+    const [resizeStartWidths, setResizeStartWidths] = (0, import_react12.useState)([]);
+    const [resizeColumnIndex, setResizeColumnIndex] = (0, import_react12.useState)(null);
+    const [draggedNode, setDraggedNode] = (0, import_react12.useState)(null);
+    const [dragOverColumn, setDragOverColumn] = (0, import_react12.useState)(null);
+    const containerRef = (0, import_react12.useRef)(null);
+    const featureNodes = props.data.nodes.filter((node) => {
+      if (!node) return false;
+      const isFeatureById = node.id?.startsWith("feature:");
+      const nodeType = node.attributes?.type;
+      const metadataType = node.attributes?.metadata?.type;
+      const hasFeatureAttributes = node.attributes?.featureName || node.attributes?.scenario || node.attributes?.given || node.attributes?.when || node.attributes?.then;
+      const label = node.attributes?.label || "";
+      const description = node.attributes?.description || "";
+      const isFeatureByText = label.toLowerCase().includes("feature") || description.toLowerCase().includes("scenario");
+      const idContainsFeature = node.id?.toLowerCase().includes("feature");
+      return isFeatureById || nodeType === "feature" || metadataType === "feature" || hasFeatureAttributes || isFeatureByText || idContainsFeature;
+    });
+    const featureNodeIds = new Set(featureNodes.map((node) => node.id));
+    const featureEdges = props.data.edges?.filter((edge) => {
+      return featureNodeIds.has(edge.source) && featureNodeIds.has(edge.target);
+    });
+    const featureData = {
+      ...props.data,
+      nodes: featureNodes,
+      edges: featureEdges || []
+    };
+    (0, import_react12.useEffect)(() => {
+      const allColumns2 = [
+        ...config.columns,
+        {
+          id: "backlog",
+          title: "Backlog",
+          statusFilter: (node) => {
+            for (const column of config.columns) {
+              try {
+                if (column.statusFilter(node)) {
+                  return false;
+                }
+              } catch (error) {
+                continue;
+              }
+            }
+            return true;
+          },
+          width: 20
+          // Default width for backlog column
+        }
+      ];
+      const totalWidth = allColumns2.reduce((sum, col) => sum + col.width, 0);
+      const initialWidths = allColumns2.map((col) => col.width / totalWidth * 100);
+      setColumnWidths(initialWidths);
+    }, [config.columns]);
+    const allColumns = [
+      ...config.columns,
+      {
+        id: "backlog",
+        title: "Backlog",
+        statusFilter: (node) => {
+          for (const column of config.columns) {
+            try {
+              if (column.statusFilter(node)) {
+                return false;
+              }
+            } catch (error) {
+              continue;
+            }
+          }
+          return true;
+        },
+        width: 20
+      }
+    ];
+    const adjustedColumns = allColumns.map((col, index2) => ({
+      ...col,
+      width: columnWidths[index2] || col.width / 100 * 100
+    }));
+    const handleResizeStart = (index2, e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsResizing(true);
+      setResizeColumnIndex(index2);
+      setResizeStartX(e.clientX);
+      setResizeStartWidths([...columnWidths]);
+    };
+    (0, import_react12.useEffect)(() => {
+      const handleMouseMove = (e) => {
+        if (!isResizing || resizeColumnIndex === null) return;
+        const deltaX = e.clientX - resizeStartX;
+        const containerWidth = containerRef.current?.clientWidth || (typeof width === "number" ? width : 800);
+        const deltaPercent = deltaX / containerWidth * 100;
+        const newWidths = [...resizeStartWidths];
+        const leftIndex = resizeColumnIndex - 1;
+        const rightIndex = resizeColumnIndex;
+        const minWidth = 5;
+        if (newWidths[leftIndex] + deltaPercent >= minWidth && newWidths[rightIndex] - deltaPercent >= minWidth) {
+          newWidths[leftIndex] += deltaPercent;
+          newWidths[rightIndex] -= deltaPercent;
+          setColumnWidths(newWidths);
+        }
+      };
+      const handleMouseUp = () => {
+        setIsResizing(false);
+        setResizeColumnIndex(null);
+      };
+      if (isResizing) {
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+      }
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+      };
+    }, [isResizing, resizeColumnIndex, resizeStartX, resizeStartWidths, width]);
+    const handleDragStart = (node, e) => {
+      e.dataTransfer.setData("text/plain", node.id);
+      setDraggedNode(node);
+      e.dataTransfer.effectAllowed = "move";
+    };
+    const handleDragOver = (columnId, e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      setDragOverColumn(columnId);
+    };
+    const handleDrop = (columnId, e) => {
+      e.preventDefault();
+      const nodeId = e.dataTransfer.getData("text/plain");
+      const node = featureNodes.find((n) => n.id === nodeId);
+      if (node) {
+        console.log(`Dropped node ${nodeId} into column ${columnId}`);
+        props.onNodeClick?.(node);
+      }
+      setDragOverColumn(null);
+      setDraggedNode(null);
+    };
+    const handleDragEnd = () => {
+      setDragOverColumn(null);
+      setDraggedNode(null);
+    };
     const renderColumns = () => {
-      let currentX = 0;
-      return config.columns.map((column, index2) => {
-        const columnWidth = column.width / 100 * width;
-        const columnX = currentX;
-        currentX += columnWidth;
-        const columnNodes = props.data.nodes.filter((node) => {
+      return adjustedColumns.map((column, index2) => {
+        const columnNodes = featureNodes.filter((node) => {
           if (!node) return false;
           const safeNode = {
             id: node.id || "",
@@ -14568,38 +14867,191 @@ var TesterantoStakeholderApp = (() => {
             return false;
           }
         });
-        return /* @__PURE__ */ import_react10.default.createElement("g", { key: `column-${column.id}` }, /* @__PURE__ */ import_react10.default.createElement(
-          "rect",
+        const isDragOver = dragOverColumn === column.id;
+        return /* @__PURE__ */ import_react12.default.createElement(import_react12.default.Fragment, { key: `column-${column.id}` }, index2 > 0 && /* @__PURE__ */ import_react12.default.createElement(
+          "div",
           {
-            x: columnX,
-            y: 0,
-            width: columnWidth,
-            height,
-            fill: "#f5f5f5",
-            stroke: "#ddd",
-            strokeWidth: 1
-          }
-        ), /* @__PURE__ */ import_react10.default.createElement(
-          "text",
-          {
-            x: columnX + columnWidth / 2,
-            y: 25,
-            textAnchor: "middle",
-            fontWeight: "bold",
-            fontSize: 14
+            style: {
+              width: "5px",
+              backgroundColor: isResizing && resizeColumnIndex === index2 ? "#007acc" : "#ddd",
+              cursor: "col-resize",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+              zIndex: 2
+            },
+            onMouseDown: (e) => handleResizeStart(index2, e),
+            title: "Drag to resize"
           },
-          column.title,
-          " (",
-          columnNodes.length,
-          ")"
+          /* @__PURE__ */ import_react12.default.createElement(
+            "div",
+            {
+              style: {
+                width: "1px",
+                height: "20px",
+                backgroundColor: "#999"
+              }
+            }
+          )
+        ), /* @__PURE__ */ import_react12.default.createElement(
+          "div",
+          {
+            style: {
+              flex: `0 0 ${column.width}%`,
+              border: "1px solid #ddd",
+              backgroundColor: isDragOver ? "#e8f4fd" : "#f5f5f5",
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              overflow: "hidden",
+              minWidth: "50px",
+              transition: "background-color 0.2s"
+            },
+            onDragOver: (e) => handleDragOver(column.id, e),
+            onDrop: (e) => handleDrop(column.id, e),
+            onDragLeave: () => setDragOverColumn(null)
+          },
+          /* @__PURE__ */ import_react12.default.createElement(
+            "div",
+            {
+              style: {
+                padding: "10px",
+                borderBottom: "1px solid #ddd",
+                backgroundColor: "#e0e0e0",
+                fontWeight: "bold",
+                textAlign: "center",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }
+            },
+            /* @__PURE__ */ import_react12.default.createElement("span", null, column.title, " (", columnNodes.length, ")"),
+            /* @__PURE__ */ import_react12.default.createElement("span", { style: { fontSize: "12px", color: "#666" } }, column.width.toFixed(1), "%")
+          ),
+          /* @__PURE__ */ import_react12.default.createElement(
+            "div",
+            {
+              style: {
+                flex: 1,
+                padding: "10px",
+                overflowY: "auto"
+              }
+            },
+            columnNodes.map((node) => {
+              const label = node.attributes?.label || node.id;
+              const status = node.attributes?.status || node.attributes?.metadata?.status;
+              const priority = node.attributes?.priority;
+              const isDragging = draggedNode?.id === node.id;
+              return /* @__PURE__ */ import_react12.default.createElement(
+                "div",
+                {
+                  key: node.id,
+                  draggable: true,
+                  style: {
+                    padding: "8px",
+                    marginBottom: "8px",
+                    backgroundColor: isDragging ? "#f0f0f0" : "white",
+                    border: isDragging ? "2px dashed #007acc" : "1px solid #ccc",
+                    borderRadius: "4px",
+                    cursor: "grab",
+                    opacity: isDragging ? 0.5 : 1,
+                    transition: "all 0.2s"
+                  },
+                  onClick: () => {
+                    setSelectedNode(node);
+                    setIsModalOpen(true);
+                    props.onNodeClick?.(node);
+                  },
+                  onMouseEnter: () => props.onNodeHover?.(node),
+                  onMouseLeave: () => props.onNodeHover?.(null),
+                  onDragStart: (e) => handleDragStart(node, e),
+                  onDragEnd: handleDragEnd
+                },
+                /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "4px" } }, label),
+                status && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "12px", color: "#666", marginBottom: "2px" } }, "Status: ", status),
+                priority && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "12px", color: "#666" } }, "Priority: ", priority)
+              );
+            })
+          )
         ));
       });
     };
-    return /* @__PURE__ */ import_react10.default.createElement("svg", { width, height, style: { border: "1px solid #ccc" } }, renderColumns(), /* @__PURE__ */ import_react10.default.createElement(BaseChart, { ...props }));
+    if (featureNodes.length === 0) {
+      const totalNodes = props.data.nodes.length;
+      const nodeTypes = Array.from(new Set(props.data.nodes.map((n) => n.attributes?.type).filter(Boolean)));
+      const metadataTypes = Array.from(new Set(props.data.nodes.map((n) => n.attributes?.metadata?.type).filter(Boolean)));
+      const nodeIds = props.data.nodes.slice(0, 10).map((n) => n.id);
+      const featureLikeIds = props.data.nodes.filter((n) => n.id?.toLowerCase().includes("feature")).map((n) => n.id);
+      const sampleNodes = props.data.nodes.slice(0, 3).map((n) => ({
+        id: n.id,
+        attributes: n.attributes,
+        hasFeatureId: n.id?.toLowerCase().includes("feature"),
+        type: n.attributes?.type,
+        metadataType: n.attributes?.metadata?.type,
+        label: n.attributes?.label,
+        description: n.attributes?.description
+      }));
+      return /* @__PURE__ */ import_react12.default.createElement("div", { style: { width: "100%", height, display: "flex", alignItems: "center", justifyContent: "center" } }, /* @__PURE__ */ import_react12.default.createElement("div", { style: { textAlign: "center", color: "#666", padding: "20px" } }, /* @__PURE__ */ import_react12.default.createElement("h3", null, "No Feature Graph Available"), /* @__PURE__ */ import_react12.default.createElement("p", null, "Total nodes in data: ", totalNodes), /* @__PURE__ */ import_react12.default.createElement("p", null, "Node types present: ", nodeTypes.join(", ") || "(none)"), /* @__PURE__ */ import_react12.default.createElement("p", null, "Metadata types present: ", metadataTypes.join(", ") || "(none)"), /* @__PURE__ */ import_react12.default.createElement("p", null, "First few node IDs: ", nodeIds.join(", ")), /* @__PURE__ */ import_react12.default.createElement("p", null, "Nodes with 'feature' in ID: ", featureLikeIds.length > 0 ? featureLikeIds.join(", ") : "none"), /* @__PURE__ */ import_react12.default.createElement("p", null, "Sample nodes:"), /* @__PURE__ */ import_react12.default.createElement("div", { style: { textAlign: "left", display: "inline-block", marginTop: "10px" } }, sampleNodes.map((node, i) => /* @__PURE__ */ import_react12.default.createElement("div", { key: i, style: { marginBottom: "10px", padding: "10px", border: "1px solid #ddd", borderRadius: "5px" } }, /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "ID:"), " ", node.id), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Type:"), " ", node.type || "(none)"), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Metadata Type:"), " ", node.metadataType || "(none)"), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Label:"), " ", node.label || "(none)"), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Description:"), " ", node.description || "(none)"), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Has 'feature' in ID:"), " ", node.hasFeatureId ? "Yes" : "No")))), /* @__PURE__ */ import_react12.default.createElement("p", null, "Filter criteria used:"), /* @__PURE__ */ import_react12.default.createElement("ul", { style: { textAlign: "left", display: "inline-block" } }, /* @__PURE__ */ import_react12.default.createElement("li", null, "ID starts with 'feature:'"), /* @__PURE__ */ import_react12.default.createElement("li", null, "attributes.type === 'feature'"), /* @__PURE__ */ import_react12.default.createElement("li", null, "attributes.metadata.type === 'feature'"), /* @__PURE__ */ import_react12.default.createElement("li", null, "Has feature attributes (featureName, scenario, given, when, then)"), /* @__PURE__ */ import_react12.default.createElement("li", null, "Label/description contains 'feature' or 'scenario'"), /* @__PURE__ */ import_react12.default.createElement("li", null, "ID contains 'feature' (case-insensitive)"))));
+    }
+    return /* @__PURE__ */ import_react12.default.createElement(import_react12.default.Fragment, null, /* @__PURE__ */ import_react12.default.createElement(
+      "div",
+      {
+        ref: containerRef,
+        style: {
+          width: "100%",
+          height,
+          position: "relative"
+        },
+        onDragOver: (e) => {
+          e.preventDefault();
+        },
+        onDrop: (e) => {
+          e.preventDefault();
+          setDragOverColumn(null);
+        }
+      },
+      /* @__PURE__ */ import_react12.default.createElement("div", { style: {
+        display: "flex",
+        height: "100%",
+        overflow: "hidden",
+        userSelect: isResizing ? "none" : "auto"
+      } }, renderColumns()),
+      isResizing && /* @__PURE__ */ import_react12.default.createElement("div", { style: {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1e3,
+        cursor: "col-resize"
+      } }),
+      draggedNode && /* @__PURE__ */ import_react12.default.createElement("div", { style: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+        backgroundColor: "rgba(0, 122, 204, 0.9)",
+        color: "white",
+        padding: "5px 10px",
+        borderRadius: "4px",
+        fontSize: "12px",
+        zIndex: 1001
+      } }, "Dragging: ", draggedNode.attributes?.label || draggedNode.id)
+    ), /* @__PURE__ */ import_react12.default.createElement(
+      NodeDetailsModal,
+      {
+        node: selectedNode,
+        isOpen: isModalOpen,
+        onClose: () => {
+          setIsModalOpen(false);
+          setSelectedNode(null);
+        }
+      }
+    ));
   };
 
   // src/grafeovidajo/charts/TreeGraph.tsx
-  var import_react11 = __toESM(require_react(), 1);
+  var import_react13 = __toESM(require_react(), 1);
   var TreeGraph = (props) => {
     const extractTreeData = (graphData) => {
       const treeEdges = graphData.edges?.filter(
@@ -14620,16 +15072,18 @@ var TesterantoStakeholderApp = (() => {
       };
     };
     const treeData = extractTreeData(props.data);
-    return /* @__PURE__ */ import_react11.default.createElement(BaseChart, { ...props, data: treeData });
+    return /* @__PURE__ */ import_react13.default.createElement(BaseChart, { ...props, data: treeData });
   };
 
   // src/grafeovidajo/charts/DebugGraph.tsx
-  var import_react12 = __toESM(require_react(), 1);
+  var import_react14 = __toESM(require_react(), 1);
   var DebugGraph = (props) => {
-    const [viewMode, setViewMode] = (0, import_react12.useState)(props.config.viewMode || "both");
-    const [useForceLayout, setUseForceLayout] = (0, import_react12.useState)(
+    const [viewMode, setViewMode] = (0, import_react14.useState)(props.config.viewMode || "both");
+    const [useForceLayout, setUseForceLayout] = (0, import_react14.useState)(
       props.config.projection?.layout === "force" || false
     );
+    const [selectedNode, setSelectedNode] = (0, import_react14.useState)(null);
+    const [isModalOpen, setIsModalOpen] = (0, import_react14.useState)(false);
     const debugConfig = {
       ...props.config,
       projection: {
@@ -14745,21 +15199,30 @@ var TesterantoStakeholderApp = (() => {
         };
       })
     };
+    const handleNodeClick = (node) => {
+      setSelectedNode(node);
+      setIsModalOpen(true);
+      props.onNodeClick?.(node);
+    };
+    const handleModalClose = () => {
+      setIsModalOpen(false);
+      setSelectedNode(null);
+    };
     const renderHtmlView = () => {
       const { nodes, edges } = props.data;
-      return /* @__PURE__ */ import_react12.default.createElement("div", { style: {
+      return /* @__PURE__ */ import_react14.default.createElement("div", { style: {
         display: "flex",
         gap: "20px",
         height: "100%",
         fontFamily: "monospace",
         fontSize: "12px"
-      } }, /* @__PURE__ */ import_react12.default.createElement("div", { style: {
+      } }, /* @__PURE__ */ import_react14.default.createElement("div", { style: {
         flex: 1,
         border: "1px solid #ccc",
         borderRadius: "4px",
         padding: "10px",
         overflow: "auto"
-      } }, /* @__PURE__ */ import_react12.default.createElement("h3", { style: { marginTop: 0, marginBottom: "10px" } }, "Nodes (", nodes.length, ")"), /* @__PURE__ */ import_react12.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "5px" } }, nodes.map((node) => /* @__PURE__ */ import_react12.default.createElement(
+      } }, /* @__PURE__ */ import_react14.default.createElement("h3", { style: { marginTop: 0, marginBottom: "10px" } }, "Nodes (", nodes.length, ")"), /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "5px" } }, nodes.map((node) => /* @__PURE__ */ import_react14.default.createElement(
         "div",
         {
           key: node.id,
@@ -14773,9 +15236,9 @@ var TesterantoStakeholderApp = (() => {
           },
           onMouseEnter: () => props.onNodeHover?.(node),
           onMouseLeave: () => props.onNodeHover?.(null),
-          onClick: () => props.onNodeClick?.(node)
+          onClick: () => handleNodeClick(node)
         },
-        /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px", display: "flex", alignItems: "center", gap: "5px" } }, (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react12.default.createElement("span", { style: { fontSize: "14px" } }, (() => {
+        /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px", display: "flex", alignItems: "center", gap: "5px" } }, (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react14.default.createElement("span", { style: { fontSize: "14px" } }, (() => {
           const icon = node.icon || node.attributes?.icon;
           if (icon === "document") return "\u{1F4C4}";
           if (icon === "folder") return "\u{1F4C1}";
@@ -14786,26 +15249,26 @@ var TesterantoStakeholderApp = (() => {
           if (icon === "play") return "\u25B6\uFE0F";
           if (icon === "check") return "\u2705";
           return "\u2753";
-        })()), node.id, node.attributes?.isAttributeNode && /* @__PURE__ */ import_react12.default.createElement("span", { style: {
+        })()), node.id, node.attributes?.isAttributeNode && /* @__PURE__ */ import_react14.default.createElement("span", { style: {
           marginLeft: "5px",
           fontSize: "10px",
           color: "#999",
           fontStyle: "italic"
         } }, "(attribute)")),
-        /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react12.default.createElement("span", { style: { color: "#007acc" } }, node.type || "unknown")),
-        (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Icon: ", node.icon || node.attributes?.icon),
-        node.attributes?.label && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Label: ", node.attributes.label),
-        node.attributes?.status && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Status: ", /* @__PURE__ */ import_react12.default.createElement("span", { style: {
+        /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: { color: "#007acc" } }, node.type || "unknown")),
+        (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Icon: ", node.icon || node.attributes?.icon),
+        node.attributes?.label && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Label: ", node.attributes.label),
+        node.attributes?.status && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Status: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: {
           color: node.attributes.status === "done" ? "#4CAF50" : node.attributes.status === "doing" ? "#FF9800" : node.attributes.status === "blocked" ? "#F44336" : "#666"
         } }, node.attributes.status)),
-        node.attributes?.priority && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Priority: ", node.attributes.priority)
-      )))), /* @__PURE__ */ import_react12.default.createElement("div", { style: {
+        node.attributes?.priority && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Priority: ", node.attributes.priority)
+      )))), /* @__PURE__ */ import_react14.default.createElement("div", { style: {
         flex: 1,
         border: "1px solid #ccc",
         borderRadius: "4px",
         padding: "10px",
         overflow: "auto"
-      } }, /* @__PURE__ */ import_react12.default.createElement("h3", { style: { marginTop: 0, marginBottom: "10px" } }, "Edges (", edges?.length || 0, ")"), /* @__PURE__ */ import_react12.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "5px" } }, edges && edges.length > 0 ? edges.map((edge, index2) => /* @__PURE__ */ import_react12.default.createElement(
+      } }, /* @__PURE__ */ import_react14.default.createElement("h3", { style: { marginTop: 0, marginBottom: "10px" } }, "Edges (", edges?.length || 0, ")"), /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "5px" } }, edges && edges.length > 0 ? edges.map((edge, index2) => /* @__PURE__ */ import_react14.default.createElement(
         "div",
         {
           key: `${edge.source}-${edge.target}-${index2}`,
@@ -14816,14 +15279,22 @@ var TesterantoStakeholderApp = (() => {
             backgroundColor: "#f9f9f9"
           }
         },
-        /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px" } }, edge.source, " \u2192 ", edge.target),
-        /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react12.default.createElement("span", { style: { color: "#007acc" } }, edge.attributes?.type || "unknown")),
-        edge.attributes?.weight && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Weight: ", edge.attributes.weight),
-        edge.attributes?.timestamp && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Timestamp: ", new Date(edge.attributes.timestamp).toLocaleString())
-      )) : /* @__PURE__ */ import_react12.default.createElement("div", { style: { padding: "10px", textAlign: "center", color: "#999" } }, "No edges in graph"))));
+        /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px" } }, edge.source, " \u2192 ", edge.target),
+        /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: { color: "#007acc" } }, edge.attributes?.type || "unknown")),
+        edge.attributes?.weight && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Weight: ", edge.attributes.weight),
+        edge.attributes?.timestamp && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Timestamp: ", new Date(edge.attributes.timestamp).toLocaleString())
+      )) : /* @__PURE__ */ import_react14.default.createElement("div", { style: { padding: "10px", textAlign: "center", color: "#999" } }, "No edges in graph"))));
     };
     const renderSvgView = () => {
-      return /* @__PURE__ */ import_react12.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, /* @__PURE__ */ import_react12.default.createElement(BaseChart, { ...props, data: debugData, config: debugConfig }), /* @__PURE__ */ import_react12.default.createElement("div", { style: {
+      return /* @__PURE__ */ import_react14.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, /* @__PURE__ */ import_react14.default.createElement(
+        BaseChart,
+        {
+          ...props,
+          data: debugData,
+          config: debugConfig,
+          onNodeClick: handleNodeClick
+        }
+      ), /* @__PURE__ */ import_react14.default.createElement("div", { style: {
         position: "absolute",
         top: 50,
         left: 10,
@@ -14835,24 +15306,24 @@ var TesterantoStakeholderApp = (() => {
         border: "1px solid #ccc",
         maxWidth: "300px",
         zIndex: 10
-      } }, /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "5px" } }, "Graph Debug Info"), /* @__PURE__ */ import_react12.default.createElement("div", null, "Nodes: ", props.data.nodes.length), /* @__PURE__ */ import_react12.default.createElement("div", null, "Edges: ", props.data.edges?.length || 0), /* @__PURE__ */ import_react12.default.createElement("div", { style: { marginTop: "5px", fontWeight: "bold" } }, "Node Types:"), (() => {
+      } }, /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "5px" } }, "Graph Debug Info"), /* @__PURE__ */ import_react14.default.createElement("div", null, "Nodes: ", props.data.nodes.length), /* @__PURE__ */ import_react14.default.createElement("div", null, "Edges: ", props.data.edges?.length || 0), /* @__PURE__ */ import_react14.default.createElement("div", { style: { marginTop: "5px", fontWeight: "bold" } }, "Node Types:"), (() => {
         const typeCounts = {};
         props.data.nodes.forEach((node) => {
           const type = node.type || "unknown";
           typeCounts[type] = (typeCounts[type] || 0) + 1;
         });
-        return Object.entries(typeCounts).map(([type, count]) => /* @__PURE__ */ import_react12.default.createElement("div", { key: type, style: { marginLeft: "10px" } }, type, ": ", count));
-      })(), /* @__PURE__ */ import_react12.default.createElement("div", { style: { marginTop: "5px", fontWeight: "bold" } }, "Edge Types:"), (() => {
+        return Object.entries(typeCounts).map(([type, count]) => /* @__PURE__ */ import_react14.default.createElement("div", { key: type, style: { marginLeft: "10px" } }, type, ": ", count));
+      })(), /* @__PURE__ */ import_react14.default.createElement("div", { style: { marginTop: "5px", fontWeight: "bold" } }, "Edge Types:"), (() => {
         const edgeTypeCounts = {};
         props.data.edges?.forEach((edge) => {
           const type = edge.attributes?.type || "unknown";
           edgeTypeCounts[type] = (edgeTypeCounts[type] || 0) + 1;
         });
-        return Object.entries(edgeTypeCounts).map(([type, count]) => /* @__PURE__ */ import_react12.default.createElement("div", { key: type, style: { marginLeft: "10px" } }, type, ": ", count));
+        return Object.entries(edgeTypeCounts).map(([type, count]) => /* @__PURE__ */ import_react14.default.createElement("div", { key: type, style: { marginLeft: "10px" } }, type, ": ", count));
       })()));
     };
     const renderViewModeSelector = () => {
-      return /* @__PURE__ */ import_react12.default.createElement("div", { style: {
+      return /* @__PURE__ */ import_react14.default.createElement("div", { style: {
         position: "absolute",
         top: 10,
         left: 10,
@@ -14867,7 +15338,7 @@ var TesterantoStakeholderApp = (() => {
         gap: "5px",
         flexWrap: "wrap",
         maxWidth: "300px"
-      } }, /* @__PURE__ */ import_react12.default.createElement("div", { style: { display: "flex", gap: "5px", flexWrap: "wrap" } }, /* @__PURE__ */ import_react12.default.createElement(
+      } }, /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", gap: "5px", flexWrap: "wrap" } }, /* @__PURE__ */ import_react14.default.createElement(
         "button",
         {
           onClick: () => setViewMode("svg"),
@@ -14882,7 +15353,7 @@ var TesterantoStakeholderApp = (() => {
           }
         },
         "SVG"
-      ), /* @__PURE__ */ import_react12.default.createElement(
+      ), /* @__PURE__ */ import_react14.default.createElement(
         "button",
         {
           onClick: () => setViewMode("html"),
@@ -14897,7 +15368,7 @@ var TesterantoStakeholderApp = (() => {
           }
         },
         "HTML"
-      ), /* @__PURE__ */ import_react12.default.createElement(
+      ), /* @__PURE__ */ import_react14.default.createElement(
         "button",
         {
           onClick: () => setViewMode("both"),
@@ -14912,7 +15383,7 @@ var TesterantoStakeholderApp = (() => {
           }
         },
         "Both"
-      )), /* @__PURE__ */ import_react12.default.createElement("div", { style: { display: "flex", gap: "5px", marginTop: "5px" } }, /* @__PURE__ */ import_react12.default.createElement(
+      )), /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", gap: "5px", marginTop: "5px" } }, /* @__PURE__ */ import_react14.default.createElement(
         "button",
         {
           onClick: () => setUseForceLayout(!useForceLayout),
@@ -14936,32 +15407,399 @@ var TesterantoStakeholderApp = (() => {
         case "html":
           return renderHtmlView();
         case "both":
-          return /* @__PURE__ */ import_react12.default.createElement("div", { style: { display: "flex", flexDirection: "column", height: "100%", gap: "10px" } }, /* @__PURE__ */ import_react12.default.createElement("div", { style: { flex: 1, border: "1px solid #ccc", borderRadius: "4px", overflow: "hidden" } }, renderSvgView()), /* @__PURE__ */ import_react12.default.createElement("div", { style: { flex: 1, border: "1px solid #ccc", borderRadius: "4px", overflow: "hidden" } }, renderHtmlView()));
+          return /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", flexDirection: "column", height: "100%", gap: "10px" } }, /* @__PURE__ */ import_react14.default.createElement("div", { style: { flex: 1, border: "1px solid #ccc", borderRadius: "4px", overflow: "hidden" } }, renderSvgView()), /* @__PURE__ */ import_react14.default.createElement("div", { style: { flex: 1, border: "1px solid #ccc", borderRadius: "4px", overflow: "hidden" } }, renderHtmlView()));
         default:
           return renderSvgView();
       }
     };
-    return /* @__PURE__ */ import_react12.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, renderViewModeSelector(), renderContent());
+    return /* @__PURE__ */ import_react14.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, renderViewModeSelector(), renderContent(), /* @__PURE__ */ import_react14.default.createElement(
+      NodeDetailsModal,
+      {
+        node: selectedNode,
+        isOpen: isModalOpen,
+        onClose: handleModalClose
+      }
+    ));
   };
 
   // src/stakeholderApp/stateless/renderVisualization.tsx
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+  var TreeViewWithSwitcher = ({ data, onNodeClick, onNodeHover }) => {
+    const [viewMode, setViewMode] = (0, import_react15.useState)("html");
+    const renderHtmlTree = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: {
+      border: "1px solid #ddd",
+      borderRadius: "4px",
+      padding: "20px",
+      maxHeight: "500px",
+      overflow: "auto"
+    }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      HtmlTree,
+      {
+        data,
+        onNodeClick,
+        onNodeHover
+      }
+    ) });
+    const renderSvgTree = () => {
+      const treeConfig = {
+        projection: {
+          layout: "tree",
+          xAttribute: "type",
+          yAttribute: "label",
+          xType: "categorical",
+          yType: "categorical",
+          spacing: { x: 150, y: 100 }
+        },
+        style: {
+          nodeSize: (node) => {
+            const type = node.attributes?.type || "unknown";
+            if (type === "folder" || type === "directory") return 15;
+            if (type === "file") return 10;
+            if (type === "feature") return 12;
+            if (type === "test") return 11;
+            return 8;
+          },
+          nodeColor: (node) => {
+            const type = node.attributes?.type || "unknown";
+            const typeColors = {
+              "feature": "#4caf50",
+              "file": "#2196f3",
+              "folder": "#007acc",
+              "directory": "#007acc",
+              "test": "#ff9800",
+              "test_result": "#f44336",
+              "documentation": "#9c27b0",
+              "config": "#795548",
+              "unknown": "#9e9e9e"
+            };
+            return typeColors[type] || typeColors.unknown;
+          },
+          nodeShape: (node) => {
+            const type = node.attributes?.type || "unknown";
+            if (type === "folder" || type === "directory") return "square";
+            return "circle";
+          },
+          labels: {
+            show: true,
+            attribute: "label",
+            fontSize: 12
+          },
+          edgeColor: "#999",
+          edgeWidth: 2
+        }
+      };
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: {
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+        padding: "20px",
+        height: "500px",
+        overflow: "hidden"
+      }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        TreeGraph,
+        {
+          data,
+          config: treeConfig,
+          width: 800,
+          height: 450,
+          onNodeClick: onNodeClick || (() => {
+          }),
+          onNodeHover: onNodeHover || (() => {
+          })
+        }
+      ) });
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "15px"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { style: { margin: 0 }, children: "Unified Tree View" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { style: { margin: "5px 0 0 0", color: "#666" }, children: "Combined view of features, files, and their relationships" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+          display: "flex",
+          gap: "10px",
+          backgroundColor: "#f5f5f5",
+          padding: "5px",
+          borderRadius: "6px"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "button",
+            {
+              onClick: () => setViewMode("html"),
+              style: {
+                padding: "8px 16px",
+                backgroundColor: viewMode === "html" ? "#007acc" : "transparent",
+                color: viewMode === "html" ? "white" : "#333",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontWeight: viewMode === "html" ? "bold" : "normal",
+                transition: "all 0.2s"
+              },
+              children: "HTML List"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "button",
+            {
+              onClick: () => setViewMode("svg"),
+              style: {
+                padding: "8px 16px",
+                backgroundColor: viewMode === "svg" ? "#007acc" : "transparent",
+                color: viewMode === "svg" ? "white" : "#333",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontWeight: viewMode === "svg" ? "bold" : "normal",
+                transition: "all 0.2s"
+              },
+              children: "SVG Tree"
+            }
+          )
+        ] })
+      ] }),
+      viewMode === "html" ? renderHtmlTree() : renderSvgTree(),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+        marginTop: "10px",
+        fontSize: "0.9em",
+        color: "#666",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+          "Total nodes: ",
+          data.nodes.length,
+          " | Total edges: ",
+          data.edges?.length || 0
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { display: "flex", gap: "10px" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { style: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "5px"
+          }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+              display: "inline-block",
+              width: "12px",
+              height: "12px",
+              borderRadius: "50%",
+              backgroundColor: "#4caf50"
+            } }),
+            "Feature"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { style: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "5px"
+          }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+              display: "inline-block",
+              width: "12px",
+              height: "12px",
+              borderRadius: "50%",
+              backgroundColor: "#2196f3"
+            } }),
+            "File"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { style: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "5px"
+          }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+              display: "inline-block",
+              width: "12px",
+              height: "12px",
+              borderRadius: "4px",
+              backgroundColor: "#007acc"
+            } }),
+            "Folder"
+          ] })
+        ] })
+      ] })
+    ] });
+  };
+  var HtmlTree = ({ data, onNodeClick, onNodeHover }) => {
+    const incomingEdges = /* @__PURE__ */ new Map();
+    const outgoingEdges = /* @__PURE__ */ new Map();
+    data.nodes.forEach((node) => {
+      incomingEdges.set(node.id, []);
+      outgoingEdges.set(node.id, []);
+    });
+    data.edges?.forEach((edge) => {
+      const targetIncoming = incomingEdges.get(edge.target) || [];
+      if (!targetIncoming.includes(edge.source)) {
+        targetIncoming.push(edge.source);
+      }
+      incomingEdges.set(edge.target, targetIncoming);
+      const sourceOutgoing = outgoingEdges.get(edge.source) || [];
+      if (!sourceOutgoing.includes(edge.target)) {
+        sourceOutgoing.push(edge.target);
+      }
+      outgoingEdges.set(edge.source, sourceOutgoing);
+    });
+    const rootNodes = data.nodes.filter((node) => {
+      const incoming = incomingEdges.get(node.id) || [];
+      return incoming.length === 0;
+    });
+    const displayNodes = rootNodes.length > 0 ? rootNodes : data.nodes;
+    const visited = /* @__PURE__ */ new Set();
+    const renderNode = (node, depth = 0) => {
+      if (visited.has(node.id)) {
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { style: { marginBottom: "5px", color: "#999" }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { marginLeft: `${depth * 20}px` }, children: [
+          "\u26A0\uFE0F Cycle detected: ",
+          node.attributes?.label || node.id
+        ] }) }, node.id);
+      }
+      visited.add(node.id);
+      const nodeType = node.attributes?.type || "unknown";
+      const label = node.attributes?.label || node.id;
+      const childrenIds = outgoingEdges.get(node.id) || [];
+      const children = data.nodes.filter((n) => childrenIds.includes(n.id));
+      let icon = "\u{1F4C4}";
+      switch (nodeType) {
+        case "folder":
+        case "directory":
+          icon = "\u{1F4C1}";
+          break;
+        case "feature":
+          icon = "\u2B50";
+          break;
+        case "test":
+          icon = "\u{1F9EA}";
+          break;
+        case "test_result":
+          icon = "\u{1F4CA}";
+          break;
+        case "file":
+          icon = "\u{1F4C4}";
+          break;
+        case "documentation":
+          icon = "\u{1F4DA}";
+          break;
+        case "config":
+          icon = "\u2699\uFE0F";
+          break;
+        default:
+          icon = "\u{1F4C4}";
+      }
+      let color = "#333";
+      switch (nodeType) {
+        case "feature":
+          color = "#4caf50";
+          break;
+        case "file":
+          color = "#2196f3";
+          break;
+        case "folder":
+        case "directory":
+          color = "#007acc";
+          break;
+        case "test":
+          color = "#ff9800";
+          break;
+        case "test_result":
+          color = "#f44336";
+          break;
+        case "documentation":
+          color = "#9c27b0";
+          break;
+        case "config":
+          color = "#795548";
+          break;
+      }
+      const result = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { style: { marginBottom: "5px" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+          "div",
+          {
+            style: {
+              padding: "8px 12px",
+              borderRadius: "4px",
+              backgroundColor: children.length > 0 ? "#f8f9fa" : "transparent",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              marginLeft: `${depth * 20}px`,
+              borderLeft: `4px solid ${color}`,
+              transition: "background-color 0.2s",
+              ":hover": {
+                backgroundColor: "#e9ecef"
+              }
+            },
+            onClick: () => onNodeClick?.(node),
+            onMouseEnter: () => onNodeHover?.(node),
+            onMouseLeave: () => onNodeHover?.(null),
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { marginRight: "10px", fontSize: "1.1em" }, children: icon }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+                fontWeight: children.length > 0 ? "600" : "normal",
+                flex: 1
+              }, children: label }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+                fontSize: "0.75em",
+                color: "#6c757d",
+                backgroundColor: "#e9ecef",
+                padding: "2px 8px",
+                borderRadius: "12px",
+                marginLeft: "10px"
+              }, children: nodeType })
+            ]
+          }
+        ),
+        children.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { style: {
+          listStyleType: "none",
+          paddingLeft: "24px",
+          marginTop: "8px",
+          borderLeft: "2px dashed #dee2e6"
+        }, children: children.map((child) => renderNode(child, depth + 1)) })
+      ] }, node.id);
+      visited.delete(node.id);
+      return result;
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+        marginBottom: "15px",
+        padding: "10px",
+        backgroundColor: "#e9ecef",
+        borderRadius: "4px",
+        fontSize: "0.9em"
+      }, children: [
+        "Total nodes: ",
+        data.nodes.length,
+        " | Total edges: ",
+        data.edges?.length || 0,
+        " | Root nodes: ",
+        displayNodes.length
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { style: {
+        listStyleType: "none",
+        paddingLeft: "0",
+        margin: "0"
+      }, children: displayNodes.map((node) => renderNode(node)) })
+    ] });
+  };
   function renderVisualization({
     data,
     vizType,
     onNodeClick,
     onNodeHover
   }) {
-    if (!data.featureGraph || !data.featureGraph.nodes || data.featureGraph.nodes.length === 0) {
+    const graphToUse = data.unifiedGraph;
+    if (!graphToUse || !graphToUse.nodes || graphToUse.nodes.length === 0) {
       return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "No Feature Graph Available" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "No Graph Data Available" }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Features need to be extracted from test results to create visualizations." }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Run tests to generate feature data." })
       ] });
     }
     const graphData = {
-      nodes: data.featureGraph.nodes,
-      edges: data.featureGraph.edges || []
+      nodes: graphToUse.nodes,
+      edges: graphToUse.edges || []
     };
     const baseConfig = data.vizConfig || {
       projection: {
@@ -15048,7 +15886,7 @@ var TesterantoStakeholderApp = (() => {
       case "kanban":
         return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Kanban Board" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Feature status columns" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Feature status columns (including backlog for tickets without a status)" }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             KanbanBoard,
             {
@@ -15059,26 +15897,38 @@ var TesterantoStakeholderApp = (() => {
                   {
                     id: "todo",
                     title: "To Do",
-                    statusFilter: (node) => node.attributes.status === "todo",
-                    width: 25
+                    statusFilter: (node) => {
+                      const status = node.attributes?.status || node.attributes?.metadata?.status;
+                      return status === "todo";
+                    },
+                    width: 20
                   },
                   {
                     id: "doing",
                     title: "Doing",
-                    statusFilter: (node) => node.attributes.status === "doing",
-                    width: 25
+                    statusFilter: (node) => {
+                      const status = node.attributes?.status || node.attributes?.metadata?.status;
+                      return status === "doing";
+                    },
+                    width: 20
                   },
                   {
                     id: "review",
                     title: "Review",
-                    statusFilter: (node) => node.attributes.status === "review",
-                    width: 25
+                    statusFilter: (node) => {
+                      const status = node.attributes?.status || node.attributes?.metadata?.status;
+                      return status === "review";
+                    },
+                    width: 20
                   },
                   {
                     id: "done",
                     title: "Done",
-                    statusFilter: (node) => node.attributes.status === "done",
-                    width: 25
+                    statusFilter: (node) => {
+                      const status = node.attributes?.status || node.attributes?.metadata?.status;
+                      return status === "done";
+                    },
+                    width: 20
                   }
                 ]
               }
@@ -15086,84 +15936,14 @@ var TesterantoStakeholderApp = (() => {
           )
         ] });
       case "tree":
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Feature Dependency Tree" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Feature relationships" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-            TreeGraph,
-            {
-              ...commonProps,
-              config: {
-                ...baseConfig,
-                projection: {
-                  ...baseConfig.projection,
-                  layout: "tree"
-                },
-                orientation: "horizontal",
-                nodeSeparation: 100,
-                levelSeparation: 80
-              }
-            }
-          )
-        ] });
-      case "file-tree":
-        const fileTreeData = data.fileTreeGraph || data.featureGraph;
-        if (!fileTreeData || !fileTreeData.nodes || fileTreeData.nodes.length === 0) {
-          return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "No File Tree Graph Available" }),
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "File tree data needs to be extracted to create visualizations." })
-          ] });
-        }
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "File Tree Structure" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Hierarchical view of files and directories" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-            TreeGraph,
-            {
-              data: fileTreeData,
-              config: {
-                projection: {
-                  layout: "tree",
-                  xAttribute: "depth",
-                  yAttribute: "name",
-                  xType: "continuous",
-                  yType: "categorical"
-                },
-                style: {
-                  nodeSize: (node) => {
-                    const type = node.attributes.type;
-                    if (type === "directory") return 15;
-                    if (type === "file") return 10;
-                    return 8;
-                  },
-                  nodeColor: (node) => {
-                    const type = node.attributes.type;
-                    if (type === "directory") return "#007acc";
-                    if (type === "file") return "#4caf50";
-                    if (type === "documentation") return "#ff9800";
-                    return "#9e9e9e";
-                  },
-                  nodeShape: (node) => {
-                    const type = node.attributes.type;
-                    if (type === "directory") return "square";
-                    return "circle";
-                  },
-                  labels: {
-                    show: true,
-                    attribute: "name",
-                    fontSize: 12
-                  }
-                }
-              },
-              width: 800,
-              height: 500,
-              onNodeClick: onNodeClick || (() => {
-              }),
-              onNodeHover: onNodeHover || (() => {
-              })
-            }
-          )
-        ] });
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          TreeViewWithSwitcher,
+          {
+            data: graphData,
+            onNodeClick,
+            onNodeHover
+          }
+        );
       default:
         return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "Select a visualization type" });
     }
@@ -15176,15 +15956,15 @@ var TesterantoStakeholderApp = (() => {
     onNodeClick,
     onNodeHover
   }) => {
-    const [activeTab, setActiveTab] = (0, import_react14.useState)("tree");
-    const stats = getFeatureGraphStats(data.featureGraph);
+    const [activeTab, setActiveTab] = (0, import_react16.useState)("tree");
+    const stats = getFeatureGraphStats(data.unifiedGraph);
     const tabs = [
-      { id: "tree", label: "Feature Tree" },
-      { id: "file-tree", label: "File Tree" },
+      { id: "tree", label: "Unified Tree" },
       { id: "eisenhower", label: "Eisenhower Matrix" },
       { id: "gantt", label: "Gantt Chart" },
       { id: "kanban", label: "Kanban Board" },
-      { id: "debug", label: "Debug View" }
+      { id: "debug", label: "Debug View" },
+      { id: "uncategorized", label: "Uncategorized Features" }
     ];
     const renderDebugView = () => {
       if (!data.unifiedGraph) {
@@ -15488,12 +16268,12 @@ var TesterantoStakeholderApp = (() => {
   var isDevelopmentMode = typeof window !== "undefined" && window.location.hostname.includes("localhost") && window.location.protocol.startsWith("http");
   console.log(`[StakeholderApp] Mode: ${isDevelopmentMode ? "Development (WebSocket enabled)" : "Static (read-only)"}`);
   var DefaultStakeholderApp = () => {
-    const [data, setData] = import_react15.default.useState(null);
-    const [loading, setLoading] = import_react15.default.useState(true);
-    const [error, setError] = import_react15.default.useState(null);
-    const [graphClient, setGraphClient] = import_react15.default.useState(null);
-    const [wsConnected, setWsConnected] = import_react15.default.useState(false);
-    import_react15.default.useEffect(() => {
+    const [data, setData] = import_react17.default.useState(null);
+    const [loading, setLoading] = import_react17.default.useState(true);
+    const [error, setError] = import_react17.default.useState(null);
+    const [graphClient, setGraphClient] = import_react17.default.useState(null);
+    const [wsConnected, setWsConnected] = import_react17.default.useState(false);
+    import_react17.default.useEffect(() => {
       if (data && !graphClient) {
         const client = new StakeholderGraphClient((updatedGraphData) => {
           setData((prev) => prev ? {
@@ -15509,7 +16289,7 @@ var TesterantoStakeholderApp = (() => {
         }
       };
     }, [data, graphClient]);
-    import_react15.default.useEffect(() => {
+    import_react17.default.useEffect(() => {
       const loadData = async () => {
         setLoading(true);
         setError(null);
@@ -15652,7 +16432,7 @@ var TesterantoStakeholderApp = (() => {
   function renderApp(rootElement) {
     const root = import_client.default.createRoot(rootElement);
     root.render(
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_react15.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(DefaultStakeholderApp, {}) })
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_react17.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(DefaultStakeholderApp, {}) })
     );
   }
   var index_default = DefaultStakeholderApp;

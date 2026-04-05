@@ -18,18 +18,19 @@ export const VisualizationTabs: React.FC<VisualizationTabsProps> = ({
   onNodeHover,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    "tree" | "file-tree" | "eisenhower" | "gantt" | "kanban" | "debug"
+    "tree" | "eisenhower" | "gantt" | "kanban" | "debug" | "uncategorized"
   >("tree");
 
-  const stats = getFeatureGraphStats(data.featureGraph);
+  // Use unifiedGraph for stats
+  const stats = getFeatureGraphStats(data.unifiedGraph);
 
   const tabs = [
-    { id: "tree", label: "Feature Tree" },
-    { id: "file-tree", label: "File Tree" },
+    { id: "tree", label: "Unified Tree" },
     { id: "eisenhower", label: "Eisenhower Matrix" },
     { id: "gantt", label: "Gantt Chart" },
     { id: "kanban", label: "Kanban Board" },
     { id: "debug", label: "Debug View" },
+    { id: "uncategorized", label: "Uncategorized Features" },
   ] as const;
 
   // Handle debug view separately since it uses unifiedGraph

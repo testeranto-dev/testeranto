@@ -42,7 +42,7 @@ export class BaseConfirm<I extends TestTypeParams_any> {
   toObj() {
     const testCases = this.testCases || [];
     return CommonUtils.toObj(this, {
-      testCases: testCases.map((testCase) => {
+      confirms: testCases.map((testCase, index) => {
         if (Array.isArray(testCase) && testCase.length >= 2) {
           const [value, should] = testCase;
           
@@ -98,6 +98,7 @@ export class BaseConfirm<I extends TestTypeParams_any> {
           }
           
           return {
+            index,
             input: inputData,
             test: testDescription,
           };
@@ -202,6 +203,10 @@ export class BaseConfirm<I extends TestTypeParams_any> {
     return this.store;
   }
 
+  async afterEach(store: I["istore"], key: string, artifactory?: any): Promise<I["istore"]> {
+    return store;
+  }
+
   // Alias for run to match BaseSuite expectations
   async run(
     subject: I["isubject"],
@@ -219,3 +224,6 @@ export class BaseConfirm<I extends TestTypeParams_any> {
 }
 
 export type IConfirms<I extends TestTypeParams_any> = Record<string, BaseConfirm<I>>;
+
+// Export the BaseConfirm class as named export
+export { BaseConfirm };
