@@ -179,7 +179,23 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
                 onMouseLeave={() => props.onNodeHover?.(null)}
                 onClick={() => props.onNodeClick?.(node)}
               >
-                <div style={{ fontWeight: 'bold', marginBottom: '3px' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '3px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  {(node.icon || node.attributes?.icon) && (
+                    <span style={{ fontSize: '14px' }}>
+                      {(() => {
+                        const icon = node.icon || node.attributes?.icon;
+                        if (icon === 'document') return '📄';
+                        if (icon === 'folder') return '📁';
+                        if (icon === 'globe') return '🌐';
+                        if (icon === 'file-text') return '📝';
+                        if (icon === 'test') return '🧪';
+                        if (icon === 'circle') return '⭕';
+                        if (icon === 'play') return '▶️';
+                        if (icon === 'check') return '✅';
+                        return '❓';
+                      })()}
+                    </span>
+                  )}
                   {node.id}
                   {node.attributes?.isAttributeNode && (
                     <span style={{
@@ -195,6 +211,11 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
                 <div style={{ fontSize: '11px', color: '#666' }}>
                   Type: <span style={{ color: '#007acc' }}>{node.type || 'unknown'}</span>
                 </div>
+                {(node.icon || node.attributes?.icon) && (
+                  <div style={{ fontSize: '11px', color: '#666' }}>
+                    Icon: {node.icon || node.attributes?.icon}
+                  </div>
+                )}
                 {node.attributes?.label && (
                   <div style={{ fontSize: '11px', color: '#666' }}>
                     Label: {node.attributes.label}

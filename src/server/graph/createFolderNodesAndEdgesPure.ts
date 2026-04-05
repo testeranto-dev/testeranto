@@ -28,6 +28,7 @@ export function createFolderNodesAndEdgesPure(
           label: hostname,
           description: `Domain: ${hostname}`,
           status: 'todo',
+          icon: 'globe',
           metadata: {
             hostname: hostname,
             isVirtual: true,
@@ -47,6 +48,7 @@ export function createFolderNodesAndEdgesPure(
           label: 'web',
           description: 'Web Root',
           status: 'todo',
+          icon: 'folder',
           metadata: {
             path: 'web',
             name: 'web',
@@ -95,6 +97,7 @@ export function createFolderNodesAndEdgesPure(
               label: folderName,
               description: `Web Path: ${folderName}`,
               status: 'todo',
+              icon: 'folder',
               metadata: {
                 path: folderPath,
                 name: folderName,
@@ -193,6 +196,7 @@ export function createFolderNodesAndEdgesPure(
           label: folderName,
           description: `Folder: ${folderPath}`,
           status: 'todo',
+          icon: 'folder',
           metadata: {
             path: folderPath,
             name: folderName,
@@ -228,6 +232,7 @@ export function createFolderNodesAndEdgesPure(
             label: 'root',
             description: 'Root folder',
             status: 'todo',
+            icon: 'folder',
             metadata: {
               path: '',
               name: 'root',

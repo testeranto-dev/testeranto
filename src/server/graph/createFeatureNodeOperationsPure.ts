@@ -33,6 +33,7 @@ export function createFeatureNodeOperationsPure(
       label: featureName,
       description: `Feature: ${featureName}`,
       status: 'todo',
+      icon: 'document',
       metadata: featureMetadata
     },
     timestamp

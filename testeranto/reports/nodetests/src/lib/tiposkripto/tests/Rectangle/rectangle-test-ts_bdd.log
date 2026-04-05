@@ -1,14 +1,14 @@
-=== Log started at 2026-04-05T01:17:15.528Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (runtime: node) ===
-=== Container ID: c12521f12d045bf886d9fdd0b81815e6fbd92976926bc451bbcb653508bc1956 ===
+=== Log started at 2026-04-05T01:52:37.490Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (runtime: node) ===
+=== Container ID: 1611734656ec8404a5cf4a6010d9a400170b4d9451602271c7a3299d530af3c5 ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
 === ALL LOGS (stdout + stderr) ===
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+$ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/"}'
 warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.239.0: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/"}'
 [NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/"}
 HELLO RECTANGLE
 testImplementation.describes is not defined or not an object
@@ -16,6 +16,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/'
 }
-Done in 1.03s.
+Done in 0.78s.
 
-=== Log captured at 2026-04-05T01:17:17.832Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-05T01:52:39.939Z (container status: exited, exit code: 0) ===

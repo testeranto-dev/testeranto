@@ -14214,9 +14214,38 @@ var TesterantoStakeholderApp = (() => {
           onMouseLeave: () => onNodeHover?.(null),
           style: { cursor: "pointer" }
         };
+        const icon = node.icon || node.attributes?.icon;
+        let iconElement = null;
+        if (icon) {
+          const iconEmojiMap = {
+            "document": "\u{1F4C4}",
+            "folder": "\u{1F4C1}",
+            "globe": "\u{1F310}",
+            "file-text": "\u{1F4DD}",
+            "test": "\u{1F9EA}",
+            "circle": "\u2B55",
+            "play": "\u25B6\uFE0F",
+            "check": "\u2705"
+          };
+          const emoji = iconEmojiMap[icon] || "\u2753";
+          iconElement = /* @__PURE__ */ import_react7.default.createElement(
+            "text",
+            {
+              x: screenCoords.x,
+              y: screenCoords.y,
+              textAnchor: "middle",
+              dominantBaseline: "central",
+              fontSize: screenSize * 1.5,
+              fill: "#333",
+              style: { pointerEvents: "none" }
+            },
+            emoji
+          );
+        }
+        let shapeElement;
         switch (node.shape) {
           case "square":
-            return /* @__PURE__ */ import_react7.default.createElement(
+            shapeElement = /* @__PURE__ */ import_react7.default.createElement(
               "rect",
               {
                 ...nodeProps,
@@ -14224,11 +14253,13 @@ var TesterantoStakeholderApp = (() => {
                 y: screenCoords.y - screenSize,
                 width: screenSize * 2,
                 height: screenSize * 2,
-                fill: node.color
+                fill: node.color,
+                opacity: icon ? 0.3 : 1
               }
             );
+            break;
           case "diamond":
-            return /* @__PURE__ */ import_react7.default.createElement(
+            shapeElement = /* @__PURE__ */ import_react7.default.createElement(
               "polygon",
               {
                 ...nodeProps,
@@ -14238,21 +14269,25 @@ var TesterantoStakeholderApp = (() => {
                 ${screenCoords.x},${screenCoords.y + screenSize}
                 ${screenCoords.x - screenSize},${screenCoords.y}
               `,
-                fill: node.color
+                fill: node.color,
+                opacity: icon ? 0.3 : 1
               }
             );
+            break;
           default:
-            return /* @__PURE__ */ import_react7.default.createElement(
+            shapeElement = /* @__PURE__ */ import_react7.default.createElement(
               "circle",
               {
                 ...nodeProps,
                 cx: screenCoords.x,
                 cy: screenCoords.y,
                 r: screenSize,
-                fill: node.color
+                fill: node.color,
+                opacity: icon ? 0.3 : 1
               }
             );
         }
+        return /* @__PURE__ */ import_react7.default.createElement("g", { key: node.id }, shapeElement, iconElement);
       });
     };
     const renderEdges = () => {
@@ -14740,13 +14775,25 @@ var TesterantoStakeholderApp = (() => {
           onMouseLeave: () => props.onNodeHover?.(null),
           onClick: () => props.onNodeClick?.(node)
         },
-        /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px" } }, node.id, node.attributes?.isAttributeNode && /* @__PURE__ */ import_react12.default.createElement("span", { style: {
+        /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px", display: "flex", alignItems: "center", gap: "5px" } }, (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react12.default.createElement("span", { style: { fontSize: "14px" } }, (() => {
+          const icon = node.icon || node.attributes?.icon;
+          if (icon === "document") return "\u{1F4C4}";
+          if (icon === "folder") return "\u{1F4C1}";
+          if (icon === "globe") return "\u{1F310}";
+          if (icon === "file-text") return "\u{1F4DD}";
+          if (icon === "test") return "\u{1F9EA}";
+          if (icon === "circle") return "\u2B55";
+          if (icon === "play") return "\u25B6\uFE0F";
+          if (icon === "check") return "\u2705";
+          return "\u2753";
+        })()), node.id, node.attributes?.isAttributeNode && /* @__PURE__ */ import_react12.default.createElement("span", { style: {
           marginLeft: "5px",
           fontSize: "10px",
           color: "#999",
           fontStyle: "italic"
         } }, "(attribute)")),
         /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react12.default.createElement("span", { style: { color: "#007acc" } }, node.type || "unknown")),
+        (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Icon: ", node.icon || node.attributes?.icon),
         node.attributes?.label && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Label: ", node.attributes.label),
         node.attributes?.status && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Status: ", /* @__PURE__ */ import_react12.default.createElement("span", { style: {
           color: node.attributes.status === "done" ? "#4CAF50" : node.attributes.status === "doing" ? "#FF9800" : node.attributes.status === "blocked" ? "#F44336" : "#666"

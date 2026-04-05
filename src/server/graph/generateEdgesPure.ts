@@ -142,6 +142,7 @@ export function generateEdgesPure(
           label: 'root',
           description: 'Root folder',
           status: 'todo',
+          icon: 'folder',
           metadata: {
             path: '',
             name: 'root',
@@ -200,6 +201,7 @@ export function generateEdgesPure(
           label: segment,
           description: `Folder: ${currentPath}`,
           status: 'todo',
+          icon: 'folder',
           metadata: {
             path: currentPath,
             name: segment,
@@ -382,6 +384,7 @@ export function generateEdgesPure(
               description: `Test suite: ${filePath}`,
               status: 'todo',
               priority: 'medium',
+              icon: 'test',
               metadata: {
                 configKey: sanitizedConfigKey,
                 testName: filePath,

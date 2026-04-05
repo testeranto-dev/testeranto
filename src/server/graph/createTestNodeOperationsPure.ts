@@ -62,6 +62,7 @@ export function createTestNodeOperationsPure(
       description: `Test: ${stepName}`,
       status,
       priority,
+      icon: 'test',
       metadata: testMetadata
     },
     timestamp

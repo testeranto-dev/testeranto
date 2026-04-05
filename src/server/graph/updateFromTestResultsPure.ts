@@ -6,6 +6,7 @@ import { createFeatureNodeOperationsPure } from './createFeatureNodeOperationsPu
 import { createFolderNodesAndEdgesPure } from './createFolderNodesAndEdgesPure';
 import { createSimpleTestNodeOperationsPure } from './createSimpleTestNodeOperationsPure';
 import { createTestNodeOperationsPure } from './createTestNodeOperationsPure';
+import { createVerbNodesFromTestResultsPure } from './createVerbNodesFromTestResultsPure';
 import { extractFeatureInfoPure } from './extractFeatureInfoPure';
 import { processFeatureUrlPure } from './processFeatureUrlPure';
 
@@ -338,6 +339,17 @@ export async function updateFromTestResultsPure(
             }
           }
         }
+
+        // Create verb nodes (Given, When, Then) for this test
+        const verbOps = createVerbNodesFromTestResultsPure(
+          {
+            ...singleTestResult,
+            individualResults: [individualResult]
+          },
+          testId,
+          timestamp
+        );
+        operations.push(...verbOps);
 
         // Process features if they exist in individualResult
         // Always process features even if we don't have an entrypointId

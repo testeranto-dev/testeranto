@@ -51,6 +51,7 @@ export function createEntrypointNodeOperationsPure(
       label: path.basename(filePathForEntrypoint),
       description: `Test entrypoint: ${filePathForEntrypoint}`,
       status: 'done',
+      icon: 'file-text',
       metadata: entrypointMetadata
     },
     timestamp

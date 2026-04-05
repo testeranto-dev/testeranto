@@ -8,6 +8,7 @@ export interface FileTreeNode {
   type: 'file' | 'url';
   label: string;
   description: string;
+  icon?: string;
   metadata: {
     path?: string;
     url?: string;
@@ -62,6 +63,7 @@ export function generateFileTreeGraphPure(
       type: 'file',
       label: path.basename(filePath),
       description: isDirectory ? `Directory: ${relativePath}` : `File: ${relativePath}`,
+      icon: isDirectory ? 'folder' : 'document',
       metadata: {
         path: relativePath,
         isDirectory,
@@ -129,6 +131,7 @@ export function generateFileTreeGraphPure(
       type: 'url',
       label: url.split('/').pop() || url,
       description: `URL: ${url}`,
+      icon: 'globe',
       metadata: {
         url: url,
         isDirectory: false,

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-05T01:17:07.203Z",
+  "timestamp": "2026-04-05T01:52:29.986Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -10,10 +10,11 @@
           "label": "Calculator.test.node.ts",
           "description": "Test entrypoint: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
           "status": "done",
+          "icon": "file-text",
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": 1775351361351,
+            "timestamp": 1775353830429,
             "fails": 6,
             "artifacts": [],
             "features": [
@@ -38,6 +39,7 @@
           "label": "src",
           "description": "Folder: src",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "src",
             "name": "src",
@@ -51,6 +53,7 @@
           "label": "root",
           "description": "Root folder",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "",
             "name": "root",
@@ -65,6 +68,7 @@
           "label": "lib",
           "description": "Folder: src/lib",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "src/lib",
             "name": "lib",
@@ -78,6 +82,7 @@
           "label": "tiposkripto",
           "description": "Folder: src/lib/tiposkripto",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "src/lib/tiposkripto",
             "name": "tiposkripto",
@@ -91,6 +96,7 @@
           "label": "tests",
           "description": "Folder: src/lib/tiposkripto/tests",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "src/lib/tiposkripto/tests",
             "name": "tests",
@@ -104,6 +110,7 @@
           "label": "calculator",
           "description": "Folder: src/lib/tiposkripto/tests/calculator",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "src/lib/tiposkripto/tests/calculator",
             "name": "calculator",
@@ -118,6 +125,7 @@
           "description": "Test: confirm",
           "status": "blocked",
           "priority": "high",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -174,11 +182,33 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0:0",
+          "type": "given",
+          "label": "Given: confirm",
+          "description": "Given condition for test step 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
+            "stepIndex": 0,
+            "givenKey": "confirm",
+            "failed": true,
+            "features": [
+              "./Readme.md"
+            ],
+            "status": true,
+            "fails": 2,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "feature:Readme.md",
           "type": "feature",
           "label": "Readme.md",
           "description": "Feature: Readme.md",
           "status": "todo",
+          "icon": "document",
           "metadata": {
             "url": "./Readme.md",
             "contentPreview": "---\ntitle: Readme\ndescription: 'Feature: ./Readme.md'\nstatus: todo\npriority: medium\n---\n# Testeranto\n\n## What is it?\n\nTesteranto lets you vibe code large, real-world polyglot codebases via tests writt...",
@@ -192,6 +222,7 @@
           "description": "Test: step_1",
           "status": "blocked",
           "priority": "high",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -239,12 +270,34 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "type": "given",
+          "label": "Given: step_1",
+          "description": "Given condition for test step 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+            "stepIndex": 0,
+            "givenKey": "step_1",
+            "failed": true,
+            "features": [
+              "./Readme.md"
+            ],
+            "status": false,
+            "fails": 1,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
           "type": "test",
           "label": "step_2",
           "description": "Test: step_2",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -302,12 +355,124 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0",
+          "type": "given",
+          "label": "Given: step_2",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+            "stepIndex": 0,
+            "givenKey": "step_2",
+            "failed": false,
+            "features": [
+              "./Readme.md"
+            ],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
+          "type": "when",
+          "label": "When: press: 5",
+          "description": "When action for test step 0, action 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+            "stepIndex": 0,
+            "whenIndex": 0,
+            "name": "press: 5",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:1",
+          "type": "when",
+          "label": "When: press: +",
+          "description": "When action for test step 0, action 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+            "stepIndex": 0,
+            "whenIndex": 1,
+            "name": "press: +",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:2",
+          "type": "when",
+          "label": "When: press: 3",
+          "description": "When action for test step 0, action 2",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+            "stepIndex": 0,
+            "whenIndex": 2,
+            "name": "press: 3",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:3",
+          "type": "when",
+          "label": "When: enter: ",
+          "description": "When action for test step 0, action 3",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+            "stepIndex": 0,
+            "whenIndex": 3,
+            "name": "enter: ",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
+          "type": "then",
+          "label": "Then: result: 8",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "result: 8",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
           "type": "test",
           "label": "confirm",
           "description": "Test: confirm",
           "status": "blocked",
           "priority": "high",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -360,12 +525,34 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3:0",
+          "type": "given",
+          "label": "Given: confirm",
+          "description": "Given condition for test step 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
+            "stepIndex": 0,
+            "givenKey": "confirm",
+            "failed": true,
+            "features": [
+              "./Readme.md"
+            ],
+            "status": true,
+            "fails": 1,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
           "type": "test",
           "label": "confirm",
           "description": "Test: confirm",
           "status": "blocked",
           "priority": "high",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -418,12 +605,34 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4:0",
+          "type": "given",
+          "label": "Given: confirm",
+          "description": "Given condition for test step 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
+            "stepIndex": 0,
+            "givenKey": "confirm",
+            "failed": true,
+            "features": [
+              "./Readme.md"
+            ],
+            "status": true,
+            "fails": 1,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
           "type": "test",
           "label": "confirm",
           "description": "Test: confirm",
           "status": "blocked",
           "priority": "high",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -476,15 +685,37 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5:0",
+          "type": "given",
+          "label": "Given: confirm",
+          "description": "Given condition for test step 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
+            "stepIndex": 0,
+            "givenKey": "confirm",
+            "failed": true,
+            "features": [
+              "./Readme.md"
+            ],
+            "status": true,
+            "fails": 1,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
           "type": "entrypoint",
           "label": "Circle.test.ts",
           "description": "Test entrypoint: src/lib/tiposkripto/tests/circle/Circle.test.ts",
           "status": "done",
+          "icon": "file-text",
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": 1775351361441,
+            "timestamp": 1775353830419,
             "fails": 4,
             "artifacts": [],
             "features": [],
@@ -507,6 +738,7 @@
           "label": "circle",
           "description": "Folder: src/lib/tiposkripto/tests/circle",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "src/lib/tiposkripto/tests/circle",
             "name": "circle",
@@ -521,6 +753,7 @@
           "description": "Test: confirm",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -563,12 +796,32 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0:0",
+          "type": "given",
+          "label": "Given: confirm",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+            "stepIndex": 0,
+            "givenKey": "confirm",
+            "failed": false,
+            "features": [],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
           "type": "test",
           "label": "confirm",
           "description": "Test: confirm",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -611,12 +864,32 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1:0",
+          "type": "given",
+          "label": "Given: confirm",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
+            "stepIndex": 0,
+            "givenKey": "confirm",
+            "failed": false,
+            "features": [],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
           "type": "test",
           "label": "step_2",
           "description": "Test: step_2",
           "status": "blocked",
           "priority": "high",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -660,12 +933,32 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "type": "given",
+          "label": "Given: step_2",
+          "description": "Given condition for test step 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
+            "stepIndex": 0,
+            "givenKey": "step_2",
+            "failed": true,
+            "features": [],
+            "status": false,
+            "fails": 1,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
           "type": "test",
           "label": "step_3",
           "description": "Test: step_3",
           "status": "blocked",
           "priority": "high",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -729,12 +1022,104 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0",
+          "type": "given",
+          "label": "Given: step_3",
+          "description": "Given condition for test step 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
+            "stepIndex": 0,
+            "givenKey": "step_3",
+            "failed": true,
+            "features": [],
+            "status": true,
+            "fails": 2,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
+          "type": "when",
+          "label": "When: doubleRadius: ",
+          "description": "When action for test step 0, action 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
+            "stepIndex": 0,
+            "whenIndex": 0,
+            "name": "doubleRadius: ",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "type": "when",
+          "label": "When: halveRadius: ",
+          "description": "When action for test step 0, action 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
+            "stepIndex": 0,
+            "whenIndex": 1,
+            "name": "halveRadius: ",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
+          "type": "then",
+          "label": "Then: radiusIs: 10",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "radiusIs: 10",
+            "status": false,
+            "error": "AssertionError: expected NaN to be close to 10 +/- 0.0001",
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "type": "then",
+          "label": "Then: circumferenceIs: 62.83185307179586",
+          "description": "Then assertion for test step 0, assertion 1",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
+            "stepIndex": 0,
+            "thenIndex": 1,
+            "name": "circumferenceIs: 62.83185307179586",
+            "status": false,
+            "error": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001",
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
           "type": "test",
           "label": "Step_4",
           "description": "Test: Step_4",
           "status": "blocked",
           "priority": "high",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -759,15 +1144,32 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4:0",
+          "type": "given",
+          "label": "Given: step_4",
+          "description": "Given condition for test step 0",
+          "status": "blocked",
+          "priority": "high",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
+            "stepIndex": 0,
+            "givenKey": "step_4",
+            "features": [],
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
           "type": "entrypoint",
           "label": "Rectangle.test.ts",
           "description": "Test entrypoint: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
           "status": "done",
+          "icon": "file-text",
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": 1775351361474,
+            "timestamp": 1775353830575,
             "fails": 0,
             "artifacts": [],
             "features": [
@@ -795,6 +1197,7 @@
           "label": "Rectangle",
           "description": "Folder: src/lib/tiposkripto/tests/Rectangle",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "src/lib/tiposkripto/tests/Rectangle",
             "name": "Rectangle",
@@ -809,6 +1212,7 @@
           "description": "Test: step_0",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -861,14 +1265,108 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0",
+          "type": "given",
+          "label": "Given: step_0",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+            "stepIndex": 0,
+            "givenKey": "step_0",
+            "failed": false,
+            "features": [
+              "https://api.github.com/repos/adamwong246/testeranto/issues/888"
+            ],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
+          "type": "when",
+          "label": "When: setWidth: 4",
+          "description": "When action for test step 0, action 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+            "stepIndex": 0,
+            "whenIndex": 0,
+            "name": "setWidth: 4",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "type": "when",
+          "label": "When: setHeight: 19",
+          "description": "When action for test step 0, action 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+            "stepIndex": 0,
+            "whenIndex": 1,
+            "name": "setHeight: 19",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
+          "type": "then",
+          "label": "Then: getWidth: 4",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "getWidth: 4",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "type": "then",
+          "label": "Then: getHeight: 19",
+          "description": "Then assertion for test step 0, assertion 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+            "stepIndex": 0,
+            "thenIndex": 1,
+            "name": "getHeight: 19",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "feature:888",
           "type": "feature",
           "label": "888",
           "description": "Feature: 888",
           "status": "todo",
+          "icon": "document",
           "metadata": {
             "url": "https://api.github.com/repos/adamwong246/testeranto/issues/888",
-            "contentPreview": "{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/issues/issues#get-an-issue\",\"status\":\"404\"}",
+            "contentPreview": "{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"h...",
             "localPath": "/Users/adam/Code/testeranto/tickets/web/api_github_com/_repos_adamwong246_testeranto_issues_888.md"
           }
         },
@@ -878,6 +1376,7 @@
           "label": "api.github.com",
           "description": "Domain: api.github.com",
           "status": "todo",
+          "icon": "globe",
           "metadata": {
             "hostname": "api.github.com",
             "isVirtual": true,
@@ -890,6 +1389,7 @@
           "label": "web",
           "description": "Web Root",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "web",
             "name": "web",
@@ -903,6 +1403,7 @@
           "label": "repos",
           "description": "Web Path: repos",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "web/api.github.com/repos",
             "name": "repos",
@@ -916,6 +1417,7 @@
           "label": "adamwong246",
           "description": "Web Path: adamwong246",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "web/api.github.com/repos/adamwong246",
             "name": "adamwong246",
@@ -929,6 +1431,7 @@
           "label": "testeranto",
           "description": "Web Path: testeranto",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "web/api.github.com/repos/adamwong246/testeranto",
             "name": "testeranto",
@@ -942,6 +1445,7 @@
           "label": "issues",
           "description": "Web Path: issues",
           "status": "todo",
+          "icon": "folder",
           "metadata": {
             "path": "web/api.github.com/repos/adamwong246/testeranto/issues",
             "name": "issues",
@@ -956,6 +1460,7 @@
           "description": "Test: step_1",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -1018,11 +1523,141 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0",
+          "type": "given",
+          "label": "Given: step_1",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+            "stepIndex": 0,
+            "givenKey": "step_1",
+            "failed": false,
+            "features": [
+              "src/lib/tiposkripto/tests/Rectangle/README.md"
+            ],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
+          "type": "when",
+          "label": "When: setWidth: 4",
+          "description": "When action for test step 0, action 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+            "stepIndex": 0,
+            "whenIndex": 0,
+            "name": "setWidth: 4",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "type": "when",
+          "label": "When: setHeight: 5",
+          "description": "When action for test step 0, action 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+            "stepIndex": 0,
+            "whenIndex": 1,
+            "name": "setHeight: 5",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
+          "type": "then",
+          "label": "Then: getWidth: 4",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "getWidth: 4",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "type": "then",
+          "label": "Then: getHeight: 5",
+          "description": "Then assertion for test step 0, assertion 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+            "stepIndex": 0,
+            "thenIndex": 1,
+            "name": "getHeight: 5",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:2",
+          "type": "then",
+          "label": "Then: area: 20",
+          "description": "Then assertion for test step 0, assertion 2",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+            "stepIndex": 0,
+            "thenIndex": 2,
+            "name": "area: 20",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:3",
+          "type": "then",
+          "label": "Then: AreaPlusCircumference: 38",
+          "description": "Then assertion for test step 0, assertion 3",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+            "stepIndex": 0,
+            "thenIndex": 3,
+            "name": "AreaPlusCircumference: 38",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "feature:README.md",
           "type": "feature",
           "label": "README.md",
           "description": "Feature: README.md",
           "status": "todo",
+          "icon": "document",
           "metadata": {
             "url": "src/lib/tiposkripto/tests/Rectangle/README.md",
             "contentPreview": "# Testing a single class with `TesterantoClassic`\n\nIf you want to test a single javascript class, you can use `TesterantoClassic` class to skip some boilerplate. \n\n## a plain old javascript class\n\n```...",
@@ -1036,6 +1671,7 @@
           "description": "Test: step_2",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -1085,14 +1721,91 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0",
+          "type": "given",
+          "label": "Given: step_2",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+            "stepIndex": 0,
+            "givenKey": "step_2",
+            "failed": false,
+            "features": [
+              "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+              "src/lib/tiposkripto/README.md"
+            ],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
+          "type": "when",
+          "label": "When: setHeight: 4",
+          "description": "When action for test step 0, action 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+            "stepIndex": 0,
+            "whenIndex": 0,
+            "name": "setHeight: 4",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:1",
+          "type": "when",
+          "label": "When: setWidth: 33",
+          "description": "When action for test step 0, action 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+            "stepIndex": 0,
+            "whenIndex": 1,
+            "name": "setWidth: 33",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
+          "type": "then",
+          "label": "Then: area: 132",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "area: 132",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "feature:8",
           "type": "feature",
           "label": "8",
           "description": "Feature: 8",
           "status": "todo",
+          "icon": "document",
           "metadata": {
             "url": "https://api.github.com/repos/adamwong246/testeranto/issues/8",
-            "contentPreview": "{\"url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8\",\"repository_url\":\"https://api.github.com/repos/adamwong246/testeranto\",\"labels_url\":\"https://api.github.com/repos/adamwong246/test...",
+            "contentPreview": "{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"h...",
             "localPath": "/Users/adam/Code/testeranto/tickets/web/api_github_com/_repos_adamwong246_testeranto_issues_8.md"
           }
         },
@@ -1103,6 +1816,7 @@
           "description": "Test: step_3",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -1146,12 +1860,71 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
+          "type": "given",
+          "label": "Given: step_3",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
+            "stepIndex": 0,
+            "givenKey": "step_3",
+            "failed": false,
+            "features": [
+              "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+              "src/lib/tiposkripto/README.md"
+            ],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0:0",
+          "type": "then",
+          "label": "Then: getWidth: 2",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "getWidth: 2",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0:1",
+          "type": "then",
+          "label": "Then: getHeight: 2",
+          "description": "Then assertion for test step 0, assertion 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
+            "stepIndex": 0,
+            "thenIndex": 1,
+            "name": "getHeight: 2",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
           "type": "test",
           "label": "step_4",
           "description": "Test: step_4",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -1199,12 +1972,88 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0",
+          "type": "given",
+          "label": "Given: step_4",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
+            "stepIndex": 0,
+            "givenKey": "step_4",
+            "failed": false,
+            "features": [
+              "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+            ],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
+          "type": "when",
+          "label": "When: setHeight: 5",
+          "description": "When action for test step 0, action 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
+            "stepIndex": 0,
+            "whenIndex": 0,
+            "name": "setHeight: 5",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:1",
+          "type": "when",
+          "label": "When: setWidth: 5",
+          "description": "When action for test step 0, action 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
+            "stepIndex": 0,
+            "whenIndex": 1,
+            "name": "setWidth: 5",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
+          "type": "then",
+          "label": "Then: area: 25",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "area: 25",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
           "type": "test",
           "label": "step_5",
           "description": "Test: step_5",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -1252,12 +2101,88 @@
           }
         },
         {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0",
+          "type": "given",
+          "label": "Given: step_5",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
+            "stepIndex": 0,
+            "givenKey": "step_5",
+            "failed": false,
+            "features": [
+              "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+            ],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
+          "type": "when",
+          "label": "When: setHeight: 6",
+          "description": "When action for test step 0, action 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
+            "stepIndex": 0,
+            "whenIndex": 0,
+            "name": "setHeight: 6",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:1",
+          "type": "when",
+          "label": "When: setWidth: 6",
+          "description": "When action for test step 0, action 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "play",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
+            "stepIndex": 0,
+            "whenIndex": 1,
+            "name": "setWidth: 6",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
+          "type": "then",
+          "label": "Then: area: 36",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "area: 36",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
           "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
           "type": "test",
           "label": "step_6",
           "description": "Test: step_6",
           "status": "done",
           "priority": "low",
+          "icon": "test",
           "metadata": {
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -1296,6 +2221,63 @@
               ]
             },
             "result": 0
+          }
+        },
+        {
+          "id": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
+          "type": "given",
+          "label": "Given: step_6",
+          "description": "Given condition for test step 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "circle",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
+            "stepIndex": 0,
+            "givenKey": "step_6",
+            "failed": false,
+            "features": [
+              "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+            ],
+            "status": true,
+            "fails": 0,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0:0",
+          "type": "then",
+          "label": "Then: getWidth: 2",
+          "description": "Then assertion for test step 0, assertion 0",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
+            "stepIndex": 0,
+            "thenIndex": 0,
+            "name": "getWidth: 2",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
+          }
+        },
+        {
+          "id": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0:1",
+          "type": "then",
+          "label": "Then: getHeight: 2",
+          "description": "Then assertion for test step 0, assertion 1",
+          "status": "done",
+          "priority": "low",
+          "icon": "check",
+          "metadata": {
+            "testId": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
+            "stepIndex": 0,
+            "thenIndex": 1,
+            "name": "getHeight: 2",
+            "status": true,
+            "error": null,
+            "pattern": "bdd"
           }
         }
       ],
@@ -1357,6 +2339,14 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:Readme.md",
           "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
           "attributes": {
@@ -1381,6 +2371,14 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:Readme.md",
           "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
           "attributes": {
@@ -1397,6 +2395,54 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:1",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:2",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:2",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:3",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:3",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:Readme.md",
           "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
           "attributes": {
@@ -1413,6 +2459,14 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:Readme.md",
           "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
           "attributes": {
@@ -1429,6 +2483,14 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:Readme.md",
           "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
           "attributes": {
@@ -1441,6 +2503,14 @@
           "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
           "attributes": {
             "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5:0",
+          "attributes": {
+            "type": "hasGiven",
             "weight": 1
           }
         },
@@ -1477,10 +2547,26 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
           "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
           "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
           "attributes": {
             "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1:0",
+          "attributes": {
+            "type": "hasGiven",
             "weight": 1
           }
         },
@@ -1493,6 +2579,14 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
           "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
           "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
           "attributes": {
@@ -1501,10 +2595,58 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
           "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
           "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
           "attributes": {
             "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4:0",
+          "attributes": {
+            "type": "hasGiven",
             "weight": 1
           }
         },
@@ -1529,6 +2671,46 @@
           "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
           "attributes": {
             "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "attributes": {
+            "type": "hasThen",
             "weight": 1
           }
         },
@@ -1597,6 +2779,62 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:2",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:3",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:README.md",
           "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
           "attributes": {
@@ -1617,6 +2855,38 @@
           "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
           "attributes": {
             "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
+          "attributes": {
+            "type": "hasThen",
             "weight": 1
           }
         },
@@ -1661,6 +2931,30 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0:1",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:8",
           "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
           "attributes": {
@@ -1685,6 +2979,38 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:8",
           "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
           "attributes": {
@@ -1701,6 +3027,38 @@
           }
         },
         {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
           "source": "feature:8",
           "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
           "attributes": {
@@ -1713,6 +3071,30 @@
           "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
           "attributes": {
             "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0:1",
+          "attributes": {
+            "type": "hasThen",
             "weight": 1
           }
         },
@@ -1743,7 +3125,7 @@
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-05T01:17:07.202Z"
+        "timestamp": "2026-04-05T01:52:29.986Z"
       }
     },
     "vizConfig": {

@@ -14,7 +14,17 @@ export type GraphNodeType =
   | 'config'       // Configuration nodes
   | 'attribute'    // Attribute nodes (for nodes like suite:14:content, suite:14:configKey, etc.)
   | 'folder'       // Folder nodes for directory structure
-  | 'domain';      // Domain nodes for grouping external features by hostname
+  | 'domain'       // Domain nodes for grouping external features by hostname
+  // Verb nodes for testeranto test structure
+  | 'given'        // BDD Given nodes
+  | 'when'         // BDD When nodes
+  | 'then'         // BDD Then nodes
+  | 'describe'     // AAA Describe nodes
+  | 'it'           // AAA It nodes
+  | 'confirm'      // TDT Confirm nodes
+  | 'value'        // TDT Value nodes
+  | 'should'       // TDT Should nodes
+  | 'expected'     // TDT Expected nodes
 
 // Array of valid GraphNodeType values for validation
 const graphNodeTypeValues: GraphNodeType[] = [
@@ -27,7 +37,17 @@ const graphNodeTypeValues: GraphNodeType[] = [
   'config',
   'attribute',
   'folder',
-  'domain'
+  'domain',
+  // Verb nodes for testeranto test structure
+  'given',
+  'when',
+  'then',
+  'describe',
+  'it',
+  'confirm',
+  'value',
+  'should',
+  'expected'
 ];
 
 // Edge types in our graph
@@ -40,7 +60,18 @@ export type GraphEdgeType =
   | 'locatedIn'    // Node located in file/directory
   | 'parentOf'     // Parent-child relationship for tree structure
   | 'runsOn'       // Suite/test runs on runtime
-  | 'configuredBy'; // Configured by config
+  | 'configuredBy' // Configured by config
+  // Verb relationship edges
+  | 'hasGiven'     // Test has a Given
+  | 'hasWhen'      // Given has a When
+  | 'nextWhen'     // When leads to next When
+  | 'hasThen'      // When has a Then
+  | 'hasDescribe'  // Test has a Describe
+  | 'hasIt'        // Describe has an It
+  | 'hasConfirm'   // Test has a Confirm
+  | 'hasValue'     // Confirm has a Value
+  | 'hasShould'    // Value has a Should
+  | 'hasExpected'  // Should has an Expected
 
 // Base node attributes
 export interface GraphNodeAttributes extends Attributes {
@@ -52,6 +83,7 @@ export interface GraphNodeAttributes extends Attributes {
   priority?: 'low' | 'medium' | 'high' | 'critical';
   timestamp?: string;
   metadata?: Record<string, any>;
+  icon?: string;
 }
 
 // Base edge attributes

@@ -257,9 +257,42 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
         style: { cursor: 'pointer' }
       };
 
+      // Get icon from node or attributes
+      const icon = node.icon || node.attributes?.icon;
+      let iconElement = null;
+      
+      if (icon) {
+        // Map icon names to emoji
+        const iconEmojiMap: Record<string, string> = {
+          'document': '📄',
+          'folder': '📁',
+          'globe': '🌐',
+          'file-text': '📝',
+          'test': '🧪',
+          'circle': '⭕',
+          'play': '▶️',
+          'check': '✅'
+        };
+        const emoji = iconEmojiMap[icon] || '❓';
+        iconElement = (
+          <text
+            x={screenCoords.x}
+            y={screenCoords.y}
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize={screenSize * 1.5}
+            fill="#333"
+            style={{ pointerEvents: 'none' }}
+          >
+            {emoji}
+          </text>
+        );
+      }
+
+      let shapeElement;
       switch (node.shape) {
         case 'square':
-          return (
+          shapeElement = (
             <rect
               {...nodeProps}
               x={screenCoords.x - screenSize}
@@ -267,10 +300,12 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
               width={screenSize * 2}
               height={screenSize * 2}
               fill={node.color}
+              opacity={icon ? 0.3 : 1}
             />
           );
+          break;
         case 'diamond':
-          return (
+          shapeElement = (
             <polygon
               {...nodeProps}
               points={`
@@ -280,19 +315,29 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
                 ${screenCoords.x - screenSize},${screenCoords.y}
               `}
               fill={node.color}
+              opacity={icon ? 0.3 : 1}
             />
           );
+          break;
         default: // circle
-          return (
+          shapeElement = (
             <circle
               {...nodeProps}
               cx={screenCoords.x}
               cy={screenCoords.y}
               r={screenSize}
               fill={node.color}
+              opacity={icon ? 0.3 : 1}
             />
           );
       }
+
+      return (
+        <g key={node.id}>
+          {shapeElement}
+          {iconElement}
+        </g>
+      );
     });
   };
 

@@ -35,6 +35,7 @@ export function createSimpleTestNodeOperationsPure(
       description: `Test: ${filePathForEntrypoint}`,
       status: testResults.failed === false ? 'done' : 'blocked',
       priority: testResults.failed === false ? 'low' : 'high',
+      icon: 'test',
       metadata: testMetadata
     },
     timestamp
