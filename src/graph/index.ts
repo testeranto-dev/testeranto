@@ -26,6 +26,12 @@ export type GraphNodeType =
   | 'value'        // TDT Value nodes
   | 'should'       // TDT Should nodes
   | 'expected'     // TDT Expected nodes
+  // Docker process nodes
+  | 'docker_process' // Docker container processes
+  | 'bdd_process'  // BDD test process
+  | 'check_process' // Check process
+  | 'aider_process' // Aider process
+  | 'builder_process' // Builder process
 
 // Array of valid GraphNodeType values for validation
 export const graphNodeTypeValues: GraphNodeType[] = [
@@ -49,7 +55,13 @@ export const graphNodeTypeValues: GraphNodeType[] = [
   'confirm',
   'value',
   'should',
-  'expected'
+  'expected',
+  // Docker process nodes
+  'docker_process',
+  'bdd_process',
+  'check_process',
+  'aider_process',
+  'builder_process'
 ];
 
 // Edge types in our graph
@@ -74,6 +86,13 @@ export type GraphEdgeType =
   | 'hasValue'     // Confirm has a Value
   | 'hasShould'    // Value has a Should
   | 'hasExpected'  // Should has an Expected
+  // Docker process relationship edges
+  | 'hasProcess'   // Entrypoint has a process
+  | 'hasBddProcess' // Entrypoint has a BDD process
+  | 'hasCheckProcess' // Entrypoint has a check process
+  | 'hasAiderProcess' // Entrypoint has an aider process
+  | 'hasBuilderProcess' // Config has a builder process
+  | 'processOf'    // Process belongs to entrypoint
 
 // Base node attributes
 export interface GraphNodeAttributes extends Attributes {

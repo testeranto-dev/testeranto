@@ -1,5 +1,5 @@
-=== Log started at 2026-04-05T17:04:13.656Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 2a7edda49277007ac4c79a2ac21106c868af34baf9e76145dc56e1fcc4206788 ===
+=== Log started at 2026-04-05T17:44:53.190Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: 0160cb545f8d9411a3987f60534ba3c70490646e7a19ec9d61a1ffd606e8e6b1 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -11,14 +11,6 @@ warning testeranto@0.235.9: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}'
 [NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}
 Describe implementation for "a circle with radius" is not a function, got: object
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
 [Circle adapter] beforeEach called with subject: [class Circle]
 [Circle adapter] beforeEach created circle: Circle { radius: [class Circle] }
 [Circle adapter] andWhen called with store: Circle { radius: [class Circle] }
@@ -30,10 +22,18 @@ Error: Step type Function has no runnable method
 [Circle adapter] verify called with store: Circle { radius: NaN }
 [Circle adapter] verificationFn: [AsyncFunction (anonymous)]
 [Circle adapter] afterEach called with store: Circle { radius: NaN }
+Error: Step type Function has no runnable method
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
+Error: Step type Function has no runnable method
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
 testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 0.65s.
+Done in 0.67s.
 
-=== Log captured at 2026-04-05T17:04:13.924Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-05T17:44:55.417Z (container status: exited, exit code: 0) ===

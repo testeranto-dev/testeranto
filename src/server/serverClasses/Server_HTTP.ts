@@ -220,7 +220,7 @@ export abstract class Server_HTTP extends Server_Base {
   }
 
   // Save graph data for static mode access
-  private saveGraphDataForStaticMode(fullGraphData: any): void {
+  public saveGraphDataForStaticMode(fullGraphData: any): void {
     try {
       const projectRoot = process.cwd();
       const filePath = path.join(projectRoot, 'testeranto', 'reports', 'graph-data.json');
@@ -431,6 +431,72 @@ export abstract class Server_HTTP extends Server_Base {
           unifiedGraph: result
         }
       });
+    }
+  }
+
+  // Save current graph to graph-data.json
+  public saveCurrentGraph(): void {
+    try {
+      if (this.graphManager) {
+        const graphData = this.graphManager.getGraphData();
+        if (graphData) {
+          const fullGraphData = {
+            unifiedGraph: graphData,
+            vizConfig: {
+              projection: {
+                xAttribute: 'status',
+                yAttribute: 'priority',
+                xType: 'categorical' as const,
+                yType: 'continuous' as const,
+                layout: 'grid' as const
+              },
+              style: {
+                nodeSize: 10,
+                nodeColor: '#882255',
+                nodeShape: 'circle'
+              }
+            },
+            configs: this.configs
+          };
+          this.saveGraphDataForStaticMode(fullGraphData);
+          console.log(`[Server_HTTP] Saved current graph to graph-data.json`);
+        }
+      }
+    } catch (error) {
+      console.error('[Server_HTTP] Error saving current graph:', error);
+    }
+  }
+
+  // Save current graph to graph-data.json
+  public saveCurrentGraph(): void {
+    try {
+      if (this.graphManager) {
+        const graphData = this.graphManager.getGraphData();
+        if (graphData) {
+          const fullGraphData = {
+            unifiedGraph: graphData,
+            vizConfig: {
+              projection: {
+                xAttribute: 'status',
+                yAttribute: 'priority',
+                xType: 'categorical' as const,
+                yType: 'continuous' as const,
+                layout: 'grid' as const
+              },
+              style: {
+                nodeSize: 10,
+                nodeColor: '#882255',
+                nodeShape: 'circle'
+              }
+            },
+            configs: this.configs
+          };
+          this.saveGraphDataForStaticMode(fullGraphData);
+          console.log(`[Server_HTTP] Saved current graph to graph-data.json`);
+        }
+      }
+    } catch (error) {
+      console.error('[Server_HTTP] Error saving current graph:', error);
     }
   }
 

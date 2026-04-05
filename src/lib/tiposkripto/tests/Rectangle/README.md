@@ -1,3 +1,8 @@
+---
+status: todo
+title: README.md
+description: 'Feature: README.md'
+---
 # Testing a single class with `TesterantoClassic`
 
 If you want to test a single javascript class, you can use `TesterantoClassic` class to skip some boilerplate. 

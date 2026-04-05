@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-05T17:04:06.541Z",
+  "timestamp": "2026-04-05T17:45:27.630Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -14,7 +14,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": 1775408446131,
+            "timestamp": 1775410841566,
             "fails": 6,
             "artifacts": [],
             "features": [
@@ -161,7 +161,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775408446131,
+            "timestamp": 1775410841566,
             "individualResults": [
               {
                 "index": 0,
@@ -512,6 +512,425 @@
               "description": "Feature: Readme.md"
             },
             "localPath": "/Users/adam/Code/testeranto/Readme.md"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.ts",
+          "type": "file",
+          "label": "Calculator.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
+            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
+            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.ts"
+          }
+        },
+        {
+          "id": "folder:..",
+          "type": "folder",
+          "label": "..",
+          "description": "Folder: ..",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "..",
+            "name": "..",
+            "absolutePath": "/Users/adam/Code",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../..",
+          "type": "folder",
+          "label": "..",
+          "description": "Folder: ../..",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../..",
+            "name": "..",
+            "absolutePath": "/Users/adam",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../../..",
+          "type": "folder",
+          "label": "..",
+          "description": "Folder: ../../..",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../..",
+            "name": "..",
+            "absolutePath": "/Users",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../../../..",
+          "type": "folder",
+          "label": "..",
+          "description": "Folder: ../../../..",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../..",
+            "name": "..",
+            "absolutePath": "/",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../../../../src",
+          "type": "folder",
+          "label": "src",
+          "description": "Folder: ../../../../src",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src",
+            "name": "src",
+            "absolutePath": "/src",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib",
+          "type": "folder",
+          "label": "lib",
+          "description": "Folder: ../../../../src/lib",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib",
+            "name": "lib",
+            "absolutePath": "/src/lib",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto",
+          "type": "folder",
+          "label": "tiposkripto",
+          "description": "Folder: ../../../../src/lib/tiposkripto",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto",
+            "name": "tiposkripto",
+            "absolutePath": "/src/lib/tiposkripto",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/tests",
+          "type": "folder",
+          "label": "tests",
+          "description": "Folder: ../../../../src/lib/tiposkripto/tests",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/tests",
+            "name": "tests",
+            "absolutePath": "/src/lib/tiposkripto/tests",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/tests/calculator",
+          "type": "folder",
+          "label": "calculator",
+          "description": "Folder: ../../../../src/lib/tiposkripto/tests/calculator",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/tests/calculator",
+            "name": "calculator",
+            "absolutePath": "/src/lib/tiposkripto/tests/calculator",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
+          "type": "file",
+          "label": "Calculator.test.adapter.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
+            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
+            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
+          "type": "file",
+          "label": "Calculator.test.implementation.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
+            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
+            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+          "type": "file",
+          "label": "Calculator.test.specification.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "type": "file",
+          "label": "Calculator.test.node.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/Node.ts",
+          "type": "file",
+          "label": "Node.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/Node.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/Node.ts",
+            "localPath": "/src/lib/tiposkripto/src/Node.ts",
+            "url": "file:///src/lib/tiposkripto/src/Node.ts"
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/src",
+          "type": "folder",
+          "label": "src",
+          "description": "Folder: ../../../../src/lib/tiposkripto/src",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/src",
+            "name": "src",
+            "absolutePath": "/src/lib/tiposkripto/src",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/BaseTiposkripto.ts",
+          "type": "file",
+          "label": "BaseTiposkripto.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/BaseTiposkripto.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
+            "localPath": "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
+            "url": "file:///src/lib/tiposkripto/src/BaseTiposkripto.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/Adapters.ts",
+          "type": "file",
+          "label": "Adapters.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/Adapters.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/Adapters.ts",
+            "localPath": "/src/lib/tiposkripto/src/Adapters.ts",
+            "url": "file:///src/lib/tiposkripto/src/Adapters.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/types.ts",
+          "type": "file",
+          "label": "types.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/types.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/types.ts",
+            "localPath": "/src/lib/tiposkripto/src/types.ts",
+            "url": "file:///src/lib/tiposkripto/src/types.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+          "type": "file",
+          "label": "BaseDescribe.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts"
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/src/verbs",
+          "type": "folder",
+          "label": "verbs",
+          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/src/verbs",
+            "name": "verbs",
+            "absolutePath": "/src/lib/tiposkripto/src/verbs",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/src/verbs/aaa",
+          "type": "folder",
+          "label": "aaa",
+          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs/aaa",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/src/verbs/aaa",
+            "name": "aaa",
+            "absolutePath": "/src/lib/tiposkripto/src/verbs/aaa",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+          "type": "file",
+          "label": "CommonUtils.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts"
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/src/verbs/internal",
+          "type": "folder",
+          "label": "internal",
+          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs/internal",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/src/verbs/internal",
+            "name": "internal",
+            "absolutePath": "/src/lib/tiposkripto/src/verbs/internal",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+          "type": "file",
+          "label": "BaseIt.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+          "type": "file",
+          "label": "BaseGiven.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts"
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/src/verbs/bdd",
+          "type": "folder",
+          "label": "bdd",
+          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs/bdd",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/src/verbs/bdd",
+            "name": "bdd",
+            "absolutePath": "/src/lib/tiposkripto/src/verbs/bdd",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+          "type": "file",
+          "label": "BaseThen.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+          "type": "file",
+          "label": "BaseWhen.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+          "type": "file",
+          "label": "BaseConfirm.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts"
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/src/verbs/tdt",
+          "type": "folder",
+          "label": "tdt",
+          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs/tdt",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/src/verbs/tdt",
+            "name": "tdt",
+            "absolutePath": "/src/lib/tiposkripto/src/verbs/tdt",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+          "type": "file",
+          "label": "BaseExpected.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+          "type": "file",
+          "label": "BaseShould.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+          "type": "file",
+          "label": "BaseValue.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
           }
         },
         {
@@ -1048,7 +1467,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": 1775408446233,
+            "timestamp": 1775410841535,
             "fails": 4,
             "artifacts": [],
             "features": [],
@@ -1120,7 +1539,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775408446233,
+            "timestamp": 1775410841535,
             "individualResults": [
               {
                 "index": 0,
@@ -1354,6 +1773,75 @@
             "status": true,
             "fails": 0,
             "pattern": "generic"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.ts",
+          "type": "file",
+          "label": "Circle.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.ts",
+            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.ts",
+            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.ts"
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/tests/circle",
+          "type": "folder",
+          "label": "circle",
+          "description": "Folder: ../../../../src/lib/tiposkripto/tests/circle",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/tests/circle",
+            "name": "circle",
+            "absolutePath": "/src/lib/tiposkripto/tests/circle",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
+          "type": "file",
+          "label": "Circle.test.adapter.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
+            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
+            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
+          "type": "file",
+          "label": "Circle.test.implementation.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
+            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
+            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+          "type": "file",
+          "label": "Circle.test.specification.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.test.specification.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": "file",
+          "label": "Circle.test.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.test.ts"
           }
         },
         {
@@ -1745,7 +2233,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": 1775408446211,
+            "timestamp": 1775410841598,
             "fails": 0,
             "artifacts": [],
             "features": [
@@ -1827,7 +2315,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775408446211,
+            "timestamp": 1775410841598,
             "individualResults": [
               {
                 "index": 0,
@@ -2352,6 +2840,75 @@
             "name": "issues",
             "isVirtual": true,
             "hostname": "api.github.com"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
+          "type": "file",
+          "label": "Rectangle.test.implementation.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
+            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
+            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts"
+          }
+        },
+        {
+          "id": "folder:../../../../src/lib/tiposkripto/tests/Rectangle",
+          "type": "folder",
+          "label": "Rectangle",
+          "description": "Folder: ../../../../src/lib/tiposkripto/tests/Rectangle",
+          "status": "todo",
+          "icon": "folder",
+          "metadata": {
+            "path": "../../../../src/lib/tiposkripto/tests/Rectangle",
+            "name": "Rectangle",
+            "absolutePath": "/src/lib/tiposkripto/tests/Rectangle",
+            "isVirtual": false
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+          "type": "file",
+          "label": "Rectangle.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+          "type": "file",
+          "label": "Rectangle.test.specification.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts",
+          "type": "file",
+          "label": "Rectangle.test.adapter.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts",
+            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts",
+            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": "file",
+          "label": "Rectangle.test.ts",
+          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts"
           }
         },
         {
@@ -3199,560 +3756,217 @@
           }
         },
         {
-          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.ts",
-          "type": "file",
-          "label": "Calculator.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.ts",
+          "id": "builder_process:nodetests",
+          "type": "builder_process",
+          "label": "Builder Process: nodetests",
+          "description": "builder process for  (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
-            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
-            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.ts"
+            "runtime": "node",
+            "testName": "",
+            "configKey": "nodetests",
+            "processType": "builder",
+            "timestamp": "2026-04-05T17:44:51.379Z"
           }
         },
         {
-          "id": "folder:..",
-          "type": "folder",
-          "label": "..",
-          "description": "Folder: ..",
+          "id": "config:nodetests",
+          "type": "config",
+          "label": "Config: nodetests",
+          "description": "Configuration for nodetests",
           "status": "todo",
-          "icon": "folder",
+          "priority": "medium",
           "metadata": {
-            "path": "..",
-            "name": "..",
-            "absolutePath": "/Users/adam/Code",
-            "isVirtual": false
+            "configKey": "nodetests",
+            "runtime": "node",
+            "timestamp": "2026-04-05T17:44:51.379Z"
           }
         },
         {
-          "id": "folder:../..",
-          "type": "folder",
-          "label": "..",
-          "description": "Folder: ../..",
-          "status": "todo",
-          "icon": "folder",
+          "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "bdd process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "path": "../..",
-            "name": "..",
-            "absolutePath": "/Users/adam",
-            "isVirtual": false
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-05T17:44:54.460Z"
           }
         },
         {
-          "id": "folder:../../..",
-          "type": "folder",
-          "label": "..",
-          "description": "Folder: ../../..",
-          "status": "todo",
-          "icon": "folder",
+          "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "bdd process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "path": "../../..",
-            "name": "..",
-            "absolutePath": "/Users",
-            "isVirtual": false
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-05T17:44:56.006Z"
           }
         },
         {
-          "id": "folder:../../../..",
-          "type": "folder",
-          "label": "..",
-          "description": "Folder: ../../../..",
-          "status": "todo",
-          "icon": "folder",
+          "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "bdd process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "path": "../../../..",
-            "name": "..",
-            "absolutePath": "/",
-            "isVirtual": false
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-05T17:44:57.032Z"
           }
         },
         {
-          "id": "folder:../../../../src",
-          "type": "folder",
-          "label": "src",
-          "description": "Folder: ../../../../src",
-          "status": "todo",
-          "icon": "folder",
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "check process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "path": "../../../../src",
-            "name": "src",
-            "absolutePath": "/src",
-            "isVirtual": false
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-05T17:45:03.241Z"
           }
         },
         {
-          "id": "folder:../../../../src/lib",
-          "type": "folder",
-          "label": "lib",
-          "description": "Folder: ../../../../src/lib",
-          "status": "todo",
-          "icon": "folder",
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "check process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "path": "../../../../src/lib",
-            "name": "lib",
-            "absolutePath": "/src/lib",
-            "isVirtual": false
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-05T17:45:03.243Z"
           }
         },
         {
-          "id": "folder:../../../../src/lib/tiposkripto",
-          "type": "folder",
-          "label": "tiposkripto",
-          "description": "Folder: ../../../../src/lib/tiposkripto",
-          "status": "todo",
-          "icon": "folder",
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "path": "../../../../src/lib/tiposkripto",
-            "name": "tiposkripto",
-            "absolutePath": "/src/lib/tiposkripto",
-            "isVirtual": false
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-05T17:45:04.340Z"
           }
         },
         {
-          "id": "folder:../../../../src/lib/tiposkripto/tests",
-          "type": "folder",
-          "label": "tests",
-          "description": "Folder: ../../../../src/lib/tiposkripto/tests",
-          "status": "todo",
-          "icon": "folder",
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "path": "../../../../src/lib/tiposkripto/tests",
-            "name": "tests",
-            "absolutePath": "/src/lib/tiposkripto/tests",
-            "isVirtual": false
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-05T17:45:04.342Z"
           }
         },
         {
-          "id": "folder:../../../../src/lib/tiposkripto/tests/calculator",
-          "type": "folder",
-          "label": "calculator",
-          "description": "Folder: ../../../../src/lib/tiposkripto/tests/calculator",
-          "status": "todo",
-          "icon": "folder",
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "path": "../../../../src/lib/tiposkripto/tests/calculator",
-            "name": "calculator",
-            "absolutePath": "/src/lib/tiposkripto/tests/calculator",
-            "isVirtual": false
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-05T17:45:05.584Z"
           }
         },
         {
-          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
-          "type": "file",
-          "label": "Calculator.test.adapter.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
-            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
-            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts"
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-05T17:45:05.586Z"
           }
         },
         {
-          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
-          "type": "file",
-          "label": "Calculator.test.implementation.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
+          "id": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "aider process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
-            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts",
-            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.test.implementation.ts"
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-05T17:45:25.822Z"
           }
         },
         {
-          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-          "type": "file",
-          "label": "Calculator.test.specification.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+          "id": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "aider process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts"
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-05T17:45:26.680Z"
           }
         },
         {
-          "id": "file:/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-          "type": "file",
-          "label": "Calculator.test.node.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "id": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "aider process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
           "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "localPath": "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "url": "file:///src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/Node.ts",
-          "type": "file",
-          "label": "Node.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/Node.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/Node.ts",
-            "localPath": "/src/lib/tiposkripto/src/Node.ts",
-            "url": "file:///src/lib/tiposkripto/src/Node.ts"
-          }
-        },
-        {
-          "id": "folder:../../../../src/lib/tiposkripto/src",
-          "type": "folder",
-          "label": "src",
-          "description": "Folder: ../../../../src/lib/tiposkripto/src",
-          "status": "todo",
-          "icon": "folder",
-          "metadata": {
-            "path": "../../../../src/lib/tiposkripto/src",
-            "name": "src",
-            "absolutePath": "/src/lib/tiposkripto/src",
-            "isVirtual": false
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/BaseTiposkripto.ts",
-          "type": "file",
-          "label": "BaseTiposkripto.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/BaseTiposkripto.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
-            "localPath": "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
-            "url": "file:///src/lib/tiposkripto/src/BaseTiposkripto.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/Adapters.ts",
-          "type": "file",
-          "label": "Adapters.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/Adapters.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/Adapters.ts",
-            "localPath": "/src/lib/tiposkripto/src/Adapters.ts",
-            "url": "file:///src/lib/tiposkripto/src/Adapters.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/types.ts",
-          "type": "file",
-          "label": "types.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/types.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/types.ts",
-            "localPath": "/src/lib/tiposkripto/src/types.ts",
-            "url": "file:///src/lib/tiposkripto/src/types.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-          "type": "file",
-          "label": "BaseDescribe.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts"
-          }
-        },
-        {
-          "id": "folder:../../../../src/lib/tiposkripto/src/verbs",
-          "type": "folder",
-          "label": "verbs",
-          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs",
-          "status": "todo",
-          "icon": "folder",
-          "metadata": {
-            "path": "../../../../src/lib/tiposkripto/src/verbs",
-            "name": "verbs",
-            "absolutePath": "/src/lib/tiposkripto/src/verbs",
-            "isVirtual": false
-          }
-        },
-        {
-          "id": "folder:../../../../src/lib/tiposkripto/src/verbs/aaa",
-          "type": "folder",
-          "label": "aaa",
-          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs/aaa",
-          "status": "todo",
-          "icon": "folder",
-          "metadata": {
-            "path": "../../../../src/lib/tiposkripto/src/verbs/aaa",
-            "name": "aaa",
-            "absolutePath": "/src/lib/tiposkripto/src/verbs/aaa",
-            "isVirtual": false
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-          "type": "file",
-          "label": "CommonUtils.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts"
-          }
-        },
-        {
-          "id": "folder:../../../../src/lib/tiposkripto/src/verbs/internal",
-          "type": "folder",
-          "label": "internal",
-          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs/internal",
-          "status": "todo",
-          "icon": "folder",
-          "metadata": {
-            "path": "../../../../src/lib/tiposkripto/src/verbs/internal",
-            "name": "internal",
-            "absolutePath": "/src/lib/tiposkripto/src/verbs/internal",
-            "isVirtual": false
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-          "type": "file",
-          "label": "BaseIt.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-          "type": "file",
-          "label": "BaseGiven.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts"
-          }
-        },
-        {
-          "id": "folder:../../../../src/lib/tiposkripto/src/verbs/bdd",
-          "type": "folder",
-          "label": "bdd",
-          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs/bdd",
-          "status": "todo",
-          "icon": "folder",
-          "metadata": {
-            "path": "../../../../src/lib/tiposkripto/src/verbs/bdd",
-            "name": "bdd",
-            "absolutePath": "/src/lib/tiposkripto/src/verbs/bdd",
-            "isVirtual": false
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-          "type": "file",
-          "label": "BaseThen.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-          "type": "file",
-          "label": "BaseWhen.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-          "type": "file",
-          "label": "BaseConfirm.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts"
-          }
-        },
-        {
-          "id": "folder:../../../../src/lib/tiposkripto/src/verbs/tdt",
-          "type": "folder",
-          "label": "tdt",
-          "description": "Folder: ../../../../src/lib/tiposkripto/src/verbs/tdt",
-          "status": "todo",
-          "icon": "folder",
-          "metadata": {
-            "path": "../../../../src/lib/tiposkripto/src/verbs/tdt",
-            "name": "tdt",
-            "absolutePath": "/src/lib/tiposkripto/src/verbs/tdt",
-            "isVirtual": false
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-          "type": "file",
-          "label": "BaseExpected.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-          "type": "file",
-          "label": "BaseShould.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-          "type": "file",
-          "label": "BaseValue.ts",
-          "description": "Input file: /src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-            "localPath": "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-            "url": "file:///src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.ts",
-          "type": "file",
-          "label": "Circle.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.ts",
-            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.ts",
-            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.ts"
-          }
-        },
-        {
-          "id": "folder:../../../../src/lib/tiposkripto/tests/circle",
-          "type": "folder",
-          "label": "circle",
-          "description": "Folder: ../../../../src/lib/tiposkripto/tests/circle",
-          "status": "todo",
-          "icon": "folder",
-          "metadata": {
-            "path": "../../../../src/lib/tiposkripto/tests/circle",
-            "name": "circle",
-            "absolutePath": "/src/lib/tiposkripto/tests/circle",
-            "isVirtual": false
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
-          "type": "file",
-          "label": "Circle.test.adapter.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
-            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
-            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
-          "type": "file",
-          "label": "Circle.test.implementation.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
-            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts",
-            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.test.implementation.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
-          "type": "file",
-          "label": "Circle.test.specification.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
-            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
-            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.test.specification.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/circle/Circle.test.ts",
-          "type": "file",
-          "label": "Circle.test.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/circle/Circle.test.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "localPath": "/src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "url": "file:///src/lib/tiposkripto/tests/circle/Circle.test.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
-          "type": "file",
-          "label": "Rectangle.test.implementation.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
-            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
-            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts"
-          }
-        },
-        {
-          "id": "folder:../../../../src/lib/tiposkripto/tests/Rectangle",
-          "type": "folder",
-          "label": "Rectangle",
-          "description": "Folder: ../../../../src/lib/tiposkripto/tests/Rectangle",
-          "status": "todo",
-          "icon": "folder",
-          "metadata": {
-            "path": "../../../../src/lib/tiposkripto/tests/Rectangle",
-            "name": "Rectangle",
-            "absolutePath": "/src/lib/tiposkripto/tests/Rectangle",
-            "isVirtual": false
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
-          "type": "file",
-          "label": "Rectangle.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
-            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
-            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
-          "type": "file",
-          "label": "Rectangle.test.specification.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
-            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
-            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts",
-          "type": "file",
-          "label": "Rectangle.test.adapter.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts",
-            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts",
-            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.test.adapter.ts"
-          }
-        },
-        {
-          "id": "file:/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "type": "file",
-          "label": "Rectangle.test.ts",
-          "description": "Input file: /src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "metadata": {
-            "filePath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "localPath": "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "url": "file:///src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts"
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-05T17:45:27.628Z"
           }
         }
       ],
@@ -3834,798 +4048,6 @@
           "target": "feature:Readme.md",
           "attributes": {
             "type": "locatedIn",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
-          "target": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
-          "attributes": {
-            "type": "hasDescribe",
-            "weight": 1
-          }
-        },
-        {
-          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
-          "target": "it:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0:0",
-          "attributes": {
-            "type": "hasIt",
-            "weight": 1
-          }
-        },
-        {
-          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
-          "target": "it:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0:1",
-          "attributes": {
-            "type": "hasIt",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:Readme.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
-          "attributes": {
-            "type": "hasWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:1",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:1",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:2",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:2",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:3",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:3",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:Readme.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
-          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3:0",
-          "attributes": {
-            "type": "hasResult",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:Readme.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
-          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4:0",
-          "attributes": {
-            "type": "hasResult",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:Readme.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
-          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5:0",
-          "attributes": {
-            "type": "hasResult",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:Readme.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:src/lib/tiposkripto/tests",
-          "target": "folder:src/lib/tiposkripto/tests/circle",
-          "attributes": {
-            "type": "parentOf",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:src/lib/tiposkripto/tests/circle",
-          "target": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
-          "attributes": {
-            "type": "locatedIn",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
-          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0:0",
-          "attributes": {
-            "type": "hasResult",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
-          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1:0",
-          "attributes": {
-            "type": "hasResult",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
-          "target": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
-          "attributes": {
-            "type": "hasDescribe",
-            "weight": 1
-          }
-        },
-        {
-          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
-          "target": "it:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0:0",
-          "attributes": {
-            "type": "hasIt",
-            "weight": 1
-          }
-        },
-        {
-          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
-          "target": "it:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0:1",
-          "attributes": {
-            "type": "hasIt",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
-          "attributes": {
-            "type": "hasWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
-          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4:0",
-          "attributes": {
-            "type": "hasResult",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:src/lib/tiposkripto/tests",
-          "target": "folder:src/lib/tiposkripto/tests/Rectangle",
-          "attributes": {
-            "type": "parentOf",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:src/lib/tiposkripto/tests/Rectangle",
-          "target": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "attributes": {
-            "type": "locatedIn",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
-          "attributes": {
-            "type": "hasWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:888",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:web",
-          "target": "domain:api.github.com",
-          "attributes": {
-            "type": "parentOf",
-            "weight": 1
-          }
-        },
-        {
-          "source": "domain:api.github.com",
-          "target": "folder:web/api.github.com/repos",
-          "attributes": {
-            "type": "parentOf",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:web/api.github.com/repos",
-          "target": "folder:web/api.github.com/repos/adamwong246",
-          "attributes": {
-            "type": "parentOf",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:web/api.github.com/repos/adamwong246",
-          "target": "folder:web/api.github.com/repos/adamwong246/testeranto",
-          "attributes": {
-            "type": "parentOf",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:web/api.github.com/repos/adamwong246/testeranto",
-          "target": "folder:web/api.github.com/repos/adamwong246/testeranto/issues",
-          "attributes": {
-            "type": "parentOf",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:web/api.github.com/repos/adamwong246/testeranto/issues",
-          "target": "feature:888",
-          "attributes": {
-            "type": "locatedIn",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
-          "attributes": {
-            "type": "hasWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:2",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:3",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:README.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:src/lib/tiposkripto/tests/Rectangle",
-          "target": "feature:README.md",
-          "attributes": {
-            "type": "locatedIn",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
-          "attributes": {
-            "type": "hasWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:1",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:8",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:web/api.github.com/repos/adamwong246/testeranto/issues",
-          "target": "feature:8",
-          "attributes": {
-            "type": "locatedIn",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:README.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "folder:src/lib/tiposkripto",
-          "target": "feature:README.md",
-          "attributes": {
-            "type": "locatedIn",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0:1",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:8",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:README.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
-          "attributes": {
-            "type": "hasWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:1",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:8",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
-          "attributes": {
-            "type": "hasWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
-          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:1",
-          "attributes": {
-            "type": "nextWhen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:1",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:8",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
-          "attributes": {
-            "type": "belongsTo",
-            "weight": 1
-          }
-        },
-        {
-          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
-          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
-          "attributes": {
-            "type": "hasGiven",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0:0",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
-          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0:1",
-          "attributes": {
-            "type": "hasThen",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:8",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:README.md",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
-          "attributes": {
-            "type": "associatedWith",
-            "weight": 1
-          }
-        },
-        {
-          "source": "feature:8",
-          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
-          "attributes": {
-            "type": "associatedWith",
             "weight": 1
           }
         },
@@ -5054,6 +4476,214 @@
           }
         },
         {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+          "target": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "attributes": {
+            "type": "hasDescribe",
+            "weight": 1
+          }
+        },
+        {
+          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "target": "it:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0:0",
+          "attributes": {
+            "type": "hasIt",
+            "weight": 1
+          }
+        },
+        {
+          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0",
+          "target": "it:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1:0:1",
+          "attributes": {
+            "type": "hasIt",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:Readme.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:1",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:2",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:2",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:3",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:3",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:Readme.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3:0",
+          "attributes": {
+            "type": "hasResult",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:Readme.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:3",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4:0",
+          "attributes": {
+            "type": "hasResult",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:Readme.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:4",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5:0",
+          "attributes": {
+            "type": "hasResult",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:Readme.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:5",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:src/lib/tiposkripto/tests",
+          "target": "folder:src/lib/tiposkripto/tests/circle",
+          "attributes": {
+            "type": "parentOf",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:src/lib/tiposkripto/tests/circle",
+          "target": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "attributes": {
+            "type": "locatedIn",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0:0",
+          "attributes": {
+            "type": "hasResult",
+            "weight": 1
+          }
+        },
+        {
           "source": "folder:../../../../src/lib/tiposkripto/tests",
           "target": "folder:../../../../src/lib/tiposkripto/tests/circle",
           "attributes": {
@@ -5250,6 +4880,238 @@
           "target": "file:/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
           "attributes": {
             "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1:0",
+          "attributes": {
+            "type": "hasResult",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
+          "target": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "attributes": {
+            "type": "hasDescribe",
+            "weight": 1
+          }
+        },
+        {
+          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "target": "it:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0:0",
+          "attributes": {
+            "type": "hasIt",
+            "weight": 1
+          }
+        },
+        {
+          "source": "describe:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0",
+          "target": "it:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2:0:1",
+          "attributes": {
+            "type": "hasIt",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:3:0:1",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4",
+          "target": "verb:test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:4:0",
+          "attributes": {
+            "type": "hasResult",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:src/lib/tiposkripto/tests",
+          "target": "folder:src/lib/tiposkripto/tests/Rectangle",
+          "attributes": {
+            "type": "parentOf",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:src/lib/tiposkripto/tests/Rectangle",
+          "target": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "attributes": {
+            "type": "locatedIn",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0:0:1",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:888",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:web",
+          "target": "domain:api.github.com",
+          "attributes": {
+            "type": "parentOf",
+            "weight": 1
+          }
+        },
+        {
+          "source": "domain:api.github.com",
+          "target": "folder:web/api.github.com/repos",
+          "attributes": {
+            "type": "parentOf",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:web/api.github.com/repos",
+          "target": "folder:web/api.github.com/repos/adamwong246",
+          "attributes": {
+            "type": "parentOf",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:web/api.github.com/repos/adamwong246",
+          "target": "folder:web/api.github.com/repos/adamwong246/testeranto",
+          "attributes": {
+            "type": "parentOf",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:web/api.github.com/repos/adamwong246/testeranto",
+          "target": "folder:web/api.github.com/repos/adamwong246/testeranto/issues",
+          "attributes": {
+            "type": "parentOf",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:web/api.github.com/repos/adamwong246/testeranto/issues",
+          "target": "feature:888",
+          "attributes": {
+            "type": "locatedIn",
             "weight": 1
           }
         },
@@ -5452,11 +5314,480 @@
             "type": "associatedWith",
             "weight": 1
           }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:2",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1:0:3",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:README.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:src/lib/tiposkripto/tests/Rectangle",
+          "target": "feature:README.md",
+          "attributes": {
+            "type": "locatedIn",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:8",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:web/api.github.com/repos/adamwong246/testeranto/issues",
+          "target": "feature:8",
+          "attributes": {
+            "type": "locatedIn",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:README.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "folder:src/lib/tiposkripto",
+          "target": "feature:README.md",
+          "attributes": {
+            "type": "locatedIn",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3:0:1",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:8",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:README.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:3",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:8",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:4",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
+          "attributes": {
+            "type": "hasWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
+          "target": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:1",
+          "attributes": {
+            "type": "nextWhen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "when:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:1",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:8",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:5",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
+          "attributes": {
+            "type": "belongsTo",
+            "weight": 1
+          }
+        },
+        {
+          "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
+          "target": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
+          "attributes": {
+            "type": "hasGiven",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0:0",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "given:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0",
+          "target": "then:test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6:0:1",
+          "attributes": {
+            "type": "hasThen",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:8",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:6",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:README.md",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "feature:8",
+          "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "attributes": {
+            "type": "associatedWith",
+            "weight": 1
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "builder_process:nodetests",
+          "attributes": {
+            "type": "hasBuilderProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:44:51.379Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "attributes": {
+            "type": "hasBddProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:44:54.460Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "attributes": {
+            "type": "hasBddProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:44:56.006Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "attributes": {
+            "type": "hasBddProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:44:57.032Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
+          "attributes": {
+            "type": "hasCheckProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:03.241Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+          "attributes": {
+            "type": "hasCheckProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:03.243Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+          "attributes": {
+            "type": "hasCheckProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:04.340Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
+          "attributes": {
+            "type": "hasCheckProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:04.342Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "attributes": {
+            "type": "hasCheckProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:05.584Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+          "attributes": {
+            "type": "hasCheckProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:05.586Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "attributes": {
+            "type": "hasAiderProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:25.822Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "attributes": {
+            "type": "hasAiderProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:26.680Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "attributes": {
+            "type": "hasAiderProcess",
+            "weight": 1,
+            "timestamp": "2026-04-05T17:45:27.628Z"
+          }
         }
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-05T17:04:06.541Z"
+        "timestamp": "2026-04-05T17:45:27.630Z"
       }
     },
     "vizConfig": {
@@ -5474,6 +5805,10 @@
       }
     },
     "configs": {
+      "volumes": [
+        "/Users/adam/Code/testeranto/src:/workspace/src",
+        "/Users/adam/Code/testeranto/test:/workspace/test"
+      ],
       "runtimes": {
         "nodetests": {
           "runtime": "node",
@@ -5492,8 +5827,7 @@
           "outputs": []
         }
       },
-      "documentationGlob": "./src/**/*.md",
-      "featureIngestor": "present"
+      "documentationGlob": "./src/**/*.md"
     }
   }
 }

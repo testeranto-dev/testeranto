@@ -163,6 +163,8 @@ export const watchInputFilePure = async (
 
   if (mode === "dev") {
     watchFile(inputFilePath, async (curr, prev) => {
+      consoleLog(`[Server_Docker] File ${inputFilePath} changed`);
+      
       if (!existsSync(inputFilePath)) {
         consoleWarn(`${inputFilePath} does not exist yet.`);
         return;
@@ -191,6 +193,8 @@ export const watchInputFilePure = async (
         setState(updatedInputFiles, updatedHashs);
         resourceChanged("/~/inputfiles");
 
+        consoleLog(`[Server_Docker] Input files changed for ${testsName}, hash changed: ${newHash !== oldHash}`);
+        
         if (newHash !== oldHash) {
           for (const [ck, configValue] of Object.entries(configs.runtimes)) {
             if (
@@ -200,7 +204,7 @@ export const watchInputFilePure = async (
               launchBddTest(runtime, testsName, ck, configValue);
               launchChecks(runtime, testsName, ck, configValue);
               informAider(runtime, testsName, ck, configValue, testInfo.files);
-
+              
               // Update graph with input files
               consoleLog(`[Server_Docker] Checking if we should update graph with input files:`, {
                 hasUpdateGraphWithInputFiles: !!updateGraphWithInputFiles,
