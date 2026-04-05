@@ -6,7 +6,7 @@ import {
   readFileSync,
 } from "../Server_Docker_Dependents";
 import type { TestResultFile } from "../../../types/testResults";
-import type { ITesterantoConfig } from "../../../../../Types";
+import type { ITesterantoConfig } from "../../../../Types";
 
 export const getTestResultsPure = (
   runtime?: string,
@@ -45,12 +45,12 @@ export const getTestResultsPure = (
 
     // Construct the exact path where test results should be
     const testResultsPath = join(reportsDir, runtime, testName, "tests.json");
-    
+
     if (existsSync(testResultsPath)) {
       try {
         const content = readFileSync(testResultsPath, "utf-8");
         const result = JSON.parse(content);
-        
+
         testResults.push({
           file: "tests.json",
           filePath: testResultsPath,
@@ -70,16 +70,16 @@ export const getTestResultsPure = (
     // Collect results for all tests in the config
     for (const [configKey, runtimeConfig] of Object.entries(configs.runtimes)) {
       const tests = runtimeConfig.tests || [];
-      
+
       for (const test of tests) {
         // Construct the exact path where test results should be
         const testResultsPath = join(reportsDir, configKey, test, "tests.json");
-        
+
         if (existsSync(testResultsPath)) {
           try {
             const content = readFileSync(testResultsPath, "utf-8");
             const result = JSON.parse(content);
-            
+
             testResults.push({
               file: "tests.json",
               filePath: testResultsPath,

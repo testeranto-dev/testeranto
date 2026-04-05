@@ -209,7 +209,7 @@ export const watchInputFilePure = async (
               });
               if (updateGraphWithInputFiles && testInfo.files) {
                 try {
-                  consoleLog(`[Server_Docker] Calling updateGraphWithInputFiles`);
+                  consoleLog(`[Server_Docker] Calling updateGraphWithInputFiles for ${testsName} with ${testInfo.files.length} files`);
                   await updateGraphWithInputFiles(runtime, testsName, ck, testInfo.files);
                   consoleLog(`[Server_Docker] updateGraphWithInputFiles completed`);
                 } catch (error) {

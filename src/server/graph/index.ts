@@ -287,6 +287,129 @@ export class GraphManager {
     );
   }
 
+  // Update graph with input files for a specific test
+  public async updateGraphWithInputFiles(
+    runtime: string,
+    testName: string,
+    configKey: string,
+    inputFiles: string[]
+  ): Promise<GraphUpdate> {
+    const timestamp = new Date().toISOString();
+    const operations: GraphOperation[] = [];
+    
+    console.log(`[GraphManager] updateGraphWithInputFiles called for ${configKey}/${testName} with ${inputFiles.length} files`);
+    
+    // Find or create the entrypoint node for this test
+    const entrypointId = `entrypoint:${testName}`;
+    const existingEntrypointNode = this.graph.hasNode(entrypointId);
+    
+    if (!existingEntrypointNode) {
+      // Create entrypoint node if it doesn't exist
+      operations.push({
+        type: 'addNode',
+        data: {
+          id: entrypointId,
+          type: 'entrypoint',
+          label: testName.split('/').pop() || testName,
+          description: `Test entrypoint: ${testName}`,
+          status: 'todo',
+          icon: 'file-text',
+          metadata: {
+            configKey,
+            filePath: testName,
+            runtime,
+            timestamp
+          }
+        },
+        timestamp
+      });
+    }
+    
+    // Process each input file
+    for (const inputFile of inputFiles) {
+      console.log(`[GraphManager] Processing input file: ${inputFile}`);
+      
+      // Create file node for input file
+      const fileNodeId = `file:${inputFile}`;
+      const existingFileNode = this.graph.hasNode(fileNodeId);
+      
+      if (!existingFileNode) {
+        console.log(`[GraphManager] Creating file node: ${fileNodeId}`);
+        operations.push({
+          type: 'addNode',
+          data: {
+            id: fileNodeId,
+            type: 'file',
+            label: inputFile.split('/').pop() || inputFile,
+            description: `Input file: ${inputFile}`,
+            metadata: {
+              filePath: inputFile,
+              localPath: inputFile,
+              url: `file://${inputFile}`,
+              isInputFile: true
+            }
+          },
+          timestamp
+        });
+      } else {
+        console.log(`[GraphManager] File node already exists: ${fileNodeId}`);
+      }
+
+      // Create folder nodes for the input file's path
+      const parentFolderId = this.createFolderNodesAndEdges(
+        inputFile,
+        operations,
+        timestamp
+      );
+
+      // Connect input file to its parent folder
+      if (parentFolderId !== '') {
+        const folderEdgeExists = this.graph.hasEdge(parentFolderId, fileNodeId);
+        if (!folderEdgeExists) {
+          operations.push({
+            type: 'addEdge',
+            data: {
+              source: parentFolderId,
+              target: fileNodeId,
+              attributes: {
+                type: 'locatedIn',
+                weight: 1
+              }
+            },
+            timestamp
+          });
+        }
+      }
+
+      // Connect entrypoint to input file
+      const entrypointToFileEdgeExists = this.graph.hasEdge(entrypointId, fileNodeId);
+      if (!entrypointToFileEdgeExists) {
+        operations.push({
+          type: 'addEdge',
+          data: {
+            source: entrypointId,
+            target: fileNodeId,
+            attributes: {
+              type: 'associatedWith',
+              weight: 1
+            }
+          },
+          timestamp
+        });
+      }
+    }
+    
+    // Apply the operations
+    if (operations.length > 0) {
+      const update = { operations, timestamp };
+      this.applyUpdate(update);
+      console.log(`[GraphManager] Applied ${operations.length} operations for input files`);
+      return update;
+    }
+    
+    return { operations: [], timestamp };
+  }
+
   // Clean up attribute nodes (nodes that should be attributes of other nodes)
   public cleanupAttributeNodes(): GraphUpdate {
     const timestamp = new Date().toISOString();

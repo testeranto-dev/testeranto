@@ -4,6 +4,32 @@ import { createTestNodeOperationsPure } from './createTestNodeOperationsPure';
 import { createVerbNodesFromTestResultsPure } from './createVerbNodesFromTestResultsPure';
 import { processFeaturesForTest } from './processFeaturesForTest';
 import { processInputFilesForTestPure } from './processInputFilesForTestPure';
+import fs from 'fs';
+import path from 'path';
+
+// Helper function to load input files from bundle directory
+function loadInputFilesFromBundleForIndividual(
+  configKey: string,
+  testName: string,
+  projectRoot: string
+): string[] {
+  try {
+    const bundleDir = path.join(projectRoot, 'testeranto', 'bundles', configKey);
+    const inputFilesPath = path.join(bundleDir, 'inputFiles.json');
+    
+    if (fs.existsSync(inputFilesPath)) {
+      const content = fs.readFileSync(inputFilesPath, 'utf-8');
+      const allTestsInfo = JSON.parse(content);
+      
+      if (allTestsInfo[testName] && allTestsInfo[testName].files) {
+        return allTestsInfo[testName].files;
+      }
+    }
+  } catch (error) {
+    console.error(`[GraphManager] Error loading input files from bundle for ${configKey}/${testName}:`, error);
+  }
+  return [];
+}
 
 export async function processIndividualResultsPure(
   singleTestResult: TestResult,
@@ -19,6 +45,13 @@ export async function processIndividualResultsPure(
   if (!entrypointId || !singleTestResult.individualResults || !Array.isArray(singleTestResult.individualResults)) {
     return;
   }
+
+  // Load input files from bundle for the entire test
+  const bundleInputFiles = loadInputFilesFromBundleForIndividual(
+    singleTestResult.configKey || sanitizedConfigKey,
+    singleTestResult.testName || filePathForEntrypoint,
+    projectRoot
+  );
 
   if (singleTestResult.individualResults.length > 0) {
     for (let i = 0; i < singleTestResult.individualResults.length; i++) {
@@ -95,14 +128,20 @@ export async function processIndividualResultsPure(
         console.log(`[GraphManager] No features found for individual result ${i}`);
       }
 
-      console.log(`[GraphManager] Checking for input files in individual result ${i}:`, individualResult.inputFiles);
-      if (individualResult.inputFiles && Array.isArray(individualResult.inputFiles)) {
-        console.log(`[GraphManager] Processing ${individualResult.inputFiles.length} input files for individual result ${i}:`, individualResult.inputFiles);
+      // Use input files from individual result or from bundle
+      let inputFiles = individualResult.inputFiles;
+      if (!inputFiles || !Array.isArray(inputFiles)) {
+        inputFiles = bundleInputFiles;
+      }
+
+      console.log(`[GraphManager] Checking for input files in individual result ${i}:`, inputFiles);
+      if (inputFiles && Array.isArray(inputFiles) && inputFiles.length > 0) {
+        console.log(`[GraphManager] Processing ${inputFiles.length} input files for individual result ${i}:`, inputFiles);
         console.log(`[GraphManager] Entrypoint ID for individual result: ${entrypointId}`);
         if (entrypointId) {
           console.log(`[GraphManager] Calling processInputFilesForTest for individual result`);
           await processInputFilesForTestPure(
-            individualResult.inputFiles,
+            inputFiles,
             entrypointId,
             operations,
             graph,

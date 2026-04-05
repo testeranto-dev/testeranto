@@ -11,6 +11,33 @@ import { processIndividualResultsPure } from './processIndividualResultsPure';
 import { processTopLevelFeaturesPure } from './processTopLevelFeaturesPure';
 import { processInputFilesForTestPure } from './processInputFilesForTestPure';
 import { handleSimpleTestResultPure } from './handleSimpleTestResultPure';
+import fs from 'fs';
+import path from 'path';
+
+// Helper function to load input files from bundle directory
+function loadInputFilesFromBundle(
+  configKey: string,
+  testName: string,
+  projectRoot: string
+): string[] {
+  try {
+    const bundleDir = path.join(projectRoot, 'testeranto', 'bundles', configKey);
+    const inputFilesPath = path.join(bundleDir, 'inputFiles.json');
+    
+    if (fs.existsSync(inputFilesPath)) {
+      const content = fs.readFileSync(inputFilesPath, 'utf-8');
+      const allTestsInfo = JSON.parse(content);
+      
+      if (allTestsInfo[testName] && allTestsInfo[testName].files) {
+        console.log(`[GraphManager] Loaded ${allTestsInfo[testName].files.length} input files from bundle for ${configKey}/${testName}`);
+        return allTestsInfo[testName].files;
+      }
+    }
+  } catch (error) {
+    console.error(`[GraphManager] Error loading input files from bundle for ${configKey}/${testName}:`, error);
+  }
+  return [];
+}
 
 export async function processSingleTestResultPure(
   singleTestResult: TestResult,
@@ -64,6 +91,20 @@ export async function processSingleTestResultPure(
 
   const sanitizedConfigKey = configKey.replace(/[^a-zA-Z0-9:_\-.]/g, '_');
   console.log(`[GraphManager] Sanitized configKey="${sanitizedConfigKey}"`);
+
+  // Load input files from bundle if not present in test results
+  let inputFiles = singleTestResult.inputFiles;
+  if (!inputFiles || !Array.isArray(inputFiles)) {
+    inputFiles = loadInputFilesFromBundle(configKey, testName, projectRoot);
+    if (inputFiles.length > 0) {
+      console.log(`[GraphManager] Augmented test result with ${inputFiles.length} input files from bundle`);
+      // Create a copy with input files
+      singleTestResult = {
+        ...singleTestResult,
+        inputFiles
+      };
+    }
+  }
 
   const entrypointResult = createEntrypointNodeOperationsPure(
     configKey,
@@ -145,15 +186,16 @@ export async function processSingleTestResultPure(
     actualTimestamp
   );
 
-  if (singleTestResult.inputFiles && Array.isArray(singleTestResult.inputFiles)) {
+  // Process input files (now they should be available)
+  if (inputFiles && Array.isArray(inputFiles) && inputFiles.length > 0) {
     console.log(`[GraphManager] Processing input files for test ${singleTestResult.testName}`);
-    console.log(`[GraphManager] Found ${singleTestResult.inputFiles.length} input files:`, singleTestResult.inputFiles);
+    console.log(`[GraphManager] Found ${inputFiles.length} input files:`, inputFiles);
     console.log(`[GraphManager] Entrypoint ID: ${entrypointId}`);
 
     if (entrypointId) {
       console.log(`[GraphManager] Calling processInputFilesForTest`);
       await processInputFilesForTestPure(
-        singleTestResult.inputFiles,
+        inputFiles,
         entrypointId,
         operations,
         graph,
