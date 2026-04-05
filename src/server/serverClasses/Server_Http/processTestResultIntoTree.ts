@@ -1,4 +1,4 @@
-import { findNodeInTree } from "../StakeholderUtils";
+import { findNodeInTree } from "../../stakeholder/StakeholderUtils";
 import { addFileToTree } from "../utils/addFileToTree";
 import { extractLocalFilePath } from "../utils/extractLocalFilePath";
 import { isLocalFileUrl } from "../utils/isLocalFileUrl";

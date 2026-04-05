@@ -12,7 +12,6 @@ import { stakeholderWsAPI, stakeholderHttpAPI } from "../../api";
 import { GraphManager } from "../graph/index";
 import { Palette } from "../../colors";
 import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
-import { isLocalFileUrl, getConfigsData } from "../stakeholder/utils";
 
 declare const Bun: any;
 
@@ -158,7 +157,7 @@ export abstract class Server_HTTP extends Server_Base {
     // Handle /~/ routes (vscode API) - for VS Code extension
     if (url.pathname.startsWith("/~/")) {
       return await this.handleRouteRequest(request, url);
-    } 
+    }
     // Handle /api/ routes for stakeholder app in development mode
     else if (url.pathname.startsWith("/api/")) {
       return await this.handleStakeholderApiRequest(request, url);
@@ -420,7 +419,7 @@ export abstract class Server_HTTP extends Server_Base {
   public async handleMarkdownFileChange(filePath: string): Promise<void> {
     const { handleMarkdownFileChange } = await import('../stakeholder/markdown');
     const result = await handleMarkdownFileChange(filePath, this.graphManager);
-    
+
     // Broadcast update to WebSocket clients if we're a WS server
     if (this instanceof Server_WS && result) {
       const wsThis = this as Server_WS;
@@ -444,17 +443,17 @@ export abstract class Server_HTTP extends Server_Base {
 
   private async handleStakeholderApiRequest(request: Request, url: URL): Promise<Response> {
     const routeName = url.pathname.slice(5); // Remove '/api/'
-    
+
     if (request.method === "OPTIONS") {
       return handleOptions();
     }
-    
+
     try {
       // Check if the route matches any defined API endpoint
       const endpoint = Object.values(stakeholderHttpAPI).find(
         ep => ep.path === `/api/${routeName}`
       );
-      
+
       if (!endpoint) {
         return new Response(JSON.stringify({
           error: "Not found",
@@ -464,7 +463,7 @@ export abstract class Server_HTTP extends Server_Base {
           headers: { "Content-Type": "application/json" },
         });
       }
-      
+
       // Check if the HTTP method matches
       if (request.method !== endpoint.method) {
         return new Response(JSON.stringify({
@@ -475,7 +474,7 @@ export abstract class Server_HTTP extends Server_Base {
           headers: { "Content-Type": "application/json" },
         });
       }
-      
+
       // Handle the specific endpoint
       switch (routeName) {
         case 'graph-update':
@@ -500,7 +499,7 @@ export abstract class Server_HTTP extends Server_Base {
       });
     }
   }
-  
+
   private async handlePostGraphUpdate(request: Request, url: URL): Promise<Response> {
     const { handlePostGraphUpdate } = await import('../stakeholder/handlers');
     const broadcast = this instanceof Server_WS ? (this as Server_WS).broadcast.bind(this) : undefined;

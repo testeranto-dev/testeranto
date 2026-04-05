@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-05T08:37:27.797Z",
+  "timestamp": "2026-04-05T16:07:24.596Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -14,7 +14,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": 1775373084051,
+            "timestamp": 1775403141455,
             "fails": 6,
             "artifacts": [],
             "features": [
@@ -140,7 +140,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775373084051,
+            "timestamp": 1775403141455,
             "individualResults": [
               {
                 "index": 0,
@@ -1006,7 +1006,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": 1775373084267,
+            "timestamp": 1775403141475,
             "fails": 4,
             "artifacts": [],
             "features": [],
@@ -1057,7 +1057,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775373084267,
+            "timestamp": 1775403141475,
             "individualResults": [
               {
                 "index": 0,
@@ -1661,7 +1661,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": 1775373084199,
+            "timestamp": 1775403141463,
             "fails": 0,
             "artifacts": [],
             "features": [
@@ -1722,7 +1722,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775373084199,
+            "timestamp": 1775403141463,
             "individualResults": [
               {
                 "index": 0,
@@ -2135,8 +2135,8 @@
           "icon": "document",
           "metadata": {
             "url": "https://api.github.com/repos/adamwong246/testeranto/issues/888",
-            "content": "---\nstatus: todo\ntitle: '888'\ndescription: 'Feature: 888'\n---\n{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n",
-            "contentPreview": "{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"h...",
+            "content": "---\nstatus: todo\ntitle: '888'\ndescription: 'Feature: 888'\n---\n{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/issues/issues#get-an-issue\",\"status\":\"404\"}",
+            "contentPreview": "{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/issues/issues#get-an-issue\",\"status\":\"404\"}",
             "frontmatter": {
               "status": "todo",
               "title": "888",
@@ -2591,8 +2591,8 @@
           "icon": "document",
           "metadata": {
             "url": "https://api.github.com/repos/adamwong246/testeranto/issues/8",
-            "content": "---\nstatus: todo\ntitle: '8'\ndescription: 'Feature: 8'\n---\n{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n",
-            "contentPreview": "{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"h...",
+            "content": "---\nstatus: todo\ntitle: '8'\ndescription: 'Feature: 8'\n---\n{\"url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8\",\"repository_url\":\"https://api.github.com/repos/adamwong246/testeranto\",\"labels_url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/labels{/name}\",\"comments_url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/comments\",\"events_url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/events\",\"html_url\":\"https://github.com/adamwong246/testeranto/issues/8\",\"id\":2901690454,\"node_id\":\"I_kwDOIY-Tns6s9EhW\",\"number\":8,\"title\":\"rectangle getters and setters\",\"user\":{\"login\":\"adamwong246\",\"id\":474792,\"node_id\":\"MDQ6VXNlcjQ3NDc5Mg==\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/474792?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/adamwong246\",\"html_url\":\"https://github.com/adamwong246\",\"followers_url\":\"https://api.github.com/users/adamwong246/followers\",\"following_url\":\"https://api.github.com/users/adamwong246/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/adamwong246/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/adamwong246/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/adamwong246/subscriptions\",\"organizations_url\":\"https://api.github.com/users/adamwong246/orgs\",\"repos_url\":\"https://api.github.com/users/adamwong246/repos\",\"events_url\":\"https://api.github.com/users/adamwong246/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/adamwong246/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"labels\":[{\"id\":4772586359,\"node_id\":\"LA_kwDOIY-Tns8AAAABHHfjdw\",\"url\":\"https://api.github.com/repos/adamwong246/testeranto/labels/invalid\",\"name\":\"invalid\",\"color\":\"e4e669\",\"default\":true,\"description\":\"This doesn't seem right\"}],\"state\":\"open\",\"locked\":false,\"assignees\":[],\"milestone\":null,\"comments\":0,\"created_at\":\"2025-03-07T00:09:26Z\",\"updated_at\":\"2025-08-16T15:54:40Z\",\"closed_at\":null,\"assignee\":null,\"author_association\":\"OWNER\",\"active_lock_reason\":null,\"sub_issues_summary\":{\"total\":0,\"completed\":0,\"percent_completed\":0},\"issue_dependencies_summary\":{\"blocked_by\":0,\"total_blocked_by\":0,\"blocking\":0,\"total_blocking\":0},\"body\":\"Rectangles class should have proper accessor functions\",\"closed_by\":null,\"reactions\":{\"url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/reactions\",\"total_count\":0,\"+1\":0,\"-1\":0,\"laugh\":0,\"hooray\":0,\"confused\":0,\"heart\":0,\"rocket\":0,\"eyes\":0},\"timeline_url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/timeline\",\"performed_via_github_app\":null,\"state_reason\":null,\"pinned_comment\":null}",
+            "contentPreview": "{\"url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8\",\"repository_url\":\"https://api.github.com/repos/adamwong246/testeranto\",\"labels_url\":\"https://api.github.com/repos/adamwong246/test...",
             "frontmatter": {
               "status": "todo",
               "title": "8",
@@ -3949,7 +3949,7 @@
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-05T08:37:27.797Z"
+        "timestamp": "2026-04-05T16:07:24.596Z"
       }
     },
     "vizConfig": {
@@ -3965,6 +3965,28 @@
         "nodeColor": "#882255",
         "nodeShape": "circle"
       }
+    },
+    "configs": {
+      "runtimes": {
+        "nodetests": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts"
+          ],
+          "checks": [
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        }
+      },
+      "documentationGlob": "./src/**/*.md",
+      "featureIngestor": "present"
     }
   }
 }

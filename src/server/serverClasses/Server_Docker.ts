@@ -1,4 +1,3 @@
-import { execSync } from "child_process";
 import fs, { existsSync } from "fs";
 import path from "path";
 import process from "process";
@@ -7,6 +6,8 @@ import type { IMode } from "../types";
 import { AiderImageBuilder } from "./Server_Docker/AiderImageBuilder";
 import { AiderMessageManager } from "./Server_Docker/AiderMessageManager";
 import { BuilderServicesManager } from "./Server_Docker/BuilderServicesManager";
+import { clearStoredLogs } from "./Server_Docker/clearStoredLogs";
+import { getContainerInfo } from "./Server_Docker/getContainerInfo";
 import {
   getDockerComposeDownPure,
   getReportDirPure,
@@ -42,8 +43,6 @@ import {
 import { writeConfigForExtensionOnStop } from "./Server_Docker/utils/writeConfigForExtensionOnStop";
 import { writeConfigForExtensionPure } from "./Server_Docker/utils/writeConfigForExtensionPure";
 import { Server_Docker_Compose } from "./Server_Docker_Compose";
-import { getContainerInfo } from "./Server_Docker/getContainerInfo";
-import { clearStoredLogs } from "./Server_Docker/clearStoredLogs";
 // Note: waitForBundlesPure is imported dynamically to avoid circular dependencies
 
 // TODO: TICKET-001 - Refactor logging system to separate test and builder services

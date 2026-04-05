@@ -1,4 +1,4 @@
-import { findNodeInTree } from "../StakeholderUtils";
+import { findNodeInTree } from "../../stakeholder/StakeholderUtils";
 import { addFileToTree } from "./addFileToTree";
 import { addTestResultStructureToNode } from "./addTestResultStructureToNode";
 import { collectTestResults } from "./collectTestResults";
