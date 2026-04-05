@@ -1,48 +1,25 @@
-import { resetGraphDataPure } from "./utils/resetGraphDataPure";
-import fs from 'fs';
-import path from 'path';
 import type { AllTestResults, ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
-import { Server_Base } from "./Server_Base";
-import { handleOptions } from "./Server_Http/handleOptions";
+import { Server_HTTP_Base } from "./Server_HTTP_Base";
 import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
-import { serveStaticFile } from "./Server_Http/utils/utils";
 import { Server_WS } from "./Server_WS";
 import { stakeholderWsAPI, stakeholderHttpAPI } from "../../api";
-import { GraphManager } from "../graph/index";
-import { Palette } from "../../colors";
-import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
 
 declare const Bun: any;
 
-export abstract class Server_HTTP extends Server_Base {
+export abstract class Server_HTTP extends Server_HTTP_Base {
   protected bunServer: any | null = null;
   private routesHandler: Server_HTTP_Routes;
-  protected graphManager: GraphManager;
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
     console.log('[Server_HTTP] Constructor called with configs:',
       configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
     this.routesHandler = new Server_HTTP_Routes(this);
-    this.graphManager = new GraphManager(
-      process.cwd(),
-      configs.featureIngestor,
-      configs
-    );
   }
 
   async start(): Promise<void> {
     await super.start();
-
-    // Generate and save graph data immediately on startup
-    console.log('[Server_HTTP] Generating initial graph data...');
-    try {
-      const graphData = await this.resetGraphData();
-      console.log('[Server_HTTP] Initial graph data generated successfully');
-    } catch (error) {
-      console.error('[Server_HTTP] Error generating initial graph data:', error);
-    }
 
     const port = 3000;
 
@@ -122,11 +99,6 @@ export abstract class Server_HTTP extends Server_Base {
   }
 
   async stop() {
-    // Save graph before stopping
-    if (this.graphManager) {
-      this.graphManager.saveGraph();
-    }
-
     if (this.bunServer) {
       this.bunServer.stop();
     }
@@ -172,7 +144,7 @@ export abstract class Server_HTTP extends Server_Base {
     const routeName = url.pathname.slice(3);
 
     if (request.method === "OPTIONS") {
-      return handleOptions();
+      return this.handleOptions();
     }
 
     try {
@@ -194,87 +166,6 @@ export abstract class Server_HTTP extends Server_Base {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
-    }
-  }
-
-  private async serveStaticFile(request: Request, url: URL): Promise<Response> {
-    return serveStaticFile(request, url, this.configs);
-  }
-
-
-  public async resetGraphData(): Promise<any> {
-    console.log('[Server_HTTP] resetGraphData() called');
-
-    // Use the pure stateless function
-    const fullGraphData = await resetGraphDataPure(
-      this.graphManager,
-      this.configs,
-      this.getCurrentTestResults.bind(this)
-    );
-
-    console.log(`[Server_HTTP] Saving full graph data structure in unified format...`);
-    // Also save a standalone graph-data.json file for static mode
-    this.saveGraphDataForStaticMode(fullGraphData);
-
-    return fullGraphData;
-  }
-
-  // Save graph data for static mode access
-  public saveGraphDataForStaticMode(fullGraphData: any): void {
-    try {
-      const projectRoot = process.cwd();
-      const filePath = path.join(projectRoot, 'testeranto', 'reports', 'graph-data.json');
-      const dir = path.dirname(filePath);
-
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-        console.log(`[Server_HTTP] Created directory: ${dir}`);
-      }
-
-      // Create a standalone graph data object for static mode in unified format
-      const staticGraphData = {
-        timestamp: new Date().toISOString(),
-        version: '1.0',
-        data: {
-          unifiedGraph: fullGraphData.unifiedGraph || { nodes: [], edges: [] },
-          vizConfig: fullGraphData.vizConfig || {
-            projection: {
-              xAttribute: 'status',
-              yAttribute: 'priority',
-              xType: 'categorical',
-              yType: 'continuous',
-              layout: 'grid'
-            },
-            style: {
-              nodeSize: 10,
-              nodeColor: Palette.rust,
-              nodeShape: 'circle'
-            }
-          },
-          configs: fullGraphData.configs || {}
-        }
-      };
-
-      // Always write the file on startup (as intended)
-      console.log(`[Server_HTTP] Writing graph-data.json to ${filePath}`);
-      console.log(`[Server_HTTP] Graph data structure keys:`, Object.keys(staticGraphData.data));
-      if (staticGraphData.data.unifiedGraph) {
-        console.log(`[Server_HTTP] unifiedGraph has ${staticGraphData.data.unifiedGraph.nodes?.length || 0} nodes, ${staticGraphData.data.unifiedGraph.edges?.length || 0} edges`);
-      }
-
-      fs.writeFileSync(filePath, JSON.stringify(staticGraphData, null, 2), 'utf-8');
-      console.log(`[Server_HTTP] Successfully saved graph-data.json (${fs.statSync(filePath).size} bytes)`);
-
-      // Verify the file was written correctly
-      try {
-        const writtenContent = fs.readFileSync(filePath, 'utf-8');
-        const parsed = JSON.parse(writtenContent);
-        console.log(`[Server_HTTP] Verification: file contains ${parsed.data?.unifiedGraph?.nodes?.length || 0} nodes`);
-      } catch (verifyError) {
-        console.error(`[Server_HTTP] Failed to verify written file:`, verifyError);
-      }
-    } catch (error) {
-      console.error('[Server_HTTP] Error saving static graph data:', error);
     }
   }
 
@@ -359,159 +250,11 @@ export abstract class Server_HTTP extends Server_Base {
     return {};
   }
 
-  protected generateFeatureTree(): any {
-    // Generate a tree structure from features
-    const graphData = this.graphManager ? this.graphManager.getGraphData() : { nodes: [], edges: [] };
-
-    const featureNodes = graphData.nodes.filter((node: any) => node.type === 'feature');
-    const featureEdges = graphData.edges.filter((edge: any) =>
-      edge.attributes.type === 'dependsUpon' || edge.attributes.type === 'blocks'
-    );
-
-    const tree: any = {};
-
-    featureNodes.forEach((node: any) => {
-      tree[node.id] = {
-        ...node,
-        children: [],
-        parents: []
-      };
-    });
-
-    featureEdges.forEach((edge: any) => {
-      if (edge.attributes.type === 'dependsUpon') {
-        // source depends on target
-        if (tree[edge.source]) {
-          tree[edge.source].parents.push(edge.target);
-        }
-        if (tree[edge.target]) {
-          tree[edge.target].children.push(edge.source);
-        }
-      } else if (edge.attributes.type === 'blocks') {
-        // source blocks target
-        if (tree[edge.source]) {
-          tree[edge.source].children.push(edge.target);
-        }
-        if (tree[edge.target]) {
-          tree[edge.target].parents.push(edge.source);
-        }
-      }
-    });
-
-    return tree;
-  }
-
-  protected generateFeatureGraph(): any {
-    return this.graphManager ? this.graphManager.getGraphData() : { nodes: [], edges: [] };
-  }
-
-  protected generateFileTreeGraph(): any {
-    // Generate a file tree graph based on the project structure
-    // Only include: entry files, input files used by entry files, and feature references (URLs or files)
-    const projectRoot = process.cwd();
-    const testResults = this.getCurrentTestResults();
-
-    // Use the pure stateless function
-    return generateFileTreeGraphPure(projectRoot, this.configs, testResults);
-  }
-
-  // Handle markdown file changes by updating the specific file in the graph
-  public async handleMarkdownFileChange(filePath: string): Promise<void> {
-    const { handleMarkdownFileChange } = await import('../stakeholder/markdown');
-    const result = await handleMarkdownFileChange(filePath, this.graphManager);
-
-    // Broadcast update to WebSocket clients if we're a WS server
-    if (this instanceof Server_WS && result) {
-      const wsThis = this as Server_WS;
-      wsThis.broadcast({
-        type: 'graphUpdated',
-        message: `Graph updated due to markdown file change: ${filePath}`,
-        timestamp: new Date().toISOString(),
-        data: {
-          unifiedGraph: result
-        }
-      });
-    }
-  }
-
-  // Save current graph to graph-data.json
-  public saveCurrentGraph(): void {
-    try {
-      if (this.graphManager) {
-        const graphData = this.graphManager.getGraphData();
-        if (graphData) {
-          const fullGraphData = {
-            unifiedGraph: graphData,
-            vizConfig: {
-              projection: {
-                xAttribute: 'status',
-                yAttribute: 'priority',
-                xType: 'categorical' as const,
-                yType: 'continuous' as const,
-                layout: 'grid' as const
-              },
-              style: {
-                nodeSize: 10,
-                nodeColor: '#882255',
-                nodeShape: 'circle'
-              }
-            },
-            configs: this.configs
-          };
-          this.saveGraphDataForStaticMode(fullGraphData);
-          console.log(`[Server_HTTP] Saved current graph to graph-data.json`);
-        }
-      }
-    } catch (error) {
-      console.error('[Server_HTTP] Error saving current graph:', error);
-    }
-  }
-
-  // Save current graph to graph-data.json
-  public saveCurrentGraph(): void {
-    try {
-      if (this.graphManager) {
-        const graphData = this.graphManager.getGraphData();
-        if (graphData) {
-          const fullGraphData = {
-            unifiedGraph: graphData,
-            vizConfig: {
-              projection: {
-                xAttribute: 'status',
-                yAttribute: 'priority',
-                xType: 'categorical' as const,
-                yType: 'continuous' as const,
-                layout: 'grid' as const
-              },
-              style: {
-                nodeSize: 10,
-                nodeColor: '#882255',
-                nodeShape: 'circle'
-              }
-            },
-            configs: this.configs
-          };
-          this.saveGraphDataForStaticMode(fullGraphData);
-          console.log(`[Server_HTTP] Saved current graph to graph-data.json`);
-        }
-      }
-    } catch (error) {
-      console.error('[Server_HTTP] Error saving current graph:', error);
-    }
-  }
-
-  // Write markdown file with updated frontmatter using stakeholder utilities
-  public async writeMarkdownFile(filePath: string, frontmatterData: Record<string, any>, contentBody?: string): Promise<void> {
-    const { updateMarkdownFile } = await import('../stakeholder/markdown');
-    await updateMarkdownFile(filePath, frontmatterData, contentBody);
-    console.log(`[Server_HTTP] Updated markdown file: ${filePath}`);
-  }
-
   private async handleStakeholderApiRequest(request: Request, url: URL): Promise<Response> {
     const routeName = url.pathname.slice(5); // Remove '/api/'
 
     if (request.method === "OPTIONS") {
-      return handleOptions();
+      return this.handleOptions();
     }
 
     try {

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-05T20:14:23.417Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 714dad3ce409f18d909fd0cd761b1557b4aa67d3a7c9aab7785153038c0a0b97 ===
+=== Log started at 2026-04-05T20:30:33.121Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: 1aeefc2f641eea844c27487e869ddaa860945600fa4927dc5f10a369ba2bbacb ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -15,14 +15,6 @@ Describe implementation for "a circle with radius" is not a function, got: objec
 [Circle adapter] beforeEach created circle: Circle { radius: [class Circle] }
 [Circle adapter] andWhen called with store: Circle { radius: [class Circle] }
 [Circle adapter] andWhen result: Circle { radius: NaN }
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
 [Circle adapter] andWhen called with store: Circle { radius: NaN }
 [Circle adapter] andWhen result: Circle { radius: NaN }
 [Circle adapter] verify called with store: Circle { radius: NaN }
@@ -30,10 +22,18 @@ Error: Step type Function has no runnable method
 [Circle adapter] verify called with store: Circle { radius: NaN }
 [Circle adapter] verificationFn: [AsyncFunction (anonymous)]
 [Circle adapter] afterEach called with store: Circle { radius: NaN }
+Error: Step type Function has no runnable method
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
+Error: Step type Function has no runnable method
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
 testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 0.65s.
+Done in 0.61s.
 
-=== Log captured at 2026-04-05T20:14:24.896Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-05T20:30:35.730Z (container status: exited, exit code: 0) ===

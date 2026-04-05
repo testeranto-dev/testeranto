@@ -14,9 +14,9 @@ import {
 import { generateServicesPure } from "./Server_Docker/utils/generateServicesPure";
 import { getDockerComposeCommandsPure } from "./Server_Docker/utils/getDockerComposeCommandsPure";
 import { writeComposeFile } from "./Server_Docker/utils/writeComposeFile";
-import { Server_WS } from "./Server_WS";
+import { Server_Docker_Base } from "./Server_Docker_Base";
 
-export abstract class Server_Docker_Compose extends Server_WS {
+export abstract class Server_Docker_Compose extends Server_Docker_Base {
   dockerComposeManager: DockerComposeManager;
 
   abstract getProcessSummary: any;

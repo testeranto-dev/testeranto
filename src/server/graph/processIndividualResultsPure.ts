@@ -16,11 +16,11 @@ function loadInputFilesFromBundleForIndividual(
   try {
     const bundleDir = path.join(projectRoot, 'testeranto', 'bundles', configKey);
     const inputFilesPath = path.join(bundleDir, 'inputFiles.json');
-    
+
     if (fs.existsSync(inputFilesPath)) {
       const content = fs.readFileSync(inputFilesPath, 'utf-8');
       const allTestsInfo = JSON.parse(content);
-      
+
       if (allTestsInfo[testName] && allTestsInfo[testName].files) {
         return allTestsInfo[testName].files;
       }
@@ -114,7 +114,7 @@ export async function processIndividualResultsPure(
       operations.push(...verbOps);
 
       if (individualResult.features && Array.isArray(individualResult.features)) {
-        console.log(`[GraphManager] Processing ${individualResult.features.length} features for individual result ${i}:`, individualResult.features);
+        // console.log(`[GraphManager] Processing ${individualResult.features.length} features for individual result ${i}:`, individualResult.features);
         await processFeaturesForTest(
           individualResult.features,
           testId,
@@ -125,7 +125,7 @@ export async function processIndividualResultsPure(
           timestamp
         );
       } else {
-        console.log(`[GraphManager] No features found for individual result ${i}`);
+        // console.log(`[GraphManager] No features found for individual result ${i}`);
       }
 
       // Use input files from individual result or from bundle
@@ -134,12 +134,12 @@ export async function processIndividualResultsPure(
         inputFiles = bundleInputFiles;
       }
 
-      console.log(`[GraphManager] Checking for input files in individual result ${i}:`, inputFiles);
+      // console.log(`[GraphManager] Checking for input files in individual result ${i}:`, inputFiles);
       if (inputFiles && Array.isArray(inputFiles) && inputFiles.length > 0) {
-        console.log(`[GraphManager] Processing ${inputFiles.length} input files for individual result ${i}:`, inputFiles);
-        console.log(`[GraphManager] Entrypoint ID for individual result: ${entrypointId}`);
+        // console.log(`[GraphManager] Processing ${inputFiles.length} input files for individual result ${i}:`, inputFiles);
+        // console.log(`[GraphManager] Entrypoint ID for individual result: ${entrypointId}`);
         if (entrypointId) {
-          console.log(`[GraphManager] Calling processInputFilesForTest for individual result`);
+          // console.log(`[GraphManager] Calling processInputFilesForTest for individual result`);
           await processInputFilesForTestPure(
             inputFiles,
             entrypointId,
@@ -148,7 +148,7 @@ export async function processIndividualResultsPure(
             projectRoot,
             timestamp
           );
-          console.log(`[GraphManager] Finished processing input files for individual result`);
+          // console.log(`[GraphManager] Finished processing input files for individual result`);
         } else {
           console.log(`[GraphManager] No entrypointId for individual result, skipping`);
         }

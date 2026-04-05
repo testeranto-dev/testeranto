@@ -1,5 +1,5 @@
-=== Log started at 2026-04-05T20:14:23.604Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (runtime: node) ===
-=== Container ID: fe5ba028cd72749b1ae969f9dda2717b92c2ed74a9ff95cdbabab3b7808c85db ===
+=== Log started at 2026-04-05T20:30:33.270Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (runtime: node) ===
+=== Container ID: cd9350d47662b2566fa1c5c7342a722664e2bd160141cc4aeb9034e8480012fc ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
@@ -16,6 +16,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/'
 }
-Done in 0.54s.
+Done in 0.59s.
 
-=== Log captured at 2026-04-05T20:14:25.976Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-05T20:30:33.664Z (container status: exited, exit code: 0) ===

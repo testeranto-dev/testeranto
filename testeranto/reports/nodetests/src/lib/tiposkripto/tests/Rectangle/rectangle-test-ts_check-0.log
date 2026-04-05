@@ -1,5 +1,5 @@
-=== Log started at 2026-04-05T20:14:28.529Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
-=== Container ID: 45ac6cf389e64c2e431228757dc5a1c2f1e202a30c912e195ac100ec34b309fc ===
+=== Log started at 2026-04-05T20:30:35.216Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
+=== Container ID: 20fc366c758e1c3d3f221bc94d442b8807004099de978110ee38b12c531078c5 ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
@@ -24,4 +24,4 @@ Common causes of this problem include:
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
 
-=== Log captured at 2026-04-05T20:14:29.852Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-05T20:30:38.558Z (container status: exited, exit code: 2) ===

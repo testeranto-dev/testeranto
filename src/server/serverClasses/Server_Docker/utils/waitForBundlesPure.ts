@@ -2,10 +2,11 @@ import { execSync } from "child_process";
 import { existsSync } from "fs";
 import type { ITesterantoConfig } from "../../../../Types";
 import { checkBundlesReady } from "./checkBundlesReady";
+import { processCwd } from "../Server_Docker_Dependents";
 
 export async function waitForBundlesPure({
   configs,
-  processCwd,
+  // processCwd,
   failedBuilderConfigs,
   consoleLog,
   consoleWarn,
@@ -13,7 +14,7 @@ export async function waitForBundlesPure({
   checkInterval = 500,
 }: {
   configs: ITesterantoConfig;
-  processCwd: () => string;
+  // processCwd: () => string;
   failedBuilderConfigs: Set<string>;
   consoleLog: (message: string) => void;
   consoleWarn: (message: string) => void;
@@ -24,7 +25,7 @@ export async function waitForBundlesPure({
   const startTime = Date.now();
   let bundlesReady = false;
   let lastProgressReport = 0;
-  
+
   // Create a new Set to avoid mutating the input parameter
   const updatedFailedBuilderConfigs = new Set(failedBuilderConfigs);
 
