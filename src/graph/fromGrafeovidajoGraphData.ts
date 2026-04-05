@@ -115,6 +115,8 @@ export function fromGrafeovidajoGraphData(
         type = 'folder';
       } else if (id.startsWith('domain:')) {
         type = 'domain';
+      } else if (id.startsWith('input_file:')) {
+        type = 'input_file';
       } else {
         // Fall back to attribute-based inference
         if (attrs.configKey !== undefined || attrs.testName !== undefined) {

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-05T16:07:44.472Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
-=== Container ID: 7bd74cc35f5a9dca9ec960fbc317b17fd599aa77320e957d3f9533a3b3012c0e ===
+=== Log started at 2026-04-05T16:48:30.822Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
+=== Container ID: 371a8a1ccfc78e70b03af0473de5378d70ae68a7ce6073b3b001630018b196bb ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
@@ -21,7 +21,7 @@ Common causes of this problem include:
 1. The "import" plugin is not defined in your configuration file.
 2. The "import" plugin is not defined within the same configuration object in which the "import/no-dynamic-require" rule is applied.
 
-error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 2.
 
-=== Log captured at 2026-04-05T16:07:46.829Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-05T16:48:33.132Z (container status: exited, exit code: 2) ===

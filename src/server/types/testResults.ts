@@ -16,6 +16,7 @@ export interface IndividualTestResult {
   stepName: string;
   failed: boolean;
   features: string[];
+  inputFiles?: string[];
   [key: string]: any;
 }
 
@@ -27,6 +28,7 @@ export interface TestResult {
   individualResults?: IndividualTestResult[];
   failed?: boolean;
   metadata?: Record<string, any>;
+  inputFiles?: string[];
   [key: string]: any;
 }
 

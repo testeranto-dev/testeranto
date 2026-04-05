@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-05T16:07:24.596Z",
+  "timestamp": "2026-04-05T16:48:18.510Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -14,7 +14,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": 1775403141455,
+            "timestamp": 1775406659668,
             "fails": 6,
             "artifacts": [],
             "features": [
@@ -140,7 +140,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775403141455,
+            "timestamp": 1775406659668,
             "individualResults": [
               {
                 "index": 0,
@@ -1006,7 +1006,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": 1775403141475,
+            "timestamp": 1775406659681,
             "fails": 4,
             "artifacts": [],
             "features": [],
@@ -1057,7 +1057,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775403141475,
+            "timestamp": 1775406659681,
             "individualResults": [
               {
                 "index": 0,
@@ -1661,7 +1661,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": 1775403141463,
+            "timestamp": 1775406659719,
             "fails": 0,
             "artifacts": [],
             "features": [
@@ -1722,7 +1722,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775403141463,
+            "timestamp": 1775406659719,
             "individualResults": [
               {
                 "index": 0,
@@ -3949,7 +3949,7 @@
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-05T16:07:24.596Z"
+        "timestamp": "2026-04-05T16:48:18.510Z"
       }
     },
     "vizConfig": {

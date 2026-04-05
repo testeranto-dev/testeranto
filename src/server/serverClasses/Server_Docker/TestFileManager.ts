@@ -56,7 +56,8 @@ export class TestFileManager {
     onBddTest: (runtime: IRunTime, testName: string, configKey: string, configValue: any) => Promise<void>,
     onChecks: (runtime: IRunTime, testName: string, configKey: string, configValue: any) => Promise<void>,
     onAider: (runtime: IRunTime, testName: string, configKey: string, configValue: any, files?: any) => Promise<void>,
-    onLoadInput: (runtime: IRunTime, testName: string, configKey: string) => void
+    onLoadInput: (runtime: IRunTime, testName: string, configKey: string) => void,
+    onUpdateGraph?: (runtime: IRunTime, testName: string, configKey: string, inputFiles: string[]) => Promise<void>
   ) {
     const result = await watchInputFilePure(
       runtime,
@@ -74,6 +75,7 @@ export class TestFileManager {
       onAider,
       () => this.resourceChanged("/~/inputfiles"),
       onLoadInput,
+      onUpdateGraph,
     );
     this.inputFiles = result.inputFiles;
     this.hashs = result.hashs;

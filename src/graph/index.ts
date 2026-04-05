@@ -15,6 +15,7 @@ export type GraphNodeType =
   | 'attribute'    // Attribute nodes (for nodes like suite:14:content, suite:14:configKey, etc.)
   | 'folder'       // Folder nodes for directory structure
   | 'domain'       // Domain nodes for grouping external features by hostname
+  | 'input_file'   // Input source files for tests
   // Verb nodes for testeranto test structure
   | 'given'        // BDD Given nodes
   | 'when'         // BDD When nodes
@@ -27,7 +28,7 @@ export type GraphNodeType =
   | 'expected'     // TDT Expected nodes
 
 // Array of valid GraphNodeType values for validation
-const graphNodeTypeValues: GraphNodeType[] = [
+export const graphNodeTypeValues: GraphNodeType[] = [
   'feature',
   'entrypoint',
   'test',
@@ -38,6 +39,7 @@ const graphNodeTypeValues: GraphNodeType[] = [
   'attribute',
   'folder',
   'domain',
+  'input_file',
   // Verb nodes for testeranto test structure
   'given',
   'when',

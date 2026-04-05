@@ -219,6 +219,8 @@ export class Server_Docker extends Server_Docker_Compose {
                     testName,
                     configKey,
                   ),
+                (runtime, testName, configKey, inputFiles) =>
+                  this.updateGraphWithInputFiles(runtime, testName, configKey, inputFiles),
               );
               await this.testFileManager.watchOutputFile(
                 runtime,
@@ -345,6 +347,8 @@ export class Server_Docker extends Server_Docker_Compose {
       () => this.resourceChanged("/~/inputfiles"),
       (runtime, testName, configKey) =>
         this.loadInputFileOnce(runtime, testName, configKey),
+      (runtime, testName, configKey, inputFiles) =>
+        this.updateGraphWithInputFiles(runtime, testName, configKey, inputFiles),
     );
     this.inputFiles = result.inputFiles;
     this.hashs = result.hashs;
@@ -365,6 +369,59 @@ export class Server_Docker extends Server_Docker_Compose {
     );
     // Also launch the aider service when input files change
     await this.launchAider(runtime, testName, configKey, configValue);
+  }
+
+  private async updateGraphWithInputFiles(
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+    inputFiles: string[],
+  ): Promise<void> {
+    console.log(`[Server_Docker] updateGraphWithInputFiles called:`, {
+      runtime,
+      testName,
+      configKey,
+      inputFilesCount: inputFiles?.length || 0,
+      inputFiles
+    });
+    
+    if (!inputFiles || inputFiles.length === 0) {
+      console.log(`[Server_Docker] No input files provided, skipping`);
+      return;
+    }
+    
+    // We need to update the graph with input file nodes
+    // Create a test result-like object with input files
+    // Ensure testName is treated as a file path for proper entrypoint creation
+    const processedTestName = testName.includes('.') ? testName : `${configKey}:${testName}`;
+    const testResult = {
+      configKey,
+      runtime,
+      testName: processedTestName,
+      inputFiles,
+      // Add required fields for TestResult interface
+      failed: false,
+      // Add empty individualResults to satisfy the interface
+      individualResults: [],
+      timestamp: new Date().toISOString()
+    };
+
+    console.log(`[Server_Docker] Created test result for graph update:`, testResult);
+
+    // Update the graph using the graph manager
+    // The graph manager is in the parent class Server_HTTP
+    const serverHttp = this as any;
+    if (serverHttp.graphManager && typeof serverHttp.graphManager.updateFromTestResults === 'function') {
+      console.log(`[Server_Docker] Graph manager available, calling updateFromTestResults`);
+      try {
+        await serverHttp.graphManager.updateFromTestResults(testResult);
+        console.log(`[Server_Docker] Updated graph with ${inputFiles.length} input files for ${testName}`);
+      } catch (error) {
+        console.error(`[Server_Docker] Error updating graph with input files:`, error);
+      }
+    } else {
+      console.warn(`[Server_Docker] Graph manager not available for updating input files`);
+    }
   }
 
   private async createAiderMessageFile(

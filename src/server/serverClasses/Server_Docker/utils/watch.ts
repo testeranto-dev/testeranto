@@ -46,6 +46,12 @@ export const watchInputFilePure = async (
     testName: string,
     configKey: string,
   ) => void,
+  updateGraphWithInputFiles?: (
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+    inputFiles: string[],
+  ) => Promise<void>,
 ): Promise<{
   inputFiles: Record<string, Record<string, string[]>>;
   hashs: Record<string, Record<string, string>>;
@@ -156,7 +162,7 @@ export const watchInputFilePure = async (
   }
 
   if (mode === "dev") {
-    watchFile(inputFilePath, (curr, prev) => {
+    watchFile(inputFilePath, async (curr, prev) => {
       if (!existsSync(inputFilePath)) {
         consoleWarn(`${inputFilePath} does not exist yet.`);
         return;
@@ -194,6 +200,24 @@ export const watchInputFilePure = async (
               launchBddTest(runtime, testsName, ck, configValue);
               launchChecks(runtime, testsName, ck, configValue);
               informAider(runtime, testsName, ck, configValue, testInfo.files);
+
+              // Update graph with input files
+              consoleLog(`[Server_Docker] Checking if we should update graph with input files:`, {
+                hasUpdateGraphWithInputFiles: !!updateGraphWithInputFiles,
+                hasFiles: !!testInfo.files,
+                filesCount: testInfo.files?.length || 0
+              });
+              if (updateGraphWithInputFiles && testInfo.files) {
+                try {
+                  consoleLog(`[Server_Docker] Calling updateGraphWithInputFiles`);
+                  await updateGraphWithInputFiles(runtime, testsName, ck, testInfo.files);
+                  consoleLog(`[Server_Docker] updateGraphWithInputFiles completed`);
+                } catch (error) {
+                  consoleWarn(`[Server_Docker] Failed to update graph with input files: ${error}`);
+                }
+              } else {
+                consoleLog(`[Server_Docker] Not updating graph: updateGraphWithInputFiles=${!!updateGraphWithInputFiles}, files=${!!testInfo.files}`);
+              }
               break;
             }
           }
