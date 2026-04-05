@@ -3,11 +3,11 @@ import pkg from "../package.json";
 const version = pkg.version;
 
 import readline from "readline";
-import { Server } from "./server/serverClasses/Server";
+import { Server } from "./server/serverClasses/Server.ts";
 import { join } from "path";
 import fs from "fs/promises";
 
-import stakeholderTsx from "../src/stakeholderApp/index.tsx" with { type: "text" };
+import stakeholderTsx from "./stakeholderApp/index.tsx" with { type: "text" };
 
 const init = async () => {
 

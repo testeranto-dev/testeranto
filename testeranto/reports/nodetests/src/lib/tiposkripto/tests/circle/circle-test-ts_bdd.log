@@ -1,5 +1,5 @@
-=== Log started at 2026-04-03T00:16:07.552Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 5f64389401ce8bcf0329cc6755062e05da6d7b3842dc23d02ff4840da192d37c ===
+=== Log started at 2026-04-05T01:17:15.341Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: aed6a368ea45ddb4800ae17b6913e2720359890efae6ad9962385f9926eeba59 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -34,6 +34,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 0.97s.
+Done in 1.09s.
 
-=== Log captured at 2026-04-03T00:16:07.878Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-05T01:17:16.877Z (container status: exited, exit code: 0) ===

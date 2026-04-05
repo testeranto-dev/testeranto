@@ -50,17 +50,23 @@ export const RectangleTesterantoBaseTestSpecification: ITestSpecification<
         Then.area(20),
         Then.AreaPlusCircumference(38),
       ],
-      ["https://api.github.com/repos/adamwong246/testeranto/issues/8"],
+      [
+        "src/lib/tiposkripto/tests/Rectangle/README.md"
+      ],
     ),
     Given.Default(undefined)(
       [When.setHeight(4), When.setWidth(33)],
       [Then.area(132)],
-      ["https://api.github.com/repos/adamwong246/testeranto/issues/8"],
+      ["https://api.github.com/repos/adamwong246/testeranto/issues/8",
+        "src/lib/tiposkripto/README.md"
+      ],
     ),
     Given.Default(undefined)(
       [],
       [Then.getWidth(2), Then.getHeight(2)],
-      ["https://api.github.com/repos/adamwong246/testeranto/issues/8"],
+      ["https://api.github.com/repos/adamwong246/testeranto/issues/8",
+        "src/lib/tiposkripto/README.md"
+      ],
     ),
     Given.Default(undefined)(
       [When.setHeight(5), When.setWidth(5)],

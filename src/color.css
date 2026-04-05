@@ -1,0 +1,62 @@
+:root {
+  /* Palette definitions */
+  --ivory: #FFFDF0;
+  --obsidian: #1A1918;
+  --oliveDark: #004949;
+  --oliveDarkSubtle: #E6F4EA;
+  --oliveDeep: #002D2D;
+  --bluishGreen: #009E73;
+  --amberGold: #F5C710;
+  --amberGoldSubtle: #FFF8E1;
+  --amberDeep: #332B00;
+  --amberDark: #856404;
+  --deepOrange: #D55E00;
+  --deepOrangeSubtle: #FCE8E6;
+  --deepOrangeDeep: #331600;
+  --vermillionLight: #FFB07C;
+  --charcoal: #494949;
+  --charcoalSubtle: #F5F5F5;
+  --charcoalDeep: #1A1A1A;
+  --silver: #BDC0C3;
+  --rust: #882255;
+  --rustSubtle: #F3E5F5;
+  --rustDeep: #2D0015;
+  --reddishPurple: #CC79A7;
+  --warmGrey: #706A63;
+  --warmGreySubtle: #EFEBE7;
+  --warmGreyDeep: #2A2826;
+  --warmGreyLight: #A8A199;
+
+  /* Semantic Mapping (Light Mode Default) */
+  --canvas-bg: var(--ivory);
+  --canvas-fg: var(--black);
+  --success-bg: var(--oliveDarkSubtle);
+  --success-fg: var(--oliveDark);
+  --warning-bg: var(--amberGoldSubtle);
+  --warning-fg: var(--amberDark);
+  --error-bg: var(--deepOrangeSubtle);
+  --error-fg: var(--deepOrange);
+  --neutral-bg: var(--charcoalSubtle);
+  --neutral-fg: var(--charcoal);
+  --inProgress-bg: var(--rustSubtle);
+  --inProgress-fg: var(--rust);
+  --muted-bg: var(--warmGreySubtle);
+  --muted-fg: var(--warmGrey);
+}
+
+[data-theme="dark"] {
+  --canvas-bg: var(--obsidian);
+  --canvas-fg: var(--silver);
+  --success-bg: var(--oliveDeep);
+  --success-fg: var(--bluishGreen);
+  --warning-bg: var(--amberDeep);
+  --warning-fg: var(--amberGold);
+  --error-bg: var(--deepOrangeDeep);
+  --error-fg: var(--vermillionLight);
+  --neutral-bg: var(--charcoalDeep);
+  --neutral-fg: var(--silver);
+  --inProgress-bg: var(--rustDeep);
+  --inProgress-fg: var(--reddishPurple);
+  --muted-bg: var(--warmGreyDeep);
+  --muted-fg: var(--warmGreyLight);
+}

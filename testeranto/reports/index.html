@@ -35,17 +35,27 @@
     </div>
   </div>
 
-  <script type="module">
+  <!-- Load the bundled JavaScript file with defer to ensure proper loading order -->
+  <script src="/testeranto/reports/index.js" defer></script>
+
+  <script>
     // Wait for the stakeholder app to be loaded
-    // Note: Paths must match those defined in src/api.ts
-    async function initApp() {
+    // The bundled app is available as TesterantoStakeholderApp
+    function initApp() {
       const root = document.getElementById('root');
 
       try {
-        // Import the stakeholder app module
-        // This path should be consistent with static file serving configuration
-        const { renderApp } = await import('/testeranto/reports/index.js');
-        renderApp(root);
+        // Access the global variable
+        if (typeof TesterantoStakeholderApp !== 'undefined') {
+          const { renderApp } = TesterantoStakeholderApp;
+          if (typeof renderApp === 'function') {
+            renderApp(root);
+          } else {
+            throw new Error('renderApp is not a function in TesterantoStakeholderApp');
+          }
+        } else {
+          throw new Error('TesterantoStakeholderApp global variable not found');
+        }
       } catch (error) {
         console.error('Failed to load stakeholder report:', error);
         root.innerHTML = `
@@ -63,11 +73,8 @@
     }
 
     // Start the app when the DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initApp);
-    } else {
-      initApp();
-    }
+    // With defer, the script will execute after DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 

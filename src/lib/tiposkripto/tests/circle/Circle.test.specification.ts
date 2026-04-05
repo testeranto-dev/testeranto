@@ -20,7 +20,6 @@ export const specification: ITestSpecification<ICircleNode, O> = (
         [Value.radius(2), Should.beCloseTo(4 * Math.PI)],
         [Value.radius(5), Should.beCloseTo(10 * Math.PI)],
       ],
-      ["Circle circumference formula: C = 2πr"],
     ),
 
     // TDT pattern: Test area calculation
@@ -31,7 +30,6 @@ export const specification: ITestSpecification<ICircleNode, O> = (
         [Value.radius(2), Should.beCloseTo(4 * Math.PI)],
         [Value.radius(5), Should.beCloseTo(25 * Math.PI)],
       ],
-      ["Circle area formula: A = πr²"],
     ),
 
     // AAA pattern: Test circle properties
@@ -40,7 +38,6 @@ export const specification: ITestSpecification<ICircleNode, O> = (
         It["has correct circumference"](),
         It["has correct area"](),
       ],
-      ["Testing circle with radius 5"],
     ),
 
     // BDD pattern: Test radius operations
@@ -53,12 +50,10 @@ export const specification: ITestSpecification<ICircleNode, O> = (
         Then.radiusIs(10), // 10 * 2 / 2 = 10
         Then.circumferenceIs(2 * Math.PI * 10),
       ],
-      ["Testing radius operations"],
     ),
 
     // BDD pattern: Test setRadius
     Given.Default(
-      ["Default circle with radius 1"],
       [
         When.setRadius(7),
       ],
@@ -67,7 +62,6 @@ export const specification: ITestSpecification<ICircleNode, O> = (
         Then.circumferenceIs(2 * Math.PI * 7),
         Then.areaIs(Math.PI * 49),
       ],
-      ["Testing setRadius method"],
     ),
   ];
 };

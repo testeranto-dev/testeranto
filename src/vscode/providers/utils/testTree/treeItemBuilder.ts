@@ -106,35 +106,35 @@ export function createNoFilesItem(runtimeKey: string, testName: string): TestTre
   ];
 }
 
-export function createErrorItems(runtimeKey: string, testName: string, error: any): TestTreeItem[] {
-  return [
-    new TestTreeItem(
-      "Error loading files",
-      TreeItemType.File,
-      vscode.TreeItemCollapsibleState.None,
-      {
-        runtimeKey,
-        testName,
-        description: error.message,
-      },
-      undefined,
-      new vscode.ThemeIcon("error"),
-    ),
-    new TestTreeItem(
-      "Check if server is running",
-      TreeItemType.Info,
-      vscode.TreeItemCollapsibleState.None,
-      {
-        runtimeKey,
-        testName,
-        serverCheck: true,
-      },
-      {
-        command: "testeranto.startServer",
-        title: "Start Server",
-        arguments: [],
-      },
-      new vscode.ThemeIcon("server"),
-    ),
-  ];
-}
+// export function createErrorItems(runtimeKey: string, testName: string, error: any): TestTreeItem[] {
+//   return [
+//     new TestTreeItem(
+//       "Error loading files",
+//       TreeItemType.File,
+//       vscode.TreeItemCollapsibleState.None,
+//       {
+//         runtimeKey,
+//         testName,
+//         description: error.message,
+//       },
+//       undefined,
+//       new vscode.ThemeIcon("error"),
+//     ),
+//     new TestTreeItem(
+//       "Check if server is running",
+//       TreeItemType.Info,
+//       vscode.TreeItemCollapsibleState.None,
+//       {
+//         runtimeKey,
+//         testName,
+//         serverCheck: true,
+//       },
+//       {
+//         command: "testeranto.startServer",
+//         title: "Start Server",
+//         arguments: [],
+//       },
+//       new vscode.ThemeIcon("server"),
+//     ),
+//   ];
+// }

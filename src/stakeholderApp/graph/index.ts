@@ -8,12 +8,77 @@ import type {
 export class StakeholderGraphClient {
   private ws: WebSocket | null = null;
   private onGraphUpdate: (data: GraphData) => void;
+  private isDevelopmentMode: boolean;
 
   constructor(onGraphUpdate: (data: GraphData) => void) {
     this.onGraphUpdate = onGraphUpdate;
-    // Stakeholder app should not use WebSocket or HTTP APIs
-    // It only loads static files
-    console.log('[StakeholderGraphClient] Stakeholder app uses static files only');
+    
+    // Determine if we're in development mode (server API available)
+    this.isDevelopmentMode = typeof window !== 'undefined' && 
+      window.location.hostname.includes('localhost') &&
+      window.location.protocol.startsWith('http');
+    
+    console.log(`[StakeholderGraphClient] Mode: ${this.isDevelopmentMode ? 'Development (WebSocket enabled)' : 'Static (read-only)'}`);
+    
+    // Only connect WebSocket in development mode
+    if (this.isDevelopmentMode) {
+      this.connectWebSocket();
+    }
+  }
+
+  private connectWebSocket(): void {
+    try {
+      // Connect to WebSocket server
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}/~/ws`;
+      
+      this.ws = new WebSocket(wsUrl);
+      
+      this.ws.onopen = () => {
+        console.log('[StakeholderGraphClient] WebSocket connected');
+      };
+      
+      this.ws.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          
+          // Handle graphUpdated messages
+          if (message.type === 'graphUpdated') {
+            console.log('[StakeholderGraphClient] Received graph update via WebSocket');
+            // The server should send the updated graph data
+            if (message.data && message.data.unifiedGraph) {
+              this.onGraphUpdate(message.data.unifiedGraph);
+            }
+          }
+          
+          // Handle other relevant messages
+          if (message.type === 'connected') {
+            console.log('[StakeholderGraphClient] Server connection confirmed');
+          }
+        } catch (error) {
+          console.error('[StakeholderGraphClient] Error parsing WebSocket message:', error);
+        }
+      };
+      
+      this.ws.onerror = (error) => {
+        console.error('[StakeholderGraphClient] WebSocket error:', error);
+      };
+      
+      this.ws.onclose = () => {
+        console.log('[StakeholderGraphClient] WebSocket disconnected');
+        this.ws = null;
+        
+        // Attempt to reconnect after delay (only in development mode)
+        if (this.isDevelopmentMode) {
+          setTimeout(() => {
+            console.log('[StakeholderGraphClient] Attempting to reconnect...');
+            this.connectWebSocket();
+          }, 3000);
+        }
+      };
+    } catch (error) {
+      console.error('[StakeholderGraphClient] Failed to connect WebSocket:', error);
+    }
   }
 
   async fetchGraphData(): Promise<GraphData> {
@@ -25,16 +90,15 @@ export class StakeholderGraphClient {
       }
       const result = await response.json();
       
-      // Handle both direct GraphData and nested formats
+      // Handle only unified graph format
       let graphData: GraphData;
-      if (result.data && result.data.featureGraph) {
-        // New format with nested data
-        graphData = result.data.featureGraph;
-      } else if (result.nodes) {
-        // Direct GraphData format
-        graphData = result;
+      if (result.data && result.data.unifiedGraph) {
+        // New format with unifiedGraph (GraphDataFile format)
+        graphData = result.data.unifiedGraph;
+        console.log('[StakeholderGraphClient] Loaded GraphDataFile format');
       } else {
-        throw new Error('Invalid graph data format');
+        // Old format - throw error
+        throw new Error('Old graph format detected. Please regenerate graph-data.json with unified format.');
       }
       
       this.onGraphUpdate(graphData);
@@ -46,13 +110,48 @@ export class StakeholderGraphClient {
   }
 
   async updateGraph(operations: GraphOperation[]): Promise<GraphData> {
-    // Stakeholder app should not update graph via HTTP
-    // Graph updates are handled by the server and saved to graph-data.json
-    console.warn('[StakeholderGraphClient] Stakeholder app cannot update graph - read only');
-    throw new Error('Stakeholder app is read-only. Graph updates are not supported.');
+    // Only allow updates in development mode
+    if (!this.isDevelopmentMode) {
+      console.warn('[StakeholderGraphClient] Stakeholder app is in static mode - read only');
+      throw new Error('Stakeholder app is in static mode. Graph updates are not supported.');
+    }
+    
+    try {
+      // Send update to server via HTTP POST
+      const response = await fetch('/~/graph', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          operations,
+          timestamp: new Date().toISOString()
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      // The server should return the updated graph data
+      if (result.data && result.data.unifiedGraph) {
+        this.onGraphUpdate(result.data.unifiedGraph);
+        return result.data.unifiedGraph;
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('[StakeholderGraphClient] Failed to update graph:', error);
+      throw error;
+    }
   }
 
   disconnect(): void {
-    // Nothing to disconnect - no WebSocket connection
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
   }
 }

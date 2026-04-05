@@ -101,9 +101,9 @@ export function buildTestResultsTree(
                     type: "file",
                     name: fileName,
                     path: file.path,
-                    isJson: file.isJson,
-                    size: file.size,
-                    modified: file.modified,
+                    // isJson: file.isJson,
+                    // size: file.size,
+                    // modified: file.modified,
                 };
             }
         }

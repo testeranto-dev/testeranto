@@ -1,16 +1,17 @@
+import { resetGraphDataPure } from "./utils/resetGraphDataPure";
 import fs from 'fs';
 import path from 'path';
-import type { ITesterantoConfig } from "../../Types";
+import type { AllTestResults, ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_Base } from "./Server_Base";
 import { handleOptions } from "./Server_Http/handleOptions";
 import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
-import {
-  serveStaticFile,
-} from "./Server_Http/utils/utils";
+import { serveStaticFile } from "./Server_Http/utils/utils";
 import { Server_WS } from "./Server_WS";
 import { stakeholderWsAPI } from "../../api";
 import { GraphManager } from "../graph/index";
+import { Palette } from "../../colors";
+import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
 
 declare const Bun: any;
 
@@ -24,24 +25,11 @@ export abstract class Server_HTTP extends Server_Base {
     console.log('[Server_HTTP] Constructor called with configs:',
       configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
     this.routesHandler = new Server_HTTP_Routes(this);
-    this.graphManager = new GraphManager(process.cwd());
-    
-    // Don't save initial empty graph here - it will be saved by resetGraphData()
-    // which is called in start()
-
-    // Don't create graph-data.json here - it will be created when generateGraphData() is called
-    // This prevents overwriting existing data on server restart
-
-    // Temporarily disabled: Initialize graph with markdown files if available
-    // if (configs.documentationGlob) {
-    //   try {
-    //     const update = this.graphManager.parseMarkdownFiles(configs.documentationGlob);
-    //     this.graphManager.applyUpdate(update);
-    //     console.log('[Server_HTTP] Initialized graph from markdown files');
-    //   } catch (error) {
-    //     console.error('[Server_HTTP] Error initializing graph from markdown files:', error);
-    //   }
-    // }
+    this.graphManager = new GraphManager(
+      process.cwd(),
+      configs.featureIngestor,
+      configs
+    );
   }
 
   async start(): Promise<void> {
@@ -50,7 +38,7 @@ export abstract class Server_HTTP extends Server_Base {
     // Generate and save graph data immediately on startup
     console.log('[Server_HTTP] Generating initial graph data...');
     try {
-      const graphData = this.resetGraphData();
+      const graphData = await this.resetGraphData();
       console.log('[Server_HTTP] Initial graph data generated successfully');
     } catch (error) {
       console.error('[Server_HTTP] Error generating initial graph data:', error);
@@ -208,93 +196,18 @@ export abstract class Server_HTTP extends Server_Base {
     return serveStaticFile(request, url, this.configs);
   }
 
-  public resetGraphData(): any {
+
+  public async resetGraphData(): Promise<any> {
     console.log('[Server_HTTP] resetGraphData() called');
-    
-    // Generate graph data based on current configuration and test results
-    const configs = this.configs;
-    console.log(`[Server_HTTP] Configs has ${Object.keys(configs?.runtimes || {}).length} runtimes`);
 
-    // Get graph data from GraphManager
-    const graphData = this.graphManager ? this.graphManager.getGraphData() : { nodes: [], edges: [] };
-    console.log(`[Server_HTTP] Initial graph data from GraphManager: ${graphData.nodes?.length || 0} nodes, ${graphData.edges?.length || 0} edges`);
+    // Use the pure stateless function
+    const fullGraphData = await resetGraphDataPure(
+      this.graphManager,
+      this.configs,
+      this.getCurrentTestResults.bind(this)
+    );
 
-    // Get test results if available
-    const testResults = this.getCurrentTestResults ? this.getCurrentTestResults() : {};
-    console.log(`[Server_HTTP] Test results: ${Object.keys(testResults).length} runtimes with results`);
-
-    // Update graph with test results
-    if (Object.keys(testResults).length > 0) {
-      console.log('[Server_HTTP] Updating graph with test results...');
-      for (const [runtime, runtimeResults] of Object.entries(testResults as Record<string, any>)) {
-        console.log(`[Server_HTTP] Processing runtime: ${runtime} with ${Object.keys(runtimeResults).length} tests`);
-        for (const [testName, testResult] of Object.entries(runtimeResults as Record<string, any>)) {
-          // Create a combined test result object
-          const combinedResult = {
-            testName,
-            runtime,
-            ...testResult
-          };
-          const update = this.graphManager.updateFromTestResults(combinedResult);
-          this.graphManager.applyUpdate(update);
-        }
-      }
-    } else {
-      console.log('[Server_HTTP] No test results available to update graph');
-    }
-
-    // If graph has nodes but no edges, generate edges
-    if (this.graphManager && graphData.nodes.length > 0 && graphData.edges.length === 0) {
-      console.log('[Server_HTTP] Graph has nodes but no edges, generating edges...');
-      const update = this.graphManager.generateEdges();
-      this.graphManager.applyUpdate(update);
-    }
-
-    // Log graph statistics (but don't save here - saveGraphDataForStaticMode() will save)
-    if (this.graphManager) {
-      const stats = this.graphManager.getGraphStats();
-      console.log(`[Server_HTTP] Graph stats: ${stats.nodes} nodes, ${stats.edges} edges`);
-      console.log(`[Server_HTTP] Node types:`, stats.nodeTypes);
-      console.log(`[Server_HTTP] Edge types:`, stats.edgeTypes);
-    }
-
-    // Get updated graph data
-    const updatedGraphData = this.graphManager ? this.graphManager.getGraphData() : { nodes: [], edges: [] };
-    console.log(`[Server_HTTP] Updated graph data: ${updatedGraphData.nodes?.length || 0} nodes, ${updatedGraphData.edges?.length || 0} edges`);
-
-    // Log if edges are missing
-    if (updatedGraphData.nodes.length > 0 && updatedGraphData.edges.length === 0) {
-      console.warn('[Server_HTTP] WARNING: Graph has nodes but no edges!');
-    }
-
-    // Prepare the full graph data structure
-    const fullGraphData = {
-      configs: {
-        runtimes: configs?.runtimes || {},
-        documentationGlob: configs?.documentationGlob,
-        stakeholderReactModule: configs?.stakeholderReactModule
-      },
-      allTestResults: testResults,
-      featureTree: this.generateFeatureTree ? this.generateFeatureTree() : {},
-      featureGraph: updatedGraphData,
-      fileTreeGraph: this.generateFileTreeGraph ? this.generateFileTreeGraph() : { nodes: [], edges: [] },
-      vizConfig: {
-        projection: {
-          xAttribute: 'status',
-          yAttribute: 'priority',
-          xType: 'categorical',
-          yType: 'continuous',
-          layout: 'grid'
-        },
-        style: {
-          nodeSize: 10,
-          nodeColor: '#007acc',
-          nodeShape: 'circle'
-        }
-      }
-    };
-
-    console.log(`[Server_HTTP] Saving full graph data structure...`);
+    console.log(`[Server_HTTP] Saving full graph data structure in unified format...`);
     // Also save a standalone graph-data.json file for static mode
     this.saveGraphDataForStaticMode(fullGraphData);
 
@@ -313,28 +226,45 @@ export abstract class Server_HTTP extends Server_Base {
         console.log(`[Server_HTTP] Created directory: ${dir}`);
       }
 
-      // Create a standalone graph data object for static mode
+      // Create a standalone graph data object for static mode in unified format
       const staticGraphData = {
         timestamp: new Date().toISOString(),
         version: '1.0',
-        data: fullGraphData
+        data: {
+          unifiedGraph: fullGraphData.unifiedGraph || { nodes: [], edges: [] },
+          vizConfig: fullGraphData.vizConfig || {
+            projection: {
+              xAttribute: 'status',
+              yAttribute: 'priority',
+              xType: 'categorical',
+              yType: 'continuous',
+              layout: 'grid'
+            },
+            style: {
+              nodeSize: 10,
+              nodeColor: Palette.rust,
+              nodeShape: 'circle'
+            }
+          },
+          configs: fullGraphData.configs || {}
+        }
       };
 
       // Always write the file on startup (as intended)
       console.log(`[Server_HTTP] Writing graph-data.json to ${filePath}`);
-      console.log(`[Server_HTTP] Graph data structure keys:`, Object.keys(fullGraphData));
-      if (fullGraphData.featureGraph) {
-        console.log(`[Server_HTTP] featureGraph has ${fullGraphData.featureGraph.nodes?.length || 0} nodes, ${fullGraphData.featureGraph.edges?.length || 0} edges`);
+      console.log(`[Server_HTTP] Graph data structure keys:`, Object.keys(staticGraphData.data));
+      if (staticGraphData.data.unifiedGraph) {
+        console.log(`[Server_HTTP] unifiedGraph has ${staticGraphData.data.unifiedGraph.nodes?.length || 0} nodes, ${staticGraphData.data.unifiedGraph.edges?.length || 0} edges`);
       }
-      
+
       fs.writeFileSync(filePath, JSON.stringify(staticGraphData, null, 2), 'utf-8');
       console.log(`[Server_HTTP] Successfully saved graph-data.json (${fs.statSync(filePath).size} bytes)`);
-      
+
       // Verify the file was written correctly
       try {
         const writtenContent = fs.readFileSync(filePath, 'utf-8');
         const parsed = JSON.parse(writtenContent);
-        console.log(`[Server_HTTP] Verification: file contains ${parsed.data?.featureGraph?.nodes?.length || 0} nodes`);
+        console.log(`[Server_HTTP] Verification: file contains ${parsed.data?.unifiedGraph?.nodes?.length || 0} nodes`);
       } catch (verifyError) {
         console.error(`[Server_HTTP] Failed to verify written file:`, verifyError);
       }
@@ -343,11 +273,83 @@ export abstract class Server_HTTP extends Server_Base {
     }
   }
 
-  protected getCurrentTestResults(): any {
+  protected getCurrentTestResults(): AllTestResults {
     // Try to get test results from the server
     // This should be implemented by subclasses
     if ((this as any).getTestResults) {
-      return (this as any).getTestResults();
+      const rawResults = (this as any).getTestResults();
+
+      // According to SOUL.md: no guessing, no fallbacks
+      // We need to validate the data structure and transform it correctly
+
+      // If rawResults is already in the expected format, return it
+      if (rawResults && typeof rawResults === 'object' && !Array.isArray(rawResults)) {
+        // Filter to only include configKeys that exist in config runtimes
+        const filtered: AllTestResults = {};
+        for (const [configKey, runtimeResults] of Object.entries(rawResults)) {
+          // Only include if configKey exists in config runtimes
+          if (this.configs?.runtimes?.[configKey]) {
+            filtered[configKey] = runtimeResults as any;
+          } else {
+            console.warn(`[Server_HTTP] Skipping configKey '${configKey}' not present in config runtimes`);
+          }
+        }
+        return filtered;
+      }
+
+      // If rawResults is an array, transform it to the expected format
+      if (Array.isArray(rawResults)) {
+        console.log('[Server_HTTP] Transforming array test results to expected format');
+        console.log(`[Server_HTTP] Array length: ${rawResults.length}`);
+        const transformed: AllTestResults = {};
+        for (const item of rawResults) {
+          if (item && typeof item === 'object') {
+            // Try to extract testName from various possible fields
+            let testName = item.testName || item.name || item.file || item.filePath;
+            // If testName is still undefined, skip this item
+            if (!testName) {
+              console.warn('[Server_HTTP] Item missing testName, skipping:', item);
+              continue;
+            }
+            // Extract configKey - DO NOT use runtime field (deprecated)
+            let configKey = item.configKey;
+            // If configKey is missing, skip this item (no guessing)
+            if (!configKey) {
+              console.warn(`[Server_HTTP] Item missing configKey, skipping:`, item);
+              continue;
+            }
+            // Only include configKey that exists in config runtimes
+            if (!this.configs?.runtimes?.[configKey]) {
+              console.warn(`[Server_HTTP] Skipping item with configKey '${configKey}' not present in config runtimes`);
+              continue;
+            }
+            if (!transformed[configKey]) {
+              transformed[configKey] = {};
+            }
+            // Use testName as key
+            transformed[configKey][testName] = {
+              ...item,
+              configKey,
+              testName
+            };
+          }
+        }
+        // Check if we have any results after transformation
+        if (Object.keys(transformed).length > 0) {
+          console.log(`[Server_HTTP] Transformed array into ${Object.keys(transformed).length} configs`);
+          return transformed;
+        } else {
+          console.warn('[Server_HTTP] Transformation resulted in empty object');
+        }
+      }
+
+      // Otherwise, we need to transform from getTestResultsPure format
+      // But according to SOUL.md, we shouldn't guess
+      // For now, return empty object to avoid processing invalid data
+      console.error('[Server_HTTP] getCurrentTestResults: raw results are not in expected format');
+      console.error('[Server_HTTP] Expected: object with configKey keys matching config');
+      console.error('[Server_HTTP] Got:', typeof rawResults, Array.isArray(rawResults) ? 'array' : 'object');
+      return {};
     }
     return {};
   }
@@ -401,261 +403,12 @@ export abstract class Server_HTTP extends Server_Base {
   protected generateFileTreeGraph(): any {
     // Generate a file tree graph based on the project structure
     // Only include: entry files, input files used by entry files, and feature references (URLs or files)
-    const fs = require('fs');
-    const path = require('path');
-
     const projectRoot = process.cwd();
-    const nodes: any[] = [];
-    const edges: any[] = [];
-
-    // Track which files/URLs we've already added to avoid duplicates
-    const addedItems = new Set<string>();
-
-    // Helper to add a file node if not already added
-    const addFileNode = (filePath: string) => {
-      const relativePath = path.relative(projectRoot, filePath);
-      if (addedItems.has(relativePath)) {
-        return null;
-      }
-
-      const nodeId = `file:${relativePath}`;
-      const isDirectory = fs.existsSync(filePath) && fs.statSync(filePath).isDirectory();
-
-      nodes.push({
-        id: nodeId,
-        type: 'file',
-        label: path.basename(filePath),
-        description: isDirectory ? `Directory: ${relativePath}` : `File: ${relativePath}`,
-        metadata: {
-          path: relativePath,
-          isDirectory,
-          isEntryFile: false,
-          isInputFile: false,
-          isFeature: false,
-          isUrl: false
-        }
-      });
-
-      addedItems.add(relativePath);
-
-      // Add parent directory structure
-      if (!isDirectory) {
-        const dirPath = path.dirname(filePath);
-        const dirRelativePath = path.relative(projectRoot, dirPath);
-        const dirNodeId = `file:${dirRelativePath}`;
-
-        // Add parent directory if not already added
-        if (!addedItems.has(dirRelativePath) && fs.existsSync(dirPath)) {
-          nodes.push({
-            id: dirNodeId,
-            type: 'file',
-            label: path.basename(dirPath),
-            description: `Directory: ${dirRelativePath}`,
-            metadata: {
-              path: dirRelativePath,
-              isDirectory: true,
-              isEntryFile: false,
-              isInputFile: false,
-              isFeature: false,
-              isUrl: false
-            }
-          });
-          addedItems.add(dirRelativePath);
-
-          // Connect file to directory
-          edges.push({
-            source: dirNodeId,
-            target: nodeId,
-            attributes: { type: 'locatedIn' }
-          });
-        } else if (addedItems.has(dirRelativePath)) {
-          // Connect file to existing directory
-          edges.push({
-            source: dirNodeId,
-            target: nodeId,
-            attributes: { type: 'locatedIn' }
-          });
-        }
-      }
-
-      return nodeId;
-    };
-
-    // Helper to add a URL node
-    const addUrlNode = (url: string) => {
-      if (addedItems.has(url)) {
-        return null;
-      }
-
-      const nodeId = `url:${url}`;
-      nodes.push({
-        id: nodeId,
-        type: 'url',
-        label: url.split('/').pop() || url,
-        description: `URL: ${url}`,
-        metadata: {
-          url: url,
-          isDirectory: false,
-          isEntryFile: false,
-          isInputFile: false,
-          isFeature: true,
-          isUrl: true
-        }
-      });
-
-      addedItems.add(url);
-      return nodeId;
-    };
-
-    // 1. Add entry files (test files from configs)
-    const configs = this.configs;
-    if (configs?.runtimes) {
-      for (const [runtimeKey, runtimeConfig] of Object.entries(configs.runtimes)) {
-        const tests = (runtimeConfig as any).tests || [];
-        for (const testPath of tests) {
-          const absoluteTestPath = path.isAbsolute(testPath) ? testPath : path.join(projectRoot, testPath);
-          if (fs.existsSync(absoluteTestPath)) {
-            const nodeId = addFileNode(absoluteTestPath);
-            if (nodeId) {
-              // Mark as entry file in metadata
-              const nodeIndex = nodes.findIndex(n => n.id === nodeId);
-              if (nodeIndex !== -1) {
-                nodes[nodeIndex].metadata.isEntryFile = true;
-                nodes[nodeIndex].metadata.runtimeKey = runtimeKey;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    // 2. Add input files used by entry files
-    // We need to get input files from the bundles directory
-    const bundlesDir = path.join(projectRoot, 'testeranto', 'bundles');
-    if (fs.existsSync(bundlesDir)) {
-      try {
-        const runtimeDirs = fs.readdirSync(bundlesDir, { withFileTypes: true })
-          .filter(item => item.isDirectory())
-          .map(dir => dir.name);
-
-        for (const runtimeDir of runtimeDirs) {
-          const inputFilesPath = path.join(bundlesDir, runtimeDir, 'inputFiles.json');
-          if (fs.existsSync(inputFilesPath)) {
-            try {
-              const inputFilesData = JSON.parse(fs.readFileSync(inputFilesPath, 'utf-8'));
-              for (const [testName, testData] of Object.entries(inputFilesData)) {
-                if (testData && typeof testData === 'object' && 'files' in testData) {
-                  const files = (testData as any).files || [];
-                  for (const filePath of files) {
-                    const absoluteFilePath = path.isAbsolute(filePath) ? filePath : path.join(projectRoot, filePath);
-                    if (fs.existsSync(absoluteFilePath)) {
-                      const nodeId = addFileNode(absoluteFilePath);
-                      if (nodeId) {
-                        // Mark as input file in metadata
-                        const nodeIndex = nodes.findIndex(n => n.id === nodeId);
-                        if (nodeIndex !== -1) {
-                          nodes[nodeIndex].metadata.isInputFile = true;
-                          nodes[nodeIndex].metadata.usedByTest = testName;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            } catch (error) {
-              console.error(`[Server_HTTP] Error reading input files for ${runtimeDir}:`, error);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('[Server_HTTP] Error reading bundles directory:', error);
-      }
-    }
-
-    // 3. Add feature references from test results (URLs or files)
-    // Get test results to extract feature references
     const testResults = this.getCurrentTestResults();
-    if (testResults && typeof testResults === 'object') {
-      const featureUrls = new Set<string>();
 
-      // Collect all features from test results
-      for (const [runtime, runtimeResults] of Object.entries(testResults as Record<string, any>)) {
-        if (runtimeResults && typeof runtimeResults === 'object') {
-          for (const [testName, testResult] of Object.entries(runtimeResults as Record<string, any>)) {
-            if (testResult && typeof testResult === 'object') {
-              // Check for features in individualResults
-              if (Array.isArray(testResult.individualResults)) {
-                for (const individualResult of testResult.individualResults) {
-                  if (individualResult && Array.isArray(individualResult.features)) {
-                    for (const feature of individualResult.features) {
-                      if (typeof feature === 'string') {
-                        featureUrls.add(feature);
-                      }
-                    }
-                  }
-                }
-              }
-              // Check for features at the top level
-              if (Array.isArray(testResult.features)) {
-                for (const feature of testResult.features) {
-                  if (typeof feature === 'string') {
-                    featureUrls.add(feature);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // Add feature URLs as nodes
-      for (const featureUrl of featureUrls) {
-        // Check if it's a URL or a local file path
-        if (featureUrl.startsWith('http://') || featureUrl.startsWith('https://')) {
-          // It's a URL
-          addUrlNode(featureUrl);
-        } else {
-          // It might be a local file path
-          // Check if it exists as a file
-          const absoluteFeaturePath = path.isAbsolute(featureUrl) ? featureUrl : path.join(projectRoot, featureUrl);
-          if (fs.existsSync(absoluteFeaturePath)) {
-            const nodeId = addFileNode(absoluteFeaturePath);
-            if (nodeId) {
-              // Mark as feature in metadata
-              const nodeIndex = nodes.findIndex(n => n.id === nodeId);
-              if (nodeIndex !== -1) {
-                nodes[nodeIndex].metadata.isFeature = true;
-              }
-            }
-          } else {
-            // If it doesn't exist as a file, treat it as a URL or path reference
-            addUrlNode(featureUrl);
-          }
-        }
-      }
-    }
-
-    return { nodes, edges };
+    // Use the pure stateless function
+    return generateFileTreeGraphPure(projectRoot, this.configs, testResults);
   }
-
-  // private async generateCollatedFilesTree(): Promise<Record<string, any>> {
-  //   return generateCollatedFilesTree(this.configs);
-  // }
-
-  // // private addTestResultsFilesToTree(
-  // //   treeRoot: Record<string, any>,
-  // //   reportsDir: string,
-  // // ): void {
-  // //   addTestResultsFilesToTree(treeRoot, reportsDir);
-  // // }
-
-  // private getFileType(filename: string): string {
-  //   return getFileType(filename);
-  // }
-
-  // // private async collectAllTestResults(): Promise<Record<string, any>> {
-  // //   return collectAllTestResults(this.configs);
-  // // }
 
   router(a: any): any {
     return a;

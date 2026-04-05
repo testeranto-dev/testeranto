@@ -39,4 +39,6 @@ IMPORTANT: Passing empty objects `{}`, empty arrays `[]`, or other default value
 
 IMPORTANT: Do not add tautological, useless, pedantic comments. Comments that merely repeat what the code already says add no value and violate the KISS principle. The function name should be descriptive enough; if it's not, rename the function instead of adding a comment.
 
+IMPORTANT: It's always preferable to make smaller files by extracting functions to their own file, 1 function per file. 
+
 Always check that your work aligns with SOUL.md!!!

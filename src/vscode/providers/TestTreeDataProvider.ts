@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
-import * as TestTreeUtils from './utils/testTree';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
 import { ApiUtils } from './utils/apiUtils';
+import * as TestTreeUtils from './utils/testTree';
+import { createErrorItems } from './createErrorItems';
 
 export class TestTreeDataProvider extends BaseTreeDataProvider {
   private configWatcher: vscode.FileSystemWatcher | undefined;
@@ -28,7 +29,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       cancellable: false
     }, async (progress) => {
       progress.report({ increment: 0 });
-      
+
       try {
         await TestTreeUtils.fetchConfigsViaHttp();
         progress.report({ increment: 100 });
@@ -78,7 +79,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   getTreeItem(element: TestTreeItem): vscode.TreeItem {
     console.log('[TestTreeDataProvider] getTreeItem called with element:', element ? `type: ${element.type}, label: ${element.label}` : 'undefined');
-    
+
     if (element === null || element === undefined) {
       console.error('[TestTreeDataProvider] getTreeItem called with null/undefined element');
       // Return a placeholder tree item to prevent crashes
@@ -105,24 +106,24 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]> {
     console.log('[TestTreeDataProvider] getChildren called with element:', element ? `type: ${element.type}, label: ${element.label}` : 'undefined');
-    
+
     // Handle null/undefined element
     if (element === null || element === undefined) {
       console.log('[TestTreeDataProvider] No element, returning runtime items');
       return this.getRuntimeItems();
     }
-    
+
     // Ensure element is a TestTreeItem and has a type property
     if (typeof element !== 'object' || element === null) {
       console.error('[TestTreeDataProvider] Element is not an object:', element);
       return Promise.resolve([]);
     }
-    
+
     if (element.type === undefined) {
       console.error('[TestTreeDataProvider] Element type is undefined:', element);
       return Promise.resolve([]);
     }
-    
+
     switch (element.type) {
       case TreeItemType.Runtime:
         console.log('[TestTreeDataProvider] Handling Runtime element');
@@ -188,19 +189,19 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
     // Add webview button
     items.push(new TestTreeItem(
-        'Open Server Report',
-        TreeItemType.Info,
-        vscode.TreeItemCollapsibleState.None,
-        {
-            description: 'View HTML report in webview',
-            webview: true
-        },
-        {
-            command: 'testeranto.openServerWebview',
-            title: 'Open Server Webview',
-            arguments: []
-        },
-        new vscode.ThemeIcon('globe')
+      'Open Server Report',
+      TreeItemType.Info,
+      vscode.TreeItemCollapsibleState.None,
+      {
+        description: 'View HTML report in webview',
+        webview: true
+      },
+      {
+        command: 'testeranto.openServerWebview',
+        title: 'Open Server Webview',
+        arguments: []
+      },
+      new vscode.ThemeIcon('globe')
     ));
 
     try {
@@ -211,7 +212,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       }
       const data = await response.json();
       const unifiedTree = data.tree || {};
-      
+
       if (Object.keys(unifiedTree).length > 0) {
         items.push(new TestTreeItem(
           `Runtimes (${Object.keys(unifiedTree).length})`,
@@ -331,7 +332,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
   private createConnectionStatusItem(): TestTreeItem {
     const isConnected = (this as any).isConnected;
     const description = isConnected ? 'WebSocket connected' : 'WebSocket disconnected';
-    const icon = isConnected ? 
+    const icon = isConnected ?
       new vscode.ThemeIcon('radio-tower', new vscode.ThemeColor('testing.iconPassed')) :
       new vscode.ThemeIcon('radio-tower', new vscode.ThemeColor('testing.iconFailed'));
 
@@ -435,262 +436,35 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
     try {
       console.log(`[TestTreeDataProvider] Fetching unified test tree from server...`);
-      const response = await fetch(ApiUtils.getUnifiedTestTreeUrl());
-      console.log(`[TestTreeDataProvider] Fetch response status: ${response.status}`);
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      // The response structure is { tree: ..., message: ... }
-      const unifiedTree = data.tree || {};
-      console.log(`[TestTreeDataProvider] Received unified tree, has ${Object.keys(unifiedTree).length} runtimes`);
-
-      // Find the specific runtime and test
-      const runtimeEntry = unifiedTree[runtimeKey];
-      if (!runtimeEntry) {
-        console.log(`[TestTreeDataProvider] Runtime "${runtimeKey}" not found in unified tree`);
-        return this.createNoFilesItems(runtimeKey, testName);
-      }
-
-      const testEntry = runtimeEntry.tests?.[testName];
-      if (!testEntry) {
-        console.log(`[TestTreeDataProvider] Test "${testName}" not found in runtime "${runtimeKey}"`);
-        return this.createNoFilesItems(runtimeKey, testName);
-      }
-
-      console.log(`[TestTreeDataProvider] Found test entry with ${testEntry.sourceFiles?.length || 0} source files, ${testEntry.logs?.length || 0} logs, ${testEntry.results ? 'results' : 'no results'}, ${testEntry.outputFiles?.length || 0} output files`);
-
-      // Build tree items
-      const items: TestTreeItem[] = [];
-
-      // Source files section
-      if (testEntry.sourceFiles && testEntry.sourceFiles.length > 0) {
-        const sourceFolder = new TestTreeItem(
-          'Source Files',
-          TreeItemType.Info,
-          vscode.TreeItemCollapsibleState.Collapsed,
-          {
-            description: `${testEntry.sourceFiles.length} file(s)`,
-            runtimeKey,
-            testName,
-          },
-          undefined,
-          new vscode.ThemeIcon('folder')
-        );
-        sourceFolder.children = testEntry.sourceFiles.map((file: any) => {
-          const fileName = typeof file === 'string' ? file : file.path;
-          return new TestTreeItem(
-            fileName,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            {
-              fileName: fileName,
-              runtime: runtimeKey,
-              testName: testName,
-              isFile: true,
-              fileType: 'source'
-            },
-            {
-              command: 'testeranto.openFile',
-              title: 'Open File',
-              arguments: [{
-                fileName: fileName,
-                runtime: runtimeKey,
-                testName: testName,
-                isFile: true,
-                fileType: 'source'
-              }]
-            },
-            new vscode.ThemeIcon('file')
-          );
-        });
-        items.push(sourceFolder);
-      }
-
-      // Logs section
-      if (testEntry.logs && testEntry.logs.length > 0) {
-        const logsFolder = new TestTreeItem(
-          'Logs',
-          TreeItemType.Info,
-          vscode.TreeItemCollapsibleState.Collapsed,
-          {
-            description: `${testEntry.logs.length} file(s)`,
-            runtimeKey,
-            testName,
-          },
-          undefined,
-          new vscode.ThemeIcon('output')
-        );
-        logsFolder.children = testEntry.logs.map((logPath: string) => {
-          const fileName = logPath.split('/').pop() || logPath;
-          return new TestTreeItem(
-            fileName,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            {
-              fileName: logPath,
-              runtime: runtimeKey,
-              testName: testName,
-              isFile: true,
-              fileType: 'log'
-            },
-            {
-              command: 'testeranto.openFile',
-              title: 'Open File',
-              arguments: [{
-                fileName: logPath,
-                runtime: runtimeKey,
-                testName: testName,
-                isFile: true,
-                fileType: 'log'
-              }]
-            },
-            new vscode.ThemeIcon('file-text')
-          );
-        });
-        items.push(logsFolder);
-      }
-
-      // Results file
-      if (testEntry.results && typeof testEntry.results === 'string') {
-        const resultsFile = new TestTreeItem(
-          'Test Results',
-          TreeItemType.File,
-          vscode.TreeItemCollapsibleState.None,
-          {
-            fileName: testEntry.results,
-            runtime: runtimeKey,
-            testName: testName,
-            isFile: true,
-            fileType: 'results'
-          },
-          {
-            command: 'testeranto.openFile',
-            title: 'Open File',
-            arguments: [{
-              fileName: testEntry.results,
-              runtime: runtimeKey,
-              testName: testName,
-              isFile: true,
-              fileType: 'results'
-            }]
-          },
-          new vscode.ThemeIcon('checklist')
-        );
-        items.push(resultsFile);
-      }
-
-      // Output files section
-      if (testEntry.outputFiles && testEntry.outputFiles.length > 0) {
-        const outputFolder = new TestTreeItem(
-          'Output Files',
-          TreeItemType.Info,
-          vscode.TreeItemCollapsibleState.Collapsed,
-          {
-            description: `${testEntry.outputFiles.length} file(s)`,
-            runtimeKey,
-            testName,
-          },
-          undefined,
-          new vscode.ThemeIcon('folder-opened')
-        );
-        outputFolder.children = testEntry.outputFiles.map((outputPath: string) => {
-          const fileName = outputPath.split('/').pop() || outputPath;
-          return new TestTreeItem(
-            fileName,
-            TreeItemType.File,
-            vscode.TreeItemCollapsibleState.None,
-            {
-              fileName: outputPath,
-              runtime: runtimeKey,
-              testName: testName,
-              isFile: true,
-              fileType: 'output'
-            },
-            {
-              command: 'testeranto.openFile',
-              title: 'Open File',
-              arguments: [{
-                fileName: outputPath,
-                runtime: runtimeKey,
-                testName: testName,
-                isFile: true,
-                fileType: 'output'
-              }]
-            },
-            new vscode.ThemeIcon('file')
-          );
-        });
-        items.push(outputFolder);
-      }
-
-      if (items.length === 0) {
-        return this.createNoFilesItems(runtimeKey, testName);
-      }
+      const items = this.getTestFileItems(runtimeKey, testName);
 
       console.log(`[TestTreeDataProvider] Built ${items.length} top-level items for ${runtimeKey}/${testName}`);
       return items;
     } catch (error) {
       console.error("[TestTreeDataProvider] Error fetching unified test tree:", error);
-      return this.createErrorItems(runtimeKey, testName, error);
+      return createErrorItems(runtimeKey, testName);
     }
   }
 
-  private createNoFilesItems(runtimeKey: string, testName: string): TestTreeItem[] {
-    return [
-      new TestTreeItem(
-        'No files found',
-        TreeItemType.Info,
-        vscode.TreeItemCollapsibleState.None,
-        {
-          description: 'Test may not have been run yet',
-          runtimeKey,
-          testName,
-        },
-        undefined,
-        new vscode.ThemeIcon('info')
-      )
-    ];
-  }
-
-  private createErrorItems(runtimeKey: string, testName: string, error: any): TestTreeItem[] {
-    return [
-      new TestTreeItem(
-        'Error loading files',
-        TreeItemType.Info,
-        vscode.TreeItemCollapsibleState.None,
-        {
-          description: error.message || 'Unknown error',
-          runtimeKey,
-          testName,
-        },
-        undefined,
-        new vscode.ThemeIcon('error')
-      )
-    ];
-  }
-
   protected handleWebSocketMessage(message: any): void {
-  console.log('[TestTreeDataProvider] Received WebSocket message:', message.type);
+    console.log('[TestTreeDataProvider] Received WebSocket message:', message.type);
 
-  switch(message.type) {
+    switch (message.type) {
       case 'connected':
-  console.log('[TestTreeDataProvider] WebSocket connection confirmed');
-  break;
+        console.log('[TestTreeDataProvider] WebSocket connection confirmed');
+        break;
       case 'resourceChanged':
-  console.log('[TestTreeDataProvider] Resource changed, fetching updated configs:', message.url);
-  if (message.url === '/~/configs') {
-    TestTreeUtils.fetchConfigsViaHttp().catch(error => {
-      console.log('[TestTreeDataProvider] HTTP fetch after resource change failed:', error);
-    }).then(() => {
-      this._onDidChangeTreeData.fire();
-    });
-  }
-  break;
+        console.log('[TestTreeDataProvider] Resource changed, fetching updated configs:', message.url);
+        if (message.url === '/~/configs') {
+          TestTreeUtils.fetchConfigsViaHttp().catch(error => {
+            console.log('[TestTreeDataProvider] HTTP fetch after resource change failed:', error);
+          }).then(() => {
+            this._onDidChangeTreeData.fire();
+          });
+        }
+        break;
       default:
-  console.log('[TestTreeDataProvider] Unhandled message type:', message.type);
-}
+        console.log('[TestTreeDataProvider] Unhandled message type:', message.type);
+    }
   }
 }

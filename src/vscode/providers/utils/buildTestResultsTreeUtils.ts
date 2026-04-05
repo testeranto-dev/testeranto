@@ -117,9 +117,9 @@ export function buildTestResultsTree(collatedTestResults: Record<string, any>): 
                     type: 'file',
                     name: fileName,
                     path: file.path,
-                    isJson: file.isJson,
-                    size: file.size,
-                    modified: file.modified
+                    // isJson: file.isJson,
+                    // size: file.size,
+                    // modified: file.modified
                 };
             }
         }
@@ -236,7 +236,7 @@ export function buildTreeItemsFromTestResultsTree(treeRoot: Record<string, any>)
                 )
             );
         } else if (node.type === 'file') {
-            const description = `${node.isJson ? 'JSON' : 'File'} - ${node.size} bytes`;
+            // const description = `${node.isJson ? 'JSON' : 'File'} - ${node.size} bytes`;
             const icon = node.isJson ?
                 new vscode.ThemeIcon('json') :
                 new vscode.ThemeIcon('file');
@@ -249,10 +249,10 @@ export function buildTreeItemsFromTestResultsTree(treeRoot: Record<string, any>)
                     {
                         fileName: node.name,
                         filePath: node.path,
-                        isJson: node.isJson,
-                        size: node.size,
-                        modified: node.modified,
-                        description: description
+                        // isJson: node.isJson,
+                        // size: node.size,
+                        // modified: node.modified,
+                        description: node.description
                     },
                     undefined,
                     icon

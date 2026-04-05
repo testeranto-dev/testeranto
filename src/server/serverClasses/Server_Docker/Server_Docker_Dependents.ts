@@ -107,7 +107,7 @@ export const consoleLog = (message: string): void => {
     console.log(message);
 };
 
-export const consoleError = (message: string): void => {
+export const consoleError = (...message: string[]): void => {
     console.error(message);
 };
 

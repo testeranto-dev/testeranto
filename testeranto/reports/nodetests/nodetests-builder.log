@@ -1,5 +1,5 @@
-=== Log started at 2026-04-03T00:15:44.473Z for service nodetests-builder (runtime: node) ===
-=== Container ID: 09c77c8434c6c70d5cf2cfd77795c507b69cb36cc26891ada8ef84e71dbd4690 ===
+=== Log started at 2026-04-05T00:59:15.934Z for service nodetests-builder (runtime: node) ===
+=== Container ID: f37c6649dfb9a8560c986131f9920892aa0791cbd81ef27b8da486c26cef1c4b ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
@@ -53,15 +53,15 @@ node > build ended with 0 errors
 [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
 [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
 [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 6dd957b3b83e9d431656daeef2aa3d70
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: f9ef6240297157bd826820cc40117681
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: dec3014ff424d3d7e871e71889f51103
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: b19e3fe9476349cfcc94350832d2c588
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 43be60d78f921ac941b7154cbf1d9545
 [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-U4RILNIO.mjs
 [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
 [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 6dd957b3b83e9d431656daeef2aa3d70
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: f9ef6240297157bd826820cc40117681
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: dec3014ff424d3d7e871e71889f51103
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: b19e3fe9476349cfcc94350832d2c588
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 43be60d78f921ac941b7154cbf1d9545
 [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-U4RILNIO.mjs
 [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Watch mode active - waiting for file changes...
@@ -98,11 +98,11 @@ node > build ended with 0 errors
 [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
 [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
 [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 6dd957b3b83e9d431656daeef2aa3d70
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: f9ef6240297157bd826820cc40117681
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: dec3014ff424d3d7e871e71889f51103
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: b19e3fe9476349cfcc94350832d2c588
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 43be60d78f921ac941b7154cbf1d9545
 [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-U4RILNIO.mjs
 [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
 
-=== Log captured at 2026-04-03T00:16:05.657Z (container status: running) ===
+=== Log captured at 2026-04-05T00:59:36.931Z (container status: running) ===

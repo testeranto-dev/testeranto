@@ -24,7 +24,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/circle/Circle.test.ts": {
-    "hash": "f9ef6240297157bd826820cc40117681",
+    "hash": "b19e3fe9476349cfcc94350832d2c588",
     "files": [
       "/src/lib/tiposkripto/tests/circle/Circle.ts",
       "/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
@@ -48,7 +48,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts": {
-    "hash": "dec3014ff424d3d7e871e71889f51103",
+    "hash": "43be60d78f921ac941b7154cbf1d9545",
     "files": [
       "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
       "/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",

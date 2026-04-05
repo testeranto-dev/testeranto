@@ -71,7 +71,7 @@ export function buildTreeItemsFromTestResultsTreeForConfig(
                 )
             );
         } else if (node.type === 'file') {
-            const description = `${node.isJson ? 'JSON' : 'File'} - ${node.size} bytes`;
+            // const description = `${node.isJson ? 'JSON' : 'File'} - ${node.size} bytes`;
             const icon = node.isJson ?
                 new vscode.ThemeIcon('json') :
                 new vscode.ThemeIcon('file');
@@ -84,10 +84,10 @@ export function buildTreeItemsFromTestResultsTreeForConfig(
                     {
                         fileName: node.name,
                         filePath: node.path,
-                        isJson: node.isJson,
-                        size: node.size,
-                        modified: node.modified,
-                        description: description
+                        // isJson: node.isJson,
+                        // size: node.size,
+                        // modified: node.modified,
+                        description: node.description
                     },
                     undefined,
                     icon

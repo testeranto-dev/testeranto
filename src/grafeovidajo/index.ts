@@ -10,6 +10,7 @@ export { EisenhowerMatrix } from './charts/EisenhowerMatrix';
 export { GanttChart } from './charts/GanttChart';
 export { KanbanBoard } from './charts/KanbanBoard';
 export { TreeGraph } from './charts/TreeGraph';
+export { DebugGraph } from './charts/DebugGraph';
 
 // Types re-exports
 export type {
@@ -21,3 +22,6 @@ export type {
   VizConfig,
   VizComponentProps
 } from './core/types';
+
+// Export DebugConfig type
+export type { DebugConfig } from './charts/DebugGraph';

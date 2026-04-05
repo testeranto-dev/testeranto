@@ -13,8 +13,22 @@ const config: ITesterantoConfig = {
     // Note: node_modules is NOT mounted to avoid platform incompatibility
   ],
 
-  featureIngestor: function (s: string): Promise<string> {
-    throw new Error("Function not implemented.");
+  featureIngestor: async function (s: string): Promise<{ data: string; filepath: string }> {
+    // Example implementation:
+    // Fetch the URL content
+    const response = await fetch(s);
+    const data = await response.text();
+
+    // Determine where to save it
+    // Save to a location that matches the virtual folder structure
+    const url = new URL(s);
+    const hostname = url.hostname.replace(/\./g, '_');
+    const pathname = url.pathname.replace(/\//g, '_').replace(/\./g, '_') || 'index';
+    const filename = `${pathname}.md`;
+    // Save under web/ directory to match virtual folder structure
+    const filepath = `tickets/web/${hostname}/${filename}`;
+
+    return { data, filepath };
   },
 
   runtimes: {

@@ -19,7 +19,7 @@ import type { BaseShould } from "./lib/tiposkripto/src/verbs/tdt/BaseShould";
 
 export type ITesterantoConfig = {
   volumes: string[],
-  featureIngestor: (s: string) => Promise<string>;
+  featureIngestor: (s: string) => Promise<{ data: string; filepath: string }>;
   runtimes: Record<string, IBaseTestConfig>;
   // documentationGlob?: string; // New field: glob pattern to find documentation files
   stakeholderReactModule?: string; // Path to custom React component module
@@ -252,3 +252,12 @@ export type IRunTime =
   | `rust`;
 
 export type ITestTypes = [string, IRunTime, { ports: number }, ITestTypes[]];
+
+// Re-export test result types for convenience
+export type { 
+  TestResultFile,
+  IndividualTestResult,
+  TestResult,
+  RuntimeTestResults,
+  AllTestResults 
+} from "./server/types/testResults";

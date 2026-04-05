@@ -14,21 +14,16 @@ import { StakeholderGraphClient } from "testeranto/stakeholderApp/graph/index.ts
 
 
 // Determine if we're in development mode (server API available)
-// In development, we can use /api/graph-data for live updates
-// In static mode, we load from graph-data.json file
-const isDevelopmentMode = window.location.hostname.includes('localhost') &&
+// In development, we can use WebSocket for live updates
+// In static mode, we load only from graph-data.json file
+const isDevelopmentMode = typeof window !== 'undefined' &&
+  window.location.hostname.includes('localhost') &&
   window.location.protocol.startsWith('http');
 
-// Paths for loading graph data
-const GRAPH_DATA_PATHS = {
-  // In development, use API endpoint
-  development: '/api/graph-data',
-  // In static mode, load from file in same directory
-  static: 'graph-data.json'
-} as const;
+console.log(`[StakeholderApp] Mode: ${isDevelopmentMode ? 'Development (WebSocket enabled)' : 'Static (read-only)'}`);
 
 // Import types from the graph module
-import type { GraphData } from '../../graph/index';
+import type { GraphData } from '../graph/index';
 
 // Types that should match those in src/api.ts
 // For proper type safety, these should be imported from a shared location
@@ -55,18 +50,15 @@ export interface StakeholderData {
         dockerfile: string;
       }
     >;
-    // documentationGlob?: string;
   };
   timestamp: string;
   workspaceRoot: string;
-  // featureTree is now encoded in featureGraph via parentOf edges
   allTestResults?: {
     [configKey: string]: {
       [testName: string]: any;
     };
   };
-  featureGraph?: GraphData;
-  fileTreeGraph?: GraphData;
+  unifiedGraph?: GraphData; // Changed from featureGraph/fileTreeGraph
   vizConfig?: any;
 }
 
@@ -76,16 +68,16 @@ export const DefaultStakeholderApp: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [graphClient, setGraphClient] = React.useState<StakeholderGraphClient | null>(null);
+  const [wsConnected, setWsConnected] = React.useState(false);
 
   React.useEffect(() => {
     // Initialize graph client when data is loaded
     if (data && !graphClient) {
       const client = new StakeholderGraphClient((updatedGraphData) => {
-        // Update data with new graph
+        // Update data with new unified graph
         setData(prev => prev ? {
           ...prev,
-          featureGraph: updatedGraphData.featureGraph || prev.featureGraph,
-          fileTreeGraph: updatedGraphData.fileTreeGraph || prev.fileTreeGraph
+          unifiedGraph: updatedGraphData
         } : prev);
       });
       setGraphClient(client);
@@ -106,22 +98,41 @@ export const DefaultStakeholderApp: React.FC = () => {
       // Always load baseline from graph-data.json first
       // This ensures consistent baseline across all modes
       try {
-        const response = await fetch('/testeranto/reports/graph-data.json');
-        if (!response.ok) {
-          throw new Error(`Failed to load static file: ${response.status} ${response.statusText}`);
+        // Try multiple possible paths for graph-data.json
+        const possiblePaths = [
+          // 'graph-data.json',
+          '/testeranto/reports/graph-data.json',
+          // './graph-data.json'
+        ];
+
+        let response = null;
+        let lastError = null;
+
+        // Try each path until one works
+        for (const path of possiblePaths) {
+          try {
+            response = await fetch(path);
+            if (response.ok) break;
+          } catch (err) {
+            lastError = err;
+            continue;
+          }
         }
+
+        if (!response || !response.ok) {
+          throw new Error(`Failed to load graph-data.json from any path. Last error: ${lastError?.message || 'Unknown'}`);
+        }
+
         const result = await response.json();
-        
-        // Handle both direct StakeholderData format and nested data format
+
+        // Handle only unified graph format
         let stakeholderData: StakeholderData;
-        if (result.data) {
-          // New format with nested data
+        if (result.data && result.data.unifiedGraph) {
+          // New format with unifiedGraph (GraphDataFile format)
           stakeholderData = {
             configs: result.data.configs || {},
             allTestResults: result.data.allTestResults || {},
-            // featureTree is no longer included - tree structure is encoded in featureGraph via parentOf edges
-            featureGraph: result.data.featureGraph || { nodes: [], edges: [] },
-            fileTreeGraph: result.data.fileTreeGraph || { nodes: [], edges: [] },
+            unifiedGraph: result.data.unifiedGraph,
             vizConfig: result.data.vizConfig || {
               projection: {
                 xAttribute: 'status',
@@ -142,18 +153,15 @@ export const DefaultStakeholderApp: React.FC = () => {
             timestamp: result.timestamp || new Date().toISOString(),
             workspaceRoot: ''
           };
+          console.log('[StakeholderApp] Loaded GraphDataFile format');
         } else {
-          // Direct StakeholderData format
-          stakeholderData = result as StakeholderData;
+          // Old format - show error
+          throw new Error('Old graph format detected. Please regenerate graph-data.json with unified format.');
         }
-        
+
         setData(stakeholderData);
         setLoading(false);
-        
-        // After loading baseline, we can connect to WebSocket for live updates
-        // The WebSocket connection is handled by the graph client initialization
-        // which happens in the other useEffect when data is set
-        
+
       } catch (error) {
         console.error('Failed to load static graph data:', error);
         setError(error.message || 'Unknown error loading data');
@@ -196,15 +204,83 @@ export const DefaultStakeholderApp: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div style={{ padding: "40px", textAlign: "center" }}>
+        <h2>Loading Testeranto Stakeholder Report...</h2>
+        <p>Attempting to load data...</p>
+        {isDevelopmentMode && <p style={{ fontSize: "0.9em", color: "#666" }}>Development mode: WebSocket will connect after loading</p>}
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div style={{ padding: "40px", textAlign: "center" }}>
+        <h1 style={{ color: "#d32f2f" }}>Error Loading Report</h1>
+        <p>{error || "No data could be loaded."}</p>
+        <p>Please make sure the Testeranto server has generated the report files.</p>
+        <p style={{ fontSize: "0.9em", color: "#666" }}>
+          Mode: {isDevelopmentMode ? 'Development' : 'Static'} |
+          Tried loading from: graph-data.json, /testeranto/reports/graph-data.json, ./graph-data.json
+        </p>
+      </div>
+    );
+  }
+
+  // const handleNodeClick = (node: any) => {
+  //   console.log("Node clicked:", node);
+  //   // You can access node properties with type safety
+  //   console.log("Node ID:", node.id);
+  //   console.log("Node attributes:", node.attributes);
+  // };
+
+  // const handleNodeHover = (node: any | null) => {
+  //   if (node) {
+  //     console.log("Node hover:", node.id);
+  //   }
+  // };
+
   return (
     <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Testeranto Stakeholder Report</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <h1>Testeranto Stakeholder Report</h1>
+        <div style={{ fontSize: "0.9em", color: "#666" }}>
+          Mode: {isDevelopmentMode ? (
+            <span style={{ color: "#2e7d32", fontWeight: "bold" }}>Development</span>
+          ) : (
+            <span style={{ color: "#666", fontWeight: "bold" }}>Static (read-only)</span>
+          )}
+          {isDevelopmentMode && (
+            <div style={{ marginTop: "5px", fontSize: "0.8em" }}>
+              WebSocket: {wsConnected ? (
+                <span style={{ color: "#2e7d32" }}>Connected</span>
+              ) : (
+                <span style={{ color: "#d32f2f" }}>Disconnected</span>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
       <div style={{ marginBottom: "20px" }}>
         <VisualizationTabs
           data={data}
           onNodeClick={handleNodeClick}
           onNodeHover={handleNodeHover}
         />
+      </div>
+      <div style={{ fontSize: "0.8em", color: "#666", marginTop: "30px", paddingTop: "10px", borderTop: "1px solid #eee" }}>
+        <p>
+          Data loaded from graph-data.json |
+          Last updated: {data.timestamp ? new Date(data.timestamp).toLocaleString() : 'Unknown'} |
+          Graph nodes: {data.unifiedGraph?.nodes?.length || 0} |
+          Graph edges: {data.unifiedGraph?.edges?.length || 0}
+        </p>
+        {!isDevelopmentMode && (
+          <p style={{ fontStyle: "italic" }}>
+            Note: Running in static mode. To enable live updates, run the Testeranto server locally.
+          </p>
+        )}
       </div>
     </div>
   );

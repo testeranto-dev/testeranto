@@ -19,6 +19,9 @@ import { Server_WS } from "./Server_WS";
 export abstract class Server_Docker_Compose extends Server_WS {
   dockerComposeManager: DockerComposeManager;
 
+  abstract getProcessSummary: any;
+  abstract startServiceLogging: any;
+
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
 
@@ -41,9 +44,6 @@ export abstract class Server_Docker_Compose extends Server_WS {
   async setupDockerCompose() {
     writeComposeFile(this.generateServices(), this.configs);
   }
-
-  abstract getProcessSummary: any;
-  abstract startServiceLogging: any;
 
   // TODO: this code is duplicated in DockerComposeManager
   public async DC_upAll(): Promise<IDockerComposeResult> {

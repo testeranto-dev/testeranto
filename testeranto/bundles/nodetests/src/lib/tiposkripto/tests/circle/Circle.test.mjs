@@ -217,8 +217,7 @@ var specification = (Given, When, Then, Describe, It, Confirm, Value, Should) =>
         [Value.radius(1), Should.beCloseTo(2 * Math.PI)],
         [Value.radius(2), Should.beCloseTo(4 * Math.PI)],
         [Value.radius(5), Should.beCloseTo(10 * Math.PI)]
-      ],
-      ["Circle circumference formula: C = 2\u03C0r"]
+      ]
     ),
     // TDT pattern: Test area calculation
     Confirm["areaCalculation"]()(
@@ -227,16 +226,14 @@ var specification = (Given, When, Then, Describe, It, Confirm, Value, Should) =>
         [Value.radius(1), Should.beCloseTo(Math.PI)],
         [Value.radius(2), Should.beCloseTo(4 * Math.PI)],
         [Value.radius(5), Should.beCloseTo(25 * Math.PI)]
-      ],
-      ["Circle area formula: A = \u03C0r\xB2"]
+      ]
     ),
     // AAA pattern: Test circle properties
     Describe["a circle with radius"](5)(
       [
         It["has correct circumference"](),
         It["has correct area"]()
-      ],
-      ["Testing circle with radius 5"]
+      ]
     ),
     // BDD pattern: Test radius operations
     Given.WithRadius(10)(
@@ -248,12 +245,10 @@ var specification = (Given, When, Then, Describe, It, Confirm, Value, Should) =>
         Then.radiusIs(10),
         // 10 * 2 / 2 = 10
         Then.circumferenceIs(2 * Math.PI * 10)
-      ],
-      ["Testing radius operations"]
+      ]
     ),
     // BDD pattern: Test setRadius
     Given.Default(
-      ["Default circle with radius 1"],
       [
         When.setRadius(7)
       ],
@@ -261,8 +256,7 @@ var specification = (Given, When, Then, Describe, It, Confirm, Value, Should) =>
         Then.radiusIs(7),
         Then.circumferenceIs(2 * Math.PI * 7),
         Then.areaIs(Math.PI * 49)
-      ],
-      ["Testing setRadius method"]
+      ]
     )
   ];
 };

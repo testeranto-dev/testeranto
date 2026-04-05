@@ -85,7 +85,7 @@ export class TestResultsCollector {
   }
 
   getTestResults(runtime?: string, testName?: string): any[] {
-    return getTestResultsPure(runtime, testName);
+    return getTestResultsPure(runtime, testName, this.configs);
   }
 
   getInputFiles(runtime: string, testName: string): string[] {

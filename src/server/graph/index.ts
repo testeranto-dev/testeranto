@@ -1,100 +1,59 @@
 import fs from 'fs';
 import path from 'path';
+import type { ITesterantoConfig } from "../../Types";
+import { graphToData } from '../../graph/graphToData';
 import {
   type GraphData,
-  type GraphNodeAttributes,
   type GraphEdgeAttributes,
-  type GraphUpdate,
+  type GraphNodeAttributes,
   type GraphOperation,
-  createGraph,
-  graphToData,
-  dataToGraph,
-  type TesterantoGraph
+  type GraphUpdate,
+  type TesterantoGraph,
 } from '../../graph/index';
+import type { TestResult } from "../types/testResults";
+import { cleanupAttributeNodesPure } from './cleanupAttributeNodesPure';
+import { connectAllTestsToEntrypointPure } from './connectAllTestsToEntrypointPure';
+import { createEntrypointNodeOperationsPure } from './createEntrypointNodeOperationsPure';
+import { createFolderNodesAndEdgesPure } from './createFolderNodesAndEdgesPure';
+import { createGraphDataFilePure } from './createGraphDataFilePure';
+import { createSimpleTestNodeOperationsPure } from './createSimpleTestNodeOperationsPure';
+import { createTestNodeOperationsPure } from './createTestNodeOperationsPure';
+import { extractFeatureInfoPure } from './extractFeatureInfoPure';
+import { generateEdgesPure } from './generateEdgesPure';
+import { getGraphStatsPure } from './getGraphStatsPure';
+import { hasFeatureUpdatesPure } from './hasFeatureUpdatesPure';
+import { loadGraphPure } from './loadGraphPure';
+import { processFeatureUrlPure } from './processFeatureUrlPure';
+import { updateFromTestResultsPure } from './updateFromTestResultsPure';
 
-// We'll use dynamic imports for optional dependencies
-let yaml: any;
-let glob: any;
-
-async function ensureDeps() {
-  if (!yaml) {
-    yaml = await import('js-yaml');
-  }
-  if (!glob) {
-    glob = await import('glob');
-  }
-}
-
-// Server-side graph manager
 export class GraphManager {
   private graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>;
   private graphDataPath: string;
 
-  constructor(private projectRoot: string) {
+  private featureIngestor?: (url: string) => Promise<{ data: string; filepath: string }>;
+
+  constructor(
+    private projectRoot: string,
+    featureIngestor?: (url: string) => Promise<{ data: string; filepath: string }>,
+    private config?: ITesterantoConfig
+  ) {
+    this.featureIngestor = featureIngestor;
+
     // Use the same file that the stakeholder app reads from
     this.graphDataPath = path.join(projectRoot, 'testeranto', 'reports', 'graph-data.json');
-    
-    // Load existing graph data if available, otherwise create fresh
-    if (fs.existsSync(this.graphDataPath)) {
-      try {
-        const fileContent = fs.readFileSync(this.graphDataPath, 'utf-8');
-        const parsed = JSON.parse(fileContent);
-        
-        // Handle both wrapper format and raw GraphData format
-        let graphData: GraphData;
-        if (parsed.data && parsed.data.featureGraph) {
-          // Wrapper format: {timestamp, version, data: {featureGraph: {...}}}
-          graphData = parsed.data.featureGraph;
-        } else if (parsed.nodes) {
-          // Raw GraphData format
-          graphData = parsed;
-        } else {
-          console.warn('[GraphManager] Invalid graph data format, starting fresh');
-          this.graph = createGraph();
-          return;
-        }
-        
-        this.graph = dataToGraph(graphData);
-        console.log(`[GraphManager] Loaded existing graph with ${this.graph.order} nodes and ${this.graph.size} edges`);
-        
-        // Convert featureTree to graph edges if it exists
-        if (parsed.data && parsed.data.featureTree) {
-          console.log('[GraphManager] Converting featureTree to graph edges');
-          this.convertTreeToGraphEdges(parsed.data.featureTree);
-          
-          // Remove featureTree from data since it's now encoded in the graph
-          // We'll save this updated structure
-          this.saveGraph();
-        }
-      } catch (error) {
-        console.error('[GraphManager] Error loading existing graph, starting fresh:', error);
-        this.graph = createGraph();
-      }
-    } else {
-      // Start with a fresh graph if no file exists
-      this.graph = createGraph();
-      console.log('[GraphManager] Created fresh graph (no existing data found)');
-    }
+
+    // Load graph using pure function
+    this.graph = loadGraphPure(this.graphDataPath, projectRoot);
   }
 
   // Load graph from file or create new
   private loadGraph(): TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes> {
     // Note: This method is kept for compatibility but not used in constructor
     // since we always start fresh
-    try {
-      if (fs.existsSync(this.graphDataPath)) {
-        const data = JSON.parse(fs.readFileSync(this.graphDataPath, 'utf-8')) as GraphData;
-        const graph = dataToGraph(data);
-        console.log(`[GraphManager] Loaded graph with ${graph.order} nodes and ${graph.size} edges`);
-        return graph;
-      }
-    } catch (error) {
-      console.error('[GraphManager] Error loading graph:', error);
-    }
-    return createGraph();
+    return loadGraphPure(this.graphDataPath, this.projectRoot);
   }
 
-  // Save graph to file, preserving existing data in the wrapper format
+  // Save graph to file in unified format
   public saveGraph(): void {
     try {
       const graphData = graphToData(this.graph);
@@ -102,62 +61,13 @@ export class GraphManager {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
-      
-      let existingData: any = {
-        timestamp: new Date().toISOString(),
-        version: '1.0',
-        data: {
-          featureGraph: graphData,
-          // Default empty values for other fields
-          configs: {},
-          allTestResults: {},
-          featureTree: {},
-          fileTreeGraph: { nodes: [], edges: [] },
-          vizConfig: {
-            projection: {
-              xAttribute: 'status',
-              yAttribute: 'priority',
-              xType: 'categorical',
-              yType: 'continuous',
-              layout: 'grid'
-            },
-            style: {
-              nodeSize: 10,
-              nodeColor: '#007acc',
-              nodeShape: 'circle'
-            }
-          }
-        }
-      };
-      
-      // Try to read existing file to preserve other data
-      if (fs.existsSync(this.graphDataPath)) {
-        try {
-          const fileContent = fs.readFileSync(this.graphDataPath, 'utf-8');
-          const parsed = JSON.parse(fileContent);
-          
-          // If it has the wrapper format, preserve everything except featureGraph
-          if (parsed.data) {
-            existingData = {
-              ...parsed,
-              timestamp: new Date().toISOString(),
-              data: {
-                ...parsed.data,
-                featureGraph: graphData,  // Update only the featureGraph
-                // Remove featureTree since it's now encoded in the graph
-                featureTree: undefined
-              }
-            };
-            // Clean up the undefined field
-            delete existingData.data.featureTree;
-          }
-        } catch (error) {
-          console.warn('[GraphManager] Error reading existing graph-data.json, creating new:', error);
-        }
-      }
-      
-      fs.writeFileSync(this.graphDataPath, JSON.stringify(existingData, null, 2), 'utf-8');
-      console.log(`[GraphManager] Saved graph to ${this.graphDataPath} with ${graphData.nodes.length} nodes and ${graphData.edges.length} edges`);
+
+      // Use pure function to create graph data file structure
+      const graphDataFile = createGraphDataFilePure(graphData);
+
+      // DO NOT try to preserve old data - always write new unified format
+      fs.writeFileSync(this.graphDataPath, JSON.stringify(graphDataFile, null, 2), 'utf-8');
+      console.log(`[GraphManager] Saved unified graph to ${this.graphDataPath} with ${graphData.nodes.length} nodes and ${graphData.edges.length} edges`);
     } catch (error) {
       console.error('[GraphManager] Error saving graph:', error);
     }
@@ -205,17 +115,14 @@ export class GraphManager {
     });
 
     this.saveGraph();
-    
+
     // Also serialize to markdown if there are feature updates
-    const hasFeatureUpdates = update.operations.some(op => 
-      op.type === 'addNode' && op.data.type === 'feature' ||
-      op.type === 'updateNode' && this.graph.getNodeAttributes(op.data.id)?.type === 'feature'
-    );
-    
+    const hasFeatureUpdates = hasFeatureUpdatesPure(update.operations, this.graph);
+
     if (hasFeatureUpdates) {
       this.serializeToMarkdown();
     }
-    
+
     return this.getGraphData();
   }
 
@@ -226,405 +133,79 @@ export class GraphManager {
 
     // Temporarily disabled: Skip parsing markdown files
     console.log('[GraphManager] parseMarkdownFiles is temporarily disabled');
-    
+
     return {
       operations,
       timestamp
     };
   }
 
-  // Update graph from test results
-  public updateFromTestResults(testResults: any): GraphUpdate {
-    const operations: GraphOperation[] = [];
-    const timestamp = new Date().toISOString();
-    
-    // Log for debugging
-    console.log(`[GraphManager] updateFromTestResults called with:`, {
-      runtime: testResults.runtime,
-      testName: testResults.testName,
-      hasIndividualResults: testResults.individualResults && Array.isArray(testResults.individualResults),
-      individualResultsCount: testResults.individualResults ? testResults.individualResults.length : 0
-    });
-
-    // Extract test information - handle various formats
-    let runtime = testResults.runtime || 'unknown';
-    let testName = testResults.testName || 'unknown';
-    
-    // Try to extract from metadata if not directly available
-    if (runtime === 'unknown' && testResults.metadata) {
-      runtime = testResults.metadata.runtime || runtime;
-      testName = testResults.metadata.testName || testName;
-    }
-    
-    // Sanitize runtime and testName to create valid node IDs
-    // Replace any characters that might cause issues in node IDs
-    const sanitizeForNodeId = (str: string): string => {
-      return str.replace(/[^a-zA-Z0-9:_\-.]/g, '_');
-    };
-    
-    runtime = sanitizeForNodeId(runtime);
-    testName = sanitizeForNodeId(testName);
-    
-    // Create a suite node for this test
-    const suiteId = `suite:${runtime}:${testName}`;
-    
-    // Check if suite node already exists
-    const existingSuiteNode = this.graph.hasNode(suiteId);
-    
-    // Always create or update the suite node
-    operations.push({
-      type: existingSuiteNode ? 'updateNode' : 'addNode',
-      data: {
-        id: suiteId,
-        type: 'suite',
-        label: testName,
-        description: `Test suite: ${testName} (${runtime})`,
-        status: 'done',
-        metadata: { 
-          runtime, 
-          testName,
-          timestamp: new Date().toISOString()
-        }
-      },
-      timestamp
-    });
-
-    // Handle individual test results (from tests.json format)
-    if (testResults.individualResults && Array.isArray(testResults.individualResults)) {
-      testResults.individualResults.forEach((individualResult: any, index: number) => {
-        const stepName = individualResult.stepName || `Step ${index + 1}`;
-        const testId = `test:${runtime}:${testName}:${index}`;
-        
-        // Check if test node already exists
-        const existingTestNode = this.graph.hasNode(testId);
-        
-        // Create or update test node
-        operations.push({
-          type: existingTestNode ? 'updateNode' : 'addNode',
-          data: {
-            id: testId,
-            type: 'test',
-            label: stepName,
-            description: `Test: ${stepName}`,
-            status: individualResult.failed === false ? 'done' : 'blocked',
-            priority: individualResult.failed === false ? 'low' : 'high',
-            metadata: {
-              runtime,
-              testName,
-              stepIndex: index,
-              stepName,
-              failed: individualResult.failed,
-              features: individualResult.features || []
-            }
-          },
-          timestamp
-        });
-
-        // Connect test to suite (only add edge if it doesn't exist)
-        // Check if edge already exists
-        let edgeExists = false;
-        if (this.graph.hasEdge(suiteId, testId)) {
-          edgeExists = true;
-        }
-        
-        if (!edgeExists) {
-          operations.push({
-            type: 'addEdge',
-            data: {
-              source: suiteId,
-              target: testId,
-              attributes: {
-                type: 'belongsTo',
-                weight: 1
-              }
-            },
-            timestamp
-          });
-        }
-
-        // Process features if they exist
-        if (individualResult.features && Array.isArray(individualResult.features)) {
-          individualResult.features.forEach((featureUrl: string) => {
-            // Extract feature name from URL
-            const featureName = featureUrl.split('/').pop() || featureUrl;
-            const featureId = `feature:${featureName}`;
-            
-            // Check if feature node already exists
-            const existingFeatureNode = this.graph.hasNode(featureId);
-            
-            // Create or update feature node
-            operations.push({
-              type: existingFeatureNode ? 'updateNode' : 'addNode',
-              data: {
-                id: featureId,
-                type: 'feature',
-                label: featureName,
-                description: `Feature: ${featureName}`,
-                status: 'todo',
-                metadata: { url: featureUrl }
-              },
-              timestamp
-            });
-
-            // Connect feature to test (only add edge if it doesn't exist)
-            let featureEdgeExists = false;
-            if (this.graph.hasEdge(featureId, testId)) {
-              featureEdgeExists = true;
-            }
-            
-            if (!featureEdgeExists) {
-              operations.push({
-                type: 'addEdge',
-                data: {
-                  source: featureId,
-                  target: testId,
-                  attributes: {
-                    type: 'associatedWith',
-                    weight: 1
-                  }
-                },
-                timestamp
-              });
-            }
-          });
-        }
-      });
-    } 
-    // Handle simple test result format
-    else if (testResults.failed !== undefined) {
-      const testId = `test:${runtime}:${testName}:0`;
-      
-      // Check if test node already exists
-      const existingTestNode = this.graph.hasNode(testId);
-      
-      operations.push({
-        type: existingTestNode ? 'updateNode' : 'addNode',
-        data: {
-          id: testId,
-          type: 'test',
-          label: testName,
-          description: `Test: ${testName}`,
-          status: testResults.failed === false ? 'done' : 'blocked',
-          priority: testResults.failed === false ? 'low' : 'high',
-          metadata: testResults
-        },
-        timestamp
-      });
-
-      // Connect test to suite (only add edge if it doesn't exist)
-      let edgeExists = false;
-      if (this.graph.hasEdge(suiteId, testId)) {
-        edgeExists = true;
-      }
-      
-      if (!edgeExists) {
-        operations.push({
-          type: 'addEdge',
-          data: {
-            source: suiteId,
-            target: testId,
-            attributes: {
-              type: 'belongsTo',
-              weight: 1
-            }
-          },
-          timestamp
-        });
-      }
-    }
-
-    return {
+  // Helper to create folder nodes and connect them in a hierarchy for both local file paths and URLs
+  private createFolderNodesAndEdges(
+    pathStr: string,
+    operations: GraphOperation[],
+    timestamp: string
+  ): string {
+    return createFolderNodesAndEdgesPure(
+      pathStr,
+      this.projectRoot,
       operations,
       timestamp
-    };
+    );
+  }
+
+  // Helper to process a feature URL using featureIngestor
+  private async processFeatureUrl(featureUrl: string): Promise<{ content: string; localPath?: string }> {
+    return processFeatureUrlPure(
+      featureUrl,
+      this.projectRoot,
+      this.featureIngestor
+    );
+  }
+
+  // Update graph from test results
+  public async updateFromTestResults(testResults: TestResult | TestResult[]): Promise<GraphUpdate> {
+    return updateFromTestResultsPure(
+      testResults,
+      this.graph,
+      this.projectRoot,
+      this.featureIngestor,
+      this.config
+    );
+  }
+
+  // Clean up attribute nodes (nodes that should be attributes of other nodes)
+  public cleanupAttributeNodes(): GraphUpdate {
+    const timestamp = new Date().toISOString();
+    const graphData = graphToData(this.graph);
+    const operations = cleanupAttributeNodesPure(graphData, timestamp);
+    return { operations, timestamp };
   }
 
   // Generate edges between related nodes
   public generateEdges(): GraphUpdate {
-    const operations: GraphOperation[] = [];
     const timestamp = new Date().toISOString();
-    
-    // Get all nodes
-    const nodes = this.graph.nodes();
-    
-    // Create a map of node types
-    const nodeMap = new Map();
-    for (const nodeId of nodes) {
-      const attributes = this.graph.getNodeAttributes(nodeId);
-      nodeMap.set(nodeId, attributes);
-    }
-    
-    // Generate edges based on node ID patterns and metadata
-    for (const [nodeId, attributes] of nodeMap.entries()) {
-      // Handle test nodes - connect them to their suite
-      if (attributes.type === 'test') {
-        // Extract runtime and testName from metadata or node ID
-        const runtime = attributes.metadata?.runtime || 'unknown';
-        const testName = attributes.metadata?.testName || 'unknown';
-        
-        if (runtime !== 'unknown' && testName !== 'unknown') {
-          const suiteId = `suite:${runtime}:${testName}`;
-          if (nodeMap.has(suiteId)) {
-            // Check if edge already exists
-            let edgeExists = false;
-            if (this.graph.hasEdge(suiteId, nodeId)) {
-              edgeExists = true;
-            }
-            
-            if (!edgeExists) {
-              operations.push({
-                type: 'addEdge',
-                data: {
-                  source: suiteId,
-                  target: nodeId,
-                  attributes: {
-                    type: 'belongsTo',
-                    weight: 1
-                  }
-                },
-                timestamp
-              });
-            }
-          }
-        }
-      }
-      
-      // Handle feature nodes - connect them to tests that reference them
-      if (attributes.type === 'feature') {
-        const featureId = nodeId;
-        const featureName = attributes.label || nodeId.replace('feature:', '');
-        
-        // Look for tests that have this feature in their metadata
-        for (const [testNodeId, testAttributes] of nodeMap.entries()) {
-          if (testAttributes.type === 'test') {
-            const testFeatures = testAttributes.metadata?.features || [];
-            if (testFeatures.some((f: string) => f.includes(featureName))) {
-              // Check if edge already exists
-              let edgeExists = false;
-              if (this.graph.hasEdge(featureId, testNodeId)) {
-                edgeExists = true;
-              }
-              
-              if (!edgeExists) {
-                operations.push({
-                  type: 'addEdge',
-                  data: {
-                    source: featureId,
-                    target: testNodeId,
-                    attributes: {
-                      type: 'associatedWith',
-                      weight: 1
-                    }
-                  },
-                  timestamp
-                });
-              }
-            }
-          }
-        }
-      }
-    }
-    
+    const graphData = graphToData(this.graph);
+    const operations = generateEdgesPure(graphData, this.config, timestamp, this.projectRoot);
     return { operations, timestamp };
   }
 
   // Get graph statistics
   public getGraphStats(): { nodes: number; edges: number; nodeTypes: Record<string, number>; edgeTypes: Record<string, number> } {
-    const nodes = this.graph.nodes();
-    const edges = this.graph.edges();
-    
-    const nodeTypes: Record<string, number> = {};
-    const edgeTypes: Record<string, number> = {};
-    
-    for (const nodeId of nodes) {
-      const attributes = this.graph.getNodeAttributes(nodeId);
-      const type = attributes.type || 'unknown';
-      nodeTypes[type] = (nodeTypes[type] || 0) + 1;
-    }
-    
-    for (const edge of edges) {
-      const attributes = this.graph.getEdgeAttributes(edge);
-      const type = attributes.type || 'unknown';
-      edgeTypes[type] = (edgeTypes[type] || 0) + 1;
-    }
-    
-    console.log(`[GraphManager] Graph stats: ${nodes.length} nodes, ${edges.length} edges`);
-    console.log(`[GraphManager] Node types:`, nodeTypes);
-    console.log(`[GraphManager] Edge types:`, edgeTypes);
-    
-    return {
-      nodes: nodes.length,
-      edges: edges.length,
-      nodeTypes,
-      edgeTypes
-    };
-  }
+    const stats = getGraphStatsPure(this.graph);
 
-  // Convert featureTree structure to graph edges
-  private convertTreeToGraphEdges(featureTree: any): void {
-    const timestamp = new Date().toISOString();
-    
-    const traverse = (node: any, parentId?: string) => {
-      if (!node || !node.id) return;
-      
-      // Ensure the node exists in the graph
-      if (!this.graph.hasNode(node.id)) {
-        try {
-          this.graph.addNode(node.id, {
-            id: node.id,
-            type: 'feature',
-            label: node.label || node.id,
-            description: node.description || '',
-            status: node.status || 'todo',
-            metadata: node.metadata || {}
-          });
-        } catch (error) {
-          // Node might already exist, which is fine
-        }
-      }
-      
-      // Add parent-child edge if parent exists
-      if (parentId && this.graph.hasNode(parentId)) {
-        // Check if edge already exists
-        let edgeExists = false;
-        if (this.graph.hasEdge(parentId, node.id)) {
-          edgeExists = true;
-        }
-        
-        if (!edgeExists) {
-          try {
-            this.graph.addEdge(parentId, node.id, {
-              type: 'parentOf',
-              weight: 1,
-              metadata: { treeLevel: node.level || 0 }
-            });
-            console.log(`[GraphManager] Added parentOf edge: ${parentId} -> ${node.id}`);
-          } catch (error) {
-            console.error(`[GraphManager] Error adding edge ${parentId} -> ${node.id}:`, error);
-          }
-        }
-      }
-      
-      // Recursively process children
-      if (node.children && Array.isArray(node.children)) {
-        node.children.forEach((child: any) => traverse(child, node.id));
-      }
-    };
-    
-    if (Array.isArray(featureTree)) {
-      featureTree.forEach(root => traverse(root));
-    } else if (featureTree) {
-      traverse(featureTree);
-    }
-    
-    console.log(`[GraphManager] Converted featureTree to graph edges`);
+    console.log(`[GraphManager] Graph stats: ${stats.nodes} nodes, ${stats.edges} edges`);
+    console.log(`[GraphManager] Node types:`, stats.nodeTypes);
+    console.log(`[GraphManager] Edge types:`, stats.edgeTypes);
+
+    return stats;
   }
 
   // Serialize graph changes back to markdown frontmatter
   public serializeToMarkdown(): void {
     // Temporarily disabled: Skip serializing to markdown files
     console.log('[GraphManager] serializeToMarkdown is temporarily disabled');
-    
+
     // Still save the graph
     this.saveGraph();
   }
