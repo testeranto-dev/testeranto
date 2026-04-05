@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-05T02:47:01.434Z",
+  "timestamp": "2026-04-05T08:37:27.797Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -14,7 +14,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": 1775357198708,
+            "timestamp": 1775373084051,
             "fails": 6,
             "artifacts": [],
             "features": [
@@ -140,7 +140,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775357198708,
+            "timestamp": 1775373084051,
             "individualResults": [
               {
                 "index": 0,
@@ -462,7 +462,13 @@
           "icon": "document",
           "metadata": {
             "url": "./Readme.md",
-            "contentPreview": "---\ntitle: Readme\ndescription: 'Feature: ./Readme.md'\nstatus: todo\npriority: medium\n---\n# Testeranto\n\n## What is it?\n\nTesteranto lets you vibe code large, real-world polyglot codebases via tests writt...",
+            "content": "---\nstatus: todo\ntitle: Readme.md\ndescription: 'Feature: Readme.md'\n---\n# Testeranto\n\n## What is it?\n\nTesteranto lets you vibe code large, real-world polyglot codebases via tests written in javascript, python, golang, rust and java. By wrapping your code in BDD (Given-When-Then), AAA (Arrange-Act-Assert), and TDT (Table Driven Testing) semantics, you specify the behavior of your components. The tests are run and the output of those tests are passed into the context of your favorite LLM. Testeranto edits your code and tests using your documentation and then runs the tests again. Once all the tests pass, the results are committed to the repo. In short, testeranto is my attempt to automate my job. \n\nIn more concrete terms, testeranto is\n\n- a Bun/TS server/test runner that uses docker as a multi-language process manager\n- a VS code extension to manage that server\n- 6 language specific packages\n  - tiposkripto\n  - pitono\n  - rubeno\n  - rusto\n  - kafe\n  - golingvu\n\n- turns github issues, BDD specs and markdown documentation into packaged artifacts and human readable test reports.\n- supports multiple testing patterns: BDD (Given-When-Then), AAA (Arrange-Act-Assert), and TDT (Table Driven Testing)\n\n## getting started\n\nInstall testeranto\nAdd a lib for you language of choice.\n\n- tiposkripto (ts) npm\n- rusto (rust) cargo\n- pitono (python) pypi\n- golingvu (go) `go get github.com/testeranto-dev/golingvu`\n- kafe (java) TBD\n- rubeno (ruby ) rubygems\n- Run `testeranto dev`\n\n### Important Note for Cross-Platform Development\n\nWhen developing on macOS (especially Apple Silicon) and running tests in Docker containers (Linux x86_64):\n\n- **Node.js dependencies** are installed inside the container during build time\n- **Host `node_modules` is NOT mounted** into containers to avoid platform incompatibility\n- Ensure your `package.json` and lock files (`yarn.lock`, `package-lock.json`) are included in your Docker build context\n- Native addons will be compiled for the container's architecture, not the host's\n\n### Dockerfile Requirements and Common Errors\n\n#### 1. Stage Targeting Error\n\n**Error**: `\"ERROR: failed to build: failed to solve: target stage \"runtime\" could not be found\"`\n\n**Cause**: Your Dockerfile doesn't have a stage named \"runtime\", but the BuildKit configuration is trying to build with `targetStage: \"runtime\"`.\n\n**Solutions**:\n\n1. **Option A**: Remove `targetStage` from your configuration:\n   ```typescript\n   buildKitOptions: {\n     // Don't include targetStage\n     cacheMounts: [...]\n   }\n   ```\n2. **Option B**: Add a stage named \"runtime\" to your Dockerfile:\n   ```dockerfile\n   FROM node:20-alpine AS runtime\n   WORKDIR /workspace\n   # ... rest of your Dockerfile\n   ```\n3. **Option C**: Update your configuration to match your Dockerfile's stage names:\n   ```typescript\n   buildKitOptions: {\n     targetStage: \"builder\", // or whatever your stage is named\n     cacheMounts: [...]\n   }\n   ```\n\n#### 2. Single-Stage vs Multi-Stage Dockerfiles\n\n- **Single-stage**: Don't use `targetStage` in configuration\n- **Multi-stage**: Use `targetStage` only if you need to build a specific stage\n\n#### 3. Example Configurations\n\n**Single-stage Dockerfile**:\n\n```typescript\nbuildKitOptions: {\n  cacheMounts: [\"/root/.npm\"];\n  // No targetStage\n}\n```\n\n**Multi-stage Dockerfile with \"runtime\" stage**:\n\n```typescript\nbuildKitOptions: {\n  cacheMounts: [\"/root/.npm\"],\n  targetStage: \"runtime\"\n}\n```\n\n**Multi-stage Dockerfile with custom stage name**:\n\n```typescript\nbuildKitOptions: {\n  cacheMounts: [\"/root/.npm\"],\n  targetStage: \"production\" // matches FROM ... AS production\n}\n```\n\n## Philosophy\n\nThe common pattern of testing and packaging software is\n\n1. static tests of entire codebase\n2. unit tests of entire codebase\n3. packaging\n4. integration tests of entire codebase\n\nTesteranto reverses this pattern\n\n1. Breakup the application into \"slices\"\n2. Package each test, producing a set of input files which correlate output artifacts to to the local files which they import.\n3. run all the tests\n4. the developer invokes the LLM and the results of the tests are passed to an LLM context, along with the input files, features, etc\n5. the LLM produces a change\n6. this change triggers the test runner to rebuild and relaunch the relevevant tests\n7. goto 4\n\nBy packaging a piece of software first, we can correlate the output aritifacts to it's specific input source files. We can then run static tests and unit tests upon this set of input files. The results of all these tests, plus the BDD test results, are given to an LLM. This allows focus the LLM's context entirely around 1 slice of an application.\n\n## Running the server\n\n```bash\n# Install dependencies\nbun install\n\n# Run the server (Bun runs TypeScript directly)\nbun run start\n\n# Or run in watch mode\nbun run dev\n\n# Build for production\nbun build --target node --outdir dist src/index.ts\n\n# Install globally\nbun run link   # This builds first, then links\n\nMake sure `~/.bun/bin` is in your PATH:\nexport PATH=\"$HOME/.bun/bin:$PATH\"\n# Add this line to your ~/.zshrc for permanent access\n```\n\n## VS Code extension\n\n```sh\n# build the extionsion\nyarn package:vsce\n```\n",
+            "contentPreview": "# Testeranto\n\n## What is it?\n\nTesteranto lets you vibe code large, real-world polyglot codebases via tests written in javascript, python, golang, rust and java. By wrapping your code in BDD (Given-Whe...",
+            "frontmatter": {
+              "status": "todo",
+              "title": "Readme.md",
+              "description": "Feature: Readme.md"
+            },
             "localPath": "/Users/adam/Code/testeranto/Readme.md"
           }
         },
@@ -1000,7 +1006,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": 1775357198697,
+            "timestamp": 1775373084267,
             "fails": 4,
             "artifacts": [],
             "features": [],
@@ -1051,7 +1057,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775357198697,
+            "timestamp": 1775373084267,
             "individualResults": [
               {
                 "index": 0,
@@ -1655,7 +1661,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": 1775357198752,
+            "timestamp": 1775373084199,
             "fails": 0,
             "artifacts": [],
             "features": [
@@ -1716,7 +1722,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775357198752,
+            "timestamp": 1775373084199,
             "individualResults": [
               {
                 "index": 0,
@@ -2129,7 +2135,13 @@
           "icon": "document",
           "metadata": {
             "url": "https://api.github.com/repos/adamwong246/testeranto/issues/888",
+            "content": "---\nstatus: todo\ntitle: '888'\ndescription: 'Feature: 888'\n---\n{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n",
             "contentPreview": "{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"h...",
+            "frontmatter": {
+              "status": "todo",
+              "title": "888",
+              "description": "Feature: 888"
+            },
             "localPath": "/Users/adam/Code/testeranto/tickets/web/api_github_com/_repos_adamwong246_testeranto_issues_888.md"
           }
         },
@@ -2423,7 +2435,18 @@
           "icon": "document",
           "metadata": {
             "url": "src/lib/tiposkripto/README.md",
-            "contentPreview": "# tiposkripto\n\n## the typescript implementation of testeranto\n\n## Supported Patterns\n\n1. **BDD (Behavior Driven Development)**: Given, When, Then (3 verbs) - fully implemented and production-ready\n2. ...",
+            "content": "---\nstatus: todo\ntitle: README.md\ndescription: 'Feature: README.md'\nfrontmatter:\n  status: done\n  title: README.md\n  description: 'Feature: README.md'\n---\n# README.md\n\nFeature: README.md",
+            "contentPreview": "# README.md\n\nFeature: README.md",
+            "frontmatter": {
+              "status": "todo",
+              "title": "README.md",
+              "description": "Feature: README.md",
+              "frontmatter": {
+                "status": "done",
+                "title": "README.md",
+                "description": "Feature: README.md"
+              }
+            },
             "localPath": "/Users/adam/Code/testeranto/src/lib/tiposkripto/README.md"
           }
         },
@@ -2568,7 +2591,13 @@
           "icon": "document",
           "metadata": {
             "url": "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+            "content": "---\nstatus: todo\ntitle: '8'\ndescription: 'Feature: 8'\n---\n{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n",
             "contentPreview": "{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"h...",
+            "frontmatter": {
+              "status": "todo",
+              "title": "8",
+              "description": "Feature: 8"
+            },
             "localPath": "/Users/adam/Code/testeranto/tickets/web/api_github_com/_repos_adamwong246_testeranto_issues_8.md"
           }
         },
@@ -3920,7 +3949,7 @@
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-05T02:47:01.434Z"
+        "timestamp": "2026-04-05T08:37:27.797Z"
       }
     },
     "vizConfig": {
@@ -3936,28 +3965,6 @@
         "nodeColor": "#882255",
         "nodeShape": "circle"
       }
-    },
-    "configs": {
-      "runtimes": {
-        "nodetests": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts"
-          ],
-          "checks": [
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        }
-      },
-      "documentationGlob": "./src/**/*.md",
-      "featureIngestor": "present"
     }
   }
 }

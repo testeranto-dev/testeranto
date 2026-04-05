@@ -233,25 +233,25 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
                     Icon: {node.icon || node.attributes?.icon}
                   </div>
                 )}
-                {node.attributes?.label && (
+                {node.label && (
                   <div style={{ fontSize: '11px', color: '#666' }}>
-                    Label: {node.attributes.label}
+                    Label: {node.label}
                   </div>
                 )}
-                {node.attributes?.status && (
+                {node.metadata?.frontmatter?.status && (
                   <div style={{ fontSize: '11px', color: '#666' }}>
                     Status: <span style={{
-                      color: node.attributes.status === 'done' ? '#4CAF50' :
-                        node.attributes.status === 'doing' ? '#FF9800' :
-                          node.attributes.status === 'blocked' ? '#F44336' : '#666'
+                      color: node.metadata.frontmatter.status === 'done' ? '#4CAF50' :
+                        node.metadata.frontmatter.status === 'doing' ? '#FF9800' :
+                          node.metadata.frontmatter.status === 'blocked' ? '#F44336' : '#666'
                     }}>
-                      {node.attributes.status}
+                      {node.metadata.frontmatter.status}
                     </span>
                   </div>
                 )}
-                {node.attributes?.priority && (
+                {node.metadata?.frontmatter?.priority && (
                   <div style={{ fontSize: '11px', color: '#666' }}>
-                    Priority: {node.attributes.priority}
+                    Priority: {node.metadata.frontmatter.priority}
                   </div>
                 )}
               </div>
@@ -318,6 +318,7 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
           data={debugData} 
           config={debugConfig}
           onNodeClick={handleNodeClick}
+          onNodeUpdate={props.onNodeUpdate}
         />
 
         {/* Debug overlay with statistics */}

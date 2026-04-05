@@ -1,8 +1,4 @@
 // This file is kept for backward compatibility
-// The types are now defined in src/api.ts
+// Re-export everything from the main API
+export { stakeholderWsAPI } from "../api";
 export type { ResourceChangedData, ConnectedData } from "../api";
-
-// vscodeWsAPI with proper typing
-export const stakeholderWsAPI = {
-  //  TODO add route for updating the graph
-} as const;

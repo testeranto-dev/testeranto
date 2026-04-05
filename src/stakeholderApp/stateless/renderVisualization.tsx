@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { type GraphData, type Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph } from "../../grafeovidajo/index";
+import { getNodeStatus } from "../../grafeovidajo/charts/KanbanBoard";
 
 interface HtmlTreeProps {
   data: GraphData;
@@ -423,13 +424,15 @@ export interface RenderVisualizationProps {
   vizType: 'eisenhower' | 'gantt' | 'kanban' | 'tree';
   onNodeClick?: (node: Node) => void;
   onNodeHover?: (node: Node | null) => void;
+  onNodeUpdate?: (nodeId: string, updatedAttributes: Record<string, any>) => void;
 }
 
 export function renderVisualization({
   data,
   vizType,
   onNodeClick,
-  onNodeHover
+  onNodeHover,
+  onNodeUpdate
 }: RenderVisualizationProps): React.ReactElement {
   // Always use unifiedGraph
   const graphToUse = data.unifiedGraph;
@@ -483,7 +486,8 @@ export function renderVisualization({
     width: 800,
     height: 500,
     onNodeClick: onNodeClick || (() => { }),
-    onNodeHover: onNodeHover || (() => { })
+    onNodeHover: onNodeHover || (() => { }),
+    onNodeUpdate: onNodeUpdate
   };
 
   switch (vizType) {
@@ -543,42 +547,41 @@ export function renderVisualization({
                   id: 'todo',
                   title: 'To Do',
                   statusFilter: (node: Node) => {
-                    // Check status in multiple possible locations
-                    const status = node.attributes?.status ||
-                      node.attributes?.metadata?.status;
+                    const status = getNodeStatus(node);
                     return status === 'todo';
                   },
-                  width: 20
+                  width: 20,
+                  targetStatus: 'todo'
                 },
                 {
                   id: 'doing',
                   title: 'Doing',
                   statusFilter: (node: Node) => {
-                    const status = node.attributes?.status ||
-                      node.attributes?.metadata?.status;
+                    const status = getNodeStatus(node);
                     return status === 'doing';
                   },
-                  width: 20
+                  width: 20,
+                  targetStatus: 'doing'
                 },
                 {
                   id: 'review',
                   title: 'Review',
                   statusFilter: (node: Node) => {
-                    const status = node.attributes?.status ||
-                      node.attributes?.metadata?.status;
+                    const status = getNodeStatus(node);
                     return status === 'review';
                   },
-                  width: 20
+                  width: 20,
+                  targetStatus: 'review'
                 },
                 {
                   id: 'done',
                   title: 'Done',
                   statusFilter: (node: Node) => {
-                    const status = node.attributes?.status ||
-                      node.attributes?.metadata?.status;
+                    const status = getNodeStatus(node);
                     return status === 'done';
                   },
-                  width: 20
+                  width: 20,
+                  targetStatus: 'done'
                 }
               ]
             }}

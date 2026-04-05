@@ -11,6 +11,7 @@ import {
 } from "testeranto/stakeholderApp/VisualizationTabs.tsx";
 // import { window } from "vscode";
 import { StakeholderGraphClient } from "testeranto/stakeholderApp/graph/index.ts";
+import { sendGraphUpdate } from "testeranto/stakeholderApp/utils/graphUpdate.ts"
 
 
 // Determine if we're in development mode (server API available)
@@ -204,6 +205,27 @@ export const DefaultStakeholderApp: React.FC = () => {
     }
   };
 
+  const handleNodeUpdate = async (nodeId: string, updatedAttributes: Record<string, any>) => {
+    console.log("Node update requested:", nodeId, updatedAttributes);
+    try {
+      // Create update operation
+      const operation = {
+        type: 'updateNode' as const,
+        data: {
+          id: nodeId,
+          ...updatedAttributes
+        },
+        timestamp: new Date().toISOString()
+      };
+
+      await sendGraphUpdate([operation]);
+      console.log("Node update sent to server");
+    } catch (error) {
+      console.error("Failed to update node:", error);
+      // You might want to show an error to the user
+    }
+  };
+
   if (loading) {
     return (
       <div style={{ padding: "40px", textAlign: "center" }}>
@@ -267,6 +289,7 @@ export const DefaultStakeholderApp: React.FC = () => {
           data={data}
           onNodeClick={handleNodeClick}
           onNodeHover={handleNodeHover}
+          onNodeUpdate={handleNodeUpdate}
         />
       </div>
       <div style={{ fontSize: "0.8em", color: "#666", marginTop: "30px", paddingTop: "10px", borderTop: "1px solid #eee" }}>

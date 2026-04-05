@@ -1,7 +1,6 @@
 import type { GraphData } from "grafeovidajo";
 import type Graph from "graphology";
-import type { GraphNodeAttributes, GraphEdgeAttributes, GraphNodeType, GraphEdgeType, GraphOperation, GraphUpdate, GraphDataFile } from ".";
-import { Palette } from "../colors";
+import type { GraphEdgeAttributes, GraphNodeAttributes } from ".";
 import { createGraph } from "./createGraph";
 
 // Load data into graph

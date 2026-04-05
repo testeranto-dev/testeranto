@@ -47,6 +47,7 @@ export class Server_WS extends Server_HTTP {
     const validTypes = [
       stakeholderWsAPI.resourceChanged.type,
       stakeholderWsAPI.connected.type,
+      stakeholderWsAPI.graphUpdated.type,
     ];
 
     if (message && typeof message === 'object' && message.type) {

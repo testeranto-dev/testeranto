@@ -1,0 +1,1 @@
+this folder co-locates stakeholder concerns on the server

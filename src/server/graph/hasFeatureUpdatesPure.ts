@@ -11,7 +11,9 @@ export function hasFeatureUpdatesPure(
     }
     if (op.type === 'updateNode' && graph) {
       const existingAttributes = graph.getNodeAttributes(op.data.id);
-      return existingAttributes?.type === 'feature';
+      // Check if it's a feature node or if the update affects frontmatter
+      return existingAttributes?.type === 'feature' || 
+             op.data.metadata?.requiresMarkdownUpdate === true;
     }
     return false;
   });

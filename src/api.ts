@@ -82,6 +82,12 @@ export const stakeholderWsAPI = {
     type: 'connected' as const,
     description: 'Connection established',
     data: {} as ConnectedData
+  },
+
+  graphUpdated: {
+    type: 'graphUpdated' as const,
+    description: 'Notify that the graph has been updated',
+    data: {} as any // We can define a proper type if needed
   }
 } as const;
 

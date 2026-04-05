@@ -1,10 +1,11 @@
 import { type GraphOperation } from '../../graph/index';
 import { extractFeatureInfoPure } from './extractFeatureInfoPure';
+import matter from 'gray-matter'
 
 // Pure function to create feature node operations
 export function createFeatureNodeOperationsPure(
   featureUrl: string,
-  content: string,
+  contentString: string,
   localPath: string | undefined,
   testId: string,
   timestamp: string
@@ -14,10 +15,15 @@ export function createFeatureNodeOperationsPure(
   // Extract feature information using pure function
   const { featureName, featureId } = extractFeatureInfoPure(featureUrl);
 
+
+  const { data, content } = matter(contentString)
+
   // Prepare feature metadata
   const featureMetadata: Record<string, unknown> = {
     url: featureUrl,
-    contentPreview: content.substring(0, 200) + (content.length > 200 ? '...' : '')
+    content: content || '', // Store full content for serialization, ensure it's a string
+    contentPreview: (content || '').substring(0, 200) + ((content || '').length > 200 ? '...' : ''),
+    frontmatter: data
   };
 
   if (localPath) {

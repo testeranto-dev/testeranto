@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BaseChart, VizComponentProps } from './BaseChart';
+
 import { NodeDetailsModal } from './NodeDetailsModal';
-import { VizConfig, Node } from '../core/types';
+import { VizConfig, Node, VizComponentProps } from '../core/types';
 
 export interface KanbanConfig extends VizConfig {
   columns: Array<{
@@ -9,12 +9,36 @@ export interface KanbanConfig extends VizConfig {
     title: string;
     statusFilter: (node: Node) => boolean;
     width: number;
+    // The status value that nodes in this column should have
+    targetStatus?: string;
   }>;
 }
 
 // Helper function to safely get node attributes
-const getSafeNodeAttributes = (node: Node): Record<string, any> => {
-  return node.attributes || {};
+// export const getSafeNodeAttributes = (node: Node): Record<string, any> => {
+//   return node.attributes || {};
+// };
+
+// Helper function to extract status from a node
+export const getNodeStatus = (node: Node): string | undefined => {
+
+  if (node.metadata.frontmatter.status) {
+    return node.metadata.frontmatter.status
+  }
+  // debugger
+  // if (!node) return undefined;
+
+  // // Check node.attributes.status (YAML frontmatter)
+  // if (node.attributes?.status !== undefined) {
+  //   return String(node.attributes.status);
+  // }
+
+  // // Check node.attributes.metadata.status
+  // if (node.attributes?.metadata?.status !== undefined) {
+  //   return String(node.attributes.metadata.status);
+  // }
+
+  return undefined;
 };
 
 export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }> = (props) => {
@@ -31,59 +55,59 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
   const [draggedNode, setDraggedNode] = useState<Node | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   // Filter nodes to only include features
   const featureNodes = props.data.nodes.filter(node => {
     if (!node) return false;
-    
+
     // Check if the node id starts with 'feature:' (most reliable)
     const isFeatureById = node.id?.startsWith('feature:');
-    
-    // According to the Node interface, type is in attributes.type
-    const nodeType = node.attributes?.type;
-    
-    // Also check if type is in attributes.metadata.type
-    const metadataType = node.attributes?.metadata?.type;
-    
-    // Check if the node has feature-like attributes
-    const hasFeatureAttributes = node.attributes?.featureName || 
-                                 node.attributes?.scenario ||
-                                 node.attributes?.given ||
-                                 node.attributes?.when ||
-                                 node.attributes?.then;
-    
+
+    // According to the Node interface, type is a direct property
+    const nodeType = node.type;
+
+    // Check if the node has feature-like metadata
+    const hasFeatureMetadata = node.metadata?.frontmatter?.feature ||
+      node.metadata?.frontmatter?.scenario;
+
     // Check if label or description suggests it's a feature
-    const label = node.attributes?.label || '';
-    const description = node.attributes?.description || '';
-    const isFeatureByText = label.toLowerCase().includes('feature') || 
-                           description.toLowerCase().includes('scenario');
-    
+    const label = node.label || '';
+    const description = node.description || '';
+    const isFeatureByText = label.toLowerCase().includes('feature') ||
+      description.toLowerCase().includes('scenario');
+
     // Also check if the node id contains 'feature' anywhere (case-insensitive)
     const idContainsFeature = node.id?.toLowerCase().includes('feature');
-    
-    return isFeatureById || 
-           nodeType === 'feature' || 
-           metadataType === 'feature' ||
-           hasFeatureAttributes || 
-           isFeatureByText || 
-           idContainsFeature;
+
+    // Check for YAML frontmatter fields that are common in feature files
+    // Feature files often have status, title, description in frontmatter
+    const hasFrontmatterFields = node.metadata?.frontmatter?.status ||
+      node.metadata?.frontmatter?.title ||
+      node.metadata?.frontmatter?.description;
+
+    return isFeatureById ||
+      nodeType === 'feature' ||
+      hasFeatureMetadata ||
+      isFeatureByText ||
+      idContainsFeature ||
+      hasFrontmatterFields;
   });
-  
+
   // Create a set of feature node IDs for quick lookup
   const featureNodeIds = new Set(featureNodes.map(node => node.id));
-  
+
   // Filter edges to only include those where both source and target are feature nodes
   const featureEdges = props.data.edges?.filter(edge => {
     return featureNodeIds.has(edge.source) && featureNodeIds.has(edge.target);
   });
-  
+
   // Create a new data object with only feature nodes and edges
   const featureData = {
     ...props.data,
     nodes: featureNodes,
     edges: featureEdges || []
   };
-  
+
   // Initialize column widths
   useEffect(() => {
     // Create a backlog column for nodes that don't match any other column
@@ -158,17 +182,17 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing || resizeColumnIndex === null) return;
-      
+
       const deltaX = e.clientX - resizeStartX;
       const containerWidth = containerRef.current?.clientWidth || (typeof width === 'number' ? width : 800);
       const deltaPercent = (deltaX / containerWidth) * 100;
-      
+
       const newWidths = [...resizeStartWidths];
-      
+
       // Adjust the widths of the two adjacent columns
       const leftIndex = resizeColumnIndex - 1;
       const rightIndex = resizeColumnIndex;
-      
+
       // Ensure we don't go below minimum width (e.g., 5%)
       const minWidth = 5;
       // Swap the adjustment direction: left column gets deltaPercent added, right column gets deltaPercent subtracted
@@ -181,17 +205,17 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
         setColumnWidths(newWidths);
       }
     };
-    
+
     const handleMouseUp = () => {
       setIsResizing(false);
       setResizeColumnIndex(null);
     };
-    
+
     if (isResizing) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     }
-    
+
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
@@ -217,14 +241,45 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
     e.preventDefault();
     const nodeId = e.dataTransfer.getData('text/plain');
     const node = featureNodes.find(n => n.id === nodeId);
-    
+
     if (node) {
-      // Here you would update the node's status to match the column
-      // For now, we'll just log and call onNodeClick if provided
-      console.log(`Dropped node ${nodeId} into column ${columnId}`);
-      props.onNodeClick?.(node);
+      // Determine which column the node was dropped into
+      const targetColumn = adjustedColumns.find(col => col.id === columnId);
+      if (targetColumn) {
+        // Update the node's status to match the column
+        // We need to determine what attribute change is needed
+        // For now, we'll update the node's status attribute
+        // This should trigger a GraphOperation to be sent to the server
+        console.log(`Dropped node ${nodeId} into column ${columnId}`);
+
+        // Update the node's attributes to match the target column
+        // Use targetStatus if provided, otherwise use column id
+        const targetStatus = targetColumn.targetStatus ||
+          (columnId === 'backlog' ? 'todo' : columnId);
+
+        // We need to update the node's attributes in a way that makes the statusFilter return true
+        // For now, update the status attribute
+        const updatedAttributes: Node = {
+          ...node,
+          metadata: {
+            ...node.metadata,
+            frontmatter: {
+              ...node.metadata.frontmatter,
+              status: targetStatus
+            }
+          }
+        };
+
+        // Call a callback to send the update to the server
+        if (props.onNodeUpdate) {
+          props.onNodeUpdate(node.id, updatedAttributes);
+        }
+
+        // Also call onNodeClick if provided
+        props.onNodeClick?.(node);
+      }
     }
-    
+
     setDragOverColumn(null);
     setDraggedNode(null);
   };
@@ -241,23 +296,23 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
       // Filter feature nodes for this column
       const columnNodes = featureNodes.filter(node => {
         if (!node) return false;
-        
+
         // Create a safe node object with guaranteed attributes
-        const safeNode = {
-          id: node.id || '',
-          attributes: getSafeNodeAttributes(node)
-        };
-        
+        // const safeNode = {
+        //   id: node.id || '',
+        //   attributes: getSafeNodeAttributes(node)
+        // };
+
         try {
-          return column.statusFilter(safeNode);
+          return column.statusFilter(node);
         } catch (error) {
           console.warn(`Error in statusFilter for column "${column.title}":`, error);
           return false;
         }
       });
-      
+
       const isDragOver = dragOverColumn === column.id;
-      
+
       return (
         <React.Fragment key={`column-${column.id}`}>
           {index > 0 && (
@@ -325,11 +380,11 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
               }}
             >
               {columnNodes.map(node => {
-                const label = node.attributes?.label || node.id;
-                const status = node.attributes?.status || node.attributes?.metadata?.status;
-                const priority = node.attributes?.priority;
+                const label = node.label || node.id;
+                const status = node.metadata?.frontmatter?.status;
+                const priority = node.metadata?.frontmatter?.priority;
                 const isDragging = draggedNode?.id === node.id;
-                
+
                 return (
                   <div
                     key={node.id}
@@ -376,70 +431,15 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
       );
     });
   };
-  
-  // If no feature nodes are found, display a message with more debugging info
-  if (featureNodes.length === 0) {
-    // Collect debugging information
-    const totalNodes = props.data.nodes.length;
-    const nodeTypes = Array.from(new Set(props.data.nodes.map(n => n.attributes?.type).filter(Boolean)));
-    const metadataTypes = Array.from(new Set(props.data.nodes.map(n => n.attributes?.metadata?.type).filter(Boolean)));
-    const nodeIds = props.data.nodes.slice(0, 10).map(n => n.id);
-    const featureLikeIds = props.data.nodes.filter(n => n.id?.toLowerCase().includes('feature')).map(n => n.id);
-    
-    // Sample a few nodes to show their attributes
-    const sampleNodes = props.data.nodes.slice(0, 3).map(n => ({
-      id: n.id,
-      attributes: n.attributes,
-      hasFeatureId: n.id?.toLowerCase().includes('feature'),
-      type: n.attributes?.type,
-      metadataType: n.attributes?.metadata?.type,
-      label: n.attributes?.label,
-      description: n.attributes?.description
-    }));
-    
-    return (
-      <div style={{ width: '100%', height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center', color: '#666', padding: '20px' }}>
-          <h3>No Feature Graph Available</h3>
-          <p>Total nodes in data: {totalNodes}</p>
-          <p>Node types present: {nodeTypes.join(', ') || '(none)'}</p>
-          <p>Metadata types present: {metadataTypes.join(', ') || '(none)'}</p>
-          <p>First few node IDs: {nodeIds.join(', ')}</p>
-          <p>Nodes with 'feature' in ID: {featureLikeIds.length > 0 ? featureLikeIds.join(', ') : 'none'}</p>
-          <p>Sample nodes:</p>
-          <div style={{ textAlign: 'left', display: 'inline-block', marginTop: '10px' }}>
-            {sampleNodes.map((node, i) => (
-              <div key={i} style={{ marginBottom: '10px', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}>
-                <div><strong>ID:</strong> {node.id}</div>
-                <div><strong>Type:</strong> {node.type || '(none)'}</div>
-                <div><strong>Metadata Type:</strong> {node.metadataType || '(none)'}</div>
-                <div><strong>Label:</strong> {node.label || '(none)'}</div>
-                <div><strong>Description:</strong> {node.description || '(none)'}</div>
-                <div><strong>Has 'feature' in ID:</strong> {node.hasFeatureId ? 'Yes' : 'No'}</div>
-              </div>
-            ))}
-          </div>
-          <p>Filter criteria used:</p>
-          <ul style={{ textAlign: 'left', display: 'inline-block' }}>
-            <li>ID starts with 'feature:'</li>
-            <li>attributes.type === 'feature'</li>
-            <li>attributes.metadata.type === 'feature'</li>
-            <li>Has feature attributes (featureName, scenario, given, when, then)</li>
-            <li>Label/description contains 'feature' or 'scenario'</li>
-            <li>ID contains 'feature' (case-insensitive)</li>
-          </ul>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <>
-      <div 
+      <div
         ref={containerRef}
-        style={{ 
-          width: '100%', 
-          height, 
+        style={{
+          width: '100%',
+          height,
           position: 'relative'
         }}
         onDragOver={(e) => {
@@ -450,9 +450,9 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
           setDragOverColumn(null);
         }}
       >
-        <div style={{ 
-          display: 'flex', 
-          height: '100%', 
+        <div style={{
+          display: 'flex',
+          height: '100%',
           overflow: 'hidden',
           userSelect: isResizing ? 'none' : 'auto'
         }}>
@@ -481,7 +481,7 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
             fontSize: '12px',
             zIndex: 1001
           }}>
-            Dragging: {draggedNode.attributes?.label || draggedNode.id}
+            Dragging: {draggedNode.label || draggedNode.id}
           </div>
         )}
       </div>

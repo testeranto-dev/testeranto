@@ -17,33 +17,44 @@ export const NodeDetailsModal: React.FC<NodeDetailsModalProps> = ({ node, isOpen
     }
   };
 
-  // Format attributes for display
-  const formatAttributes = (attributes: Record<string, any>): Array<{ key: string; value: any }> => {
+  // Format node properties for display
+  const formatNodeProperties = (node: Node): Array<{ key: string; value: any }> => {
     const result: Array<{ key: string; value: any }> = [];
-
-    for (const [key, value] of Object.entries(attributes)) {
-      // Skip internal or debug attributes
-      if (key.startsWith('_') || key === 'debugLabel' || key === 'debugType' || key === 'isAttributeNode') {
-        continue;
+    
+    // Add direct properties
+    const directProps = {
+      id: node.id,
+      type: node.type,
+      label: node.label,
+      description: node.description,
+      icon: node.icon
+    };
+    
+    for (const [key, value] of Object.entries(directProps)) {
+      if (value !== undefined && value !== null && value !== '') {
+        result.push({ 
+          key, 
+          value: typeof value === 'object' ? JSON.stringify(value, null, 2) : value.toString() 
+        });
       }
-
-      // Format the value for display
-      let displayValue = value;
-      if (value === null || value === undefined) {
-        displayValue = 'null';
-      } else if (typeof value === 'object') {
-        displayValue = JSON.stringify(value, null, 2);
-      } else if (typeof value === 'boolean') {
-        displayValue = value.toString();
-      }
-
-      result.push({ key, value: displayValue });
     }
-
+    
+    // Add metadata
+    if (node.metadata) {
+      for (const [key, value] of Object.entries(node.metadata)) {
+        if (value !== undefined && value !== null) {
+          result.push({ 
+            key: `metadata.${key}`, 
+            value: typeof value === 'object' ? JSON.stringify(value, null, 2) : value.toString() 
+          });
+        }
+      }
+    }
+    
     return result.sort((a, b) => a.key.localeCompare(b.key));
   };
 
-  const attributes = node.attributes ? formatAttributes(node.attributes) : [];
+  const attributes = formatNodeProperties(node);
 
   return (
     <div
@@ -113,7 +124,7 @@ export const NodeDetailsModal: React.FC<NodeDetailsModalProps> = ({ node, isOpen
             </div>
           </div>
 
-          {node.attributes?.type && (
+          {node.type && (
             <div style={{ marginBottom: '8px' }}>
               <strong style={{ color: Palette.charcoal }}>Type:</strong>
               <div style={{
@@ -126,12 +137,12 @@ export const NodeDetailsModal: React.FC<NodeDetailsModalProps> = ({ node, isOpen
                 fontSize: '14px',
                 fontWeight: 'bold'
               }}>
-                {node.attributes.type}
+                {node.type}
               </div>
             </div>
           )}
 
-          {node.attributes?.label && (
+          {node.label && (
             <div style={{ marginBottom: '8px' }}>
               <strong style={{ color: Palette.charcoal }}>Label:</strong>
               <div style={{
@@ -140,7 +151,7 @@ export const NodeDetailsModal: React.FC<NodeDetailsModalProps> = ({ node, isOpen
                 backgroundColor: '#f9f9f9',
                 borderRadius: '4px'
               }}>
-                {node.attributes.label}
+                {node.label}
               </div>
             </div>
           )}

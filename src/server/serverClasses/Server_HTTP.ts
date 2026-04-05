@@ -8,10 +8,11 @@ import { handleOptions } from "./Server_Http/handleOptions";
 import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
 import { serveStaticFile } from "./Server_Http/utils/utils";
 import { Server_WS } from "./Server_WS";
-import { stakeholderWsAPI } from "../../api";
+import { stakeholderWsAPI, stakeholderHttpAPI } from "../../api";
 import { GraphManager } from "../graph/index";
 import { Palette } from "../../colors";
 import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
+import { isLocalFileUrl, getConfigsData } from "../stakeholder/utils";
 
 declare const Bun: any;
 
@@ -67,7 +68,7 @@ export abstract class Server_HTTP extends Server_Base {
               },
             );
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error('[Server_HTTP] Error in fetch handler:', error);
           return new Response(`Server Error: ${error.message}`, {
             status: 500,
@@ -157,7 +158,12 @@ export abstract class Server_HTTP extends Server_Base {
     // Handle /~/ routes (vscode API) - for VS Code extension
     if (url.pathname.startsWith("/~/")) {
       return await this.handleRouteRequest(request, url);
-    } else {
+    } 
+    // Handle /api/ routes for stakeholder app in development mode
+    else if (url.pathname.startsWith("/api/")) {
+      return await this.handleStakeholderApiRequest(request, url);
+    }
+    else {
       // Serve static files for everything else - for stakeholder app
       return await this.serveStaticFile(request, url);
     }
@@ -408,6 +414,97 @@ export abstract class Server_HTTP extends Server_Base {
 
     // Use the pure stateless function
     return generateFileTreeGraphPure(projectRoot, this.configs, testResults);
+  }
+
+  // Handle markdown file changes by updating the specific file in the graph
+  public async handleMarkdownFileChange(filePath: string): Promise<void> {
+    const { handleMarkdownFileChange } = await import('../stakeholder/markdown');
+    const result = await handleMarkdownFileChange(filePath, this.graphManager);
+    
+    // Broadcast update to WebSocket clients if we're a WS server
+    if (this instanceof Server_WS && result) {
+      const wsThis = this as Server_WS;
+      wsThis.broadcast({
+        type: 'graphUpdated',
+        message: `Graph updated due to markdown file change: ${filePath}`,
+        timestamp: new Date().toISOString(),
+        data: {
+          unifiedGraph: result
+        }
+      });
+    }
+  }
+
+  // Write markdown file with updated frontmatter using stakeholder utilities
+  public async writeMarkdownFile(filePath: string, frontmatterData: Record<string, any>, contentBody?: string): Promise<void> {
+    const { updateMarkdownFile } = await import('../stakeholder/markdown');
+    await updateMarkdownFile(filePath, frontmatterData, contentBody);
+    console.log(`[Server_HTTP] Updated markdown file: ${filePath}`);
+  }
+
+  private async handleStakeholderApiRequest(request: Request, url: URL): Promise<Response> {
+    const routeName = url.pathname.slice(5); // Remove '/api/'
+    
+    if (request.method === "OPTIONS") {
+      return handleOptions();
+    }
+    
+    try {
+      // Check if the route matches any defined API endpoint
+      const endpoint = Object.values(stakeholderHttpAPI).find(
+        ep => ep.path === `/api/${routeName}`
+      );
+      
+      if (!endpoint) {
+        return new Response(JSON.stringify({
+          error: "Not found",
+          message: `API endpoint ${routeName} not found`
+        }), {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      
+      // Check if the HTTP method matches
+      if (request.method !== endpoint.method) {
+        return new Response(JSON.stringify({
+          error: "Method not allowed",
+          message: `Method ${request.method} not allowed for ${routeName}. Expected ${endpoint.method}`
+        }), {
+          status: 405,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      
+      // Handle the specific endpoint
+      switch (routeName) {
+        case 'graph-update':
+          return await this.handlePostGraphUpdate(request, url);
+        default:
+          return new Response(JSON.stringify({
+            error: "Not implemented",
+            message: `API endpoint ${routeName} is defined but not implemented`
+          }), {
+            status: 501,
+            headers: { "Content-Type": "application/json" },
+          });
+      }
+    } catch (error) {
+      console.error('[Server_HTTP] Error handling stakeholder API request:', error);
+      return new Response(JSON.stringify({
+        error: "Internal server error",
+        message: error.message
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+  
+  private async handlePostGraphUpdate(request: Request, url: URL): Promise<Response> {
+    const { handlePostGraphUpdate } = await import('../stakeholder/handlers');
+    const broadcast = this instanceof Server_WS ? (this as Server_WS).broadcast.bind(this) : undefined;
+    return handlePostGraphUpdate(request, this.graphManager, broadcast);
   }
 
   router(a: any): any {

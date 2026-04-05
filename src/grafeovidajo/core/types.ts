@@ -6,7 +6,15 @@ export interface GraphData {
 
 export interface Node {
   id: string;
-  attributes: Record<string, any>;
+  description: string
+  icon: string
+  label: string;
+  type: string
+  metadata: {
+    frontmatter: Record<string, any>
+    localPath: string
+    url: string
+  };
 }
 
 export interface Edge {
@@ -21,16 +29,16 @@ export interface ProjectionConfig {
   yAttribute?: string;
   xType?: 'categorical' | 'continuous' | 'ordinal' | 'temporal';
   yType?: 'categorical' | 'continuous' | 'ordinal' | 'temporal';
-  
+
   layout?: 'grid' | 'force' | 'tree' | 'timeline' | 'none';
   spacing?: {
     x: number;
     y: number;
   };
-  
+
   xDomain?: [min: number, max: number] | string[];
   yDomain?: [min: number, max: number] | string[];
-  
+
   xTransform?: (value: any) => number;
   yTransform?: (value: any) => number;
 }
@@ -105,4 +113,5 @@ export interface VizComponentProps {
   height: number;
   onNodeClick?: (node: Node) => void;
   onNodeHover?: (node: Node | null) => void;
+  onNodeUpdate?: (nodeId: string, updatedAttributes: Record<string, any>) => void;
 }

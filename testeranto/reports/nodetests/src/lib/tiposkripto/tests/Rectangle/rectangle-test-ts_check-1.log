@@ -1,5 +1,5 @@
-=== Log started at 2026-04-05T02:47:12.335Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
-=== Container ID: 5b3cf5a1b48754a91e95d4f76f691b034f324d420ec00e2263b008eebc876d9d ===
+=== Log started at 2026-04-05T07:11:26.040Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
+=== Container ID: 45ac3e5278877596b7676bf93cfaa9b2729adb55fab8dd88fe599249b703a494 ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
@@ -15,4 +15,4 @@ src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression 
 error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-05T02:47:19.679Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-05T07:11:32.194Z (container status: exited, exit code: 2) ===

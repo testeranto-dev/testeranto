@@ -14032,7 +14032,7 @@ var TesterantoStakeholderApp = (() => {
   // src/grafeovidajo/charts/BaseChart.tsx
   var import_react8 = __toESM(require_react(), 1);
   var BaseChart = (props) => {
-    const { data, config, width, height, onNodeClick, onNodeHover } = props;
+    const { data, config, width, height, onNodeClick, onNodeHover, onNodeUpdate } = props;
     const [camera, setCamera] = (0, import_react8.useState)({
       x: 0,
       y: 0,
@@ -14473,7 +14473,49 @@ var TesterantoStakeholderApp = (() => {
   // src/grafeovidajo/charts/EisenhowerMatrix.tsx
   var import_react9 = __toESM(require_react(), 1);
   var EisenhowerMatrix = (props) => {
-    const { config, width, height } = props;
+    const { config, width, height, data } = props;
+    const [showUncategorized, setShowUncategorized] = (0, import_react9.useState)(false);
+    const uncategorizedFeatures = data.nodes.filter((node) => {
+      const nodeType = node.type || node.attributes?.type;
+      const isFeature = nodeType === "feature" || node.id.startsWith("feature:") || node.attributes?.label && !nodeType;
+      if (!isFeature) {
+        return false;
+      }
+      const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
+      const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
+      const hasUrgency = urgency !== void 0;
+      const hasImportance = importance !== void 0;
+      return !hasUrgency || !hasImportance;
+    });
+    const categorizedNodes = data.nodes.filter((node) => {
+      const nodeType = node.type || node.attributes?.type;
+      const isFeature = nodeType === "feature" || node.id.startsWith("feature:") || node.attributes?.label && !nodeType;
+      if (!isFeature) {
+        return false;
+      }
+      const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
+      const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
+      const hasUrgency = urgency !== void 0;
+      const hasImportance = importance !== void 0;
+      return hasUrgency && hasImportance;
+    });
+    const categorizedData = {
+      ...data,
+      nodes: categorizedNodes.map((node) => {
+        const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
+        const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
+        const urgencyNum = typeof urgency === "string" ? parseFloat(urgency) : urgency;
+        const importanceNum = typeof importance === "string" ? parseFloat(importance) : importance;
+        return {
+          ...node,
+          attributes: {
+            ...node.attributes,
+            urgency: urgencyNum,
+            importance: importanceNum
+          }
+        };
+      })
+    };
     const renderQuadrantLines = () => {
       const midX = width / 2;
       const midY = height / 2;
@@ -14501,7 +14543,149 @@ var TesterantoStakeholderApp = (() => {
         }
       ), /* @__PURE__ */ import_react9.default.createElement("text", { x: width * 0.25, y: 20, textAnchor: "middle", fontWeight: "bold" }, "Urgent"), /* @__PURE__ */ import_react9.default.createElement("text", { x: width * 0.75, y: 20, textAnchor: "middle", fontWeight: "bold" }, "Not Urgent"), /* @__PURE__ */ import_react9.default.createElement("text", { x: 10, y: height * 0.25, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.25})` }, "Important"), /* @__PURE__ */ import_react9.default.createElement("text", { x: 10, y: height * 0.75, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.75})` }, "Not Important"));
     };
-    return /* @__PURE__ */ import_react9.default.createElement("svg", { width, height, style: { border: "1px solid #ccc" } }, renderQuadrantLines(), /* @__PURE__ */ import_react9.default.createElement(BaseChart, { ...props }));
+    const renderUncategorizedList = () => {
+      if (uncategorizedFeatures.length === 0) {
+        return /* @__PURE__ */ import_react9.default.createElement("div", { style: { padding: "20px", textAlign: "center" } }, /* @__PURE__ */ import_react9.default.createElement("h4", null, "All Features Are Categorized"), /* @__PURE__ */ import_react9.default.createElement("p", null, "Great! All ", categorizedNodes.length, " feature nodes have both urgency and importance attributes and are shown on the matrix."));
+      }
+      return /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+        padding: "20px",
+        maxHeight: "300px",
+        overflow: "auto",
+        marginTop: "20px"
+      } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "15px"
+      } }, /* @__PURE__ */ import_react9.default.createElement("h4", { style: { margin: 0 } }, "Uncategorized Features (", uncategorizedFeatures.length, ")"), /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+        backgroundColor: "#f5f5f5",
+        padding: "5px 10px",
+        borderRadius: "4px",
+        fontSize: "0.9em"
+      } }, "Missing urgency or importance")), /* @__PURE__ */ import_react9.default.createElement("ul", { style: {
+        listStyleType: "none",
+        paddingLeft: "0",
+        margin: 0
+      } }, uncategorizedFeatures.map((node) => {
+        const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
+        const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
+        return /* @__PURE__ */ import_react9.default.createElement("li", { key: node.id, style: { marginBottom: "10px" } }, /* @__PURE__ */ import_react9.default.createElement(
+          "div",
+          {
+            style: {
+              padding: "10px",
+              borderRadius: "4px",
+              backgroundColor: "#fff",
+              border: "1px solid #e0e0e0",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              transition: "background-color 0.2s"
+            },
+            onClick: () => props.onNodeClick?.(node),
+            onMouseEnter: () => props.onNodeHover?.(node),
+            onMouseLeave: () => props.onNodeHover?.(null)
+          },
+          /* @__PURE__ */ import_react9.default.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontWeight: "600", marginBottom: "4px" } }, node.attributes?.label || node.id), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.85em", color: "#666" } }, "ID: ", node.id)),
+          /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+            display: "flex",
+            gap: "10px",
+            fontSize: "0.8em"
+          } }, urgency === void 0 && /* @__PURE__ */ import_react9.default.createElement("span", { style: {
+            backgroundColor: "#ffebee",
+            padding: "2px 8px",
+            borderRadius: "10px",
+            color: "#d32f2f"
+          } }, "Missing urgency"), importance === void 0 && /* @__PURE__ */ import_react9.default.createElement("span", { style: {
+            backgroundColor: "#fff3e0",
+            padding: "2px 8px",
+            borderRadius: "10px",
+            color: "#f57c00"
+          } }, "Missing importance"), urgency !== void 0 && /* @__PURE__ */ import_react9.default.createElement("span", { style: {
+            backgroundColor: "#e3f2fd",
+            padding: "2px 8px",
+            borderRadius: "10px",
+            color: "#1976d2"
+          } }, "Urgency: ", urgency), importance !== void 0 && /* @__PURE__ */ import_react9.default.createElement("span", { style: {
+            backgroundColor: "#e8f5e8",
+            padding: "2px 8px",
+            borderRadius: "10px",
+            color: "#388e3c"
+          } }, "Importance: ", importance))
+        ));
+      })), /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+        marginTop: "15px",
+        padding: "10px",
+        backgroundColor: "#f5f5f5",
+        borderRadius: "4px",
+        fontSize: "0.9em"
+      } }, /* @__PURE__ */ import_react9.default.createElement("strong", null, "Note:"), " These features cannot be placed on the Eisenhower matrix because they're missing either ", /* @__PURE__ */ import_react9.default.createElement("code", null, "urgency"), " or ", /* @__PURE__ */ import_react9.default.createElement("code", null, "importance"), " attributes in their YAML frontmatter. Add these attributes to your feature markdown files to categorize them:", /* @__PURE__ */ import_react9.default.createElement("pre", { style: {
+        backgroundColor: "#fff",
+        padding: "10px",
+        borderRadius: "4px",
+        marginTop: "5px",
+        fontSize: "0.85em",
+        overflow: "auto"
+      } }, "--- urgency: 0.7    # Value between 0 and 1 importance: 0.9 # Value between 0 and 1 ---"), /* @__PURE__ */ import_react9.default.createElement("p", { style: { marginTop: "5px", marginBottom: 0 } }, "Features are identified by: type='feature', ID starting with 'feature:', or having a label without a specific type.")));
+    };
+    const renderToggleButton = () => {
+      if (uncategorizedFeatures.length === 0) {
+        return null;
+      }
+      return /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+        zIndex: 10
+      } }, /* @__PURE__ */ import_react9.default.createElement(
+        "button",
+        {
+          onClick: () => setShowUncategorized(!showUncategorized),
+          style: {
+            padding: "8px 16px",
+            backgroundColor: showUncategorized ? "#007acc" : "#f0f0f0",
+            color: showUncategorized ? "white" : "#333",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontWeight: "bold",
+            fontSize: "12px"
+          }
+        },
+        showUncategorized ? "Hide Uncategorized" : `Show Uncategorized (${uncategorizedFeatures.length})`
+      ));
+    };
+    return /* @__PURE__ */ import_react9.default.createElement("div", { style: { position: "relative" } }, renderToggleButton(), /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px"
+    } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      padding: "10px",
+      backgroundColor: "#fafafa"
+    } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "10px"
+    } }, /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("h3", { style: { margin: 0 } }, "Eisenhower Matrix"), /* @__PURE__ */ import_react9.default.createElement("p", { style: { margin: "5px 0 0 0", fontSize: "0.9em", color: "#666" } }, "Using YAML frontmatter attributes: ", /* @__PURE__ */ import_react9.default.createElement("code", null, "urgency"), " (x-axis, 0-1) and ", /* @__PURE__ */ import_react9.default.createElement("code", null, "importance"), " (y-axis, 0-1)")), /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+      fontSize: "0.9em",
+      color: "#666",
+      backgroundColor: "#f0f0f0",
+      padding: "5px 10px",
+      borderRadius: "4px"
+    } }, categorizedNodes.length, " on matrix | ", uncategorizedFeatures.length, " uncategorized | Total: ", categorizedNodes.length + uncategorizedFeatures.length)), categorizedNodes.length > 0 && /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+      fontSize: "0.8em",
+      color: "#666",
+      backgroundColor: "#e8f5e8",
+      padding: "5px 10px",
+      borderRadius: "4px",
+      marginBottom: "10px"
+    } }, "Showing ", categorizedNodes.length, " features with both urgency and importance values."), /* @__PURE__ */ import_react9.default.createElement("svg", { width, height, style: { border: "1px solid #ddd", borderRadius: "4px" } }, renderQuadrantLines(), /* @__PURE__ */ import_react9.default.createElement(BaseChart, { ...props, data: categorizedData }))), showUncategorized && renderUncategorizedList()));
   };
 
   // src/grafeovidajo/charts/GanttChart.tsx
@@ -14555,25 +14739,36 @@ var TesterantoStakeholderApp = (() => {
         onClose();
       }
     };
-    const formatAttributes = (attributes2) => {
+    const formatNodeProperties = (node2) => {
       const result = [];
-      for (const [key, value] of Object.entries(attributes2)) {
-        if (key.startsWith("_") || key === "debugLabel" || key === "debugType" || key === "isAttributeNode") {
-          continue;
+      const directProps = {
+        id: node2.id,
+        type: node2.type,
+        label: node2.label,
+        description: node2.description,
+        icon: node2.icon
+      };
+      for (const [key, value] of Object.entries(directProps)) {
+        if (value !== void 0 && value !== null && value !== "") {
+          result.push({
+            key,
+            value: typeof value === "object" ? JSON.stringify(value, null, 2) : value.toString()
+          });
         }
-        let displayValue = value;
-        if (value === null || value === void 0) {
-          displayValue = "null";
-        } else if (typeof value === "object") {
-          displayValue = JSON.stringify(value, null, 2);
-        } else if (typeof value === "boolean") {
-          displayValue = value.toString();
+      }
+      if (node2.metadata) {
+        for (const [key, value] of Object.entries(node2.metadata)) {
+          if (value !== void 0 && value !== null) {
+            result.push({
+              key: `metadata.${key}`,
+              value: typeof value === "object" ? JSON.stringify(value, null, 2) : value.toString()
+            });
+          }
         }
-        result.push({ key, value: displayValue });
       }
       return result.sort((a2, b) => a2.key.localeCompare(b.key));
     };
-    const attributes = node.attributes ? formatAttributes(node.attributes) : [];
+    const attributes = formatNodeProperties(node);
     return /* @__PURE__ */ import_react11.default.createElement(
       "div",
       {
@@ -14635,7 +14830,7 @@ var TesterantoStakeholderApp = (() => {
           borderRadius: "4px",
           marginTop: "4px",
           wordBreak: "break-all"
-        } }, node.id)), node.attributes?.type && /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "Type:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
+        } }, node.id)), node.type && /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "Type:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
           display: "inline-block",
           backgroundColor: Palette.rustSubtle,
           color: Palette.rust,
@@ -14644,12 +14839,12 @@ var TesterantoStakeholderApp = (() => {
           marginLeft: "8px",
           fontSize: "14px",
           fontWeight: "bold"
-        } }, node.attributes.type)), node.attributes?.label && /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "Label:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
+        } }, node.type)), node.label && /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "Label:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
           padding: "8px",
           marginTop: "4px",
           backgroundColor: "#f9f9f9",
           borderRadius: "4px"
-        } }, node.attributes.label))),
+        } }, node.label))),
         attributes.length > 0 && /* @__PURE__ */ import_react11.default.createElement("div", null, /* @__PURE__ */ import_react11.default.createElement("h3", { style: { marginBottom: "12px", color: Palette.charcoal } }, "Attributes"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
           border: "1px solid #e0e0e0",
           borderRadius: "6px",
@@ -14703,8 +14898,11 @@ var TesterantoStakeholderApp = (() => {
   };
 
   // src/grafeovidajo/charts/KanbanBoard.tsx
-  var getSafeNodeAttributes = (node) => {
-    return node.attributes || {};
+  var getNodeStatus = (node) => {
+    if (node.metadata.frontmatter.status) {
+      return node.metadata.frontmatter.status;
+    }
+    return void 0;
   };
   var KanbanBoard = (props) => {
     const { config, height } = props;
@@ -14722,14 +14920,14 @@ var TesterantoStakeholderApp = (() => {
     const featureNodes = props.data.nodes.filter((node) => {
       if (!node) return false;
       const isFeatureById = node.id?.startsWith("feature:");
-      const nodeType = node.attributes?.type;
-      const metadataType = node.attributes?.metadata?.type;
-      const hasFeatureAttributes = node.attributes?.featureName || node.attributes?.scenario || node.attributes?.given || node.attributes?.when || node.attributes?.then;
-      const label = node.attributes?.label || "";
-      const description = node.attributes?.description || "";
+      const nodeType = node.type;
+      const hasFeatureMetadata = node.metadata?.frontmatter?.feature || node.metadata?.frontmatter?.scenario;
+      const label = node.label || "";
+      const description = node.description || "";
       const isFeatureByText = label.toLowerCase().includes("feature") || description.toLowerCase().includes("scenario");
       const idContainsFeature = node.id?.toLowerCase().includes("feature");
-      return isFeatureById || nodeType === "feature" || metadataType === "feature" || hasFeatureAttributes || isFeatureByText || idContainsFeature;
+      const hasFrontmatterFields = node.metadata?.frontmatter?.status || node.metadata?.frontmatter?.title || node.metadata?.frontmatter?.description;
+      return isFeatureById || nodeType === "feature" || hasFeatureMetadata || isFeatureByText || idContainsFeature || hasFrontmatterFields;
     });
     const featureNodeIds = new Set(featureNodes.map((node) => node.id));
     const featureEdges = props.data.edges?.filter((edge) => {
@@ -14842,8 +15040,25 @@ var TesterantoStakeholderApp = (() => {
       const nodeId = e.dataTransfer.getData("text/plain");
       const node = featureNodes.find((n) => n.id === nodeId);
       if (node) {
-        console.log(`Dropped node ${nodeId} into column ${columnId}`);
-        props.onNodeClick?.(node);
+        const targetColumn = adjustedColumns.find((col) => col.id === columnId);
+        if (targetColumn) {
+          console.log(`Dropped node ${nodeId} into column ${columnId}`);
+          const targetStatus = targetColumn.targetStatus || (columnId === "backlog" ? "todo" : columnId);
+          const updatedAttributes = {
+            ...node,
+            metadata: {
+              ...node.metadata,
+              frontmatter: {
+                ...node.metadata.frontmatter,
+                status: targetStatus
+              }
+            }
+          };
+          if (props.onNodeUpdate) {
+            props.onNodeUpdate(node.id, updatedAttributes);
+          }
+          props.onNodeClick?.(node);
+        }
       }
       setDragOverColumn(null);
       setDraggedNode(null);
@@ -14856,12 +15071,8 @@ var TesterantoStakeholderApp = (() => {
       return adjustedColumns.map((column, index2) => {
         const columnNodes = featureNodes.filter((node) => {
           if (!node) return false;
-          const safeNode = {
-            id: node.id || "",
-            attributes: getSafeNodeAttributes(node)
-          };
           try {
-            return column.statusFilter(safeNode);
+            return column.statusFilter(node);
           } catch (error) {
             console.warn(`Error in statusFilter for column "${column.title}":`, error);
             return false;
@@ -14939,9 +15150,9 @@ var TesterantoStakeholderApp = (() => {
               }
             },
             columnNodes.map((node) => {
-              const label = node.attributes?.label || node.id;
-              const status = node.attributes?.status || node.attributes?.metadata?.status;
-              const priority = node.attributes?.priority;
+              const label = node.label || node.id;
+              const status = node.metadata?.frontmatter?.status;
+              const priority = node.metadata?.frontmatter?.priority;
               const isDragging = draggedNode?.id === node.id;
               return /* @__PURE__ */ import_react12.default.createElement(
                 "div",
@@ -14977,23 +15188,6 @@ var TesterantoStakeholderApp = (() => {
         ));
       });
     };
-    if (featureNodes.length === 0) {
-      const totalNodes = props.data.nodes.length;
-      const nodeTypes = Array.from(new Set(props.data.nodes.map((n) => n.attributes?.type).filter(Boolean)));
-      const metadataTypes = Array.from(new Set(props.data.nodes.map((n) => n.attributes?.metadata?.type).filter(Boolean)));
-      const nodeIds = props.data.nodes.slice(0, 10).map((n) => n.id);
-      const featureLikeIds = props.data.nodes.filter((n) => n.id?.toLowerCase().includes("feature")).map((n) => n.id);
-      const sampleNodes = props.data.nodes.slice(0, 3).map((n) => ({
-        id: n.id,
-        attributes: n.attributes,
-        hasFeatureId: n.id?.toLowerCase().includes("feature"),
-        type: n.attributes?.type,
-        metadataType: n.attributes?.metadata?.type,
-        label: n.attributes?.label,
-        description: n.attributes?.description
-      }));
-      return /* @__PURE__ */ import_react12.default.createElement("div", { style: { width: "100%", height, display: "flex", alignItems: "center", justifyContent: "center" } }, /* @__PURE__ */ import_react12.default.createElement("div", { style: { textAlign: "center", color: "#666", padding: "20px" } }, /* @__PURE__ */ import_react12.default.createElement("h3", null, "No Feature Graph Available"), /* @__PURE__ */ import_react12.default.createElement("p", null, "Total nodes in data: ", totalNodes), /* @__PURE__ */ import_react12.default.createElement("p", null, "Node types present: ", nodeTypes.join(", ") || "(none)"), /* @__PURE__ */ import_react12.default.createElement("p", null, "Metadata types present: ", metadataTypes.join(", ") || "(none)"), /* @__PURE__ */ import_react12.default.createElement("p", null, "First few node IDs: ", nodeIds.join(", ")), /* @__PURE__ */ import_react12.default.createElement("p", null, "Nodes with 'feature' in ID: ", featureLikeIds.length > 0 ? featureLikeIds.join(", ") : "none"), /* @__PURE__ */ import_react12.default.createElement("p", null, "Sample nodes:"), /* @__PURE__ */ import_react12.default.createElement("div", { style: { textAlign: "left", display: "inline-block", marginTop: "10px" } }, sampleNodes.map((node, i) => /* @__PURE__ */ import_react12.default.createElement("div", { key: i, style: { marginBottom: "10px", padding: "10px", border: "1px solid #ddd", borderRadius: "5px" } }, /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "ID:"), " ", node.id), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Type:"), " ", node.type || "(none)"), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Metadata Type:"), " ", node.metadataType || "(none)"), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Label:"), " ", node.label || "(none)"), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Description:"), " ", node.description || "(none)"), /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("strong", null, "Has 'feature' in ID:"), " ", node.hasFeatureId ? "Yes" : "No")))), /* @__PURE__ */ import_react12.default.createElement("p", null, "Filter criteria used:"), /* @__PURE__ */ import_react12.default.createElement("ul", { style: { textAlign: "left", display: "inline-block" } }, /* @__PURE__ */ import_react12.default.createElement("li", null, "ID starts with 'feature:'"), /* @__PURE__ */ import_react12.default.createElement("li", null, "attributes.type === 'feature'"), /* @__PURE__ */ import_react12.default.createElement("li", null, "attributes.metadata.type === 'feature'"), /* @__PURE__ */ import_react12.default.createElement("li", null, "Has feature attributes (featureName, scenario, given, when, then)"), /* @__PURE__ */ import_react12.default.createElement("li", null, "Label/description contains 'feature' or 'scenario'"), /* @__PURE__ */ import_react12.default.createElement("li", null, "ID contains 'feature' (case-insensitive)"))));
-    }
     return /* @__PURE__ */ import_react12.default.createElement(import_react12.default.Fragment, null, /* @__PURE__ */ import_react12.default.createElement(
       "div",
       {
@@ -15036,7 +15230,7 @@ var TesterantoStakeholderApp = (() => {
         borderRadius: "4px",
         fontSize: "12px",
         zIndex: 1001
-      } }, "Dragging: ", draggedNode.attributes?.label || draggedNode.id)
+      } }, "Dragging: ", draggedNode.label || draggedNode.id)
     ), /* @__PURE__ */ import_react12.default.createElement(
       NodeDetailsModal,
       {
@@ -15257,11 +15451,11 @@ var TesterantoStakeholderApp = (() => {
         } }, "(attribute)")),
         /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: { color: "#007acc" } }, node.type || "unknown")),
         (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Icon: ", node.icon || node.attributes?.icon),
-        node.attributes?.label && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Label: ", node.attributes.label),
-        node.attributes?.status && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Status: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: {
-          color: node.attributes.status === "done" ? "#4CAF50" : node.attributes.status === "doing" ? "#FF9800" : node.attributes.status === "blocked" ? "#F44336" : "#666"
-        } }, node.attributes.status)),
-        node.attributes?.priority && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Priority: ", node.attributes.priority)
+        node.label && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Label: ", node.label),
+        node.metadata?.frontmatter?.status && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Status: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: {
+          color: node.metadata.frontmatter.status === "done" ? "#4CAF50" : node.metadata.frontmatter.status === "doing" ? "#FF9800" : node.metadata.frontmatter.status === "blocked" ? "#F44336" : "#666"
+        } }, node.metadata.frontmatter.status)),
+        node.metadata?.frontmatter?.priority && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Priority: ", node.metadata.frontmatter.priority)
       )))), /* @__PURE__ */ import_react14.default.createElement("div", { style: {
         flex: 1,
         border: "1px solid #ccc",
@@ -15292,7 +15486,8 @@ var TesterantoStakeholderApp = (() => {
           ...props,
           data: debugData,
           config: debugConfig,
-          onNodeClick: handleNodeClick
+          onNodeClick: handleNodeClick,
+          onNodeUpdate: props.onNodeUpdate
         }
       ), /* @__PURE__ */ import_react14.default.createElement("div", { style: {
         position: "absolute",
@@ -15787,7 +15982,8 @@ var TesterantoStakeholderApp = (() => {
     data,
     vizType,
     onNodeClick,
-    onNodeHover
+    onNodeHover,
+    onNodeUpdate
   }) {
     const graphToUse = data.unifiedGraph;
     if (!graphToUse || !graphToUse.nodes || graphToUse.nodes.length === 0) {
@@ -15836,7 +16032,8 @@ var TesterantoStakeholderApp = (() => {
       onNodeClick: onNodeClick || (() => {
       }),
       onNodeHover: onNodeHover || (() => {
-      })
+      }),
+      onNodeUpdate
     };
     switch (vizType) {
       case "eisenhower":
@@ -15898,37 +16095,41 @@ var TesterantoStakeholderApp = (() => {
                     id: "todo",
                     title: "To Do",
                     statusFilter: (node) => {
-                      const status = node.attributes?.status || node.attributes?.metadata?.status;
+                      const status = getNodeStatus(node);
                       return status === "todo";
                     },
-                    width: 20
+                    width: 20,
+                    targetStatus: "todo"
                   },
                   {
                     id: "doing",
                     title: "Doing",
                     statusFilter: (node) => {
-                      const status = node.attributes?.status || node.attributes?.metadata?.status;
+                      const status = getNodeStatus(node);
                       return status === "doing";
                     },
-                    width: 20
+                    width: 20,
+                    targetStatus: "doing"
                   },
                   {
                     id: "review",
                     title: "Review",
                     statusFilter: (node) => {
-                      const status = node.attributes?.status || node.attributes?.metadata?.status;
+                      const status = getNodeStatus(node);
                       return status === "review";
                     },
-                    width: 20
+                    width: 20,
+                    targetStatus: "review"
                   },
                   {
                     id: "done",
                     title: "Done",
                     statusFilter: (node) => {
-                      const status = node.attributes?.status || node.attributes?.metadata?.status;
+                      const status = getNodeStatus(node);
                       return status === "done";
                     },
-                    width: 20
+                    width: 20,
+                    targetStatus: "done"
                   }
                 ]
               }
@@ -15954,7 +16155,8 @@ var TesterantoStakeholderApp = (() => {
   var VisualizationTabs = ({
     data,
     onNodeClick,
-    onNodeHover
+    onNodeHover,
+    onNodeUpdate
   }) => {
     const [activeTab, setActiveTab] = (0, import_react16.useState)("tree");
     const stats = getFeatureGraphStats(data.unifiedGraph);
@@ -15963,8 +16165,7 @@ var TesterantoStakeholderApp = (() => {
       { id: "eisenhower", label: "Eisenhower Matrix" },
       { id: "gantt", label: "Gantt Chart" },
       { id: "kanban", label: "Kanban Board" },
-      { id: "debug", label: "Debug View" },
-      { id: "uncategorized", label: "Uncategorized Features" }
+      { id: "debug", label: "Debug View" }
     ];
     const renderDebugView = () => {
       if (!data.unifiedGraph) {
@@ -16062,7 +16263,8 @@ var TesterantoStakeholderApp = (() => {
           width: 800,
           height: 600,
           onNodeClick,
-          onNodeHover
+          onNodeHover,
+          onNodeUpdate
         }
       );
     };
@@ -16103,7 +16305,8 @@ var TesterantoStakeholderApp = (() => {
           data,
           vizType: activeTab,
           onNodeClick,
-          onNodeHover
+          onNodeHover,
+          onNodeUpdate
         }) })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
@@ -16263,6 +16466,35 @@ var TesterantoStakeholderApp = (() => {
     }
   };
 
+  // src/stakeholderApp/utils/graphUpdate.ts
+  async function sendGraphUpdate(operations) {
+    const update = {
+      operations,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    const isDevelopmentMode2 = typeof window !== "undefined" && (window.location.hostname.includes("localhost") || window.location.hostname.includes("127.0.0.1") || window.location.port !== "");
+    if (!isDevelopmentMode2) {
+      console.warn("[sendGraphUpdate] Stakeholder app is in static mode - graph updates are not supported");
+      throw new Error("Stakeholder app is in static mode. Graph updates are not supported.");
+    }
+    try {
+      const response = await fetch("/~/graph", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(update)
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to update graph: ${response.statusText}`);
+      }
+      console.log("Graph update sent successfully");
+    } catch (error) {
+      console.error("Error sending graph update:", error);
+      throw error;
+    }
+  }
+
   // testeranto/reports/index.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var isDevelopmentMode = typeof window !== "undefined" && window.location.hostname.includes("localhost") && window.location.protocol.startsWith("http");
@@ -16377,6 +16609,23 @@ var TesterantoStakeholderApp = (() => {
         console.log("Node hover:", node.id);
       }
     };
+    const handleNodeUpdate = async (nodeId, updatedAttributes) => {
+      console.log("Node update requested:", nodeId, updatedAttributes);
+      try {
+        const operation = {
+          type: "updateNode",
+          data: {
+            id: nodeId,
+            ...updatedAttributes
+          },
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        await sendGraphUpdate([operation]);
+        console.log("Node update sent to server");
+      } catch (error2) {
+        console.error("Failed to update node:", error2);
+      }
+    };
     if (loading) {
       return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { children: "Loading Testeranto Stakeholder Report..." }),
@@ -16413,7 +16662,8 @@ var TesterantoStakeholderApp = (() => {
         {
           data,
           onNodeClick: handleNodeClick,
-          onNodeHover: handleNodeHover
+          onNodeHover: handleNodeHover,
+          onNodeUpdate: handleNodeUpdate
         }
       ) }),
       /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { fontSize: "0.8em", color: "#666", marginTop: "30px", paddingTop: "10px", borderTop: "1px solid #eee" }, children: [

@@ -1,0 +1,1 @@
+this folder co-locates vscode concerns on the server

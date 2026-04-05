@@ -10,15 +10,17 @@ export interface VisualizationTabsProps {
   data: any;
   onNodeClick: (node: Node) => void;
   onNodeHover: (node: Node | null) => void;
+  onNodeUpdate?: (nodeId: string, updatedAttributes: Record<string, any>) => void;
 }
 
 export const VisualizationTabs: React.FC<VisualizationTabsProps> = ({
   data,
   onNodeClick,
   onNodeHover,
+  onNodeUpdate,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    "tree" | "eisenhower" | "gantt" | "kanban" | "debug" | "uncategorized"
+    "tree" | "eisenhower" | "gantt" | "kanban" | "debug"
   >("tree");
 
   // Use unifiedGraph for stats
@@ -30,7 +32,7 @@ export const VisualizationTabs: React.FC<VisualizationTabsProps> = ({
     { id: "gantt", label: "Gantt Chart" },
     { id: "kanban", label: "Kanban Board" },
     { id: "debug", label: "Debug View" },
-    { id: "uncategorized", label: "Uncategorized Features" },
+
   ] as const;
 
   // Handle debug view separately since it uses unifiedGraph
@@ -141,6 +143,7 @@ export const VisualizationTabs: React.FC<VisualizationTabsProps> = ({
         height={600}
         onNodeClick={onNodeClick}
         onNodeHover={onNodeHover}
+        onNodeUpdate={onNodeUpdate}
       />
     );
   };
@@ -191,6 +194,7 @@ export const VisualizationTabs: React.FC<VisualizationTabsProps> = ({
               vizType: activeTab,
               onNodeClick,
               onNodeHover,
+              onNodeUpdate,
             })
           )}
         </div>

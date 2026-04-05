@@ -1,26 +1,23 @@
-export interface GraphDataResponse {
-  success: boolean;
-  timestamp: string;
-  data: any;
+export interface GraphUpdateRequest {
+  nodeId: string;
+  updatedAttributes: Record<string, any>;
 }
 
+export interface GraphUpdateResponse {
+  success: boolean;
+  message: string;
+  timestamp: string;
+  newHash?: string;
+}
 
 export const stakeholderHttpAPI = {
-  // THIS IS ALL FUCKING WRONG.
-  // ONLY SERVE STATIC FILES, NOTHING ELSE
-  // 
-  // // Graph data endpoints
-  // getGraphData: {
-  //   method: 'GET' as const,
-  //   path: '/api/graph-data',
-  //   description: 'Get graph data for visualization (API mode only)',
-  //   response: {} as GraphDataResponse
-  // },
-
-  // getGraphDataJson: {
-  //   method: 'GET' as const,
-  //   path: '/graph-data.json',
-  //   description: 'Get graph data as JSON file (static mode)',
-  //   response: {} as any // Raw JSON data
-  // }
+  // Development mode API endpoint - only for updates
+  // Initial graph data is loaded from graph-data.json static file
+  postGraphUpdate: {
+    method: 'POST' as const,
+    path: '/api/graph-update',
+    description: 'Update graph data (development mode only) - initial load is from graph-data.json',
+    response: {} as GraphUpdateResponse
+  },
+  // Static mode uses graph-data.json directly (no API endpoints needed)
 } as const;

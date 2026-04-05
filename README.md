@@ -1,8 +1,7 @@
 ---
-title: Readme
-description: 'Feature: ./Readme.md'
 status: todo
-priority: medium
+title: Readme.md
+description: 'Feature: Readme.md'
 ---
 # Testeranto
 
