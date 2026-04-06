@@ -1,5 +1,5 @@
 ---
-status: doing
+status: done
 ---
 
 The stakeholder uses the newer graph-based approach to sync data between the stakeholder app and the backend. The graph-data.json file acts as a baseline, while the server accepts mutations and returns updates over the api. The vscode extensions uses an older half-baked approach. Our goal is to unify these 2 under a common design.

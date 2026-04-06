@@ -1,14 +1,14 @@
-=== Log started at 2026-04-06T03:06:33.762Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
-=== Container ID: 7c52c29d9a05c81208ccc83e259ca6c4af73edb6b639edc79edfd3a259d26c2d ===
+=== Log started at 2026-04-06T03:28:59.493Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
+=== Container ID: 3aa4f2eae6e9d9e70176fd0cbb06de41782c12299565dfb8986841ec0b0d714a ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
 === ALL LOGS (stdout + stderr) ===
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-$ /workspace/node_modules/.bin/eslint
 warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.239.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/eslint
 
 Oops! Something went wrong! :(
 
@@ -24,4 +24,4 @@ Common causes of this problem include:
 error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-06T03:06:37.563Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-06T03:29:03.766Z (container status: exited, exit code: 2) ===

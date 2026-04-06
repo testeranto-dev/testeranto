@@ -2117,3 +2117,181 @@
 [2026-04-06T03:06:01.807Z] [NODE BUILDER] Metafile updated
 [2026-04-06T03:06:01.789Z] INFO: Build started for nodetests
 [2026-04-06T03:06:01.809Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:11:32.085Z] node > build ended with 0 errors
+[2026-04-06T03:11:32.087Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:11:32.089Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:11:32.089Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:11:32.091Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: ebb5bd6a8d6ad25608a1d26749bde4d6
+[2026-04-06T03:11:32.092Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: 4b1f2470846b5a1a39072b924ef0ae31
+[2026-04-06T03:11:32.093Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: e22c37036ba1f1a1fdbe7e4fc2a3219c
+[2026-04-06T03:11:32.093Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-67AKYASL.mjs
+[2026-04-06T03:11:32.093Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:11:32.093Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:11:32.047Z] INFO: Build started for nodetests
+[2026-04-06T03:11:32.098Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:16:54.958Z] node > build ended with 0 errors
+[2026-04-06T03:16:54.959Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:16:54.959Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:16:54.959Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:16:54.960Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 22 files, hash: d5f955333101219d816f0b3ee1f85165
+[2026-04-06T03:16:54.961Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 22 files, hash: e2d078dd10e526738201ef5023e3fb5d
+[2026-04-06T03:16:54.962Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 22 files, hash: e0a2f36c9737fae704598d6cdd6733e4
+[2026-04-06T03:16:54.962Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-PVYETVKB.mjs
+[2026-04-06T03:16:54.962Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:16:54.962Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:16:54.922Z] INFO: Build started for nodetests
+[2026-04-06T03:16:54.966Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:17:43.562Z] node > build ended with 0 errors
+[2026-04-06T03:17:43.564Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:17:43.564Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:17:43.565Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:17:43.569Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 22 files, hash: a3757f9a3663587010b6f6263e50da18
+[2026-04-06T03:17:43.570Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 22 files, hash: 059cb90c6b848730f8c5d04599f5947e
+[2026-04-06T03:17:43.571Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 22 files, hash: f0791e89f54e9114264c9fc767c9a7b3
+[2026-04-06T03:17:43.571Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-K6JDYFXD.mjs
+[2026-04-06T03:17:43.572Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:17:43.572Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:17:43.529Z] INFO: Build started for nodetests
+[2026-04-06T03:17:43.577Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:22:07.511Z] node > build ended with 0 errors
+[2026-04-06T03:22:07.513Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:22:07.513Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:22:07.513Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:22:07.514Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 5094586a44762de8d332bca028b32132
+[2026-04-06T03:22:07.515Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 1db603861a8a0cdabc7ce80940d66d1d
+[2026-04-06T03:22:07.515Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 0f79a8e586c322266d67c0bff655295c
+[2026-04-06T03:22:07.515Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-ABRU3XSS.mjs
+[2026-04-06T03:22:07.516Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:22:07.516Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:22:07.482Z] INFO: Build started for nodetests
+[2026-04-06T03:22:07.519Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:23:36.731Z] node > build ended with 0 errors
+[2026-04-06T03:23:36.733Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:23:36.733Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:23:36.733Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:23:36.734Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 937706b9415136d95d89e88a116ac756
+[2026-04-06T03:23:36.735Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 4e0cecacc32c730ca8f02f6a63ed08ca
+[2026-04-06T03:23:36.735Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: c60c2df6b4cd683b7113609a756b415a
+[2026-04-06T03:23:36.735Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-ZQD2GG7Y.mjs
+[2026-04-06T03:23:36.736Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:23:36.736Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:23:36.698Z] INFO: Build started for nodetests
+[2026-04-06T03:23:36.739Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:24:15.315Z] [NODE BUILDER] Process exiting
+[2026-04-06T03:24:21.059Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T03:24:21.060Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T03:24:21.060Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T03:24:21.060Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T03:24:21.067Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-06T03:24:21.068Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+[2026-04-06T03:24:21.075Z] [NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts
+[2026-04-06T03:24:21.076Z] [NODE BUILDER] Using converter: jest
+[2026-04-06T03:24:21.080Z] [NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/circle/Circle.test.ts
+[2026-04-06T03:24:21.080Z] [NODE BUILDER] Using converter: jest
+[2026-04-06T03:24:21.083Z] [NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+[2026-04-06T03:24:21.084Z] [NODE BUILDER] Using converter: jest
+[2026-04-06T03:24:21.084Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-06T03:24:21.149Z] node > build ended with 0 errors
+[2026-04-06T03:24:21.150Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:24:21.150Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:24:21.150Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:24:21.151Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 937706b9415136d95d89e88a116ac756
+[2026-04-06T03:24:21.151Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 4e0cecacc32c730ca8f02f6a63ed08ca
+[2026-04-06T03:24:21.151Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: c60c2df6b4cd683b7113609a756b415a
+[2026-04-06T03:24:21.151Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-ZQD2GG7Y.mjs
+[2026-04-06T03:24:21.152Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:24:21.152Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:24:21.105Z] INFO: Build started for nodetests
+[2026-04-06T03:24:21.149Z] LOG: node > build ended with 0 errors
+[2026-04-06T03:24:21.153Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:24:21.155Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 937706b9415136d95d89e88a116ac756
+[2026-04-06T03:24:21.155Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 4e0cecacc32c730ca8f02f6a63ed08ca
+[2026-04-06T03:24:21.155Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: c60c2df6b4cd683b7113609a756b415a
+[2026-04-06T03:24:21.155Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-ZQD2GG7Y.mjs
+[2026-04-06T03:24:21.156Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:24:21.156Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-06T03:24:21.156Z] [NODE BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-06T03:24:21.156Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-06T03:24:21.172Z] node > build ended with 0 errors
+[2026-04-06T03:24:21.172Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:24:21.172Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:24:21.172Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:24:21.173Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 937706b9415136d95d89e88a116ac756
+[2026-04-06T03:24:21.173Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 4e0cecacc32c730ca8f02f6a63ed08ca
+[2026-04-06T03:24:21.173Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: c60c2df6b4cd683b7113609a756b415a
+[2026-04-06T03:24:21.173Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-ZQD2GG7Y.mjs
+[2026-04-06T03:24:21.174Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:24:21.174Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:24:21.157Z] INFO: Build started for nodetests
+[2026-04-06T03:24:21.175Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:25:21.969Z] node > build ended with 0 errors
+[2026-04-06T03:25:21.971Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:25:21.972Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:25:21.972Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:25:21.973Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: cbc81226fe950b516c99e6ccac9dbe39
+[2026-04-06T03:25:21.974Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 30f0cb07200498cd98381d0b6b7520f4
+[2026-04-06T03:25:21.974Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 4954b4b3f598a10c715450b765d72375
+[2026-04-06T03:25:21.974Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-V46IL4AC.mjs
+[2026-04-06T03:25:21.975Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:25:21.975Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:25:21.940Z] INFO: Build started for nodetests
+[2026-04-06T03:25:21.983Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:27:26.367Z] node > build ended with 0 errors
+[2026-04-06T03:27:26.368Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:27:26.369Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:27:26.369Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:27:26.370Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 69af3380e93d0da1a7120fc990cce351
+[2026-04-06T03:27:26.371Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: ef8ae1fe5c654e97bf7580d4d8fc288a
+[2026-04-06T03:27:26.372Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: a5ac22b6b40fc79484b1c27ea86d23b9
+[2026-04-06T03:27:26.372Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs
+[2026-04-06T03:27:26.372Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:27:26.372Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:27:26.336Z] INFO: Build started for nodetests
+[2026-04-06T03:27:26.378Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:28:18.981Z] [NODE BUILDER] Process exiting
+[2026-04-06T03:28:25.586Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T03:28:25.586Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T03:28:25.586Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T03:28:25.586Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T03:28:25.595Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-06T03:28:25.596Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+[2026-04-06T03:28:25.598Z] [NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts
+[2026-04-06T03:28:25.599Z] [NODE BUILDER] Using converter: jest
+[2026-04-06T03:28:25.600Z] [NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/circle/Circle.test.ts
+[2026-04-06T03:28:25.601Z] [NODE BUILDER] Using converter: jest
+[2026-04-06T03:28:25.601Z] [NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+[2026-04-06T03:28:25.601Z] [NODE BUILDER] Using converter: jest
+[2026-04-06T03:28:25.602Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-06T03:28:25.646Z] node > build ended with 0 errors
+[2026-04-06T03:28:25.647Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:28:25.647Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:28:25.647Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:28:25.648Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 69af3380e93d0da1a7120fc990cce351
+[2026-04-06T03:28:25.648Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: ef8ae1fe5c654e97bf7580d4d8fc288a
+[2026-04-06T03:28:25.648Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: a5ac22b6b40fc79484b1c27ea86d23b9
+[2026-04-06T03:28:25.648Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs
+[2026-04-06T03:28:25.649Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:28:25.649Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:28:25.622Z] INFO: Build started for nodetests
+[2026-04-06T03:28:25.646Z] LOG: node > build ended with 0 errors
+[2026-04-06T03:28:25.649Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T03:28:25.650Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 69af3380e93d0da1a7120fc990cce351
+[2026-04-06T03:28:25.651Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: ef8ae1fe5c654e97bf7580d4d8fc288a
+[2026-04-06T03:28:25.651Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: a5ac22b6b40fc79484b1c27ea86d23b9
+[2026-04-06T03:28:25.651Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs
+[2026-04-06T03:28:25.651Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:28:25.652Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-06T03:28:25.652Z] [NODE BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-06T03:28:25.652Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-06T03:28:25.666Z] node > build ended with 0 errors
+[2026-04-06T03:28:25.667Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[2026-04-06T03:28:25.667Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-06T03:28:25.667Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-06T03:28:25.667Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 69af3380e93d0da1a7120fc990cce351
+[2026-04-06T03:28:25.668Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: ef8ae1fe5c654e97bf7580d4d8fc288a
+[2026-04-06T03:28:25.668Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: a5ac22b6b40fc79484b1c27ea86d23b9
+[2026-04-06T03:28:25.668Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs
+[2026-04-06T03:28:25.668Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-06T03:28:25.668Z] [NODE BUILDER] Metafile updated
+[2026-04-06T03:28:25.652Z] INFO: Build started for nodetests
+[2026-04-06T03:28:25.669Z] [NODE BUILDER] Triggered inputFiles.json update

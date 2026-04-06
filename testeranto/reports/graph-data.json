@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-06T03:06:40.544Z",
+  "timestamp": "2026-04-06T03:29:32.531Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -14,7 +14,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": 1775444000335,
+            "timestamp": 1775446051750,
             "fails": 6,
             "artifacts": [],
             "features": [
@@ -29,7 +29,7 @@
               "totalTests": 6,
               "passed": 0,
               "failed": 6,
-              "successRate": "0%"
+              "successRate": "0.00%"
             },
             "inputFiles": [
               "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
@@ -41,16 +41,21 @@
               "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
               "/src/lib/tiposkripto/src/Adapters.ts",
               "/src/lib/tiposkripto/src/types.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+              "/src/lib/tiposkripto/src/VerbProxies.ts",
+              "/src/lib/tiposkripto/src/verbs/index.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/TestJobCreator.ts",
+              "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+              "/src/lib/tiposkripto/src/TestRunner.ts"
             ]
           }
         },
@@ -161,7 +166,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775444000335,
+            "timestamp": 1775446051750,
             "individualResults": [
               {
                 "index": 0,
@@ -172,7 +177,7 @@
                 ],
                 "error": {
                   "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
-                  "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)",
+                  "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)",
                   "name": "AssertionError"
                 },
                 "stepName": "confirm",
@@ -184,9 +189,9 @@
                       "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
                       "name": "AssertionError",
                       "ok": false,
-                      "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)"
+                      "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)"
                     },
-                    "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)"
+                    "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)"
                   ],
                   "failed": true,
                   "features": [
@@ -224,7 +229,7 @@
                 ],
                 "error": {
                   "message": "Describe.another simple calculator is not implemented",
-                  "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1483:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+                  "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:974:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:368:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1177:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
                   "name": "Error"
                 },
                 "stepName": "step_1",
@@ -245,7 +250,7 @@
                   ],
                   "error": [
                     "Describe.another simple calculator is not implemented",
-                    "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1483:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                    "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:974:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:368:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1177:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                   ],
                   "failed": true,
                   "features": [
@@ -316,7 +321,7 @@
                 ],
                 "error": {
                   "message": "expected [Function] to equal 3",
-                  "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+                  "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
                   "name": "AssertionError"
                 },
                 "stepName": "confirm",
@@ -331,9 +336,9 @@
                       "operator": "strictEqual",
                       "name": "AssertionError",
                       "ok": false,
-                      "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                      "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                     },
-                    "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                    "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                   ],
                   "failed": true,
                   "features": [
@@ -363,7 +368,7 @@
                 ],
                 "error": {
                   "message": "expected [Function] to equal 32",
-                  "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+                  "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
                   "name": "AssertionError"
                 },
                 "stepName": "confirm",
@@ -378,9 +383,9 @@
                       "operator": "strictEqual",
                       "name": "AssertionError",
                       "ok": false,
-                      "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                      "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                     },
-                    "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                    "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                   ],
                   "failed": true,
                   "features": [
@@ -410,7 +415,7 @@
                 ],
                 "error": {
                   "message": "expected [Function] to equal 332",
-                  "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+                  "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
                   "name": "AssertionError"
                 },
                 "stepName": "confirm",
@@ -425,9 +430,9 @@
                       "operator": "strictEqual",
                       "name": "AssertionError",
                       "ok": false,
-                      "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                      "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                     },
-                    "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                    "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                   ],
                   "failed": true,
                   "features": [
@@ -453,7 +458,7 @@
               "totalTests": 6,
               "passed": 0,
               "failed": 6,
-              "successRate": "0%"
+              "successRate": "0.00%"
             },
             "inputFiles": [
               "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
@@ -465,16 +470,21 @@
               "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
               "/src/lib/tiposkripto/src/Adapters.ts",
               "/src/lib/tiposkripto/src/types.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+              "/src/lib/tiposkripto/src/VerbProxies.ts",
+              "/src/lib/tiposkripto/src/verbs/index.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/TestJobCreator.ts",
+              "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+              "/src/lib/tiposkripto/src/TestRunner.ts"
             ],
             "result": -1
           }
@@ -959,7 +969,7 @@
             "fails": 1,
             "error": {
               "message": "Describe.another simple calculator is not implemented",
-              "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1483:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+              "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:974:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:368:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1177:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
               "name": "Error"
             },
             "stepType": "BaseDescribe",
@@ -979,7 +989,7 @@
               ],
               "error": [
                 "Describe.another simple calculator is not implemented",
-                "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1483:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:974:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:368:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1177:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
               ],
               "failed": true,
               "features": [
@@ -1243,7 +1253,7 @@
             "fails": 1,
             "error": {
               "message": "expected [Function] to equal 3",
-              "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+              "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
               "name": "AssertionError"
             },
             "stepType": "BaseConfirm",
@@ -1257,9 +1267,9 @@
                   "operator": "strictEqual",
                   "name": "AssertionError",
                   "ok": false,
-                  "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                  "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                 },
-                "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
               ],
               "failed": true,
               "features": [
@@ -1324,7 +1334,7 @@
             "fails": 1,
             "error": {
               "message": "expected [Function] to equal 32",
-              "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+              "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
               "name": "AssertionError"
             },
             "stepType": "BaseConfirm",
@@ -1338,9 +1348,9 @@
                   "operator": "strictEqual",
                   "name": "AssertionError",
                   "ok": false,
-                  "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                  "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                 },
-                "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
               ],
               "failed": true,
               "features": [
@@ -1405,7 +1415,7 @@
             "fails": 1,
             "error": {
               "message": "expected [Function] to equal 332",
-              "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+              "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
               "name": "AssertionError"
             },
             "stepType": "BaseConfirm",
@@ -1419,9 +1429,9 @@
                   "operator": "strictEqual",
                   "name": "AssertionError",
                   "ok": false,
-                  "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                  "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                 },
-                "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:765:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1187:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
               ],
               "failed": true,
               "features": [
@@ -1475,7 +1485,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": 1775444000381,
+            "timestamp": 1775446051941,
             "fails": 4,
             "artifacts": [],
             "features": [],
@@ -1500,16 +1510,21 @@
               "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
               "/src/lib/tiposkripto/src/Adapters.ts",
               "/src/lib/tiposkripto/src/types.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+              "/src/lib/tiposkripto/src/VerbProxies.ts",
+              "/src/lib/tiposkripto/src/verbs/index.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/TestJobCreator.ts",
+              "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+              "/src/lib/tiposkripto/src/TestRunner.ts"
             ]
           }
         },
@@ -1547,7 +1562,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775444000381,
+            "timestamp": 1775446051941,
             "individualResults": [
               {
                 "index": 0,
@@ -1636,7 +1651,7 @@
                 "features": [],
                 "error": {
                   "message": "Describe implementation for \"a circle with radius\" is not a valid function",
-                  "stack": "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:997:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+                  "stack": "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1553:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:368:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1177:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
                   "name": "Error"
                 },
                 "stepName": "step_2",
@@ -1657,7 +1672,7 @@
                   ],
                   "error": [
                     "Describe implementation for \"a circle with radius\" is not a valid function",
-                    "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:997:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                    "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1553:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:368:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1177:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
                   ],
                   "failed": true,
                   "features": [],
@@ -1673,7 +1688,7 @@
                 "features": [],
                 "error": {
                   "message": "expected NaN to be close to 62.83185307179586 +/- 0.0001",
-                  "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:908:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1738:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:28)",
+                  "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1450:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1229:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:24)",
                   "name": "AssertionError"
                 },
                 "stepName": "step_3",
@@ -1688,9 +1703,9 @@
                       "operator": "strictEqual",
                       "name": "AssertionError",
                       "ok": false,
-                      "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:908:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1738:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:28)"
+                      "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1450:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1229:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:24)"
                     },
-                    "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:908:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1738:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:28)"
+                    "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1450:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1229:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:24)"
                   ],
                   "failed": true,
                   "features": [],
@@ -1730,7 +1745,7 @@
                 "features": [],
                 "error": {
                   "message": "Step type Function has no runnable method",
-                  "stack": "Error: Step type Function has no runnable method\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1756:19)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+                  "stack": "Error: Step type Function has no runnable method\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1247:19)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
                   "name": "Error"
                 },
                 "stepName": "Step_4",
@@ -1758,16 +1773,21 @@
               "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
               "/src/lib/tiposkripto/src/Adapters.ts",
               "/src/lib/tiposkripto/src/types.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+              "/src/lib/tiposkripto/src/VerbProxies.ts",
+              "/src/lib/tiposkripto/src/verbs/index.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/TestJobCreator.ts",
+              "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+              "/src/lib/tiposkripto/src/TestRunner.ts"
             ],
             "result": -1
           }
@@ -1951,7 +1971,7 @@
             "fails": 1,
             "error": {
               "message": "Describe implementation for \"a circle with radius\" is not a valid function",
-              "stack": "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:997:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+              "stack": "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1553:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:368:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1177:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
               "name": "Error"
             },
             "stepType": "BaseDescribe",
@@ -1971,7 +1991,7 @@
               ],
               "error": [
                 "Describe implementation for \"a circle with radius\" is not a valid function",
-                "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:997:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
+                "Error: Describe implementation for \"a circle with radius\" is not a valid function\n    at BaseDescribe.actualDescribeCB [as describeCB] (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1553:25)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:368:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1177:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)"
               ],
               "failed": true,
               "features": [],
@@ -2054,7 +2074,7 @@
             "fails": 2,
             "error": {
               "message": "expected NaN to be close to 62.83185307179586 +/- 0.0001",
-              "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:908:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1738:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:28)",
+              "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1450:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1229:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:24)",
               "name": "AssertionError"
             },
             "stepType": "Unknown",
@@ -2068,9 +2088,9 @@
                   "operator": "strictEqual",
                   "name": "AssertionError",
                   "ok": false,
-                  "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:908:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1738:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:28)"
+                  "stack": "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1450:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1229:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:24)"
                 },
-                "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:386:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:908:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:381:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:317:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1738:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:30)\n    at async runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:28)"
+                "AssertionError: expected NaN to be close to 62.83185307179586 +/- 0.0001\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:198:16)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:59:13)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1450:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1229:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:24)"
               ],
               "failed": true,
               "features": [],
@@ -2215,7 +2235,7 @@
             "fails": 1,
             "error": {
               "message": "Step type Function has no runnable method",
-              "stack": "Error: Step type Function has no runnable method\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1756:19)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
+              "stack": "Error: Step type Function has no runnable method\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1247:19)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1270:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-KWAV5SVZ.mjs:1609:42)",
               "name": "Error"
             },
             "stepType": "Function",
@@ -2253,7 +2273,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": 1775444000345,
+            "timestamp": 1775446052061,
             "fails": 0,
             "artifacts": [],
             "features": [
@@ -2271,7 +2291,7 @@
               "totalTests": 7,
               "passed": 7,
               "failed": 0,
-              "successRate": "100.00%"
+              "successRate": "100%"
             },
             "inputFiles": [
               "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
@@ -2283,16 +2303,21 @@
               "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
               "/src/lib/tiposkripto/src/Adapters.ts",
               "/src/lib/tiposkripto/src/types.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+              "/src/lib/tiposkripto/src/VerbProxies.ts",
+              "/src/lib/tiposkripto/src/verbs/index.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/TestJobCreator.ts",
+              "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+              "/src/lib/tiposkripto/src/TestRunner.ts"
             ]
           }
         },
@@ -2335,7 +2360,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775444000345,
+            "timestamp": 1775446052061,
             "individualResults": [
               {
                 "index": 0,
@@ -2641,7 +2666,7 @@
               "totalTests": 7,
               "passed": 7,
               "failed": 0,
-              "successRate": "100.00%"
+              "successRate": "100%"
             },
             "inputFiles": [
               "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
@@ -2653,16 +2678,21 @@
               "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
               "/src/lib/tiposkripto/src/Adapters.ts",
               "/src/lib/tiposkripto/src/types.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+              "/src/lib/tiposkripto/src/VerbProxies.ts",
+              "/src/lib/tiposkripto/src/verbs/index.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
               "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+              "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+              "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
               "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-              "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+              "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+              "/src/lib/tiposkripto/src/TestJobCreator.ts",
+              "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+              "/src/lib/tiposkripto/src/TestRunner.ts"
             ],
             "result": 0
           }
@@ -4770,6 +4800,1059 @@
             "timestamp": "2026-04-06T03:06:40.543Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
           }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/VerbProxies.ts",
+          "type": "file",
+          "label": "VerbProxies.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/VerbProxies.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/VerbProxies.ts",
+            "localPath": "/src/lib/tiposkripto/src/VerbProxies.ts",
+            "url": "file:///src/lib/tiposkripto/src/VerbProxies.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/verbs/index.ts",
+          "type": "file",
+          "label": "index.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/verbs/index.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/verbs/index.ts",
+            "localPath": "/src/lib/tiposkripto/src/verbs/index.ts",
+            "url": "file:///src/lib/tiposkripto/src/verbs/index.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/TestJobCreator.ts",
+          "type": "file",
+          "label": "TestJobCreator.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/TestJobCreator.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/TestJobCreator.ts",
+            "localPath": "/src/lib/tiposkripto/src/TestJobCreator.ts",
+            "url": "file:///src/lib/tiposkripto/src/TestJobCreator.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/ClassyImplementations.ts",
+          "type": "file",
+          "label": "ClassyImplementations.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/ClassyImplementations.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+            "localPath": "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+            "url": "file:///src/lib/tiposkripto/src/ClassyImplementations.ts"
+          }
+        },
+        {
+          "id": "file:/src/lib/tiposkripto/src/TestRunner.ts",
+          "type": "file",
+          "label": "TestRunner.ts",
+          "description": "Input file: /src/lib/tiposkripto/src/TestRunner.ts",
+          "metadata": {
+            "filePath": "/src/lib/tiposkripto/src/TestRunner.ts",
+            "localPath": "/src/lib/tiposkripto/src/TestRunner.ts",
+            "url": "file:///src/lib/tiposkripto/src/TestRunner.ts"
+          }
+        },
+        {
+          "id": "logfile:nodetests-builder.log:mnmmmlel",
+          "type": "file",
+          "label": "nodetests-builder.log",
+          "description": "Log file for nodetests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log",
+            "relativePath": "testeranto/reports/nodetests/nodetests-builder.log",
+            "serviceName": "nodetests-builder",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-06T03:24:25.437Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_bdd.log:mnmmn2nv",
+          "type": "file",
+          "label": "Calculator-test-node-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:24:47.803Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_bdd.log:mnmmn2po",
+          "type": "file",
+          "label": "Circle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:24:47.868Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_bdd.log:mnmmn2rq",
+          "type": "file",
+          "label": "Rectangle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:24:47.942Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-0.log:mnmmn5lj",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:24:51.607Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-1.log:mnmmn5qv",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:24:51.799Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-0.log:mnmmn6hm",
+          "type": "file",
+          "label": "Circle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:24:52.761Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-1.log:mnmmn6oe",
+          "type": "file",
+          "label": "Circle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:24:53.006Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-1.log:mnmmn734",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:24:53.536Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-0.log:mnmmn7cc",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:24:53.868Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_aider.log:mnmmncg2",
+          "type": "file",
+          "label": "Circle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:25:00.482Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_aider.log:mnmmndl5",
+          "type": "file",
+          "label": "Calculator-test-node-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:25:01.961Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_aider.log:mnmmnene",
+          "type": "file",
+          "label": "Rectangle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:25:03.338Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_bdd.log:mnmmnuzn",
+          "type": "file",
+          "label": "Calculator-test-node-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:25:24.515Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_bdd.log:mnmmnv1z",
+          "type": "file",
+          "label": "Circle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:25:24.599Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_bdd.log:mnmmnv5n",
+          "type": "file",
+          "label": "Rectangle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:25:24.731Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_aider.log:mnmmnvc8",
+          "type": "file",
+          "label": "Calculator-test-node-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:25:24.968Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_aider.log:mnmmnvlo",
+          "type": "file",
+          "label": "Circle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:25:25.308Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_aider.log:mnmmnvrl",
+          "type": "file",
+          "label": "Rectangle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:25:25.521Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-1.log:mnmmnxol",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:25:28.005Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-0.log:mnmmnxsv",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:25:28.159Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-0.log:mnmmnxxi",
+          "type": "file",
+          "label": "Circle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:25:28.326Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-1.log:mnmmny1s",
+          "type": "file",
+          "label": "Circle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:25:28.480Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-0.log:mnmmny5r",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:25:28.623Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-1.log:mnmmny9m",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:25:28.762Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_bdd.log:mnmmqjfr",
+          "type": "file",
+          "label": "Calculator-test-node-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:27:29.511Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_bdd.log:mnmmqjil",
+          "type": "file",
+          "label": "Circle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:27:29.613Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_bdd.log:mnmmqjmd",
+          "type": "file",
+          "label": "Rectangle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:27:29.749Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_aider.log:mnmmqjpo",
+          "type": "file",
+          "label": "Calculator-test-node-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:27:29.868Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_aider.log:mnmmqjx1",
+          "type": "file",
+          "label": "Circle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:27:30.133Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_aider.log:mnmmqk3x",
+          "type": "file",
+          "label": "Rectangle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:27:30.381Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-0.log:mnmmqkd5",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:27:30.713Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-1.log:mnmmqkjo",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:27:30.948Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-1.log:mnmmql7l",
+          "type": "file",
+          "label": "Circle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:27:31.809Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-0.log:mnmmqlbu",
+          "type": "file",
+          "label": "Circle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:27:31.962Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-1.log:mnmmqlhn",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:27:32.171Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-0.log:mnmmqllk",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:27:32.312Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:nodetests-builder.log:mnmmru2m",
+          "type": "file",
+          "label": "nodetests-builder.log",
+          "description": "Log file for nodetests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log",
+            "relativePath": "testeranto/reports/nodetests/nodetests-builder.log",
+            "serviceName": "nodetests-builder",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-06T03:28:29.949Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_bdd.log:mnmmsbwu",
+          "type": "file",
+          "label": "Calculator-test-node-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:28:53.070Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_bdd.log:mnmmsbyv",
+          "type": "file",
+          "label": "Circle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:28:53.143Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_bdd.log:mnmmsc19",
+          "type": "file",
+          "label": "Rectangle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T03:28:53.229Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-1.log:mnmmsfb6",
+          "type": "file",
+          "label": "Circle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:28:57.474Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-0.log:mnmmsfga",
+          "type": "file",
+          "label": "Circle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:28:57.658Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-1.log:mnmmsgio",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:28:59.040Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-0.log:mnmmsgpy",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:28:59.302Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-0.log:mnmmshc3",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:29:00.098Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-1.log:mnmmshnb",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T03:29:00.503Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_aider.log:mnmmsnck",
+          "type": "file",
+          "label": "Rectangle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:29:07.892Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_aider.log:mnmmsod8",
+          "type": "file",
+          "label": "Circle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:29:09.212Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_aider.log:mnmmspc9",
+          "type": "file",
+          "label": "Calculator-test-node-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T03:29:10.473Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log"
+          }
         }
       ],
       "edges": [
@@ -6712,11 +7795,727 @@
             "type": "hasLog",
             "timestamp": "2026-04-06T03:06:40.543Z"
           }
+        },
+        {
+          "source": "folder:../../../../src/lib/tiposkripto/src",
+          "target": "file:/src/lib/tiposkripto/src/VerbProxies.ts",
+          "attributes": {
+            "type": "locatedIn"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "file:/src/lib/tiposkripto/src/VerbProxies.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "folder:../../../../src/lib/tiposkripto/src/verbs",
+          "target": "file:/src/lib/tiposkripto/src/verbs/index.ts",
+          "attributes": {
+            "type": "locatedIn"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "file:/src/lib/tiposkripto/src/verbs/index.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "folder:../../../../src/lib/tiposkripto/src",
+          "target": "file:/src/lib/tiposkripto/src/TestJobCreator.ts",
+          "attributes": {
+            "type": "locatedIn"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "file:/src/lib/tiposkripto/src/TestJobCreator.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "folder:../../../../src/lib/tiposkripto/src",
+          "target": "file:/src/lib/tiposkripto/src/ClassyImplementations.ts",
+          "attributes": {
+            "type": "locatedIn"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "file:/src/lib/tiposkripto/src/ClassyImplementations.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "folder:../../../../src/lib/tiposkripto/src",
+          "target": "file:/src/lib/tiposkripto/src/TestRunner.ts",
+          "attributes": {
+            "type": "locatedIn"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "file:/src/lib/tiposkripto/src/TestRunner.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/VerbProxies.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/verbs/index.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/TestJobCreator.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/ClassyImplementations.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/TestRunner.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/VerbProxies.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/verbs/index.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/TestJobCreator.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/ClassyImplementations.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "file:/src/lib/tiposkripto/src/TestRunner.ts",
+          "attributes": {
+            "type": "associatedWith"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnmmn2nv",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:47.803Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnmmn2nv",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:24:47.803Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnmmn2po",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:47.868Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnmmn2po",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:24:47.868Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnmmn2rq",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:47.942Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnmmn2rq",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:24:47.942Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-0.log:mnmmn5lj",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:51.607Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-1.log:mnmmn5qv",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:51.799Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-0.log:mnmmn6hm",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:52.761Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-1.log:mnmmn6oe",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:53.006Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-1.log:mnmmn734",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:53.536Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-0.log:mnmmn7cc",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:24:53.868Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnmmncg2",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:00.482Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnmmncg2",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:00.482Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnmmndl5",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:01.961Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnmmndl5",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:01.961Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnmmnene",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:03.338Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnmmnene",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:03.338Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnmmnuzn",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:24.515Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnmmnuzn",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:24.515Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnmmnv1z",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:24.599Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnmmnv1z",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:24.599Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnmmnv5n",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:24.731Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnmmnv5n",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:24.731Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnmmnvc8",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:24.968Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnmmnvc8",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:24.968Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnmmnvlo",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:25.308Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnmmnvlo",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:25.308Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnmmnvrl",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:25.521Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnmmnvrl",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:25:25.521Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-1.log:mnmmnxol",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:28.005Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-0.log:mnmmnxsv",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:28.159Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-0.log:mnmmnxxi",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:28.326Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-1.log:mnmmny1s",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:28.480Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-0.log:mnmmny5r",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:28.623Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-1.log:mnmmny9m",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:25:28.762Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnmmqjfr",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:29.511Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnmmqjfr",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:27:29.511Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnmmqjil",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:29.613Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnmmqjil",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:27:29.613Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnmmqjmd",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:29.749Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnmmqjmd",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:27:29.749Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnmmqjpo",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:29.868Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnmmqjpo",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:27:29.868Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnmmqjx1",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:30.133Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnmmqjx1",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:27:30.133Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnmmqk3x",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:30.381Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnmmqk3x",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:27:30.381Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-0.log:mnmmqkd5",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:30.713Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-1.log:mnmmqkjo",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:30.948Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-1.log:mnmmql7l",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:31.809Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-0.log:mnmmqlbu",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:31.962Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-1.log:mnmmqlhn",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:32.171Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-0.log:mnmmqllk",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:27:32.312Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnmmsbwu",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:28:53.070Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnmmsbwu",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:28:53.070Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnmmsbyv",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:28:53.143Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnmmsbyv",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:28:53.143Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnmmsc19",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:28:53.229Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnmmsc19",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:28:53.229Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-1.log:mnmmsfb6",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:28:57.474Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-0.log:mnmmsfga",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:28:57.658Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-1.log:mnmmsgio",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:28:59.040Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-0.log:mnmmsgpy",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:28:59.302Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-0.log:mnmmshc3",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:29:00.098Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-1.log:mnmmshnb",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:29:00.503Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnmmsnck",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:29:07.892Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnmmsnck",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:29:07.892Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnmmsod8",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:29:09.212Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnmmsod8",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:29:09.212Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnmmspc9",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T03:29:10.473Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnmmspc9",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T03:29:10.473Z"
+          }
         }
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-06T03:06:40.544Z"
+        "timestamp": "2026-04-06T03:29:32.531Z"
       }
     },
     "vizConfig": {

@@ -1,6 +1,6 @@
 import {
   NodeTiposkripto
-} from "../../../../../chunk-7TUUD5WL.mjs";
+} from "../../../../../chunk-KWAV5SVZ.mjs";
 
 // src/lib/tiposkripto/tests/circle/Circle.ts
 var Circle = class {

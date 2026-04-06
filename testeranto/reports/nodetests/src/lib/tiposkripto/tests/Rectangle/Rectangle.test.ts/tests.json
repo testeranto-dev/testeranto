@@ -13,7 +13,7 @@
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1775444789705,
+  "timestamp": 1775446135644,
   "individualResults": [
     {
       "index": 0,
@@ -319,6 +319,6 @@
     "totalTests": 7,
     "passed": 7,
     "failed": 0,
-    "successRate": "100.00%"
+    "successRate": "100%"
   }
 }
