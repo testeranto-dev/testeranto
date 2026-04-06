@@ -8,6 +8,7 @@
 /Users/adam/Code/testeranto/src/lib/kafe/src/main/java/kafe/IFinalResults.java
 /Users/adam/Code/testeranto/src/lib/kafe/src/main/java/kafe/BaseShould.java
 /Users/adam/Code/testeranto/src/lib/kafe/src/main/java/kafe/BaseThen.java
+/Users/adam/Code/testeranto/src/lib/kafe/src/main/java/kafe/BaseConfirm.java
 /Users/adam/Code/testeranto/src/lib/kafe/src/main/java/kafe/ITTestResourceRequest.java
 /Users/adam/Code/testeranto/src/lib/kafe/src/main/java/kafe/BaseSetup.java
 /Users/adam/Code/testeranto/src/lib/kafe/src/main/java/kafe/ITestSpecification.java

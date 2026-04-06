@@ -1,4 +1,5 @@
-from .Pitono import Pitono, set_default_instance, main
+from .pitono_factory import Pitono, set_default_instance, main
+from .pitono_class import PitonoClass
 from .simple_adapter import SimpleTestAdapter
 from .pitono_types import (
     IUniversalTestAdapter, ITestAdapter, ITTestResourceConfiguration, ITestSpecification, 
@@ -16,6 +17,11 @@ from .base_should import BaseShould
 from .base_expected import BaseExpected
 from .base_describe import BaseDescribe
 from .base_it import BaseIt
+
+# Import new modules
+from .verb_wrappers import VerbWrappers
+from .classy_implementations import initialize_classy_implementations
+from .artifactory import create_artifactory
 
 # Helper functions for TDT and Describe-It patterns
 def create_tdt_specification(Suite, Value, Should, Expected):
@@ -56,13 +62,14 @@ TDT = create_tdt_specification
 DescribeIt = create_describe_it_specification
 
 __all__ = [
-    'Pitono', 'set_default_instance', 'main', 'SimpleTestAdapter',
+    'Pitono', 'set_default_instance', 'main', 'PitonoClass', 'SimpleTestAdapter',
     'IUniversalTestAdapter', 'ITestAdapter', 'ITestResourceConfiguration', 'ITestSpecification',
     'ITestImplementation', 'ITestResourceRequest', 'IFinalResults', 'ITestArtifactory',
     'BaseSuite', 'BaseSetup', 'BaseAction', 'BaseCheck',
     'BaseGiven', 'BaseWhen', 'BaseThen',
     'BaseValue', 'BaseShould', 'BaseExpected',
     'BaseDescribe', 'BaseIt',
+    'VerbWrappers', 'initialize_classy_implementations', 'create_artifactory',
     'create_tdt_specification', 'create_describe_it_specification',
     'TDT', 'DescribeIt'
 ]

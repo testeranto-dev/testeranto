@@ -10,8 +10,6 @@ export abstract class Server_HTTP_Base extends Server_Base {
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
-    console.log('[Server_HTTP_Base] Constructor called with configs:',
-      configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
     this.graphManager = new Server_GraphManager(
       configs,
       mode,
@@ -22,24 +20,16 @@ export abstract class Server_HTTP_Base extends Server_Base {
   async start(): Promise<void> {
     await super.start();
 
-    // Generate and save graph data immediately on startup
-    console.log('[Server_HTTP_Base] Generating initial graph data...');
     try {
-      const graphData = await this.resetGraphData();
-      console.log('[Server_HTTP_Base] Initial graph data generated successfully');
+      await this.resetGraphData();
     } catch (error) {
       console.error('[Server_HTTP_Base] Error generating initial graph data:', error);
     }
   }
 
   async stop() {
-    // Save graph before stopping
-    if (this.graphManager) {
-      const graphManager = this.graphManager as any;
-      if (graphManager.getGraphManager && graphManager.getGraphManager().saveGraph) {
-        graphManager.getGraphManager().saveGraph();
-      }
-    }
+    const graphManager = this.graphManager;
+    graphManager.getGraphManager().saveGraph();
     await super.stop();
   }
 

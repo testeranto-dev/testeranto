@@ -1,4 +1,6 @@
-import { type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph } from '../../graph/index';
+import {
+  type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph
+} from '../../graph/index';
 import { createFeatureNodeOperationsPure } from './createFeatureNodeOperationsPure';
 import { extractFeatureInfoPure } from './extractFeatureInfoPure';
 
@@ -11,7 +13,6 @@ export async function handleFeatureNodeOperationsPure(
   graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>,
   timestamp: string
 ): Promise<void> {
-  // Use pure function to create feature node operations
   const featureOps = createFeatureNodeOperationsPure(
     featureUrl,
     content,
@@ -34,7 +35,6 @@ export async function handleFeatureNodeOperationsPure(
       });
     } else {
       operations.push(op);
-      console.log(`[GraphManager] Added ${op.type} operation for ${featureId}`);
     }
   }
 }

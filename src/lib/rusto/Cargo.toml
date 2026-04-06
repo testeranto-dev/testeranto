@@ -1,12 +1,12 @@
 [package]
 name = "testeranto_rusto"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Rust implementation of Testeranto"
 authors = ["Testeranto Team"]
 license = "MIT"
 readme = "README.md"
-publish = false  # Prevent accidental publishing
+publish = true  # Allow publishing to crates.io
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }

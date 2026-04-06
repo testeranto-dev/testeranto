@@ -29,9 +29,18 @@ pub mod base_describe;
 pub mod base_it;
 pub mod simple_adapter;
 pub mod rusto;
+pub mod rusto_impl;
+pub mod rusto_artifactory;
+pub mod rusto_helpers;
 pub mod reverse_integration;
 pub mod ast_transformer;
 pub mod interoperability;
+
+// Examples are standalone files in the examples/ directory, not library modules
+// They are configured in Cargo.toml as [[example]] entries
+
+// Note: Examples are standalone files in the examples/ directory
+// They are not compiled into the library by default
 
 // Re-export main types for convenience
 pub use types::*;
@@ -53,6 +62,9 @@ pub use reverse_integration::*;
 pub use ast_transformer::RustASTTransformer;
 pub use interoperability::*;
 
+// Note: Example modules are standalone files in the examples/ directory
+// They are not part of the library crate
+
 /// Prelude module for convenient imports
 pub mod prelude {
     pub use crate::types::*;
@@ -72,6 +84,8 @@ pub mod prelude {
     pub use crate::Rusto;
     pub use crate::RustASTTransformer;
     pub use crate::interoperability::*;
+    
+    // Note: Calculator examples are standalone files, not part of the library
 }
 
 /// Main entry point for creating a Rusto instance - matches TypeScript's tiposkripto

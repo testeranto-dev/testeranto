@@ -14,14 +14,12 @@ export async function handleFeatureTestEdgePure(
   }
 
   const { featureId } = extractFeatureInfoPure(featureUrl);
-  
+
   // Check if edge already exists and skip if it does
   let featureEdgeExists = false;
   if (graph.hasEdge(featureId, testId)) {
     featureEdgeExists = true;
   }
-  console.log(`[GraphManager] Edge from ${featureId} to ${testId} exists: ${featureEdgeExists}`);
-
   // If edge exists, we need to remove the edge operation that was added by createFeatureNodeOperationsPure
   if (featureEdgeExists) {
     // Find and remove the edge operation

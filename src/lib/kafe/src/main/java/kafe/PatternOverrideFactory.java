@@ -156,6 +156,234 @@ public class PatternOverrideFactory<I, S, R, Sel> {
         return thenOverrides;
     }
     
+    public Map<String, Object> createConfirmOverrides() {
+        Map<String, Object> confirmOverrides = new HashMap<>();
+        if (testImplementation.confirms != null) {
+            for (String key : testImplementation.confirms.keySet()) {
+                confirmOverrides.put(key, (Function<Object[], BaseConfirm>) 
+                    args -> {
+                        @SuppressWarnings("unchecked")
+                        List<String> features = (List<String>) args[0];
+                        @SuppressWarnings("unchecked")
+                        List<List<Object>> tableRows = (List<List<Object>>) args[1];
+                        @SuppressWarnings("unchecked")
+                        Function<S, R> confirmCB = (Function<S, R>) args[2];
+                        Object initialValues = args[3];
+                        
+                        return new BaseConfirm<I, S, R>(
+                            features,
+                            tableRows,
+                            confirmCB,
+                            initialValues
+                        ) {
+                            @Override
+                            public R setupThat(
+                                S subject,
+                                ITTestResourceConfiguration testResourceConfiguration,
+                                Object artifactory,
+                                Function<S, R> setupCB,
+                                Object initialValues
+                            ) {
+                                return testAdapter.prepareEach(
+                                    subject,
+                                    setupCB,
+                                    testResourceConfiguration,
+                                    initialValues,
+                                    artifactory
+                                );
+                            }
+                            
+                            @Override
+                            public R afterEach(
+                                R store,
+                                String key,
+                                Object artifactory
+                            ) {
+                                return testAdapter.cleanupEach(store, key, artifactory);
+                            }
+                        };
+                    });
+            }
+        }
+        return confirmOverrides;
+    }
+    
+    public Map<String, Object> createValueOverrides() {
+        Map<String, Object> valueOverrides = new HashMap<>();
+        if (testImplementation.values != null) {
+            for (String key : testImplementation.values.keySet()) {
+                valueOverrides.put(key, (Function<Object[], BaseValue>) 
+                    args -> {
+                        @SuppressWarnings("unchecked")
+                        List<String> features = (List<String>) args[0];
+                        @SuppressWarnings("unchecked")
+                        List<List<Object>> tableRows = (List<List<Object>>) args[1];
+                        @SuppressWarnings("unchecked")
+                        Function<S, R> valueCB = (Function<S, R>) args[2];
+                        Object initialValues = args[3];
+                        
+                        return new BaseValue<I, S, R>(
+                            features,
+                            tableRows,
+                            valueCB,
+                            initialValues
+                        ) {
+                            @Override
+                            public R setupThat(
+                                S subject,
+                                ITTestResourceConfiguration testResourceConfiguration,
+                                Object artifactory,
+                                Function<S, R> setupCB,
+                                Object initialValues
+                            ) {
+                                return testAdapter.prepareEach(
+                                    subject,
+                                    setupCB,
+                                    testResourceConfiguration,
+                                    initialValues,
+                                    artifactory
+                                );
+                            }
+                            
+                            @Override
+                            public R afterEach(
+                                R store,
+                                String key,
+                                Object artifactory
+                            ) {
+                                return testAdapter.cleanupEach(store, key, artifactory);
+                            }
+                        };
+                    });
+            }
+        }
+        return valueOverrides;
+    }
+    
+    public Map<String, Object> createShouldOverrides() {
+        Map<String, Object> shouldOverrides = new HashMap<>();
+        if (testImplementation.shoulds != null) {
+            for (String key : testImplementation.shoulds.keySet()) {
+                shouldOverrides.put(key, (Function<Object[], BaseShould>) 
+                    args -> {
+                        return new BaseShould<R>(key + ": " + Arrays.toString(args), 
+                            (Function<R, R>) testImplementation.shoulds.get(key).apply(args)) {
+                            @Override
+                            public R performAction(
+                                R store,
+                                Function<R, R> actionCB,
+                                ITTestResourceConfiguration testResourceConfiguration,
+                                Object artifactory
+                            ) {
+                                return testAdapter.execute(store, actionCB, testResourceConfiguration, artifactory);
+                            }
+                        };
+                    });
+            }
+        }
+        return shouldOverrides;
+    }
+    
+    public Map<String, Object> createExpectedOverrides() {
+        Map<String, Object> expectedOverrides = new HashMap<>();
+        if (testImplementation.expecteds != null) {
+            for (String key : testImplementation.expecteds.keySet()) {
+                expectedOverrides.put(key, (Function<Object[], BaseExpected>) 
+                    args -> {
+                        return new BaseExpected<R>(key + ": " + Arrays.toString(args),
+                            (Function<R, Object>) testImplementation.expecteds.get(key).apply(args)) {
+                            @Override
+                            public Object verifyCheck(
+                                R store,
+                                Function<R, Object> checkCB,
+                                ITTestResourceConfiguration testResourceConfiguration,
+                                Object artifactory
+                            ) {
+                                return testAdapter.verify(store, checkCB, testResourceConfiguration, artifactory);
+                            }
+                        };
+                    });
+            }
+        }
+        return expectedOverrides;
+    }
+    
+    public Map<String, Object> createDescribeOverrides() {
+        Map<String, Object> describeOverrides = new HashMap<>();
+        if (testImplementation.describes != null) {
+            for (String key : testImplementation.describes.keySet()) {
+                describeOverrides.put(key, (Function<Object[], BaseDescribe>) 
+                    args -> {
+                        @SuppressWarnings("unchecked")
+                        List<String> features = (List<String>) args[0];
+                        @SuppressWarnings("unchecked")
+                        List<BaseIt<R>> its = (List<BaseIt<R>>) args[1];
+                        @SuppressWarnings("unchecked")
+                        Function<S, R> describeCB = (Function<S, R>) args[2];
+                        Object initialValues = args[3];
+                        
+                        return new BaseDescribe<I, S, R>(
+                            features,
+                            its,
+                            describeCB,
+                            initialValues
+                        ) {
+                            @Override
+                            public R setupThat(
+                                S subject,
+                                ITTestResourceConfiguration testResourceConfiguration,
+                                Object artifactory,
+                                Function<S, R> setupCB,
+                                Object initialValues
+                            ) {
+                                return testAdapter.prepareEach(
+                                    subject,
+                                    setupCB,
+                                    testResourceConfiguration,
+                                    initialValues,
+                                    artifactory
+                                );
+                            }
+                            
+                            @Override
+                            public R afterEach(
+                                R store,
+                                String key,
+                                Object artifactory
+                            ) {
+                                return testAdapter.cleanupEach(store, key, artifactory);
+                            }
+                        };
+                    });
+            }
+        }
+        return describeOverrides;
+    }
+    
+    public Map<String, Object> createItOverrides() {
+        Map<String, Object> itOverrides = new HashMap<>();
+        if (testImplementation.its != null) {
+            for (String key : testImplementation.its.keySet()) {
+                itOverrides.put(key, (Function<Object[], BaseIt>) 
+                    args -> {
+                        return new BaseIt<R>(key + ": " + Arrays.toString(args), 
+                            (Function<R, R>) testImplementation.its.get(key).apply(args)) {
+                            @Override
+                            public R performAction(
+                                R store,
+                                Function<R, R> actionCB,
+                                ITTestResourceConfiguration testResourceConfiguration,
+                                Object artifactory
+                            ) {
+                                return testAdapter.execute(store, actionCB, testResourceConfiguration, artifactory);
+                            }
+                        };
+                    });
+            }
+        }
+        return itOverrides;
+    }
+    
     // Similar methods for TDT and Describe-It patterns can be added here
     // For brevity, I'm showing the main BDD patterns
 }

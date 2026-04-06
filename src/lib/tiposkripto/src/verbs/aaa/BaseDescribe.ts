@@ -49,8 +49,14 @@ export class BaseDescribe<I extends TestTypeParams_any> {
 
     try {
       // Setup phase (Arrange)
-      // describeCB is I["given"] which is () => Calculator
-      this.store = await this.describeCB("x");
+      // describeCB may be a function that returns a store, or the store itself
+      if (typeof this.describeCB === 'function') {
+        // If it's a function, call it with the subject (and possibly initialValues)
+        this.store = await this.describeCB(subject, this.initialValues);
+      } else {
+        // Otherwise, treat it as the store directly
+        this.store = this.describeCB;
+      }
       this.status = true;
     } catch (e: any) {
       this.status = false;

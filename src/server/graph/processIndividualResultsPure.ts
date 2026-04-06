@@ -1,11 +1,13 @@
-import { type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph } from '../../graph/index';
+import fs from 'fs';
+import path from 'path';
+import {
+  type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph
+} from '../../graph/index';
 import type { TestResult } from "../types/testResults";
 import { createTestNodeOperationsPure } from './createTestNodeOperationsPure';
 import { createVerbNodesFromTestResultsPure } from './createVerbNodesFromTestResultsPure';
 import { processFeaturesForTest } from './processFeaturesForTest';
 import { processInputFilesForTestPure } from './processInputFilesForTestPure';
-import fs from 'fs';
-import path from 'path';
 
 // Helper function to load input files from bundle directory
 function loadInputFilesFromBundleForIndividual(
@@ -46,7 +48,6 @@ export async function processIndividualResultsPure(
     return;
   }
 
-  // Load input files from bundle for the entire test
   const bundleInputFiles = loadInputFilesFromBundleForIndividual(
     singleTestResult.configKey || sanitizedConfigKey,
     singleTestResult.testName || filePathForEntrypoint,
@@ -57,10 +58,7 @@ export async function processIndividualResultsPure(
     for (let i = 0; i < singleTestResult.individualResults.length; i++) {
       const individualResult = singleTestResult.individualResults[i];
       const stepName = individualResult.stepName;
-      if (!stepName) {
-        console.log(`[GraphManager] individualResult missing stepName, skipping`);
-        continue;
-      }
+
 
       const testOps = createTestNodeOperationsPure(
         sanitizedConfigKey,
@@ -114,7 +112,6 @@ export async function processIndividualResultsPure(
       operations.push(...verbOps);
 
       if (individualResult.features && Array.isArray(individualResult.features)) {
-        // console.log(`[GraphManager] Processing ${individualResult.features.length} features for individual result ${i}:`, individualResult.features);
         await processFeaturesForTest(
           individualResult.features,
           testId,
@@ -134,12 +131,8 @@ export async function processIndividualResultsPure(
         inputFiles = bundleInputFiles;
       }
 
-      // console.log(`[GraphManager] Checking for input files in individual result ${i}:`, inputFiles);
       if (inputFiles && Array.isArray(inputFiles) && inputFiles.length > 0) {
-        // console.log(`[GraphManager] Processing ${inputFiles.length} input files for individual result ${i}:`, inputFiles);
-        // console.log(`[GraphManager] Entrypoint ID for individual result: ${entrypointId}`);
         if (entrypointId) {
-          // console.log(`[GraphManager] Calling processInputFilesForTest for individual result`);
           await processInputFilesForTestPure(
             inputFiles,
             entrypointId,
@@ -148,7 +141,6 @@ export async function processIndividualResultsPure(
             projectRoot,
             timestamp
           );
-          // console.log(`[GraphManager] Finished processing input files for individual result`);
         } else {
           console.log(`[GraphManager] No entrypointId for individual result, skipping`);
         }

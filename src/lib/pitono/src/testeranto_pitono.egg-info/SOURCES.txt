@@ -3,6 +3,7 @@ pyproject.toml
 setup.py
 src/Pitono.py
 src/__init__.py
+src/artifactory.py
 src/base_action.py
 src/base_check.py
 src/base_describe.py
@@ -14,10 +15,15 @@ src/base_should.py
 src/base_suite.py
 src/base_then.py
 src/base_validate.py
+src/base_value.py
 src/base_when.py
+src/classy_implementations.py
+src/pitono_class.py
+src/pitono_factory.py
 src/pitono_types.py
 src/reverse_integration.py
 src/simple_adapter.py
+src/verb_wrappers.py
 src/testeranto_pitono.egg-info/PKG-INFO
 src/testeranto_pitono.egg-info/SOURCES.txt
 src/testeranto_pitono.egg-info/dependency_links.txt

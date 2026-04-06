@@ -56,7 +56,7 @@ while IFS= read -r -d '' file; do
         TOTAL_SIZE=$((TOTAL_SIZE + size))
         FILE_COUNT=$((FILE_COUNT + 1))
     fi
-done < <(find "$TARGET_DIR" \( -name "node_modules" -o -name "venv" -o -name "target/package" -o -path "*/lib/rusto/target" -o -path "*/lib/rusto/target/*" -o -path "*/dist/*" \) -prune -o \
+done < <(find "$TARGET_DIR" \( -name "node_modules" -o -name "venv" -o -name "target/package" -o -path "*/lib/rusto/target" -o -path "*/lib/rusto/target/*" -o -path "*/dist/*" -o -path "src/lib/pitono/lib/python3.14/*" \) -prune -o \
     -type f \( \
     -name "*.ts" -o \
     -name "*.tsx" -o \

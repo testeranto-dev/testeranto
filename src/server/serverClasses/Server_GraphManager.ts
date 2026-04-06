@@ -23,15 +23,12 @@ export class Server_GraphManager {
   }
 
   async resetGraphData(): Promise<any> {
-    console.log('[Server_GraphManager] resetGraphData() called');
-
     const fullGraphData = await resetGraphDataPure(
       this.graphManager,
       this.configs,
       this.getCurrentTestResults
     );
 
-    console.log(`[Server_GraphManager] Saving full graph data structure in unified format...`);
     this.saveGraphDataForStaticMode(fullGraphData);
 
     return fullGraphData;
@@ -42,11 +39,6 @@ export class Server_GraphManager {
       const projectRoot = process.cwd();
       const filePath = path.join(projectRoot, 'testeranto', 'reports', 'graph-data.json');
       const dir = path.dirname(filePath);
-
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-        console.log(`[Server_GraphManager] Created directory: ${dir}`);
-      }
 
       const staticGraphData = {
         timestamp: new Date().toISOString(),
@@ -71,19 +63,11 @@ export class Server_GraphManager {
         }
       };
 
-      console.log(`[Server_GraphManager] Writing graph-data.json to ${filePath}`);
-      console.log(`[Server_GraphManager] Graph data structure keys:`, Object.keys(staticGraphData.data));
-      if (staticGraphData.data.unifiedGraph) {
-        console.log(`[Server_GraphManager] unifiedGraph has ${staticGraphData.data.unifiedGraph.nodes?.length || 0} nodes, ${staticGraphData.data.unifiedGraph.edges?.length || 0} edges`);
-      }
-
       fs.writeFileSync(filePath, JSON.stringify(staticGraphData, null, 2), 'utf-8');
-      console.log(`[Server_GraphManager] Successfully saved graph-data.json (${fs.statSync(filePath).size} bytes)`);
 
       try {
         const writtenContent = fs.readFileSync(filePath, 'utf-8');
         const parsed = JSON.parse(writtenContent);
-        console.log(`[Server_GraphManager] Verification: file contains ${parsed.data?.unifiedGraph?.nodes?.length || 0} nodes`);
       } catch (verifyError) {
         console.error(`[Server_GraphManager] Failed to verify written file:`, verifyError);
       }
@@ -171,7 +155,6 @@ export class Server_GraphManager {
             configs: this.configs
           };
           this.saveGraphDataForStaticMode(fullGraphData);
-          console.log(`[Server_GraphManager] Saved current graph to graph-data.json`);
         }
       }
     } catch (error) {
@@ -182,7 +165,6 @@ export class Server_GraphManager {
   async writeMarkdownFile(filePath: string, frontmatterData: Record<string, any>, contentBody?: string): Promise<void> {
     const { updateMarkdownFile } = await import('../stakeholder/markdown');
     await updateMarkdownFile(filePath, frontmatterData, contentBody);
-    console.log(`[Server_GraphManager] Updated markdown file: ${filePath}`);
   }
 
   getGraphManager(): GraphManager {

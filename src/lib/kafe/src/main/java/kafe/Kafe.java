@@ -21,6 +21,7 @@ public class Kafe<I, S, R, Sel> {
     public Map<String, Object> thenOverrides;
     public Map<String, Object> whenOverrides;
     // TDT pattern overrides
+    public Map<String, Object> confirmsOverrides;
     public Map<String, Object> valuesOverrides;
     public Map<String, Object> shouldsOverrides;
     public Map<String, Object> expectedsOverrides;
@@ -56,16 +57,54 @@ public class Kafe<I, S, R, Sel> {
                     path.append("suite-").append(context.get("suiteIndex")).append("/");
                 }
                 
-                // Add given context if available
+                // Add given context if available (BDD)
                 if (context.containsKey("givenKey")) {
                     path.append("given-").append(context.get("givenKey")).append("/");
                 }
                 
-                // Add when or then context
+                // Add when or then context (BDD)
                 if (context.containsKey("whenIndex")) {
                     path.append("when-").append(context.get("whenIndex")).append(" ");
                 } else if (context.containsKey("thenIndex")) {
                     path.append("then-").append(context.get("thenIndex")).append(" ");
+                }
+                
+                // Add describe context if available (AAA)
+                if (context.containsKey("describeIndex")) {
+                    path.append("describe-").append(context.get("describeIndex")).append("/");
+                }
+                
+                // Add it context if available (AAA)
+                if (context.containsKey("itIndex")) {
+                    path.append("it-").append(context.get("itIndex")).append(" ");
+                }
+                
+                // Add confirm context if available (TDT)
+                if (context.containsKey("confirmKey")) {
+                    path.append("confirm-").append(context.get("confirmKey")).append("/");
+                }
+                
+                // Add value context if available (TDT)
+                if (context.containsKey("valueKey")) {
+                    path.append("value-").append(context.get("valueKey")).append("/");
+                }
+                
+                // Add should context if available (TDT)
+                if (context.containsKey("shouldIndex")) {
+                    path.append("should-").append(context.get("shouldIndex")).append(" ");
+                }
+                
+                // Add expect context if available (TDT)
+                if (context.containsKey("expectKey")) {
+                    path.append("expect-").append(context.get("expectKey")).append(" ");
+                }
+                
+                // Add step context if available (generic)
+                if (context.containsKey("stepIndex")) {
+                    path.append("step-").append(context.get("stepIndex")).append("/");
+                    if (context.containsKey("stepType")) {
+                        path.append(context.get("stepType")).append("/");
+                    }
                 }
                 
                 // Add the filename
@@ -115,6 +154,7 @@ public class Kafe<I, S, R, Sel> {
         this.givenOverrides = new HashMap<>();
         this.whenOverrides = new HashMap<>();
         this.thenOverrides = new HashMap<>();
+        this.confirmsOverrides = new HashMap<>();
         this.valuesOverrides = new HashMap<>();
         this.shouldsOverrides = new HashMap<>();
         this.expectedsOverrides = new HashMap<>();
@@ -128,8 +168,13 @@ public class Kafe<I, S, R, Sel> {
         this.whenOverrides = factory.createWhenOverrides();
         this.thenOverrides = factory.createThenOverrides();
         
-        // Note: For brevity, TDT and Describe-It patterns are not fully implemented here
-        // but the structure is in place
+        // Create TDT and Describe-It pattern overrides
+        this.valuesOverrides = factory.createValueOverrides();
+        this.shouldsOverrides = factory.createShouldOverrides();
+        this.expectedsOverrides = factory.createExpectedOverrides();
+        this.describesOverrides = factory.createDescribeOverrides();
+        this.itsOverrides = factory.createItOverrides();
+        this.confirmsOverrides = factory.createConfirmOverrides();
         
         // Generate specs
         if (testSpecification != null) {
@@ -137,7 +182,12 @@ public class Kafe<I, S, R, Sel> {
                 this.Suites(),
                 this.Given(),
                 this.When(),
-                this.Then()
+                this.Then(),
+                this.Describes(),
+                this.Its(),
+                this.Confirms(),
+                this.Values(),
+                this.Shoulds()
             );
         }
         
@@ -278,6 +328,11 @@ public class Kafe<I, S, R, Sel> {
     
     public Object Its() {
         return this.itsOverrides;
+    }
+    
+    // TDT pattern accessors
+    public Object Confirms() {
+        return this.confirmsOverrides;
     }
     
     public Object Specs() {

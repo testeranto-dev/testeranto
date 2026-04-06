@@ -58,4 +58,24 @@ public class ITestImplementation {
         this.describes = describes != null ? describes : new java.util.HashMap<>();
         this.its = its != null ? its : new java.util.HashMap<>();
     }
+    
+    // Add confirms field
+    public Map<String, Function<Object, Object>> confirms;
+    
+    // Update constructor to include confirms
+    public ITestImplementation(
+        Map<String, Object> suites,
+        Map<String, Function<Object, Object>> givens,
+        Map<String, Function<Object, Function<Object, Object>>> whens,
+        Map<String, Function<Object, Function<Object, Object>>> thens,
+        Map<String, Function<Object, Object>> values,
+        Map<String, Function<Object, Function<Object, Object>>> shoulds,
+        Map<String, Function<Object, Function<Object, Object>>> expecteds,
+        Map<String, Function<Object, Object>> describes,
+        Map<String, Function<Object, Function<Object, Object>>> its,
+        Map<String, Function<Object, Object>> confirms
+    ) {
+        this(suites, givens, whens, thens, values, shoulds, expecteds, describes, its);
+        this.confirms = confirms != null ? confirms : new java.util.HashMap<>();
+    }
 }

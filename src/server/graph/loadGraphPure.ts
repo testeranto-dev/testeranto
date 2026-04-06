@@ -1,8 +1,12 @@
 import fs from 'fs';
-import path from 'path';
-import { type GraphData, type TesterantoGraph, type GraphNodeAttributes, type GraphEdgeAttributes } from '../../graph/index';
 import { createGraph } from '../../graph/createGraph';
 import { dataToGraph } from '../../graph/dataToGraph';
+import {
+  type GraphData,
+  type GraphEdgeAttributes,
+  type GraphNodeAttributes,
+  type TesterantoGraph
+} from '../../graph/index';
 
 // Pure function to load graph from file or create new
 export function loadGraphPure(
@@ -20,7 +24,7 @@ export function loadGraphPure(
       if (parsed.data && parsed.data.unifiedGraph) {
         // Unified format: {timestamp, version, data: {unifiedGraph: {...}}}
         graphData = parsed.data.unifiedGraph;
-        console.log('[GraphManager] Loading unified graph format');
+
       } else {
         // Old format detected - create fresh graph
         console.warn('[GraphManager] Old graph format detected - creating fresh unified graph');
@@ -28,7 +32,7 @@ export function loadGraphPure(
       }
 
       const graph = dataToGraph(graphData);
-      console.log(`[GraphManager] Loaded unified graph with ${graph.order} nodes and ${graph.size} edges`);
+
       return graph;
     } catch (error) {
       console.error('[GraphManager] Error loading existing graph, starting fresh:', error);

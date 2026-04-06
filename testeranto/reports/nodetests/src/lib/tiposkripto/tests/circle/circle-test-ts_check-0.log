@@ -1,5 +1,5 @@
-=== Log started at 2026-04-06T03:28:57.893Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (runtime: node) ===
-=== Container ID: 4adb53dcd162cbf3e3d19769860351c3413c1e0e28d1e393c278187cccbff949 ===
+=== Log started at 2026-04-06T04:34:18.797Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (runtime: node) ===
+=== Container ID: 9f782c9a2c9879287d09203cf8b7c0bb49f2b468645048c963cdca2e137a6438 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -21,7 +21,7 @@ Common causes of this problem include:
 1. The "import" plugin is not defined in your configuration file.
 2. The "import" plugin is not defined within the same configuration object in which the "import/no-dynamic-require" rule is applied.
 
-error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 2.
 
-=== Log captured at 2026-04-06T03:29:02.773Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-06T04:34:21.100Z (container status: exited, exit code: 2) ===

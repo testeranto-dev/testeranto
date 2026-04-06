@@ -34,7 +34,6 @@ export async function processFeatureUrlPure(
 
         // Write the content to the specified filepath
         fs.writeFileSync(filepath, content, 'utf-8');
-        console.log(`[GraphManager] Saved feature content to: ${filepath}`);
 
         return { content, localPath: filepath };
       } catch (error) {

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-06T03:28:54.313Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
-=== Container ID: 980e044f0088cf19d2ff7605d334ae5fa39d03cfe6c482a2da825ed6e350278b ===
+=== Log started at 2026-04-06T04:34:15.953Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
+=== Container ID: cf57f067dff35c5a4aaf0638b6649359d1476bacd601300a26dfdc729de550a8 ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
@@ -28,6 +28,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/'
 }
-Done in 0.92s.
+Done in 0.59s.
 
-=== Log captured at 2026-04-06T03:28:58.291Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-06T04:34:17.206Z (container status: exited, exit code: 0) ===

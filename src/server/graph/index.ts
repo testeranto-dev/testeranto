@@ -64,7 +64,6 @@ export class GraphManager {
 
       // DO NOT try to preserve old data - always write new unified format
       fs.writeFileSync(this.graphDataPath, JSON.stringify(graphDataFile, null, 2), 'utf-8');
-      console.log(`[GraphManager] Saved unified graph to ${this.graphDataPath} with ${graphData.nodes.length} nodes and ${graphData.edges.length} edges`);
     } catch (error) {
       console.error('[GraphManager] Error saving graph:', error);
     }
@@ -144,7 +143,6 @@ export class GraphManager {
             break;
           case 'addEdge':
             this.graph.addEdge(op.data.source, op.data.target, op.data.attributes);
-            // console.log(`[GraphManager] Added edge: ${op.data.source} -> ${op.data.target} (${op.data.attributes.type})`);
             break;
           case 'updateEdge':
             const edge = this.graph.edge(op.data.source, op.data.target);
@@ -296,8 +294,6 @@ export class GraphManager {
     const timestamp = new Date().toISOString();
     const operations: GraphOperation[] = [];
 
-    // console.log(`[GraphManager] updateGraphWithInputFiles called for ${configKey}/${testName} with ${inputFiles.length} files`);
-
     // Find or create the entrypoint node for this test
     const entrypointId = `entrypoint:${testName}`;
     const existingEntrypointNode = this.graph.hasNode(entrypointId);
@@ -326,14 +322,11 @@ export class GraphManager {
 
     // Process each input file
     for (const inputFile of inputFiles) {
-      console.log(`[GraphManager] Processing input file: ${inputFile}`);
-
       // Create file node for input file
       const fileNodeId = `file:${inputFile}`;
       const existingFileNode = this.graph.hasNode(fileNodeId);
 
       if (!existingFileNode) {
-        console.log(`[GraphManager] Creating file node: ${fileNodeId}`);
         operations.push({
           type: 'addNode',
           data: {
@@ -425,21 +418,12 @@ export class GraphManager {
     return { operations, timestamp };
   }
 
-  // Get graph statistics
   public getGraphStats(): { nodes: number; edges: number; nodeTypes: Record<string, number>; edgeTypes: Record<string, number> } {
-    const stats = getGraphStatsPure(this.graph);
-
-    // console.log(`[GraphManager] Graph stats: ${stats.nodes} nodes, ${stats.edges} edges`);
-    // console.log(`[GraphManager] Node types:`, stats.nodeTypes);
-    // console.log(`[GraphManager] Edge types:`, stats.edgeTypes);
-
-    return stats;
+    return getGraphStatsPure(this.graph);
   }
 
   // Serialize graph changes back to markdown frontmatter
   public serializeToMarkdown(): void {
-    console.log('[GraphManager] serializeToMarkdown is called');
-
     // Get all feature nodes from the graph
     const featureNodes = this.graph.nodes().filter(nodeId => {
       const attrs = this.graph.getNodeAttributes(nodeId);
@@ -454,26 +438,9 @@ export class GraphManager {
         const metadata = attrs.metadata || {};
         const localPath = metadata.localPath as string | undefined;
 
-        if (!localPath) {
-          console.log(`[GraphManager] Feature ${nodeId} has no local path, skipping`);
-          continue;
-        }
-
         // Generate markdown content with YAML frontmatter from node attributes
         const content = this.generateMarkdownContent(attrs);
 
-        if (!content) {
-          console.log(`[GraphManager] Feature ${nodeId} has no content, skipping`);
-          continue;
-        }
-
-        // Ensure the directory exists
-        const dir = path.dirname(localPath);
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir, { recursive: true });
-        }
-
-        // Write the content to the file
         fs.writeFileSync(localPath, content, 'utf-8');
 
         // Update the node's metadata.content to keep graph in sync
@@ -484,7 +451,6 @@ export class GraphManager {
           }
         });
 
-        // console.log(`[GraphManager] Wrote feature content to ${localPath}`);
         writtenCount++;
 
       } catch (error) {
@@ -493,7 +459,6 @@ export class GraphManager {
       }
     }
 
-    // console.log(`[GraphManager] Serialized ${writtenCount} feature files, ${errorCount} errors`);
   }
 
   // Generate markdown content with YAML frontmatter from node attributes
@@ -656,7 +621,6 @@ export class GraphManager {
     return newContent;
   }
 
-  // Update graph with aider node
   public async updateGraphWithAiderNode(params: {
     runtime: string;
     testName: string;
@@ -664,25 +628,17 @@ export class GraphManager {
     aiderServiceName: string;
     containerId?: string;
   }): Promise<void> {
-    console.log(`[GraphManager] updateGraphWithAiderNode called with params:`, params);
     const timestamp = new Date().toISOString();
     const operations = createAiderNodeGraphOperationsPure({
       ...params,
       timestamp
     });
-
-    console.log(`[GraphManager] Created ${operations.length} operations for aider node`);
     const update: GraphUpdate = {
       operations,
       timestamp
     };
-
     this.applyUpdate(update);
-    console.log(`[GraphManager] Updated graph with aider node for ${params.aiderServiceName}`);
-
-    // Also save the graph explicitly
     this.saveGraph();
-    console.log(`[GraphManager] Graph saved after aider node update`);
   }
 
   // Create aider node for an entrypoint (for manual testing)
@@ -727,6 +683,5 @@ export class GraphManager {
     }
 
     this.saveGraph();
-    console.log(`[GraphManager] Created aider node ${aiderNodeId} for entrypoint ${entrypointId}`);
   }
 }

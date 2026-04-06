@@ -9,7 +9,7 @@ We need to add the [artifactory](testerantoV2/src/lib/artifactory.md) to all the
 
 [ ] go
 [ ] java
-[ ] py
-[ ] rb
-[ ] rs
+[x] py
+[x] rb
+[x] rs
 [x] ts

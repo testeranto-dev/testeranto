@@ -1,4 +1,67 @@
 services:
+  javatests-builder:
+    container_name: javatests-builder
+    environment:
+      ENV: java
+      MODE: dev
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: 'sh -c "cd /workspace && echo ''=== Java Builder Starting ==='' && echo ''1. Checking for Kafe library...'' && echo ''   Looking for: /root/.m2/repository/com/testeranto/testeranto.kafe/0.3.4/testeranto.kafe-0.3.4.jar'' && if [ -f /root/.m2/repository/com/testeranto/testeranto.kafe/0.3.4/testeranto.kafe-0.3.4.jar ]; then echo ''   Found Kafe 0.3.4 in local repository''; ls -la /root/.m2/repository/com/testeranto/testeranto.kafe/0.3.4/; else echo ''   Kafe not found in local repository''; echo ''   Contents of /root/.m2/repository/com/testeranto/testeranto.kafe/:''; ls -la /root/.m2/repository/com/testeranto/testeranto.kafe/ 2>/dev/null; fi && echo ''2. Building with Gradle...'' && export GRADLE_OPTS=''--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED'' && (if [ -f ./gradlew ]; then ./gradlew --no-daemon --stacktrace -Dorg.gradle.jvmargs=''--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED'' build -x test; else gradle --no-daemon --stacktrace -Dorg.gradle.jvmargs=''--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED'' build -x test; fi) && echo ''3. Compiling and running java_runtime...'' && javac -cp \".:lib/*\" testeranto/java_runtime.java && java -cp \"testeranto:.:lib/*\" java_runtime /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/java/java.java javatests "'
+    networks:
+      - allTests_network
+    restart: 'no'
+    image: testeranto-java-javatests:latest
+  rubytests-builder:
+    container_name: rubytests-builder
+    environment:
+      ENV: ruby
+      MODE: dev
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: ruby /workspace/testeranto/native_detection.rb /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/ruby/ruby.rb rubytests src/lib/rubeno/examples/calculator/Calculator.test.rb && RUBYLIB="/workspace/testeranto/bundles/rubytests:/workspace/testeranto/bundles/rubytests/src/ruby:$RUBYLIB" ruby "/workspace/testeranto/bundles/rubytests/src/lib/rubeno/examples/calculator/Calculator.test.rb" '{"name":"rubytests","fs":"/workspace/testeranto/reports/rubytests","ports":[],"timeout":30000,"retries":0,"environment":{}}'
+    networks:
+      - allTests_network
+    restart: 'no'
+    image: testeranto-ruby-rubytests:latest
+  rubytests-src_lib_rubeno_examples_calculator_calculator-test-rb-bdd:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/ruby/ruby.Dockerfile
+    container_name: rubytests-src_lib_rubeno_examples_calculator_calculator-test-rb-bdd
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: ruby testeranto/bundles/rubytests/src/lib/rubeno/examples/calculator/Calculator.test.rb '{"name":"ruby-test","ports":[1111],"fs":"testeranto/reports/rubytests/src/lib/rubeno/examples/calculator/Calculator.test.rb/","timeout":30000,"retries":0,"environment":{}}'
+    networks:
+      - allTests_network
+    restart: 'no'
+  rubytests-src_lib_rubeno_examples_calculator_calculator-test-rb-aider:
+    image: testeranto-aider:latest
+    container_name: rubytests-src_lib_rubeno_examples_calculator_calculator-test-rb-aider
+    environment:
+      NODE_ENV: production
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+      - /Users/adam/Code/testeranto:/workspace
+    working_dir: /workspace
+    command: tail -f /dev/null
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    restart: 'no'
   nodetests-builder:
     container_name: nodetests-builder
     environment:
@@ -78,6 +141,21 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+  nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/node/node.Dockerfile
+    container_name: nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: echo 'No calculator test found'
+    networks:
+      - allTests_network
+    restart: 'no'
   nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -141,6 +219,21 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+  nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/node/node.Dockerfile
+    container_name: nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: echo 'No calculator test found'
+    networks:
+      - allTests_network
+    restart: 'no'
   nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -201,6 +294,368 @@ services:
       - /Users/adam/Code/testeranto/test:/workspace/test
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
+    networks:
+      - allTests_network
+    restart: 'no'
+  nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/node/node.Dockerfile
+    container_name: nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: echo 'No calculator test found'
+    networks:
+      - allTests_network
+    restart: 'no'
+  webtests-builder:
+    container_name: webtests-builder
+    environment:
+      NODE_ENV: production
+      ENV: web
+      MODE: dev
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: 'yarn tsx /workspace/testeranto/web_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/web/web.ts webtests '
+    networks:
+      - allTests_network
+    expose:
+      - '8000'
+    restart: 'no'
+    image: testeranto-web-webtests:latest
+  pythontests-builder:
+    container_name: pythontests-builder
+    environment:
+      ENV: python
+      MODE: dev
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: python /workspace/testeranto/python_runtime.py /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/python/python.py pythontests src/lib/pitono/examples/calculator_test.py
+    networks:
+      - allTests_network
+    restart: 'no'
+    image: testeranto-python-pythontests:latest
+  pythontests-src_lib_pitono_examples_calculator_test-py-bdd:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/python/python.Dockerfile
+    container_name: pythontests-src_lib_pitono_examples_calculator_test-py-bdd
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: python testeranto/bundles/pythontests/src/lib/pitono/examples/calculator_test.py '{"ports":[1111],"fs":"testeranto/reports/pythontests/src/lib/pitono/examples/calculator_test.py/"}'
+    networks:
+      - allTests_network
+    restart: 'no'
+  pythontests-src_lib_pitono_examples_calculator_test-py-aider:
+    image: testeranto-aider:latest
+    container_name: pythontests-src_lib_pitono_examples_calculator_test-py-aider
+    environment:
+      NODE_ENV: production
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+      - /Users/adam/Code/testeranto:/workspace
+    working_dir: /workspace
+    command: tail -f /dev/null
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    restart: 'no'
+  pythontests-src_lib_pitono_examples_calculator_test-py-check-0:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/python/python.Dockerfile
+    container_name: pythontests-src_lib_pitono_examples_calculator_test-py-check-0
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: 'python -m py_compile '
+    networks:
+      - allTests_network
+    restart: 'no'
+  pythontests-src_lib_pitono_examples_calculator_test-py-check-1:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/python/python.Dockerfile
+    container_name: pythontests-src_lib_pitono_examples_calculator_test-py-check-1
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: cd src/lib/pitono/examples && python calculator_test.py
+    networks:
+      - allTests_network
+    restart: 'no'
+  pythontests-src_lib_pitono_examples_calculator_test-py-check-2:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/python/python.Dockerfile
+    container_name: pythontests-src_lib_pitono_examples_calculator_test-py-check-2
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: 'python -m unittest '
+    networks:
+      - allTests_network
+    restart: 'no'
+  golangtests-builder:
+    container_name: golangtests-builder
+    environment:
+      ENV: golang
+      MODE: dev
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: go run /workspace/testeranto/golang_runtime.go /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/golang/golang.ts golangtests src/lib/golingvu/examples/calculator/golingvu_test.go
+    networks:
+      - allTests_network
+    restart: 'no'
+    image: testeranto-golang-golangtests:latest
+  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-bdd:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
+    container_name: golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-bdd
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: ./testeranto/bundles/golangtests/golingvu_test '{"name":"go-test","ports":[1111],"fs":"testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/","timeout":30000,"retries":0,"environment":{}}'
+    networks:
+      - allTests_network
+    restart: 'no'
+  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-aider:
+    image: testeranto-aider:latest
+    container_name: golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-aider
+    environment:
+      NODE_ENV: production
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+      - /Users/adam/Code/testeranto:/workspace
+    working_dir: /workspace
+    command: tail -f /dev/null
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    restart: 'no'
+  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-0:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
+    container_name: golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-0
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: go fmt ./...
+    networks:
+      - allTests_network
+    restart: 'no'
+  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-1:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
+    container_name: golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-1
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: go vet ./...
+    networks:
+      - allTests_network
+    restart: 'no'
+  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-2:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
+    container_name: golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-2
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: echo 'No golang calculator test found'
+    networks:
+      - allTests_network
+    restart: 'no'
+  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-3:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
+    container_name: golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-3
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: go test -v ./src/lib/golingvu/...
+    networks:
+      - allTests_network
+    restart: 'no'
+  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-4:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
+    container_name: golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-4
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: go test -coverprofile=coverage.out ./src/lib/golingvu/... && go tool cover -func=coverage.out
+    networks:
+      - allTests_network
+    restart: 'no'
+  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-5:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
+    container_name: golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-5
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: golangci-lint run ./src/lib/golingvu/... --timeout=5m
+    networks:
+      - allTests_network
+    restart: 'no'
+  rusttests-builder:
+    container_name: rusttests-builder
+    environment:
+      ENV: rust
+      MODE: dev
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: cargo run --manifest-path /workspace/testeranto/rust_builder/Cargo.toml -- /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/rust/rust.ts rusttests src/lib/rusto/examples/calculator_test.rs src/lib/rusto/examples/calculator_complete_test.rs
+    networks:
+      - allTests_network
+    restart: 'no'
+    image: testeranto-rust-rusttests:latest
+  rusttests-src_lib_rusto_examples_calculator_test-rs-bdd:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/rust/rust.Dockerfile
+    container_name: rusttests-src_lib_rusto_examples_calculator_test-rs-bdd
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: 'sh -c ''cd /workspace && if [ -f "/workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_test_rs" ]; then "/workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_test_rs" ''''''{"name":"rust-test","ports":[1111],"fs":"testeranto/reports/rusttests/src/lib/rusto/examples/calculator_test.rs/","timeout":30000,"retries":0,"environment":{}}''''''; elif [ -f "/workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_test_rs.exe" ]; then "/workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_test_rs.exe" ''''''{"name":"rust-test","ports":[1111],"fs":"testeranto/reports/rusttests/src/lib/rusto/examples/calculator_test.rs/","timeout":30000,"retries":0,"environment":{}}''''''; else echo "Binary not found: /workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_test_rs or /workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_test_rs.exe"; ls -la "/workspace/testeranto/bundles/rusttests/"; exit 1; fi'''
+    networks:
+      - allTests_network
+    restart: 'no'
+  rusttests-src_lib_rusto_examples_calculator_test-rs-aider:
+    image: testeranto-aider:latest
+    container_name: rusttests-src_lib_rusto_examples_calculator_test-rs-aider
+    environment:
+      NODE_ENV: production
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+      - /Users/adam/Code/testeranto:/workspace
+    working_dir: /workspace
+    command: tail -f /dev/null
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    restart: 'no'
+  rusttests-src_lib_rusto_examples_calculator_complete_test-rs-bdd:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/rust/rust.Dockerfile
+    container_name: rusttests-src_lib_rusto_examples_calculator_complete_test-rs-bdd
+    environment: {}
+    working_dir: /workspace
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+    command: 'sh -c ''cd /workspace && if [ -f "/workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_complete_test_rs" ]; then "/workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_complete_test_rs" ''''''{"name":"rust-test","ports":[1111],"fs":"testeranto/reports/rusttests/src/lib/rusto/examples/calculator_complete_test.rs/","timeout":30000,"retries":0,"environment":{}}''''''; elif [ -f "/workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_complete_test_rs.exe" ]; then "/workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_complete_test_rs.exe" ''''''{"name":"rust-test","ports":[1111],"fs":"testeranto/reports/rusttests/src/lib/rusto/examples/calculator_complete_test.rs/","timeout":30000,"retries":0,"environment":{}}''''''; else echo "Binary not found: /workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_complete_test_rs or /workspace/testeranto/bundles/rusttests/src_lib_rusto_examples_calculator_complete_test_rs.exe"; ls -la "/workspace/testeranto/bundles/rusttests/"; exit 1; fi'''
+    networks:
+      - allTests_network
+    restart: 'no'
+  rusttests-src_lib_rusto_examples_calculator_complete_test-rs-aider:
+    image: testeranto-aider:latest
+    container_name: rusttests-src_lib_rusto_examples_calculator_complete_test-rs-aider
+    environment:
+      NODE_ENV: production
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+      - /Users/adam/Code/testeranto:/workspace
+    working_dir: /workspace
+    command: tail -f /dev/null
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    restart: 'no'
+  chrome-service:
+    image: browserless/chrome:latest
+    container_name: chrome-service
+    environment:
+      CONNECTION_TIMEOUT: '60000'
+      MAX_CONCURRENT_SESSIONS: '1'
+      ENABLE_CORS: 'true'
+      PREBOOT_CHROME: 'true'
+      DEFAULT_BLOCK_ADS: 'true'
+    shm_size: 2g
+    expose:
+      - '3000'
+    ports:
+      - '9222:3000'
     networks:
       - allTests_network
     restart: 'no'

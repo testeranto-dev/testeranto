@@ -33,14 +33,26 @@ type ITestSpecification func(suites, givens, whens, thens interface{}) interface
 
 // ITestImplementation contains the concrete implementations of test components.
 // Suites: Map of suite names to their implementations
-// Givens: Map of given condition names to their implementations
-// Whens:  Map of when action names to their implementations
-// Thens:  Map of then assertion names to their implementations
+// Givens: Map of given condition names to their implementations (BDD pattern)
+// Whens:  Map of when action names to their implementations (BDD pattern)
+// Thens:  Map of then assertion names to their implementations (BDD pattern)
+// Values: Map of value names to their implementations (TDT pattern)
+// Shoulds: Map of should names to their implementations (TDT pattern)
+// Expecteds: Map of expected names to their implementations (TDT pattern)
+// Describes: Map of describe names to their implementations (AAA pattern)
+// Its: Map of it names to their implementations (AAA pattern)
+// Confirms: Map of confirm names to their implementations (TDT pattern)
 type ITestImplementation struct {
-	Suites map[string]interface{}
-	Givens map[string]interface{}
-	Whens  map[string]interface{}
-	Thens  map[string]interface{}
+	Suites    map[string]interface{}
+	Givens    map[string]interface{}
+	Whens     map[string]interface{}
+	Thens     map[string]interface{}
+	Values    map[string]interface{}
+	Shoulds   map[string]interface{}
+	Expecteds map[string]interface{}
+	Describes map[string]interface{}
+	Its       map[string]interface{}
+	Confirms  map[string]interface{}
 }
 
 // IUniversalTestAdapter defines the unified interface for adapting test execution.

@@ -7,10 +7,13 @@ kafe/PatternOverrideFactory$4.class
 kafe/PatternOverrideFactory$1$2.class
 kafe/BaseSetup.class
 kafe/ITestSpecification.class
+kafe/BaseConfirm.class
 kafe/ITTestResourceRequest.class
+kafe/PatternOverrideFactory$9.class
 kafe/BaseExpected.class
 kafe/ITestJob.class
 kafe/Kafe$1.class
+kafe/PatternOverrideFactory$6.class
 kafe/Kafe.class
 kafe/IbddInAny.class
 kafe/BaseThen.class
@@ -19,6 +22,7 @@ kafe/SimpleTestAdapter.class
 kafe/ITestImplementation.class
 kafe/BaseIt.class
 kafe/BaseSuite.class
+kafe/PatternOverrideFactory$8.class
 kafe/BaseSetup$1.class
 kafe/Default.class
 kafe/PatternOverrideFactory$3.class
@@ -28,10 +32,13 @@ kafe/PatternOverrideFactory$1$1.class
 kafe/BaseShould.class
 kafe/PatternOverrideFactory.class
 kafe/BaseGiven.class
+kafe/PatternOverrideFactory$5.class
 kafe/Kafe$BiFunction.class
 kafe/BaseCheck.class
 kafe/BaseDescribe.class
 kafe/ITTestResourceConfiguration.class
+kafe/PatternOverrideFactory$7.class
+kafe/PatternOverrideFactory$10.class
 kafe/ITestAdapter.class
 kafe/Kafe$2.class
 kafe/IFinalResults.class

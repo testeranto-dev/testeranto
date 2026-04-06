@@ -1,0 +1,35 @@
+{
+  "fails": 0,
+  "features": [
+    "config"
+  ],
+  "givens": [
+    {
+      "artifacts": [],
+      "error": null,
+      "features": [
+        "config"
+      ],
+      "its": [],
+      "key": "configTest",
+      "status": true,
+      "thens": [
+        {
+          "artifacts": [],
+          "error": false,
+          "key": "alwaysTrue",
+          "status": true
+        }
+      ],
+      "whens": [
+        {
+          "artifacts": [],
+          "error": null,
+          "key": "noop",
+          "status": true
+        }
+      ]
+    }
+  ],
+  "key": "ConfigSuite"
+}

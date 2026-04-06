@@ -21,6 +21,12 @@ type Golingvu struct {
 	GivenOverrides          map[string]interface{}
 	WhenOverrides           map[string]interface{}
 	ThenOverrides           map[string]interface{}
+	ValuesOverrides         map[string]interface{}
+	ShouldsOverrides        map[string]interface{}
+	ExpectedsOverrides      map[string]interface{}
+	DescribesOverrides      map[string]interface{}
+	ItsOverrides            map[string]interface{}
+	ConfirmsOverrides       map[string]interface{}
 	Specs                   interface{}
 	totalTests              int
 	assertThis              func(t interface{}) interface{}
@@ -246,9 +252,59 @@ func (gv *Golingvu) CreateGoTest(name string) func(*testing.T) {
 	}
 }
 
+// CreateTestImplementation creates a complete test implementation with all patterns
+func CreateTestImplementation(
+	suites map[string]interface{},
+	givens map[string]interface{},
+	whens map[string]interface{},
+	thens map[string]interface{},
+	values map[string]interface{},
+	shoulds map[string]interface{},
+	expecteds map[string]interface{},
+	describes map[string]interface{},
+	its map[string]interface{},
+	confirms map[string]interface{},
+) ITestImplementation {
+	return ITestImplementation{
+		Suites:    suites,
+		Givens:    givens,
+		Whens:     whens,
+		Thens:     thens,
+		Values:    values,
+		Shoulds:   shoulds,
+		Expecteds: expecteds,
+		Describes: describes,
+		Its:       its,
+		Confirms:  confirms,
+	}
+}
+
+// CreateSimpleTestImplementation creates a simple test implementation with BDD pattern only
+// for backward compatibility
+func CreateSimpleTestImplementation(
+	suites map[string]interface{},
+	givens map[string]interface{},
+	whens map[string]interface{},
+	thens map[string]interface{},
+) ITestImplementation {
+	return ITestImplementation{
+		Suites: suites,
+		Givens: givens,
+		Whens:  whens,
+		Thens:  thens,
+	}
+}
+
 // RunSimpleTest is a convenience method for running a simple test without complex setup
 // This is useful for interoperability with standard Go testing
 func (gv *Golingvu) RunSimpleTest(t *testing.T, testFunc func() error) {
+	if gv == nil {
+		if t != nil {
+			t.Error("Golingvu instance is nil")
+		}
+		return
+	}
+	
 	if t == nil {
 		// Run without testing.T
 		if err := testFunc(); err != nil {
@@ -274,264 +330,6 @@ func (gv *Golingvu) RegisterCleanup(cleanupFunc func()) {
 }
 
 
-// NewGolingvu creates a new Golingvu instance
-func NewGolingvu(
-	input interface{},
-	testSpecification ITestSpecification,
-	testImplementation ITestImplementation,
-	testResourceRequirement ITTestResourceRequest,
-	testAdapter ITestAdapter,
-	uberCatcher func(func()),
-) *Golingvu {
-	gv := &Golingvu{
-		TestResourceRequirement: testResourceRequirement,
-		Artifacts:               make([]interface{}, 0),
-		SuitesOverrides:         make(map[string]interface{}),
-		GivenOverrides:          make(map[string]interface{}),
-		WhenOverrides:           make(map[string]interface{}),
-		ThenOverrides:           make(map[string]interface{}),
-		assertThis: func(t interface{}) interface{} {
-			return testAdapter.AssertThis(t)
-		},
-		testAdapter:               testAdapter,
-		TestResourceConfiguration: nil,
-	}
-
-	// Create classy implementations as functions that return instances
-	// We need to handle multiple patterns: BDD (Given, When, Then), TDT (Value, Should, Expected), Describe-It (Describe, It)
-	
-	classySuites := make(map[string]interface{})
-	for key := range testImplementation.Suites {
-		classySuites[key] = func(somestring string, setups map[string]interface{}) *BaseSuite {
-			// Convert setups to givens for BaseSuite
-			givens := make(map[string]*BaseGiven)
-			for setupKey, setup := range setups {
-				if given, ok := setup.(*BaseGiven); ok {
-					givens[setupKey] = given
-				}
-			}
-			return &BaseSuite{
-				Key:    somestring,
-				Givens: givens,
-				AfterAllFunc: func(store interface{}, artifactory func(string, interface{}), artifactoryObj interface{}) interface{} {
-					return testAdapter.AfterAll(store, artifactoryObj)
-				},
-				AssertThatFunc: func(t interface{}) bool {
-					return testAdapter.AssertThis(t)
-				},
-				SetupFunc: func(s interface{}, artifactory func(string, interface{}), tr ITTestResourceConfiguration, artifactoryObj interface{}) interface{} {
-					result := testAdapter.BeforeAll(s, tr, artifactoryObj)
-					if result == nil {
-						return s
-					}
-					return result
-				},
-			}
-		}
-	}
-
-	// BDD Pattern: Givens
-	classyGivens := make(map[string]interface{})
-	for key, g := range testImplementation.Givens {
-		givenCB := g
-		classyGivens[key] = func(key string, features []string, whens []*BaseWhen, thens []*BaseThen, gcb interface{}, initialValues interface{}) *BaseGiven {
-			return NewBaseGiven(key, features, whens, thens, givenCB, initialValues)
-		}
-	}
-
-	// BDD Pattern: Whens
-	classyWhens := make(map[string]interface{})
-	for key, whEn := range testImplementation.Whens {
-		whenKey := key
-		whenCB := whEn
-		classyWhens[key] = func(payload ...interface{}) *BaseWhen {
-			return NewBaseWhen(whenKey, whenCB)
-		}
-	}
-
-	// BDD Pattern: Thens
-	classyThens := make(map[string]interface{})
-	for key, thEn := range testImplementation.Thens {
-		thenKey := key
-		thenCB := thEn
-		classyThens[key] = func(args ...interface{}) *BaseThen {
-			return NewBaseThen(thenKey, thenCB)
-		}
-	}
-
-	// TDT Pattern: Values
-	classyValues := make(map[string]interface{})
-	// Check if Values exist in testImplementation
-	if values, ok := testImplementation.Suites["Values"]; ok {
-		// Handle TDT pattern
-		if valueMap, ok := values.(map[string]interface{}); ok {
-			for key, val := range valueMap {
-				_ = val // valueCB is not used
-				classyValues[key] = func(features []string, tableRows [][]interface{}, confirmCB interface{}, initialValues interface{}) *BaseValue {
-					return NewBaseValue(features, tableRows, confirmCB, initialValues)
-				}
-			}
-		}
-	}
-
-	// TDT Pattern: Shoulds
-	// classyShoulds is not used, so we don't need to declare it
-
-	// TDT Pattern: Expecteds
-	// classyExpecteds is not used, so we don't need to declare it
-
-	// Describe-It Pattern: Describes
-	// classyDescribes is not used, so we don't need to declare it
-
-	// Describe-It Pattern: Its
-	// classyIts is not used, so we don't need to declare it
-
-	// Set up the overrides
-	gv.SuitesOverrides = classySuites
-	gv.GivenOverrides = classyGivens
-	gv.WhenOverrides = classyWhens
-	gv.ThenOverrides = classyThens
-	gv.TestResourceRequirement = testResourceRequirement
-	gv.TestSpecification = testSpecification
-
-	// Generate specs
-	specs := testSpecification(
-		gv.Suites(),
-		gv.Given(),
-		gv.When(),
-		gv.Then(),
-	)
-
-	// Ensure specs is properly formatted as a slice
-	if specsSlice, ok := specs.([]interface{}); ok {
-		gv.Specs = specsSlice
-	} else {
-		// If it's not a slice, wrap it in one
-		gv.Specs = []interface{}{specs}
-	}
-
-	// Calculate total number of tests (sum of all Givens across all Suites)
-	// This needs to be implemented based on the actual structure
-	// For now, we'll set a placeholder
-	gv.totalTests = 0
-	// Implementation to count Givens would go here
-
-	// Create test jobs based on the specifications
-	gv.TestJobs = make([]ITestJob, 0)
-	gv.totalTests = 0
-
-	// Parse the specs to create test jobs
-	if specs, ok := gv.Specs.([]interface{}); ok {
-		for _, suite := range specs {
-			if suiteMap, ok := suite.(map[string]interface{}); ok {
-				if givensMap, exists := suiteMap["givens"].(map[string]interface{}); exists {
-					for key := range givensMap {
-						gv.TestJobs = append(gv.TestJobs, &BaseTestJob{
-							Name: key,
-						})
-						gv.totalTests++
-					}
-				}
-			}
-		}
-	}
-
-	// If no test jobs were created, add a default one
-	if len(gv.TestJobs) == 0 {
-		gv.TestJobs = append(gv.TestJobs, &BaseTestJob{
-			Name: "DefaultTest",
-		})
-		gv.totalTests = 1
-	}
-
-	return gv
-}
-
-// NewGolingvuFromFlavored creates a new Golingvu instance from a flavored test specification
-// This is a convenience function for integration with the flavored package
-func NewGolingvuFromFlavored(
-	description string,
-	setupFunc func() interface{},
-	whenSteps []interface{},
-	thenSteps []interface{},
-) *Golingvu {
-	// Create a simple test adapter
-	adapter := &SimpleTestAdapter{}
-
-	// Create a test implementation that matches the flavored structure
-	impl := ITestImplementation{
-		Suites: map[string]interface{}{
-			"FlavoredSuite": "Flavored Test Suite",
-		},
-		Givens: map[string]interface{}{
-			description: func() interface{} {
-				return setupFunc()
-			},
-		},
-		Whens: make(map[string]interface{}),
-		Thens: make(map[string]interface{}),
-	}
-
-	// Add when steps - these functions should match ITestImplementation.Whens signature
-	for i := range whenSteps {
-		stepName := fmt.Sprintf("WhenStep%d", i)
-		// Store the step function directly
-		impl.Whens[stepName] = whenSteps[i]
-	}
-
-	// Add then steps - these functions should match ITestImplementation.Thens signature
-	for i := range thenSteps {
-		stepName := fmt.Sprintf("ThenStep%d", i)
-		// Store the step function directly
-		impl.Thens[stepName] = thenSteps[i]
-	}
-
-	// Create a test specification that matches the flavored structure
-	spec := func(suites, givens, whens, thens interface{}) interface{} {
-		// Convert whenSteps to a slice of step names
-		whenNames := make([]interface{}, len(whenSteps))
-		for i := range whenSteps {
-			whenNames[i] = fmt.Sprintf("WhenStep%d", i)
-		}
-
-		// Convert thenSteps to a slice of step names
-		thenNames := make([]interface{}, len(thenSteps))
-		for i := range thenSteps {
-			thenNames[i] = fmt.Sprintf("ThenStep%d", i)
-		}
-
-		return []interface{}{
-			map[string]interface{}{
-				"key": description,
-				"givens": map[string]interface{}{
-					description: map[string]interface{}{
-						"features": []string{"flavored"},
-						"whens":    whenNames,
-						"thens":    thenNames,
-					},
-				},
-			},
-		}
-	}
-
-	// Create the Golingvu instance
-	return NewGolingvu(
-		nil,
-		spec,
-		impl,
-		DefaultTestResourceRequest,
-		adapter,
-		func(f func()) {
-			defer func() {
-				if r := recover(); r != nil {
-					// Log the panic but don't fail since we don't have access to testing.T here
-					fmt.Printf("Test panicked: %v\n", r)
-				}
-			}()
-			f()
-		},
-	)
-}
 
 // ReceiveTestResourceConfig receives test resource configuration and executes tests
 func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFinalResults, error) {
@@ -642,206 +440,7 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 	return result, nil
 }
 
-// runActualTests executes the actual test jobs and returns results matching Node.js format
-func (gv *Golingvu) runActualTests() (map[string]interface{}, error) {
-	// Create the structure that matches the Node.js implementation exactly
-	results := make(map[string]interface{})
 
-	// Initialize the results structure with proper types
-	results["givens"] = make([]interface{}, 0)
-	results["features"] = make([]string, 0)
-	results["key"] = "default"
-
-	// Track total failures
-	totalFails := 0
-
-	// Parse the specs and actually execute the tests
-	var specs []interface{}
-	switch s := gv.Specs.(type) {
-	case []interface{}:
-		specs = s
-	case []map[string]interface{}:
-		// Convert to []interface{}
-		specs = make([]interface{}, len(s))
-		for i, v := range s {
-			specs[i] = v
-		}
-	default:
-		// According to SOUL.md, propagate errors rather than using fallbacks
-		return nil, fmt.Errorf("invalid specs type: %T", gv.Specs)
-	}
-
-	for _, suite := range specs {
-		suiteMap, ok := suite.(map[string]interface{})
-		if !ok {
-			// Try to see if it's a BaseSuite
-			if suiteObj, ok := suite.(*BaseSuite); ok {
-				// Convert BaseSuite to map
-				suiteMap = suiteObj.ToObj()
-			} else {
-				// Skip non-map entries
-				continue
-			}
-		}
-
-		// Set the key from the suite
-		if suiteName, exists := suiteMap["key"].(string); exists {
-			results["key"] = suiteName
-		}
-
-		// Process givens
-		var givensMap map[string]interface{}
-		if g, exists := suiteMap["givens"].(map[string]interface{}); exists {
-			givensMap = g
-		} else if g, exists := suiteMap["givens"].(map[string]*BaseGiven); exists {
-			// Convert to map[string]interface{}
-			givensMap = make(map[string]interface{})
-			for k, v := range g {
-				givensMap[k] = v
-			}
-		} else {
-			continue
-		}
-
-		for key, given := range givensMap {
-			var givenObj *BaseGiven
-			switch g := given.(type) {
-			case *BaseGiven:
-				givenObj = g
-			case map[string]interface{}:
-				// According to SOUL.md, propagate errors
-				return nil, fmt.Errorf("invalid given type for key %s: %T", key, given)
-			default:
-				return nil, fmt.Errorf("invalid given type for key %s: %T", key, given)
-			}
-
-			// Execute the test and record actual results
-			processedGiven, testFailed, err := gv.executeTest(key, givenObj)
-			if err != nil {
-				return nil, err
-			}
-
-			if testFailed {
-				totalFails++
-			}
-
-			// Add to results
-			givensSlice := results["givens"].([]interface{})
-			results["givens"] = append(givensSlice, processedGiven)
-
-			// Add features to overall features (deduplicated)
-			if features, exists := processedGiven["features"].([]string); exists {
-				existingFeatures := results["features"].([]string)
-				featureSet := make(map[string]bool)
-
-				// Add existing features to set
-				for _, feature := range existingFeatures {
-					featureSet[feature] = true
-				}
-
-				// Add new features
-				for _, feature := range features {
-					if !featureSet[feature] {
-						existingFeatures = append(existingFeatures, feature)
-						featureSet[feature] = true
-					}
-				}
-				results["features"] = existingFeatures
-			}
-		}
-	}
-
-	results["fails"] = totalFails
-
-	return results, nil
-}
-
-// executeTest actually runs a test and records its results to match Node.js format
-func (gv *Golingvu) executeTest(key string, given *BaseGiven) (map[string]interface{}, bool, error) {
-	// Create the test result structure that matches the Node.js format exactly
-	processedGiven := map[string]interface{}{
-		"key":       key,
-		"whens":     make([]map[string]interface{}, 0),
-		"thens":     make([]map[string]interface{}, 0),
-		"error":     nil,
-		"features":  given.Features,
-		"artifacts": make([]interface{}, 0),
-		"status":    true, // Default to true, will be set to false if any step fails
-	}
-
-	// Track if the test failed
-	testFailed := false
-
-	// Use the adapter to create initial store
-	// We need a test resource configuration - create a minimal one
-	testResource := ITTestResourceConfiguration{
-		Name: "test",
-		Fs:   "./",
-	}
-
-	// Create initial subject using BeforeAll
-	store := gv.testAdapter.BeforeAll(nil, testResource, nil)
-
-	// Process whens - execute each when step
-	for _, when := range given.Whens {
-		var whenError error = nil
-		whenName := when.Key
-
-		// Execute the when callback using the adapter's AndWhen
-		// The adapter's AndWhen will handle calling the actual whenCB
-		newStore := gv.testAdapter.AndWhen(store, when.WhenCB, testResource, nil)
-		if newStore != nil {
-			store = newStore
-		}
-
-		// Record the when step according to the Node.js format
-		processedWhen := map[string]interface{}{
-			"key":       whenName,
-			"status":    whenError == nil,
-			"error":     whenError,
-			"artifacts": make([]interface{}, 0),
-		}
-		// Append to whens
-		whensSlice := processedGiven["whens"].([]map[string]interface{})
-		processedGiven["whens"] = append(whensSlice, processedWhen)
-	}
-
-	// Process thens - execute each then step
-	for _, then := range given.Thens {
-		var thenError error = nil
-		thenName := then.Key
-		thenStatus := true
-
-		// Execute the then callback using the adapter's ButThen
-		result := gv.testAdapter.ButThen(store, then.ThenCB, testResource, nil)
-
-		// Check the result
-		// The adapter's AssertThis can be used to validate
-		success := gv.testAdapter.AssertThis(result)
-		if !success {
-			thenError = fmt.Errorf("assertion failed")
-			thenStatus = false
-			testFailed = true
-			processedGiven["status"] = false
-			if processedGiven["error"] == nil {
-				processedGiven["error"] = thenError
-			}
-		}
-
-		// Record the then step according to the Node.js format
-		processedThen := map[string]interface{}{
-			"key":       thenName,
-			"error":     thenError != nil,
-			"artifacts": make([]interface{}, 0),
-			"status":    thenStatus,
-		}
-		// Append to thens
-		thensSlice := processedGiven["thens"].([]map[string]interface{})
-		processedGiven["thens"] = append(thensSlice, processedThen)
-	}
-
-	return processedGiven, testFailed, nil
-}
 
 // Suites returns the suites overrides
 func (gv *Golingvu) Suites() map[string]interface{} {
@@ -861,6 +460,36 @@ func (gv *Golingvu) When() map[string]interface{} {
 // Then returns the then overrides
 func (gv *Golingvu) Then() map[string]interface{} {
 	return gv.ThenOverrides
+}
+
+// Values returns the values overrides
+func (gv *Golingvu) Values() map[string]interface{} {
+	return gv.ValuesOverrides
+}
+
+// Shoulds returns the shoulds overrides
+func (gv *Golingvu) Shoulds() map[string]interface{} {
+	return gv.ShouldsOverrides
+}
+
+// Expecteds returns the expecteds overrides
+func (gv *Golingvu) Expecteds() map[string]interface{} {
+	return gv.ExpectedsOverrides
+}
+
+// Describes returns the describes overrides
+func (gv *Golingvu) Describes() map[string]interface{} {
+	return gv.DescribesOverrides
+}
+
+// Its returns the its overrides
+func (gv *Golingvu) Its() map[string]interface{} {
+	return gv.ItsOverrides
+}
+
+// Confirms returns the confirms overrides
+func (gv *Golingvu) Confirms() map[string]interface{} {
+	return gv.ConfirmsOverrides
 }
 
 // GetTestJobs returns the test jobs
@@ -1109,6 +738,159 @@ func readFileDirectly(path string) (string, error) {
 		return "", err
 	}
 	return string(content), nil
+}
+
+// convertMapToBaseGiven converts a map specification to a BaseGiven for backward compatibility
+func (gv *Golingvu) convertMapToBaseGiven(key string, spec map[string]interface{}) (*BaseGiven, error) {
+	// Extract features
+	var features []string
+	if f, ok := spec["features"].([]string); ok {
+		features = f
+	} else if f, ok := spec["features"].([]interface{}); ok {
+		features = make([]string, len(f))
+		for i, v := range f {
+			features[i] = fmt.Sprintf("%v", v)
+		}
+	} else {
+		features = []string{}
+	}
+	
+	// Extract when references and resolve them
+	var whens []*BaseWhen
+	if whenRefsInterface, ok := spec["whens"]; ok && whenRefsInterface != nil {
+		if whenRefs, ok := whenRefsInterface.([]interface{}); ok {
+			for _, ref := range whenRefs {
+				if ref == nil {
+					continue
+				}
+				if refStr, ok := ref.(string); ok {
+					// Look up the when implementation
+					if whenFunc, exists := gv.WhenOverrides[refStr]; exists && whenFunc != nil {
+						// Try different function signatures
+						switch fn := whenFunc.(type) {
+						case func(interface{}) *BaseWhen:
+							// Parse arguments if any (format "name:arg1:arg2")
+							parts := strings.Split(refStr, ":")
+							if len(parts) > 1 {
+								// Pass the payload (everything after the first colon)
+								when := fn(strings.Join(parts[1:], ":"))
+								whens = append(whens, when)
+							} else {
+								// Call with nil if no arguments
+								when := fn(nil)
+								whens = append(whens, when)
+							}
+						case func(...interface{}) *BaseWhen:
+							parts := strings.Split(refStr, ":")
+							if len(parts) > 1 {
+								when := fn(strings.Join(parts[1:], ":"))
+								whens = append(whens, when)
+							} else {
+								when := fn()
+								whens = append(whens, when)
+							}
+						default:
+							// If we can't call it, create a placeholder
+							when := NewBaseWhen(refStr, nil)
+							when.AndWhenFunc = func(store, whenCB, testResource interface{}, artifactory func(string, interface{})) (interface{}, error) {
+								return store, nil
+							}
+							whens = append(whens, when)
+						}
+					} else {
+						// If not found, create placeholder
+						when := NewBaseWhen(refStr, nil)
+						when.AndWhenFunc = func(store, whenCB, testResource interface{}, artifactory func(string, interface{})) (interface{}, error) {
+							return store, nil
+						}
+						whens = append(whens, when)
+					}
+				}
+			}
+		}
+	}
+	
+	// Extract then references and resolve them
+	var thens []*BaseThen
+	if thenRefsInterface, ok := spec["thens"]; ok && thenRefsInterface != nil {
+		if thenRefs, ok := thenRefsInterface.([]interface{}); ok {
+			for _, ref := range thenRefs {
+				if ref == nil {
+					continue
+				}
+				if refStr, ok := ref.(string); ok {
+					// Look up the then implementation
+					if thenFunc, exists := gv.ThenOverrides[refStr]; exists && thenFunc != nil {
+						// Try different function signatures
+						switch fn := thenFunc.(type) {
+						case func(interface{}) *BaseThen:
+							parts := strings.Split(refStr, ":")
+							if len(parts) > 1 {
+								then := fn(strings.Join(parts[1:], ":"))
+								thens = append(thens, then)
+							} else {
+								then := fn(nil)
+								thens = append(thens, then)
+							}
+						case func(...interface{}) *BaseThen:
+							parts := strings.Split(refStr, ":")
+							if len(parts) > 1 {
+								then := fn(strings.Join(parts[1:], ":"))
+								thens = append(thens, then)
+							} else {
+								then := fn()
+								thens = append(thens, then)
+							}
+						default:
+							// If we can't call it, create a placeholder
+							then := NewBaseThen(refStr, nil)
+							then.ButThenFunc = func(store, thenCB, testResource interface{}, artifactory func(string, interface{})) (interface{}, error) {
+								return true, nil
+							}
+							thens = append(thens, then)
+						}
+					} else {
+						// If not found, create placeholder
+						then := NewBaseThen(refStr, nil)
+						then.ButThenFunc = func(store, thenCB, testResource interface{}, artifactory func(string, interface{})) (interface{}, error) {
+							return true, nil
+						}
+						thens = append(thens, then)
+					}
+				}
+			}
+		}
+	}
+	
+	// If no whens/thens were resolved, create placeholders
+	if len(whens) == 0 {
+		when := NewBaseWhen("placeholder-when", nil)
+		when.AndWhenFunc = func(store, whenCB, testResource interface{}, artifactory func(string, interface{})) (interface{}, error) {
+			return store, nil
+		}
+		whens = append(whens, when)
+	}
+	
+	if len(thens) == 0 {
+		then := NewBaseThen("placeholder-then", nil)
+		then.ButThenFunc = func(store, thenCB, testResource interface{}, artifactory func(string, interface{})) (interface{}, error) {
+			return true, nil
+		}
+		thens = append(thens, then)
+	}
+	
+	// Look up the given callback from the implementation
+	var givenCB interface{}
+	if givenFunc, exists := gv.GivenOverrides[key]; exists {
+		givenCB = givenFunc
+	} else {
+		// Fallback to a simple given callback
+		givenCB = func() interface{} {
+			return "test-subject"
+		}
+	}
+	
+	return NewBaseGiven(key, features, whens, thens, givenCB, nil), nil
 }
 
 

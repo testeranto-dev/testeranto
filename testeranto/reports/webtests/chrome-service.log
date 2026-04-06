@@ -1,0 +1,105 @@
+=== Log started at 2026-04-06T04:42:38.807Z for service chrome-service (runtime: web) ===
+=== Container ID: 16d4af57b1242ac584a706a155f5eee9552e528ab572fbd4e6f98a01370337ad ===
+=== Test: N/A ===
+=== Config Key: webtests ===
+
+=== ALL LOGS (stdout + stderr) ===
+2026-04-06T04:42:34.110Z browserless:server Using configuration: 
+2026-04-06T04:42:34.111Z browserless:server {
+  CONNECTION_TIMEOUT: 60000,
+  MAX_CONCURRENT_SESSIONS: 1,
+  QUEUE_LENGTH: 10,
+  SINGLE_RUN: false,
+  CHROME_REFRESH_TIME: 1800000,
+  KEEP_ALIVE: false,
+  DEFAULT_BLOCK_ADS: true,
+  DEFAULT_HEADLESS: 'new',
+  DEFAULT_LAUNCH_ARGS: [],
+  DEFAULT_IGNORE_DEFAULT_ARGS: false,
+  DEFAULT_IGNORE_HTTPS_ERRORS: false,
+  DEFAULT_DUMPIO: false,
+  DEFAULT_STEALTH: false,
+  DEFAULT_USER_DATA_DIR: undefined,
+  PREBOOT_CHROME: true,
+  PREBOOT_QUANTITY: 0,
+  PRINT_GET_STARTED_LINKS: true,
+  PRINT_NETWORK_INFO: true,
+  DEBUG: 'browserless*',
+  DISABLED_FEATURES: [],
+  ENABLE_CORS: true,
+  ENABLE_API_GET: false,
+  TOKEN: null,
+  ENABLE_HEAP_DUMP: false,
+  ALLOW_FILE_PROTOCOL: false,
+  DISABLE_AUTO_SET_DOWNLOAD_BEHAVIOR: false,
+  FUNCTION_BUILT_INS: [ 'url' ],
+  FUNCTION_ENV_VARS: [],
+  FUNCTION_ENABLE_INCOGNITO_MODE: false,
+  FUNCTION_EXTERNALS: [ 'lighthouse', 'node-pdftk', 'sharp' ],
+  WORKSPACE_DIR: '/usr/src/app/workspace',
+  WORKSPACE_DELETE_EXPIRED: false,
+  WORKSPACE_EXPIRE_DAYS: 30,
+  FAILED_HEALTH_URL: null,
+  QUEUE_ALERT_URL: null,
+  REJECT_ALERT_URL: null,
+  TIMEOUT_ALERT_URL: null,
+  ERROR_ALERT_URL: null,
+  SESSION_CHECK_FAIL_URL: null,
+  PRE_REQUEST_HEALTH_CHECK: false,
+  EXIT_ON_HEALTH_FAILURE: false,
+  MAX_CPU_PERCENT: 99,
+  MAX_MEMORY_PERCENT: 99,
+  METRICS_JSON_PATH: null,
+  HOST: '0.0.0.0',
+  PORT: 3000,
+  SOCKET_CLOSE_METHOD: 'http',
+  PROXY_URL: undefined,
+  MAX_PAYLOAD_SIZE: '5mb'
+}
+2026-04-06T04:42:34.112Z browserless:server 
+
+Running on port 3000
+	Localhost	 ws:localhost:3000
+	Local network	 ws:172.18.0.3:3000
+2026-04-06T04:42:34.112Z browserless:server 
+Get started at	 https://www.browserless.io/docs/start
+Get a license at	 https://www.browserless.io/sign-up?type=commercial
+Get support at	 https://www.browserless.io/contact
+
+Happy coding!
+
+2026-04-06T04:42:34.115Z browserless:system Starting chrome swarm: 1 chrome instances starting
+2026-04-06T04:42:34.116Z browserless:chrome-helper Launching Chrome with args: {
+  "args": [
+    "--no-sandbox",
+    "--enable-logging",
+    "--v1=1",
+    "--disable-dev-shm-usage",
+    "--no-first-run",
+    "--remote-debugging-port=42379",
+    "--user-data-dir=/tmp/browserless-data-dir-x1t2yM"
+  ],
+  "blockAds": true,
+  "headless": "new",
+  "ignoreDefaultArgs": false,
+  "ignoreHTTPSErrors": false,
+  "pauseOnConnect": false,
+  "userDataDir": "/tmp/browserless-data-dir-x1t2yM",
+  "playwright": false,
+  "stealth": false,
+  "meta": null,
+  "executablePath": "/usr/bin/google-chrome",
+  "handleSIGINT": false,
+  "handleSIGTERM": false,
+  "handleSIGHUP": false
+}
+2026-04-06T04:42:34.470Z browserless:chrome-helper Chrome PID: 21
+2026-04-06T04:42:34.471Z browserless:chrome-helper Finding prior pages
+2026-04-06T04:42:34.487Z browserless:chrome-helper Found 1 pages
+2026-04-06T04:42:34.488Z browserless:chrome-helper Setting up page Unknown
+2026-04-06T04:42:34.488Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
+2026-04-06T04:42:34.488Z browserless:system Chrome launched 373ms
+2026-04-06T04:42:34.507Z browserless:chrome-helper Setting up file:// protocol request rejection
+2026-04-06T04:42:34.507Z browserless:chrome-helper Setting up page for ad-blocking
+
+=== Log captured at 2026-04-06T04:42:59.858Z (container status: running) ===

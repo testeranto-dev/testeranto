@@ -1,4 +1,6 @@
-import { type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph } from '../../graph/index';
+import {
+  type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph
+} from '../../graph/index';
 import { processFeatureUrlPure } from './processFeatureUrlPure';
 import { handleFeatureNodeOperationsPure } from './handleFeatureNodeOperationsPure';
 import { handleFeatureTestEdgePure } from './handleFeatureTestEdgePure';
@@ -13,7 +15,6 @@ export async function processSingleFeaturePure(
   featureIngestor: ((url: string) => Promise<{ data: string; filepath: string }>) | undefined,
   timestamp: string
 ): Promise<void> {
-  console.log(`[GraphManager] Processing feature: ${featureUrl}`);
 
   // Process the feature URL
   const { content, localPath } = await processFeatureUrlPure(
@@ -21,8 +22,6 @@ export async function processSingleFeaturePure(
     projectRoot,
     featureIngestor
   );
-
-  console.log(`[GraphManager] Processed feature URL, content length: ${content.length}, localPath: ${localPath}`);
 
   // Handle feature node operations
   await handleFeatureNodeOperationsPure(

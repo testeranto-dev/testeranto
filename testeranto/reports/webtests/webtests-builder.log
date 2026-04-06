@@ -1,0 +1,34 @@
+=== Log started at 2026-04-06T04:42:11.671Z for service webtests-builder (runtime: web) ===
+=== Container ID: 2f67adf2031768214865e18b4b8d73f8f10d081d6096d666b824346fd28c586c ===
+=== Test: N/A ===
+=== Config Key: webtests ===
+
+=== ALL LOGS (stdout + stderr) ===
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.242.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsx /workspace/testeranto/web_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/web/web.ts webtests
+[WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[WEB BUILDER] nodeConfig:  /workspace/testeranto/runtimes/web/web.ts
+[WEB BUILDER] testName:  webtests
+[WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[WEB BUILDER] CWD: /workspace
+[WEB BUILDER] is now bundling: webtests
+[WEB BUILDER] Entry points: 
+[WEB BUILDER] Running in dev mode - starting watch mode
+web > build ended with 0 errors
+[web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER] Metafile updated
+[WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.4, port 8000, /workspace
+[WEB BUILDER] Watch mode active - waiting for file changes...
+[WEB BUILDER] Using onEnd plugin for rebuild detection
+Chrome is a separate service, not launched in builder
+web > build ended with 0 errors
+[web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER] Metafile updated
+[WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+
+=== Log captured at 2026-04-06T04:42:33.035Z (container status: running) ===
