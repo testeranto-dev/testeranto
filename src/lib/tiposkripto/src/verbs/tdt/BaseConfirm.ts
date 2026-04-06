@@ -45,7 +45,7 @@ export class BaseConfirm<I extends TestTypeParams_any> {
       confirms: testCases.map((testCase, index) => {
         if (Array.isArray(testCase) && testCase.length >= 2) {
           const [value, should] = testCase;
-          
+
           // Get input data
           let inputData: any = null;
           try {
@@ -60,7 +60,7 @@ export class BaseConfirm<I extends TestTypeParams_any> {
           } catch (e) {
             inputData = `Error: ${e.message}`;
           }
-          
+
           // Get test description
           let testDescription: any = null;
           try {
@@ -96,7 +96,7 @@ export class BaseConfirm<I extends TestTypeParams_any> {
           } catch (e) {
             testDescription = `Error: ${e.message}`;
           }
-          
+
           return {
             index,
             input: inputData,
@@ -147,7 +147,7 @@ export class BaseConfirm<I extends TestTypeParams_any> {
               // assume value is the input directly
               input = value;
             }
-            
+
             // should is a function that expects the actual result
             if (typeof should === 'function') {
               // Compute actual result using confirmCB
@@ -167,10 +167,10 @@ export class BaseConfirm<I extends TestTypeParams_any> {
               } else {
                 testFn = this.confirmCB;
               }
-            
+
               // Now call the test function with input
-              const actualResult = Array.isArray(input) 
-                ? testFn(...input) 
+              const actualResult = Array.isArray(input)
+                ? testFn(...input)
                 : testFn(input);
               // Call should with the actual result
               const passed = should(actualResult);
@@ -178,8 +178,8 @@ export class BaseConfirm<I extends TestTypeParams_any> {
             } else if (should && typeof should.processRow === 'function') {
               // should is a BaseShould instance
               // Compute actual result using confirmCB
-              const actualResult = Array.isArray(input) 
-                ? this.confirmCB(...input) 
+              const actualResult = Array.isArray(input)
+                ? this.confirmCB(...input)
                 : this.confirmCB(input);
               const passed = await should.processRow(
                 actualResult,
@@ -226,4 +226,4 @@ export class BaseConfirm<I extends TestTypeParams_any> {
 export type IConfirms<I extends TestTypeParams_any> = Record<string, BaseConfirm<I>>;
 
 // Export the BaseConfirm class as named export
-export { BaseConfirm };
+// export { BaseConfirm };

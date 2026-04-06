@@ -1,18 +1,11 @@
-=== Log started at 2026-04-05T20:30:37.822Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (runtime: node) ===
-=== Container ID: c7828da0e88068f7d00e73856fa6002f3309399a0817bcf7be2404915b561ac5 ===
+=== Log started at 2026-04-06T02:36:35.883Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (runtime: node) ===
+=== Container ID: 3dc9b95bd9187fad27fe58345284990388d89c4752794d7c54e2dc3d0bffb998 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
-=== ALL LOGS (stdout + stderr) ===
-yarn run v1.22.22
-warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-warning testeranto@0.235.9: The engine "vscode" appears to be invalid.
-warning testeranto@0.235.9: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/tsc --noEmit
-src/grafeovidajo/dist/grafeovidajo/charts/NodeDetailsModal.js(143,1): error TS1109: Expression expected.
-src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
-src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
-error Command failed with exit code 2.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-05T20:30:45.142Z (container status: exited, exit code: 2) ===
+=== No logs captured (container may have exited without output) ===
+=== FINAL ATTEMPT (with --timestamps) ===
+Error response from daemon: No such container: 3dc9b95bd9187fad27fe58345284990388d89c4752794d7c54e2dc3d0bffb998
+
+=== Log captured at 2026-04-06T02:36:41.756Z (container status: running) ===

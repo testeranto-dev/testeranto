@@ -1,6 +1,6 @@
 import {
   Node_default
-} from "../../../../../chunk-U4RILNIO.mjs";
+} from "../../../../../chunk-7TUUD5WL.mjs";
 
 // src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts
 import { assert } from "chai";

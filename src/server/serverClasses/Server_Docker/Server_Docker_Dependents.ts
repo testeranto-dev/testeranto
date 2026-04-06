@@ -103,7 +103,7 @@ export const yamlDump = (data: any, options?: yaml.DumpOptions): string => {
 };
 
 // Console operations (globals)
-export const consoleLog = (message: string): void => {
+export const consoleLog = (...message: string[]): void => {
     console.log(message);
 };
 
@@ -111,7 +111,7 @@ export const consoleError = (...message: string[]): void => {
     console.error(message);
 };
 
-export const consoleWarn = (message: string): void => {
+export const consoleWarn = (...message: string[]): void => {
     console.warn(message);
 };
 

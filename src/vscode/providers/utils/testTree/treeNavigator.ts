@@ -1,8 +1,10 @@
+import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import { TestTreeItem } from "../../../TestTreeItem";
 import { convertNodeToItem } from "./nodeConverter";
 import { filterTreeForRuntimeAndTest } from "./treeFilter";
-import { ApiUtils } from '../apiUtils';
-import type { CollatedFilesResponse } from '../../../../api';
+import { TreeItemType } from '../../../types';
 
 export async function getDirectoryChildren(
   runtime: string,
@@ -10,17 +12,86 @@ export async function getDirectoryChildren(
   dirPath: string,
 ): Promise<TestTreeItem[]> {
   try {
-    const response = await fetch(ApiUtils.getCollatedFilesUrl());
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    // Read from graph-data.json instead of HTTP endpoint
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders || workspaceFolders.length === 0) {
+      return [];
     }
-    const data = await response.json();
-    // Use type assertion for the response
-    const collatedFilesResponse = data as CollatedFilesResponse;
-    const tree = collatedFilesResponse.tree || {};
 
+    const workspaceRoot = workspaceFolders[0].uri.fsPath;
+    const graphDataPath = path.join(workspaceRoot, 'testeranto', 'reports', 'graph-data.json');
+    
+    if (!fs.existsSync(graphDataPath)) {
+      return [];
+    }
+
+    const graphDataContent = fs.readFileSync(graphDataPath, 'utf-8');
+    const graphData = JSON.parse(graphDataContent);
+    
+    // Build a tree structure from graph nodes
+    const tree: Record<string, any> = {};
+    
+    // Get all file and folder nodes
+    const fileNodes = graphData.data?.unifiedGraph?.nodes?.filter((node: any) => 
+      node.type === 'file' || node.type === 'folder' || node.type === 'input_file'
+    ) || [];
+    
+    // Get edges to understand relationships
+    const edges = graphData.data?.unifiedGraph?.edges || [];
+    
+    // Find test nodes for this runtime and testName
+    const testNodes = graphData.data?.unifiedGraph?.nodes?.filter((node: any) =>
+      node.type === 'test' &&
+      (node.metadata?.configKey === runtime || node.metadata?.runtime === runtime) &&
+      (node.metadata?.testName === testName || node.label === testName)
+    ) || [];
+    
+    if (testNodes.length === 0) {
+      return [];
+    }
+    
+    // Build a simple tree structure for compatibility
+    // We'll create a flat structure since the old code expects a tree
+    const simpleTree: Record<string, any> = {
+      [runtime]: {
+        type: 'directory',
+        children: {}
+      }
+    };
+    
+    // For each test node, find connected file nodes
+    for (const testNode of testNodes) {
+      const testId = testNode.id;
+      
+      // Find edges from this test to files
+      const connectedEdges = edges.filter((edge: any) =>
+        edge.source === testId || edge.target === testId
+      );
+      
+      for (const edge of connectedEdges) {
+        const fileNodeId = edge.source === testId ? edge.target : edge.source;
+        const fileNode = fileNodes.find((n: any) => n.id === fileNodeId);
+        
+        if (fileNode) {
+          const filePath = fileNode.metadata?.filePath || fileNode.label;
+          const fileName = path.basename(filePath);
+          const fileType = fileNode.type === 'folder' ? 'directory' : 'file';
+          
+          // Create a simple node structure
+          simpleTree[runtime].children[fileName] = {
+            type: fileType,
+            path: filePath,
+            fileType: fileNode.metadata?.fileType || (fileNode.type === 'input_file' ? 'source' : 'file'),
+            testName: testName,
+            runtime: runtime
+          };
+        }
+      }
+    }
+    
+    // Use the existing filter function (it expects the old tree structure)
     const filteredTree = filterTreeForRuntimeAndTest(
-      tree,
+      simpleTree,
       runtime,
       testName,
     );

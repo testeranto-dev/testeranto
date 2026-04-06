@@ -103,8 +103,13 @@ export async function launchAiderPure({
       })()
     ]);
 
-    resourceChanged("/~/processes");
-    resourceChanged("/~/aider-processes");
+    // Broadcast graph update via WebSocket
+    if (resourceChanged) {
+      // In unified approach, we broadcast graphUpdated events
+      // The actual graph update happens via updateGraphWithAiderNode
+      // We'll trigger a refresh for clients
+      resourceChanged("/~/graph");
+    }
     writeConfigForExtension();
 
     consoleLog(`[Server_Docker] Started aider service: ${aiderServiceName}`);
@@ -127,7 +132,7 @@ export function createAiderNodeGraphOperationsPure(params: {
 
   // Create aider node ID
   const aiderNodeId = `aider:${params.aiderServiceName}`;
-  
+
   // Create aider node
   operations.push({
     type: 'addNode',
@@ -157,7 +162,7 @@ export function createAiderNodeGraphOperationsPure(params: {
   } else {
     entrypointId = `entrypoint:${params.configKey}:${params.testName}`;
   }
-  
+
   // Create edge from entrypoint to aider node
   operations.push({
     type: 'addEdge',
@@ -166,7 +171,6 @@ export function createAiderNodeGraphOperationsPure(params: {
       target: aiderNodeId,
       attributes: {
         type: 'hasAider',
-        weight: 1,
         timestamp
       }
     },
@@ -176,7 +180,7 @@ export function createAiderNodeGraphOperationsPure(params: {
   // If we have a containerId, create edge from aider node to docker process
   if (params.containerId) {
     const dockerProcessId = `docker_process:${params.containerId}`;
-    
+
     operations.push({
       type: 'addEdge',
       data: {
@@ -184,7 +188,6 @@ export function createAiderNodeGraphOperationsPure(params: {
         target: dockerProcessId,
         attributes: {
           type: 'hasProcess',
-          weight: 1,
           timestamp
         }
       },

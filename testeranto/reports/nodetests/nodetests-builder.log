@@ -1,13 +1,13 @@
-=== Log started at 2026-04-05T00:59:15.934Z for service nodetests-builder (runtime: node) ===
-=== Container ID: f37c6649dfb9a8560c986131f9920892aa0791cbd81ef27b8da486c26cef1c4b ===
+=== Log started at 2026-04-06T02:36:09.574Z for service nodetests-builder (runtime: node) ===
+=== Container ID: b6f2120245b0035b0df250ac4cc5477dca70a4ea1d5076f8fc0586a202f4f942 ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
 === ALL LOGS (stdout + stderr) ===
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
-warning testeranto@0.239.0: The engine "bun" appears to be invalid.
+warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.242.0: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs nodetests src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts src/lib/tiposkripto/tests/circle/Circle.test.ts src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
 [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
 [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
@@ -24,20 +24,20 @@ $ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /worksp
 [NODE BUILDER] Running in dev mode - starting watch mode
 ▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
 
-    package.json:211:6:
-      211 │       "types": "./src/CoreTypes.d.ts"
+    package.json:222:6:
+      222 │       "types": "./src/CoreTypes.d.ts"
           ╵       ~~~~~~~
 
   The "import" condition comes earlier and will be used for all "import" statements:
 
-    package.json:209:6:
-      209 │       "import": "./src/CoreTypes.ts",
+    package.json:220:6:
+      220 │       "import": "./src/CoreTypes.ts",
           ╵       ~~~~~~~~
 
   The "require" condition comes earlier and will be used for all "require" calls:
 
-    package.json:210:6:
-      210 │       "require": "./src/CoreTypes.ts",
+    package.json:221:6:
+      221 │       "require": "./src/CoreTypes.ts",
           ╵       ~~~~~~~~~
 
 ▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
@@ -52,37 +52,37 @@ node > build ended with 0 errors
 [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
 [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
 [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 6dd957b3b83e9d431656daeef2aa3d70
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: b19e3fe9476349cfcc94350832d2c588
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 43be60d78f921ac941b7154cbf1d9545
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-U4RILNIO.mjs
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 03bc200c88b1267c8ff8e871ba29cb78
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: c77bcdcedb2a4e5c89b3beb6eaae337a
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 987a4ca6b1fb542d8237626b3483eab8
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs
 [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 6dd957b3b83e9d431656daeef2aa3d70
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: b19e3fe9476349cfcc94350832d2c588
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 43be60d78f921ac941b7154cbf1d9545
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-U4RILNIO.mjs
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 03bc200c88b1267c8ff8e871ba29cb78
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: c77bcdcedb2a4e5c89b3beb6eaae337a
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 987a4ca6b1fb542d8237626b3483eab8
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs
 [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Watch mode active - waiting for file changes...
 [NODE BUILDER] Using onEnd plugin for rebuild detection
 [NODE BUILDER] Keeping process alive for continuous watching...
 ▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
 
-    package.json:211:6:
-      211 │       "types": "./src/CoreTypes.d.ts"
+    package.json:222:6:
+      222 │       "types": "./src/CoreTypes.d.ts"
           ╵       ~~~~~~~
 
   The "import" condition comes earlier and will be used for all "import" statements:
 
-    package.json:209:6:
-      209 │       "import": "./src/CoreTypes.ts",
+    package.json:220:6:
+      220 │       "import": "./src/CoreTypes.ts",
           ╵       ~~~~~~~~
 
   The "require" condition comes earlier and will be used for all "require" calls:
 
-    package.json:210:6:
-      210 │       "require": "./src/CoreTypes.ts",
+    package.json:221:6:
+      221 │       "require": "./src/CoreTypes.ts",
           ╵       ~~~~~~~~~
 
 ▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
@@ -97,12 +97,12 @@ node > build ended with 0 errors
 [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
 [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
 [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 6dd957b3b83e9d431656daeef2aa3d70
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: b19e3fe9476349cfcc94350832d2c588
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 43be60d78f921ac941b7154cbf1d9545
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-U4RILNIO.mjs
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 19 files, hash: 03bc200c88b1267c8ff8e871ba29cb78
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 19 files, hash: c77bcdcedb2a4e5c89b3beb6eaae337a
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 19 files, hash: 987a4ca6b1fb542d8237626b3483eab8
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs
 [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
 
-=== Log captured at 2026-04-05T00:59:36.931Z (container status: running) ===
+=== Log captured at 2026-04-06T02:36:30.750Z (container status: running) ===

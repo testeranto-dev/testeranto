@@ -1,4 +1,5 @@
-import { vscodeHttpAPI } from "../../../api";
+
+import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
 import { extractRouteNameFromPath } from "./extractRouteNameFromPath";
 
 // Helper function to get API definition for a route, optionally filtering by method

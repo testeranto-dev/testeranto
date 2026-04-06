@@ -1,4 +1,4 @@
-import { stakeholderWsAPI, vscodeWsAPI } from "../../api";
+import { stakeholderWsAPI } from "../../api/api";
 import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";

@@ -11,12 +11,12 @@ export function createTestNodeOperationsPure(
   testIndex: number
 ): GraphOperation[] {
   const operations: GraphOperation[] = [];
-  
+
   const stepName = individualResult.stepName;
   if (!stepName) {
     return operations;
   }
-  
+
   const testId = `test:${sanitizedConfigKey}:${filePathForEntrypoint}:${testIndex}`;
 
   // Prepare test metadata
@@ -77,7 +77,7 @@ export function createTestNodeOperationsPure(
         target: testId,
         attributes: {
           type: 'belongsTo',
-          weight: 1
+          // 
         }
       },
       timestamp

@@ -1,3 +1,5 @@
+import type { VscodeHttpAPI } from "./vscodeExtensionHttp";
+
 // Base API definition types
 export type HttpMethod = 'GET' | 'POST' | 'PUT' |
   'DELETE' | 'PATCH' | 'OPTIONS';
@@ -44,14 +46,9 @@ export type ApiResponse<T> = {
   timestamp: string;
 } & T;
 
-// Re-export API implementations
-export { vscodeHttpAPI } from "./api/vscodeExtensionHttp";
-export { stakeholderHttpAPI } from "./api/stakeholderHttp";
-export { vscodeWsAPI } from "./api/vscodeExtensionWs";
-
 
 // Type aliases
-export type VscodeHttpAPI = _VscodeHttpAPI;
+// export type VscodeHttpAPI = _VscodeHttpAPI;
 export type VscodeHttpEndpoint = keyof VscodeHttpAPI;
 export type VscodeHttpEndpointDefinition<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T];
 export type VscodeHttpResponse<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T]['response'];
@@ -99,3 +96,13 @@ export type StakeholderWsMessageDefinition<T extends StakeholderWsMessage> = Sta
 // Helper to get data type for a broadcast
 export type StakeholderWsData<T extends StakeholderWsMessage> =
   StakeholderWsAPI[T]['data'];
+
+export interface GraphDataResponse {
+  graphData: any;
+  message: string;
+  timestamp?: string;
+}
+
+
+// Note: WebSocket API is defined separately in stakeholderWsAPI
+// HTTP API for VS Code is defined in vscodeExtensionHttp.ts

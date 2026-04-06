@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import type { IRunTime } from '../Types';
-import { ApiUtils } from './providers/utils/apiUtils';
-import type { AiderProcessesResponse } from '../api';
 
 export class TerminalManager {
   private terminals: Map<string, vscode.Terminal> = new Map();
@@ -53,19 +53,47 @@ export class TerminalManager {
     this.terminals.clear();
   }
 
-  // Fetch aider processes from the server
+  // Fetch aider processes from graph-data.json
   async fetchAiderProcesses(): Promise<any[]> {
     try {
-      const response = await fetch(ApiUtils.getAiderProcessesUrl());
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const workspaceFolders = vscode.workspace.workspaceFolders;
+      if (!workspaceFolders || workspaceFolders.length === 0) {
+        return [];
       }
-      const data = await response.json();
-      // Use type assertion for the response
-      const aiderResponse = data as AiderProcessesResponse;
-      return aiderResponse.aiderProcesses || [];
+
+      const workspaceRoot = workspaceFolders[0].uri.fsPath;
+      const graphDataPath = path.join(workspaceRoot, 'testeranto', 'reports', 'graph-data.json');
+      
+      if (!fs.existsSync(graphDataPath)) {
+        return [];
+      }
+
+      const graphDataContent = fs.readFileSync(graphDataPath, 'utf-8');
+      const graphData = JSON.parse(graphDataContent);
+      
+      // Extract aider nodes from graph
+      const aiderNodes = graphData.data?.unifiedGraph?.nodes?.filter((node: any) => 
+        node.type === 'aider' || node.type === 'aider_process'
+      ) || [];
+
+      return aiderNodes.map((node: any) => {
+        const metadata = node.metadata || {};
+        return {
+          id: node.id,
+          containerId: metadata.containerId || 'unknown',
+          containerName: metadata.aiderServiceName || metadata.containerName || 'unknown',
+          runtime: metadata.runtime || 'unknown',
+          testName: metadata.testName || 'unknown',
+          configKey: metadata.configKey || 'unknown',
+          isActive: metadata.isActive || false,
+          status: metadata.status || 'stopped',
+          exitCode: metadata.exitCode,
+          startedAt: metadata.startedAt || '',
+          lastActivity: metadata.lastActivity
+        };
+      });
     } catch (error) {
-      console.error('Failed to fetch aider processes:', error);
+      console.error('Failed to fetch aider processes from graph:', error);
       return [];
     }
   }

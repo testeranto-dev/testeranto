@@ -1,6 +1,6 @@
 {
   "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
-    "hash": "6dd957b3b83e9d431656daeef2aa3d70",
+    "hash": "03bc200c88b1267c8ff8e871ba29cb78",
     "files": [
       "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.adapter.ts",
@@ -24,7 +24,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/circle/Circle.test.ts": {
-    "hash": "b19e3fe9476349cfcc94350832d2c588",
+    "hash": "c77bcdcedb2a4e5c89b3beb6eaae337a",
     "files": [
       "/src/lib/tiposkripto/tests/circle/Circle.ts",
       "/src/lib/tiposkripto/tests/circle/Circle.test.adapter.ts",
@@ -48,7 +48,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts": {
-    "hash": "43be60d78f921ac941b7154cbf1d9545",
+    "hash": "987a4ca6b1fb542d8237626b3483eab8",
     "files": [
       "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.implementation.ts",
       "/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",

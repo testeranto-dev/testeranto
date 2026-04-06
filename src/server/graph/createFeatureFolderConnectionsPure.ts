@@ -36,7 +36,7 @@ export async function createFeatureFolderConnectionsPure(
           target: featureId,
           attributes: {
             type: 'locatedIn',
-            weight: 1
+            // 
           }
         },
         timestamp

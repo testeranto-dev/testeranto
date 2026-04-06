@@ -1,4 +1,4 @@
-import type { VscodeHttpEndpoint } from "../../../api";
+import type { VscodeHttpEndpoint } from "../../../api/api";
 import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
 
 export class ApiUtils {

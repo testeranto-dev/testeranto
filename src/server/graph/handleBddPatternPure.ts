@@ -8,7 +8,7 @@ export function handleBddPatternPure(
 ): GraphOperation[] {
   const operations: GraphOperation[] = [];
   const givenKey = testJob.key || `step_${stepIndex}`;
-  
+
   // Create Given node
   const givenId = `given:${testId}:${stepIndex}`;
   operations.push({
@@ -43,7 +43,7 @@ export function handleBddPatternPure(
       target: givenId,
       attributes: {
         type: 'hasGiven',
-        weight: 1
+
       }
     },
     timestamp
@@ -55,7 +55,7 @@ export function handleBddPatternPure(
     for (let whenIndex = 0; whenIndex < testJob.whens.length; whenIndex++) {
       const when = testJob.whens[whenIndex];
       const whenId = `when:${testId}:${stepIndex}:${whenIndex}`;
-      
+
       operations.push({
         type: 'addNode',
         data: {
@@ -89,7 +89,7 @@ export function handleBddPatternPure(
             target: whenId,
             attributes: {
               type: 'hasWhen',
-              weight: 1
+
             }
           },
           timestamp
@@ -103,7 +103,7 @@ export function handleBddPatternPure(
             target: whenId,
             attributes: {
               type: 'nextWhen',
-              weight: 1
+
             }
           },
           timestamp
@@ -118,7 +118,7 @@ export function handleBddPatternPure(
     for (let thenIndex = 0; thenIndex < testJob.thens.length; thenIndex++) {
       const then = testJob.thens[thenIndex];
       const thenId = `then:${testId}:${stepIndex}:${thenIndex}`;
-      
+
       operations.push({
         type: 'addNode',
         data: {
@@ -152,7 +152,7 @@ export function handleBddPatternPure(
             target: thenId,
             attributes: {
               type: 'hasThen',
-              weight: 1
+
             }
           },
           timestamp
@@ -166,7 +166,7 @@ export function handleBddPatternPure(
             target: thenId,
             attributes: {
               type: 'hasThen',
-              weight: 1
+
             }
           },
           timestamp

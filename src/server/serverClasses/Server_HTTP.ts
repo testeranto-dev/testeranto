@@ -1,9 +1,9 @@
 import type { AllTestResults, ITesterantoConfig } from "../../Types";
+import { stakeholderWsAPI } from "../../api/api";
 import type { IMode } from "../types";
 import { Server_HTTP_Base } from "./Server_HTTP_Base";
 import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
 import { Server_WS } from "./Server_WS";
-import { stakeholderWsAPI, stakeholderHttpAPI } from "../../api";
 
 declare const Bun: any;
 
@@ -126,13 +126,9 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
       }
     }
 
-    // Handle /~/ routes (vscode API) - for VS Code extension
+    // Handle /~/ routes (unified API for all clients)
     if (url.pathname.startsWith("/~/")) {
       return await this.handleRouteRequest(request, url);
-    }
-    // Handle /api/ routes for stakeholder app in development mode
-    else if (url.pathname.startsWith("/api/")) {
-      return await this.handleStakeholderApiRequest(request, url);
     }
     else {
       // Serve static files for everything else - for stakeholder app
@@ -157,7 +153,7 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('[Server_HTTP] Error handling route:', error);
       return new Response(JSON.stringify({
         error: "Internal server error",
@@ -250,70 +246,6 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
     return {};
   }
 
-  private async handleStakeholderApiRequest(request: Request, url: URL): Promise<Response> {
-    const routeName = url.pathname.slice(5); // Remove '/api/'
-
-    if (request.method === "OPTIONS") {
-      return this.handleOptions();
-    }
-
-    try {
-      // Check if the route matches any defined API endpoint
-      const endpoint = Object.values(stakeholderHttpAPI).find(
-        ep => ep.path === `/api/${routeName}`
-      );
-
-      if (!endpoint) {
-        return new Response(JSON.stringify({
-          error: "Not found",
-          message: `API endpoint ${routeName} not found`
-        }), {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-
-      // Check if the HTTP method matches
-      if (request.method !== endpoint.method) {
-        return new Response(JSON.stringify({
-          error: "Method not allowed",
-          message: `Method ${request.method} not allowed for ${routeName}. Expected ${endpoint.method}`
-        }), {
-          status: 405,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-
-      // Handle the specific endpoint
-      switch (routeName) {
-        case 'graph-update':
-          return await this.handlePostGraphUpdate(request, url);
-        default:
-          return new Response(JSON.stringify({
-            error: "Not implemented",
-            message: `API endpoint ${routeName} is defined but not implemented`
-          }), {
-            status: 501,
-            headers: { "Content-Type": "application/json" },
-          });
-      }
-    } catch (error) {
-      console.error('[Server_HTTP] Error handling stakeholder API request:', error);
-      return new Response(JSON.stringify({
-        error: "Internal server error",
-        message: error.message
-      }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-  }
-
-  private async handlePostGraphUpdate(request: Request, url: URL): Promise<Response> {
-    const { handlePostGraphUpdate } = await import('../stakeholder/handlers');
-    const broadcast = this instanceof Server_WS ? (this as Server_WS).broadcast.bind(this) : undefined;
-    return handlePostGraphUpdate(request, this.graphManager, broadcast);
-  }
 
   router(a: any): any {
     return a;

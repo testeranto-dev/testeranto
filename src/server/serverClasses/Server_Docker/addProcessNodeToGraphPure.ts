@@ -86,7 +86,7 @@ export async function addProcessNodeToGraphPure(
             target: processId,
             attributes: {
               type: edgeType,
-              weight: 1,
+
               timestamp
             }
           },
@@ -131,7 +131,7 @@ export async function addProcessNodeToGraphPure(
             target: processId,
             attributes: {
               type: 'hasBuilderProcess',
-              weight: 1,
+
               timestamp
             }
           },

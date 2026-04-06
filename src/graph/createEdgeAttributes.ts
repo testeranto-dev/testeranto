@@ -6,7 +6,7 @@ export function createEdgeAttributes(
 ): GraphEdgeAttributes {
   return {
     type,
-    weight: options?.weight,
+    // weight: options?.weight,
     timestamp: options?.timestamp || new Date().toISOString(),
     metadata: options?.metadata
   };

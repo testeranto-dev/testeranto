@@ -1,24 +1,18 @@
-import { TestTreeItem } from '../../TestTreeItem';
-import { getDocumentationChildren } from './documentationChildrenUtils';
-import { getTestInputChildren } from './testInputChildrenUtils';
-import { getTestResultChildren, getTestResultRuntimeChildren } from './testResultChildrenUtils';
-import { getTestResultsConfigItems } from './testResultsConfigUtils';
-import { getTestInputRuntimeItems } from './testInputRuntimeUtils';
-import { getTestInputTestItems } from './testInputTestUtils';
-import { getTestResultsDirectoryItems } from './testResultsDirectoryUtils';
+import type { TestTreeItem } from "../../TestTreeItem";
+
 
 export function getChildrenForElement(
     element: TestTreeItem,
     buildTreeItemsFromTestResultsTree: (tree: Record<string, any>) => TestTreeItem[]
 ): TestTreeItem[] {
     const data = element.data;
-    
+
     if (!data) {
         return [];
     }
 
     const section = data.section;
-    
+
     // Handle different sections
     switch (section) {
         case 'documentation':

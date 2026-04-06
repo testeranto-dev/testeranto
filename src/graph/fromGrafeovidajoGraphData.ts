@@ -180,7 +180,7 @@ export function fromGrafeovidajoGraphData(
     target: edge.target,
     attributes: {
       type: (edge.attributes?.type as GraphEdgeType) || 'associatedWith',
-      weight: edge.attributes?.weight,
+      // weight: edge.attributes?.weight,
       timestamp: edge.attributes?.timestamp,
       metadata: edge.attributes?.metadata
     }

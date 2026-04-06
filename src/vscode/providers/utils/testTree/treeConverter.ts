@@ -29,7 +29,7 @@ export function convertTreeToItems(
         new vscode.ThemeIcon('error')
       );
     }
-    
+
     const filePath = file.path || '';
     const fileName = path.basename(filePath);
     let fileUri: vscode.Uri | undefined;
@@ -204,7 +204,7 @@ export function convertTreeToItems(
         if (nodeName === "source") displayName = "Source Files";
         else if (nodeName === "output") displayName = "Output Files";
         else if (nodeName === "logs") displayName = "Logs";
-        
+
         console.log(
           `[DEBUG] Creating directory item for ${displayName}`,
         );

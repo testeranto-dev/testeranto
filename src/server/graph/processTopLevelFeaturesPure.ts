@@ -13,8 +13,6 @@ export async function processTopLevelFeaturesPure(
   timestamp: string
 ): Promise<void> {
   if (singleTestResult.features && Array.isArray(singleTestResult.features)) {
-    console.log(`[GraphManager] Processing top-level features for test ${singleTestResult.testName}`);
-    console.log(`[GraphManager] Found ${singleTestResult.features.length} features:`, singleTestResult.features);
     const testId = `test:${sanitizedConfigKey}:${filePathForEntrypoint}:0`;
     console.log(`[GraphManager] Using testId ${testId} for top-level features`);
     await processFeaturesForTest(

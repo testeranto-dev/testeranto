@@ -189,8 +189,6 @@ export class GraphManager {
       // Find all markdown files matching the glob pattern
       const files = glob.sync(globPattern, { cwd: this.projectRoot });
 
-      // console.log(`[GraphManager] Found ${files.length} markdown files to parse`);
-
       for (const file of files) {
         try {
           const filePath = path.join(this.projectRoot, file);
@@ -374,7 +372,7 @@ export class GraphManager {
               target: fileNodeId,
               attributes: {
                 type: 'locatedIn',
-                weight: 1
+
               }
             },
             timestamp
@@ -392,7 +390,7 @@ export class GraphManager {
             target: fileNodeId,
             attributes: {
               type: 'associatedWith',
-              weight: 1
+
             }
           },
           timestamp
@@ -447,9 +445,6 @@ export class GraphManager {
       const attrs = this.graph.getNodeAttributes(nodeId);
       return attrs.type === 'feature';
     });
-
-    console.log(`[GraphManager] Found ${featureNodes.length} feature nodes to serialize`);
-
     let writtenCount = 0;
     let errorCount = 0;
 
@@ -684,7 +679,7 @@ export class GraphManager {
 
     this.applyUpdate(update);
     console.log(`[GraphManager] Updated graph with aider node for ${params.aiderServiceName}`);
-    
+
     // Also save the graph explicitly
     this.saveGraph();
     console.log(`[GraphManager] Graph saved after aider node update`);
@@ -694,7 +689,7 @@ export class GraphManager {
   public createAiderNodeForEntrypoint(entrypointId: string, aiderServiceName: string, containerId?: string): void {
     const timestamp = new Date().toISOString();
     const aiderNodeId = `aider:${aiderServiceName}`;
-    
+
     // Create aider node
     this.graph.addNode(aiderNodeId, {
       id: aiderNodeId,
@@ -714,7 +709,7 @@ export class GraphManager {
     if (this.graph.hasNode(entrypointId)) {
       this.graph.addEdge(entrypointId, aiderNodeId, {
         type: 'hasAider',
-        weight: 1,
+
         timestamp
       });
     }
@@ -725,7 +720,7 @@ export class GraphManager {
       if (this.graph.hasNode(dockerProcessId)) {
         this.graph.addEdge(aiderNodeId, dockerProcessId, {
           type: 'hasProcess',
-          weight: 1,
+
           timestamp
         });
       }

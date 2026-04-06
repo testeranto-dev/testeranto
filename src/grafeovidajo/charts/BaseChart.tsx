@@ -260,7 +260,7 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
       // Get icon from node or attributes
       const icon = node.icon || node.attributes?.icon;
       let iconElement = null;
-      
+
       if (icon) {
         // Map icon names to emoji
         const iconEmojiMap: Record<string, string> = {
@@ -386,16 +386,17 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
       const screenSize = node.size * camera.scale;
 
       return (
-        <text
-          key={`label-${node.id}`}
-          x={screenCoords.x}
-          y={screenCoords.y + screenSize + 15}
-          textAnchor="middle"
-          fontSize={(config.style.labels?.fontSize || 12) * camera.scale}
-          fill="#333"
-        >
-          {node.label}
-        </text>
+        <></>
+        // <text
+        //   key={`label-${node.id}`}
+        //   x={screenCoords.x}
+        //   y={screenCoords.y + screenSize + 15}
+        //   textAnchor="middle"
+        //   fontSize={(config.style.labels?.fontSize || 12) * camera.scale}
+        //   fill="#333"
+        // >
+        //   {node.label}
+        // </text>
       );
     });
   };

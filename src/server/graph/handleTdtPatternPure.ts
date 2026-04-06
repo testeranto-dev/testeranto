@@ -8,7 +8,7 @@ export function handleTdtPatternPure(
 ): GraphOperation[] {
   const operations: GraphOperation[] = [];
   const confirmKey = testJob.key || `confirm_${stepIndex}`;
-  
+
   // Create Confirm node
   const confirmId = `confirm:${testId}:${stepIndex}`;
   operations.push({
@@ -43,7 +43,7 @@ export function handleTdtPatternPure(
       target: confirmId,
       attributes: {
         type: 'hasConfirm',
-        weight: 1
+
       }
     },
     timestamp
@@ -54,7 +54,7 @@ export function handleTdtPatternPure(
     for (let valueIndex = 0; valueIndex < testJob.values.length; valueIndex++) {
       const value = testJob.values[valueIndex];
       const valueId = `value:${testId}:${stepIndex}:${valueIndex}`;
-      
+
       operations.push({
         type: 'addNode',
         data: {
@@ -86,7 +86,7 @@ export function handleTdtPatternPure(
           target: valueId,
           attributes: {
             type: 'hasValue',
-            weight: 1
+
           }
         },
         timestamp
@@ -98,7 +98,7 @@ export function handleTdtPatternPure(
         for (let shouldIndex = 0; shouldIndex < shoulds.length; shouldIndex++) {
           const should = shoulds[shouldIndex];
           const shouldId = `should:${testId}:${stepIndex}:${valueIndex}:${shouldIndex}`;
-          
+
           operations.push({
             type: 'addNode',
             data: {
@@ -131,7 +131,7 @@ export function handleTdtPatternPure(
               target: shouldId,
               attributes: {
                 type: 'hasShould',
-                weight: 1
+
               }
             },
             timestamp
@@ -143,7 +143,7 @@ export function handleTdtPatternPure(
             for (let expectedIndex = 0; expectedIndex < expecteds.length; expectedIndex++) {
               const expected = expecteds[expectedIndex];
               const expectedId = `expected:${testId}:${stepIndex}:${valueIndex}:${shouldIndex}:${expectedIndex}`;
-              
+
               operations.push({
                 type: 'addNode',
                 data: {
@@ -177,7 +177,7 @@ export function handleTdtPatternPure(
                   target: expectedId,
                   attributes: {
                     type: 'hasExpected',
-                    weight: 1
+
                   }
                 },
                 timestamp
@@ -195,11 +195,11 @@ export function handleTdtPatternPure(
       name: key,
       ...(typeof val === 'object' ? val : { value: val })
     }));
-    
+
     for (let valueIndex = 0; valueIndex < valuesArray.length; valueIndex++) {
       const value = valuesArray[valueIndex];
       const valueId = `value:${testId}:${stepIndex}:${valueIndex}`;
-      
+
       operations.push({
         type: 'addNode',
         data: {
@@ -231,7 +231,7 @@ export function handleTdtPatternPure(
           target: valueId,
           attributes: {
             type: 'hasValue',
-            weight: 1
+
           }
         },
         timestamp

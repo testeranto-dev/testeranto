@@ -113,7 +113,7 @@ export interface GraphNodeAttributes extends Attributes {
 // Base edge attributes
 export interface GraphEdgeAttributes extends Attributes {
   type: GraphEdgeType;
-  weight?: number;
+  // weight?: number;
   timestamp?: string;
   metadata?: Record<string, any>;
   directed?: boolean; // true for directed, false for undirected (default: true)

@@ -49,7 +49,7 @@ export function generateEdgesPure(
                 target: nodeId,
                 attributes: {
                   type: 'belongsTo',
-                  weight: 1
+                  // 
                 }
               },
               timestamp
@@ -98,7 +98,7 @@ export function generateEdgesPure(
                   target: testNodeId,
                   attributes: {
                     type: 'associatedWith',
-                    weight: 1
+                    // 
                   }
                 },
                 timestamp
@@ -122,16 +122,16 @@ export function generateEdgesPure(
     // Extract directory portion from file path
     // For URLs, we need to handle them differently
     const isUrl = filePath.startsWith('http://') || filePath.startsWith('https://');
-    
+
     if (isUrl) {
       // For URLs, we can't create folder nodes in the file system sense
       // Return empty string to indicate no folder structure
       return '';
     }
-    
+
     // For local file paths, get the directory portion
     const dirPath = path.dirname(filePath);
-    
+
     // If the file is at the root (e.g., 'README.md' -> '.'), create root folder
     if (dirPath === '.' || dirPath === '') {
       const rootFolderId = 'folder:';
@@ -160,11 +160,11 @@ export function generateEdgesPure(
       }
       return rootFolderId;
     }
-    
+
     const segments = dirPath.split(/[\\/]/).filter(s => s.length > 0);
     let currentPath = '';
     let parentFolderId = '';
-    
+
     // First, ensure root folder exists
     const rootFolderId = 'folder:';
     if (!updatedNodeMap.has(rootFolderId)) {
@@ -189,7 +189,7 @@ export function generateEdgesPure(
       });
       updatedNodeMap.set(rootFolderId, rootFolderNode);
     }
-    
+
     for (let i = 0; i < segments.length; i++) {
       const segment = segments[i];
       currentPath = currentPath ? `${currentPath}/${segment}` : segment;
@@ -233,7 +233,7 @@ export function generateEdgesPure(
                 target: folderId,
                 attributes: {
                   type: 'parentOf',
-                  weight: 1
+                  // 
                 }
               },
               timestamp
@@ -256,7 +256,7 @@ export function generateEdgesPure(
                 target: folderId,
                 attributes: {
                   type: 'parentOf',
-                  weight: 1
+                  // 
                 }
               },
               timestamp
@@ -314,7 +314,7 @@ export function generateEdgesPure(
                   target: entrypointId,
                   attributes: {
                     type: 'locatedIn',
-                    weight: 1
+                    // 
                   }
                 },
                 timestamp
@@ -359,7 +359,7 @@ export function generateEdgesPure(
                     target: testNodeId,
                     attributes: {
                       type: 'belongsTo',
-                      weight: 1
+                      // 
                     }
                   },
                   timestamp
@@ -405,7 +405,7 @@ export function generateEdgesPure(
                 target: testId,
                 attributes: {
                   type: 'belongsTo',
-                  weight: 1
+                  // 
                 }
               },
               timestamp

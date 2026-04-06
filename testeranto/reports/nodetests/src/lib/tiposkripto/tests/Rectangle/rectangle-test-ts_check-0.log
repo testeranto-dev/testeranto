@@ -1,27 +1,11 @@
-=== Log started at 2026-04-05T20:30:35.216Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
-=== Container ID: 20fc366c758e1c3d3f221bc94d442b8807004099de978110ee38b12c531078c5 ===
+=== Log started at 2026-04-06T02:36:36.867Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
+=== Container ID: 877b0d9f76e8e606c0694fa145c5858c1b66949702f00c175460c8115b69f97c ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
-=== ALL LOGS (stdout + stderr) ===
-yarn run v1.22.22
-warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
-warning testeranto@0.239.0: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/eslint
 
-Oops! Something went wrong! :(
+=== No logs captured (container may have exited without output) ===
+=== FINAL ATTEMPT (with --timestamps) ===
+Error response from daemon: No such container: 877b0d9f76e8e606c0694fa145c5858c1b66949702f00c175460c8115b69f97c
 
-ESLint: 9.39.4
-
-A configuration object specifies rule "import/no-dynamic-require", but could not find plugin "import".
-
-Common causes of this problem include:
-
-1. The "import" plugin is not defined in your configuration file.
-2. The "import" plugin is not defined within the same configuration object in which the "import/no-dynamic-require" rule is applied.
-
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-error Command failed with exit code 2.
-
-=== Log captured at 2026-04-05T20:30:38.558Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-06T02:36:41.132Z (container status: running) ===

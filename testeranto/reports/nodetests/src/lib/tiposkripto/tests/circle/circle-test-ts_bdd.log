@@ -1,5 +1,5 @@
-=== Log started at 2026-04-05T20:30:33.121Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 1aeefc2f641eea844c27487e869ddaa860945600fa4927dc5f10a369ba2bbacb ===
+=== Log started at 2026-04-06T02:36:32.376Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: db8c3c89cf850c8d691bee524080c68ad23c4ad14fa2e1fc1d082966e35b0be0 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -23,17 +23,17 @@ Describe implementation for "a circle with radius" is not a function, got: objec
 [Circle adapter] verificationFn: [AsyncFunction (anonymous)]
 [Circle adapter] afterEach called with store: Circle { radius: NaN }
 Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1756:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)
 Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1748:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)
-    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)
+    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1756:19)
+    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)
+    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)
 testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 0.61s.
+Done in 0.66s.
 
-=== Log captured at 2026-04-05T20:30:35.730Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-06T02:36:33.935Z (container status: exited, exit code: 0) ===

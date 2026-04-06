@@ -23,11 +23,11 @@ function loadInputFilesFromBundle(
   try {
     const bundleDir = path.join(projectRoot, 'testeranto', 'bundles', configKey);
     const inputFilesPath = path.join(bundleDir, 'inputFiles.json');
-    
+
     if (fs.existsSync(inputFilesPath)) {
       const content = fs.readFileSync(inputFilesPath, 'utf-8');
       const allTestsInfo = JSON.parse(content);
-      
+
       if (allTestsInfo[testName] && allTestsInfo[testName].files) {
         console.log(`[GraphManager] Loaded ${allTestsInfo[testName].files.length} input files from bundle for ${configKey}/${testName}`);
         return allTestsInfo[testName].files;
@@ -72,7 +72,7 @@ export async function processSingleTestResultPure(
       }))
       : 'no individual results'
   });
-  
+
   const resultStr = JSON.stringify(singleTestResult);
   console.log(`[GraphManager] Full test result (first 500 chars):`, resultStr.substring(0, 500));
 
@@ -154,7 +154,7 @@ export async function processSingleTestResultPure(
             target: entrypointId,
             attributes: {
               type: 'locatedIn',
-              weight: 1
+
             }
           },
           timestamp: actualTimestamp
@@ -189,8 +189,6 @@ export async function processSingleTestResultPure(
   // Process input files (now they should be available)
   if (inputFiles && Array.isArray(inputFiles) && inputFiles.length > 0) {
     console.log(`[GraphManager] Processing input files for test ${singleTestResult.testName}`);
-    console.log(`[GraphManager] Found ${inputFiles.length} input files:`, inputFiles);
-    console.log(`[GraphManager] Entrypoint ID: ${entrypointId}`);
 
     if (entrypointId) {
       console.log(`[GraphManager] Calling processInputFilesForTest`);

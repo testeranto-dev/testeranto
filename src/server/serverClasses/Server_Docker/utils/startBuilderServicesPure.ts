@@ -63,8 +63,18 @@ export const startBuilderServicesPure = async (
         setTimeout(() => reject(new Error(`Timeout starting ${serviceName}`)), 120000) // 2 minutes (reduced from 5)
       );
 
+      // Call servicePromise with the correct arguments
+      const servicePromiseResult = servicePromise(
+        serviceName,
+        runtime,
+        configKey,
+        configs,
+        startServiceLogging,
+        failedConfigs
+      );
+
       // Add timeout to the service promise
-      return await Promise.race([servicePromise, timeoutPromise]);
+      return await Promise.race([servicePromiseResult, timeoutPromise]);
 
     } catch (error: any) {
       consoleError(

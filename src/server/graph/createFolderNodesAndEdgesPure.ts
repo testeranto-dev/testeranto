@@ -67,7 +67,7 @@ export function createFolderNodesAndEdgesPure(
           target: domainId,
           attributes: {
             type: 'parentOf',
-            weight: 1
+            // 
           }
         },
         timestamp
@@ -117,7 +117,7 @@ export function createFolderNodesAndEdgesPure(
                 target: folderId,
                 attributes: {
                   type: 'parentOf',
-                  weight: 1
+                  // 
                 }
               },
               timestamp
@@ -152,7 +152,7 @@ export function createFolderNodesAndEdgesPure(
 
     // Split the path into parts
     const parts = relativePath.split(path.sep).filter(part => part.trim() !== '');
-    
+
     // If the path is empty (root), create a root folder
     if (parts.length === 0) {
       // Create root folder
@@ -216,7 +216,7 @@ export function createFolderNodesAndEdgesPure(
             target: folderId,
             attributes: {
               type: 'parentOf',
-              weight: 1
+              // 
             }
           },
           timestamp
@@ -250,7 +250,7 @@ export function createFolderNodesAndEdgesPure(
             target: folderId,
             attributes: {
               type: 'parentOf',
-              weight: 1
+              // 
             }
           },
           timestamp

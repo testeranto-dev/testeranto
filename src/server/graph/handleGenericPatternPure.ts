@@ -9,7 +9,7 @@ export function handleGenericPatternPure(
   const operations: GraphOperation[] = [];
   const verbKey = testJob.key || `step_${stepIndex}`;
   const verbId = `verb:${testId}:${stepIndex}`;
-  
+
   operations.push({
     type: 'addNode',
     data: {
@@ -42,7 +42,7 @@ export function handleGenericPatternPure(
       target: verbId,
       attributes: {
         type: 'hasResult',
-        weight: 1
+
       }
     },
     timestamp

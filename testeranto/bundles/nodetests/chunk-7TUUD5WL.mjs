@@ -468,7 +468,7 @@ var BaseConfirm = class {
   toObj() {
     const testCases = this.testCases || [];
     return CommonUtils.toObj(this, {
-      testCases: testCases.map((testCase) => {
+      confirms: testCases.map((testCase, index) => {
         if (Array.isArray(testCase) && testCase.length >= 2) {
           const [value, should] = testCase;
           let inputData = null;
@@ -515,6 +515,7 @@ var BaseConfirm = class {
             testDescription = `Error: ${e.message}`;
           }
           return {
+            index,
             input: inputData,
             test: testDescription
           };
@@ -577,6 +578,9 @@ var BaseConfirm = class {
       CommonUtils.handleTestError(e, this);
     }
     return this.store;
+  }
+  async afterEach(store, key, artifactory) {
+    return store;
   }
   // Alias for run to match BaseSuite expectations
   async run(subject, testResourceConfiguration, artifactory) {
@@ -661,7 +665,8 @@ var BaseShould = class {
       status: this.status,
       error: this.error ? `${this.error.name}: ${this.error.message}` : null,
       rowIndex: this.rowIndex,
-      currentRow: this.currentRow
+      currentRow: this.currentRow,
+      pattern: "tdt"
     };
   }
 };
@@ -779,25 +784,28 @@ var BaseValue = class {
     return store;
   }
   toObj() {
-    const processedRows = (this.tableRows || []).map((row) => {
+    const processedRows = (this.tableRows || []).map((row, index) => {
       if (Array.isArray(row)) {
-        return row.map((item) => {
-          if (item && typeof item === "object") {
-            if (item.toObj) {
-              return item.toObj();
-            }
-            const result = {};
-            for (const [key, value] of Object.entries(item)) {
-              if (key !== "_parent" && key !== "testResourceConfiguration") {
-                result[key] = value;
+        return {
+          index,
+          values: row.map((item) => {
+            if (item && typeof item === "object") {
+              if (item.toObj) {
+                return item.toObj();
               }
+              const result = {};
+              for (const [key, value] of Object.entries(item)) {
+                if (key !== "_parent" && key !== "testResourceConfiguration") {
+                  result[key] = value;
+                }
+              }
+              return result;
             }
-            return result;
-          }
-          return item;
-        });
+            return item;
+          })
+        };
       }
-      return row;
+      return { index, values: [row] };
     });
     return {
       key: this.key,

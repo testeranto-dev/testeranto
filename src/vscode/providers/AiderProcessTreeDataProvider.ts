@@ -1,286 +1,306 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
-import { ApiUtils } from './utils/apiUtils';
-import type { AiderProcessesResponse } from '../../../api';
 
-interface AiderProcess {
-    id: string;
-    containerId: string;
-    containerName: string;
-    runtime: string;
-    testName: string;
-    configKey: string;
-    isActive: boolean;
-    status: 'running' | 'stopped' | 'exited';
-    exitCode?: number;
-    startedAt: string;
-    lastActivity?: string;
+interface GraphNode {
+  id: string;
+  type: string;
+  label: string;
+  metadata?: Record<string, any>;
+}
+
+interface GraphEdge {
+  source: string;
+  target: string;
+  attributes: {
+    type: string;
+  };
+}
+
+interface GraphData {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
 }
 
 export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
-    private processes: AiderProcess[] = [];
-    private refreshInterval: NodeJS.Timeout | null = null;
+  private graphData: GraphData | null = null;
 
-    constructor() {
-        super();
-        this.startAutoRefresh();
+  constructor() {
+    super();
+    console.log('[AiderProcessTreeDataProvider] Constructor called');
+    this.loadGraphData();
+  }
+
+  private loadGraphData(): void {
+    try {
+      const workspaceFolders = vscode.workspace.workspaceFolders;
+      if (!workspaceFolders || workspaceFolders.length === 0) {
+        return;
+      }
+
+      const workspaceRoot = workspaceFolders[0].uri.fsPath;
+      const graphDataPath = path.join(workspaceRoot, 'testeranto', 'reports', 'graph-data.json');
+      
+      if (fs.existsSync(graphDataPath)) {
+        const content = fs.readFileSync(graphDataPath, 'utf-8');
+        const parsed = JSON.parse(content);
+        this.graphData = parsed.data?.unifiedGraph || { nodes: [], edges: [] };
+        console.log(`[AiderProcessTreeDataProvider] Loaded graph with ${this.graphData.nodes.length} nodes`);
+      }
+    } catch (error) {
+      console.error('[AiderProcessTreeDataProvider] Error loading graph data:', error);
+    }
+  }
+
+  refresh(): void {
+    this.loadGraphData();
+    this._onDidChangeTreeData.fire();
+  }
+
+  getTreeItem(element: TestTreeItem): vscode.TreeItem {
+    return element;
+  }
+
+  async getChildren(element?: TestTreeItem): Promise<TestTreeItem[]> {
+    if (!this.graphData) {
+      this.loadGraphData();
     }
 
-    private startAutoRefresh(): void {
-        // Refresh every 10 seconds
-        this.refreshInterval = setInterval(() => {
-            this.refresh();
-        }, 10000);
+    if (!element) {
+      // Root level: Show aider processes grouped by entrypoint
+      return this.getAiderProcessItems();
     }
 
-    async refresh(): Promise<void> {
-        try {
-            await this.fetchProcesses();
-            this._onDidChangeTreeData.fire();
-        } catch (error) {
-            console.error('[AiderProcessTreeDataProvider] Error refreshing processes:', error);
-        }
+    const elementType = element.type;
+    const elementData = element.data || {};
+
+    if (elementType === TreeItemType.Runtime) {
+      // Show aider processes for this entrypoint
+      return this.getAiderProcessesForEntrypoint(elementData.entrypointId);
     }
 
-    private async fetchProcesses(): Promise<void> {
-        try {
-            const response = await fetch(ApiUtils.getAiderProcessesUrl(), {
-                signal: AbortSignal.timeout(3000)
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            const data = await response.json();
-            const aiderResponse = data as AiderProcessesResponse;
-            const rawProcesses = Array.isArray(aiderResponse.aiderProcesses) ? aiderResponse.aiderProcesses : [];
-            
-            this.processes = rawProcesses.filter(process => 
-                process && typeof process === 'object'
-            ).map(process => ({
-                id: process.id || process.containerId || 'unknown',
-                containerId: process.containerId || 'unknown',
-                containerName: process.containerName || 'unknown',
-                runtime: process.runtime || 'unknown',
-                testName: process.testName || 'unknown',
-                configKey: process.configKey || 'unknown',
-                isActive: process.isActive || false,
-                status: process.status || 'stopped',
-                exitCode: process.exitCode,
-                startedAt: process.startedAt || '',
-                lastActivity: process.lastActivity
-            }));
-            
-            if (this.processes.length > 0) {
-                console.log('[AiderProcessTreeDataProvider] Found', this.processes.length, 'aider processes');
-            }
-        } catch (error) {
-            console.error('[AiderProcessTreeDataProvider] Error fetching aider processes:', error);
-            this.processes = [];
-        }
+    return [];
+  }
+
+  private getAiderProcessItems(): TestTreeItem[] {
+    if (!this.graphData) return [];
+
+    // Find all aider nodes
+    const aiderNodes = this.graphData.nodes.filter(node => 
+      node.type === 'aider' || node.type === 'aider_process'
+    );
+
+    const items: TestTreeItem[] = [];
+
+    // Add refresh item
+    items.push(new TestTreeItem(
+      'Refresh',
+      TreeItemType.Info,
+      vscode.TreeItemCollapsibleState.None,
+      {
+        description: 'Reload graph data',
+        refresh: true
+      },
+      {
+        command: 'testeranto.refreshAiderProcesses',
+        title: 'Refresh',
+        arguments: []
+      },
+      new vscode.ThemeIcon('refresh')
+    ));
+
+    if (aiderNodes.length === 0) {
+      items.push(new TestTreeItem(
+        'No aider processes found',
+        TreeItemType.Info,
+        vscode.TreeItemCollapsibleState.None,
+        {
+          description: 'No aider processes in graph'
+        },
+        undefined,
+        new vscode.ThemeIcon('info')
+      ));
+      return items;
     }
 
-    getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]> {
-        if (!element) {
-            return this.getRootItems();
+    // Group aider nodes by their connected entrypoints
+    const entrypointMap = new Map<string, GraphNode[]>();
+
+    for (const aiderNode of aiderNodes) {
+      // Find edges where this aider is the target (connected from entrypoint)
+      const connectedEdges = this.graphData.edges.filter(edge =>
+        edge.target === aiderNode.id &&
+        edge.attributes.type === 'hasAider'
+      );
+
+      let entrypointId = 'ungrouped';
+      for (const edge of connectedEdges) {
+        const entrypointNode = this.graphData.nodes.find(n => n.id === edge.source);
+        if (entrypointNode && entrypointNode.type === 'entrypoint') {
+          entrypointId = entrypointNode.id;
+          break;
         }
-        
-        if (element.children && element.children.length > 0) {
-            return Promise.resolve(element.children);
-        }
-        
-        return Promise.resolve([]);
+      }
+
+      if (!entrypointMap.has(entrypointId)) {
+        entrypointMap.set(entrypointId, []);
+      }
+      entrypointMap.get(entrypointId)!.push(aiderNode);
     }
 
-    getTreeItem(element: TestTreeItem): vscode.TreeItem {
-        return element;
+    // Create items for each entrypoint group
+    for (const [entrypointId, aiderNodes] of entrypointMap.entries()) {
+      let entrypointLabel = 'Ungrouped Aider Processes';
+      let entrypointNode: GraphNode | undefined;
+
+      if (entrypointId !== 'ungrouped') {
+        entrypointNode = this.graphData.nodes.find(n => n.id === entrypointId);
+        entrypointLabel = entrypointNode?.label || entrypointId;
+      }
+
+      const entrypointItem = new TestTreeItem(
+        entrypointLabel,
+        TreeItemType.Runtime,
+        vscode.TreeItemCollapsibleState.Collapsed,
+        {
+          entrypointId,
+          description: `${aiderNodes.length} aider process(es)`,
+          count: aiderNodes.length
+        },
+        undefined,
+        new vscode.ThemeIcon('symbol-namespace')
+      );
+
+      // Store children
+      entrypointItem.children = aiderNodes.map(node => this.createAiderProcessItem(node, entrypointNode));
+      items.push(entrypointItem);
     }
 
-    private async getRootItems(): Promise<TestTreeItem[]> {
-        const items: TestTreeItem[] = [];
+    return items;
+  }
 
-        // Add header item
-        items.push(new TestTreeItem(
-            'Aider Processes',
-            TreeItemType.Info,
-            vscode.TreeItemCollapsibleState.None,
-            {
-                description: `${this.processes.length} processes`,
-                count: this.processes.length
-            },
-            undefined,
-            new vscode.ThemeIcon('comment-discussion')
-        ));
+  private getAiderProcessesForEntrypoint(entrypointId: string): TestTreeItem[] {
+    if (!this.graphData) return [];
 
-        // Add refresh item
-        items.push(new TestTreeItem(
-            'Refresh now',
-            TreeItemType.Info,
-            vscode.TreeItemCollapsibleState.None,
-            {
-                description: 'Update aider process list',
-                refresh: true
-            },
-            {
-                command: 'testeranto.refreshAiderProcesses',
-                title: 'Refresh Aider Processes',
-                arguments: []
-            },
-            new vscode.ThemeIcon('refresh')
-        ));
+    // Find aider nodes connected to this entrypoint
+    const connectedEdges = this.graphData.edges.filter(edge =>
+      edge.source === entrypointId &&
+      edge.attributes.type === 'hasAider'
+    );
 
-        // Add process items
-        if (this.processes.length === 0) {
-            items.push(new TestTreeItem(
-                'No aider processes found',
-                TreeItemType.Info,
-                vscode.TreeItemCollapsibleState.None,
-                {
-                    description: 'Run tests to create aider processes'
-                },
-                {
-                    command: 'testeranto.showTests',
-                    title: 'Show Tests',
-                    arguments: []
-                },
-                new vscode.ThemeIcon('info')
-            ));
-        } else {
-            // Group by runtime
-            const groupedByRuntime = this.groupProcessesByRuntime();
-            
-            for (const [runtime, processes] of Object.entries(groupedByRuntime)) {
-                if (!processes || processes.length === 0) continue;
-                
-                if (runtime === 'unknown') {
-                    processes.forEach(process => {
-                        if (process) {
-                            items.push(this.createProcessItem(process));
-                        }
-                    });
-                } else {
-                    const runtimeItem = new TestTreeItem(
-                        runtime,
-                        TreeItemType.Runtime,
-                        vscode.TreeItemCollapsibleState.Collapsed,
-                        {
-                            runtime: runtime,
-                            description: `${processes.length} processes`,
-                            count: processes.length
-                        },
-                        undefined,
-                        new vscode.ThemeIcon('symbol-namespace')
-                    );
-                    
-                    runtimeItem.children = processes
-                        .filter(process => process)
-                        .map(process => this.createProcessItem(process));
-                    items.push(runtimeItem);
-                }
-            }
-        }
-
-        return items;
+    const aiderNodes: GraphNode[] = [];
+    for (const edge of connectedEdges) {
+      const aiderNode = this.graphData.nodes.find(n => n.id === edge.target);
+      if (aiderNode && (aiderNode.type === 'aider' || aiderNode.type === 'aider_process')) {
+        aiderNodes.push(aiderNode);
+      }
     }
 
-    private groupProcessesByRuntime(): Record<string, AiderProcess[]> {
-        const groups: Record<string, AiderProcess[]> = {};
-        
-        this.processes.forEach(process => {
-            if (!process || typeof process !== 'object') return;
-            
-            const runtime = process.runtime || 'unknown';
-            
-            if (!groups[runtime]) {
-                groups[runtime] = [];
-            }
-            groups[runtime].push(process);
-        });
-        
-        return groups;
+    const entrypointNode = this.graphData.nodes.find(n => n.id === entrypointId);
+    return aiderNodes.map(node => this.createAiderProcessItem(node, entrypointNode));
+  }
+
+  private createAiderProcessItem(node: GraphNode, entrypointNode?: GraphNode): TestTreeItem {
+    const metadata = node.metadata || {};
+    const status = metadata.status || 'stopped';
+    const exitCode = metadata.exitCode;
+    const isActive = metadata.isActive || false;
+    const containerId = metadata.containerId || 'unknown';
+    const containerName = metadata.aiderServiceName || metadata.containerName || 'unknown';
+    const runtime = metadata.runtime || 'unknown';
+    const testName = metadata.testName || 'unknown';
+    const configKey = metadata.configKey || 'unknown';
+
+    // Determine label
+    let label = node.label || containerName;
+    if (label === 'unknown' && node.id) {
+      const parts = node.id.split(':');
+      label = parts[parts.length - 1] || node.id;
     }
 
-    private createProcessItem(process: AiderProcess): TestTreeItem {
-        const label = `${process.testName} (${process.runtime})`;
-        let description = process.status;
-        if (process.exitCode !== undefined) {
-            description += ` (exit: ${process.exitCode})`;
-        }
-        if (!process.isActive) {
-            description += ' • inactive';
-        }
-
-        let icon: vscode.ThemeIcon;
-        if (process.status === 'running' && process.isActive) {
-            icon = new vscode.ThemeIcon('play-circle', new vscode.ThemeColor('testing.iconPassed'));
-        } else if (process.status === 'exited') {
-            if (process.exitCode === 0) {
-                icon = new vscode.ThemeIcon('check', new vscode.ThemeColor('testing.iconPassed'));
-            } else {
-                icon = new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'));
-            }
-        } else if (process.status === 'stopped') {
-            icon = new vscode.ThemeIcon('circle-slash', new vscode.ThemeColor('testing.iconUnset'));
-        } else {
-            icon = new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'));
-        }
-
-        const item = new TestTreeItem(
-            label,
-            TreeItemType.Info,
-            vscode.TreeItemCollapsibleState.None,
-            {
-                description: description,
-                status: process.status,
-                exitCode: process.exitCode,
-                runtime: process.runtime,
-                testName: process.testName,
-                configKey: process.configKey,
-                containerId: process.containerId,
-                containerName: process.containerName,
-                isActive: process.isActive
-            },
-            {
-                command: 'testeranto.openAiderTerminal',
-                title: 'Open Aider Terminal',
-                arguments: [process.runtime, process.testName, process.containerId]
-            },
-            icon
-        );
-        
-        let tooltip = `Test: ${process.testName}\n`;
-        tooltip += `Runtime: ${process.runtime}\n`;
-        tooltip += `Config: ${process.configKey}\n`;
-        tooltip += `Status: ${process.status}\n`;
-        tooltip += `Active: ${process.isActive ? 'Yes' : 'No'}\n`;
-        if (process.exitCode !== undefined) {
-            tooltip += `Exit Code: ${process.exitCode}\n`;
-        }
-        tooltip += `Container: ${process.containerName}\n`;
-        tooltip += `Container ID: ${process.containerId}\n`;
-        if (process.startedAt) {
-            tooltip += `Started: ${process.startedAt}\n`;
-        }
-        if (process.lastActivity) {
-            tooltip += `Last Activity: ${process.lastActivity}\n`;
-        }
-        item.tooltip = tooltip;
-        
-        return item;
+    // Determine description
+    let description = `${status}`;
+    if (exitCode !== undefined) {
+      description += ` (exit: ${exitCode})`;
+    }
+    if (!isActive) {
+      description += ' • inactive';
     }
 
-    protected handleWebSocketMessage(message: any): void {
-        if (message.type === 'resourceChanged' && message.url === '/~/aider-processes') {
-            this.refresh();
-        }
+    // Determine icon
+    let icon: vscode.ThemeIcon;
+    if (status === 'running' && isActive) {
+      icon = new vscode.ThemeIcon('play-circle', new vscode.ThemeColor('testing.iconPassed'));
+    } else if (status === 'exited') {
+      if (exitCode === 0) {
+        icon = new vscode.ThemeIcon('check', new vscode.ThemeColor('testing.iconPassed'));
+      } else {
+        icon = new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'));
+      }
+    } else if (status === 'stopped') {
+      icon = new vscode.ThemeIcon('circle-slash', new vscode.ThemeColor('testing.iconUnset'));
+    } else {
+      icon = new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'));
     }
 
-    dispose(): void {
-        if (this.refreshInterval) {
-            clearInterval(this.refreshInterval);
-            this.refreshInterval = null;
-        }
-        super.dispose();
+    const item = new TestTreeItem(
+      label,
+      TreeItemType.Info,
+      vscode.TreeItemCollapsibleState.None,
+      {
+        description,
+        status,
+        exitCode,
+        runtime,
+        testName,
+        configKey,
+        containerId,
+        containerName,
+        isActive,
+        aiderId: node.id
+      },
+      {
+        command: 'testeranto.openAiderTerminal',
+        title: 'Open Aider Terminal',
+        arguments: [runtime, testName, containerId]
+      },
+      icon
+    );
+
+    // Build tooltip
+    let tooltip = `Type: ${node.type}\n`;
+    tooltip += `ID: ${node.id}\n`;
+    if (entrypointNode) {
+      tooltip += `Entrypoint: ${entrypointNode.label || entrypointNode.id}\n`;
     }
+    tooltip += `Container: ${containerName}\n`;
+    tooltip += `Container ID: ${containerId}\n`;
+    tooltip += `Status: ${status}\n`;
+    tooltip += `Active: ${isActive ? 'Yes' : 'No'}\n`;
+    if (exitCode !== undefined) {
+      tooltip += `Exit Code: ${exitCode}\n`;
+    }
+    tooltip += `Runtime: ${runtime}\n`;
+    tooltip += `Test: ${testName}\n`;
+    tooltip += `Config: ${configKey}\n`;
+    if (metadata.startedAt) {
+      tooltip += `Started: ${metadata.startedAt}\n`;
+    }
+    if (metadata.lastActivity) {
+      tooltip += `Last Activity: ${metadata.lastActivity}\n`;
+    }
+
+    item.tooltip = tooltip;
+    return item;
+  }
+
+  protected handleWebSocketMessage(message: any): void {
+    super.handleWebSocketMessage(message);
+    if (message.type === 'graphUpdated') {
+      this.refresh();
+    }
+  }
 }

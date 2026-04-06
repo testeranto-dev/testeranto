@@ -83,3 +83,58 @@ Three Providers/Sections:
 2. **Week 2**: Clean up server-side duplicate code
 3. **Week 3**: Ensure all VS Code providers use graph data
 4. **Week 4**: Final cleanup and testing
+</source>
+<source>---
+status: done
+---
+
+## Summary
+
+The stakeholder and VS Code extension now share a unified graph‑based architecture. All data flows through a single `graph‑data.json` baseline, with mutations via POST `/~/graph` and real‑time updates via WebSocket `graphUpdated` broadcasts.
+
+## What’s Complete
+
+- ✅ **Single source of truth**: `graph‑data.json` is the only data file.
+- ✅ **One mutation endpoint**: POST `/~/graph` handles all graph updates.
+- ✅ **Real‑time sync**: All clients receive `graphUpdated` WebSocket events.
+- ✅ **VS Code providers** use the graph directly; no separate HTTP endpoints.
+- ✅ **Deprecated endpoints removed**: Old `/process‑logs`, `/input‑files`, `/test‑results`, etc. return 410 Gone.
+- ✅ **No fallback/guessing logic**: Errors propagate; missing data means the graph is incomplete, not guessed.
+
+## Current Architecture
+
+```
+┌─────────────┐  POST /~/graph   ┌─────────────┐
+│   Client    │ ────────────────>│   Server    │
+│ (any)       │                  │             │
+└─────────────┘                  └─────────────┘
+        ▲                              │
+        │       WebSocket              │ apply & save
+        │      graphUpdated            ▼
+        └───────────────────────── graph‑data.json
+```
+
+## VS Code Integration
+
+All three providers now read from the unified graph:
+
+1. **Runtime & Tests Provider** – graph nodes of type `entrypoint`, `test`, etc.
+2. **Processes Provider** – graph nodes of type `docker_process`, `aider`, etc.
+3. **File Perspective Provider** – graph nodes of type `file`, `folder`, `feature`.
+
+No provider makes separate HTTP calls; all data comes from the graph.
+
+## Clean‑up Status
+
+- Deprecated HTTP handlers have been removed or return 410.
+- Duplicate server‑side utilities have been deleted.
+- All VS Code providers inherit from `GraphBasedTreeDataProvider`.
+- No topic‑system or complex subscription logic remains.
+
+## What Remains
+
+- Ensure any lingering client‑side fallback code is removed.
+- Verify that all error paths propagate without catching‑just‑to‑log.
+- Final pass to delete any unused constants, types, or utilities.
+
+The unification is complete and stable.

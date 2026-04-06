@@ -14325,18 +14325,7 @@ var TesterantoStakeholderApp = (() => {
         const graphY = node.screenY || node.y * height;
         const screenCoords = toScreenCoords(graphX, graphY);
         const screenSize = node.size * camera.scale;
-        return /* @__PURE__ */ import_react8.default.createElement(
-          "text",
-          {
-            key: `label-${node.id}`,
-            x: screenCoords.x,
-            y: screenCoords.y + screenSize + 15,
-            textAnchor: "middle",
-            fontSize: (config.style.labels?.fontSize || 12) * camera.scale,
-            fill: "#333"
-          },
-          node.label
-        );
+        return /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null);
       });
     };
     const renderSpaceIndicator = () => {
@@ -15488,7 +15477,6 @@ var TesterantoStakeholderApp = (() => {
         },
         /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px" } }, edge.source, " \u2192 ", edge.target),
         /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: { color: "#007acc" } }, edge.attributes?.type || "unknown")),
-        edge.attributes?.weight && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Weight: ", edge.attributes.weight),
         edge.attributes?.timestamp && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Timestamp: ", new Date(edge.attributes.timestamp).toLocaleString())
       )) : /* @__PURE__ */ import_react14.default.createElement("div", { style: { padding: "10px", textAlign: "center", color: "#999" } }, "No edges in graph"))));
     };

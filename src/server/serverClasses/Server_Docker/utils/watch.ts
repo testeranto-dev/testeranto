@@ -100,12 +100,9 @@ export const watchInputFilePure = async (
     }
     newHashs[configKey][testsName] = testInfo.hash || "";
 
-    // Create directories for each test entrypoint to ensure test.json files can be placed correctly
-    // According to the bug report, test.json files should follow the structure of the entrypoint
-    // For each test in the input JSON, create the appropriate directory under testeranto/reports/{correctConfigKey}/
+    // Create directories for each test entrypoint
     const cwd = processCwd();
     for (const [currentTestName, testInfo] of Object.entries(allTestsInfo)) {
-      // Find which config this test belongs to
       let testConfigKey: string | null = null;
       for (const [ck, configValue] of Object.entries(configs.runtimes)) {
         if (configValue.tests.includes(currentTestName)) {
@@ -114,7 +111,6 @@ export const watchInputFilePure = async (
         }
       }
 
-      // If we couldn't find a config for this test, skip it
       if (!testConfigKey) {
         consoleWarn(
           `[Server_Docker] Could not find config for test ${currentTestName}`,
@@ -122,14 +118,8 @@ export const watchInputFilePure = async (
         continue;
       }
 
-      // The entrypoint path is currentTestName (e.g., "src/ts/Calculator.test.node.ts")
-      // We need to create a directory structure under testeranto/reports/{testConfigKey}/{entrypointPath}/
-      // According to the bug report, test.json should be placed at {entrypointPath}/tests.json
-      // So we need to create a directory for the entire entrypoint path (including the filename as a directory)
       const entrypointPath = currentTestName;
-      // Remove leading "./" if present
       const cleanPath = entrypointPath.replace(/^\.\//, "");
-      // Create directory path: testeranto/reports/{testConfigKey}/{cleanPath}/
       const fullDirPath = join(
         cwd,
         "testeranto",
@@ -137,8 +127,6 @@ export const watchInputFilePure = async (
         testConfigKey,
         cleanPath,
       );
-      // We need to create the directory for fullDirPath, not remove the last component
-      // Because tests.json will be placed inside a directory named after the entrypoint file
       const dirToCreate = fullDirPath;
       try {
         if (!existsSync(dirToCreate)) {
@@ -191,7 +179,8 @@ export const watchInputFilePure = async (
         updatedHashs[configKey][testsName] = newHash;
 
         setState(updatedInputFiles, updatedHashs);
-        resourceChanged("/~/inputfiles");
+        // In unified approach, we broadcast graph updates instead
+        resourceChanged('/~/graph');
 
         consoleLog(`[Server_Docker] Input files changed for ${testsName}, hash changed: ${newHash !== oldHash}`);
         
@@ -205,22 +194,15 @@ export const watchInputFilePure = async (
               launchChecks(runtime, testsName, ck, configValue);
               informAider(runtime, testsName, ck, configValue, testInfo.files);
               
-              // Update graph with input files
-              consoleLog(`[Server_Docker] Checking if we should update graph with input files:`, {
-                hasUpdateGraphWithInputFiles: !!updateGraphWithInputFiles,
-                hasFiles: !!testInfo.files,
-                filesCount: testInfo.files?.length || 0
-              });
+              // Update graph with input files using unified approach
               if (updateGraphWithInputFiles && testInfo.files) {
                 try {
-                  consoleLog(`[Server_Docker] Calling updateGraphWithInputFiles for ${testsName} with ${testInfo.files.length} files`);
                   await updateGraphWithInputFiles(runtime, testsName, ck, testInfo.files);
-                  consoleLog(`[Server_Docker] updateGraphWithInputFiles completed`);
+                  // Broadcast graph update
+                  resourceChanged('/~/graph');
                 } catch (error) {
                   consoleWarn(`[Server_Docker] Failed to update graph with input files: ${error}`);
                 }
-              } else {
-                consoleLog(`[Server_Docker] Not updating graph: updateGraphWithInputFiles=${!!updateGraphWithInputFiles}, files=${!!testInfo.files}`);
               }
               break;
             }
@@ -254,7 +236,6 @@ export const watchOutputFilePure = (
   const outputDir = getFullReportDir(cwd, runtime);
   const projectRoot = cwd;
 
-  // Ensure the output directory exists
   if (!existsSync(outputDir)) {
     consoleLog(`[Server_Docker] Creating output directory: ${outputDir}`);
     mkdirSync(outputDir, { recursive: true });
@@ -286,7 +267,8 @@ export const watchOutputFilePure = (
           outputDir,
           projectRoot,
         );
-        resourceChanged("/~/outputfiles");
+        // In unified approach, broadcast graph updates
+        resourceChanged('/~/graph');
       }
     });
   }

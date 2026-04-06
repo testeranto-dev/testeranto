@@ -54,7 +54,7 @@ export function createFeatureNodeOperationsPure(
         target: testId,
         attributes: {
           type: 'associatedWith',
-          weight: 1
+
         }
       },
       timestamp

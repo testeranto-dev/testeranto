@@ -61,7 +61,7 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
             this.ws.onmessage = (event) => {
                 try {
                     const message = JSON.parse(event.data);
-                    console.log('[BaseTreeDataProvider] WebSocket message received:', message.type);
+                    console.log('[BaseTreeDataProvider] WebSocket message received:', message.type, message);
                     this.handleWebSocketMessage(message);
                 } catch (error) {
                     console.error('[BaseTreeDataProvider] Error parsing WebSocket message:', error);
@@ -93,9 +93,12 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
 
     protected handleWebSocketMessage(message: any): void {
         // Base implementation - can be overridden by subclasses
-        if (message.type === 'resourceChanged') {
+        if (message.type === 'resourceChanged' || message.type === 'graphUpdated') {
+            console.log(`[BaseTreeDataProvider] ${message.type} received, refreshing`);
             this.refresh();
         }
+        // Note: Process-related WebSocket messages have been removed
+        // as part of the unified graph-based approach
     }
 
     public dispose(): void {

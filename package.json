@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the AI powered test framework for polyglot projects",
-  "version": "0.240.0",
+  "version": "0.242.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -27,12 +27,14 @@
     "onCommand:testeranto.startServer",
     "onCommand:testeranto.refreshDockerProcesses",
     "onCommand:testeranto.refreshAiderProcesses",
+    "onCommand:testeranto.refreshFileTree",
     "onCommand:testeranto.showProcessLogs",
     "onCommand:testeranto.openAiderTerminal",
     "onCommand:testeranto.openServerWebview",
     "onView:testeranto.runtimeView",
     "onView:testeranto.dockerProcessView",
     "onView:testeranto.aiderProcessView",
+    "onView:testeranto.fileTreeView",
     "workspaceContains:**/testeranto/extension-config.json",
     "workspaceContains:**/testeranto/reports/**/*.json"
   ],
@@ -81,6 +83,11 @@
           "id": "testeranto.aiderProcessView",
           "name": "Aider Processes",
           "icon": "$(comment-discussion)"
+        },
+        {
+          "id": "testeranto.fileTreeView",
+          "name": "File Perspective",
+          "icon": "$(files)"
         }
       ]
     },
@@ -120,6 +127,10 @@
       {
         "command": "testeranto.refreshAiderProcesses",
         "title": "Testeranto: Refresh Aider Processes"
+      },
+      {
+        "command": "testeranto.refreshFileTree",
+        "title": "Testeranto: Refresh File Tree"
       },
       {
         "command": "testeranto.showProcessLogs",

@@ -1,4 +1,4 @@
-import { vscodeWsAPI } from "../../api";
+import { vscodeWsAPI } from "../../api/vscodeExtensionWs";
 
 export function handleWebSocketMessage(
   ws: WebSocket,
@@ -11,18 +11,7 @@ export function handleWebSocketMessage(
   getBuildEvents?: () => any[],
   broadcast?: (message: any) => void
 ): void {
-  if (message.type === vscodeWsAPI.getProcesses.type) {
-    // Handle getProcesses
-    if (!ws || typeof ws.send !== 'function') {
-      return;
-    }
-    ws.send(JSON.stringify({
-      type: vscodeWsAPI.getProcesses.response.type,
-      message: "Please use HTTP GET /~/processes to fetch processes",
-      timestamp: new Date().toISOString()
-    }));
-    return;
-  }
+  // Note: getProcesses WebSocket message has been removed as part of the unified graph-based approach
 
   if (message.type === vscodeWsAPI.getUnifiedTestTree.type) {
     // Handle getUnifiedTestTree

@@ -17,17 +17,17 @@ export function createLogFileNodeOperationsPure(
   const filename = path.basename(logFilePath);
   const timestampPart = Date.now().toString(36); // Base36 timestamp
   const logFileId = `logfile:${filename}:${timestampPart}`;
-  
+
   // Get the relative path for display
-  const relativeLogPath = logFilePath.startsWith(process.cwd()) 
+  const relativeLogPath = logFilePath.startsWith(process.cwd())
     ? path.relative(process.cwd(), logFilePath)
     : logFilePath;
 
   // Determine log type from service name
   const logType = serviceName.includes('bdd') ? 'bdd' :
-                 serviceName.includes('check') ? 'check' :
-                 serviceName.includes('aider') ? 'aider' :
-                 serviceName.includes('builder') ? 'builder' : 'unknown';
+    serviceName.includes('check') ? 'check' :
+      serviceName.includes('aider') ? 'aider' :
+        serviceName.includes('builder') ? 'builder' : 'unknown';
 
   operations.push({
     type: 'addNode',
@@ -57,18 +57,18 @@ export function createLogFileNodeOperationsPure(
 
   // Always create the log file node, even without connections
   // This ensures it appears in the graph
-  
+
   // If we have a test name, try to connect to relevant nodes
   if (testName) {
     // Try to connect to entrypoint first (most reliable)
     let entrypointId: string;
-    
+
     if (testName.includes('.') || testName.includes('/') || testName.includes('\\')) {
       entrypointId = `entrypoint:${testName}`;
     } else {
       entrypointId = `entrypoint:${runtimeConfigKey}:${testName}`;
     }
-    
+
     // Connect to entrypoint
     operations.push({
       type: 'addEdge',
@@ -77,7 +77,6 @@ export function createLogFileNodeOperationsPure(
         target: logFileId,
         attributes: {
           type: 'associatedWith',
-          weight: 1,
           timestamp
         }
       },
@@ -96,7 +95,7 @@ export function createLogFileNodeOperationsPure(
     } else if (serviceName.includes('builder')) {
       processType = 'builder_process';
     }
-    
+
     if (processType) {
       let processId: string;
       if (processType === 'builder_process') {
@@ -104,7 +103,7 @@ export function createLogFileNodeOperationsPure(
       } else {
         processId = `${processType}:${runtimeConfigKey}:${testName}`;
       }
-      
+
       operations.push({
         type: 'addEdge',
         data: {
@@ -112,7 +111,6 @@ export function createLogFileNodeOperationsPure(
           target: logFileId,
           attributes: {
             type: 'hasLog',
-            weight: 1,
             timestamp
           }
         },
@@ -120,7 +118,7 @@ export function createLogFileNodeOperationsPure(
       });
     }
   }
-  
+
   // Also add a metadata property to make log files easier to find
   operations.push({
     type: 'updateNode',
@@ -130,9 +128,9 @@ export function createLogFileNodeOperationsPure(
         ...operations[0].data.metadata, // Get metadata from the addNode operation
         isLogFile: true,
         logType: serviceName.includes('bdd') ? 'bdd' :
-                serviceName.includes('check') ? 'check' :
-                serviceName.includes('aider') ? 'aider' :
-                serviceName.includes('builder') ? 'builder' : 'unknown'
+          serviceName.includes('check') ? 'check' :
+            serviceName.includes('aider') ? 'aider' :
+              serviceName.includes('builder') ? 'builder' : 'unknown'
       }
     },
     timestamp

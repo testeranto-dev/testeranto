@@ -7,11 +7,11 @@ export function connectAllTestsToEntrypointPure(
   timestamp: string
 ): GraphOperation[] {
   const operations: GraphOperation[] = [];
-  
+
   if (!entrypointId) {
     return operations;
   }
-  
+
   for (const testNodeId of testNodeIds) {
     operations.push({
       type: 'addEdge',
@@ -20,12 +20,12 @@ export function connectAllTestsToEntrypointPure(
         target: testNodeId,
         attributes: {
           type: 'belongsTo',
-          weight: 1
+          // 
         }
       },
       timestamp
     });
   }
-  
+
   return operations;
 }

@@ -1,10 +1,7 @@
 import * as vscode from 'vscode';
 import { TestTreeItem } from '../../TestTreeItem';
 import { TreeItemType } from '../../types';
-import { getDocumentationItems } from './documentationItemsUtils';
-import { getTestInputItems } from './testInputItemsUtils';
-import { getTestResultItems } from './testResultItemsUtils';
-import { getProcessItems } from './processItemsUtils';
+
 
 export function getRootItems(
     documentationFiles: string[],

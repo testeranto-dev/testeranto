@@ -1,33 +1,12 @@
+import fs from 'fs';
 import { captureContainerExitCode } from ".";
 import {
-  getLogFilePath,
-  getExitCodeFilePath,
-  DOCKER_COMPOSE_BASE,
-} from "../Server_Docker_Constants";
-import {
-  execSyncWrapper,
-  consoleWarn,
-  writeFileSync,
-  spawnWrapper,
   consoleLog,
+  consoleWarn,
+  execSyncWrapper,
+  writeFileSync,
 } from "../Server_Docker_Dependents";
-import fs from 'fs';
-import { spawn } from 'child_process';
-
-// Helper to clean test name for file paths (preserves directory structure)
-const cleanTestNameForPath = (testName: string): string => {
-  // Keep original case for directory parts, only clean the filename part
-  const parts = testName.split('/');
-  const lastPart = parts[parts.length - 1];
-  // Clean the filename part: replace dots with hyphens and remove invalid chars
-  const cleanedLastPart = lastPart.replace(/\./g, '-').replace(/[^a-zA-Z0-9_-]/g, '');
-  parts[parts.length - 1] = cleanedLastPart;
-  let result = parts.join('/');
-  // Remove any other invalid characters from the full path (keep slashes, hyphens, underscores, alphanumeric)
-  // But preserve the case for directory names
-  result = result.replace(/[^a-zA-Z0-9_/-]/g, '');
-  return result;
-};
+import { cleanTestNameForPath } from "./cleanTestNameForPath";
 
 export const startServiceLoggingPure = async (
   serviceName: string,
@@ -57,7 +36,7 @@ export const startServiceLoggingPure = async (
           ]);
           // consoleLog(`[startServiceLoggingPure] Stopped existing log process for ${serviceName}`);
         }
-      } catch (error) {
+      } catch (error: any) {
         consoleWarn(`[startServiceLoggingPure] Error stopping existing log process for ${serviceName}:`, error);
       }
       // Remove from tracking
@@ -89,7 +68,7 @@ export const startServiceLoggingPure = async (
 
   // Get the Docker container ID and its start time
   let dockerContainerId: string;
-  let containerStartTime: string;
+  let containerStartTime: string = '';
   try {
     const containerIdCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${serviceName}`;
     dockerContainerId = execSyncWrapper(containerIdCmd, { cwd: cwd }).trim();
@@ -107,7 +86,7 @@ export const startServiceLoggingPure = async (
       const startTimeCmd = `docker inspect --format='{{.State.StartedAt}}' ${dockerContainerId}`;
       containerStartTime = execSyncWrapper(startTimeCmd, { cwd: cwd }).trim();
     }
-  } catch (error) {
+  } catch (error: any) {
     consoleWarn(`[startServiceLoggingPure] Error getting container info for ${serviceName}:`, error);
     // Still try to capture exit code
     captureContainerExitCode(serviceName, runtime, runtimeConfigKey, testName);
@@ -154,7 +133,7 @@ export const startServiceLoggingPure = async (
           // Continue with status check
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       // Container might have been removed
       consoleWarn(`[startServiceLoggingPure] Error checking container status:`, error);
       break;
@@ -263,7 +242,7 @@ export const startServiceLoggingPure = async (
         // Ignore final attempt errors
       }
     }
-  } catch (error) {
+  } catch (error: any) {
     consoleWarn(`[startServiceLoggingPure] Error capturing logs for ${serviceName}:`, error);
     fs.appendFileSync(logFilePath, `\n=== Error capturing logs: ${error} ===\n`);
 

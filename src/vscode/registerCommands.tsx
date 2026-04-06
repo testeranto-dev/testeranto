@@ -7,6 +7,7 @@ import { TreeItemType } from './types';
 import type { StatusBarManager } from './statusBarManager';
 import type { DockerProcessTreeDataProvider } from './providers/DockerProcessTreeDataProvider';
 import type { AiderProcessTreeDataProvider } from './providers/AiderProcessTreeDataProvider';
+// Note: showProcessLogs has been updated to use graph-based approach
 import { showProcessLogs } from './showProcessLogs';
 import { openFile } from './openFile';
 import { openServerWebview } from './openServerWebview';
@@ -17,8 +18,10 @@ export const registerCommands = (
     runtimeProvider: any,
     statusBarManager: StatusBarManager,
     dockerProcessProvider: DockerProcessTreeDataProvider,
-    aiderProcessProvider: AiderProcessTreeDataProvider
+    aiderProcessProvider: AiderProcessTreeDataProvider,
+    fileTreeProvider: any
 ): vscode.Disposable[] => {
+    console.log('[VS Code] Registering commands');
     const disposables: vscode.Disposable[] = [];
 
     disposables.push(
@@ -242,6 +245,25 @@ export const registerCommands = (
                     }
                 } catch (err) {
                     vscode.window.showErrorMessage(`Error refreshing aider processes: ${err}`);
+                }
+            }
+        )
+    );
+
+    // File tree commands
+    disposables.push(
+        vscode.commands.registerCommand(
+            "testeranto.refreshFileTree",
+            async () => {
+                try {
+                    if (fileTreeProvider && typeof (fileTreeProvider as any).refresh === 'function') {
+                        await (fileTreeProvider as any).refresh();
+                        vscode.window.showInformationMessage("File tree refreshed");
+                    } else {
+                        vscode.window.showWarningMessage("File tree provider not available");
+                    }
+                } catch (err) {
+                    vscode.window.showErrorMessage(`Error refreshing file tree: ${err}`);
                 }
             }
         )

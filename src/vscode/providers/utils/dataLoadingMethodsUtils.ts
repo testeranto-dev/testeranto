@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import { fetchCollatedDocumentation } from './fetchUtils';
 import { fetchCollatedInputFiles } from './fetchCollatedUtils';
 import { fetchCollatedTestResults } from './fetchCollatedUtils';
@@ -57,12 +58,19 @@ export async function loadTestResultsData(): Promise<{
     testResults: Map<string, any[]>;
     collatedTestResults: Record<string, any>;
 }> {
+    console.log('[dataLoadingMethodsUtils] loadTestResultsData called');
+    const debugChannel = vscode.window.createOutputChannel("Testeranto Debug");
+    debugChannel.appendLine(`[${new Date().toISOString()}] loadTestResultsData called`);
+    
     try {
+        debugChannel.appendLine(`[${new Date().toISOString()}] Fetching collated test results...`);
         const data = await fetchCollatedTestResults();
+        debugChannel.appendLine(`[${new Date().toISOString()}] Fetched data: ${JSON.stringify(data).substring(0, 200)}...`);
         
         // Convert to Map
         const testResults = new Map<string, any[]>();
         if (data.results && Array.isArray(data.results)) {
+            debugChannel.appendLine(`[${new Date().toISOString()}] Processing ${data.results.length} results`);
             for (const result of data.results) {
                 const testName = result.testName || 'unknown';
                 if (!testResults.has(testName)) {
@@ -72,12 +80,17 @@ export async function loadTestResultsData(): Promise<{
             }
         }
         
+        debugChannel.appendLine(`[${new Date().toISOString()}] Returning ${testResults.size} test results`);
+        debugChannel.show();
+        
         return {
             testResults,
             collatedTestResults: data.collated || {}
         };
     } catch (error) {
+        debugChannel.appendLine(`[${new Date().toISOString()}] Error loading test results data: ${error}`);
         console.error('Error loading test results data:', error);
+        debugChannel.show();
         return {
             testResults: new Map(),
             collatedTestResults: {}

@@ -10,7 +10,7 @@
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1775421033228,
+  "timestamp": 1775442992823,
   "individualResults": [
     {
       "index": 0,
@@ -21,7 +21,7 @@
       ],
       "error": {
         "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
-        "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)",
+        "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -33,9 +33,9 @@
             "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)"
+            "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)"
           },
-          "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)"
+          "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)"
         ],
         "failed": true,
         "features": [
@@ -44,8 +44,9 @@
         "artifacts": [],
         "status": true,
         "fails": 2,
-        "testCases": [
+        "confirms": [
           {
+            "index": 0,
             "input": [
               1,
               1
@@ -53,6 +54,7 @@
             "test": "beEqualTo: 2222"
           },
           {
+            "index": 1,
             "input": [
               2,
               3
@@ -71,7 +73,7 @@
       ],
       "error": {
         "message": "Describe.another simple calculator is not implemented",
-        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1475:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1483:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
         "name": "Error"
       },
       "stepName": "step_1",
@@ -92,7 +94,7 @@
         ],
         "error": [
           "Describe.another simple calculator is not implemented",
-          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1475:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1675:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1483:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:148:31)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1683:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
         ],
         "failed": true,
         "features": [
@@ -163,7 +165,7 @@
       ],
       "error": {
         "message": "expected [Function] to equal 3",
-        "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -178,9 +180,9 @@
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+            "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
           },
-          "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+          "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
         ],
         "failed": true,
         "features": [
@@ -189,8 +191,9 @@
         "artifacts": [],
         "status": true,
         "fails": 1,
-        "testCases": [
+        "confirms": [
           {
+            "index": 0,
             "input": [
               3,
               3
@@ -209,7 +212,7 @@
       ],
       "error": {
         "message": "expected [Function] to equal 32",
-        "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -224,9 +227,9 @@
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+            "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
           },
-          "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+          "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
         ],
         "failed": true,
         "features": [
@@ -235,8 +238,9 @@
         "artifacts": [],
         "status": true,
         "fails": 1,
-        "testCases": [
+        "confirms": [
           {
+            "index": 0,
             "input": [
               3,
               32
@@ -255,7 +259,7 @@
       ],
       "error": {
         "message": "expected [Function] to equal 332",
-        "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)",
+        "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -270,9 +274,9 @@
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+            "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
           },
-          "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:645:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:562:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:583:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1686:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1771:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-U4RILNIO.mjs:1127:51)"
+          "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:649:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:563:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:587:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1694:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1779:36)\n    at runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-7TUUD5WL.mjs:1135:51)"
         ],
         "failed": true,
         "features": [
@@ -281,8 +285,9 @@
         "artifacts": [],
         "status": true,
         "fails": 1,
-        "testCases": [
+        "confirms": [
           {
+            "index": 0,
             "input": [
               3,
               332

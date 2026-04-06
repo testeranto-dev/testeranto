@@ -1,6 +1,0 @@
-=== Log started at 2026-03-30T02:33:30.062Z for service golang ===
-
-golang-builder  | testeranto/golang_runtime.go:13:2: package src/server/runtimes/golang/framework-converters is not in std (/usr/local/go/src/src/server/runtimes/golang/framework-converters)
-[Kgolang-builder exited with code 1
-
-=== Log ended at 2026-03-30T02:33:30.568Z, process exited with code 0 ===

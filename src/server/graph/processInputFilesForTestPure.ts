@@ -13,7 +13,7 @@ export async function processInputFilesForTestPure(
     // Create file node for input file
     const fileNodeId = `file:${inputFile}`;
     const existingFileNode = graph.hasNode(fileNodeId);
-    
+
     if (!existingFileNode) {
       operations.push({
         type: 'addNode',
@@ -51,7 +51,7 @@ export async function processInputFilesForTestPure(
             target: fileNodeId,
             attributes: {
               type: 'locatedIn',
-              weight: 1
+
             }
           },
           timestamp
@@ -69,7 +69,7 @@ export async function processInputFilesForTestPure(
           target: fileNodeId,
           attributes: {
             type: 'associatedWith',
-            weight: 1
+
           }
         },
         timestamp

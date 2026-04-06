@@ -10,7 +10,7 @@ export function createSimpleTestNodeOperationsPure(
   timestamp: string
 ): GraphOperation[] {
   const operations: GraphOperation[] = [];
-  
+
   const testId = `test:${sanitizedConfigKey}:${filePathForEntrypoint}:0`;
 
   // Prepare test metadata from testResults
@@ -50,7 +50,7 @@ export function createSimpleTestNodeOperationsPure(
         target: testId,
         attributes: {
           type: 'belongsTo',
-          weight: 1
+          // 
         }
       },
       timestamp

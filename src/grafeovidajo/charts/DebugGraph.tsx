@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { BaseChart, VizComponentProps } from './BaseChart';
+import { BaseChart } from './BaseChart';
 import { NodeDetailsModal } from './NodeDetailsModal';
-import { VizConfig, GraphData, Node, Edge } from '../core/types';
+import { VizConfig, GraphData, Node, Edge, VizComponentProps } from '../core/types';
 import { Palette } from '../../colors';
 
 export interface DebugConfig extends VizConfig {
@@ -293,11 +293,11 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
                   <div style={{ fontSize: '11px', color: '#666' }}>
                     Type: <span style={{ color: '#007acc' }}>{edge.attributes?.type || 'unknown'}</span>
                   </div>
-                  {edge.attributes?.weight && (
+                  {/* {edge.attributes?.weight && (
                     <div style={{ fontSize: '11px', color: '#666' }}>
                       Weight: {edge.attributes.weight}
                     </div>
-                  )}
+                  )} */}
                   {edge.attributes?.timestamp && (
                     <div style={{ fontSize: '11px', color: '#666' }}>
                       Timestamp: {new Date(edge.attributes.timestamp).toLocaleString()}
@@ -320,9 +320,9 @@ export const DebugGraph: React.FC<VizComponentProps & { config: DebugConfig }> =
   const renderSvgView = () => {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <BaseChart 
-          {...props} 
-          data={debugData} 
+        <BaseChart
+          {...props}
+          data={debugData}
           config={debugConfig}
           onNodeClick={handleNodeClick}
           onNodeUpdate={props.onNodeUpdate}

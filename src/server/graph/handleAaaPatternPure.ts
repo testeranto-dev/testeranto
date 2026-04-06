@@ -8,7 +8,7 @@ export function handleAaaPatternPure(
 ): GraphOperation[] {
   const operations: GraphOperation[] = [];
   const describeKey = testJob.key || `describe_${stepIndex}`;
-  
+
   // Create Describe node
   const describeId = `describe:${testId}:${stepIndex}`;
   operations.push({
@@ -43,7 +43,7 @@ export function handleAaaPatternPure(
       target: describeId,
       attributes: {
         type: 'hasDescribe',
-        weight: 1
+        // 
       }
     },
     timestamp
@@ -54,7 +54,7 @@ export function handleAaaPatternPure(
     for (let itIndex = 0; itIndex < testJob.its.length; itIndex++) {
       const it = testJob.its[itIndex];
       const itId = `it:${testId}:${stepIndex}:${itIndex}`;
-      
+
       operations.push({
         type: 'addNode',
         data: {
@@ -86,7 +86,7 @@ export function handleAaaPatternPure(
           target: itId,
           attributes: {
             type: 'hasIt',
-            weight: 1
+            // 
           }
         },
         timestamp

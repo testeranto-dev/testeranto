@@ -1,5 +1,4 @@
 import { DataUtils } from './dataUtils';
-
 export class DataManagementUtils {
     private static documentationFiles: string[] = [];
     private static documentationTree: Record<string, any> = {};
@@ -12,7 +11,7 @@ export class DataManagementUtils {
     static async loadInitialData(loadAllDataFn: () => Promise<any>): Promise<void> {
         try {
             const data = await loadAllDataFn();
-            
+
             this.documentationFiles = data.documentationFiles || [];
             this.documentationTree = data.documentationTree || {};
             this.testInputFiles = data.testInputFiles || new Map();

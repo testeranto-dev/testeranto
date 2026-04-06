@@ -5,6 +5,7 @@ import { TerminalManager } from "./TerminalManager";
 import { TestTreeDataProvider } from "./providers/TestTreeDataProvider";
 import { DockerProcessTreeDataProvider } from "./providers/DockerProcessTreeDataProvider";
 import { AiderProcessTreeDataProvider } from "./providers/AiderProcessTreeDataProvider";
+import { FileTreeDataProvider } from "./providers/FileTreeDataProvider";
 import { StatusBarManager } from "./statusBarManager";
 import { CommandManager } from "./commandManager";
 
@@ -77,13 +78,19 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         const aiderProcessProvider = new AiderProcessTreeDataProvider();
         outputChannel.appendLine("[Testeranto] AiderProcessTreeDataProvider created successfully");
 
+        // Create File tree provider for file perspective
+        outputChannel.appendLine("[Testeranto] Creating FileTreeDataProvider...");
+        const fileTreeProvider = new FileTreeDataProvider();
+        outputChannel.appendLine("[Testeranto] FileTreeDataProvider created successfully");
+
         // Verify providers implement required interface
         outputChannel.appendLine("[Testeranto] Verifying providers implement required methods...");
         const requiredMethods = ['getChildren', 'getTreeItem'];
         for (const [name, provider] of Object.entries({
             runtimeProvider,
             dockerProcessProvider,
-            aiderProcessProvider
+            aiderProcessProvider,
+            fileTreeProvider
         })) {
             outputChannel.appendLine(`[Testeranto] Checking provider: ${name}`);
             for (const method of requiredMethods) {
@@ -114,6 +121,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         vscode.window.registerTreeDataProvider('testeranto.runtimeView', runtimeProvider);
         vscode.window.registerTreeDataProvider('testeranto.dockerProcessView', dockerProcessProvider);
         vscode.window.registerTreeDataProvider('testeranto.aiderProcessView', aiderProcessProvider);
+        vscode.window.registerTreeDataProvider('testeranto.fileTreeView', fileTreeProvider);
         outputChannel.appendLine("[Testeranto] Tree data providers registered successfully");
 
         // Create tree views AFTER registering providers
@@ -136,12 +144,19 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         });
         outputChannel.appendLine("[Testeranto] Aider process tree view created successfully");
 
+        const fileTreeView = vscode.window.createTreeView("testeranto.fileTreeView", {
+            treeDataProvider: fileTreeProvider,
+            showCollapseAll: true
+        });
+        outputChannel.appendLine("[Testeranto] File tree view created successfully");
+
         // Add tree views to subscriptions
         outputChannel.appendLine("[Testeranto] Adding tree views to context subscriptions...");
         context.subscriptions.push(
             runtimeTreeView,
             dockerProcessTreeView,
-            aiderProcessTreeView
+            aiderProcessTreeView,
+            fileTreeView
         );
         outputChannel.appendLine("[Testeranto] Tree views added to subscriptions");
 
@@ -156,6 +171,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
             const aiderChildren = await aiderProcessProvider.getChildren();
             outputChannel.appendLine(`[Testeranto] aiderProcessProvider.getChildren() returned ${aiderChildren?.length || 0} items`);
+
+            const fileChildren = await fileTreeProvider.getChildren();
+            outputChannel.appendLine(`[Testeranto] fileTreeProvider.getChildren() returned ${fileChildren?.length || 0} items`);
         } catch (error) {
             outputChannel.appendLine(`[Testeranto] ERROR testing providers: ${error}`);
         }
@@ -173,6 +191,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         if (typeof aiderProcessProvider.refresh === 'function') {
             outputChannel.appendLine("[Testeranto] Refreshing aiderProcessProvider...");
             aiderProcessProvider.refresh();
+        }
+        if (typeof fileTreeProvider.refresh === 'function') {
+            outputChannel.appendLine("[Testeranto] Refreshing fileTreeProvider...");
+            fileTreeProvider.refresh();
         }
         outputChannel.appendLine("[Testeranto] Tree data providers refreshed");
 

@@ -1,4 +1,3 @@
-import { stakeholderHttpAPI } from "../../../api/stakeholderHttp";
 import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
 
 export const handleOptions = (request?: Request, routeName?: string): Response => {
@@ -17,17 +16,8 @@ export const handleOptions = (request?: Request, routeName?: string): Response =
       }
     }
 
-    // Check stakeholderHttpAPI if not found in vscodeHttpAPI
-    if (allowedMethods.length === 0) {
-      for (const [key, definition] of Object.entries(stakeholderHttpAPI)) {
-        const apiDef = definition as any;
-        const apiRouteName = apiDef.path.startsWith("/") ? apiDef.path.substring(1) : apiDef.path;
-        if (apiRouteName === routeName) {
-          allowedMethods = [apiDef.method, "OPTIONS"];
-          break;
-        }
-      }
-    }
+    // Note: stakeholderHttpAPI is deprecated in unified graph-based approach
+    // All API endpoints should be defined in vscodeHttpAPI
   }
 
   return new Response(null, {

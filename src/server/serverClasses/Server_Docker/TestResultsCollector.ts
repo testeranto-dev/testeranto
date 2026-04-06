@@ -77,6 +77,8 @@ export class TestResultsCollector {
       }
     }
 
+    // Note: We can't broadcast from here because we don't have access to resourceChanged
+    // The caller should broadcast after collecting results
     return results;
   }
 
