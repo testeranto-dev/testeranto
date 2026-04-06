@@ -3,6 +3,7 @@ import path from 'path';
 import { Palette } from "../../colors";
 import type { ITesterantoConfig } from "../../Types";
 import { GraphManager } from "../graph/index";
+import type { GraphNodeAttributes, GraphEdgeAttributes } from "../../graph/index";
 import type { IMode } from "../types";
 import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
 import { resetGraphDataPure } from "./utils/resetGraphDataPure";
@@ -170,4 +171,60 @@ export class Server_GraphManager {
   getGraphManager(): GraphManager {
     return this.graphManager;
   }
+
+  // Get only files and folders from the graph
+  getFilesAndFolders(): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    return this.graphManager.getFilesAndFolders();
+  }
+
+  // Get process slice (docker processes)
+  getProcessSlice(): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    return this.graphManager.getProcessSlice();
+  }
+
+  // Get aider slice (aider processes)
+  getAiderSlice(): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    return this.graphManager.getAiderSlice();
+  }
+
+  // Get runtime slice (runtimes)
+  getRuntimeSlice(): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    return this.graphManager.getRuntimeSlice();
+  }
+
+  // Get slice for a specific agent
+  getAgentSlice(agentName: string): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    if (!this.configs.agents) {
+      throw new Error(`No agents configured`);
+    }
+    
+    const agentConfig = this.configs.agents[agentName];
+    if (!agentConfig) {
+      throw new Error(`Agent ${agentName} not found in configuration`);
+    }
+    
+    if (typeof agentConfig.sliceFunction !== 'function') {
+      throw new Error(`Agent ${agentName} has invalid sliceFunction`);
+    }
+    
+    return agentConfig.sliceFunction(this.graphManager);
+  }
+
+
+
 }

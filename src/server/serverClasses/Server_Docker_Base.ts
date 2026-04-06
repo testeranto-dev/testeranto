@@ -165,6 +165,7 @@ export abstract class Server_Docker_Base extends Server_WS {
       testName,
       serverHttp.graphManager?.getGraphManager ? serverHttp.graphManager.getGraphManager() : null
     );
+    // Graph updates will be broadcast via /~/graph
   }
 
   protected async getContainerInfo(serviceName: string): Promise<any> {
@@ -276,5 +277,9 @@ export abstract class Server_Docker_Base extends Server_WS {
       checkIndex,
       this.graphManager?.getGraphManager ? this.graphManager.getGraphManager() : null
     );
+  }
+
+  async createAgent(agentName: string, suffix: string): Promise<void> {
+    await this.testManager.launchAgent(agentName, suffix);
   }
 }

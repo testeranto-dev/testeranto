@@ -292,6 +292,13 @@ var vscodeHttpAPI = {
     path: "/~/graph",
     description: "Update graph with operations",
     response: {}
+  },
+  // Get only files and folders
+  getFiles: {
+    method: "GET",
+    path: "/~/files",
+    description: "Get only files and folders from the graph",
+    response: {}
   }
 };
 

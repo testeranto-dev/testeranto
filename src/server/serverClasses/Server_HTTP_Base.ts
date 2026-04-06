@@ -6,7 +6,7 @@ import { handleOptions } from "./Server_Http/handleOptions";
 import { serveStaticFile } from "./Server_Http/serveStaticFile";
 
 export abstract class Server_HTTP_Base extends Server_Base {
-  protected graphManager: Server_GraphManager;
+  graphManager: Server_GraphManager;
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);

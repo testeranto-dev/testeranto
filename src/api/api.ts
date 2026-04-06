@@ -1,4 +1,4 @@
-import type { VscodeHttpAPI } from "./vscodeExtensionHttp";
+import { vscodeHttpAPI, type VscodeHttpAPI } from "./vscodeExtensionHttp";
 
 // Base API definition types
 export type HttpMethod = 'GET' | 'POST' | 'PUT' |
@@ -38,6 +38,31 @@ export interface ConnectedData {
   timestamp: string;
 }
 
+// Files and folders response type
+export interface FilesAndFoldersResponse {
+  nodes: Array<{
+    id: string;
+    type: 'file' | 'folder';
+    label: string;
+    description?: string;
+    status?: 'todo' | 'doing' | 'done' | 'blocked';
+    priority?: 'low' | 'medium' | 'high' | 'critical';
+    timestamp?: string;
+    metadata?: Record<string, any>;
+    icon?: string;
+  }>;
+  edges: Array<{
+    source: string;
+    target: string;
+    attributes: {
+      type: string;
+      timestamp?: string;
+      metadata?: Record<string, any>;
+      directed?: boolean;
+    };
+  }>;
+}
+
 // Response type helpers
 export type ApiResponse<T> = {
   success?: boolean;
@@ -46,9 +71,10 @@ export type ApiResponse<T> = {
   timestamp: string;
 } & T;
 
+// Export the vscodeHttpAPI
+export { vscodeHttpAPI } from "./vscodeExtensionHttp";
 
 // Type aliases
-// export type VscodeHttpAPI = _VscodeHttpAPI;
 export type VscodeHttpEndpoint = keyof VscodeHttpAPI;
 export type VscodeHttpEndpointDefinition<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T];
 export type VscodeHttpResponse<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T]['response'];
@@ -84,8 +110,79 @@ export const stakeholderWsAPI = {
   graphUpdated: {
     type: 'graphUpdated' as const,
     description: 'Notify that the graph has been updated',
-    data: {} as any // We can define a proper type if needed
-  }
+    data: {} as any
+  },
+
+  // Client to server messages
+  subscribeToSlice: {
+    type: 'subscribeToSlice' as const,
+    description: 'Subscribe to updates for a specific slice',
+    data: {} as { slicePath: string }
+  },
+
+  unsubscribeFromSlice: {
+    type: 'unsubscribeFromSlice' as const,
+    description: 'Unsubscribe from updates for a specific slice',
+    data: {} as { slicePath: string }
+  },
+
+  // Server to client messages
+  subscribedToSlice: {
+    type: 'subscribedToSlice' as const,
+    description: 'Confirmation of subscription to a slice',
+    data: {} as { slicePath: string; message: string }
+  },
+
+  unsubscribedFromSlice: {
+    type: 'unsubscribedFromSlice' as const,
+    description: 'Confirmation of unsubscription from a slice',
+    data: {} as { slicePath: string; message: string }
+  },
+
+  error: {
+    type: 'error' as const,
+    description: 'Error message',
+    data: {} as { message: string }
+  },
+
+  // HTTP endpoint definitions with check functions
+  files: {
+    type: 'files' as const,
+    description: 'Get files and folders slice',
+    data: {} as { slicePath: string; message: string },
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'files' && request.method === 'GET'
+    }
+  },
+
+  processes: {
+    type: 'processes' as const,
+    description: 'Get processes slice',
+    data: {} as { slicePath: string; message: string },
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'process' && request.method === 'GET'
+    }
+  },
+
+  aider: {
+    type: 'aider' as const,
+    description: 'Get aider slice',
+    data: {} as { slicePath: string; message: string },
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'aider' && request.method === 'GET'
+    }
+  },
+
+  runtime: {
+    type: 'runtime' as const,
+    description: 'Get runtime slice',
+    data: {} as { slicePath: string; message: string },
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'runtime' && request.method === 'GET'
+    }
+  },
+
+
 } as const;
 
 // Type for stakeholderWsAPI
@@ -103,6 +200,20 @@ export interface GraphDataResponse {
   timestamp?: string;
 }
 
+// Unified HTTP API that includes all endpoints
+export const unifiedHttpAPI = {
+  ...vscodeHttpAPI,
+  // Add other HTTP APIs here when needed
+} as const;
+
+export type UnifiedHttpAPI = typeof unifiedHttpAPI;
+export type UnifiedHttpEndpoint = keyof UnifiedHttpAPI;
+export type UnifiedHttpEndpointDefinition<T extends UnifiedHttpEndpoint> = UnifiedHttpAPI[T];
+export type UnifiedHttpResponse<T extends UnifiedHttpEndpoint> = UnifiedHttpAPI[T]['response'];
 
 // Note: WebSocket API is defined separately in stakeholderWsAPI
 // HTTP API for VS Code is defined in vscodeExtensionHttp.ts
+
+// export const matchRoutes = (routeName: string, f) => {
+//   return routeName === vscodeHttpAPI.getFiles.path.slice(3) && request.method === vscodeHttpAPI.getFiles.method
+// }

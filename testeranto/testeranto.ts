@@ -7,7 +7,79 @@ export const golangciLintCommand = (files: string[]): string => {
 
 const config: ITesterantoConfig = {
 
-  volumes: [
+  agents: {
+    'prodirek': {
+      markdownFile: 'prodirek.md',
+      sliceFunction: (graphManager: any) => {
+        const graphData = graphManager.getGraphData();
+        const allNodes = graphData.nodes;
+        const allEdges = graphData.edges;
+        
+        const productNodes = allNodes.filter((node: any) => 
+          node.type === 'feature' || 
+          node.type === 'documentation'
+        );
+        
+        const productEdges = allEdges.filter((edge: any) => 
+          productNodes.some((n: any) => n.id === edge.source) &&
+          productNodes.some((n: any) => n.id === edge.target)
+        );
+        
+        return {
+          nodes: productNodes,
+          edges: productEdges
+        };
+      }
+    },
+    'arko': {
+      markdownFile: 'arko.md',
+      sliceFunction: (graphManager: any) => {
+        const graphData = graphManager.getGraphData();
+        const allNodes = graphData.nodes;
+        const allEdges = graphData.edges;
+        
+        const architectNodes = allNodes.filter((node: any) => 
+          node.type === 'config' || 
+          node.type === 'entrypoint'
+        );
+        
+        const architectEdges = allEdges.filter((edge: any) => 
+          architectNodes.some((n: any) => n.id === edge.source) &&
+          architectNodes.some((n: any) => n.id === edge.target)
+        );
+        
+        return {
+          nodes: architectNodes,
+          edges: architectEdges
+        };
+      }
+    },
+    'juna': {
+      markdownFile: 'juna.md',
+      sliceFunction: (graphManager: any) => {
+        const graphData = graphManager.getGraphData();
+        const allNodes = graphData.nodes;
+        const allEdges = graphData.edges;
+        
+        const juniorNodes = allNodes.filter((node: any) => 
+          node.type === 'test' || 
+          node.type === 'file'
+        );
+        
+        const juniorEdges = allEdges.filter((edge: any) => 
+          juniorNodes.some((n: any) => n.id === edge.source) &&
+          juniorNodes.some((n: any) => n.id === edge.target)
+        );
+        
+        return {
+          nodes: juniorNodes,
+          edges: juniorEdges
+        };
+      }
+    }
+  },
+
+volumes: [
     `${process.cwd()}/src:/workspace/src`,
     `${process.cwd()}/test:/workspace/test`,
     // Note: node_modules is NOT mounted to avoid platform incompatibility

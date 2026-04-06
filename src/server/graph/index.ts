@@ -422,6 +422,194 @@ export class GraphManager {
     return getGraphStatsPure(this.graph);
   }
 
+  // Get only files and folders from the graph
+  public getFilesAndFolders(): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    const nodes: GraphNodeAttributes[] = [];
+    const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
+
+    // Collect all file and folder nodes
+    this.graph.forEachNode((nodeId, attributes) => {
+      if (attributes.type === 'file' || attributes.type === 'folder') {
+        nodes.push({ ...attributes, id: nodeId });
+      }
+    });
+
+    // Collect edges where both source and target are file or folder nodes
+    this.graph.forEachEdge((edgeId, attributes, source, target) => {
+      const sourceAttrs = this.graph.getNodeAttributes(source);
+      const targetAttrs = this.graph.getNodeAttributes(target);
+
+      // Only include edges where both ends are files or folders
+      if ((sourceAttrs.type === 'file' || sourceAttrs.type === 'folder') &&
+        (targetAttrs.type === 'file' || targetAttrs.type === 'folder')) {
+        edges.push({
+          source,
+          target,
+          attributes: { ...attributes }
+        });
+      }
+    });
+
+    return { nodes, edges };
+  }
+
+  // Get process slice (docker processes)
+  public getProcessSlice(): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    const nodes: GraphNodeAttributes[] = [];
+    const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
+
+    // Collect all process-related nodes
+    const processTypes = ['docker_process', 'bdd_process', 'check_process', 'aider_process', 'builder_process'];
+
+    this.graph.forEachNode((nodeId, attributes) => {
+      if (processTypes.includes(attributes.type)) {
+        nodes.push({ ...attributes, id: nodeId });
+      }
+    });
+
+    // Collect edges where at least one end is a process node
+    this.graph.forEachEdge((edgeId, attributes, source, target) => {
+      const sourceAttrs = this.graph.getNodeAttributes(source);
+      const targetAttrs = this.graph.getNodeAttributes(target);
+
+      // Include edges where source or target is a process node
+      if (processTypes.includes(sourceAttrs.type) || processTypes.includes(targetAttrs.type)) {
+        edges.push({
+          source,
+          target,
+          attributes: { ...attributes }
+        });
+      }
+    });
+
+    return { nodes, edges };
+  }
+
+  // Get aider slice (aider processes)
+  public getAiderSlice(): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    const nodes: GraphNodeAttributes[] = [];
+    const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
+
+    // Collect all aider-related nodes
+    const aiderTypes = ['aider', 'aider_process'];
+
+    this.graph.forEachNode((nodeId, attributes) => {
+      if (aiderTypes.includes(attributes.type)) {
+        nodes.push({ ...attributes, id: nodeId });
+      }
+    });
+
+    // Collect edges where at least one end is an aider node
+    this.graph.forEachEdge((edgeId, attributes, source, target) => {
+      const sourceAttrs = this.graph.getNodeAttributes(source);
+      const targetAttrs = this.graph.getNodeAttributes(target);
+
+      // Include edges where source or target is an aider node
+      if (aiderTypes.includes(sourceAttrs.type) || aiderTypes.includes(targetAttrs.type)) {
+        edges.push({
+          source,
+          target,
+          attributes: { ...attributes }
+        });
+      }
+    });
+
+    return { nodes, edges };
+  }
+
+  // Get runtime slice (runtimes)
+  public getRuntimeSlice(): {
+    nodes: GraphNodeAttributes[],
+    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  } {
+    const nodes: GraphNodeAttributes[] = [];
+    const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
+
+    // Collect runtime-related nodes (config nodes with runtime information)
+    this.graph.forEachNode((nodeId, attributes) => {
+      // Look for nodes that have runtime information in metadata
+      if (attributes.type === 'config' ||
+        (attributes.metadata && attributes.metadata.runtime)) {
+        nodes.push({ ...attributes, id: nodeId });
+      }
+    });
+
+    // Also include entrypoint nodes that are associated with runtimes
+    this.graph.forEachNode((nodeId, attributes) => {
+      if (attributes.type === 'entrypoint' &&
+        attributes.metadata &&
+        attributes.metadata.runtime) {
+        nodes.push({ ...attributes, id: nodeId });
+      }
+    });
+
+    // Collect edges where at least one end is a runtime-related node
+    this.graph.forEachEdge((edgeId, attributes, source, target) => {
+      const sourceAttrs = this.graph.getNodeAttributes(source);
+      const targetAttrs = this.graph.getNodeAttributes(target);
+
+      // Check if source or target is in our collected nodes
+      const sourceInSlice = nodes.some(n => n.id === source);
+      const targetInSlice = nodes.some(n => n.id === target);
+
+      if (sourceInSlice || targetInSlice) {
+        edges.push({
+          source,
+          target,
+          attributes: { ...attributes }
+        });
+      }
+    });
+
+    return { nodes, edges };
+  }
+
+  // deprecated
+  // TODO return data for the product manager
+  // it should return files, folders, input files and the test.json file. It should not include output files like logs
+  // public getProductManagerSlice(): {
+  //   nodes: GraphNodeAttributes[],
+  //   edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  // } {
+  //   // For now, return empty implementation
+  //   return { nodes: [], edges: [] };
+  // }
+
+  // // Get architect slice (for Arko)
+  // public getArchitectSlice(): {
+  //   nodes: GraphNodeAttributes[],
+  //   edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  // } {
+  //   const nodes: GraphNodeAttributes[] = [];
+  //   const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
+
+  //   // TODO: Define what the architect slice should contain
+  //   // For now, return empty slice
+  //   return { nodes, edges };
+  // }
+
+  // // Get junior slice (for Juna)
+  // public getJuniorSlice(): {
+  //   nodes: GraphNodeAttributes[],
+  //   edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
+  // } {
+  //   const nodes: GraphNodeAttributes[] = [];
+  //   const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
+
+  //   // TODO: Define what the junior slice should contain
+  //   // For now, return empty slice
+  //   return { nodes, edges };
+  // }
+
   // Serialize graph changes back to markdown frontmatter
   public serializeToMarkdown(): void {
     // Get all feature nodes from the graph

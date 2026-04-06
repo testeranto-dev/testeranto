@@ -190,6 +190,7 @@ export class Server_TestManager {
     });
 
     await this.addProcessNodeToGraph('aider', runtime, testName, configKey, configValue, undefined, graphManager);
+    // Graph updates will be broadcast via /~/graph
   }
 
   public async addProcessNodeToGraph(
@@ -213,6 +214,7 @@ export class Server_TestManager {
       this.consoleError,
       this.consoleWarn
     );
+    // Graph updates will be broadcast via /~/graph
   }
 
   protected async createAiderMessageFile(
@@ -246,6 +248,8 @@ export class Server_TestManager {
       this.consoleError,
       this.consoleWarn
     );
+    // Note: Slice notifications should be handled by the caller
+    // since this method specifically updates file nodes
   }
 
   public getInputFiles = (runtime: string, testName: string): string[] => {
@@ -294,5 +298,11 @@ export class Server_TestManager {
 
   public getFailedBuilderConfigs(): Set<string> {
     return this.failedBuilderConfigs;
+  }
+
+  async launchAgent(agentName: string, suffix: string): Promise<void> {
+    this.consoleLog(`[Server_TestManager] Launching ${agentName} agent with suffix ${suffix}`);
+    // Agent launch logic will be implemented by the specific server implementation
+    throw new Error(`Agent ${agentName} launch not implemented`);
   }
 }

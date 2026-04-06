@@ -15,7 +15,7 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
     super(configs, mode);
     console.log('[Server_HTTP] Constructor called with configs:',
       configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
-    this.routesHandler = new Server_HTTP_Routes(this);
+    this.routesHandler = new Server_HTTP_Routes(this, configs);
   }
 
   async start(): Promise<void> {
@@ -64,10 +64,10 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
       const wsThis = this as Server_WS;
       serverOptions.websocket = {
         open: (ws: WebSocket) => {
-          (wsThis as any).wsClients?.add?.(ws);
+          wsThis.wsClients.add(ws);
           ws.send(
             JSON.stringify({
-              type: stakeholderWsAPI.connected.type,
+              type: 'connected',
               message: "Connected to Process Manager WebSocket",
               timestamp: new Date().toISOString(),
             }),
@@ -79,14 +79,16 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
               ? JSON.parse(message)
               : JSON.parse(message.toString());
           if (ws && typeof ws.send === "function") {
-            (wsThis as any).handleWebSocketMessage?.(ws, data);
+            wsThis.handleWebSocketMessage(ws, data);
           }
         },
         close: (ws: WebSocket) => {
-          (wsThis as any).wsClients?.delete?.(ws);
+          wsThis.wsClients.delete(ws);
+          wsThis.cleanupClientSubscriptions(ws);
         },
         error: (ws: WebSocket, error: Error) => {
-          (wsThis as any).wsClients?.delete?.(ws);
+          wsThis.wsClients.delete(ws);
+          wsThis.cleanupClientSubscriptions(ws);
         },
       };
     }

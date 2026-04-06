@@ -1,14 +1,14 @@
-=== Log started at 2026-04-06T04:43:15.627Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
-=== Container ID: 03b81480bfd7271003f6865a58089a73c07f93a8865cb2843a75d94a5a133e14 ===
+=== Log started at 2026-04-06T14:59:04.101Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (runtime: node) ===
+=== Container ID: cd5d6e645fe6300363ebd6296f48fa114e7231fe28f70ac29f97860e9a232f0c ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
 === ALL LOGS (stdout + stderr) ===
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-$ /workspace/node_modules/.bin/eslint
 warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.239.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/eslint
 
 Oops! Something went wrong! :(
 
@@ -21,7 +21,7 @@ Common causes of this problem include:
 1. The "import" plugin is not defined in your configuration file.
 2. The "import" plugin is not defined within the same configuration object in which the "import/no-dynamic-require" rule is applied.
 
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-06T04:43:16.868Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-06T14:59:08.730Z (container status: exited, exit code: 2) ===

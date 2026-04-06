@@ -23,6 +23,11 @@ export type ITesterantoConfig = {
   runtimes: Record<string, IBaseTestConfig>;
   // documentationGlob?: string; // New field: glob pattern to find documentation files
   stakeholderReactModule?: string; // Path to custom React component module
+
+  agents: Record<string, {
+    markdownFile: string;
+    sliceFunction: (graphManager: any) => { nodes: any[]; edges: any[] };
+  }>;
 };
 
 export type IOtherTest = (x: any) => string;
@@ -254,10 +259,10 @@ export type IRunTime =
 export type ITestTypes = [string, IRunTime, { ports: number }, ITestTypes[]];
 
 // Re-export test result types for convenience
-export type { 
+export type {
   TestResultFile,
   IndividualTestResult,
   TestResult,
   RuntimeTestResults,
-  AllTestResults 
+  AllTestResults
 } from "./server/types/testResults";

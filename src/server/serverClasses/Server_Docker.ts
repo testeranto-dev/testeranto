@@ -144,11 +144,13 @@ export abstract class Server_Docker extends Server_Docker_Compose {
                     testName,
                     configKey,
                   ),
-                (runtime, testName, configKey, inputFiles) =>
+                (runtime, testName, configKey, inputFiles) => {
                   this.getTestManager().updateGraphWithInputFiles(
                     runtime, testName, configKey, inputFiles,
                     (this as any).graphManager?.getGraphManager ? (this as any).graphManager.getGraphManager() : null
-                  ),
+                  );
+                  // Graph updates will be broadcast via /~/graph when the graph is actually updated
+                },
               );
               await testFileManager.watchOutputFile(
                 runtime,
@@ -173,6 +175,8 @@ export abstract class Server_Docker extends Server_Docker_Compose {
 
     // Launch all tests in parallel
     await Promise.allSettled(testLaunchPromises);
+
+    // Graph updates will be broadcast via /~/graph
 
     if (this.mode === "once") {
       try {

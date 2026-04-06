@@ -10,6 +10,7 @@ export class CommandManager {
     private dockerProcessProvider: vscode.TreeDataProvider<any> | null;
     private aiderProcessProvider: vscode.TreeDataProvider<any> | null;
     private fileTreeProvider: vscode.TreeDataProvider<any> | null;
+    private agentProvider: vscode.TreeDataProvider<any> | null;
 
     constructor(terminalManager: TerminalManager, statusBarManager: StatusBarManager) {
         this.terminalManager = terminalManager;
@@ -18,6 +19,7 @@ export class CommandManager {
         this.dockerProcessProvider = null;
         this.aiderProcessProvider = null;
         this.fileTreeProvider = null;
+        this.agentProvider = null;
     }
 
     public setRuntimeProvider(provider: vscode.TreeDataProvider<any>): void {
@@ -36,6 +38,10 @@ export class CommandManager {
         this.fileTreeProvider = provider;
     }
 
+    public setAgentProvider(provider: vscode.TreeDataProvider<any>): void {
+        this.agentProvider = provider;
+    }
+
     public registerCommands(context: vscode.ExtensionContext): vscode.Disposable[] {
         const disposables = registerCommands(
             context,
@@ -44,7 +50,8 @@ export class CommandManager {
             this.statusBarManager,
             this.dockerProcessProvider,
             this.aiderProcessProvider,
-            this.fileTreeProvider
+            this.fileTreeProvider,
+            this.agentProvider
         );
         
         // Add a test command for debugging

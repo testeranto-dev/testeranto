@@ -6,6 +6,7 @@ import { TestTreeDataProvider } from "./providers/TestTreeDataProvider";
 import { DockerProcessTreeDataProvider } from "./providers/DockerProcessTreeDataProvider";
 import { AiderProcessTreeDataProvider } from "./providers/AiderProcessTreeDataProvider";
 import { FileTreeDataProvider } from "./providers/FileTreeDataProvider";
+import { AgentTreeDataProvider } from "./providers/AgentTreeDataProvider";
 import { StatusBarManager } from "./statusBarManager";
 import { CommandManager } from "./commandManager";
 
@@ -83,6 +84,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         const fileTreeProvider = new FileTreeDataProvider();
         outputChannel.appendLine("[Testeranto] FileTreeDataProvider created successfully");
 
+        // Create Agent tree provider
+        outputChannel.appendLine("[Testeranto] Creating AgentTreeDataProvider...");
+        const agentProvider = new AgentTreeDataProvider();
+        outputChannel.appendLine("[Testeranto] AgentTreeDataProvider created successfully");
+
         // Verify providers implement required interface
         outputChannel.appendLine("[Testeranto] Verifying providers implement required methods...");
         const requiredMethods = ['getChildren', 'getTreeItem'];
@@ -90,7 +96,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             runtimeProvider,
             dockerProcessProvider,
             aiderProcessProvider,
-            fileTreeProvider
+            fileTreeProvider,
+            agentProvider
         })) {
             outputChannel.appendLine(`[Testeranto] Checking provider: ${name}`);
             for (const method of requiredMethods) {
@@ -110,6 +117,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         commandManager.setRuntimeProvider(runtimeProvider);
         commandManager.setDockerProcessProvider(dockerProcessProvider);
         commandManager.setAiderProcessProvider(aiderProcessProvider);
+        commandManager.setFileTreeProvider(fileTreeProvider);
+        commandManager.setAgentProvider(agentProvider);
         const commandDisposables = commandManager.registerCommands(context);
         outputChannel.appendLine("[Testeranto] CommandManager created and commands registered");
 
@@ -122,6 +131,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         vscode.window.registerTreeDataProvider('testeranto.dockerProcessView', dockerProcessProvider);
         vscode.window.registerTreeDataProvider('testeranto.aiderProcessView', aiderProcessProvider);
         vscode.window.registerTreeDataProvider('testeranto.fileTreeView', fileTreeProvider);
+        vscode.window.registerTreeDataProvider('testeranto.agentView', agentProvider);
         outputChannel.appendLine("[Testeranto] Tree data providers registered successfully");
 
         // Create tree views AFTER registering providers
@@ -150,13 +160,20 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         });
         outputChannel.appendLine("[Testeranto] File tree view created successfully");
 
+        const agentTreeView = vscode.window.createTreeView("testeranto.agentView", {
+            treeDataProvider: agentProvider,
+            showCollapseAll: true
+        });
+        outputChannel.appendLine("[Testeranto] Agent tree view created successfully");
+
         // Add tree views to subscriptions
         outputChannel.appendLine("[Testeranto] Adding tree views to context subscriptions...");
         context.subscriptions.push(
             runtimeTreeView,
             dockerProcessTreeView,
             aiderProcessTreeView,
-            fileTreeView
+            fileTreeView,
+            agentTreeView
         );
         outputChannel.appendLine("[Testeranto] Tree views added to subscriptions");
 
@@ -174,6 +191,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
             const fileChildren = await fileTreeProvider.getChildren();
             outputChannel.appendLine(`[Testeranto] fileTreeProvider.getChildren() returned ${fileChildren?.length || 0} items`);
+
+            const agentChildren = await agentProvider.getChildren();
+            outputChannel.appendLine(`[Testeranto] agentProvider.getChildren() returned ${agentChildren?.length || 0} items`);
         } catch (error) {
             outputChannel.appendLine(`[Testeranto] ERROR testing providers: ${error}`);
         }
@@ -196,6 +216,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             outputChannel.appendLine("[Testeranto] Refreshing fileTreeProvider...");
             fileTreeProvider.refresh();
         }
+        if (typeof agentProvider.refresh === 'function') {
+            outputChannel.appendLine("[Testeranto] Refreshing agentProvider...");
+            agentProvider.refresh();
+        }
         outputChannel.appendLine("[Testeranto] Tree data providers refreshed");
 
         // Clean up on deactivation
@@ -206,6 +230,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 runtimeProvider.dispose?.();
                 dockerProcessProvider.dispose?.();
                 aiderProcessProvider.dispose?.();
+                fileTreeProvider.dispose?.();
+                agentProvider.dispose?.();
                 statusBarManager.dispose();
                 outputChannel.dispose();
             }

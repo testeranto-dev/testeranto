@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-06T04:43:55.374Z",
+  "timestamp": "2026-04-06T14:59:43.643Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -14,7 +14,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": 1775450055951,
+            "timestamp": 1775487281181,
             "fails": 6,
             "artifacts": [],
             "features": [
@@ -166,7 +166,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775450055951,
+            "timestamp": 1775487281181,
             "individualResults": [
               {
                 "index": 0,
@@ -1540,7 +1540,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": 1775450055970,
+            "timestamp": 1775487281188,
             "fails": 4,
             "artifacts": [],
             "features": [],
@@ -1617,7 +1617,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775450055970,
+            "timestamp": 1775487281188,
             "individualResults": [
               {
                 "index": 0,
@@ -2328,7 +2328,7 @@
           "metadata": {
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": 1775450056046,
+            "timestamp": 1775487281283,
             "fails": 0,
             "artifacts": [],
             "features": [
@@ -2415,7 +2415,7 @@
             "testJob": {
               "name": "CombinedResults"
             },
-            "timestamp": 1775450056046,
+            "timestamp": 1775487281283,
             "individualResults": [
               {
                 "index": 0,
@@ -2854,8 +2854,8 @@
           "icon": "document",
           "metadata": {
             "url": "https://api.github.com/repos/adamwong246/testeranto/issues/888",
-            "content": "---\nstatus: todo\ntitle: '888'\ndescription: 'Feature: 888'\n---\n{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n",
-            "contentPreview": "{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"h...",
+            "content": "---\nstatus: todo\ntitle: '888'\ndescription: 'Feature: 888'\n---\n{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/issues/issues#get-an-issue\",\"status\":\"404\"}",
+            "contentPreview": "{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/issues/issues#get-an-issue\",\"status\":\"404\"}",
             "frontmatter": {
               "status": "todo",
               "title": "888",
@@ -3379,8 +3379,8 @@
           "icon": "document",
           "metadata": {
             "url": "https://api.github.com/repos/adamwong246/testeranto/issues/8",
-            "content": "---\nstatus: todo\ntitle: '8'\ndescription: 'Feature: 8'\n---\n{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n",
-            "contentPreview": "{\"message\":\"API rate limit exceeded for 71.193.231.91. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"h...",
+            "content": "---\nstatus: todo\ntitle: '8'\ndescription: 'Feature: 8'\n---\n{\"url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8\",\"repository_url\":\"https://api.github.com/repos/adamwong246/testeranto\",\"labels_url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/labels{/name}\",\"comments_url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/comments\",\"events_url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/events\",\"html_url\":\"https://github.com/adamwong246/testeranto/issues/8\",\"id\":2901690454,\"node_id\":\"I_kwDOIY-Tns6s9EhW\",\"number\":8,\"title\":\"rectangle getters and setters\",\"user\":{\"login\":\"adamwong246\",\"id\":474792,\"node_id\":\"MDQ6VXNlcjQ3NDc5Mg==\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/474792?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/adamwong246\",\"html_url\":\"https://github.com/adamwong246\",\"followers_url\":\"https://api.github.com/users/adamwong246/followers\",\"following_url\":\"https://api.github.com/users/adamwong246/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/adamwong246/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/adamwong246/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/adamwong246/subscriptions\",\"organizations_url\":\"https://api.github.com/users/adamwong246/orgs\",\"repos_url\":\"https://api.github.com/users/adamwong246/repos\",\"events_url\":\"https://api.github.com/users/adamwong246/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/adamwong246/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"labels\":[{\"id\":4772586359,\"node_id\":\"LA_kwDOIY-Tns8AAAABHHfjdw\",\"url\":\"https://api.github.com/repos/adamwong246/testeranto/labels/invalid\",\"name\":\"invalid\",\"color\":\"e4e669\",\"default\":true,\"description\":\"This doesn't seem right\"}],\"state\":\"open\",\"locked\":false,\"assignees\":[],\"milestone\":null,\"comments\":0,\"created_at\":\"2025-03-07T00:09:26Z\",\"updated_at\":\"2025-08-16T15:54:40Z\",\"closed_at\":null,\"assignee\":null,\"author_association\":\"OWNER\",\"active_lock_reason\":null,\"sub_issues_summary\":{\"total\":0,\"completed\":0,\"percent_completed\":0},\"issue_dependencies_summary\":{\"blocked_by\":0,\"total_blocked_by\":0,\"blocking\":0,\"total_blocking\":0},\"body\":\"Rectangles class should have proper accessor functions\",\"closed_by\":null,\"reactions\":{\"url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/reactions\",\"total_count\":0,\"+1\":0,\"-1\":0,\"laugh\":0,\"hooray\":0,\"confused\":0,\"heart\":0,\"rocket\":0,\"eyes\":0},\"timeline_url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8/timeline\",\"performed_via_github_app\":null,\"state_reason\":null,\"pinned_comment\":null}",
+            "contentPreview": "{\"url\":\"https://api.github.com/repos/adamwong246/testeranto/issues/8\",\"repository_url\":\"https://api.github.com/repos/adamwong246/testeranto\",\"labels_url\":\"https://api.github.com/repos/adamwong246/test...",
             "frontmatter": {
               "status": "todo",
               "title": "8",
@@ -5716,6 +5716,1077 @@
             "isLogFile": true,
             "logType": "aider",
             "timestamp": "2026-04-06T04:43:32.552Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:nodetests-builder.log:mnnaz22l",
+          "type": "file",
+          "label": "nodetests-builder.log",
+          "description": "Log file for nodetests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log",
+            "relativePath": "testeranto/reports/nodetests/nodetests-builder.log",
+            "serviceName": "nodetests-builder",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-06T14:45:57.693Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
+          }
+        },
+        {
+          "id": "logfile:webtests-builder.log:mnnaz25p",
+          "type": "file",
+          "label": "webtests-builder.log",
+          "description": "Log file for webtests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/webtests-builder.log",
+            "relativePath": "testeranto/reports/webtests/webtests-builder.log",
+            "serviceName": "webtests-builder",
+            "runtime": "web",
+            "configKey": "webtests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-06T14:45:57.805Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/webtests-builder.log"
+          }
+        },
+        {
+          "id": "logfile:chrome-service.log:mnnazn4f",
+          "type": "file",
+          "label": "chrome-service.log",
+          "description": "Log file for chrome-service (unknown)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/chrome-service.log",
+            "relativePath": "testeranto/reports/webtests/chrome-service.log",
+            "serviceName": "chrome-service",
+            "runtime": "web",
+            "configKey": "webtests",
+            "isLogFile": true,
+            "logType": "unknown",
+            "timestamp": "2026-04-06T14:46:24.975Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/chrome-service.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_bdd.log:mnnb03hc",
+          "type": "file",
+          "label": "Calculator-test-node-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:46:46.176Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_bdd.log:mnnb03jm",
+          "type": "file",
+          "label": "Circle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:46:46.258Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_bdd.log:mnnb03mj",
+          "type": "file",
+          "label": "Rectangle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:46:46.363Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-1.log:mnnb05ow",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:46:49.040Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-0.log:mnnb05v2",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:46:49.262Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-2.log:mnnb060u",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:46:49.470Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-1.log:mnnb0e8i",
+          "type": "file",
+          "label": "Circle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:47:00.114Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-0.log:mnnb0ee3",
+          "type": "file",
+          "label": "Circle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:47:00.315Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-2.log:mnnb0ekz",
+          "type": "file",
+          "label": "Circle-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:47:00.563Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-0.log:mnnb0eqf",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:47:00.759Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-2.log:mnnb0ew6",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:47:00.966Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-1.log:mnnb0f0b",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:47:01.115Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_aider.log:mnnb0i1t",
+          "type": "file",
+          "label": "Calculator-test-node-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:47:05.057Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_aider.log:mnnb0r1r",
+          "type": "file",
+          "label": "Circle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:47:16.719Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_aider.log:mnnb0s7n",
+          "type": "file",
+          "label": "Rectangle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:47:18.227Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:nodetests-builder.log:mnnb97ws",
+          "type": "file",
+          "label": "nodetests-builder.log",
+          "description": "Log file for nodetests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log",
+            "relativePath": "testeranto/reports/nodetests/nodetests-builder.log",
+            "serviceName": "nodetests-builder",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-06T14:53:51.819Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
+          }
+        },
+        {
+          "id": "logfile:webtests-builder.log:mnnb97zv",
+          "type": "file",
+          "label": "webtests-builder.log",
+          "description": "Log file for webtests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/webtests-builder.log",
+            "relativePath": "testeranto/reports/webtests/webtests-builder.log",
+            "serviceName": "webtests-builder",
+            "runtime": "web",
+            "configKey": "webtests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-06T14:53:51.931Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/webtests-builder.log"
+          }
+        },
+        {
+          "id": "logfile:chrome-service.log:mnnb9st7",
+          "type": "file",
+          "label": "chrome-service.log",
+          "description": "Log file for chrome-service (unknown)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/chrome-service.log",
+            "relativePath": "testeranto/reports/webtests/chrome-service.log",
+            "serviceName": "chrome-service",
+            "runtime": "web",
+            "configKey": "webtests",
+            "isLogFile": true,
+            "logType": "unknown",
+            "timestamp": "2026-04-06T14:54:18.907Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/chrome-service.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_bdd.log:mnnba94v",
+          "type": "file",
+          "label": "Calculator-test-node-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:54:40.063Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_bdd.log:mnnba978",
+          "type": "file",
+          "label": "Circle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:54:40.148Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_bdd.log:mnnba9a3",
+          "type": "file",
+          "label": "Rectangle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:54:40.251Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-0.log:mnnbab9p",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:42.829Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-1.log:mnnbabf2",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:43.022Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-2.log:mnnbabjv",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:43.195Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-0.log:mnnbajso",
+          "type": "file",
+          "label": "Circle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:53.880Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-2.log:mnnbajzu",
+          "type": "file",
+          "label": "Circle-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:54.138Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-1.log:mnnbak4i",
+          "type": "file",
+          "label": "Circle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:54.306Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-2.log:mnnbakdd",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:54.625Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-1.log:mnnbakgo",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:54.744Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-0.log:mnnbakmr",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:54:54.963Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_aider.log:mnnbanqk",
+          "type": "file",
+          "label": "Calculator-test-node-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:54:58.988Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_aider.log:mnnbawfh",
+          "type": "file",
+          "label": "Circle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:55:10.253Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_aider.log:mnnbaxm2",
+          "type": "file",
+          "label": "Rectangle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:55:11.786Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:nodetests-builder.log:mnnbejpd",
+          "type": "file",
+          "label": "nodetests-builder.log",
+          "description": "Log file for nodetests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log",
+            "relativePath": "testeranto/reports/nodetests/nodetests-builder.log",
+            "serviceName": "nodetests-builder",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-06T14:58:00.385Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
+          }
+        },
+        {
+          "id": "logfile:webtests-builder.log:mnnbejt2",
+          "type": "file",
+          "label": "webtests-builder.log",
+          "description": "Log file for webtests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/webtests-builder.log",
+            "relativePath": "testeranto/reports/webtests/webtests-builder.log",
+            "serviceName": "webtests-builder",
+            "runtime": "web",
+            "configKey": "webtests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-06T14:58:00.518Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/webtests-builder.log"
+          }
+        },
+        {
+          "id": "logfile:chrome-service.log:mnnbf4kq",
+          "type": "file",
+          "label": "chrome-service.log",
+          "description": "Log file for chrome-service (unknown)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/chrome-service.log",
+            "relativePath": "testeranto/reports/webtests/chrome-service.log",
+            "serviceName": "chrome-service",
+            "runtime": "web",
+            "configKey": "webtests",
+            "isLogFile": true,
+            "logType": "unknown",
+            "timestamp": "2026-04-06T14:58:27.434Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/chrome-service.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_bdd.log:mnnbfkvw",
+          "type": "file",
+          "label": "Calculator-test-node-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:58:48.572Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_bdd.log:mnnbfky5",
+          "type": "file",
+          "label": "Circle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:58:48.653Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_bdd.log:mnnbfl10",
+          "type": "file",
+          "label": "Rectangle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-06T14:58:48.756Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-0.log:mnnbfmwf",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:58:51.183Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-2.log:mnnbfn6f",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:58:51.543Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-1.log:mnnbfn9k",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:58:51.656Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-1.log:mnnbfvuy",
+          "type": "file",
+          "label": "Circle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:59:02.794Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-0.log:mnnbfw0v",
+          "type": "file",
+          "label": "Circle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:59:03.007Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-2.log:mnnbfw7d",
+          "type": "file",
+          "label": "Circle-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:59:03.241Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-1.log:mnnbfwcr",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:59:03.435Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-2.log:mnnbfwk4",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:59:03.700Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-0.log:mnnbfwr2",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-06T14:59:03.950Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_aider.log:mnnbfzsy",
+          "type": "file",
+          "label": "Calculator-test-node-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:59:07.906Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_aider.log:mnnbg8hs",
+          "type": "file",
+          "label": "Circle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:59:19.168Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_aider.log:mnnbg9qm",
+          "type": "file",
+          "label": "Rectangle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-06T14:59:20.782Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
           }
         }
@@ -8140,11 +9211,515 @@
             "type": "hasLog",
             "timestamp": "2026-04-06T04:43:32.552Z"
           }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnnb03hc",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:46:46.176Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnnb03hc",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:46:46.176Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnnb03jm",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:46:46.258Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnnb03jm",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:46:46.258Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnnb03mj",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:46:46.363Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnnb03mj",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:46:46.363Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-1.log:mnnb05ow",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:46:49.040Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-0.log:mnnb05v2",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:46:49.262Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-2.log:mnnb060u",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:46:49.470Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-1.log:mnnb0e8i",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:00.114Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-0.log:mnnb0ee3",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:00.315Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-2.log:mnnb0ekz",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:00.563Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-0.log:mnnb0eqf",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:00.759Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-2.log:mnnb0ew6",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:00.966Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-1.log:mnnb0f0b",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:01.115Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnnb0i1t",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:05.057Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnnb0i1t",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:47:05.057Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnnb0r1r",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:16.719Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnnb0r1r",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:47:16.719Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnnb0s7n",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:47:18.227Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnnb0s7n",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:47:18.227Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnnba94v",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:40.063Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnnba94v",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:54:40.063Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnnba978",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:40.148Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnnba978",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:54:40.148Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnnba9a3",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:40.251Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnnba9a3",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:54:40.251Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-0.log:mnnbab9p",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:42.829Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-1.log:mnnbabf2",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:43.022Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-2.log:mnnbabjv",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:43.195Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-0.log:mnnbajso",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:53.880Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-2.log:mnnbajzu",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:54.138Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-1.log:mnnbak4i",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:54.306Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-2.log:mnnbakdd",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:54.625Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-1.log:mnnbakgo",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:54.744Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-0.log:mnnbakmr",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:54.963Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnnbanqk",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:54:58.988Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnnbanqk",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:54:58.988Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnnbawfh",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:55:10.253Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnnbawfh",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:55:10.253Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnnbaxm2",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:55:11.786Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnnbaxm2",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:55:11.786Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnnbfkvw",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:58:48.572Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_bdd.log:mnnbfkvw",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:58:48.572Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnnbfky5",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:58:48.653Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_bdd.log:mnnbfky5",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:58:48.653Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnnbfl10",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:58:48.756Z"
+          }
+        },
+        {
+          "source": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_bdd.log:mnnbfl10",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:58:48.756Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-0.log:mnnbfmwf",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:58:51.183Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-2.log:mnnbfn6f",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:58:51.543Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_check-1.log:mnnbfn9k",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:58:51.656Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-1.log:mnnbfvuy",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:02.794Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-0.log:mnnbfw0v",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:03.007Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_check-2.log:mnnbfw7d",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:03.241Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-1.log:mnnbfwcr",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:03.435Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-2.log:mnnbfwk4",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:03.700Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_check-0.log:mnnbfwr2",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:03.950Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnnbfzsy",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:07.906Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "target": "logfile:Calculator-test-node-ts_aider.log:mnnbfzsy",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:59:07.906Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnnbg8hs",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:19.168Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "target": "logfile:Circle-test-ts_aider.log:mnnbg8hs",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:59:19.168Z"
+          }
+        },
+        {
+          "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnnbg9qm",
+          "attributes": {
+            "type": "associatedWith",
+            "timestamp": "2026-04-06T14:59:20.782Z"
+          }
+        },
+        {
+          "source": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "target": "logfile:Rectangle-test-ts_aider.log:mnnbg9qm",
+          "attributes": {
+            "type": "hasLog",
+            "timestamp": "2026-04-06T14:59:20.782Z"
+          }
         }
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-06T04:43:55.374Z"
+        "timestamp": "2026-04-06T14:59:43.643Z"
       }
     },
     "vizConfig": {

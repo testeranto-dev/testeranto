@@ -7,6 +7,7 @@ import { TreeItemType } from './types';
 import type { StatusBarManager } from './statusBarManager';
 import type { DockerProcessTreeDataProvider } from './providers/DockerProcessTreeDataProvider';
 import type { AiderProcessTreeDataProvider } from './providers/AiderProcessTreeDataProvider';
+import type { AgentTreeDataProvider } from './providers/AgentTreeDataProvider';
 // Note: showProcessLogs has been updated to use graph-based approach
 import { showProcessLogs } from './showProcessLogs';
 import { openFile } from './openFile';
@@ -19,7 +20,8 @@ export const registerCommands = (
     statusBarManager: StatusBarManager,
     dockerProcessProvider: DockerProcessTreeDataProvider,
     aiderProcessProvider: AiderProcessTreeDataProvider,
-    fileTreeProvider: any
+    fileTreeProvider: any,
+    agentProvider: AgentTreeDataProvider
 ): vscode.Disposable[] => {
     console.log('[VS Code] Registering commands');
     const disposables: vscode.Disposable[] = [];
@@ -264,6 +266,104 @@ export const registerCommands = (
                     }
                 } catch (err) {
                     vscode.window.showErrorMessage(`Error refreshing file tree: ${err}`);
+                }
+            }
+        )
+    );
+
+    // Agent commands
+    disposables.push(
+        vscode.commands.registerCommand(
+            "testeranto.refreshAgents",
+            async () => {
+                try {
+                    if (agentProvider && typeof (agentProvider as any).refresh === 'function') {
+                        await (agentProvider as any).refresh();
+                        vscode.window.showInformationMessage("Agents refreshed");
+                    } else {
+                        vscode.window.showWarningMessage("Agent provider not available");
+                    }
+                } catch (err) {
+                    vscode.window.showErrorMessage(`Error refreshing agents: ${err}`);
+                }
+            }
+        )
+    );
+
+    disposables.push(
+        vscode.commands.registerCommand(
+            "testeranto.launchAgentSelection",
+            async () => {
+                const agents = [
+                    { label: 'Prodirek (Product Manager)', value: 'prodirek' },
+                    { label: 'Arko (Architect)', value: 'arko' },
+                    { label: 'Juna (Junior Engineer)', value: 'juna' }
+                ];
+                
+                const selected = await vscode.window.showQuickPick(
+                    agents.map(a => a.label),
+                    { placeHolder: 'Select an agent to launch' }
+                );
+                
+                if (selected) {
+                    const agent = agents.find(a => a.label === selected);
+                    if (agent) {
+                        await vscode.commands.executeCommand('testeranto.launchAgent', agent.value);
+                    }
+                }
+            }
+        )
+    );
+
+    disposables.push(
+        vscode.commands.registerCommand(
+            "testeranto.launchAgent",
+            async (agentName: string) => {
+                try {
+                    vscode.window.showInformationMessage(`Launching ${agentName} agent...`);
+                    
+                    // Call the server endpoint to launch the agent
+                    const response = await fetch(`http://localhost:3000/~/agents/${agentName}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        vscode.window.showInformationMessage(`${agentName} agent launched with suffix: ${data.suffix}`);
+                        
+                        // Refresh the agent provider
+                        if (agentProvider && typeof (agentProvider as any).refresh === 'function') {
+                            await (agentProvider as any).refresh();
+                        }
+                    } else {
+                        vscode.window.showErrorMessage(`Failed to launch ${agentName} agent: ${response.statusText}`);
+                    }
+                } catch (err) {
+                    vscode.window.showErrorMessage(`Error launching agent: ${err}`);
+                }
+            }
+        )
+    );
+
+    disposables.push(
+        vscode.commands.registerCommand(
+            "testeranto.openAgentWebview",
+            async (agentName: string, suffix: string) => {
+                try {
+                    const url = `http://localhost:3000/${agentName}`;
+                    if (suffix && suffix !== 'undefined') {
+                        // If there's a suffix, the agent instance has its own URL
+                        const instanceUrl = `http://localhost:3000/${agentName}/${suffix}`;
+                        vscode.env.openExternal(vscode.Uri.parse(instanceUrl));
+                    } else {
+                        vscode.env.openExternal(vscode.Uri.parse(url));
+                    }
+                    vscode.window.showInformationMessage(`Opening ${agentName} agent in browser...`);
+                } catch (err) {
+                    vscode.window.showErrorMessage(`Error opening agent webview: ${err}`);
                 }
             }
         )

@@ -1,11 +1,11 @@
-=== Log started at 2026-04-06T04:42:38.807Z for service chrome-service (runtime: web) ===
-=== Container ID: 16d4af57b1242ac584a706a155f5eee9552e528ab572fbd4e6f98a01370337ad ===
+=== Log started at 2026-04-06T14:58:27.527Z for service chrome-service (runtime: web) ===
+=== Container ID: 9b7c1db3c563185989c6788f855378ba30e2e4d56c0ce0767006414ca21ba78a ===
 === Test: N/A ===
 === Config Key: webtests ===
 
 === ALL LOGS (stdout + stderr) ===
-2026-04-06T04:42:34.110Z browserless:server Using configuration: 
-2026-04-06T04:42:34.111Z browserless:server {
+2026-04-06T14:58:22.761Z browserless:server Using configuration: 
+2026-04-06T14:58:22.763Z browserless:server {
   CONNECTION_TIMEOUT: 60000,
   MAX_CONCURRENT_SESSIONS: 1,
   QUEUE_LENGTH: 10,
@@ -56,35 +56,35 @@
   PROXY_URL: undefined,
   MAX_PAYLOAD_SIZE: '5mb'
 }
-2026-04-06T04:42:34.112Z browserless:server 
+2026-04-06T14:58:22.763Z browserless:server 
 
 Running on port 3000
 	Localhost	 ws:localhost:3000
 	Local network	 ws:172.18.0.3:3000
-2026-04-06T04:42:34.112Z browserless:server 
+2026-04-06T14:58:22.763Z browserless:server 
 Get started at	 https://www.browserless.io/docs/start
 Get a license at	 https://www.browserless.io/sign-up?type=commercial
 Get support at	 https://www.browserless.io/contact
 
 Happy coding!
 
-2026-04-06T04:42:34.115Z browserless:system Starting chrome swarm: 1 chrome instances starting
-2026-04-06T04:42:34.116Z browserless:chrome-helper Launching Chrome with args: {
+2026-04-06T14:58:22.766Z browserless:system Starting chrome swarm: 1 chrome instances starting
+2026-04-06T14:58:22.767Z browserless:chrome-helper Launching Chrome with args: {
   "args": [
     "--no-sandbox",
     "--enable-logging",
     "--v1=1",
     "--disable-dev-shm-usage",
     "--no-first-run",
-    "--remote-debugging-port=42379",
-    "--user-data-dir=/tmp/browserless-data-dir-x1t2yM"
+    "--remote-debugging-port=42951",
+    "--user-data-dir=/tmp/browserless-data-dir-UnqyYo"
   ],
   "blockAds": true,
   "headless": "new",
   "ignoreDefaultArgs": false,
   "ignoreHTTPSErrors": false,
   "pauseOnConnect": false,
-  "userDataDir": "/tmp/browserless-data-dir-x1t2yM",
+  "userDataDir": "/tmp/browserless-data-dir-UnqyYo",
   "playwright": false,
   "stealth": false,
   "meta": null,
@@ -93,13 +93,13 @@ Happy coding!
   "handleSIGTERM": false,
   "handleSIGHUP": false
 }
-2026-04-06T04:42:34.470Z browserless:chrome-helper Chrome PID: 21
-2026-04-06T04:42:34.471Z browserless:chrome-helper Finding prior pages
-2026-04-06T04:42:34.487Z browserless:chrome-helper Found 1 pages
-2026-04-06T04:42:34.488Z browserless:chrome-helper Setting up page Unknown
-2026-04-06T04:42:34.488Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
-2026-04-06T04:42:34.488Z browserless:system Chrome launched 373ms
-2026-04-06T04:42:34.507Z browserless:chrome-helper Setting up file:// protocol request rejection
-2026-04-06T04:42:34.507Z browserless:chrome-helper Setting up page for ad-blocking
+2026-04-06T14:58:23.171Z browserless:chrome-helper Chrome PID: 21
+2026-04-06T14:58:23.171Z browserless:chrome-helper Finding prior pages
+2026-04-06T14:58:23.184Z browserless:chrome-helper Found 1 pages
+2026-04-06T14:58:23.184Z browserless:chrome-helper Setting up page Unknown
+2026-04-06T14:58:23.184Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
+2026-04-06T14:58:23.185Z browserless:system Chrome launched 419ms
+2026-04-06T14:58:23.206Z browserless:chrome-helper Setting up file:// protocol request rejection
+2026-04-06T14:58:23.206Z browserless:chrome-helper Setting up page for ad-blocking
 
-=== Log captured at 2026-04-06T04:42:59.858Z (container status: running) ===
+=== Log captured at 2026-04-06T14:58:48.251Z (container status: running) ===
