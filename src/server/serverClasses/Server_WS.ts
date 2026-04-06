@@ -3,9 +3,6 @@ import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
 import { WsManager } from "./WsManager";
-import { buildUnifiedTestTree } from "../vscode/buildUnifiedTestTree";
-import { handleWebSocketMessage } from "../vscode/handleWebSocketMessage";
-
 
 export class Server_WS extends Server_HTTP {
   protected wsClients: Set<WebSocket> = new Set();
@@ -64,47 +61,47 @@ export class Server_WS extends Server_HTTP {
     });
   }
 
-  private handleWebSocketMessage(ws: WebSocket, message: any): void {
-    handleWebSocketMessage(
-      ws,
-      message,
-      this.wsManager,
-      () => this.getProcessSummary?.(),
-      (processId: string) => {
-        const processManager = this as any;
-        if (typeof processManager.getProcessLogs === "function") {
-          return processManager.getProcessLogs(processId);
-        }
-        return [];
-      },
-      (testName: string, hash: string, files: string[], runtime: string) => {
-        const sourceFilesUpdated = (this as any).sourceFilesUpdated;
-        if (typeof sourceFilesUpdated === 'function') {
-          sourceFilesUpdated(testName, hash, files, runtime);
-        }
-      },
-      () => {
-        const getBuildListenerState = (this as any).getBuildListenerState;
-        if (typeof getBuildListenerState === 'function') {
-          return getBuildListenerState();
-        }
-        return null;
-      },
-      () => {
-        const getBuildEvents = (this as any).getBuildEvents;
-        if (typeof getBuildEvents === 'function') {
-          return getBuildEvents();
-        }
-        return [];
-      },
-      this.broadcast.bind(this)
-    );
-  }
+  // private handleWebSocketMessage(ws: WebSocket, message: any): void {
+  //   handleWebSocketMessage(
+  //     ws,
+  //     message,
+  //     this.wsManager,
+  //     () => this.getProcessSummary?.(),
+  //     (processId: string) => {
+  //       const processManager = this as any;
+  //       if (typeof processManager.getProcessLogs === "function") {
+  //         return processManager.getProcessLogs(processId);
+  //       }
+  //       return [];
+  //     },
+  //     (testName: string, hash: string, files: string[], runtime: string) => {
+  //       const sourceFilesUpdated = (this as any).sourceFilesUpdated;
+  //       if (typeof sourceFilesUpdated === 'function') {
+  //         sourceFilesUpdated(testName, hash, files, runtime);
+  //       }
+  //     },
+  //     () => {
+  //       const getBuildListenerState = (this as any).getBuildListenerState;
+  //       if (typeof getBuildListenerState === 'function') {
+  //         return getBuildListenerState();
+  //       }
+  //       return null;
+  //     },
+  //     () => {
+  //       const getBuildEvents = (this as any).getBuildEvents;
+  //       if (typeof getBuildEvents === 'function') {
+  //         return getBuildEvents();
+  //       }
+  //       return [];
+  //     },
+  //     this.broadcast.bind(this)
+  //   );
+  // }
 
 
-  private buildUnifiedTestTree(): Record<string, any> {
-    return buildUnifiedTestTree(this.configs, process.cwd());
-  }
+  // private buildUnifiedTestTree(): Record<string, any> {
+  //   return buildUnifiedTestTree(this.configs, process.cwd());
+  // }
 
   protected getProcessSummary?(): any;
 }

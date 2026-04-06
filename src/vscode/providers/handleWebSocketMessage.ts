@@ -1,5 +1,3 @@
-import * as TestTreeUtils from './utils/testTree';
-
 export function handleWebSocketMessage(provider: any, message: any): void {
   console.log('[TestTreeDataProvider] Received WebSocket message:', message.type);
 

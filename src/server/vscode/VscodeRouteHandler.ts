@@ -1,4 +1,3 @@
-import { vscodeHttpAPI } from "../../api/vscodeExtensionHttp";
 import { getApiDefinitionForRoute } from "../serverClasses/Server_Http/getApiDefinitionForRoute";
 import { handleOptions } from "../serverClasses/Server_Http/handleOptions";
 import { jsonResponse } from "../serverClasses/Server_Http/jsonResponse";
@@ -13,10 +12,10 @@ export class VscodeRouteHandler {
   ): Response {
     // Log for debugging directory traversal errors
     console.log(`[VscodeRouteHandler] Handling route: ${routeName}, method: ${request.method}, url: ${url}`);
-    
+
     // API call logging
     console.log(`[API] ${request.method} ${routeName}`);
-    
+
     // Handle OPTIONS requests
     if (request.method === "OPTIONS") {
       return handleOptions(request, routeName);

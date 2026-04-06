@@ -1,11 +1,5 @@
-=== Log started at 2026-04-06T02:36:34.701Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (runtime: node) ===
-=== Container ID: f3042161c3e30317d4c502c2265bd65b8e4f11d5abf379732e094d03e027f90c ===
+=== Log started at 2026-04-06T03:06:31.536Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (runtime: node) ===
+=== Container ID: dd498fe55de35344a485108be365a63fac97457544844894674948e13ca7afd7 ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
-
-=== No logs captured (container may have exited without output) ===
-=== FINAL ATTEMPT (with --timestamps) ===
-Error response from daemon: No such container: f3042161c3e30317d4c502c2265bd65b8e4f11d5abf379732e094d03e027f90c
-
-=== Log captured at 2026-04-06T02:36:39.827Z (container status: running) ===
