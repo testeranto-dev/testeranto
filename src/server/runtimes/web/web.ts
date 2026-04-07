@@ -79,20 +79,60 @@ console.log(`[WEB BUILDER] CWD: ${process.cwd()}`);
 
 const urlDomain = `http://webtests:8000/`;
 
+// Function to produce output artifacts when shutting down
+async function produceOutputArtifacts(projectConfig: ITesterantoConfig, configKey: string): Promise<void> {
+  console.log(`[WEB BUILDER] Producing output artifacts for config ${configKey}`);
+  
+  const runtimeConfig = projectConfig.runtimes[configKey];
+  if (!runtimeConfig) {
+    console.error(`[WEB BUILDER] No runtime config found for ${configKey}`);
+    return;
+  }
+  
+  const outputs = runtimeConfig.outputs;
+  if (!outputs || outputs.length === 0) {
+    console.log(`[WEB BUILDER] No outputs defined for ${configKey}`);
+    return;
+  }
+  
+  console.log(`[WEB BUILDER] Processing ${outputs.length} output artifacts`);
+  
+  // Create output directory
+  const outputDir = `testeranto/outputs/${configKey}`;
+  const fs = await import('fs');
+  const path = await import('path');
+  
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+  
+  for (const entrypoint of outputs) {
+    try {
+      const sourcePath = entrypoint;
+      const fileName = path.basename(entrypoint);
+      const destPath = path.join(outputDir, fileName);
+      
+      console.log(`[WEB BUILDER] Copying ${sourcePath} to ${destPath}`);
+      
+      // Copy file
+      fs.copyFileSync(sourcePath, destPath);
+      
+      console.log(`[WEB BUILDER] ✅ Copied ${fileName}`);
+    } catch (error: any) {
+      console.error(`[WEB BUILDER] Failed to process output artifact ${entrypoint}:`, error.message);
+    }
+  }
+  
+  console.log(`[WEB BUILDER] Finished producing output artifacts`);
+}
+
 // Handle process exit to close log stream
 process.on("exit", () => {
   console.log("[WEB BUILDER] Process exiting");
   logStream.end();
 });
-process.on("SIGINT", () => {
-  console.log("[WEB BUILDER] Received SIGINT");
-  logStream.end();
-  process.exit(0);
-});
-process.on("uncaughtException", (error) => {
-  console.error("[WEB BUILDER] Uncaught exception:", error);
-  logStream.end();
-});
+
+// Signal handlers will be set up in main function after projectConfigs is available
 
 async function startBundling(
   webConfigs: any,
@@ -221,9 +261,41 @@ async function startBundling(
 }
 
 async function main() {
+  let nodeConfigs: any;
+  let projectConfigs: ITesterantoConfig;
+  
   try {
-    const nodeConfigs = (await import(nodeConfigPath)).default;
-    const projectConfigs = (await import(projectConfigPath)).default;
+    nodeConfigs = (await import(nodeConfigPath)).default;
+    projectConfigs = (await import(projectConfigPath)).default;
+    
+    // Set up signal handlers now that we have projectConfigs
+    const setupSignalHandlers = () => {
+      process.on("SIGINT", async () => {
+        console.log("[WEB BUILDER] Received SIGINT - producing output artifacts");
+        await produceOutputArtifacts(projectConfigs, testName);
+        logStream.end();
+        process.exit(0);
+      });
+      
+      process.on("SIGTERM", async () => {
+        console.log("[WEB BUILDER] Received SIGTERM - producing output artifacts");
+        await produceOutputArtifacts(projectConfigs, testName);
+        logStream.end();
+        process.exit(0);
+      });
+      
+      process.on("uncaughtException", (error) => {
+        console.error("[WEB BUILDER] Uncaught exception:", error);
+        logStream.end();
+        // Try to produce output artifacts even on uncaught exception
+        produceOutputArtifacts(projectConfigs, testName).finally(() => {
+          process.exit(1);
+        });
+      });
+    };
+    
+    setupSignalHandlers();
+    
     await startBundling(nodeConfigs, projectConfigs, entryPoints);
   } catch (error) {
     console.error(
@@ -232,6 +304,12 @@ async function main() {
       error,
     );
     console.error(error);
+    
+    // Try to produce output artifacts before exiting on error
+    if (projectConfigs) {
+      await produceOutputArtifacts(projectConfigs, testName);
+    }
+    logStream.end();
     process.exit(1);
   }
 }

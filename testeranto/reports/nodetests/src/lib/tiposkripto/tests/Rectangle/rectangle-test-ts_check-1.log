@@ -1,18 +1,5 @@
-=== Log started at 2026-04-07T19:27:11.210Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
-=== Container ID: 982f766ea395c79f7a12574fb94b819d0ac5ed5f047748b3078f62b404afd875 ===
+=== Log started at 2026-04-07T21:18:11.605Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
+=== Container ID: e0ccb2f3ce8620f9cfc2d31c0d941866ed3db3b5c32840e5aa6ab2543d4d373e ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
-=== ALL LOGS (stdout + stderr) ===
-yarn run v1.22.22
-warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
-warning testeranto@0.239.0: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/tsc --noEmit
-src/grafeovidajo/dist/grafeovidajo/charts/NodeDetailsModal.js(143,1): error TS1109: Expression expected.
-src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
-src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-error Command failed with exit code 2.
-
-=== Log captured at 2026-04-07T19:27:25.214Z (container status: exited, exit code: 2) ===

@@ -4,9 +4,11 @@ Each builder creates test artifacts and dependency metadata using BuildKit.
 
 ### Common Responsibilities
 
-1. **Import Configuration**: Process language-specific config files
-2. **Create Bundles**: Generate executable test artifacts
-3. **Generate Metadata**: Produce inputFiles.json listing all source dependencies
+1. Import Configuration: Process language-specific config files
+2. Create Bundles: Generate executable test artifacts
+3. Generate Metadata: Produce inputFiles.json listing all source dependencies
+4. Work in both once and dev mode
+5. on shutdown, builders should produce the output artifacts as specified in the testeranto.ts config
 
 ### BuildKit Only (No Fallbacks)
 

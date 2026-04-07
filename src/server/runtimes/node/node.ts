@@ -121,10 +121,14 @@ console.warn = (...args) => {
 };
 
 // Log startup information
-console.log(`[NODE BUILDER] projectConfigPath:  ${projectConfigPath}`);
+console.log(`[NODE BUILDER!] projectConfigPath:  ${projectConfigPath}`);
 console.log(`[NODE BUILDER] nodeConfig:  ${nodeConfigPath}`);
 console.log(`[NODE BUILDER] testName:  ${testName}`);
 console.log(`[NODE BUILDER] Log file: ${logFilePath}`);
+
+const projectConfigs = JSON.parse(fs.readFileSync(projectConfigPath).toString())
+
+console.log(`[NODE BUILDER] projectConfigs: ${projectConfigs}`);
 
 // Handle process exit to close log stream
 process.on('exit', () => {
@@ -139,6 +143,11 @@ process.on('SIGINT', async () => {
 });
 process.on('SIGTERM', async () => {
   console.log('[NODE BUILDER] Received SIGTERM - producing output artifacts');
+  // If we have a context in dev mode, dispose it first
+  if (isDevMode && typeof ctx !== 'undefined') {
+    console.log('[NODE BUILDER] Disposing esbuild context');
+    await ctx.dispose();
+  }
   await produceOutputArtifacts(projectConfigs, testName);
   logStream.end();
   process.exit(0);
@@ -178,47 +187,47 @@ function generateNativeTestWrapper(
 // Function to produce output artifacts when shutting down
 async function produceOutputArtifacts(projectConfig: ITesterantoConfig, configKey: string): Promise<void> {
   console.log(`[NODE BUILDER] Producing output artifacts for config ${configKey}`);
-  
+
   const runtimeConfig = projectConfig.runtimes[configKey];
   if (!runtimeConfig) {
     console.error(`[NODE BUILDER] No runtime config found for ${configKey}`);
     return;
   }
-  
+
   const outputs = runtimeConfig.outputs;
   if (!outputs || outputs.length === 0) {
     console.log(`[NODE BUILDER] No outputs defined for ${configKey}`);
     return;
   }
-  
+
   console.log(`[NODE BUILDER] Processing ${outputs.length} output artifacts`);
-  
+
   // Create output directory
   const outputDir = `testeranto/outputs/${configKey}`;
   const fs = await import('fs');
   const path = await import('path');
-  
+
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
-  
+
   for (const entrypoint of outputs) {
     try {
       const sourcePath = entrypoint;
       const fileName = path.basename(entrypoint);
       const destPath = path.join(outputDir, fileName);
-      
+
       console.log(`[NODE BUILDER] Copying ${sourcePath} to ${destPath}`);
-      
+
       // Copy file
       fs.copyFileSync(sourcePath, destPath);
-      
+
       console.log(`[NODE BUILDER] ✅ Copied ${fileName}`);
     } catch (error: any) {
       console.error(`[NODE BUILDER] Failed to process output artifact ${entrypoint}:`, error.message);
     }
   }
-  
+
   console.log(`[NODE BUILDER] Finished producing output artifacts`);
 }
 
@@ -350,9 +359,46 @@ async function startBundling(
 }
 
 async function main() {
+  let nodeConfigs: any;
+  let projectConfigs: ITesterantoConfig;
+
   try {
-    const nodeConfigs = (await import(nodeConfigPath)).default;
-    const projectConfigs = (await import(projectConfigPath)).default;
+    nodeConfigs = (await import(nodeConfigPath)).default;
+    projectConfigs = (await import(projectConfigPath)).default;
+
+    // Set up signal handlers now that we have projectConfigs
+    const setupSignalHandlers = () => {
+      process.on("SIGINT", async () => {
+        console.log("[NODE BUILDER] Received SIGINT - producing output artifacts");
+        await produceOutputArtifacts(projectConfigs, testName);
+        logStream.end();
+        process.exit(0);
+      });
+
+      process.on("SIGTERM", async () => {
+        console.log("[NODE BUILDER] Received SIGTERM - producing output artifacts");
+        // If we have a context in dev mode, dispose it first
+        if (isDevMode && typeof ctx !== 'undefined') {
+          console.log('[NODE BUILDER] Disposing esbuild context');
+          await ctx.dispose();
+        }
+        await produceOutputArtifacts(projectConfigs, testName);
+        logStream.end();
+        process.exit(0);
+      });
+
+      process.on("uncaughtException", (error) => {
+        console.error("[NODE BUILDER] Uncaught exception:", error);
+        logStream.end();
+        // Try to produce output artifacts even on uncaught exception
+        produceOutputArtifacts(projectConfigs, testName).finally(() => {
+          process.exit(1);
+        });
+      });
+    };
+
+    setupSignalHandlers();
+
     await startBundling(nodeConfigs, projectConfigs, entryPoints);
 
     // In dev mode, keep the process running even if there's an error
@@ -361,10 +407,6 @@ async function main() {
       // Don't exit on unhandled rejections
       process.on('unhandledRejection', (reason, promise) => {
         console.error('[NODE BUILDER] Unhandled Rejection at:', promise, 'reason:', reason);
-      });
-
-      process.on('uncaughtException', (error) => {
-        console.error('[NODE BUILDER] Uncaught Exception:', error);
       });
 
       // Keep alive
@@ -382,6 +424,11 @@ async function main() {
       // Keep the process alive to restart watching
       setInterval(() => { }, 1000);
     } else {
+      // Try to produce output artifacts before exiting on error
+      if (projectConfigs) {
+        await produceOutputArtifacts(projectConfigs, testName);
+      }
+      logStream.end();
       process.exit(1);
     }
   }

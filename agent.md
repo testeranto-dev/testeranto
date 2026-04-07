@@ -1,1 +1,1 @@
-/workspace/agents/sipestro.md
+/workspace/agents/cefo.md

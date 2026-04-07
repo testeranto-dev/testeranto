@@ -7,7 +7,7 @@
     
     <groupId>com.testeranto</groupId>
     <artifactId>testeranto.kafe</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
     <packaging>jar</packaging>
     
     <name>Kafe - Java Implementation of Testeranto</name>

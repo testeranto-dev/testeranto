@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   
-  s.version = "0.4.0"
+  s.version = "0.5.0"
 
   s.authors                   = ["Adam Wong"]
   s.bindir                    = "bin"

@@ -1,18 +1,5 @@
-=== Log started at 2026-04-07T19:27:18.785Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-check-1 (runtime: node) ===
-=== Container ID: 55efc8b55829e90176964d18c59d2961872c514303641f46fdf42ccc4d129c81 ===
+=== Log started at 2026-04-07T21:18:15.115Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-check-1 (runtime: node) ===
+=== Container ID: d87ac9541981148c05be9515d2395406399ce92240d0c1c013f965db3fba3c8f ===
 === Test: src/server/serverClasses/Server_GraphManagerCore.test.ts ===
 === Config Key: nodetests ===
 
-=== ALL LOGS (stdout + stderr) ===
-yarn run v1.22.22
-warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-warning testeranto@0.342.1: The engine "vscode" appears to be invalid.
-warning testeranto@0.342.1: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/tsc --noEmit
-src/grafeovidajo/dist/grafeovidajo/charts/NodeDetailsModal.js(143,1): error TS1109: Expression expected.
-src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
-src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
-error Command failed with exit code 2.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-
-=== Log captured at 2026-04-07T19:27:26.172Z (container status: exited, exit code: 2) ===

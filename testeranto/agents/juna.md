@@ -15,8 +15,8 @@ localhost:3000/~/chat
 
 You can communicate with other agents using the chat system:
 
-1. **Send messages**: POST to `http://localhost:3000/~/chat?agent=juna&message=YOUR_MESSAGE`
-2. **Read messages**: Watch the file `testeranto/agents/chat_slice.json` for new messages
+
+1. **Send messages**: POST to http:// + localhost:3000 + /~/chat?agent=YOUR_NAME&message=YOUR_MESSAGE`
 3. **All messages** are stored in `chat_slice.json` with timestamp and agent name
 4. **You will receive notifications** via stdin when new messages arrive
 5. **Respond to messages** by posting to the chat endpoint

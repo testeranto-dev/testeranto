@@ -25,9 +25,14 @@ public class java_runtime {
         String testName = args[2];
         String[] entryPoints = Arrays.copyOfRange(args, 3, args.length);
         
-        System.out.println("Java config path: " + javaConfigPath);
-        System.out.println("Test name: " + testName);
-        System.out.println("Entry points: " + Arrays.toString(entryPoints));
+        // Check if we're in dev mode
+        String mode = System.getenv("MODE");
+        boolean isDevMode = "dev".equals(mode);
+        
+        System.out.println("[Java Builder] Java config path: " + javaConfigPath);
+        System.out.println("[Java Builder] Test name: " + testName);
+        System.out.println("[Java Builder] Entry points: " + Arrays.toString(entryPoints));
+        System.out.println("[Java Builder] Mode: " + (isDevMode ? "dev" : "once"));
         
         // Load Java config file
         JSONObject javaConfig = loadJavaConfig(Paths.get(javaConfigPath));
@@ -151,6 +156,28 @@ public class java_runtime {
         System.out.println("\n✅ Created inputFiles.json at " + inputFilesPath + " with " + allTestsInfo.length() + " tests");
         
         System.out.println("\n🎉 Java builder completed successfully");
+        
+        // In dev mode, keep the process alive
+        if (isDevMode) {
+            System.out.println("[Java Builder] Dev mode active - process will stay running");
+            
+            // Add shutdown hook for SIGTERM
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    System.out.println("[Java Builder] Received shutdown signal - shutting down");
+                }
+            });
+            
+            // Keep process alive
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
     }
     
     private static void createJarFile(String testPath, Path jarPath, JSONObject javaConfig, 

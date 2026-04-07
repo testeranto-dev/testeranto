@@ -1,5 +1,5 @@
-=== Log started at 2026-04-07T19:27:18.426Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-check-0 (runtime: node) ===
-=== Container ID: a2aa511ec11a5a9fe88be350a8c3c5c575329287a548ea0df0ac6d555d88c836 ===
+=== Log started at 2026-04-07T21:18:15.491Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-check-0 (runtime: node) ===
+=== Container ID: a5c77461729d914102aeb34691f02ef334555b6673ee9ea90778520a44544de2 ===
 === Test: src/server/serverClasses/Server_GraphManagerCore.test.ts ===
 === Config Key: nodetests ===
 
@@ -21,7 +21,7 @@ Common causes of this problem include:
 1. The "import" plugin is not defined in your configuration file.
 2. The "import" plugin is not defined within the same configuration object in which the "import/no-dynamic-require" rule is applied.
 
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-07T19:27:24.018Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-07T21:18:35.792Z (container status: exited, exit code: 2) ===

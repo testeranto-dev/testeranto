@@ -19,13 +19,13 @@
 -docencoding
 'UTF-8'
 -doctitle
-'Kafe - Java Implementation of Testeranto 0.4.0 API'
+'Kafe - Java Implementation of Testeranto 0.5.0 API'
 -linkoffline
 'https://docs.oracle.com/javase/8/docs/api' '/Users/adam/Code/testeranto/src/lib/kafe/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'Kafe - Java Implementation of Testeranto 0.4.0 API'
+'Kafe - Java Implementation of Testeranto 0.5.0 API'
 kafe
 /Users/adam/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar = 1685489257000
 /Users/adam/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar = 1685478841000
@@ -35,23 +35,21 @@ kafe
 /Users/adam/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar = 1624798415000
 /Users/adam/.m2/repository/org/junit/platform/junit-platform-commons/1.10.0/junit-platform-commons-1.10.0.jar = 1690116754000
 /Users/adam/Code/testeranto/src/lib/kafe/src/main/java = 1771518262114
-/Users/adam/Code/testeranto/src/lib/kafe/target/generated-sources/annotations = 1775450930962
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/constant-values.html = 1775450933060
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/member-search-index.zip = 1775450933112
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/overview-tree.html = 1775450933096
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/index.html = 1775450933120
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/package-search-index.js = 1775450933109
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/package-search-index.zip = 1775450933110
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/type-search-index.zip = 1775450933111
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/index-all.html = 1775450933113
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/allpackages-index.html = 1775450933117
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/deprecated-list.html = 1775450933119
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/member-search-index.js = 1775450933111
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/allclasses.html = 1775450933120
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/script.js = 1775450933123
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/stylesheet.css = 1775450933123
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/help-doc.html = 1775450933122
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/element-list = 1775450933050
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/allclasses-index.html = 1775450933116
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/type-search-index.js = 1775450933111
-/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/search.js = 1775450933124
+/Users/adam/Code/testeranto/src/lib/kafe/target/generated-sources/annotations = 1775597301752
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/tag-search-index.js = 1775597303659
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/overview-tree.html = 1775597303646
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/module-search-index.js = 1775597303658
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/index.html = 1775597303670
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/package-search-index.js = 1775597303658
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/jquery-ui.overrides.css = 1775597303676
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/index-all.html = 1775597303669
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/allpackages-index.html = 1775597303657
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/member-search-index.js = 1775597303659
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/copy.svg = 1775597303673
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/script.js = 1775597303673
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/stylesheet.css = 1775597303672
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/help-doc.html = 1775597303671
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/element-list = 1775597303602
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/allclasses-index.html = 1775597303657
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/type-search-index.js = 1775597303658
+/Users/adam/Code/testeranto/src/lib/kafe/target/apidocs/search.js = 1775597303673

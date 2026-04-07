@@ -17,23 +17,32 @@ ruby_config_file_path = ARGV[1]
 test_name = ARGV[2]
 entry_points = ARGV[3..-1]
 
+# Check if we're in dev mode
+is_dev_mode = ENV['MODE'] == 'dev'
+
+puts "[Ruby Builder] Project config: #{project_config_file_path}"
+puts "[Ruby Builder] Ruby config: #{ruby_config_file_path}"
+puts "[Ruby Builder] Test name: #{test_name}"
+puts "[Ruby Builder] Entry points: #{entry_points.join(', ')}"
+puts "[Ruby Builder] Mode: #{is_dev_mode ? 'dev' : 'once'}"
+
 # Load and parse configuration if needed
 begin
   if File.exist?(project_config_file_path)
     project_config = JSON.parse(File.read(project_config_file_path))
-    puts "Loaded project config"
+    puts "[Ruby Builder] Loaded project config"
   end
 rescue => e
-  puts "Warning: Could not parse project config: #{e.message}"
+  puts "[Ruby Builder] Warning: Could not parse project config: #{e.message}"
 end
 
 begin
   if File.exist?(ruby_config_file_path)
     ruby_config = JSON.parse(File.read(ruby_config_file_path))
-    puts "Loaded Ruby config"
+    puts "[Ruby Builder] Loaded Ruby config"
   end
 rescue => e
-  puts "Warning: Could not parse Ruby config: #{e.message}"
+  puts "[Ruby Builder] Warning: Could not parse Ruby config: #{e.message}"
 end
 
 # Delegate to native detection
@@ -48,4 +57,25 @@ end
 
 # detector.run
 
-puts "Ruby builder completed successfully"
+puts "[Ruby Builder] Ruby builder completed successfully"
+
+# In dev mode, keep the process alive
+if is_dev_mode
+  puts "[Ruby Builder] Dev mode active - process will stay running"
+  
+  # Signal handler for SIGTERM
+  Signal.trap('TERM') do
+    puts "[Ruby Builder] Received SIGTERM - shutting down"
+    exit 0
+  end
+  
+  Signal.trap('INT') do
+    puts "[Ruby Builder] Received SIGINT - shutting down"
+    exit 0
+  end
+  
+  # Keep process alive
+  loop do
+    sleep 1
+  end
+end

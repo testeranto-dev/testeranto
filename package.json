@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the AI powered test framework for polyglot projects",
-  "version": "0.342.1",
+  "version": "0.342.3",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -201,6 +201,11 @@
     "ATDD"
   ],
   "exports": {
+    "./src/vscode/defaultViews/index.ts": {
+      "import": "./src/vscode/defaultViews/index.ts",
+      "require": "./src/vscode/defaultViews/index.ts",
+      "types": "./src/vscode/defaultViews/index.ts"
+    },
     "./src/*": {
       "import": "./src/*"
     },

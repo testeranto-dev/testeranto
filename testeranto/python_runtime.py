@@ -236,10 +236,15 @@ def main():
     test_name = sys.argv[3]
     entry_points = sys.argv[4:]
     
+    # Check if we're in dev mode
+    import os
+    is_dev_mode = os.environ.get('MODE') == 'dev'
+    
     print(f"[Python Builder] Project config: {project_config_file_path}")
     print(f"[Python Builder] Python config: {python_config_file_path}")
     print(f"[Python Builder] Test name: {test_name}")
     print(f"[Python Builder] Entry points: {entry_points}")
+    print(f"[Python Builder] Mode: {'dev' if is_dev_mode else 'once'}")
     
     # Create a dictionary to store all tests' information
     all_tests_info = {}
@@ -386,6 +391,101 @@ exec(code, {{'__name__': '__main__', '__file__': r'{original_test_abs}'}})
     print(f"[Python Builder] Wrote inputFiles.json for {len(all_tests_info)} tests to {input_files_path}")
     
     print("[Python Builder] Python builder completed")
+    
+def produce_output_artifacts(project_config_path: str, config_key: str):
+    """Produce output artifacts before shutting down."""
+    print(f"[Python Builder] Producing output artifacts for config {config_key}")
+    
+    # Load project config
+    import json
+    try:
+        with open(project_config_path, 'r', encoding='utf-8') as f:
+            project_config = json.load(f)
+    except Exception as e:
+        print(f"[Python Builder] Error loading project config: {e}")
+        return
+    
+    runtime_config = project_config.get('runtimes', {}).get(config_key)
+    if not runtime_config:
+        print(f"[Python Builder] No runtime config found for {config_key}")
+        return
+    
+    outputs = runtime_config.get('outputs', [])
+    if not outputs:
+        print(f"[Python Builder] No outputs defined for {config_key}")
+        return
+    
+    print(f"[Python Builder] Processing {len(outputs)} output artifacts")
+    
+    # Create output directory
+    output_dir = f"testeranto/outputs/{config_key}"
+    os.makedirs(output_dir, exist_ok=True)
+    
+    for entrypoint in outputs:
+        try:
+            source_path = entrypoint
+            import shutil
+            file_name = os.path.basename(entrypoint)
+            dest_path = os.path.join(output_dir, file_name)
+            
+            print(f"[Python Builder] Copying {source_path} to {dest_path}")
+            
+            # Copy file
+            shutil.copy2(source_path, dest_path)
+            
+            print(f"[Python Builder] ✅ Copied {file_name}")
+        except Exception as e:
+            print(f"[Python Builder] Failed to process output artifact {entrypoint}: {e}")
+    
+    print(f"[Python Builder] Finished producing output artifacts")
+
+    # In dev mode, keep the process alive
+    if is_dev_mode:
+        print("[Python Builder] Dev mode active - process will stay running")
+        import signal
+        import time
+        
+        def handle_sigterm(signum, frame):
+            print("[Python Builder] Received SIGTERM - producing output artifacts")
+            produce_output_artifacts(project_config_file_path, test_name)
+            sys.exit(0)
+        
+        def handle_sigint(signum, frame):
+            print("[Python Builder] Received SIGINT - producing output artifacts")
+            produce_output_artifacts(project_config_file_path, test_name)
+            sys.exit(0)
+        
+        signal.signal(signal.SIGTERM, handle_sigterm)
+        signal.signal(signal.SIGINT, handle_sigint)
+        
+        # Keep process alive
+        while True:
+            time.sleep(1)
+    
+    # In dev mode, keep the process alive to watch for changes
+    # For now, we'll just keep the process running
+    # In a more complete implementation, we would watch for file changes
+    if is_dev_mode:
+        print("[Python Builder] Dev mode: keeping process alive...")
+        # Keep the process alive
+        # In a real implementation, we would watch for file changes here
+        # For now, just sleep indefinitely until SIGTERM
+        import signal
+        import time
+        
+        # Signal handler for SIGTERM to produce output artifacts
+        def sigterm_handler(signum, frame):
+            print("[Python Builder] Received SIGTERM - producing output artifacts")
+            # In a real implementation, we would produce output artifacts here
+            # For now, just exit
+            sys.exit(0)
+        
+        signal.signal(signal.SIGTERM, sigterm_handler)
+        signal.signal(signal.SIGINT, sigterm_handler)
+        
+        # Keep alive
+        while True:
+            time.sleep(1)
 
 if __name__ == "__main__":
     main()
