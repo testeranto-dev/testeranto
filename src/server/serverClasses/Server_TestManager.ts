@@ -1,5 +1,7 @@
 import path from 'path';
 import type { IRunTime, ITesterantoConfig } from "../../Types";
+import type { GraphManager } from '../graph';
+import { LockManager } from '../graph/lockManager';
 import type { IMode } from "../types";
 import { addProcessNodeToGraphPure } from "./Server_Docker/addProcessNodeToGraphPure";
 import { AiderMessageManager } from "./Server_Docker/AiderMessageManager";
@@ -79,7 +81,13 @@ export class Server_TestManager {
     writeConfigForExtension: () => void,
     graphManager?: any
   ) {
-    this.consoleLog(`[Server_TestManager] Launching BDD test for ${testName}`);
+    const lockManager = new LockManager(graphManager.graph);
+
+    // Check if any file nodes are locked by system restart
+    if (lockManager.hasLockedFiles()) {
+      this.consoleLog(`[Server_TestManager] Skipping BDD test ${testName} because files are locked for restart`);
+      return;
+    }
 
     if (this.failedBuilderConfigs.has(configKey)) {
       this.consoleLog(`[Server_TestManager] Skipping BDD test ${testName} because builder failed for config ${configKey}`);
@@ -105,6 +113,7 @@ export class Server_TestManager {
       (serviceName, runtime, configKey, testName) =>
         startServiceLogging(serviceName, runtime, configKey, testName as string),
       // In unified approach, broadcast graph updates instead
+      // TODO This should be defined in API 
       () => this.resourceChanged("/~/graph"),
       writeConfigForExtension,
     );
@@ -122,6 +131,18 @@ export class Server_TestManager {
     graphManager?: any
   ) {
     this.consoleLog(`[Server_TestManager] Launching checks for ${testName}`);
+
+    // Check if files are locked before running checks
+    if (graphManager && graphManager.graph) {
+
+      const lockManager = new LockManager(graphManager.graph);
+
+      // Check if any file nodes are locked by system restart
+      if (lockManager.hasLockedFiles()) {
+        this.consoleLog(`[Server_TestManager] Skipping checks for ${testName} because files are locked for restart`);
+        return;
+      }
+    }
 
     if (this.failedBuilderConfigs.has(configKey)) {
       this.consoleLog(`[Server_TestManager] Skipping checks for ${testName} because builder failed for config ${configKey}`);
@@ -166,8 +187,15 @@ export class Server_TestManager {
     writeConfigForExtension: () => void,
     resourceChanged: (path: string) => void,
     getContainerInfo: (serviceName: string) => Promise<any>,
-    graphManager: any
+    graphManager: GraphManager
   ) {
+    const lockManager = new LockManager(graphManager);
+
+    // Check if any file nodes are locked by system restart
+    if (lockManager.hasLockedFiles()) {
+      this.consoleLog(`[Server_TestManager] Skipping aider for ${testName} because files are locked for restart`);
+      return;
+    }
     await launchAiderPure({
       runtime,
       testName,
@@ -300,9 +328,19 @@ export class Server_TestManager {
     return this.failedBuilderConfigs;
   }
 
+  /**
+   * Check if files are locked (system in restart mode)
+   * @param graphManager The graph manager instance
+   * @returns boolean indicating if files are locked
+   */
+  public async isFilesLocked(graphManager?: any): Promise<boolean> {
+    const lockManager = new LockManager(graphManager.graph);
+    return lockManager.hasLockedFiles();
+  }
+
+  // Agents are now created as Docker services at startup, not dynamically
+  // This method is kept for compatibility but does nothing
   async launchAgent(agentName: string, suffix: string): Promise<void> {
-    this.consoleLog(`[Server_TestManager] Launching ${agentName} agent with suffix ${suffix}`);
-    // Agent launch logic will be implemented by the specific server implementation
-    throw new Error(`Agent ${agentName} launch not implemented`);
+    console.log(`[Server_TestManager] Agents are now created as Docker services at startup. Agent ${agentName} is already running.`);
   }
 }

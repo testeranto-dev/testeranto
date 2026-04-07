@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import type { Node } from "grafeovidajo/core";
 import { getFeatureGraphStats } from "./stateless/featureGraphStats";
 import { renderVisualization } from "./stateless/renderVisualization";
-// Import DebugGraph
-import { DebugGraph } from "../grafeovidajo/charts/DebugGraph";
+
 import { Palette } from "../colors";
+import { DebugGraph } from "testeranto/stakeholderApp/defaultViews/stakeholder/DebugGraph.tsx";
 
 export interface VisualizationTabsProps {
   data: any;

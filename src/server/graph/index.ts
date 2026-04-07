@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import yaml from 'js-yaml';
 import type { ITesterantoConfig } from "../../Types";
 import { graphToData } from '../../graph/graphToData';
 import {
@@ -11,6 +10,7 @@ import {
   type GraphUpdate,
   type TesterantoGraph,
 } from '../../graph/index';
+import { createAiderNodeGraphOperationsPure } from '../serverClasses/Server_Docker/utils/launchAiderPure';
 import type { TestResult } from "../types/testResults";
 import { cleanupAttributeNodesPure } from './cleanupAttributeNodesPure';
 import { createFolderNodesAndEdgesPure } from './createFolderNodesAndEdgesPure';
@@ -21,7 +21,15 @@ import { hasFeatureUpdatesPure } from './hasFeatureUpdatesPure';
 import { loadGraphPure } from './loadGraphPure';
 import { processFeatureUrlPure } from './processFeatureUrlPure';
 import { updateFromTestResultsPure } from './updateFromTestResultsPure';
-import { createAiderNodeGraphOperationsPure } from '../serverClasses/Server_Docker/utils/launchAiderPure';
+import { parseMarkdownFilesPure } from './utils/markdownParseUtils';
+import { generateMarkdownContent } from './utils/markdownUtils';
+import {
+  getAiderSlice,
+  getFilesAndFoldersSlice,
+  getProcessSlice,
+  getRuntimeSlice
+} from './utils/sliceUtils';
+import yaml from 'js-yaml';
 
 export class GraphManager {
   private graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>;
@@ -109,7 +117,7 @@ export class GraphManager {
               const updatedAttrs = this.graph.getNodeAttributes(op.data.id);
 
               // Generate updated markdown content
-              const content = this.generateMarkdownContent(updatedAttrs);
+              const content = generateMarkdownContent(updatedAttrs);
               if (content) {
                 // Parse the new frontmatter from the generated content
                 const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
@@ -175,79 +183,12 @@ export class GraphManager {
 
   // Parse markdown files with YAML frontmatter to extract graph nodes
   public parseMarkdownFiles(globPattern: string): GraphUpdate {
-    const operations: GraphOperation[] = [];
-    const timestamp = new Date().toISOString();
-
-    const fs = require('fs');
-    const path = require('path');
-    const yaml = require('js-yaml');
-    const { glob } = require('glob');
-
-    try {
-      // Find all markdown files matching the glob pattern
-      const files = glob.sync(globPattern, { cwd: this.projectRoot });
-
-      for (const file of files) {
-        try {
-          const filePath = path.join(this.projectRoot, file);
-          const content = fs.readFileSync(filePath, 'utf-8');
-
-          // Parse YAML frontmatter
-          const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
-          const match = content.match(frontmatterRegex);
-
-          if (match) {
-            const yamlContent = match[1];
-            const frontmatter = yaml.load(yamlContent) || {};
-
-            // Create a feature node from the markdown file
-            const featureName = path.basename(file, '.md');
-            const featureId = `feature:${featureName}`;
-
-            // Extract status from frontmatter
-            const status = frontmatter.status || 'todo';
-            const priority = frontmatter.priority || 'medium';
-            const label = frontmatter.title || featureName;
-            const description = frontmatter.description || `Feature: ${featureName}`;
-
-            // Check if node already exists
-            const existingNode = this.graph.hasNode(featureId);
-            const operationType = existingNode ? 'updateNode' : 'addNode';
-
-            operations.push({
-              type: operationType,
-              data: {
-                id: featureId,
-                type: 'feature',
-                label,
-                description,
-                status,
-                priority,
-                icon: 'document',
-                metadata: {
-                  ...frontmatter,
-                  localPath: filePath,
-                  content: content,
-                  contentPreview: content.substring(0, 200) + (content.length > 200 ? '...' : '')
-                }
-              },
-              timestamp
-            });
-
-            // console.log(`[GraphManager] Created feature node from ${file} with status: ${status}`);
-          }
-        } catch (error) {
-          console.error(`[GraphManager] Error parsing markdown file ${file}:`, error);
-        }
-      }
-    } catch (error) {
-      console.error('[GraphManager] Error in parseMarkdownFiles:', error);
-    }
-
-    return {
-      operations,
-      timestamp
-    };
+    const { operations, timestamp } = parseMarkdownFilesPure(
+      globPattern,
+      this.projectRoot,
+      (nodeId: string) => this.graph.hasNode(nodeId)
+    );
+    return { operations, timestamp };
   }
 
   // Helper to create folder nodes and connect them in a hierarchy for both local file paths and URLs
@@ -427,33 +368,7 @@ export class GraphManager {
     nodes: GraphNodeAttributes[],
     edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
   } {
-    const nodes: GraphNodeAttributes[] = [];
-    const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
-
-    // Collect all file and folder nodes
-    this.graph.forEachNode((nodeId, attributes) => {
-      if (attributes.type === 'file' || attributes.type === 'folder') {
-        nodes.push({ ...attributes, id: nodeId });
-      }
-    });
-
-    // Collect edges where both source and target are file or folder nodes
-    this.graph.forEachEdge((edgeId, attributes, source, target) => {
-      const sourceAttrs = this.graph.getNodeAttributes(source);
-      const targetAttrs = this.graph.getNodeAttributes(target);
-
-      // Only include edges where both ends are files or folders
-      if ((sourceAttrs.type === 'file' || sourceAttrs.type === 'folder') &&
-        (targetAttrs.type === 'file' || targetAttrs.type === 'folder')) {
-        edges.push({
-          source,
-          target,
-          attributes: { ...attributes }
-        });
-      }
-    });
-
-    return { nodes, edges };
+    return getFilesAndFoldersSlice(this.graph);
   }
 
   // Get process slice (docker processes)
@@ -461,34 +376,7 @@ export class GraphManager {
     nodes: GraphNodeAttributes[],
     edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
   } {
-    const nodes: GraphNodeAttributes[] = [];
-    const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
-
-    // Collect all process-related nodes
-    const processTypes = ['docker_process', 'bdd_process', 'check_process', 'aider_process', 'builder_process'];
-
-    this.graph.forEachNode((nodeId, attributes) => {
-      if (processTypes.includes(attributes.type)) {
-        nodes.push({ ...attributes, id: nodeId });
-      }
-    });
-
-    // Collect edges where at least one end is a process node
-    this.graph.forEachEdge((edgeId, attributes, source, target) => {
-      const sourceAttrs = this.graph.getNodeAttributes(source);
-      const targetAttrs = this.graph.getNodeAttributes(target);
-
-      // Include edges where source or target is a process node
-      if (processTypes.includes(sourceAttrs.type) || processTypes.includes(targetAttrs.type)) {
-        edges.push({
-          source,
-          target,
-          attributes: { ...attributes }
-        });
-      }
-    });
-
-    return { nodes, edges };
+    return getProcessSlice(this.graph);
   }
 
   // Get aider slice (aider processes)
@@ -496,34 +384,7 @@ export class GraphManager {
     nodes: GraphNodeAttributes[],
     edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
   } {
-    const nodes: GraphNodeAttributes[] = [];
-    const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
-
-    // Collect all aider-related nodes
-    const aiderTypes = ['aider', 'aider_process'];
-
-    this.graph.forEachNode((nodeId, attributes) => {
-      if (aiderTypes.includes(attributes.type)) {
-        nodes.push({ ...attributes, id: nodeId });
-      }
-    });
-
-    // Collect edges where at least one end is an aider node
-    this.graph.forEachEdge((edgeId, attributes, source, target) => {
-      const sourceAttrs = this.graph.getNodeAttributes(source);
-      const targetAttrs = this.graph.getNodeAttributes(target);
-
-      // Include edges where source or target is an aider node
-      if (aiderTypes.includes(sourceAttrs.type) || aiderTypes.includes(targetAttrs.type)) {
-        edges.push({
-          source,
-          target,
-          attributes: { ...attributes }
-        });
-      }
-    });
-
-    return { nodes, edges };
+    return getAiderSlice(this.graph);
   }
 
   // Get runtime slice (runtimes)
@@ -531,86 +392,9 @@ export class GraphManager {
     nodes: GraphNodeAttributes[],
     edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
   } {
-    const nodes: GraphNodeAttributes[] = [];
-    const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
-
-    // Collect runtime-related nodes (config nodes with runtime information)
-    this.graph.forEachNode((nodeId, attributes) => {
-      // Look for nodes that have runtime information in metadata
-      if (attributes.type === 'config' ||
-        (attributes.metadata && attributes.metadata.runtime)) {
-        nodes.push({ ...attributes, id: nodeId });
-      }
-    });
-
-    // Also include entrypoint nodes that are associated with runtimes
-    this.graph.forEachNode((nodeId, attributes) => {
-      if (attributes.type === 'entrypoint' &&
-        attributes.metadata &&
-        attributes.metadata.runtime) {
-        nodes.push({ ...attributes, id: nodeId });
-      }
-    });
-
-    // Collect edges where at least one end is a runtime-related node
-    this.graph.forEachEdge((edgeId, attributes, source, target) => {
-      const sourceAttrs = this.graph.getNodeAttributes(source);
-      const targetAttrs = this.graph.getNodeAttributes(target);
-
-      // Check if source or target is in our collected nodes
-      const sourceInSlice = nodes.some(n => n.id === source);
-      const targetInSlice = nodes.some(n => n.id === target);
-
-      if (sourceInSlice || targetInSlice) {
-        edges.push({
-          source,
-          target,
-          attributes: { ...attributes }
-        });
-      }
-    });
-
-    return { nodes, edges };
+    return getRuntimeSlice(this.graph);
   }
 
-  // deprecated
-  // TODO return data for the product manager
-  // it should return files, folders, input files and the test.json file. It should not include output files like logs
-  // public getProductManagerSlice(): {
-  //   nodes: GraphNodeAttributes[],
-  //   edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
-  // } {
-  //   // For now, return empty implementation
-  //   return { nodes: [], edges: [] };
-  // }
-
-  // // Get architect slice (for Arko)
-  // public getArchitectSlice(): {
-  //   nodes: GraphNodeAttributes[],
-  //   edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
-  // } {
-  //   const nodes: GraphNodeAttributes[] = [];
-  //   const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
-
-  //   // TODO: Define what the architect slice should contain
-  //   // For now, return empty slice
-  //   return { nodes, edges };
-  // }
-
-  // // Get junior slice (for Juna)
-  // public getJuniorSlice(): {
-  //   nodes: GraphNodeAttributes[],
-  //   edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
-  // } {
-  //   const nodes: GraphNodeAttributes[] = [];
-  //   const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
-
-  //   // TODO: Define what the junior slice should contain
-  //   // For now, return empty slice
-  //   return { nodes, edges };
-  // }
-
-  // Serialize graph changes back to markdown frontmatter
   public serializeToMarkdown(): void {
     // Get all feature nodes from the graph
     const featureNodes = this.graph.nodes().filter(nodeId => {
@@ -627,7 +411,7 @@ export class GraphManager {
         const localPath = metadata.localPath as string | undefined;
 
         // Generate markdown content with YAML frontmatter from node attributes
-        const content = this.generateMarkdownContent(attrs);
+        const content = generateMarkdownContent(attrs);
 
         fs.writeFileSync(localPath, content, 'utf-8');
 
@@ -651,162 +435,7 @@ export class GraphManager {
 
   // Generate markdown content with YAML frontmatter from node attributes
   public generateMarkdownContent(attrs: any): string | null {
-    const metadata = attrs.metadata || {};
-    const originalContent = metadata.content as string | undefined;
-
-    // Handle missing content
-    if (originalContent === undefined) {
-      console.log(`[GraphManager] Feature ${attrs.id} has no content field in metadata, generating from attributes`);
-      // Generate content from node attributes
-      return this.generateContentFromAttributes(attrs, metadata);
-    }
-
-    if (originalContent === '') {
-      console.log(`[GraphManager] Feature ${attrs.id} has empty content, generating from attributes`);
-      // Generate content from node attributes
-      return this.generateContentFromAttributes(attrs, metadata);
-    }
-
-    // Extract YAML frontmatter from original content
-    const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
-    const match = originalContent.match(frontmatterRegex);
-
-    let frontmatter: Record<string, any> = {};
-    let markdownBody = originalContent;
-
-    if (match) {
-      try {
-        // Parse YAML frontmatter
-        const yamlContent = match[1];
-        frontmatter = yaml.load(yamlContent) || {};
-        markdownBody = originalContent.slice(match[0].length);
-      } catch (error) {
-        console.error(`[GraphManager] Error parsing YAML frontmatter:`, error);
-        // If YAML parsing fails, use empty frontmatter
-        frontmatter = {};
-      }
-    }
-
-    // Start with the frontmatter from metadata if it exists (this preserves all original fields)
-    if (metadata.frontmatter && typeof metadata.frontmatter === 'object') {
-      // Merge metadata.frontmatter into our frontmatter, but don't overwrite with undefined
-      for (const [key, value] of Object.entries(metadata.frontmatter)) {
-        if (value !== undefined) {
-          frontmatter[key] = value;
-        }
-      }
-    }
-
-    // Update frontmatter with node attributes (these should override metadata.frontmatter)
-    // Map graph attributes to frontmatter fields
-    if (attrs.status !== undefined) {
-      frontmatter.status = attrs.status;
-    }
-    if (attrs.priority !== undefined) {
-      frontmatter.priority = attrs.priority;
-    }
-    if (attrs.label !== undefined) {
-      frontmatter.title = attrs.label;
-    }
-    if (attrs.description !== undefined) {
-      frontmatter.description = attrs.description;
-    }
-
-    // Also include any other metadata that should be in frontmatter
-    // Skip internal fields and the frontmatter field itself
-    const internalFields = ['content', 'contentPreview', 'localPath', 'url', 'frontmatter'];
-    for (const [key, value] of Object.entries(metadata)) {
-      if (!internalFields.includes(key) && value !== undefined) {
-        // Always update with metadata values, as they may have been updated
-        frontmatter[key] = value;
-      }
-    }
-
-    // Generate new YAML frontmatter
-    let newContent = '';
-    if (Object.keys(frontmatter).length > 0) {
-      try {
-        const yamlStr = yaml.dump(frontmatter, { lineWidth: -1 });
-        newContent = `---\n${yamlStr}---\n${markdownBody}`;
-      } catch (error) {
-        console.error(`[GraphManager] Error generating YAML frontmatter:`, error);
-        // Fall back to original content if YAML generation fails
-        return originalContent;
-      }
-    } else {
-      // No frontmatter, just return the markdown body
-      newContent = markdownBody;
-    }
-
-    return newContent;
-  }
-
-  // Generate markdown content from node attributes when no content exists
-  private generateContentFromAttributes(attrs: any, metadata: any): string {
-    const frontmatter: Record<string, any> = {};
-
-    // Start with the frontmatter from metadata if it exists
-    if (metadata.frontmatter && typeof metadata.frontmatter === 'object') {
-      for (const [key, value] of Object.entries(metadata.frontmatter)) {
-        if (value !== undefined) {
-          frontmatter[key] = value;
-        }
-      }
-    }
-
-    // Map graph attributes to frontmatter fields (override metadata.frontmatter)
-    if (attrs.status !== undefined) {
-      frontmatter.status = attrs.status;
-    }
-    if (attrs.priority !== undefined) {
-      frontmatter.priority = attrs.priority;
-    }
-    if (attrs.label !== undefined) {
-      frontmatter.title = attrs.label;
-    }
-    if (attrs.description !== undefined) {
-      frontmatter.description = attrs.description;
-    }
-
-    // Also include any other metadata that should be in frontmatter
-    // Skip internal fields and the frontmatter field itself
-    const internalFields = ['content', 'contentPreview', 'localPath', 'url', 'frontmatter'];
-    for (const [key, value] of Object.entries(metadata)) {
-      if (!internalFields.includes(key) && value !== undefined) {
-        // Don't overwrite if already set from metadata.frontmatter or node attributes
-        if (frontmatter[key] === undefined) {
-          frontmatter[key] = value;
-        }
-      }
-    }
-
-    // Generate markdown body from description or label
-    let markdownBody = '';
-    if (attrs.description) {
-      markdownBody = `# ${attrs.label || attrs.id}\n\n${attrs.description}`;
-    } else if (attrs.label) {
-      markdownBody = `# ${attrs.label}`;
-    } else {
-      markdownBody = `# ${attrs.id.replace('feature:', '')}`;
-    }
-
-    // Generate YAML frontmatter
-    let newContent = '';
-    if (Object.keys(frontmatter).length > 0) {
-      try {
-        const yamlStr = yaml.dump(frontmatter, { lineWidth: -1 });
-        newContent = `---\n${yamlStr}---\n\n${markdownBody}`;
-      } catch (error) {
-        console.error(`[GraphManager] Error generating YAML frontmatter from attributes:`, error);
-        // Fall back to just markdown body
-        newContent = markdownBody;
-      }
-    } else {
-      // No frontmatter, just return the markdown body
-      newContent = markdownBody;
-    }
-
-    return newContent;
+    return generateMarkdownContent(attrs);
   }
 
   public async updateGraphWithAiderNode(params: {

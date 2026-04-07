@@ -147,6 +147,75 @@ export const generateServicesPure = (
     };
   }
 
+  // Add agent services
+  const agents = configs.agents || {};
+  console.log(`[generateServicesPure] Found ${Object.keys(agents).length} agents in config`);
+
+  for (const [agentName, agentConfig] of Object.entries(agents)) {
+    const agentServiceName = `agent-${agentName}`;
+    console.log(`[generateServicesPure] Creating agent service: ${agentServiceName}`);
+
+    // Create a service for each agent that runs aider
+    // Use the testeranto-aider image which has aider installed
+    services[agentServiceName] = {
+      image: 'testeranto-aider:latest',
+      container_name: agentServiceName,
+      volumes: [
+        ...(configs.volumes || []),
+        // Mount the current directory to access files
+        `${process.cwd()}:/workspace`,
+        // Mount the agents directory instead of individual files to avoid mount issues
+        // Mount to /workspace/agents where the container can access all agent files
+        `${process.cwd()}/testeranto/agents:/workspace/agents:ro`,
+        // Mount the aider config file
+        `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
+      ],
+      working_dir: '/workspace',
+      command: [
+        'sh', '-c',
+        // First, set up the agent markdown file
+        `echo "Agent ${agentName} is starting" && \
+         # Create a symlink from the mounted agents directory
+         if [ -f "/workspace/agents/${agentName}.md" ]; then \
+           ln -sf "/workspace/agents/${agentName}.md" /workspace/agent.md && \
+           echo "Created symlink to agent markdown file at /workspace/agent.md"; \
+         else \
+           echo "Agent markdown file not found at /workspace/agents/${agentName}.md"; \
+           # Create an empty file as fallback
+           touch /workspace/agent.md; \
+         fi && \
+         echo "Aider is installed and available" && \
+         # Launch aider with the agent markdown file in a loop
+         # If aider exits, wait and restart it
+         while true; do \
+           echo "Launching aider with agent markdown file..." && \
+           aider --no-show-model-warnings --no-show-release-notes --no-check-update --message-file /workspace/agent.md || true; \
+           echo "Aider exited, restarting in 5 seconds..." && \
+           sleep 5; \
+         done`
+      ],
+      environment: {
+        MODE: mode,
+        NODE_ENV: 'production',
+        AGENT_MARKDOWN_FILE: `/workspace/agents/${agentName}.md`,
+        // Aider environment variables - API key is read from .aider.conf.yml file
+        EDITOR: 'vim',
+      },
+      restart: 'unless-stopped',
+      networks: ['allTests_network'],
+      tty: true,
+      stdin_open: true,
+      // Simple health check that just checks if container is running
+      healthcheck: {
+        test: ["CMD", "echo", "healthy"],
+        interval: '30s',
+        timeout: '10s',
+        retries: 3,
+        start_period: '10s'
+      }
+    };
+  }
+
   for (const serviceName in services) {
     if (!services[serviceName].networks) {
       services[serviceName].networks = ["allTests_network"];

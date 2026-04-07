@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
+import { ApiUtils } from './utils/apiUtils';
 
 interface GraphNode {
   id: string;
@@ -31,33 +32,37 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
   constructor() {
     super();
     console.log('[DockerProcessTreeDataProvider] Constructor called');
-    this.loadGraphData();
+    // Load data asynchronously
+    setTimeout(() => {
+      this.loadGraphData().then(() => {
+        this._onDidChangeTreeData.fire();
+      });
+    }, 100);
   }
 
-  private loadGraphData(): void {
+  private async loadGraphData(): Promise<void> {
     try {
-      const workspaceFolders = vscode.workspace.workspaceFolders;
-      if (!workspaceFolders || workspaceFolders.length === 0) {
-        return;
+      console.log('[DockerProcessTreeDataProvider] Loading graph data from process slice');
+      const response = await fetch(ApiUtils.getProcessSliceUrl());
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      const workspaceRoot = workspaceFolders[0].uri.fsPath;
-      const graphDataPath = path.join(workspaceRoot, 'testeranto', 'reports', 'graph-data.json');
-      
-      if (fs.existsSync(graphDataPath)) {
-        const content = fs.readFileSync(graphDataPath, 'utf-8');
-        const parsed = JSON.parse(content);
-        this.graphData = parsed.data?.unifiedGraph || { nodes: [], edges: [] };
-        console.log(`[DockerProcessTreeDataProvider] Loaded graph with ${this.graphData.nodes.length} nodes`);
-      }
+      const data = await response.json();
+      this.graphData = data;
+      console.log('[DockerProcessTreeDataProvider] Loaded graph data:', this.graphData?.nodes?.length, 'nodes');
     } catch (error) {
-      console.error('[DockerProcessTreeDataProvider] Error loading graph data:', error);
+      console.error('[DockerProcessTreeDataProvider] Failed to load graph data:', error);
+      this.graphData = null;
     }
   }
 
   refresh(): void {
-    this.loadGraphData();
-    this._onDidChangeTreeData.fire();
+    this.loadGraphData().then(() => {
+      this._onDidChangeTreeData.fire();
+    }).catch(error => {
+      console.error('[DockerProcessTreeDataProvider] Error in refresh:', error);
+      this._onDidChangeTreeData.fire();
+    });
   }
 
   getTreeItem(element: TestTreeItem): vscode.TreeItem {
@@ -65,8 +70,9 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
   }
 
   async getChildren(element?: TestTreeItem): Promise<TestTreeItem[]> {
+    // Load data if not already loaded
     if (!this.graphData) {
-      this.loadGraphData();
+      await this.loadGraphData();
     }
 
     if (!element) {
@@ -74,19 +80,31 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
       return this.getDockerProcessItems();
     }
 
+    // If element has children stored, return them
+    if (element.children) {
+      return element.children;
+    }
+
     return [];
   }
 
   private getDockerProcessItems(): TestTreeItem[] {
-    if (!this.graphData) return [];
+    if (!this.graphData) {
+      console.log('[DockerProcessTreeDataProvider] No graph data available');
+      return [];
+    }
+
+    console.log(`[DockerProcessTreeDataProvider] Processing graph with ${this.graphData.nodes.length} nodes, ${this.graphData.edges.length} edges`);
 
     // Find all docker process nodes
-    const dockerProcessNodes = this.graphData.nodes.filter(node => 
-      node.type === 'docker_process' || 
-      node.type === 'bdd_process' || 
-      node.type === 'check_process' || 
+    const dockerProcessNodes = this.graphData.nodes.filter(node =>
+      node.type === 'docker_process' ||
+      node.type === 'bdd_process' ||
+      node.type === 'check_process' ||
       node.type === 'builder_process'
     );
+
+    console.log(`[DockerProcessTreeDataProvider] Found ${dockerProcessNodes.length} docker process nodes`);
 
     const items: TestTreeItem[] = [];
 
@@ -107,7 +125,6 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
       new vscode.ThemeIcon('refresh')
     ));
 
-    // Add process items
     if (dockerProcessNodes.length === 0) {
       items.push(new TestTreeItem(
         'No docker processes found',
@@ -119,24 +136,86 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
         undefined,
         new vscode.ThemeIcon('info')
       ));
-    } else {
-      // Add header
-      items.push(new TestTreeItem(
-        `Docker Processes (${dockerProcessNodes.length})`,
+      return items;
+    }
+
+    // Group processes by their connected config or entrypoint
+    const processGroups = new Map<string, {
+      parentNode: any;
+      processes: any[];
+      type: 'config' | 'entrypoint' | 'unknown';
+    }>();
+
+    for (const processNode of dockerProcessNodes) {
+      // Find edges where this process is the target
+      const incomingEdges = this.graphData.edges.filter(edge => 
+        edge.target === processNode.id
+      );
+      
+      let parentNode = null;
+      let groupType: 'config' | 'entrypoint' | 'unknown' = 'unknown';
+      
+      for (const edge of incomingEdges) {
+        const sourceNode = this.graphData.nodes.find(n => n.id === edge.source);
+        if (sourceNode) {
+          if (sourceNode.type === 'config') {
+            parentNode = sourceNode;
+            groupType = 'config';
+            break;
+          } else if (sourceNode.type === 'entrypoint') {
+            parentNode = sourceNode;
+            groupType = 'entrypoint';
+            break;
+          }
+        }
+      }
+      
+      const groupKey = parentNode ? parentNode.id : 'ungrouped';
+      
+      if (!processGroups.has(groupKey)) {
+        processGroups.set(groupKey, {
+          parentNode,
+          processes: [],
+          type: groupType
+        });
+      }
+      processGroups.get(groupKey)!.processes.push(processNode);
+    }
+
+    // Create groups
+    for (const [groupKey, group] of processGroups.entries()) {
+      let groupLabel = 'Ungrouped Processes';
+      let groupDescription = `${group.processes.length} process(es)`;
+      
+      if (group.parentNode) {
+        if (group.type === 'config') {
+          groupLabel = `Config: ${group.parentNode.label || group.parentNode.id}`;
+          groupDescription = `${group.processes.length} builder process(es)`;
+        } else if (group.type === 'entrypoint') {
+          groupLabel = `Entrypoint: ${group.parentNode.label || group.parentNode.id}`;
+          groupDescription = `${group.processes.length} test process(es)`;
+        }
+      }
+      
+      const groupItem = new TestTreeItem(
+        groupLabel,
         TreeItemType.Info,
-        vscode.TreeItemCollapsibleState.None,
+        vscode.TreeItemCollapsibleState.Collapsed,
         {
-          description: 'Flat list of all docker processes',
-          count: dockerProcessNodes.length
+          description: groupDescription,
+          count: group.processes.length,
+          groupKey,
+          groupType: group.type
         },
         undefined,
+        group.type === 'config' ? new vscode.ThemeIcon('settings-gear') : 
+        group.type === 'entrypoint' ? new vscode.ThemeIcon('file-text') : 
         new vscode.ThemeIcon('server')
-      ));
-
-      // Add each process
-      for (const node of dockerProcessNodes) {
-        items.push(this.createProcessItem(node));
-      }
+      );
+      
+      // Store children processes
+      groupItem.children = group.processes.map(node => this.createProcessItem(node));
+      items.push(groupItem);
     }
 
     return items;
@@ -149,7 +228,7 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
     const isActive = metadata.isActive || false;
     const containerId = metadata.containerId || 'unknown';
     const serviceName = metadata.serviceName || metadata.name || 'unknown';
-    
+
     // Determine label
     let label = node.label || serviceName;
     if (label === 'unknown' && node.id) {
@@ -196,9 +275,9 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
         isActive
       },
       {
-        command: 'testeranto.showProcessLogs',
-        title: 'Show Process Logs',
-        arguments: [node.id, label]
+        command: 'testeranto.openProcessTerminal',
+        title: 'Open Process Terminal',
+        arguments: [node.id, label, containerId, serviceName]
       },
       icon
     );
@@ -228,11 +307,11 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
     // Check if connected to an entrypoint
     if (this.graphData) {
       const connectedEdges = this.graphData.edges.filter(edge =>
-        edge.target === node.id && 
+        edge.target === node.id &&
         (edge.attributes.type === 'hasProcess' ||
-         edge.attributes.type === 'hasBddProcess' ||
-         edge.attributes.type === 'hasCheckProcess' ||
-         edge.attributes.type === 'hasBuilderProcess')
+          edge.attributes.type === 'hasBddProcess' ||
+          edge.attributes.type === 'hasCheckProcess' ||
+          edge.attributes.type === 'hasBuilderProcess')
       );
 
       for (const edge of connectedEdges) {
@@ -253,8 +332,24 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
 
   protected handleWebSocketMessage(message: any): void {
     super.handleWebSocketMessage(message);
-    if (message.type === 'graphUpdated') {
+    console.log(`[DockerProcessTreeDataProvider] Received message type: ${message.type}, url: ${message.url}`);
+    
+    if (message.type === 'resourceChanged') {
+      if (message.url === '/~/process' || message.url === '/~/graph') {
+        console.log('[DockerProcessTreeDataProvider] Relevant update, refreshing');
+        this.refresh();
+      }
+    } else if (message.type === 'graphUpdated') {
+      console.log('[DockerProcessTreeDataProvider] Graph updated, refreshing');
       this.refresh();
     }
+  }
+
+  protected subscribeToGraphUpdates(): void {
+    super.subscribeToGraphUpdates();
+    // Subscribe to process slice
+    this.subscribeToSlice('/process');
+    // Also subscribe to graph for general updates
+    this.subscribeToSlice('/graph');
   }
 }

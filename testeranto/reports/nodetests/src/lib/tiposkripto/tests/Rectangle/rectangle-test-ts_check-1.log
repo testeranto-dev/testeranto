@@ -1,5 +1,5 @@
-=== Log started at 2026-04-06T14:59:03.640Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
-=== Container ID: f0d21d3469d083e47ddf53b6908d0e1cfe4560f964670703aed2c0fbbb77d761 ===
+=== Log started at 2026-04-07T03:23:26.611Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
+=== Container ID: 0c3f1157eac89682c93b44b27ffdd7fae096374a37cc99358e045adb2c0ba28b ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
@@ -12,7 +12,7 @@ $ /workspace/node_modules/.bin/tsc --noEmit
 src/grafeovidajo/dist/grafeovidajo/charts/NodeDetailsModal.js(143,1): error TS1109: Expression expected.
 src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
 src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
-error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 2.
 
-=== Log captured at 2026-04-06T14:59:10.748Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-07T03:23:31.377Z (container status: exited, exit code: 2) ===

@@ -14,7 +14,7 @@ export async function processTopLevelFeaturesPure(
 ): Promise<void> {
   if (singleTestResult.features && Array.isArray(singleTestResult.features)) {
     const testId = `test:${sanitizedConfigKey}:${filePathForEntrypoint}:0`;
-    console.log(`[GraphManager] Using testId ${testId} for top-level features`);
+
     await processFeaturesForTest(
       singleTestResult.features,
       testId,

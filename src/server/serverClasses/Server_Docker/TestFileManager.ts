@@ -73,6 +73,7 @@ export class TestFileManager {
       onBddTest,
       onChecks,
       onAider,
+      // TODO This should be defined in API 
       () => this.resourceChanged("/~/inputfiles"),
       onLoadInput,
       onUpdateGraph,

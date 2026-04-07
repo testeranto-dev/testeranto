@@ -188,7 +188,7 @@ export class Server_GraphManager {
     return this.graphManager.getProcessSlice();
   }
 
-  // Get aider slice (aider processes)
+  // Get aider slice (aider processes and agents)
   getAiderSlice(): {
     nodes: GraphNodeAttributes[],
     edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>

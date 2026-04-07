@@ -1,6 +1,7 @@
 /read testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_bdd.log
 /read testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-0.log
 /read testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-1.log
+/read testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/circle-test-ts_check-2.log
 /read testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json
 
 Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.

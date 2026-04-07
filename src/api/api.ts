@@ -1,6 +1,7 @@
-import { vscodeHttpAPI, type VscodeHttpAPI } from "./vscodeExtensionHttp";
+// Never hardcode routes!
+// these files exist to be imported!
 
-// Base API definition types
+import { vscodeHttpAPI, type VscodeHttpAPI } from "./vscodeExtensionHttp";
 export type HttpMethod = 'GET' | 'POST' | 'PUT' |
   'DELETE' | 'PATCH' | 'OPTIONS';
 
@@ -92,6 +93,31 @@ export type VscodeWsMessageDefinition<T extends VscodeWsMessage> = VscodeWsAPI[T
 export type VscodeWsResponse<T extends VscodeWsMessage> = VscodeWsAPI[T]['response'];
 export type VscodeWsData<T extends VscodeWsMessage> = VscodeWsAPI[T] extends { data: infer D } ? D : never;
 
+// Add lock-related types
+export interface LockStatusData {
+  hasLockedFiles: boolean;
+  lockedFiles: Array<{
+    fileId: string;
+    lockOwner: string;
+    lockType: 'read' | 'write' | 'exclusive';
+    lockTimestamp: string;
+  }>;
+  lockedCount: number;
+  message: string;
+}
+
+export interface FilesLockedData {
+  message: string;
+  timestamp: string;
+  lockedCount: number;
+}
+
+export interface FilesUnlockedData {
+  message: string;
+  timestamp: string;
+  unlockedCount: number;
+}
+
 // stakeholderWsAPI with proper typing
 export const stakeholderWsAPI = {
   // WebSocket broadcasts from server to clients
@@ -111,6 +137,25 @@ export const stakeholderWsAPI = {
     type: 'graphUpdated' as const,
     description: 'Notify that the graph has been updated',
     data: {} as any
+  },
+
+  // Lock-related WebSocket broadcasts
+  filesLocked: {
+    type: 'filesLocked' as const,
+    description: 'Notify that files have been locked',
+    data: {} as FilesLockedData
+  },
+
+  filesUnlocked: {
+    type: 'filesUnlocked' as const,
+    description: 'Notify that files have been unlocked',
+    data: {} as FilesUnlockedData
+  },
+
+  lockStatusChanged: {
+    type: 'lockStatusChanged' as const,
+    description: 'Notify that lock status has changed',
+    data: {} as LockStatusData
   },
 
   // Client to server messages
@@ -143,6 +188,17 @@ export const stakeholderWsAPI = {
     type: 'error' as const,
     description: 'Error message',
     data: {} as { message: string }
+  },
+
+  chat: {
+    type: 'chat' as const,
+    description: 'Chat message from an agent',
+    data: {} as { 
+      agent: string; 
+      message: string; 
+      timestamp: string;
+      text: string;
+    }
   },
 
   // HTTP endpoint definitions with check functions

@@ -1,3 +1,4 @@
+import path from "path";
 import { findNodeInTree } from "../../stakeholder/StakeholderUtils";
 import { addFileToTree } from "./addFileToTree";
 import { addTestResultStructureToNode } from "./addTestResultStructureToNode";
@@ -8,9 +9,7 @@ import { findSourceFileForTest } from "./findSourceFileForTest";
  * Add test results to source files in the tree
  */
 export async function addTestResultsToSourceFiles(tree: any, configs: any): Promise<void> {
-  const fs = require('fs').promises;
-  const path = require('path');
-  const { existsSync } = require('fs');
+
 
   // Get all test results from the reports directory
   const reportsDir = path.join(process.cwd(), "testeranto", "reports");

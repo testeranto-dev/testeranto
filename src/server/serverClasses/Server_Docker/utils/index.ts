@@ -150,25 +150,25 @@ export const checkBundlesReady = (
   let allBundlesReady = true;
   let readyCount = 0;
   let totalCount = 0;
-  
+
   for (const [configKey, configValue] of Object.entries(configs.runtimes)) {
     // Skip configs that are already marked as failed
     if (failedConfigs.has(configKey)) {
       consoleLog(`[checkBundlesReady] Skipping failed config ${configKey}`);
       continue;
     }
-    
+
     totalCount++;
     const bundleDir = `${cwd}/testeranto/bundles/${configKey}`;
     const inputFilesPath = `${bundleDir}/inputFiles.json`;
-    
+
     // Check if inputFiles.json exists and has content
     if (!existsSync(inputFilesPath)) {
       consoleLog(`[checkBundlesReady] Bundle not ready for ${configKey}: inputFiles.json missing`);
       allBundlesReady = false;
       continue;
     }
-    
+
     try {
       const fileContent = readFileSync(inputFilesPath, 'utf-8');
       if (fileContent.trim().length === 0) {
@@ -176,16 +176,16 @@ export const checkBundlesReady = (
         allBundlesReady = false;
         continue;
       }
-      
+
       // Check if there are actual bundle files
       const bundleFiles = readdirSync(bundleDir);
-      const hasBundleFiles = bundleFiles.some(file => 
-        file.endsWith('.js') || file.endsWith('.mjs') || 
-        file.endsWith('.py') || file.endsWith('.go') || 
-        file.endsWith('.rb') || file.endsWith('.rs') || 
+      const hasBundleFiles = bundleFiles.some(file =>
+        file.endsWith('.js') || file.endsWith('.mjs') ||
+        file.endsWith('.py') || file.endsWith('.go') ||
+        file.endsWith('.rb') || file.endsWith('.rs') ||
         file.endsWith('.java') || file.endsWith('.class')
       );
-      
+
       if (!hasBundleFiles && bundleFiles.length <= 1) { // Only inputFiles.json
         consoleLog(`[checkBundlesReady] Bundle not ready for ${configKey}: no bundle files`);
         allBundlesReady = false;
@@ -198,8 +198,7 @@ export const checkBundlesReady = (
       allBundlesReady = false;
     }
   }
-  
-  consoleLog(`[checkBundlesReady] Progress: ${readyCount}/${totalCount} bundles ready`);
+
   return allBundlesReady;
 };
 
@@ -225,7 +224,7 @@ export const captureContainerExitCode = (
     if (testName) {
       // For test services, we need to extract the suffix from serviceName and append it with underscore
       const cleanedTestName = cleanTestNameForPath(testName);
-      
+
       // Extract suffix from serviceName (e.g., "-bdd", "-check-0")
       const suffixMatch = serviceName.match(/-(bdd|check-\d+|aider|builder)$/);
       if (suffixMatch) {
@@ -237,7 +236,7 @@ export const captureContainerExitCode = (
     } else {
       baseName = serviceName;
     }
-    
+
     const containerExitCodeFilePath = `${processCwd()}/testeranto/reports/${runTimeConfigKey}/${baseName}.container.exitcode`;
     writeFileSync(containerExitCodeFilePath, exitCode);
 

@@ -53,26 +53,12 @@ export class TerminalManager {
     this.terminals.clear();
   }
 
-  // Fetch aider processes from graph-data.json
+
   async fetchAiderProcesses(): Promise<any[]> {
     try {
-      const workspaceFolders = vscode.workspace.workspaceFolders;
-      if (!workspaceFolders || workspaceFolders.length === 0) {
-        return [];
-      }
 
-      const workspaceRoot = workspaceFolders[0].uri.fsPath;
-      const graphDataPath = path.join(workspaceRoot, 'testeranto', 'reports', 'graph-data.json');
-      
-      if (!fs.existsSync(graphDataPath)) {
-        return [];
-      }
-
-      const graphDataContent = fs.readFileSync(graphDataPath, 'utf-8');
-      const graphData = JSON.parse(graphDataContent);
-      
       // Extract aider nodes from graph
-      const aiderNodes = graphData.data?.unifiedGraph?.nodes?.filter((node: any) => 
+      const aiderNodes = graphData.data?.unifiedGraph?.nodes?.filter((node: any) =>
         node.type === 'aider' || node.type === 'aider_process'
       ) || [];
 
@@ -127,35 +113,11 @@ export class TerminalManager {
     terminal = vscode.window.createTerminal(`Aider: ${testName} (${runtime})`);
     this.terminals.set(key, terminal);
 
-    // Get config key for the test
-    const configKey = await this.getConfigKeyForTest(runtime, testName);
-    if (!configKey) {
-      terminal.sendText(`echo "Error: Could not find configuration for ${testName} (${runtime})"`);
-      terminal.show();
-      return terminal;
-    }
-
-    // Get the aider container name
-    const containerName = this.getAiderContainerName(configKey, testName);
-
-    // Get workspace root to find the message file
-    const workspaceRoot = this.getWorkspaceRoot();
-    if (!workspaceRoot) {
-      terminal.sendText(`echo "Error: Could not determine workspace root"`);
-      terminal.show();
-      return terminal;
-    }
-
-    // The container's working directory is /workspace
-    // Use relative path from /workspace
-    const relativeMessagePath = `testeranto/reports/${configKey}/${testName}/aider-message.txt`;
-    
-    // First, check if the container is running, start it if not
-    terminal.sendText(`if ! docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then echo "Starting aider container..." && docker compose -f "${workspaceRoot}/testeranto/docker-compose.yml" up -d ${containerName} && sleep 2; fi`);
-    
-    // Run aider with the message file
-    // Change to /workspace first, then pipe the file to aider
-    terminal.sendText(`docker exec -i ${containerName} sh -c "cd /workspace && cat '${relativeMessagePath}' | aider --yes"`);
+    // Agents and aider services are now created as Docker services at startup
+    // We just need to show information about this
+    terminal.sendText(`echo "Aider and agent services are created as Docker services at server startup."`);
+    terminal.sendText(`echo "For ${testName} (${runtime}), check the Aider Processes view."`);
+    terminal.sendText(`echo "All user-defined agents are already running as separate services."`);
 
     terminal.show();
     return terminal;
@@ -164,31 +126,24 @@ export class TerminalManager {
   // Restart a specific aider process
   async restartAiderProcess(runtime: string, testName: string): Promise<void> {
     try {
-      const aiderProcesses = await this.fetchAiderProcesses();
-      const process = aiderProcesses.find(p =>
-        p.runtime === runtime && p.testName === testName
-      );
+      // As a thin client, we should ask the server to restart the aider process
+      // For now, we'll just create a new terminal and show a message
+      const key = this.getTerminalKey(runtime, testName);
+      let terminal = this.terminals.get(key);
 
-      if (process) {
-        const key = this.getTerminalKey(runtime, testName);
-        let terminal = this.terminals.get(key);
-
-        if (!terminal || terminal.exitStatus !== undefined) {
-          terminal = vscode.window.createTerminal(`Aider: ${testName} (${runtime})`);
-          this.terminals.set(key, terminal);
-        }
-
-        // Restart the container
-        terminal.sendText(`docker restart ${process.containerId}`);
-        // Wait a bit and then connect
-        terminal.sendText(`sleep 2 && docker exec -it ${process.containerId} /bin/bash`);
-        terminal.show();
-      } else {
-        vscode.window.showErrorMessage(`No aider process found for ${testName} (${runtime})`);
+      if (!terminal || terminal.exitStatus !== undefined) {
+        terminal = vscode.window.createTerminal(`Aider: ${testName} (${runtime})`);
+        this.terminals.set(key, terminal);
       }
+
+      terminal.sendText(`echo "To restart aider process for ${testName}, please use the server API"`);
+      terminal.sendText(`echo "The server manages all aider processes and graph updates"`);
+      terminal.show();
+      
+      vscode.window.showInformationMessage(`Aider processes are managed by the server. Check the Aider Processes view.`);
     } catch (error) {
-      console.error('Failed to restart aider process:', error);
-      vscode.window.showErrorMessage(`Failed to restart aider process: ${error}`);
+      console.error('Failed to handle aider process restart:', error);
+      vscode.window.showErrorMessage(`Failed to handle aider process: ${error}`);
     }
   }
 

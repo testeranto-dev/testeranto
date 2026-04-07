@@ -23,12 +23,13 @@ export class WsManager {
         timestamp: new Date().toISOString()
       };
     }
-    
+
     // All other messages should use the common stakeholderWsAPI
     // But in the unified approach, clients should use HTTP POST /~/graph for updates
     // and WebSocket only receives broadcasts
     return {
       type: 'error',
+      // TODO this is inaacrute
       message: `Message type '${type}' not supported. Use HTTP POST /~/graph for updates.`,
       timestamp: new Date().toISOString()
     };

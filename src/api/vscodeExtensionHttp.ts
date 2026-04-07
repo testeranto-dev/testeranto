@@ -4,52 +4,52 @@ import type { FilesAndFoldersResponse } from "./api";
 
 // import type { FilesAndFoldersResponse } from "../api";
 
-export const vscodeHttpAPI = {
-  // Get the current graph state
-  getGraph: {
-    method: 'GET' as const,
-    path: '/~/graph',
-    description: 'Get current graph state',
-    response: {} as any
-  },
-  // Update graph with operations
-  updateGraph: {
-    method: 'POST' as const,
-    path: '/~/graph',
-    description: 'Update graph with operations',
-    response: {} as any
-  },
-  // Get only files and folders
-  getFiles: {
-    method: 'GET' as const,
-    path: '/~/files',
-    description: 'Get only files and folders from the graph',
-    response: {} as FilesAndFoldersResponse
-  },
+// export const vscodeHttpAPI = {
+//   // Get the current graph state
+//   getGraph: {
+//     method: 'GET' as const,
+//     path: '/~/graph',
+//     description: 'Get current graph state',
+//     response: {} as any
+//   },
+//   // Update graph with operations
+//   updateGraph: {
+//     method: 'POST' as const,
+//     path: '/~/graph',
+//     description: 'Update graph with operations',
+//     response: {} as any
+//   },
+//   // Get only files and folders
+//   getFiles: {
+//     method: 'GET' as const,
+//     path: '/~/files',
+//     description: 'Get only files and folders from the graph',
+//     response: {} as FilesAndFoldersResponse
+//   },
 
-  // // TODO replicate this pattern
-  // files: {
-  //   type: 'files' as const,
-  //   description: 'subscribe for files',
-  //   data: {} as { slicePath: string; message: string },
-  //   check: (routeName: string, request: { method: string }) => {
-  //     return routeName === vscodeHttpAPI.getFiles.path.slice(3) && request.method === vscodeHttpAPI.getFiles.method
-  //   },
+//   // // TODO replicate this pattern
+//   // files: {
+//   //   type: 'files' as const,
+//   //   description: 'subscribe for files',
+//   //   data: {} as { slicePath: string; message: string },
+//   //   check: (routeName: string, request: { method: string }) => {
+//   //     return routeName === vscodeHttpAPI.getFiles.path.slice(3) && request.method === vscodeHttpAPI.getFiles.method
+//   //   },
 
-  //   // TODO replicate this pattern
-  //   processes: {
-  //     type: 'processes' as const,
-  //     description: 'subscribe for processes',
-  //     data: {} as { slicePath: string; message: string },
-  //     check: (routeName: string, request: { method: string }) => {
-  //       return routeName === 'process' && request.method === 'GET'
-  //     },
-  //   }
-  // }
+//   //   // TODO replicate this pattern
+//   //   processes: {
+//   //     type: 'processes' as const,
+//   //     description: 'subscribe for processes',
+//   //     data: {} as { slicePath: string; message: string },
+//   //     check: (routeName: string, request: { method: string }) => {
+//   //       return routeName === 'process' && request.method === 'GET'
+//   //     },
+//   //   }
+//   // }
 
-} as const;
+// } as const;
 
-export type VscodeHttpAPI = typeof vscodeHttpAPI;
+// export type VscodeHttpAPI = typeof vscodeHttpAPI;
 export type VscodeHttpEndpoint = keyof VscodeHttpAPI;
 export type VscodeHttpEndpointDefinition<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T];
 export type VscodeHttpResponse<T extends VscodeHttpEndpoint> = VscodeHttpAPI[T]['response'];
@@ -251,5 +251,256 @@ export const vscodeHttpAPI: {
     params: {},
     query: {},
     response: {} as any
+  },
+
+  getLockStatus: {
+    method: 'GET',
+    path: '/~/lock-status',
+    description: 'Get lock status for files',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'lock-status' && request.method === 'GET'
+    }
+  },
+
+  sendChatMessage: {
+    method: 'GET',
+    path: '/~/chat',
+    description: 'Send a chat message',
+    params: {},
+    query: {
+      agent: '',
+      message: ''
+    },
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'chat' && request.method === 'GET'
+    }
+  },
+
+  launchAgent: {
+    method: 'POST',
+    path: '/~/agents/:agentName',
+    description: 'Launch a new agent instance',
+    params: {
+      agentName: ''
+    },
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName.startsWith('agents/') && request.method === 'POST'
+    }
+  },
+
+  getAgents: {
+    method: 'GET',
+    path: '/~/agents',
+    description: 'Get all agents',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'agents' && request.method === 'GET'
+    }
+  },
+
+  getUserAgents: {
+    method: 'GET',
+    path: '/~/user-agents',
+    description: 'Get user-defined agents from config',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'user-agents' && request.method === 'GET'
+    }
+  },
+
+  getAgentSlice: {
+    method: 'GET',
+    path: '/~/agents/:agentName',
+    description: 'Get agent slice data',
+    params: {
+      agentName: ''
+    },
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName.startsWith('agents/') && request.method === 'GET'
+    }
+  },
+
+  getFiles: {
+    method: 'GET',
+    path: '/~/files',
+    description: 'Get files and folders slice',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'files' && request.method === 'GET'
+    }
+  },
+
+  getProcess: {
+    method: 'GET',
+    path: '/~/process',
+    description: 'Get processes slice',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'process' && request.method === 'GET'
+    }
+  },
+
+  getAider: {
+    method: 'GET',
+    path: '/~/aider',
+    description: 'Get aider slice',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'aider' && request.method === 'GET'
+    }
+  },
+
+  getRuntime: {
+    method: 'GET',
+    path: '/~/runtime',
+    description: 'Get runtime slice',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'runtime' && request.method === 'GET'
+    }
+  },
+
+  getVscodeView: {
+    method: 'GET',
+    path: '/~/vscode-views/:viewName',
+    description: 'Get vscode view data',
+    params: {
+      viewName: ''
+    },
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName.startsWith('vscode-views/') && request.method === 'GET'
+    }
+  },
+
+  getStakeholderView: {
+    method: 'GET',
+    path: '/~/stakeholder-views/:viewName',
+    description: 'Get stakeholder view data',
+    params: {
+      viewName: ''
+    },
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName.startsWith('stakeholder-views/') && request.method === 'GET'
+    }
+  },
+
+  gitStatus: {
+    method: 'GET',
+    path: '/~/git/status',
+    description: 'Get git status',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'git/status' && request.method === 'GET'
+    }
+  },
+
+  gitSwitchBranch: {
+    method: 'POST',
+    path: '/~/git/switch-branch',
+    description: 'Switch git branch',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'git/switch-branch' && request.method === 'POST'
+    }
+  },
+
+  gitCommit: {
+    method: 'POST',
+    path: '/~/git/commit',
+    description: 'Commit changes',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'git/commit' && request.method === 'POST'
+    }
+  },
+
+  gitMerge: {
+    method: 'POST',
+    path: '/~/git/merge',
+    description: 'Merge branch',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'git/merge' && request.method === 'POST'
+    }
+  },
+
+  gitConflicts: {
+    method: 'GET',
+    path: '/~/git/conflicts',
+    description: 'Get merge conflicts',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'git/conflicts' && request.method === 'GET'
+    }
+  },
+
+  gitResolveConflict: {
+    method: 'POST',
+    path: '/~/git/resolve-conflict',
+    description: 'Resolve merge conflict',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'git/resolve-conflict' && request.method === 'POST'
+    }
+  },
+
+  down: {
+    method: 'POST',
+    path: '/~/down',
+    description: 'Stop services and lock files',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'down' && request.method === 'POST'
+    }
+  },
+
+  up: {
+    method: 'POST',
+    path: '/~/up',
+    description: 'Start services and unlock files',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'up' && request.method === 'POST'
+    }
   }
 } as const;

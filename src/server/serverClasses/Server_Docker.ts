@@ -9,10 +9,13 @@ import {
   consoleError,
   consoleLog,
   processExit,
+  execSyncWrapper,
+  processCwd,
 } from "./Server_Docker/Server_Docker_Dependents";
 import { spawnPromise } from "./Server_Docker/utils";
 import { waitForBundlesPure } from "./Server_Docker/utils/waitForBundlesPure";
 import { Server_Docker_Compose } from "./Server_Docker_Compose";
+import type { Server_TestManager } from "./Server_TestManager";
 
 export abstract class Server_Docker extends Server_Docker_Compose {
   protected failedBuilderConfigs: Set<string> = new Set();
@@ -29,6 +32,23 @@ export abstract class Server_Docker extends Server_Docker_Compose {
     await this.dockerComposeManager.setupDockerCompose();
 
     await spawnPromise(getDockerComposeDownPure());
+
+    // First, build the aider image for agent services
+    try {
+      consoleLog('[Server_Docker] Building aider image for agent services...');
+      await this.aiderImageBuilder.buildAiderImage();
+      consoleLog('[Server_Docker] ✅ Aider image built successfully');
+    } catch (error: any) {
+      consoleError('[Server_Docker] Failed to build aider image:', error as string);
+      consoleLog('[Server_Docker] ⚠️ Agent services may not start without aider image');
+      // Continue anyway - we'll try to start agents anyway
+    }
+
+    // Start all Docker services including agent services
+    await this.DC_upAll();
+
+    // Launch all agents on startup
+    await this.launchAllAgents();
 
     // Build builder services with error handling
     try {
@@ -54,16 +74,16 @@ export abstract class Server_Docker extends Server_Docker_Compose {
         this.failedBuilderConfigs.add(configKey);
         consoleLog(`[Server_Docker] Builder failed for config ${configKey}, will skip all dependent services`);
       }
-      
+
       // Add builder process nodes to graph for all configs
       for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
         try {
           await this.testManager.addProcessNodeToGraph(
-            'builder', 
-            configValue.runtime as IRunTime, 
-            'builder', 
-            configKey, 
-            configValue, 
+            'builder',
+            configValue.runtime as IRunTime,
+            'builder',
+            configKey,
+            configValue,
             undefined,
             this.graphManager?.getGraphManager ? this.graphManager.getGraphManager() : null
           );
@@ -203,6 +223,177 @@ export abstract class Server_Docker extends Server_Docker_Compose {
     }
   }
 
+  private async launchAllAgents(): Promise<void> {
+    const agents = this.configs.agents;
+    if (!agents || Object.keys(agents).length === 0) {
+      consoleLog('[Server_Docker] No agents configured');
+      return;
+    }
+
+    consoleLog(`[Server_Docker] Launching ${Object.keys(agents).length} agents via docker-compose...`);
+
+    // Note: aider image should already be built in start() method
+    // If it failed there, we'll try to continue anyway
+
+    // Agents are already defined in docker-compose.yml via generateServicesPure
+    // We just need to start them using docker-compose
+    // First, get all agent service names
+    const agentServiceNames = Object.keys(agents).map(agentName => `agent-${agentName}`);
+    
+    if (agentServiceNames.length > 0) {
+      try {
+        // Start all agent services using docker-compose
+        const servicesToStart = agentServiceNames.join(' ');
+        consoleLog(`[Server_Docker] Starting agent services: ${servicesToStart}`);
+        
+        // Use a more robust command that ensures the container stays running
+        await spawnPromise(
+          `docker compose -f "testeranto/docker-compose.yml" up -d --wait ${servicesToStart}`,
+        );
+        
+        consoleLog(`[Server_Docker] ✅ All agent services started via docker-compose`);
+        
+        // Wait a moment for services to fully start
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        // Check if agent services are actually running
+        for (const serviceName of agentServiceNames) {
+          try {
+            const checkCmd = `docker compose -f "testeranto/docker-compose.yml" ps -q ${serviceName}`;
+            const containerId = execSyncWrapper(checkCmd, { cwd: processCwd() }).trim();
+            if (containerId) {
+              const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
+              const status = execSyncWrapper(statusCmd, { cwd: processCwd() }).trim();
+              consoleLog(`[Server_Docker] Agent service ${serviceName}: ${status} (container: ${containerId.substring(0, 12)})`);
+            } else {
+              consoleError(`[Server_Docker] Agent service ${serviceName} not found after start attempt`);
+            }
+          } catch (checkError: any) {
+            consoleError(`[Server_Docker] Error checking agent service ${serviceName}:`, checkError as string);
+          }
+        }
+        
+        // Add agent nodes to graph and create aider processes for them
+        await this.createAgentNodesAndAiderProcesses();
+        
+      } catch (error: any) {
+        consoleError(`[Server_Docker] Failed to start agent services via docker-compose:`, error as string);
+        // Try to start services individually
+        consoleLog('[Server_Docker] Trying to start agent services individually...');
+        for (const serviceName of agentServiceNames) {
+          try {
+            await spawnPromise(
+              `docker compose -f "testeranto/docker-compose.yml" up -d ${serviceName}`,
+            );
+            consoleLog(`[Server_Docker] Started agent service: ${serviceName}`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          } catch (individualError: any) {
+            consoleError(`[Server_Docker] Failed to start agent service ${serviceName}:`, individualError as string);
+          }
+        }
+      }
+    }
+  }
+
+  private async createAgentNodesAndAiderProcesses(): Promise<void> {
+    const agents = this.configs.agents;
+    if (!agents || Object.keys(agents).length === 0) {
+      return;
+    }
+
+    const graphManager = this.graphManager?.getGraphManager ? this.graphManager.getGraphManager() : null;
+    if (!graphManager) {
+      consoleError('[Server_Docker] Graph manager not available for creating agent nodes');
+      return;
+    }
+
+    for (const [agentName, agentConfig] of Object.entries(agents)) {
+      try {
+        const timestamp = new Date().toISOString();
+        const containerName = `agent-${agentName}`;
+        const agentNodeId = `agent:${agentName}`;
+        
+        // First, create agent node
+        const agentUpdate = {
+          operations: [
+            {
+              type: 'addNode' as const,
+              data: {
+                id: agentNodeId,
+                type: 'agent',
+                label: `Agent: ${agentName}`,
+                description: `Agent ${agentName} with aider`,
+                status: 'running',
+                icon: 'agent',
+                metadata: {
+                  agentName,
+                  containerName,
+                  markdownFile: agentConfig.markdownFile,
+                  hasAider: true,
+                  timestamp
+                }
+              },
+              timestamp
+            }
+          ],
+          timestamp
+        };
+        
+        graphManager.applyUpdate(agentUpdate);
+        
+        // Get container info to create aider process
+        const containerInfo = await this.getContainerInfo(containerName);
+        const containerId = containerInfo?.Id;
+        
+        // Create aider process node for the agent
+        const aiderProcessId = `aider_process:agent:${agentName}`;
+        const aiderUpdate = {
+          operations: [
+            {
+              type: 'addNode' as const,
+              data: {
+                id: aiderProcessId,
+                type: 'aider_process',
+                label: `Aider Process: Agent ${agentName}`,
+                description: `Aider process for agent ${agentName}`,
+                status: 'running',
+                icon: 'aider',
+                metadata: {
+                  agentName,
+                  containerName,
+                  containerId,
+                  isAgentAider: true,
+                  timestamp
+                }
+              },
+              timestamp
+            },
+            {
+              type: 'addEdge' as const,
+              data: {
+                source: agentNodeId,
+                target: aiderProcessId,
+                attributes: {
+                  type: 'hasAiderProcess',
+                  timestamp
+                }
+              },
+              timestamp
+            }
+          ],
+          timestamp
+        };
+        
+        graphManager.applyUpdate(aiderUpdate);
+        
+        consoleLog(`[Server_Docker] Created agent and aider process nodes for ${agentName}`);
+        
+      } catch (error: any) {
+        consoleError(`[Server_Docker] Error creating nodes for agent ${agentName}:`, error as string);
+      }
+    }
+  }
+
   protected makeReportDirectory(testName: string, configKey: string): string {
     return super.makeReportDirectory(testName, configKey);
   }
@@ -260,6 +451,7 @@ export abstract class Server_Docker extends Server_Docker_Compose {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // In unified approach, broadcast graph updates instead
+    // TODO This should be defined in API 
     this.resourceChanged("/~/graph");
     await super.stop();
   }

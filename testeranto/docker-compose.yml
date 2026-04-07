@@ -659,6 +659,196 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+  agent-prodirek:
+    image: testeranto-aider:latest
+    container_name: agent-prodirek
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto:/workspace
+      - /Users/adam/Code/testeranto/testeranto/agents:/workspace/agents:ro
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+    working_dir: /workspace
+    command:
+      - sh
+      - '-c'
+      - |-
+        echo "Agent prodirek is starting" &&          # Create a symlink from the mounted agents directory
+                 if [ -f "/workspace/agents/prodirek.md" ]; then            ln -sf "/workspace/agents/prodirek.md" /workspace/agent.md &&            echo "Created symlink to agent markdown file at /workspace/agent.md";          else            echo "Agent markdown file not found at /workspace/agents/prodirek.md";            # Create an empty file as fallback
+                   touch /workspace/agent.md;          fi &&          echo "Aider is installed and available" &&          # Launch aider with the agent markdown file in a loop
+                 # If aider exits, wait and restart it
+                 while true; do            echo "Launching aider with agent markdown file..." &&            aider --no-show-model-warnings --no-show-release-notes --no-check-update --message-file /workspace/agent.md || true;            echo "Aider exited, restarting in 5 seconds..." &&            sleep 5;          done
+    environment:
+      MODE: dev
+      NODE_ENV: production
+      AGENT_MARKDOWN_FILE: /workspace/agents/prodirek.md
+      EDITOR: vim
+    restart: unless-stopped
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test:
+        - CMD
+        - echo
+        - healthy
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+  agent-arko:
+    image: testeranto-aider:latest
+    container_name: agent-arko
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto:/workspace
+      - /Users/adam/Code/testeranto/testeranto/agents:/workspace/agents:ro
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+    working_dir: /workspace
+    command:
+      - sh
+      - '-c'
+      - |-
+        echo "Agent arko is starting" &&          # Create a symlink from the mounted agents directory
+                 if [ -f "/workspace/agents/arko.md" ]; then            ln -sf "/workspace/agents/arko.md" /workspace/agent.md &&            echo "Created symlink to agent markdown file at /workspace/agent.md";          else            echo "Agent markdown file not found at /workspace/agents/arko.md";            # Create an empty file as fallback
+                   touch /workspace/agent.md;          fi &&          echo "Aider is installed and available" &&          # Launch aider with the agent markdown file in a loop
+                 # If aider exits, wait and restart it
+                 while true; do            echo "Launching aider with agent markdown file..." &&            aider --no-show-model-warnings --no-show-release-notes --no-check-update --message-file /workspace/agent.md || true;            echo "Aider exited, restarting in 5 seconds..." &&            sleep 5;          done
+    environment:
+      MODE: dev
+      NODE_ENV: production
+      AGENT_MARKDOWN_FILE: /workspace/agents/arko.md
+      EDITOR: vim
+    restart: unless-stopped
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test:
+        - CMD
+        - echo
+        - healthy
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+  agent-juna:
+    image: testeranto-aider:latest
+    container_name: agent-juna
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto:/workspace
+      - /Users/adam/Code/testeranto/testeranto/agents:/workspace/agents:ro
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+    working_dir: /workspace
+    command:
+      - sh
+      - '-c'
+      - |-
+        echo "Agent juna is starting" &&          # Create a symlink from the mounted agents directory
+                 if [ -f "/workspace/agents/juna.md" ]; then            ln -sf "/workspace/agents/juna.md" /workspace/agent.md &&            echo "Created symlink to agent markdown file at /workspace/agent.md";          else            echo "Agent markdown file not found at /workspace/agents/juna.md";            # Create an empty file as fallback
+                   touch /workspace/agent.md;          fi &&          echo "Aider is installed and available" &&          # Launch aider with the agent markdown file in a loop
+                 # If aider exits, wait and restart it
+                 while true; do            echo "Launching aider with agent markdown file..." &&            aider --no-show-model-warnings --no-show-release-notes --no-check-update --message-file /workspace/agent.md || true;            echo "Aider exited, restarting in 5 seconds..." &&            sleep 5;          done
+    environment:
+      MODE: dev
+      NODE_ENV: production
+      AGENT_MARKDOWN_FILE: /workspace/agents/juna.md
+      EDITOR: vim
+    restart: unless-stopped
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test:
+        - CMD
+        - echo
+        - healthy
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+  agent-sipestro:
+    image: testeranto-aider:latest
+    container_name: agent-sipestro
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto:/workspace
+      - /Users/adam/Code/testeranto/testeranto/agents:/workspace/agents:ro
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+    working_dir: /workspace
+    command:
+      - sh
+      - '-c'
+      - |-
+        echo "Agent sipestro is starting" &&          # Create a symlink from the mounted agents directory
+                 if [ -f "/workspace/agents/sipestro.md" ]; then            ln -sf "/workspace/agents/sipestro.md" /workspace/agent.md &&            echo "Created symlink to agent markdown file at /workspace/agent.md";          else            echo "Agent markdown file not found at /workspace/agents/sipestro.md";            # Create an empty file as fallback
+                   touch /workspace/agent.md;          fi &&          echo "Aider is installed and available" &&          # Launch aider with the agent markdown file in a loop
+                 # If aider exits, wait and restart it
+                 while true; do            echo "Launching aider with agent markdown file..." &&            aider --no-show-model-warnings --no-show-release-notes --no-check-update --message-file /workspace/agent.md || true;            echo "Aider exited, restarting in 5 seconds..." &&            sleep 5;          done
+    environment:
+      MODE: dev
+      NODE_ENV: production
+      AGENT_MARKDOWN_FILE: /workspace/agents/sipestro.md
+      EDITOR: vim
+    restart: unless-stopped
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test:
+        - CMD
+        - echo
+        - healthy
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+  agent-cefo:
+    image: testeranto-aider:latest
+    container_name: agent-cefo
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto:/workspace
+      - /Users/adam/Code/testeranto/testeranto/agents:/workspace/agents:ro
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+    working_dir: /workspace
+    command:
+      - sh
+      - '-c'
+      - |-
+        echo "Agent cefo is starting" &&          # Create a symlink from the mounted agents directory
+                 if [ -f "/workspace/agents/cefo.md" ]; then            ln -sf "/workspace/agents/cefo.md" /workspace/agent.md &&            echo "Created symlink to agent markdown file at /workspace/agent.md";          else            echo "Agent markdown file not found at /workspace/agents/cefo.md";            # Create an empty file as fallback
+                   touch /workspace/agent.md;          fi &&          echo "Aider is installed and available" &&          # Launch aider with the agent markdown file in a loop
+                 # If aider exits, wait and restart it
+                 while true; do            echo "Launching aider with agent markdown file..." &&            aider --no-show-model-warnings --no-show-release-notes --no-check-update --message-file /workspace/agent.md || true;            echo "Aider exited, restarting in 5 seconds..." &&            sleep 5;          done
+    environment:
+      MODE: dev
+      NODE_ENV: production
+      AGENT_MARKDOWN_FILE: /workspace/agents/cefo.md
+      EDITOR: vim
+    restart: unless-stopped
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test:
+        - CMD
+        - echo
+        - healthy
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 volumes:
   node_modules:
     driver: local

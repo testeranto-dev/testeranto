@@ -10,6 +10,7 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
 
     protected ws: WebSocket | null = null;
     protected isConnected: boolean = false;
+    protected subscribedSlices: Set<string> = new Set();
 
     constructor() {
         console.log('[BaseTreeDataProvider] Constructor called');
@@ -55,6 +56,10 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
             this.ws.onopen = () => {
                 console.log('[BaseTreeDataProvider] WebSocket connection established');
                 this.isConnected = true;
+                
+                // Subscribe to graph updates
+                this.subscribeToGraphUpdates();
+                
                 this._onDidChangeTreeData.fire();
             };
 
@@ -77,6 +82,7 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
             this.ws.onclose = (event) => {
                 console.log(`[BaseTreeDataProvider] WebSocket closed: code=${event.code}, reason=${event.reason}`);
                 this.isConnected = false;
+                this.subscribedSlices.clear();
                 this.ws = null;
                 // Attempt to reconnect after a delay
                 setTimeout(() => {
@@ -91,11 +97,59 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
         }
     }
 
+    protected subscribeToGraphUpdates(): void {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+            console.log('[BaseTreeDataProvider] WebSocket not ready for subscription');
+            return;
+        }
+
+        // Subscribe to graph updates
+        const subscribeMessage = {
+            type: 'subscribeToSlice',
+            slicePath: '/graph'
+        };
+
+        this.ws.send(JSON.stringify(subscribeMessage));
+        this.subscribedSlices.add('/graph');
+        console.log('[BaseTreeDataProvider] Subscribed to graph updates');
+    }
+
+    protected subscribeToSlice(slicePath: string): void {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+            console.log(`[BaseTreeDataProvider] WebSocket not ready for subscription to ${slicePath}`);
+            return;
+        }
+
+        if (this.subscribedSlices.has(slicePath)) {
+            console.log(`[BaseTreeDataProvider] Already subscribed to ${slicePath}`);
+            return;
+        }
+
+        const subscribeMessage = {
+            type: 'subscribeToSlice',
+            slicePath
+        };
+
+        this.ws.send(JSON.stringify(subscribeMessage));
+        this.subscribedSlices.add(slicePath);
+        console.log(`[BaseTreeDataProvider] Subscribed to ${slicePath}`);
+    }
+
     protected handleWebSocketMessage(message: any): void {
         // Base implementation - can be overridden by subclasses
-        if (message.type === 'resourceChanged' || message.type === 'graphUpdated') {
-            console.log(`[BaseTreeDataProvider] ${message.type} received, refreshing`);
+        if (message.type === 'resourceChanged') {
+            console.log(`[BaseTreeDataProvider] resourceChanged received for ${message.url}, refreshing`);
             this.refresh();
+        } else if (message.type === 'graphUpdated') {
+            console.log(`[BaseTreeDataProvider] graphUpdated received, refreshing`);
+            this.refresh();
+        } else if (message.type === 'filesLocked' || message.type === 'filesUnlocked' || message.type === 'lockStatusChanged') {
+            console.log(`[BaseTreeDataProvider] ${message.type} received, refreshing for lock status`);
+            this.refresh();
+        } else if (message.type === 'subscribedToSlice') {
+            console.log(`[BaseTreeDataProvider] Successfully subscribed to slice: ${message.slicePath}`);
+        } else if (message.type === 'error') {
+            console.error(`[BaseTreeDataProvider] WebSocket error: ${message.message}`);
         }
         // Note: Process-related WebSocket messages have been removed
         // as part of the unified graph-based approach
@@ -103,6 +157,16 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
 
     public dispose(): void {
         if (this.ws) {
+            // Unsubscribe from all slices
+            for (const slicePath of this.subscribedSlices) {
+                const unsubscribeMessage = {
+                    type: 'unsubscribeFromSlice',
+                    slicePath
+                };
+                this.ws.send(JSON.stringify(unsubscribeMessage));
+            }
+            this.subscribedSlices.clear();
+            
             this.ws.close();
             this.ws = null;
         }

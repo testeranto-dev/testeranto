@@ -1,0 +1,16 @@
+[
+  {
+    "agent": "user",
+    "message": "hello",
+    "timestamp": "2026-04-07T02:39:50.569Z",
+    "text": "user said: 'hello'",
+    "id": "chat_message:2026-04-07T02:39:50.569Z:user"
+  },
+  {
+    "agent": "user",
+    "message": "hello",
+    "timestamp": "2026-04-07T16:46:03.351Z",
+    "text": "user said: 'hello'",
+    "id": "chat_message:2026-04-07T16:46:03.351Z:user"
+  }
+]

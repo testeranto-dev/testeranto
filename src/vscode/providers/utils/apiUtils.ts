@@ -1,8 +1,21 @@
+import * as vscode from 'vscode';
 import type { VscodeHttpEndpoint } from "../../../api/api";
 import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
 
 export class ApiUtils {
-    private static baseUrl = 'http://localhost:3000';
+    static getBaseUrl(): string {
+        // Try to get from configuration or use default
+        try {
+            const config = vscode.workspace.getConfiguration('testeranto');
+            const serverPort = config.get<number>('serverPort') || 3000;
+            const baseUrl = `http://localhost:${serverPort}`;
+            console.log(`[ApiUtils] Using server URL: ${baseUrl}`);
+            return baseUrl;
+        } catch (error) {
+            console.log('[ApiUtils] Using default server URL');
+            return 'http://localhost:3000';
+        }
+    }
 
     static getUrl<T extends VscodeHttpEndpoint>(
         endpointKey: T,
@@ -26,7 +39,7 @@ export class ApiUtils {
         }
 
         // Add query parameters
-        const url = `${this.baseUrl}${path}`;
+        const url = `${this.getBaseUrl()}${path}`;
         if (query && Object.keys(query).length > 0) {
             const queryParams = new URLSearchParams();
             for (const [key, value] of Object.entries(query)) {
@@ -90,9 +103,29 @@ export class ApiUtils {
         return this.getUrl('getUnifiedTestTree');
     }
 
+    static getLockStatusUrl(): string {
+        return this.getUrl('getLockStatus');
+    }
+
+    static getChatUrl(agent: string, message: string): string {
+        return this.getUrl('sendChatMessage', {}, { agent, message });
+    }
+
+    static getLaunchAgentUrl(agentName: string): string {
+        return this.getUrl('launchAgent', { agentName });
+    }
+
+    static getAgentSliceUrl(agentName: string): string {
+        return this.getUrl('getAgentSlice', { agentName });
+    }
+
+    static getAgentsUrl(): string {
+        return this.getUrl('getAgents');
+    }
+
     static getWebSocketUrl(): string {
         // Convert http:// to ws://
-        const httpUrl = this.baseUrl;
+        const httpUrl = this.getBaseUrl();
         if (httpUrl.startsWith('http://')) {
             return httpUrl.replace('http://', 'ws://');
         } else if (httpUrl.startsWith('https://')) {
@@ -102,7 +135,20 @@ export class ApiUtils {
         return 'ws://localhost:3000';
     }
 
-    static getBaseUrl(): string {
-        return this.baseUrl;
+    // New methods for slice endpoints
+    static getRuntimeSliceUrl(): string {
+        return `${this.getBaseUrl()}/~/runtime`;
+    }
+
+    static getProcessSliceUrl(): string {
+        return `${this.getBaseUrl()}/~/process`;
+    }
+
+    static getAiderSliceUrl(): string {
+        return `${this.getBaseUrl()}/~/aider`;
+    }
+
+    static getFilesSliceUrl(): string {
+        return `${this.getBaseUrl()}/~/files`;
     }
 }

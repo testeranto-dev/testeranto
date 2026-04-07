@@ -1,5 +1,8 @@
 import type { ITesterantoConfig } from "../src/Types";
 
+// Import default views from testeranto
+import { VscodeViews, Stakeholderviews } from "testeranto/src/vscode/defaultViews/index.ts";
+
 export const golangciLintCommand = (files: string[]): string => {
   // Simple implementation - just run on all Go files
   return "golangci-lint run ./... --timeout=5m --issues-exit-code=0";
@@ -7,47 +10,62 @@ export const golangciLintCommand = (files: string[]): string => {
 
 const config: ITesterantoConfig = {
 
+  // User defined views that appear in vscode in a tree within a section
+  vscodeViews: {
+    featuretree: VscodeViews.featuretree,
+    debugVisualization: VscodeViews.debugVisualization,
+  },
+
+  // User defined views that appear in stakeholder app as a tab
+  stakeholderViews: {
+    Kanban: Stakeholderviews.Kanban,
+    Gantt: Stakeholderviews.Gantt,
+    Eisenhower: Stakeholderviews.Eisenhower,
+  },
+
+
   agents: {
     'prodirek': {
-      markdownFile: 'prodirek.md',
+      markdownFile: './testeranto/agents/prodirek.md',
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
         const allEdges = graphData.edges;
-        
-        const productNodes = allNodes.filter((node: any) => 
-          node.type === 'feature' || 
+
+        const productNodes = allNodes.filter((node: any) =>
+          node.type === 'feature' ||
           node.type === 'documentation'
         );
-        
-        const productEdges = allEdges.filter((edge: any) => 
+
+        const productEdges = allEdges.filter((edge: any) =>
           productNodes.some((n: any) => n.id === edge.source) &&
           productNodes.some((n: any) => n.id === edge.target)
         );
-        
+
         return {
           nodes: productNodes,
           edges: productEdges
         };
       }
     },
+
     'arko': {
-      markdownFile: 'arko.md',
+      markdownFile: './testeranto/agents/arko.md',
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
         const allEdges = graphData.edges;
-        
-        const architectNodes = allNodes.filter((node: any) => 
-          node.type === 'config' || 
+
+        const architectNodes = allNodes.filter((node: any) =>
+          node.type === 'config' ||
           node.type === 'entrypoint'
         );
-        
-        const architectEdges = allEdges.filter((edge: any) => 
+
+        const architectEdges = allEdges.filter((edge: any) =>
           architectNodes.some((n: any) => n.id === edge.source) &&
           architectNodes.some((n: any) => n.id === edge.target)
         );
-        
+
         return {
           nodes: architectNodes,
           edges: architectEdges
@@ -55,31 +73,79 @@ const config: ITesterantoConfig = {
       }
     },
     'juna': {
-      markdownFile: 'juna.md',
+      markdownFile: './testeranto/agents/juna.md',
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
         const allEdges = graphData.edges;
-        
-        const juniorNodes = allNodes.filter((node: any) => 
-          node.type === 'test' || 
+
+        const juniorNodes = allNodes.filter((node: any) =>
+          node.type === 'test' ||
           node.type === 'file'
         );
-        
-        const juniorEdges = allEdges.filter((edge: any) => 
+
+        const juniorEdges = allEdges.filter((edge: any) =>
           juniorNodes.some((n: any) => n.id === edge.source) &&
           juniorNodes.some((n: any) => n.id === edge.target)
         );
-        
+
         return {
           nodes: juniorNodes,
           edges: juniorEdges
         };
       }
+    },
+    'sipestro': {
+      markdownFile: './testeranto/agents/sipestro.md',
+      sliceFunction: (graphManager: any) => {
+        // TODO update this
+        const graphData = graphManager.getGraphData();
+        const allNodes = graphData.nodes;
+        const allEdges = graphData.edges;
+
+        const juniorNodes = allNodes.filter((node: any) =>
+          node.type === 'test' ||
+          node.type === 'file'
+        );
+
+        const juniorEdges = allEdges.filter((edge: any) =>
+          juniorNodes.some((n: any) => n.id === edge.source) &&
+          juniorNodes.some((n: any) => n.id === edge.target)
+        );
+
+        return {
+          nodes: juniorNodes,
+          edges: juniorEdges
+        };
+      }
+    },
+    'cefo': {
+      markdownFile: './testeranto/agents/cefo.md',
+      sliceFunction: (graphManager: any) => {
+        // TODO update this
+        const graphData = graphManager.getGraphData();
+        const allNodes = graphData.nodes;
+        const allEdges = graphData.edges;
+
+        const nodes = allNodes.filter((node: any) =>
+          node.type === 'test' ||
+          node.type === 'file'
+        );
+
+        const edges = allEdges.filter((edge: any) =>
+          nodes.some((n: any) => n.id === edge.source) &&
+          nodes.some((n: any) => n.id === edge.target)
+        );
+
+        return {
+          nodes: edges,
+          edges: edges
+        };
+      }
     }
   },
 
-volumes: [
+  volumes: [
     `${process.cwd()}/src:/workspace/src`,
     `${process.cwd()}/test:/workspace/test`,
     // Note: node_modules is NOT mounted to avoid platform incompatibility

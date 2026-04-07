@@ -775,7 +775,7 @@ var TesterantoStakeholderApp = (() => {
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React18 = require_react();
+      var React9 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -815,7 +815,7 @@ var TesterantoStakeholderApp = (() => {
           implementation
         };
       }
-      var ReactSharedInternals = React18.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React9.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if ("font" === as) return "";
         if ("string" === typeof input)
@@ -951,7 +951,7 @@ var TesterantoStakeholderApp = (() => {
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler();
-      var React18 = require_react();
+      var React9 = require_react();
       var ReactDOM2 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
@@ -1142,7 +1142,7 @@ var TesterantoStakeholderApp = (() => {
         return null;
       }
       var isArrayImpl = Array.isArray;
-      var ReactSharedInternals = React18.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React9.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var ReactDOMSharedInternals = ReactDOM2.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var sharedNotPendingObject = {
         pending: false,
@@ -12588,7 +12588,7 @@ var TesterantoStakeholderApp = (() => {
           0 === i && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_1840 = React18.version;
+      var isomorphicReactPackageVersion$jscomp$inline_1840 = React9.version;
       if ("19.2.4" !== isomorphicReactPackageVersion$jscomp$inline_1840)
         throw Error(
           formatProdErrorMessage(
@@ -12759,14 +12759,17 @@ var TesterantoStakeholderApp = (() => {
   var index_exports = {};
   __export(index_exports, {
     DefaultStakeholderApp: () => DefaultStakeholderApp,
+    EisenhowerMatrix: () => EisenhowerMatrix,
+    GanttChart: () => GanttChart,
+    KanbanBoard: () => KanbanBoard,
     default: () => index_default,
     renderApp: () => renderApp
   });
-  var import_react17 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/stakeholderApp/VisualizationTabs.tsx
-  var import_react16 = __toESM(require_react(), 1);
+  var import_react8 = __toESM(require_react(), 1);
 
   // node_modules/d3-force/src/center.js
   function center_default(x3, y3) {
@@ -13629,42 +13632,6 @@ var TesterantoStakeholderApp = (() => {
   }
 
   // src/grafeovidajo/dist/index.js
-  var import_react = __toESM(require_react(), 1);
-  var import_react2 = __toESM(require_react(), 1);
-  var import_react3 = __toESM(require_react(), 1);
-  var import_react4 = __toESM(require_react(), 1);
-  var import_react5 = __toESM(require_react(), 1);
-  var import_react6 = __toESM(require_react(), 1);
-  var import_react7 = __toESM(require_react(), 1);
-
-  // src/stakeholderApp/stateless/featureGraphStats.ts
-  function getFeatureGraphStats(featureGraph) {
-    if (!featureGraph || !featureGraph.nodes) {
-      return {
-        totalFeatures: 0,
-        dependencies: featureGraph?.edges?.length || 0,
-        todo: 0,
-        doing: 0,
-        done: 0
-      };
-    }
-    const nodes = featureGraph.nodes;
-    const todo = nodes.filter((n) => n.attributes?.status === "todo").length;
-    const doing = nodes.filter((n) => n.attributes?.status === "doing").length;
-    const done = nodes.filter((n) => n.attributes?.status === "done").length;
-    return {
-      totalFeatures: nodes.length,
-      dependencies: featureGraph.edges?.length || 0,
-      todo,
-      doing,
-      done
-    };
-  }
-
-  // src/stakeholderApp/stateless/renderVisualization.tsx
-  var import_react15 = __toESM(require_react(), 1);
-
-  // src/grafeovidajo/core/projection.ts
   function projectGraph(graph, config) {
     const nodes = [];
     const edges = [];
@@ -13729,8 +13696,6 @@ var TesterantoStakeholderApp = (() => {
         return typeof value === "number" ? value : 0.5;
     }
   }
-
-  // src/grafeovidajo/core/forceLayout.ts
   function layoutForceWithD3(nodes, edges, options = {}) {
     const {
       width = 800,
@@ -13794,8 +13759,6 @@ var TesterantoStakeholderApp = (() => {
       };
     });
   }
-
-  // src/grafeovidajo/core/layout.ts
   function layoutGrid(nodes, spacing = { x: 50, y: 50 }) {
     const sortedNodes = [...nodes].sort((a2, b) => {
       if (a2.x !== b.x) return a2.x - b.x;
@@ -13911,8 +13874,6 @@ var TesterantoStakeholderApp = (() => {
       screenY: 50
     }));
   }
-
-  // src/colors.ts
   var Palette = {
     // Base & Canvas
     black: "#000000",
@@ -13949,8 +13910,6 @@ var TesterantoStakeholderApp = (() => {
     warmGreyDeep: "#2A2826",
     warmGreyLight: "#A8A199"
   };
-
-  // src/grafeovidajo/core/styling.ts
   function applyStyles(projectedGraph, styleConfig = {}) {
     const styledNodes = projectedGraph.nodes.map((node) => {
       const size = getNodeSize(node, styleConfig.nodeSize);
@@ -14029,19 +13988,88 @@ var TesterantoStakeholderApp = (() => {
     return node.attributes[attribute] || node.id;
   }
 
-  // src/grafeovidajo/charts/BaseChart.tsx
-  var import_react8 = __toESM(require_react(), 1);
+  // src/stakeholderApp/stateless/featureGraphStats.ts
+  function getFeatureGraphStats(featureGraph) {
+    if (!featureGraph || !featureGraph.nodes) {
+      return {
+        totalFeatures: 0,
+        dependencies: featureGraph?.edges?.length || 0,
+        todo: 0,
+        doing: 0,
+        done: 0
+      };
+    }
+    const nodes = featureGraph.nodes;
+    const todo = nodes.filter((n) => n.attributes?.status === "todo").length;
+    const doing = nodes.filter((n) => n.attributes?.status === "doing").length;
+    const done = nodes.filter((n) => n.attributes?.status === "done").length;
+    return {
+      totalFeatures: nodes.length,
+      dependencies: featureGraph.edges?.length || 0,
+      todo,
+      doing,
+      done
+    };
+  }
+
+  // src/stakeholderApp/stateless/renderVisualization.tsx
+  var import_react6 = __toESM(require_react(), 1);
+
+  // src/colors.ts
+  var Palette2 = {
+    // Base & Canvas
+    black: "#000000",
+    ivory: "#FFFDF0",
+    obsidian: "#1A1918",
+    silver: "#BDC0C3",
+    // Success (Greens)
+    oliveDark: "#004949",
+    oliveDarkSubtle: "#E6F4EA",
+    oliveDeep: "#002D2D",
+    bluishGreen: "#009E73",
+    // Warning (Ambers/Yellows)
+    amberGold: "#F5C710",
+    amberGoldSubtle: "#FFF8E1",
+    amberDeep: "#332B00",
+    amberDark: "#856404",
+    // Error (Oranges/Reds)
+    deepOrange: "#D55E00",
+    deepOrangeSubtle: "#FCE8E6",
+    deepOrangeDeep: "#331600",
+    vermillionLight: "#FFB07C",
+    // Neutral (Greys)
+    charcoal: "#494949",
+    charcoalSubtle: "#F5F5F5",
+    charcoalDeep: "#1A1A1A",
+    // Progress (Rust/Purples)
+    rust: "#882255",
+    rustSubtle: "#F3E5F5",
+    rustDeep: "#2D0015",
+    reddishPurple: "#CC79A7",
+    // Muted (Warm Greys)
+    warmGrey: "#706A63",
+    warmGreySubtle: "#EFEBE7",
+    warmGreyDeep: "#2A2826",
+    warmGreyLight: "#A8A199"
+  };
+
+  // src/stakeholderApp/defaultViews/vscode/EisenhowerMatrix.tsx
+  var import_react2 = __toESM(require_react(), 1);
+
+  // src/stakeholderApp/defaultViews/BaseChart.tsx
+  var import_react = __toESM(require_react(), 1);
+  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   var BaseChart = (props) => {
     const { data, config, width, height, onNodeClick, onNodeHover, onNodeUpdate } = props;
-    const [camera, setCamera] = (0, import_react8.useState)({
+    const [camera, setCamera] = (0, import_react.useState)({
       x: 0,
       y: 0,
       scale: 1
     });
-    const [isDragging, setIsDragging] = (0, import_react8.useState)(false);
-    const [dragStart, setDragStart] = (0, import_react8.useState)({ x: 0, y: 0 });
-    const [spacePressed, setSpacePressed] = (0, import_react8.useState)(false);
-    const svgRef = (0, import_react8.useRef)(null);
+    const [isDragging, setIsDragging] = (0, import_react.useState)(false);
+    const [dragStart, setDragStart] = (0, import_react.useState)({ x: 0, y: 0 });
+    const [spacePressed, setSpacePressed] = (0, import_react.useState)(false);
+    const svgRef = (0, import_react.useRef)(null);
     const projectedGraph = projectGraph(data, config.projection);
     const nodes = projectedGraph.nodes;
     let laidOutNodes = [...nodes];
@@ -14097,7 +14125,7 @@ var TesterantoStakeholderApp = (() => {
       nodes: laidOutNodes
     };
     const styledGraph = applyStyles(laidOutGraph, config.style);
-    const bounds = (0, import_react8.useMemo)(() => {
+    const bounds = (0, import_react.useMemo)(() => {
       if (styledGraph.nodes.length === 0) {
         return { minX: 0, maxX: width, minY: 0, maxY: height };
       }
@@ -14121,7 +14149,7 @@ var TesterantoStakeholderApp = (() => {
         maxY: maxY + padding
       };
     }, [styledGraph.nodes, width, height]);
-    (0, import_react8.useEffect)(() => {
+    (0, import_react.useEffect)(() => {
       const handleKeyDown = (e) => {
         if (e.code === "Space") {
           e.preventDefault();
@@ -14193,7 +14221,7 @@ var TesterantoStakeholderApp = (() => {
       const y3 = height / 2 - centerY * scale;
       setCamera({ x: x3, y: y3, scale });
     };
-    (0, import_react8.useEffect)(() => {
+    (0, import_react.useEffect)(() => {
       resetCamera();
     }, [data, width, height]);
     const toScreenCoords = (x3, y3) => {
@@ -14229,7 +14257,7 @@ var TesterantoStakeholderApp = (() => {
             "check": "\u2705"
           };
           const emoji = iconEmojiMap[icon] || "\u2753";
-          iconElement = /* @__PURE__ */ import_react8.default.createElement(
+          iconElement = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "text",
             {
               x: screenCoords.x,
@@ -14238,15 +14266,15 @@ var TesterantoStakeholderApp = (() => {
               dominantBaseline: "central",
               fontSize: screenSize * 1.5,
               fill: "#333",
-              style: { pointerEvents: "none" }
-            },
-            emoji
+              style: { pointerEvents: "none" },
+              children: emoji
+            }
           );
         }
         let shapeElement;
         switch (node.shape) {
           case "square":
-            shapeElement = /* @__PURE__ */ import_react8.default.createElement(
+            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
               "rect",
               {
                 ...nodeProps,
@@ -14260,7 +14288,7 @@ var TesterantoStakeholderApp = (() => {
             );
             break;
           case "diamond":
-            shapeElement = /* @__PURE__ */ import_react8.default.createElement(
+            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
               "polygon",
               {
                 ...nodeProps,
@@ -14276,7 +14304,7 @@ var TesterantoStakeholderApp = (() => {
             );
             break;
           default:
-            shapeElement = /* @__PURE__ */ import_react8.default.createElement(
+            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
               "circle",
               {
                 ...nodeProps,
@@ -14288,7 +14316,10 @@ var TesterantoStakeholderApp = (() => {
               }
             );
         }
-        return /* @__PURE__ */ import_react8.default.createElement("g", { key: node.id }, shapeElement, iconElement);
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+          shapeElement,
+          iconElement
+        ] }, node.id);
       });
     };
     const renderEdges = () => {
@@ -14303,17 +14334,17 @@ var TesterantoStakeholderApp = (() => {
         const targetY = targetNode.screenY || targetNode.y * height;
         const sourceScreen = toScreenCoords(sourceX, sourceY);
         const targetScreen = toScreenCoords(targetX, targetY);
-        return /* @__PURE__ */ import_react8.default.createElement(
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "line",
           {
-            key: `edge-${index2}`,
             x1: sourceScreen.x,
             y1: sourceScreen.y,
             x2: targetScreen.x,
             y2: targetScreen.y,
             stroke: config.style?.edgeColor || "#999",
             strokeWidth: (config.style?.edgeWidth || 1) * camera.scale
-          }
+          },
+          `edge-${index2}`
         );
       });
     };
@@ -14325,97 +14356,109 @@ var TesterantoStakeholderApp = (() => {
         const graphY = node.screenY || node.y * height;
         const screenCoords = toScreenCoords(graphX, graphY);
         const screenSize = node.size * camera.scale;
-        return /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null);
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {});
       });
     };
     const renderSpaceIndicator = () => {
       if (!spacePressed) return null;
-      return /* @__PURE__ */ import_react8.default.createElement("g", null, /* @__PURE__ */ import_react8.default.createElement(
-        "rect",
-        {
-          x: 10,
-          y: 50,
-          width: 120,
-          height: 25,
-          rx: 5,
-          fill: Palette.rustSubtle,
-          stroke: Palette.rust,
-          strokeWidth: 1
-        }
-      ), /* @__PURE__ */ import_react8.default.createElement(
-        "text",
-        {
-          x: 70,
-          y: 66,
-          textAnchor: "middle",
-          fill: Palette.rust,
-          fontSize: 11,
-          fontWeight: "bold"
-        },
-        "Space: Pan Mode"
-      ));
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "rect",
+          {
+            x: 10,
+            y: 50,
+            width: 120,
+            height: 25,
+            rx: 5,
+            fill: Palette2.rustSubtle,
+            stroke: Palette2.rust,
+            strokeWidth: 1
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "text",
+          {
+            x: 70,
+            y: 66,
+            textAnchor: "middle",
+            fill: Palette2.rust,
+            fontSize: 11,
+            fontWeight: "bold",
+            children: "Space: Pan Mode"
+          }
+        )
+      ] });
     };
     const renderCameraControls = () => {
-      return /* @__PURE__ */ import_react8.default.createElement("g", null, /* @__PURE__ */ import_react8.default.createElement(
-        "rect",
-        {
-          x: 10,
-          y: 10,
-          width: 100,
-          height: 30,
-          rx: 5,
-          fill: Palette.rust,
-          onClick: resetCamera,
-          style: { cursor: "pointer" }
-        }
-      ), /* @__PURE__ */ import_react8.default.createElement(
-        "text",
-        {
-          x: 60,
-          y: 28,
-          textAnchor: "middle",
-          fill: "white",
-          fontSize: 12,
-          onClick: resetCamera,
-          style: { cursor: "pointer" }
-        },
-        "Reset View"
-      ), renderSpaceIndicator(), /* @__PURE__ */ import_react8.default.createElement(
-        "text",
-        {
-          x: width - 10,
-          y: 20,
-          textAnchor: "end",
-          fill: "#666",
-          fontSize: 11
-        },
-        "Scale: ",
-        camera.scale.toFixed(2),
-        "x"
-      ), /* @__PURE__ */ import_react8.default.createElement(
-        "text",
-        {
-          x: width - 10,
-          y: 35,
-          textAnchor: "end",
-          fill: "#666",
-          fontSize: 11
-        },
-        "Pan: Space+Click or Middle Click"
-      ), /* @__PURE__ */ import_react8.default.createElement(
-        "text",
-        {
-          x: width - 10,
-          y: 50,
-          textAnchor: "end",
-          fill: "#666",
-          fontSize: 11
-        },
-        "Zoom: Mouse Wheel"
-      ));
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "rect",
+          {
+            x: 10,
+            y: 10,
+            width: 100,
+            height: 30,
+            rx: 5,
+            fill: Palette2.rust,
+            onClick: resetCamera,
+            style: { cursor: "pointer" }
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "text",
+          {
+            x: 60,
+            y: 28,
+            textAnchor: "middle",
+            fill: "white",
+            fontSize: 12,
+            onClick: resetCamera,
+            style: { cursor: "pointer" },
+            children: "Reset View"
+          }
+        ),
+        renderSpaceIndicator(),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+          "text",
+          {
+            x: width - 10,
+            y: 20,
+            textAnchor: "end",
+            fill: "#666",
+            fontSize: 11,
+            children: [
+              "Scale: ",
+              camera.scale.toFixed(2),
+              "x"
+            ]
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "text",
+          {
+            x: width - 10,
+            y: 35,
+            textAnchor: "end",
+            fill: "#666",
+            fontSize: 11,
+            children: "Pan: Space+Click or Middle Click"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "text",
+          {
+            x: width - 10,
+            y: 50,
+            textAnchor: "end",
+            fill: "#666",
+            fontSize: 11,
+            children: "Zoom: Mouse Wheel"
+          }
+        )
+      ] });
     };
     const cursorStyle = isDragging ? "grabbing" : spacePressed ? "grab" : "default";
-    return /* @__PURE__ */ import_react8.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, /* @__PURE__ */ import_react8.default.createElement(
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: { position: "relative", width: "100%", height: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
       "svg",
       {
         ref: svgRef,
@@ -14426,44 +14469,50 @@ var TesterantoStakeholderApp = (() => {
         onMouseMove: handleMouseMove,
         onMouseUp: handleMouseUp,
         onMouseLeave: handleMouseUp,
-        onWheel: handleWheel
-      },
-      /* @__PURE__ */ import_react8.default.createElement("defs", null, /* @__PURE__ */ import_react8.default.createElement(
-        "pattern",
-        {
-          id: "grid",
-          width: 50 * camera.scale,
-          height: 50 * camera.scale,
-          patternUnits: "userSpaceOnUse"
-        },
-        /* @__PURE__ */ import_react8.default.createElement(
-          "path",
-          {
-            d: `M ${50 * camera.scale} 0 L 0 0 0 ${50 * camera.scale}`,
-            fill: "none",
-            stroke: "#e0e0e0",
-            strokeWidth: 1
-          }
-        )
-      )),
-      /* @__PURE__ */ import_react8.default.createElement(
-        "rect",
-        {
-          width: "100%",
-          height: "100%",
-          fill: "url(#grid)"
-        }
-      ),
-      /* @__PURE__ */ import_react8.default.createElement("g", null, renderEdges(), renderNodes(), renderLabels()),
-      renderCameraControls()
-    ));
+        onWheel: handleWheel,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("defs", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "pattern",
+            {
+              id: "grid",
+              width: 50 * camera.scale,
+              height: 50 * camera.scale,
+              patternUnits: "userSpaceOnUse",
+              children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                "path",
+                {
+                  d: `M ${50 * camera.scale} 0 L 0 0 0 ${50 * camera.scale}`,
+                  fill: "none",
+                  stroke: "#e0e0e0",
+                  strokeWidth: 1
+                }
+              )
+            }
+          ) }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "rect",
+            {
+              width: "100%",
+              height: "100%",
+              fill: "url(#grid)"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+            renderEdges(),
+            renderNodes(),
+            renderLabels()
+          ] }),
+          renderCameraControls()
+        ]
+      }
+    ) });
   };
 
-  // src/grafeovidajo/charts/EisenhowerMatrix.tsx
-  var import_react9 = __toESM(require_react(), 1);
+  // src/stakeholderApp/defaultViews/vscode/EisenhowerMatrix.tsx
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
   var EisenhowerMatrix = (props) => {
     const { config, width, height, data } = props;
-    const [showUncategorized, setShowUncategorized] = (0, import_react9.useState)(false);
+    const [showUncategorized, setShowUncategorized] = (0, import_react2.useState)(false);
     const uncategorizedFeatures = data.nodes.filter((node) => {
       const nodeType = node.type || node.attributes?.type;
       const isFeature = nodeType === "feature" || node.id.startsWith("feature:") || node.attributes?.label && !nodeType;
@@ -14508,128 +14557,181 @@ var TesterantoStakeholderApp = (() => {
     const renderQuadrantLines = () => {
       const midX = width / 2;
       const midY = height / 2;
-      return /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, /* @__PURE__ */ import_react9.default.createElement(
-        "line",
-        {
-          x1: midX,
-          y1: 0,
-          x2: midX,
-          y2: height,
-          stroke: "#ccc",
-          strokeWidth: 2,
-          strokeDasharray: "5,5"
-        }
-      ), /* @__PURE__ */ import_react9.default.createElement(
-        "line",
-        {
-          x1: 0,
-          y1: midY,
-          x2: width,
-          y2: midY,
-          stroke: "#ccc",
-          strokeWidth: 2,
-          strokeDasharray: "5,5"
-        }
-      ), /* @__PURE__ */ import_react9.default.createElement("text", { x: width * 0.25, y: 20, textAnchor: "middle", fontWeight: "bold" }, "Urgent"), /* @__PURE__ */ import_react9.default.createElement("text", { x: width * 0.75, y: 20, textAnchor: "middle", fontWeight: "bold" }, "Not Urgent"), /* @__PURE__ */ import_react9.default.createElement("text", { x: 10, y: height * 0.25, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.25})` }, "Important"), /* @__PURE__ */ import_react9.default.createElement("text", { x: 10, y: height * 0.75, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.75})` }, "Not Important"));
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+          "line",
+          {
+            x1: midX,
+            y1: 0,
+            x2: midX,
+            y2: height,
+            stroke: "#ccc",
+            strokeWidth: 2,
+            strokeDasharray: "5,5"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+          "line",
+          {
+            x1: 0,
+            y1: midY,
+            x2: width,
+            y2: midY,
+            stroke: "#ccc",
+            strokeWidth: 2,
+            strokeDasharray: "5,5"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("text", { x: width * 0.25, y: 20, textAnchor: "middle", fontWeight: "bold", children: "Urgent" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("text", { x: width * 0.75, y: 20, textAnchor: "middle", fontWeight: "bold", children: "Not Urgent" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("text", { x: 10, y: height * 0.25, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.25})`, children: "Important" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("text", { x: 10, y: height * 0.75, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.75})`, children: "Not Important" })
+      ] });
     };
     const renderUncategorizedList = () => {
       if (uncategorizedFeatures.length === 0) {
-        return /* @__PURE__ */ import_react9.default.createElement("div", { style: { padding: "20px", textAlign: "center" } }, /* @__PURE__ */ import_react9.default.createElement("h4", null, "All Features Are Categorized"), /* @__PURE__ */ import_react9.default.createElement("p", null, "Great! All ", categorizedNodes.length, " feature nodes have both urgency and importance attributes and are shown on the matrix."));
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { padding: "20px", textAlign: "center" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { children: "All Features Are Categorized" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+            "Great! All ",
+            categorizedNodes.length,
+            " feature nodes have both urgency and importance attributes and are shown on the matrix."
+          ] })
+        ] });
       }
-      return /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
         border: "1px solid #ddd",
         borderRadius: "4px",
         padding: "20px",
         maxHeight: "300px",
         overflow: "auto",
         marginTop: "20px"
-      } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "15px"
-      } }, /* @__PURE__ */ import_react9.default.createElement("h4", { style: { margin: 0 } }, "Uncategorized Features (", uncategorizedFeatures.length, ")"), /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-        backgroundColor: "#f5f5f5",
-        padding: "5px 10px",
-        borderRadius: "4px",
-        fontSize: "0.9em"
-      } }, "Missing urgency or importance")), /* @__PURE__ */ import_react9.default.createElement("ul", { style: {
-        listStyleType: "none",
-        paddingLeft: "0",
-        margin: 0
-      } }, uncategorizedFeatures.map((node) => {
-        const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
-        const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
-        return /* @__PURE__ */ import_react9.default.createElement("li", { key: node.id, style: { marginBottom: "10px" } }, /* @__PURE__ */ import_react9.default.createElement(
-          "div",
-          {
-            style: {
-              padding: "10px",
-              borderRadius: "4px",
-              backgroundColor: "#fff",
-              border: "1px solid #e0e0e0",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              transition: "background-color 0.2s"
-            },
-            onClick: () => props.onNodeClick?.(node),
-            onMouseEnter: () => props.onNodeHover?.(node),
-            onMouseLeave: () => props.onNodeHover?.(null)
-          },
-          /* @__PURE__ */ import_react9.default.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontWeight: "600", marginBottom: "4px" } }, node.attributes?.label || node.id), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.85em", color: "#666" } }, "ID: ", node.id)),
-          /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-            display: "flex",
-            gap: "10px",
-            fontSize: "0.8em"
-          } }, urgency === void 0 && /* @__PURE__ */ import_react9.default.createElement("span", { style: {
-            backgroundColor: "#ffebee",
-            padding: "2px 8px",
-            borderRadius: "10px",
-            color: "#d32f2f"
-          } }, "Missing urgency"), importance === void 0 && /* @__PURE__ */ import_react9.default.createElement("span", { style: {
-            backgroundColor: "#fff3e0",
-            padding: "2px 8px",
-            borderRadius: "10px",
-            color: "#f57c00"
-          } }, "Missing importance"), urgency !== void 0 && /* @__PURE__ */ import_react9.default.createElement("span", { style: {
-            backgroundColor: "#e3f2fd",
-            padding: "2px 8px",
-            borderRadius: "10px",
-            color: "#1976d2"
-          } }, "Urgency: ", urgency), importance !== void 0 && /* @__PURE__ */ import_react9.default.createElement("span", { style: {
-            backgroundColor: "#e8f5e8",
-            padding: "2px 8px",
-            borderRadius: "10px",
-            color: "#388e3c"
-          } }, "Importance: ", importance))
-        ));
-      })), /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-        marginTop: "15px",
-        padding: "10px",
-        backgroundColor: "#f5f5f5",
-        borderRadius: "4px",
-        fontSize: "0.9em"
-      } }, /* @__PURE__ */ import_react9.default.createElement("strong", null, "Note:"), " These features cannot be placed on the Eisenhower matrix because they're missing either ", /* @__PURE__ */ import_react9.default.createElement("code", null, "urgency"), " or ", /* @__PURE__ */ import_react9.default.createElement("code", null, "importance"), " attributes in their YAML frontmatter. Add these attributes to your feature markdown files to categorize them:", /* @__PURE__ */ import_react9.default.createElement("pre", { style: {
-        backgroundColor: "#fff",
-        padding: "10px",
-        borderRadius: "4px",
-        marginTop: "5px",
-        fontSize: "0.85em",
-        overflow: "auto"
-      } }, "--- urgency: 0.7    # Value between 0 and 1 importance: 0.9 # Value between 0 and 1 ---"), /* @__PURE__ */ import_react9.default.createElement("p", { style: { marginTop: "5px", marginBottom: 0 } }, "Features are identified by: type='feature', ID starting with 'feature:', or having a label without a specific type.")));
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "15px"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h4", { style: { margin: 0 }, children: [
+            "Uncategorized Features (",
+            uncategorizedFeatures.length,
+            ")"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
+            backgroundColor: "#f5f5f5",
+            padding: "5px 10px",
+            borderRadius: "4px",
+            fontSize: "0.9em"
+          }, children: "Missing urgency or importance" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ul", { style: {
+          listStyleType: "none",
+          paddingLeft: "0",
+          margin: 0
+        }, children: uncategorizedFeatures.map((node) => {
+          const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
+          const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
+          return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("li", { style: { marginBottom: "10px" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+            "div",
+            {
+              style: {
+                padding: "10px",
+                borderRadius: "4px",
+                backgroundColor: "#fff",
+                border: "1px solid #e0e0e0",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                transition: "background-color 0.2s"
+              },
+              onClick: () => props.onNodeClick?.(node),
+              onMouseEnter: () => props.onNodeHover?.(node),
+              onMouseLeave: () => props.onNodeHover?.(null),
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1 }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { fontWeight: "600", marginBottom: "4px" }, children: node.attributes?.label || node.id }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: "0.85em", color: "#666" }, children: [
+                    "ID: ",
+                    node.id
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+                  display: "flex",
+                  gap: "10px",
+                  fontSize: "0.8em"
+                }, children: [
+                  urgency === void 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: {
+                    backgroundColor: "#ffebee",
+                    padding: "2px 8px",
+                    borderRadius: "10px",
+                    color: "#d32f2f"
+                  }, children: "Missing urgency" }),
+                  importance === void 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: {
+                    backgroundColor: "#fff3e0",
+                    padding: "2px 8px",
+                    borderRadius: "10px",
+                    color: "#f57c00"
+                  }, children: "Missing importance" }),
+                  urgency !== void 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: {
+                    backgroundColor: "#e3f2fd",
+                    padding: "2px 8px",
+                    borderRadius: "10px",
+                    color: "#1976d2"
+                  }, children: [
+                    "Urgency: ",
+                    urgency
+                  ] }),
+                  importance !== void 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: {
+                    backgroundColor: "#e8f5e8",
+                    padding: "2px 8px",
+                    borderRadius: "10px",
+                    color: "#388e3c"
+                  }, children: [
+                    "Importance: ",
+                    importance
+                  ] })
+                ] })
+              ]
+            }
+          ) }, node.id);
+        }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+          marginTop: "15px",
+          padding: "10px",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "4px",
+          fontSize: "0.9em"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Note:" }),
+          " These features cannot be placed on the Eisenhower matrix because they're missing either ",
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("code", { children: "urgency" }),
+          " or ",
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("code", { children: "importance" }),
+          " attributes in their YAML frontmatter. Add these attributes to your feature markdown files to categorize them:",
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("pre", { style: {
+            backgroundColor: "#fff",
+            padding: "10px",
+            borderRadius: "4px",
+            marginTop: "5px",
+            fontSize: "0.85em",
+            overflow: "auto"
+          }, children: "--- urgency: 0.7    # Value between 0 and 1 importance: 0.9 # Value between 0 and 1 ---" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { marginTop: "5px", marginBottom: 0 }, children: "Features are identified by: type='feature', ID starting with 'feature:', or having a label without a specific type." })
+        ] })
+      ] });
     };
     const renderToggleButton = () => {
       if (uncategorizedFeatures.length === 0) {
         return null;
       }
-      return /* @__PURE__ */ import_react9.default.createElement("div", { style: {
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
         position: "absolute",
         top: 10,
         right: 10,
         zIndex: 10
-      } }, /* @__PURE__ */ import_react9.default.createElement(
+      }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
         "button",
         {
           onClick: () => setShowUncategorized(!showUncategorized),
@@ -14642,85 +14744,82 @@ var TesterantoStakeholderApp = (() => {
             cursor: "pointer",
             fontWeight: "bold",
             fontSize: "12px"
-          }
-        },
-        showUncategorized ? "Hide Uncategorized" : `Show Uncategorized (${uncategorizedFeatures.length})`
-      ));
-    };
-    return /* @__PURE__ */ import_react9.default.createElement("div", { style: { position: "relative" } }, renderToggleButton(), /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px"
-    } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-      border: "1px solid #ccc",
-      borderRadius: "4px",
-      padding: "10px",
-      backgroundColor: "#fafafa"
-    } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: "10px"
-    } }, /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("h3", { style: { margin: 0 } }, "Eisenhower Matrix"), /* @__PURE__ */ import_react9.default.createElement("p", { style: { margin: "5px 0 0 0", fontSize: "0.9em", color: "#666" } }, "Using YAML frontmatter attributes: ", /* @__PURE__ */ import_react9.default.createElement("code", null, "urgency"), " (x-axis, 0-1) and ", /* @__PURE__ */ import_react9.default.createElement("code", null, "importance"), " (y-axis, 0-1)")), /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-      fontSize: "0.9em",
-      color: "#666",
-      backgroundColor: "#f0f0f0",
-      padding: "5px 10px",
-      borderRadius: "4px"
-    } }, categorizedNodes.length, " on matrix | ", uncategorizedFeatures.length, " uncategorized | Total: ", categorizedNodes.length + uncategorizedFeatures.length)), categorizedNodes.length > 0 && /* @__PURE__ */ import_react9.default.createElement("div", { style: {
-      fontSize: "0.8em",
-      color: "#666",
-      backgroundColor: "#e8f5e8",
-      padding: "5px 10px",
-      borderRadius: "4px",
-      marginBottom: "10px"
-    } }, "Showing ", categorizedNodes.length, " features with both urgency and importance values."), /* @__PURE__ */ import_react9.default.createElement("svg", { width, height, style: { border: "1px solid #ddd", borderRadius: "4px" } }, renderQuadrantLines(), /* @__PURE__ */ import_react9.default.createElement(BaseChart, { ...props, data: categorizedData }))), showUncategorized && renderUncategorizedList()));
-  };
-
-  // src/grafeovidajo/charts/GanttChart.tsx
-  var import_react10 = __toESM(require_react(), 1);
-  var GanttChart = (props) => {
-    const { config, width, height } = props;
-    const [startTime, endTime] = config.timeRange;
-    const totalDuration = endTime.getTime() - startTime.getTime();
-    const renderTimeline = () => {
-      const hours = Math.ceil(totalDuration / (1e3 * 60 * 60));
-      const segments = Math.min(hours, 24);
-      return Array.from({ length: segments }).map((_, i) => {
-        const x3 = i / segments * width;
-        const time = new Date(startTime.getTime() + i / segments * totalDuration);
-        return /* @__PURE__ */ import_react10.default.createElement("g", { key: `timeline-${i}` }, /* @__PURE__ */ import_react10.default.createElement(
-          "line",
-          {
-            x1: x3,
-            y1: 0,
-            x2: x3,
-            y2: height,
-            stroke: "#eee",
-            strokeWidth: 1
-          }
-        ), /* @__PURE__ */ import_react10.default.createElement(
-          "text",
-          {
-            x: x3,
-            y: 15,
-            textAnchor: "middle",
-            fontSize: 10,
-            fill: "#666"
           },
-          time.getHours().toString().padStart(2, "0"),
-          ":00"
-        ));
-      });
+          children: showUncategorized ? "Hide Uncategorized" : `Show Uncategorized (${uncategorizedFeatures.length})`
+        }
+      ) });
     };
-    return /* @__PURE__ */ import_react10.default.createElement("svg", { width, height, style: { border: "1px solid #ccc" } }, renderTimeline(), /* @__PURE__ */ import_react10.default.createElement(BaseChart, { ...props }));
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { position: "relative" }, children: [
+      renderToggleButton(),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          padding: "10px",
+          backgroundColor: "#fafafa"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "10px"
+          }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { style: { margin: 0 }, children: "Eisenhower Matrix" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { style: { margin: "5px 0 0 0", fontSize: "0.9em", color: "#666" }, children: [
+                "Using YAML frontmatter attributes: ",
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("code", { children: "urgency" }),
+                " (x-axis, 0-1) and ",
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("code", { children: "importance" }),
+                " (y-axis, 0-1)"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+              fontSize: "0.9em",
+              color: "#666",
+              backgroundColor: "#f0f0f0",
+              padding: "5px 10px",
+              borderRadius: "4px"
+            }, children: [
+              categorizedNodes.length,
+              " on matrix | ",
+              uncategorizedFeatures.length,
+              " uncategorized | Total: ",
+              categorizedNodes.length + uncategorizedFeatures.length
+            ] })
+          ] }),
+          categorizedNodes.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+            fontSize: "0.8em",
+            color: "#666",
+            backgroundColor: "#e8f5e8",
+            padding: "5px 10px",
+            borderRadius: "4px",
+            marginBottom: "10px"
+          }, children: [
+            "Showing ",
+            categorizedNodes.length,
+            " features with both urgency and importance values."
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { width, height, style: { border: "1px solid #ddd", borderRadius: "4px" }, children: [
+            renderQuadrantLines(),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BaseChart, { ...props, data: categorizedData })
+          ] })
+        ] }),
+        showUncategorized && renderUncategorizedList()
+      ] })
+    ] });
   };
 
-  // src/grafeovidajo/charts/KanbanBoard.tsx
-  var import_react12 = __toESM(require_react(), 1);
+  // src/stakeholderApp/defaultViews/vscode/KanbanBoard.tsx
+  var import_react4 = __toESM(require_react(), 1);
 
-  // src/grafeovidajo/charts/NodeDetailsModal.tsx
-  var import_react11 = __toESM(require_react(), 1);
+  // src/stakeholderApp/defaultViews/stakeholder/NodeDetailsModal.tsx
+  var import_react3 = __toESM(require_react(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var NodeDetailsModal = ({ node, isOpen, onClose }) => {
     if (!isOpen || !node) return null;
     const handleBackgroundClick = (e) => {
@@ -14758,7 +14857,7 @@ var TesterantoStakeholderApp = (() => {
       return result.sort((a2, b) => a2.key.localeCompare(b.key));
     };
     const attributes = formatNodeProperties(node);
-    return /* @__PURE__ */ import_react11.default.createElement(
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "div",
       {
         style: {
@@ -14773,139 +14872,157 @@ var TesterantoStakeholderApp = (() => {
           justifyContent: "center",
           zIndex: 1e3
         },
-        onClick: handleBackgroundClick
-      },
-      /* @__PURE__ */ import_react11.default.createElement(
-        "div",
-        {
-          style: {
-            backgroundColor: "white",
-            borderRadius: "8px",
-            padding: "24px",
-            maxWidth: "600px",
-            maxHeight: "80vh",
-            width: "90%",
-            overflow: "auto",
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)"
-          }
-        },
-        /* @__PURE__ */ import_react11.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" } }, /* @__PURE__ */ import_react11.default.createElement("h2", { style: { margin: 0, color: Palette.rust } }, "Node Details"), /* @__PURE__ */ import_react11.default.createElement(
-          "button",
-          {
-            onClick: onClose,
-            style: {
-              background: "none",
-              border: "none",
-              fontSize: "24px",
-              cursor: "pointer",
-              color: "#666",
-              padding: "0",
-              width: "30px",
-              height: "30px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: "4px"
-            },
-            onMouseEnter: (e) => e.currentTarget.style.backgroundColor = "#f0f0f0",
-            onMouseLeave: (e) => e.currentTarget.style.backgroundColor = "transparent"
-          },
-          "\xD7"
-        )),
-        /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "20px" } }, /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "ID:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
-          fontFamily: "monospace",
-          backgroundColor: "#f5f5f5",
-          padding: "8px",
-          borderRadius: "4px",
-          marginTop: "4px",
-          wordBreak: "break-all"
-        } }, node.id)), node.type && /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "Type:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
-          display: "inline-block",
-          backgroundColor: Palette.rustSubtle,
-          color: Palette.rust,
-          padding: "4px 8px",
-          borderRadius: "4px",
-          marginLeft: "8px",
-          fontSize: "14px",
-          fontWeight: "bold"
-        } }, node.type)), node.label && /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginBottom: "8px" } }, /* @__PURE__ */ import_react11.default.createElement("strong", { style: { color: Palette.charcoal } }, "Label:"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
-          padding: "8px",
-          marginTop: "4px",
-          backgroundColor: "#f9f9f9",
-          borderRadius: "4px"
-        } }, node.label))),
-        attributes.length > 0 && /* @__PURE__ */ import_react11.default.createElement("div", null, /* @__PURE__ */ import_react11.default.createElement("h3", { style: { marginBottom: "12px", color: Palette.charcoal } }, "Attributes"), /* @__PURE__ */ import_react11.default.createElement("div", { style: {
-          border: "1px solid #e0e0e0",
-          borderRadius: "6px",
-          overflow: "hidden"
-        } }, attributes.map((attr) => /* @__PURE__ */ import_react11.default.createElement(
+        onClick: handleBackgroundClick,
+        children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
           "div",
           {
-            key: attr.key,
             style: {
-              display: "flex",
-              borderBottom: "1px solid #e0e0e0",
-              padding: "12px",
-              backgroundColor: "#fff"
-            }
-          },
-          /* @__PURE__ */ import_react11.default.createElement("div", { style: {
-            flex: "0 0 150px",
-            fontWeight: "bold",
-            color: Palette.rust
-          } }, attr.key),
-          /* @__PURE__ */ import_react11.default.createElement("div", { style: {
-            flex: 1,
-            fontFamily: typeof attr.value === "string" && attr.value.includes("{") ? "monospace" : "inherit",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-all",
-            maxHeight: "200px",
-            overflow: "auto"
-          } }, attr.value)
-        )))),
-        /* @__PURE__ */ import_react11.default.createElement("div", { style: { marginTop: "20px", display: "flex", justifyContent: "flex-end" } }, /* @__PURE__ */ import_react11.default.createElement(
-          "button",
-          {
-            onClick: onClose,
-            style: {
-              backgroundColor: Palette.rust,
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "14px",
-              fontWeight: "bold"
+              backgroundColor: "white",
+              borderRadius: "8px",
+              padding: "24px",
+              maxWidth: "600px",
+              maxHeight: "80vh",
+              width: "90%",
+              overflow: "auto",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)"
             },
-            onMouseEnter: (e) => e.currentTarget.style.backgroundColor = Palette.rustDark,
-            onMouseLeave: (e) => e.currentTarget.style.backgroundColor = Palette.rust
-          },
-          "Close"
-        ))
-      )
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { style: { margin: 0, color: Palette2.rust }, children: "Node Details" }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                  "button",
+                  {
+                    onClick: onClose,
+                    style: {
+                      background: "none",
+                      border: "none",
+                      fontSize: "24px",
+                      cursor: "pointer",
+                      color: "#666",
+                      padding: "0",
+                      width: "30px",
+                      height: "30px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "4px"
+                    },
+                    onMouseEnter: (e) => e.currentTarget.style.backgroundColor = "#f0f0f0",
+                    onMouseLeave: (e) => e.currentTarget.style.backgroundColor = "transparent",
+                    children: "\xD7"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginBottom: "20px" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginBottom: "8px" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { style: { color: Palette2.charcoal }, children: "ID:" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+                    fontFamily: "monospace",
+                    backgroundColor: "#f5f5f5",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    marginTop: "4px",
+                    wordBreak: "break-all"
+                  }, children: node.id })
+                ] }),
+                node.type && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginBottom: "8px" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { style: { color: Palette2.charcoal }, children: "Type:" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+                    display: "inline-block",
+                    backgroundColor: Palette2.rustSubtle,
+                    color: Palette2.rust,
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    marginLeft: "8px",
+                    fontSize: "14px",
+                    fontWeight: "bold"
+                  }, children: node.type })
+                ] }),
+                node.label && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginBottom: "8px" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { style: { color: Palette2.charcoal }, children: "Label:" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+                    padding: "8px",
+                    marginTop: "4px",
+                    backgroundColor: "#f9f9f9",
+                    borderRadius: "4px"
+                  }, children: node.label })
+                ] })
+              ] }),
+              attributes.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { style: { marginBottom: "12px", color: Palette2.charcoal }, children: "Attributes" }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "6px",
+                  overflow: "hidden"
+                }, children: attributes.map((attr) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+                  "div",
+                  {
+                    style: {
+                      display: "flex",
+                      borderBottom: "1px solid #e0e0e0",
+                      padding: "12px",
+                      backgroundColor: "#fff"
+                    },
+                    children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+                        flex: "0 0 150px",
+                        fontWeight: "bold",
+                        color: Palette2.rust
+                      }, children: attr.key }),
+                      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+                        flex: 1,
+                        fontFamily: typeof attr.value === "string" && attr.value.includes("{") ? "monospace" : "inherit",
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-all",
+                        maxHeight: "200px",
+                        overflow: "auto"
+                      }, children: attr.value })
+                    ]
+                  },
+                  attr.key
+                )) })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { marginTop: "20px", display: "flex", justifyContent: "flex-end" }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                "button",
+                {
+                  onClick: onClose,
+                  style: {
+                    backgroundColor: Palette2.rust,
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    fontWeight: "bold"
+                  },
+                  onMouseEnter: (e) => e.currentTarget.style.backgroundColor = Palette2.rustDark,
+                  onMouseLeave: (e) => e.currentTarget.style.backgroundColor = Palette2.rust,
+                  children: "Close"
+                }
+              ) })
+            ]
+          }
+        )
+      }
     );
   };
 
-  // src/grafeovidajo/charts/KanbanBoard.tsx
-  var getNodeStatus = (node) => {
-    if (node.metadata.frontmatter.status) {
-      return node.metadata.frontmatter.status;
-    }
-    return void 0;
-  };
+  // src/stakeholderApp/defaultViews/vscode/KanbanBoard.tsx
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   var KanbanBoard = (props) => {
     const { config, height } = props;
     const width = props.width || "100%";
-    const [selectedNode, setSelectedNode] = (0, import_react12.useState)(null);
-    const [isModalOpen, setIsModalOpen] = (0, import_react12.useState)(false);
-    const [columnWidths, setColumnWidths] = (0, import_react12.useState)([]);
-    const [isResizing, setIsResizing] = (0, import_react12.useState)(false);
-    const [resizeStartX, setResizeStartX] = (0, import_react12.useState)(0);
-    const [resizeStartWidths, setResizeStartWidths] = (0, import_react12.useState)([]);
-    const [resizeColumnIndex, setResizeColumnIndex] = (0, import_react12.useState)(null);
-    const [draggedNode, setDraggedNode] = (0, import_react12.useState)(null);
-    const [dragOverColumn, setDragOverColumn] = (0, import_react12.useState)(null);
-    const containerRef = (0, import_react12.useRef)(null);
+    const [selectedNode, setSelectedNode] = (0, import_react4.useState)(null);
+    const [isModalOpen, setIsModalOpen] = (0, import_react4.useState)(false);
+    const [columnWidths, setColumnWidths] = (0, import_react4.useState)([]);
+    const [isResizing, setIsResizing] = (0, import_react4.useState)(false);
+    const [resizeStartX, setResizeStartX] = (0, import_react4.useState)(0);
+    const [resizeStartWidths, setResizeStartWidths] = (0, import_react4.useState)([]);
+    const [resizeColumnIndex, setResizeColumnIndex] = (0, import_react4.useState)(null);
+    const [draggedNode, setDraggedNode] = (0, import_react4.useState)(null);
+    const [dragOverColumn, setDragOverColumn] = (0, import_react4.useState)(null);
+    const containerRef = (0, import_react4.useRef)(null);
     const featureNodes = props.data.nodes.filter((node) => {
       if (!node) return false;
       const isFeatureById = node.id?.startsWith("feature:");
@@ -14927,7 +15044,7 @@ var TesterantoStakeholderApp = (() => {
       nodes: featureNodes,
       edges: featureEdges || []
     };
-    (0, import_react12.useEffect)(() => {
+    (0, import_react4.useEffect)(() => {
       const allColumns2 = [
         ...config.columns,
         {
@@ -14985,7 +15102,7 @@ var TesterantoStakeholderApp = (() => {
       setResizeStartX(e.clientX);
       setResizeStartWidths([...columnWidths]);
     };
-    (0, import_react12.useEffect)(() => {
+    (0, import_react4.useEffect)(() => {
       const handleMouseMove = (e) => {
         if (!isResizing || resizeColumnIndex === null) return;
         const deltaX = e.clientX - resizeStartX;
@@ -15068,567 +15185,261 @@ var TesterantoStakeholderApp = (() => {
           }
         });
         const isDragOver = dragOverColumn === column.id;
-        return /* @__PURE__ */ import_react12.default.createElement(import_react12.default.Fragment, { key: `column-${column.id}` }, index2 > 0 && /* @__PURE__ */ import_react12.default.createElement(
-          "div",
-          {
-            style: {
-              width: "5px",
-              backgroundColor: isResizing && resizeColumnIndex === index2 ? "#007acc" : "#ddd",
-              cursor: "col-resize",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "relative",
-              zIndex: 2
-            },
-            onMouseDown: (e) => handleResizeStart(index2, e),
-            title: "Drag to resize"
-          },
-          /* @__PURE__ */ import_react12.default.createElement(
+        return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_react4.default.Fragment, { children: [
+          index2 > 0 && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "div",
             {
               style: {
-                width: "1px",
-                height: "20px",
-                backgroundColor: "#999"
-              }
-            }
-          )
-        ), /* @__PURE__ */ import_react12.default.createElement(
-          "div",
-          {
-            style: {
-              flex: `0 0 ${column.width}%`,
-              border: "1px solid #ddd",
-              backgroundColor: isDragOver ? "#e8f4fd" : "#f5f5f5",
-              display: "flex",
-              flexDirection: "column",
-              height: "100%",
-              overflow: "hidden",
-              minWidth: "50px",
-              transition: "background-color 0.2s"
-            },
-            onDragOver: (e) => handleDragOver(column.id, e),
-            onDrop: (e) => handleDrop(column.id, e),
-            onDragLeave: () => setDragOverColumn(null)
-          },
-          /* @__PURE__ */ import_react12.default.createElement(
-            "div",
-            {
-              style: {
-                padding: "10px",
-                borderBottom: "1px solid #ddd",
-                backgroundColor: "#e0e0e0",
-                fontWeight: "bold",
-                textAlign: "center",
+                width: "5px",
+                backgroundColor: isResizing && resizeColumnIndex === index2 ? "#007acc" : "#ddd",
+                cursor: "col-resize",
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-              }
-            },
-            /* @__PURE__ */ import_react12.default.createElement("span", null, column.title, " (", columnNodes.length, ")"),
-            /* @__PURE__ */ import_react12.default.createElement("span", { style: { fontSize: "12px", color: "#666" } }, column.width.toFixed(1), "%")
-          ),
-          /* @__PURE__ */ import_react12.default.createElement(
-            "div",
-            {
-              style: {
-                flex: 1,
-                padding: "10px",
-                overflowY: "auto"
-              }
-            },
-            columnNodes.map((node) => {
-              const label = node.label || node.id;
-              const status = node.metadata?.frontmatter?.status;
-              const priority = node.metadata?.frontmatter?.priority;
-              const isDragging = draggedNode?.id === node.id;
-              return /* @__PURE__ */ import_react12.default.createElement(
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                zIndex: 2
+              },
+              onMouseDown: (e) => handleResizeStart(index2, e),
+              title: "Drag to resize",
+              children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
                 "div",
                 {
-                  key: node.id,
-                  draggable: true,
                   style: {
-                    padding: "8px",
-                    marginBottom: "8px",
-                    backgroundColor: isDragging ? "#f0f0f0" : "white",
-                    border: isDragging ? "2px dashed #007acc" : "1px solid #ccc",
-                    borderRadius: "4px",
-                    cursor: "grab",
-                    opacity: isDragging ? 0.5 : 1,
-                    transition: "all 0.2s"
-                  },
-                  onClick: () => {
-                    setSelectedNode(node);
-                    setIsModalOpen(true);
-                    props.onNodeClick?.(node);
-                  },
-                  onMouseEnter: () => props.onNodeHover?.(node),
-                  onMouseLeave: () => props.onNodeHover?.(null),
-                  onDragStart: (e) => handleDragStart(node, e),
-                  onDragEnd: handleDragEnd
-                },
-                /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "4px" } }, label),
-                status && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "12px", color: "#666", marginBottom: "2px" } }, "Status: ", status),
-                priority && /* @__PURE__ */ import_react12.default.createElement("div", { style: { fontSize: "12px", color: "#666" } }, "Priority: ", priority)
-              );
-            })
+                    width: "1px",
+                    height: "20px",
+                    backgroundColor: "#999"
+                  }
+                }
+              )
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+            "div",
+            {
+              style: {
+                flex: `0 0 ${column.width}%`,
+                border: "1px solid #ddd",
+                backgroundColor: isDragOver ? "#e8f4fd" : "#f5f5f5",
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                overflow: "hidden",
+                minWidth: "50px",
+                transition: "background-color 0.2s"
+              },
+              onDragOver: (e) => handleDragOver(column.id, e),
+              onDrop: (e) => handleDrop(column.id, e),
+              onDragLeave: () => setDragOverColumn(null),
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+                  "div",
+                  {
+                    style: {
+                      padding: "10px",
+                      borderBottom: "1px solid #ddd",
+                      backgroundColor: "#e0e0e0",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center"
+                    },
+                    children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
+                        column.title,
+                        " (",
+                        columnNodes.length,
+                        ")"
+                      ] }),
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { style: { fontSize: "12px", color: "#666" }, children: [
+                        column.width.toFixed(1),
+                        "%"
+                      ] })
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+                  "div",
+                  {
+                    style: {
+                      flex: 1,
+                      padding: "10px",
+                      overflowY: "auto"
+                    },
+                    children: columnNodes.map((node) => {
+                      const label = node.label || node.id;
+                      const status = node.metadata?.frontmatter?.status;
+                      const priority = node.metadata?.frontmatter?.priority;
+                      const isDragging = draggedNode?.id === node.id;
+                      return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+                        "div",
+                        {
+                          draggable: true,
+                          style: {
+                            padding: "8px",
+                            marginBottom: "8px",
+                            backgroundColor: isDragging ? "#f0f0f0" : "white",
+                            border: isDragging ? "2px dashed #007acc" : "1px solid #ccc",
+                            borderRadius: "4px",
+                            cursor: "grab",
+                            opacity: isDragging ? 0.5 : 1,
+                            transition: "all 0.2s"
+                          },
+                          onClick: () => {
+                            setSelectedNode(node);
+                            setIsModalOpen(true);
+                            props.onNodeClick?.(node);
+                          },
+                          onMouseEnter: () => props.onNodeHover?.(node),
+                          onMouseLeave: () => props.onNodeHover?.(null),
+                          onDragStart: (e) => handleDragStart(node, e),
+                          onDragEnd: handleDragEnd,
+                          children: [
+                            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { style: { fontWeight: "bold", marginBottom: "4px" }, children: label }),
+                            status && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { style: { fontSize: "12px", color: "#666", marginBottom: "2px" }, children: [
+                              "Status: ",
+                              status
+                            ] }),
+                            priority && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { style: { fontSize: "12px", color: "#666" }, children: [
+                              "Priority: ",
+                              priority
+                            ] })
+                          ]
+                        },
+                        node.id
+                      );
+                    })
+                  }
+                )
+              ]
+            }
           )
-        ));
+        ] }, `column-${column.id}`);
       });
     };
-    return /* @__PURE__ */ import_react12.default.createElement(import_react12.default.Fragment, null, /* @__PURE__ */ import_react12.default.createElement(
-      "div",
-      {
-        ref: containerRef,
-        style: {
-          width: "100%",
-          height,
-          position: "relative"
-        },
-        onDragOver: (e) => {
-          e.preventDefault();
-        },
-        onDrop: (e) => {
-          e.preventDefault();
-          setDragOverColumn(null);
-        }
-      },
-      /* @__PURE__ */ import_react12.default.createElement("div", { style: {
-        display: "flex",
-        height: "100%",
-        overflow: "hidden",
-        userSelect: isResizing ? "none" : "auto"
-      } }, renderColumns()),
-      isResizing && /* @__PURE__ */ import_react12.default.createElement("div", { style: {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 1e3,
-        cursor: "col-resize"
-      } }),
-      draggedNode && /* @__PURE__ */ import_react12.default.createElement("div", { style: {
-        position: "absolute",
-        top: 10,
-        right: 10,
-        backgroundColor: "rgba(0, 122, 204, 0.9)",
-        color: "white",
-        padding: "5px 10px",
-        borderRadius: "4px",
-        fontSize: "12px",
-        zIndex: 1001
-      } }, "Dragging: ", draggedNode.label || draggedNode.id)
-    ), /* @__PURE__ */ import_react12.default.createElement(
-      NodeDetailsModal,
-      {
-        node: selectedNode,
-        isOpen: isModalOpen,
-        onClose: () => {
-          setIsModalOpen(false);
-          setSelectedNode(null);
-        }
-      }
-    ));
-  };
-
-  // src/grafeovidajo/charts/TreeGraph.tsx
-  var import_react13 = __toESM(require_react(), 1);
-  var TreeGraph = (props) => {
-    const extractTreeData = (graphData) => {
-      const treeEdges = graphData.edges?.filter(
-        (edge) => edge.attributes?.type === "parentOf"
-      ) || [];
-      const treeNodeIds = /* @__PURE__ */ new Set();
-      treeEdges.forEach((edge) => {
-        treeNodeIds.add(edge.source);
-        treeNodeIds.add(edge.target);
-      });
-      const treeNodes = graphData.nodes.filter(
-        (node) => treeNodeIds.has(node.id) || node.attributes?.type === "feature"
-      );
-      return {
-        nodes: treeNodes,
-        edges: treeEdges,
-        metadata: graphData.metadata
-      };
-    };
-    const treeData = extractTreeData(props.data);
-    return /* @__PURE__ */ import_react13.default.createElement(BaseChart, { ...props, data: treeData });
-  };
-
-  // src/grafeovidajo/charts/DebugGraph.tsx
-  var import_react14 = __toESM(require_react(), 1);
-  var DebugGraph = (props) => {
-    const [viewMode, setViewMode] = (0, import_react14.useState)(props.config.viewMode || "both");
-    const [useForceLayout, setUseForceLayout] = (0, import_react14.useState)(
-      props.config.projection?.layout === "force" || false
-    );
-    const [selectedNode, setSelectedNode] = (0, import_react14.useState)(null);
-    const [isModalOpen, setIsModalOpen] = (0, import_react14.useState)(false);
-    const debugConfig = {
-      ...props.config,
-      projection: {
-        xAttribute: props.config.projection.xAttribute || "id",
-        yAttribute: props.config.projection.yAttribute || "type",
-        xType: props.config.projection.xType || "categorical",
-        yType: props.config.projection.yType || "categorical",
-        layout: props.config.projection.layout || "grid",
-        spacing: props.config.projection.spacing || { x: 100, y: 100 }
-      },
-      style: {
-        ...props.config.style,
-        nodeSize: props.config.style?.nodeSize || 15,
-        nodeColor: props.config.style?.nodeColor || ((node) => {
-          const type = node.type || "unknown";
-          if (type === "test_result") {
-            const metadata = node.attributes?.metadata || {};
-            const result = metadata.result;
-            if (result === 0 || result === false) {
-              return Palette.bluishGreen;
-            } else if (result > 0) {
-              return Palette.amberGold;
-            } else if (result < 0 || result === true) {
-              return Palette.deepOrange;
-            }
-            return Palette.deepOrange;
-          }
-          if (type === "test") {
-            const metadata = node.attributes?.metadata || {};
-            const failed = metadata.failed;
-            if (failed === false) {
-              return Palette.bluishGreen;
-            } else if (failed === true) {
-              return Palette.deepOrange;
-            }
-          }
-          const typeColors = {
-            "feature": Palette.bluishGreen,
-            // Green
-            "entrypoint": Palette.rust,
-            // Purple
-            "test": Palette.amberGold,
-            // Orange
-            "test_result": Palette.deepOrange,
-            // Red
-            "file": Palette.warmGrey,
-            // Grey
-            "documentation": Palette.oliveDark,
-            // Dark Green
-            "config": Palette.charcoal,
-            // Charcoal
-            "attribute": Palette.amberGold,
-            // Amber for attribute nodes
-            "folder": Palette.oliveDark,
-            // Dark Green for folders
-            "url-folder": Palette.amberGold,
-            // Orange for URL folders (virtual)
-            "domain": Palette.rust,
-            // Purple for domain nodes
-            "aider": Palette.rust,
-            // Purple for aider nodes
-            "aider_process": Palette.rust,
-            // Purple for aider process nodes
-            "docker_process": Palette.warmGrey,
-            // Grey for docker process nodes
-            "bdd_process": Palette.amberGold,
-            // Orange for BDD process nodes
-            "check_process": Palette.amberGold,
-            // Orange for check process nodes
-            "builder_process": Palette.charcoal,
-            // Charcoal for builder process nodes
-            "unknown": Palette.charcoal
-            // Grey
-          };
-          return typeColors[type] || typeColors.unknown;
-        }),
-        nodeShape: props.config.style?.nodeShape || "circle",
-        labels: {
-          show: true,
-          attribute: "label",
-          fontSize: 12
-        },
-        edgeColor: "#999",
-        edgeWidth: 2
-      }
-    };
-    if (useForceLayout) {
-      debugConfig.projection.layout = "force";
-      if (props.config.forceLayout) {
-        debugConfig.projection = {
-          ...debugConfig.projection,
-          ...props.config.forceLayout
-        };
-      }
-    } else {
-      debugConfig.projection.layout = "grid";
-    }
-    const debugData = {
-      ...props.data,
-      nodes: props.data.nodes.map((node) => {
-        const id = node.id;
-        const parts = id.split(":");
-        const lastPart = parts[parts.length - 1];
-        const attributeNames = [
-          // 'isJson', 'size', 'modified', 
-          "testName",
-          "configKey",
-          "result",
-          "content",
-          "filePath",
-          "relativePath"
-        ];
-        const isAttributeNode = node.type === "attribute" || attributeNames.includes(lastPart);
-        return {
-          ...node,
-          attributes: {
-            ...node.attributes,
-            // Add debug info to label
-            debugLabel: props.config.showNodeIds ? `${node.id}` : node.attributes?.label || node.id,
-            // Add type to label if showing attributes
-            debugType: props.config.showAttributes ? `[${node.attributes?.type || "unknown"}]` : "",
-            // Mark if this is an attribute node
-            isAttributeNode
-          }
-        };
-      })
-    };
-    const handleNodeClick = (node) => {
-      setSelectedNode(node);
-      setIsModalOpen(true);
-      props.onNodeClick?.(node);
-    };
-    const handleModalClose = () => {
-      setIsModalOpen(false);
-      setSelectedNode(null);
-    };
-    const renderHtmlView = () => {
-      const { nodes, edges } = props.data;
-      return /* @__PURE__ */ import_react14.default.createElement("div", { style: {
-        display: "flex",
-        gap: "20px",
-        height: "100%",
-        fontFamily: "monospace",
-        fontSize: "12px"
-      } }, /* @__PURE__ */ import_react14.default.createElement("div", { style: {
-        flex: 1,
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        padding: "10px",
-        overflow: "auto"
-      } }, /* @__PURE__ */ import_react14.default.createElement("h3", { style: { marginTop: 0, marginBottom: "10px" } }, "Nodes (", nodes.length, ")"), /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "5px" } }, nodes.map((node) => /* @__PURE__ */ import_react14.default.createElement(
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
         "div",
         {
-          key: node.id,
+          ref: containerRef,
           style: {
-            padding: "8px",
-            border: "1px solid #e0e0e0",
-            borderRadius: "3px",
-            backgroundColor: "#f9f9f9",
-            cursor: "pointer",
-            transition: "background-color 0.2s"
+            width: "100%",
+            height,
+            position: "relative"
           },
-          onMouseEnter: () => props.onNodeHover?.(node),
-          onMouseLeave: () => props.onNodeHover?.(null),
-          onClick: () => handleNodeClick(node)
-        },
-        /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px", display: "flex", alignItems: "center", gap: "5px" } }, (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react14.default.createElement("span", { style: { fontSize: "14px" } }, (() => {
-          const icon = node.icon || node.attributes?.icon;
-          if (icon === "document") return "\u{1F4C4}";
-          if (icon === "folder") return "\u{1F4C1}";
-          if (icon === "globe") return "\u{1F310}";
-          if (icon === "file-text") return "\u{1F4DD}";
-          if (icon === "test") return "\u{1F9EA}";
-          if (icon === "circle") return "\u2B55";
-          if (icon === "play") return "\u25B6\uFE0F";
-          if (icon === "check") return "\u2705";
-          if (icon === "aider") return "\u{1F916}";
-          return "\u2753";
-        })()), node.id, node.attributes?.isAttributeNode && /* @__PURE__ */ import_react14.default.createElement("span", { style: {
-          marginLeft: "5px",
-          fontSize: "10px",
-          color: "#999",
-          fontStyle: "italic"
-        } }, "(attribute)")),
-        /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: { color: "#007acc" } }, node.type || "unknown")),
-        (node.icon || node.attributes?.icon) && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Icon: ", node.icon || node.attributes?.icon),
-        node.label && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Label: ", node.label),
-        node.metadata?.frontmatter?.status && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Status: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: {
-          color: node.metadata.frontmatter.status === "done" ? "#4CAF50" : node.metadata.frontmatter.status === "doing" ? "#FF9800" : node.metadata.frontmatter.status === "blocked" ? "#F44336" : "#666"
-        } }, node.metadata.frontmatter.status)),
-        node.metadata?.frontmatter?.priority && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Priority: ", node.metadata.frontmatter.priority)
-      )))), /* @__PURE__ */ import_react14.default.createElement("div", { style: {
-        flex: 1,
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        padding: "10px",
-        overflow: "auto"
-      } }, /* @__PURE__ */ import_react14.default.createElement("h3", { style: { marginTop: 0, marginBottom: "10px" } }, "Edges (", edges?.length || 0, ")"), /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "5px" } }, edges && edges.length > 0 ? edges.map((edge, index2) => /* @__PURE__ */ import_react14.default.createElement(
-        "div",
-        {
-          key: `${edge.source}-${edge.target}-${index2}`,
-          style: {
-            padding: "8px",
-            border: "1px solid #e0e0e0",
-            borderRadius: "3px",
-            backgroundColor: "#f9f9f9"
-          }
-        },
-        /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "3px" } }, edge.source, " \u2192 ", edge.target),
-        /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Type: ", /* @__PURE__ */ import_react14.default.createElement("span", { style: { color: "#007acc" } }, edge.attributes?.type || "unknown")),
-        edge.attributes?.timestamp && /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontSize: "11px", color: "#666" } }, "Timestamp: ", new Date(edge.attributes.timestamp).toLocaleString())
-      )) : /* @__PURE__ */ import_react14.default.createElement("div", { style: { padding: "10px", textAlign: "center", color: "#999" } }, "No edges in graph"))));
-    };
-    const renderSvgView = () => {
-      return /* @__PURE__ */ import_react14.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, /* @__PURE__ */ import_react14.default.createElement(
-        BaseChart,
-        {
-          ...props,
-          data: debugData,
-          config: debugConfig,
-          onNodeClick: handleNodeClick,
-          onNodeUpdate: props.onNodeUpdate
+          onDragOver: (e) => {
+            e.preventDefault();
+          },
+          onDrop: (e) => {
+            e.preventDefault();
+            setDragOverColumn(null);
+          },
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { style: {
+              display: "flex",
+              height: "100%",
+              overflow: "hidden",
+              userSelect: isResizing ? "none" : "auto"
+            }, children: renderColumns() }),
+            isResizing && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { style: {
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1e3,
+              cursor: "col-resize"
+            } }),
+            draggedNode && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { style: {
+              position: "absolute",
+              top: 10,
+              right: 10,
+              backgroundColor: "rgba(0, 122, 204, 0.9)",
+              color: "white",
+              padding: "5px 10px",
+              borderRadius: "4px",
+              fontSize: "12px",
+              zIndex: 1001
+            }, children: [
+              "Dragging: ",
+              draggedNode.label || draggedNode.id
+            ] })
+          ]
         }
-      ), /* @__PURE__ */ import_react14.default.createElement("div", { style: {
-        position: "absolute",
-        top: 50,
-        left: 10,
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
-        padding: "10px",
-        borderRadius: "5px",
-        fontSize: "12px",
-        fontFamily: "monospace",
-        border: "1px solid #ccc",
-        maxWidth: "300px",
-        zIndex: 10
-      } }, /* @__PURE__ */ import_react14.default.createElement("div", { style: { fontWeight: "bold", marginBottom: "5px" } }, "Graph Debug Info"), /* @__PURE__ */ import_react14.default.createElement("div", null, "Nodes: ", props.data.nodes.length), /* @__PURE__ */ import_react14.default.createElement("div", null, "Edges: ", props.data.edges?.length || 0), /* @__PURE__ */ import_react14.default.createElement("div", { style: { marginTop: "5px", fontWeight: "bold" } }, "Node Types:"), (() => {
-        const typeCounts = {};
-        props.data.nodes.forEach((node) => {
-          const type = node.type || "unknown";
-          typeCounts[type] = (typeCounts[type] || 0) + 1;
-        });
-        return Object.entries(typeCounts).map(([type, count]) => /* @__PURE__ */ import_react14.default.createElement("div", { key: type, style: { marginLeft: "10px" } }, type, ": ", count));
-      })(), /* @__PURE__ */ import_react14.default.createElement("div", { style: { marginTop: "5px", fontWeight: "bold" } }, "Edge Types:"), (() => {
-        const edgeTypeCounts = {};
-        props.data.edges?.forEach((edge) => {
-          const type = edge.attributes?.type || "unknown";
-          edgeTypeCounts[type] = (edgeTypeCounts[type] || 0) + 1;
-        });
-        return Object.entries(edgeTypeCounts).map(([type, count]) => /* @__PURE__ */ import_react14.default.createElement("div", { key: type, style: { marginLeft: "10px" } }, type, ": ", count));
-      })()));
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        NodeDetailsModal,
+        {
+          node: selectedNode,
+          isOpen: isModalOpen,
+          onClose: () => {
+            setIsModalOpen(false);
+            setSelectedNode(null);
+          }
+        }
+      )
+    ] });
+  };
+
+  // src/stakeholderApp/defaultViews/vscode/GanttChart.tsx
+  var import_react5 = __toESM(require_react(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var GanttChart = (props) => {
+    const { config, width, height } = props;
+    const [startTime, endTime] = config.timeRange;
+    const totalDuration = endTime.getTime() - startTime.getTime();
+    const renderTimeline = () => {
+      const hours = Math.ceil(totalDuration / (1e3 * 60 * 60));
+      const segments = Math.min(hours, 24);
+      return Array.from({ length: segments }).map((_, i) => {
+        const x3 = i / segments * width;
+        const time = new Date(startTime.getTime() + i / segments * totalDuration);
+        return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "line",
+            {
+              x1: x3,
+              y1: 0,
+              x2: x3,
+              y2: height,
+              stroke: "#eee",
+              strokeWidth: 1
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+            "text",
+            {
+              x: x3,
+              y: 15,
+              textAnchor: "middle",
+              fontSize: 10,
+              fill: "#666",
+              children: [
+                time.getHours().toString().padStart(2, "0"),
+                ":00"
+              ]
+            }
+          )
+        ] }, `timeline-${i}`);
+      });
     };
-    const renderViewModeSelector = () => {
-      return /* @__PURE__ */ import_react14.default.createElement("div", { style: {
-        position: "absolute",
-        top: 10,
-        left: 10,
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
-        padding: "8px",
-        borderRadius: "5px",
-        fontSize: "12px",
-        fontFamily: "monospace",
-        border: "1px solid #ccc",
-        zIndex: 10,
-        display: "flex",
-        gap: "5px",
-        flexWrap: "wrap",
-        maxWidth: "300px"
-      } }, /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", gap: "5px", flexWrap: "wrap" } }, /* @__PURE__ */ import_react14.default.createElement(
-        "button",
-        {
-          onClick: () => setViewMode("svg"),
-          style: {
-            padding: "4px 8px",
-            backgroundColor: viewMode === "svg" ? "#007acc" : "#f0f0f0",
-            color: viewMode === "svg" ? "white" : "#333",
-            border: "1px solid #ccc",
-            borderRadius: "3px",
-            cursor: "pointer",
-            fontSize: "11px"
-          }
-        },
-        "SVG"
-      ), /* @__PURE__ */ import_react14.default.createElement(
-        "button",
-        {
-          onClick: () => setViewMode("html"),
-          style: {
-            padding: "4px 8px",
-            backgroundColor: viewMode === "html" ? "#007acc" : "#f0f0f0",
-            color: viewMode === "html" ? "white" : "#333",
-            border: "1px solid #ccc",
-            borderRadius: "3px",
-            cursor: "pointer",
-            fontSize: "11px"
-          }
-        },
-        "HTML"
-      ), /* @__PURE__ */ import_react14.default.createElement(
-        "button",
-        {
-          onClick: () => setViewMode("both"),
-          style: {
-            padding: "4px 8px",
-            backgroundColor: viewMode === "both" ? "#007acc" : "#f0f0f0",
-            color: viewMode === "both" ? "white" : "#333",
-            border: "1px solid #ccc",
-            borderRadius: "3px",
-            cursor: "pointer",
-            fontSize: "11px"
-          }
-        },
-        "Both"
-      )), /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", gap: "5px", marginTop: "5px" } }, /* @__PURE__ */ import_react14.default.createElement(
-        "button",
-        {
-          onClick: () => setUseForceLayout(!useForceLayout),
-          style: {
-            padding: "4px 8px",
-            backgroundColor: useForceLayout ? "#4CAF50" : "#f0f0f0",
-            color: useForceLayout ? "white" : "#333",
-            border: "1px solid #ccc",
-            borderRadius: "3px",
-            cursor: "pointer",
-            fontSize: "11px"
-          }
-        },
-        useForceLayout ? "Force Layout" : "Grid Layout"
-      )));
-    };
-    const renderContent = () => {
-      switch (viewMode) {
-        case "svg":
-          return renderSvgView();
-        case "html":
-          return renderHtmlView();
-        case "both":
-          return /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", flexDirection: "column", height: "100%", gap: "10px" } }, /* @__PURE__ */ import_react14.default.createElement("div", { style: { flex: 1, border: "1px solid #ccc", borderRadius: "4px", overflow: "hidden" } }, renderSvgView()), /* @__PURE__ */ import_react14.default.createElement("div", { style: { flex: 1, border: "1px solid #ccc", borderRadius: "4px", overflow: "hidden" } }, renderHtmlView()));
-        default:
-          return renderSvgView();
-      }
-    };
-    return /* @__PURE__ */ import_react14.default.createElement("div", { style: { position: "relative", width: "100%", height: "100%" } }, renderViewModeSelector(), renderContent(), /* @__PURE__ */ import_react14.default.createElement(
-      NodeDetailsModal,
-      {
-        node: selectedNode,
-        isOpen: isModalOpen,
-        onClose: handleModalClose
-      }
-    ));
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("svg", { width, height, style: { border: "1px solid #ccc" }, children: [
+      renderTimeline(),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(BaseChart, { ...props })
+    ] });
   };
 
   // src/stakeholderApp/stateless/renderVisualization.tsx
-  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   var TreeViewWithSwitcher = ({ data, onNodeClick, onNodeHover }) => {
-    const [viewMode, setViewMode] = (0, import_react15.useState)("html");
-    const renderHtmlTree = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: {
+    const [viewMode, setViewMode] = (0, import_react6.useState)("html");
+    const renderHtmlTree = () => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { style: {
       border: "1px solid #ddd",
       borderRadius: "4px",
       padding: "20px",
       maxHeight: "500px",
       overflow: "auto"
-    }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
       HtmlTree,
       {
         data,
@@ -15684,13 +15495,13 @@ var TesterantoStakeholderApp = (() => {
           edgeWidth: 2
         }
       };
-      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: {
+      return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { style: {
         border: "1px solid #ddd",
         borderRadius: "4px",
         padding: "20px",
         height: "500px",
         overflow: "hidden"
-      }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
         TreeGraph,
         {
           data,
@@ -15704,25 +15515,25 @@ var TesterantoStakeholderApp = (() => {
         }
       ) });
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { style: {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: "15px"
       }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { style: { margin: 0 }, children: "Unified Tree View" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { style: { margin: "5px 0 0 0", color: "#666" }, children: "Combined view of features, files, and their relationships" })
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { style: { margin: 0 }, children: "Unified Tree View" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { style: { margin: "5px 0 0 0", color: "#666" }, children: "Combined view of features, files, and their relationships" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { style: {
           display: "flex",
           gap: "10px",
           backgroundColor: "#f5f5f5",
           padding: "5px",
           borderRadius: "6px"
         }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
             "button",
             {
               onClick: () => setViewMode("html"),
@@ -15739,7 +15550,7 @@ var TesterantoStakeholderApp = (() => {
               children: "HTML List"
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
             "button",
             {
               onClick: () => setViewMode("svg"),
@@ -15759,7 +15570,7 @@ var TesterantoStakeholderApp = (() => {
         ] })
       ] }),
       viewMode === "html" ? renderHtmlTree() : renderSvgTree(),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { style: {
         marginTop: "10px",
         fontSize: "0.9em",
         color: "#666",
@@ -15767,19 +15578,19 @@ var TesterantoStakeholderApp = (() => {
         justifyContent: "space-between",
         alignItems: "center"
       }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
           "Total nodes: ",
           data.nodes.length,
           " | Total edges: ",
           data.edges?.length || 0
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { display: "flex", gap: "10px" }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { style: {
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { style: { display: "flex", gap: "10px" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { style: {
             display: "inline-flex",
             alignItems: "center",
             gap: "5px"
           }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: {
               display: "inline-block",
               width: "12px",
               height: "12px",
@@ -15788,12 +15599,12 @@ var TesterantoStakeholderApp = (() => {
             } }),
             "Feature"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { style: {
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { style: {
             display: "inline-flex",
             alignItems: "center",
             gap: "5px"
           }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: {
               display: "inline-block",
               width: "12px",
               height: "12px",
@@ -15802,12 +15613,12 @@ var TesterantoStakeholderApp = (() => {
             } }),
             "File"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { style: {
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { style: {
             display: "inline-flex",
             alignItems: "center",
             gap: "5px"
           }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: {
               display: "inline-block",
               width: "12px",
               height: "12px",
@@ -15847,7 +15658,7 @@ var TesterantoStakeholderApp = (() => {
     const visited = /* @__PURE__ */ new Set();
     const renderNode = (node, depth = 0) => {
       if (visited.has(node.id)) {
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { style: { marginBottom: "5px", color: "#999" }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { marginLeft: `${depth * 20}px` }, children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("li", { style: { marginBottom: "5px", color: "#999" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { style: { marginLeft: `${depth * 20}px` }, children: [
           "\u26A0\uFE0F Cycle detected: ",
           node.attributes?.label || node.id
         ] }) }, node.id);
@@ -15909,8 +15720,8 @@ var TesterantoStakeholderApp = (() => {
           color = "#795548";
           break;
       }
-      const result = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { style: { marginBottom: "5px" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+      const result = /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("li", { style: { marginBottom: "5px" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
           "div",
           {
             style: {
@@ -15931,12 +15742,12 @@ var TesterantoStakeholderApp = (() => {
             onMouseEnter: () => onNodeHover?.(node),
             onMouseLeave: () => onNodeHover?.(null),
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { marginRight: "10px", fontSize: "1.1em" }, children: icon }),
-              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: { marginRight: "10px", fontSize: "1.1em" }, children: icon }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: {
                 fontWeight: children.length > 0 ? "600" : "normal",
                 flex: 1
               }, children: label }),
-              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: {
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: {
                 fontSize: "0.75em",
                 color: "#6c757d",
                 backgroundColor: "#e9ecef",
@@ -15947,7 +15758,7 @@ var TesterantoStakeholderApp = (() => {
             ]
           }
         ),
-        children.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { style: {
+        children.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("ul", { style: {
           listStyleType: "none",
           paddingLeft: "24px",
           marginTop: "8px",
@@ -15957,8 +15768,8 @@ var TesterantoStakeholderApp = (() => {
       visited.delete(node.id);
       return result;
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { style: {
         marginBottom: "15px",
         padding: "10px",
         backgroundColor: "#e9ecef",
@@ -15972,7 +15783,7 @@ var TesterantoStakeholderApp = (() => {
         " | Root nodes: ",
         displayNodes.length
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { style: {
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("ul", { style: {
         listStyleType: "none",
         paddingLeft: "0",
         margin: "0"
@@ -15988,10 +15799,10 @@ var TesterantoStakeholderApp = (() => {
   }) {
     const graphToUse = data.unifiedGraph;
     if (!graphToUse || !graphToUse.nodes || graphToUse.nodes.length === 0) {
-      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "No Graph Data Available" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Features need to be extracted from test results to create visualizations." }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Run tests to generate feature data." })
+      return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "No Graph Data Available" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "Features need to be extracted from test results to create visualizations." }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "Run tests to generate feature data." })
       ] });
     }
     const graphData = {
@@ -16038,10 +15849,10 @@ var TesterantoStakeholderApp = (() => {
     };
     switch (vizType) {
       case "eisenhower":
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Eisenhower Matrix" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Urgency vs Importance of features" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "Eisenhower Matrix" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "Urgency vs Importance of features" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
             EisenhowerMatrix,
             {
               ...commonProps,
@@ -16065,10 +15876,10 @@ var TesterantoStakeholderApp = (() => {
           )
         ] });
       case "gantt":
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Gantt Chart" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Feature timeline" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "Gantt Chart" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "Feature timeline" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
             GanttChart,
             {
               ...commonProps,
@@ -16082,10 +15893,10 @@ var TesterantoStakeholderApp = (() => {
           )
         ] });
       case "kanban":
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Kanban Board" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Feature status columns (including backlog for tickets without a status)" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "Kanban Board" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "Feature status columns (including backlog for tickets without a status)" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
             KanbanBoard,
             {
               ...commonProps,
@@ -16138,7 +15949,7 @@ var TesterantoStakeholderApp = (() => {
           )
         ] });
       case "tree":
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           TreeViewWithSwitcher,
           {
             data: graphData,
@@ -16147,19 +15958,643 @@ var TesterantoStakeholderApp = (() => {
           }
         );
       default:
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "Select a visualization type" });
+        return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { children: "Select a visualization type" });
     }
   }
 
+  // src/stakeholderApp/defaultViews/stakeholder/DebugGraph.tsx
+  var import_react7 = __toESM(require_react(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  var DebugGraph = (props) => {
+    const [viewMode, setViewMode] = (0, import_react7.useState)(props.config.viewMode || "both");
+    const [useForceLayout, setUseForceLayout] = (0, import_react7.useState)(
+      props.config.projection?.layout === "force" || false
+    );
+    const [selectedNode, setSelectedNode] = (0, import_react7.useState)(null);
+    const [isModalOpen, setIsModalOpen] = (0, import_react7.useState)(false);
+    const [nodeTypeFilters, setNodeTypeFilters] = (0, import_react7.useState)({});
+    const [edgeTypeFilters, setEdgeTypeFilters] = (0, import_react7.useState)({});
+    (0, import_react7.useEffect)(() => {
+      const newNodeFilters = {};
+      const newEdgeFilters = {};
+      props.data.nodes.forEach((node) => {
+        const type = node.type || "unknown";
+        if (!(type in newNodeFilters)) {
+          newNodeFilters[type] = true;
+        }
+      });
+      props.data.edges?.forEach((edge) => {
+        const type = edge.attributes?.type || "unknown";
+        if (!(type in newEdgeFilters)) {
+          newEdgeFilters[type] = true;
+        }
+      });
+      setNodeTypeFilters((prev) => ({ ...newNodeFilters, ...prev }));
+      setEdgeTypeFilters((prev) => ({ ...newEdgeFilters, ...prev }));
+    }, [props.data.nodes, props.data.edges]);
+    const toggleNodeTypeFilter = (0, import_react7.useCallback)((type) => {
+      setNodeTypeFilters((prev) => ({
+        ...prev,
+        [type]: !prev[type]
+      }));
+    }, []);
+    const toggleEdgeTypeFilter = (0, import_react7.useCallback)((type) => {
+      setEdgeTypeFilters((prev) => ({
+        ...prev,
+        [type]: !prev[type]
+      }));
+    }, []);
+    const filteredNodes = props.data.nodes.filter((node) => {
+      const type = node.type || "unknown";
+      return nodeTypeFilters[type] !== false;
+    });
+    const filteredEdges = props.data.edges?.filter((edge) => {
+      const type = edge.attributes?.type || "unknown";
+      return edgeTypeFilters[type] !== false;
+    });
+    const handleWheel = (0, import_react7.useCallback)((e) => {
+      e.stopPropagation();
+      e.preventDefault();
+    }, []);
+    const debugConfig = {
+      ...props.config,
+      projection: {
+        xAttribute: props.config.projection.xAttribute || "id",
+        yAttribute: props.config.projection.yAttribute || "type",
+        xType: props.config.projection.xType || "categorical",
+        yType: props.config.projection.yType || "categorical",
+        layout: props.config.projection.layout || "grid",
+        spacing: props.config.projection.spacing || { x: 100, y: 100 }
+      },
+      style: {
+        ...props.config.style,
+        nodeSize: props.config.style?.nodeSize || 15,
+        nodeColor: props.config.style?.nodeColor || ((node) => {
+          const type = node.type || "unknown";
+          if (type === "test_result") {
+            const metadata = node.attributes?.metadata || {};
+            const result = metadata.result;
+            if (result === 0 || result === false) {
+              return Palette2.bluishGreen;
+            } else if (result > 0) {
+              return Palette2.amberGold;
+            } else if (result < 0 || result === true) {
+              return Palette2.deepOrange;
+            }
+            return Palette2.deepOrange;
+          }
+          if (type === "test") {
+            const metadata = node.attributes?.metadata || {};
+            const failed = metadata.failed;
+            if (failed === false) {
+              return Palette2.bluishGreen;
+            } else if (failed === true) {
+              return Palette2.deepOrange;
+            }
+          }
+          const typeColors = {
+            "feature": Palette2.bluishGreen,
+            // Green
+            "entrypoint": Palette2.rust,
+            // Purple
+            "test": Palette2.amberGold,
+            // Orange
+            "test_result": Palette2.deepOrange,
+            // Red
+            "file": Palette2.warmGrey,
+            // Grey
+            "documentation": Palette2.oliveDark,
+            // Dark Green
+            "config": Palette2.charcoal,
+            // Charcoal
+            "attribute": Palette2.amberGold,
+            // Amber for attribute nodes
+            "folder": Palette2.oliveDark,
+            // Dark Green for folders
+            "url-folder": Palette2.amberGold,
+            // Orange for URL folders (virtual)
+            "domain": Palette2.rust,
+            // Purple for domain nodes
+            "aider": Palette2.rust,
+            // Purple for aider nodes
+            "aider_process": Palette2.rust,
+            // Purple for aider process nodes
+            "docker_process": Palette2.warmGrey,
+            // Grey for docker process nodes
+            "bdd_process": Palette2.amberGold,
+            // Orange for BDD process nodes
+            "check_process": Palette2.amberGold,
+            // Orange for check process nodes
+            "builder_process": Palette2.charcoal,
+            // Charcoal for builder process nodes
+            "unknown": Palette2.charcoal
+            // Grey
+          };
+          return typeColors[type] || typeColors.unknown;
+        }),
+        nodeShape: props.config.style?.nodeShape || "circle",
+        labels: {
+          show: true,
+          attribute: "label",
+          fontSize: 12
+        },
+        edgeColor: "#999",
+        edgeWidth: 2
+      }
+    };
+    if (useForceLayout) {
+      debugConfig.projection.layout = "force";
+      if (props.config.forceLayout) {
+        debugConfig.projection = {
+          ...debugConfig.projection,
+          ...props.config.forceLayout
+        };
+      }
+    } else {
+      debugConfig.projection.layout = "grid";
+    }
+    const debugData = {
+      ...props.data,
+      nodes: filteredNodes.map((node) => {
+        const id = node.id;
+        const parts = id.split(":");
+        const lastPart = parts[parts.length - 1];
+        const attributeNames = [
+          "testName",
+          "configKey",
+          "result",
+          "content",
+          "filePath",
+          "relativePath"
+        ];
+        const isAttributeNode = node.type === "attribute" || attributeNames.includes(lastPart);
+        return {
+          ...node,
+          attributes: {
+            ...node.attributes,
+            // Add debug info to label
+            debugLabel: props.config.showNodeIds ? `${node.id}` : node.attributes?.label || node.id,
+            // Add type to label if showing attributes
+            debugType: props.config.showAttributes ? `[${node.attributes?.type || "unknown"}]` : "",
+            // Mark if this is an attribute node
+            isAttributeNode
+          }
+        };
+      }),
+      edges: filteredEdges
+    };
+    const handleNodeClick = (node) => {
+      setSelectedNode(node);
+      setIsModalOpen(true);
+      props.onNodeClick?.(node);
+    };
+    const handleModalClose = () => {
+      setIsModalOpen(false);
+      setSelectedNode(null);
+    };
+    const renderHtmlView = () => {
+      const nodes = filteredNodes;
+      const edges = filteredEdges;
+      return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+        display: "flex",
+        gap: "20px",
+        height: "100%",
+        fontFamily: "monospace",
+        fontSize: "12px"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+          flex: 1,
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          padding: "10px",
+          overflow: "auto"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("h3", { style: { marginTop: 0, marginBottom: "10px" }, children: [
+            "Nodes (",
+            nodes.length,
+            ")"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: "5px" }, children: nodes.map((node) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+            "div",
+            {
+              style: {
+                padding: "8px",
+                border: "1px solid #e0e0e0",
+                borderRadius: "3px",
+                backgroundColor: "#f9f9f9",
+                cursor: "pointer",
+                transition: "background-color 0.2s"
+              },
+              onMouseEnter: () => props.onNodeHover?.(node),
+              onMouseLeave: () => props.onNodeHover?.(null),
+              onClick: () => handleNodeClick(node),
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontWeight: "bold", marginBottom: "3px", display: "flex", alignItems: "center", gap: "5px" }, children: [
+                  (node.icon || node.attributes?.icon) && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { style: { fontSize: "14px" }, children: (() => {
+                    const icon = node.icon || node.attributes?.icon;
+                    if (icon === "document") return "\u{1F4C4}";
+                    if (icon === "folder") return "\u{1F4C1}";
+                    if (icon === "globe") return "\u{1F310}";
+                    if (icon === "file-text") return "\u{1F4DD}";
+                    if (icon === "test") return "\u{1F9EA}";
+                    if (icon === "circle") return "\u2B55";
+                    if (icon === "play") return "\u25B6\uFE0F";
+                    if (icon === "check") return "\u2705";
+                    if (icon === "aider") return "\u{1F916}";
+                    return "\u2753";
+                  })() }),
+                  node.id,
+                  node.attributes?.isAttributeNode && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { style: {
+                    marginLeft: "5px",
+                    fontSize: "10px",
+                    color: "#999",
+                    fontStyle: "italic"
+                  }, children: "(attribute)" })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontSize: "11px", color: "#666" }, children: [
+                  "Type: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { style: { color: "#007acc" }, children: node.type || "unknown" })
+                ] }),
+                (node.icon || node.attributes?.icon) && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontSize: "11px", color: "#666" }, children: [
+                  "Icon: ",
+                  node.icon || node.attributes?.icon
+                ] }),
+                node.label && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontSize: "11px", color: "#666" }, children: [
+                  "Label: ",
+                  node.label
+                ] }),
+                node.metadata?.frontmatter?.status && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontSize: "11px", color: "#666" }, children: [
+                  "Status: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { style: {
+                    color: node.metadata.frontmatter.status === "done" ? "#4CAF50" : node.metadata.frontmatter.status === "doing" ? "#FF9800" : node.metadata.frontmatter.status === "blocked" ? "#F44336" : "#666"
+                  }, children: node.metadata.frontmatter.status })
+                ] }),
+                node.metadata?.frontmatter?.priority && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontSize: "11px", color: "#666" }, children: [
+                  "Priority: ",
+                  node.metadata.frontmatter.priority
+                ] })
+              ]
+            },
+            node.id
+          )) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+          flex: 1,
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          padding: "10px",
+          overflow: "auto"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("h3", { style: { marginTop: 0, marginBottom: "10px" }, children: [
+            "Edges (",
+            edges?.length || 0,
+            ")"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: "5px" }, children: edges && edges.length > 0 ? edges.map((edge, index2) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+            "div",
+            {
+              style: {
+                padding: "8px",
+                border: "1px solid #e0e0e0",
+                borderRadius: "3px",
+                backgroundColor: "#f9f9f9"
+              },
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontWeight: "bold", marginBottom: "3px" }, children: [
+                  edge.source,
+                  " \u2192 ",
+                  edge.target
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontSize: "11px", color: "#666" }, children: [
+                  "Type: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { style: { color: "#007acc" }, children: edge.attributes?.type || "unknown" })
+                ] }),
+                edge.attributes?.timestamp && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontSize: "11px", color: "#666" }, children: [
+                  "Timestamp: ",
+                  new Date(edge.attributes.timestamp).toLocaleString()
+                ] })
+              ]
+            },
+            `${edge.source}-${edge.target}-${index2}`
+          )) : /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { padding: "10px", textAlign: "center", color: "#999" }, children: "No edges in graph" }) })
+        ] })
+      ] });
+    };
+    const renderSvgView = () => {
+      return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+        "div",
+        {
+          style: {
+            position: "relative",
+            width: "100%",
+            height: "100%",
+            minHeight: "600px"
+            // Make visualization bigger
+          },
+          onWheel: handleWheel,
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+              BaseChart,
+              {
+                ...props,
+                data: debugData,
+                config: debugConfig,
+                onNodeClick: handleNodeClick,
+                onNodeUpdate: props.onNodeUpdate
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+              position: "absolute",
+              top: 50,
+              left: 10,
+              backgroundColor: "rgba(255, 255, 255, 0.95)",
+              padding: "10px",
+              borderRadius: "5px",
+              fontSize: "12px",
+              fontFamily: "monospace",
+              border: "1px solid #ccc",
+              maxWidth: "300px",
+              zIndex: 10,
+              boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
+            }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { fontWeight: "bold", marginBottom: "5px", fontSize: "14px" }, children: "Graph Debug Info" }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
+                "Nodes: ",
+                filteredNodes.length,
+                "/",
+                props.data.nodes.length
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
+                "Edges: ",
+                filteredEdges?.length || 0,
+                "/",
+                props.data.edges?.length || 0
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { marginTop: "5px", fontWeight: "bold" }, children: "Node Types:" }),
+              (() => {
+                const typeCounts = {};
+                filteredNodes.forEach((node) => {
+                  const type = node.type || "unknown";
+                  typeCounts[type] = (typeCounts[type] || 0) + 1;
+                });
+                return Object.entries(typeCounts).map(([type, count]) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { marginLeft: "10px" }, children: [
+                  type,
+                  ": ",
+                  count
+                ] }, type));
+              })(),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { marginTop: "5px", fontWeight: "bold" }, children: "Edge Types:" }),
+              (() => {
+                const edgeTypeCounts = {};
+                filteredEdges?.forEach((edge) => {
+                  const type = edge.attributes?.type || "unknown";
+                  edgeTypeCounts[type] = (edgeTypeCounts[type] || 0) + 1;
+                });
+                return Object.entries(edgeTypeCounts).map(([type, count]) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { marginLeft: "10px" }, children: [
+                  type,
+                  ": ",
+                  count
+                ] }, type));
+              })()
+            ] })
+          ]
+        }
+      );
+    };
+    const renderLegend = () => {
+      const nodeTypes = Object.keys(nodeTypeFilters);
+      const edgeTypes = Object.keys(edgeTypeFilters);
+      return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+        backgroundColor: "rgba(255, 255, 255, 0.95)",
+        padding: "10px",
+        borderRadius: "5px",
+        fontSize: "12px",
+        fontFamily: "monospace",
+        border: "1px solid #ccc",
+        zIndex: 10,
+        maxWidth: "250px",
+        maxHeight: "80vh",
+        overflowY: "auto",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { fontWeight: "bold", marginBottom: "10px", fontSize: "14px" }, children: "Filter by Type" }),
+        nodeTypes.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { marginBottom: "15px" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontWeight: "bold", marginBottom: "5px", color: "#007acc" }, children: [
+            "Node Types (",
+            filteredNodes.length,
+            "/",
+            props.data.nodes.length,
+            ")"
+          ] }),
+          nodeTypes.map((type) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { display: "flex", alignItems: "center", marginBottom: "3px" }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+              "input",
+              {
+                type: "checkbox",
+                id: `node-${type}`,
+                checked: nodeTypeFilters[type] !== false,
+                onChange: () => toggleNodeTypeFilter(type),
+                style: { marginRight: "6px", cursor: "pointer" }
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+              "label",
+              {
+                htmlFor: `node-${type}`,
+                style: {
+                  cursor: "pointer",
+                  color: nodeTypeFilters[type] !== false ? "#000" : "#999"
+                },
+                children: [
+                  type,
+                  " (",
+                  props.data.nodes.filter((n) => (n.type || "unknown") === type).length,
+                  ")"
+                ]
+              }
+            )
+          ] }, `node-${type}`))
+        ] }),
+        edgeTypes.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontWeight: "bold", marginBottom: "5px", color: "#4CAF50" }, children: [
+            "Edge Types (",
+            filteredEdges?.length || 0,
+            "/",
+            props.data.edges?.length || 0,
+            ")"
+          ] }),
+          edgeTypes.map((type) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { display: "flex", alignItems: "center", marginBottom: "3px" }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+              "input",
+              {
+                type: "checkbox",
+                id: `edge-${type}`,
+                checked: edgeTypeFilters[type] !== false,
+                onChange: () => toggleEdgeTypeFilter(type),
+                style: { marginRight: "6px", cursor: "pointer" }
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+              "label",
+              {
+                htmlFor: `edge-${type}`,
+                style: {
+                  cursor: "pointer",
+                  color: edgeTypeFilters[type] !== false ? "#000" : "#999"
+                },
+                children: [
+                  type,
+                  " (",
+                  props.data.edges?.filter((e) => (e.attributes?.type || "unknown") === type).length || 0,
+                  ")"
+                ]
+              }
+            )
+          ] }, `edge-${type}`))
+        ] })
+      ] });
+    };
+    const renderViewModeSelector = () => {
+      return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+        position: "absolute",
+        top: 10,
+        left: 10,
+        backgroundColor: "rgba(255, 255, 255, 0.95)",
+        padding: "8px",
+        borderRadius: "5px",
+        fontSize: "12px",
+        fontFamily: "monospace",
+        border: "1px solid #ccc",
+        zIndex: 10,
+        display: "flex",
+        gap: "5px",
+        flexWrap: "wrap",
+        maxWidth: "300px",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { display: "flex", gap: "5px", flexWrap: "wrap" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+            "button",
+            {
+              onClick: () => setViewMode("svg"),
+              style: {
+                padding: "4px 8px",
+                backgroundColor: viewMode === "svg" ? "#007acc" : "#f0f0f0",
+                color: viewMode === "svg" ? "white" : "#333",
+                border: "1px solid #ccc",
+                borderRadius: "3px",
+                cursor: "pointer",
+                fontSize: "11px"
+              },
+              children: "SVG"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+            "button",
+            {
+              onClick: () => setViewMode("html"),
+              style: {
+                padding: "4px 8px",
+                backgroundColor: viewMode === "html" ? "#007acc" : "#f0f0f0",
+                color: viewMode === "html" ? "white" : "#333",
+                border: "1px solid #ccc",
+                borderRadius: "3px",
+                cursor: "pointer",
+                fontSize: "11px"
+              },
+              children: "HTML"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+            "button",
+            {
+              onClick: () => setViewMode("both"),
+              style: {
+                padding: "4px 8px",
+                backgroundColor: viewMode === "both" ? "#007acc" : "#f0f0f0",
+                color: viewMode === "both" ? "white" : "#333",
+                border: "1px solid #ccc",
+                borderRadius: "3px",
+                cursor: "pointer",
+                fontSize: "11px"
+              },
+              children: "Both"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { display: "flex", gap: "5px", marginTop: "5px" }, children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "button",
+          {
+            onClick: () => setUseForceLayout(!useForceLayout),
+            style: {
+              padding: "4px 8px",
+              backgroundColor: useForceLayout ? "#4CAF50" : "#f0f0f0",
+              color: useForceLayout ? "white" : "#333",
+              border: "1px solid #ccc",
+              borderRadius: "3px",
+              cursor: "pointer",
+              fontSize: "11px"
+            },
+            children: useForceLayout ? "Force Layout" : "Grid Layout"
+          }
+        ) })
+      ] });
+    };
+    const renderContent = () => {
+      switch (viewMode) {
+        case "svg":
+          return renderSvgView();
+        case "html":
+          return renderHtmlView();
+        case "both":
+          return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { display: "flex", flexDirection: "column", height: "100%", gap: "10px" }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { flex: 1, border: "1px solid #ccc", borderRadius: "4px", overflow: "hidden" }, children: renderSvgView() }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { flex: 1, border: "1px solid #ccc", borderRadius: "4px", overflow: "hidden" }, children: renderHtmlView() })
+          ] });
+        default:
+          return renderSvgView();
+      }
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+      "div",
+      {
+        style: {
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          minHeight: "800px"
+          // Make the whole component bigger
+        },
+        onWheel: handleWheel,
+        children: [
+          renderViewModeSelector(),
+          renderLegend(),
+          renderContent(),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+            NodeDetailsModal,
+            {
+              node: selectedNode,
+              isOpen: isModalOpen,
+              onClose: handleModalClose
+            }
+          )
+        ]
+      }
+    );
+  };
+
   // src/stakeholderApp/VisualizationTabs.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
   var VisualizationTabs = ({
     data,
     onNodeClick,
     onNodeHover,
     onNodeUpdate
   }) => {
-    const [activeTab, setActiveTab] = (0, import_react16.useState)("tree");
+    const [activeTab, setActiveTab] = (0, import_react8.useState)("tree");
     const stats = getFeatureGraphStats(data.unifiedGraph);
     const tabs = [
       { id: "tree", label: "Unified Tree" },
@@ -16170,9 +16605,9 @@ var TesterantoStakeholderApp = (() => {
     ];
     const renderDebugView = () => {
       if (!data.unifiedGraph) {
-        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { children: "No Unified Graph Data Available" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: "The unified graph data is not available in the current data structure." })
+        return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h3", { children: "No Unified Graph Data Available" }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: "The unified graph data is not available in the current data structure." })
         ] });
       }
       const debugConfig = {
@@ -16198,41 +16633,41 @@ var TesterantoStakeholderApp = (() => {
             if (type === "test_result") {
               const result = metadata.result;
               if (result === 0 || result === false) {
-                return Palette.bluishGreen;
+                return Palette2.bluishGreen;
               } else if (result > 0) {
-                return Palette.amberGold;
+                return Palette2.amberGold;
               } else if (result < 0 || result === true) {
-                return Palette.deepOrange;
+                return Palette2.deepOrange;
               }
-              return Palette.deepOrange;
+              return Palette2.deepOrange;
             }
             if (type === "test") {
               const failed = metadata.failed;
               if (failed === false) {
-                return Palette.bluishGreen;
+                return Palette2.bluishGreen;
               } else if (failed === true) {
-                return Palette.deepOrange;
+                return Palette2.deepOrange;
               }
             }
             if (type === "folder") {
               if (metadata.isVirtual) {
-                return Palette.amberGold;
+                return Palette2.amberGold;
               } else {
-                return Palette.oliveDark;
+                return Palette2.oliveDark;
               }
             }
             const typeColors = {
-              "feature": Palette.bluishGreen,
-              "entrypoint": Palette.rust,
-              "test": Palette.amberGold,
-              "test_result": Palette.deepOrange,
-              "file": Palette.warmGrey,
-              "documentation": Palette.oliveDark,
-              "config": Palette.charcoal,
-              "attribute": Palette.amberGold,
-              "folder": Palette.oliveDark,
-              "domain": Palette.rust,
-              "unknown": Palette.charcoal
+              "feature": Palette2.bluishGreen,
+              "entrypoint": Palette2.rust,
+              "test": Palette2.amberGold,
+              "test_result": Palette2.deepOrange,
+              "file": Palette2.warmGrey,
+              "documentation": Palette2.oliveDark,
+              "config": Palette2.charcoal,
+              "attribute": Palette2.amberGold,
+              "folder": Palette2.oliveDark,
+              "domain": Palette2.rust,
+              "unknown": Palette2.charcoal
             };
             return typeColors[type] || typeColors.unknown;
           },
@@ -16256,7 +16691,7 @@ var TesterantoStakeholderApp = (() => {
           // Number of iterations to run
         }
       };
-      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
         DebugGraph,
         {
           data: data.unifiedGraph,
@@ -16269,13 +16704,13 @@ var TesterantoStakeholderApp = (() => {
         }
       );
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginBottom: "20px" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { style: { marginBottom: "20px" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { style: {
           display: "flex",
           borderBottom: "2px solid #e0e0e0",
           marginBottom: "20px"
-        }, children: tabs.map((tab) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+        }, children: tabs.map((tab) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
           "button",
           {
             onClick: () => setActiveTab(tab.id),
@@ -16296,7 +16731,7 @@ var TesterantoStakeholderApp = (() => {
           },
           tab.id
         )) }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { style: {
           border: "1px solid #ddd",
           borderRadius: "8px",
           padding: "20px",
@@ -16310,7 +16745,7 @@ var TesterantoStakeholderApp = (() => {
           onNodeUpdate
         }) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
         "div",
         {
           style: {
@@ -16319,30 +16754,30 @@ var TesterantoStakeholderApp = (() => {
             borderRadius: "4px"
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { children: "Feature Graph Statistics" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: "20px", flexWrap: "wrap" }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Total Features:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Feature Graph Statistics" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { style: { display: "flex", gap: "20px", flexWrap: "wrap" }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: "Total Features:" }),
                 " ",
                 stats.totalFeatures
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Dependencies:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: "Dependencies:" }),
                 " ",
                 stats.dependencies
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Todo:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: "Todo:" }),
                 " ",
                 stats.todo
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Doing:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: "Doing:" }),
                 " ",
                 stats.doing
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Done:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: "Done:" }),
                 " ",
                 stats.done
               ] })
@@ -16497,16 +16932,16 @@ var TesterantoStakeholderApp = (() => {
   }
 
   // testeranto/reports/index.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
   var isDevelopmentMode = typeof window !== "undefined" && window.location.hostname.includes("localhost") && window.location.protocol.startsWith("http");
   console.log(`[StakeholderApp] Mode: ${isDevelopmentMode ? "Development (WebSocket enabled)" : "Static (read-only)"}`);
   var DefaultStakeholderApp = () => {
-    const [data, setData] = import_react17.default.useState(null);
-    const [loading, setLoading] = import_react17.default.useState(true);
-    const [error, setError] = import_react17.default.useState(null);
-    const [graphClient, setGraphClient] = import_react17.default.useState(null);
-    const [wsConnected, setWsConnected] = import_react17.default.useState(false);
-    import_react17.default.useEffect(() => {
+    const [data, setData] = import_react9.default.useState(null);
+    const [loading, setLoading] = import_react9.default.useState(true);
+    const [error, setError] = import_react9.default.useState(null);
+    const [graphClient, setGraphClient] = import_react9.default.useState(null);
+    const [wsConnected, setWsConnected] = import_react9.default.useState(false);
+    import_react9.default.useEffect(() => {
       if (data && !graphClient) {
         const client = new StakeholderGraphClient((updatedGraphData) => {
           setData((prev) => prev ? {
@@ -16522,7 +16957,7 @@ var TesterantoStakeholderApp = (() => {
         }
       };
     }, [data, graphClient]);
-    import_react17.default.useEffect(() => {
+    import_react9.default.useEffect(() => {
       const loadData = async () => {
         setLoading(true);
         setError(null);
@@ -16588,16 +17023,16 @@ var TesterantoStakeholderApp = (() => {
       loadData();
     }, []);
     if (loading) {
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { children: "Loading Testeranto Stakeholder Report..." }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "Attempting to load data..." })
+      return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { children: "Loading Testeranto Stakeholder Report..." }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { children: "Attempting to load data..." })
       ] });
     }
     if (error || !data) {
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h1", { style: { color: "#d32f2f" }, children: "Error Loading Report" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: error || "No data could be loaded." }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "Please make sure the Testeranto server has generated the report files." })
+      return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h1", { style: { color: "#d32f2f" }, children: "Error Loading Report" }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { children: error || "No data could be loaded." }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { children: "Please make sure the Testeranto server has generated the report files." })
       ] });
     }
     const handleNodeClick = (node) => {
@@ -16628,37 +17063,37 @@ var TesterantoStakeholderApp = (() => {
       }
     };
     if (loading) {
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { children: "Loading Testeranto Stakeholder Report..." }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "Attempting to load data..." }),
-        isDevelopmentMode && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { fontSize: "0.9em", color: "#666" }, children: "Development mode: WebSocket will connect after loading" })
+      return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { children: "Loading Testeranto Stakeholder Report..." }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { children: "Attempting to load data..." }),
+        isDevelopmentMode && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { style: { fontSize: "0.9em", color: "#666" }, children: "Development mode: WebSocket will connect after loading" })
       ] });
     }
     if (error || !data) {
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h1", { style: { color: "#d32f2f" }, children: "Error Loading Report" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: error || "No data could be loaded." }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "Please make sure the Testeranto server has generated the report files." }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { style: { fontSize: "0.9em", color: "#666" }, children: [
+      return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { padding: "40px", textAlign: "center" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h1", { style: { color: "#d32f2f" }, children: "Error Loading Report" }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { children: error || "No data could be loaded." }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { children: "Please make sure the Testeranto server has generated the report files." }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("p", { style: { fontSize: "0.9em", color: "#666" }, children: [
           "Mode: ",
           isDevelopmentMode ? "Development" : "Static",
           " | Tried loading from: graph-data.json, /testeranto/reports/graph-data.json, ./graph-data.json"
         ] })
       ] });
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: "20px", fontFamily: "sans-serif" }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h1", { children: "Testeranto Stakeholder Report" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { fontSize: "0.9em", color: "#666" }, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { padding: "20px", fontFamily: "sans-serif" }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h1", { children: "Testeranto Stakeholder Report" }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { fontSize: "0.9em", color: "#666" }, children: [
           "Mode: ",
-          isDevelopmentMode ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { color: "#2e7d32", fontWeight: "bold" }, children: "Development" }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { color: "#666", fontWeight: "bold" }, children: "Static (read-only)" }),
-          isDevelopmentMode && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginTop: "5px", fontSize: "0.8em" }, children: [
+          isDevelopmentMode ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { style: { color: "#2e7d32", fontWeight: "bold" }, children: "Development" }) : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { style: { color: "#666", fontWeight: "bold" }, children: "Static (read-only)" }),
+          isDevelopmentMode && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { marginTop: "5px", fontSize: "0.8em" }, children: [
             "WebSocket: ",
-            wsConnected ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { color: "#2e7d32" }, children: "Connected" }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { color: "#d32f2f" }, children: "Disconnected" })
+            wsConnected ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { style: { color: "#2e7d32" }, children: "Connected" }) : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { style: { color: "#d32f2f" }, children: "Disconnected" })
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { marginBottom: "20px" }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { style: { marginBottom: "20px" }, children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
         VisualizationTabs,
         {
           data,
@@ -16667,8 +17102,8 @@ var TesterantoStakeholderApp = (() => {
           onNodeUpdate: handleNodeUpdate
         }
       ) }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { fontSize: "0.8em", color: "#666", marginTop: "30px", paddingTop: "10px", borderTop: "1px solid #eee" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { fontSize: "0.8em", color: "#666", marginTop: "30px", paddingTop: "10px", borderTop: "1px solid #eee" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("p", { children: [
           "Data loaded from graph-data.json | Last updated: ",
           data.timestamp ? new Date(data.timestamp).toLocaleString() : "Unknown",
           " | Graph nodes: ",
@@ -16676,14 +17111,14 @@ var TesterantoStakeholderApp = (() => {
           " | Graph edges: ",
           data.unifiedGraph?.edges?.length || 0
         ] }),
-        !isDevelopmentMode && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { fontStyle: "italic" }, children: "Note: Running in static mode. To enable live updates, run the Testeranto server locally." })
+        !isDevelopmentMode && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { style: { fontStyle: "italic" }, children: "Note: Running in static mode. To enable live updates, run the Testeranto server locally." })
       ] })
     ] });
   };
   function renderApp(rootElement) {
     const root = import_client.default.createRoot(rootElement);
     root.render(
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_react17.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(DefaultStakeholderApp, {}) })
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_react9.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(DefaultStakeholderApp, {}) })
     );
   }
   var index_default = DefaultStakeholderApp;

@@ -1,3 +1,5 @@
+import { existsSync } from "fs";
+import path from "path";
 import { getDocumentationFilesFromGlob } from "./getDocumentationFilesFromGlob";
 
 /**
@@ -5,8 +7,7 @@ import { getDocumentationFilesFromGlob } from "./getDocumentationFilesFromGlob";
  */
 export async function getDocumentationData(configs: any): Promise<any> {
   const fs = require("fs").promises;
-  const path = require("path");
-  const { existsSync } = require("fs");
+
 
   // First, try to get documentation files from the glob pattern
   const docFiles = getDocumentationFilesFromGlob(configs?.documentationGlob);

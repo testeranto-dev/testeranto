@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
+import { ApiUtils } from './utils/apiUtils';
 
 interface GraphNode {
   id: string;
@@ -33,33 +34,37 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
   constructor() {
     super();
     console.log('[TestTreeDataProvider] Constructor called');
-    this.loadGraphData();
+    // Load data asynchronously
+    setTimeout(() => {
+      this.loadGraphData().then(() => {
+        this._onDidChangeTreeData.fire();
+      });
+    }, 100);
   }
 
-  private loadGraphData(): void {
+  private async loadGraphData(): Promise<void> {
     try {
-      const workspaceFolders = vscode.workspace.workspaceFolders;
-      if (!workspaceFolders || workspaceFolders.length === 0) {
-        return;
+      console.log('[TestTreeDataProvider] Loading graph data from runtime slice');
+      const response = await fetch(ApiUtils.getRuntimeSliceUrl());
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      const workspaceRoot = workspaceFolders[0].uri.fsPath;
-      this.graphDataPath = path.join(workspaceRoot, 'testeranto', 'reports', 'graph-data.json');
-      
-      if (fs.existsSync(this.graphDataPath)) {
-        const content = fs.readFileSync(this.graphDataPath, 'utf-8');
-        const parsed = JSON.parse(content);
-        this.graphData = parsed.data?.unifiedGraph || { nodes: [], edges: [] };
-        console.log(`[TestTreeDataProvider] Loaded graph with ${this.graphData.nodes.length} nodes`);
-      }
+      const data = await response.json();
+      this.graphData = data;
+      console.log('[TestTreeDataProvider] Loaded graph data:', this.graphData?.nodes?.length, 'nodes');
     } catch (error) {
-      console.error('[TestTreeDataProvider] Error loading graph data:', error);
+      console.error('[TestTreeDataProvider] Failed to load graph data:', error);
+      this.graphData = null;
     }
   }
 
   refresh(): void {
-    this.loadGraphData();
-    this._onDidChangeTreeData.fire();
+    this.loadGraphData().then(() => {
+      this._onDidChangeTreeData.fire();
+    }).catch(error => {
+      console.error('[TestTreeDataProvider] Error in refresh:', error);
+      this._onDidChangeTreeData.fire();
+    });
   }
 
   getTreeItem(element: TestTreeItem): vscode.TreeItem {
@@ -93,7 +98,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       case TreeItemType.Info:
         // Handle info items (like input/output file folders)
         if (elementData.section === 'input-files' || elementData.section === 'output-files' ||
-            elementData.section === 'test-input-files' || elementData.section === 'test-output-files') {
+          elementData.section === 'test-input-files' || elementData.section === 'test-output-files') {
           return element.children || [];
         }
         return [];
@@ -109,13 +114,13 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
     if (!this.graphData) return [];
 
     // Find all config nodes (represent runtimes)
-    const configNodes = this.graphData.nodes.filter(node => 
+    const configNodes = this.graphData.nodes.filter(node =>
       node.type === 'config' || (node.metadata?.configKey && node.metadata?.runtime)
     );
 
     // Group by runtime
     const runtimeMap = new Map<string, { count: number; nodes: GraphNode[] }>();
-    
+
     for (const node of configNodes) {
       const runtimeKey = node.metadata?.configKey || node.metadata?.runtime || 'unknown';
       const current = runtimeMap.get(runtimeKey) || { count: 0, nodes: [] };
@@ -166,8 +171,8 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
     if (!this.graphData) return [];
 
     // Find entrypoint nodes for this runtime
-    const entrypointNodes = this.graphData.nodes.filter(node => 
-      node.type === 'entrypoint' && 
+    const entrypointNodes = this.graphData.nodes.filter(node =>
+      node.type === 'entrypoint' &&
       node.metadata?.configKey === runtimeKey
     );
 
@@ -226,7 +231,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
     // Also create input and output file sections directly under the entrypoint
     const fileItems = this.getEntrypointFileItems(entrypointId, runtimeKey);
-    
+
     // Combine test items and file items
     return [...testItems, ...fileItems];
   }
@@ -254,12 +259,12 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
     const outputFilePaths: { node: GraphNode; path: string }[] = [];
 
     for (const node of fileNodes) {
-      const isInput = node.type === 'input_file' || 
-                     node.metadata?.isInputFile === true ||
-                     (node.metadata?.filePath && 
-                      (node.metadata.filePath.includes('input') || 
-                       node.metadata.filePath.includes('source')));
-      
+      const isInput = node.type === 'input_file' ||
+        node.metadata?.isInputFile === true ||
+        (node.metadata?.filePath &&
+          (node.metadata.filePath.includes('input') ||
+            node.metadata.filePath.includes('source')));
+
       if (isInput) {
         const item = new TestTreeItem(
           node.label || path.basename(node.metadata?.filePath || node.id),
@@ -357,12 +362,12 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
     const outputFilePaths: { node: GraphNode; path: string }[] = [];
 
     for (const node of fileNodes) {
-      const isInput = node.type === 'input_file' || 
-                     node.metadata?.isInputFile === true ||
-                     (node.metadata?.filePath && 
-                      (node.metadata.filePath.includes('input') || 
-                       node.metadata.filePath.includes('source')));
-      
+      const isInput = node.type === 'input_file' ||
+        node.metadata?.isInputFile === true ||
+        (node.metadata?.filePath &&
+          (node.metadata.filePath.includes('input') ||
+            node.metadata.filePath.includes('source')));
+
       if (isInput) {
         const item = new TestTreeItem(
           node.label || path.basename(node.metadata?.filePath || node.id),
@@ -439,15 +444,15 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   private buildFileTree(filePaths: { node: GraphNode; path: string }[]): any {
     const root: any = { type: 'directory', children: {} };
-    
+
     for (const { node, path } of filePaths) {
       const parts = path.split(/[\\/]/).filter(part => part.length > 0);
       let current = root.children;
-      
+
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
         const isLast = i === parts.length - 1;
-        
+
         if (!current[part]) {
           if (isLast) {
             current[part] = {
@@ -473,19 +478,19 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
             metadata: node.metadata
           };
         }
-        
+
         if (!isLast) {
           current = current[part].children;
         }
       }
     }
-    
+
     return root;
   }
 
   private convertTreeToItems(tree: any, runtimeKey: string, testId: string): TestTreeItem[] {
     const items: TestTreeItem[] = [];
-    
+
     for (const [name, node] of Object.entries(tree.children || {})) {
       const typedNode = node as any;
       if (typedNode.type === 'directory') {
@@ -526,7 +531,7 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
         items.push(fileItem);
       }
     }
-    
+
     // Sort folders first, then files
     items.sort((a, b) => {
       const aIsFolder = a.data?.isFile === false;
@@ -535,14 +540,14 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       if (!aIsFolder && bIsFolder) return 1;
       return a.label!.toString().localeCompare(b.label!.toString());
     });
-    
+
     return items;
   }
 
   private getTestIcon(node: GraphNode): vscode.ThemeIcon {
     const status = node.metadata?.status;
     const failed = node.metadata?.failed;
-    
+
     if (failed === true || status === 'blocked') {
       return new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'));
     } else if (failed === false || status === 'done') {
@@ -554,8 +559,24 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   protected handleWebSocketMessage(message: any): void {
     super.handleWebSocketMessage(message);
-    if (message.type === 'graphUpdated') {
+    console.log(`[TestTreeDataProvider] Received message type: ${message.type}, url: ${message.url}`);
+    
+    if (message.type === 'resourceChanged') {
+      if (message.url === '/~/runtime' || message.url === '/~/graph') {
+        console.log('[TestTreeDataProvider] Relevant update, refreshing');
+        this.refresh();
+      }
+    } else if (message.type === 'graphUpdated') {
+      console.log('[TestTreeDataProvider] Graph updated, refreshing');
       this.refresh();
     }
+  }
+
+  protected subscribeToGraphUpdates(): void {
+    super.subscribeToGraphUpdates();
+    // Subscribe to runtime slice
+    this.subscribeToSlice('/runtime');
+    // Also subscribe to graph for general updates
+    this.subscribeToSlice('/graph');
   }
 }

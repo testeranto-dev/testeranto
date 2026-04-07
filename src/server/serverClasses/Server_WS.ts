@@ -32,6 +32,8 @@ export class Server_WS extends Server_HTTP {
   }
 
   resourceChanged(url: string) {
+    console.log(`[Server_WS] Resource changed: ${url}`);
+    
     const message = {
       type: 'resourceChanged',
       url: url,
@@ -42,8 +44,18 @@ export class Server_WS extends Server_HTTP {
     // Broadcast to all clients
     this.broadcast(message);
     
-    // Also notify slice subscribers if this is a slice URL
+    // Also notify slice subscribers
     this.notifySliceSubscribers(url, message);
+    
+    // Also broadcast graphUpdated for compatibility with existing code
+    if (url.startsWith('/~/')) {
+      const graphMessage = {
+        type: 'graphUpdated',
+        timestamp: new Date().toISOString(),
+        message: `Graph updated due to change at ${url}`
+      };
+      this.broadcast(graphMessage);
+    }
   }
 
   public broadcast(message: any): void {
@@ -56,6 +68,7 @@ export class Server_WS extends Server_HTTP {
   }
 
   private notifySliceSubscribers(slicePath: string, message: any): void {
+    // First, try to notify exact match
     const subscribers = this.sliceSubscriptions.get(slicePath);
     if (subscribers) {
       const data = JSON.stringify(message);
@@ -66,8 +79,21 @@ export class Server_WS extends Server_HTTP {
       });
     }
     
+    // Also notify without the /~ prefix
+    if (slicePath.startsWith('/~/')) {
+      const withoutTilde = slicePath.slice(2); // Remove /~
+      const tildeSubscribers = this.sliceSubscriptions.get(withoutTilde);
+      if (tildeSubscribers) {
+        const data = JSON.stringify(message);
+        tildeSubscribers.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(data);
+          }
+        });
+      }
+    }
+    
     // Also notify subscribers of parent paths
-    // For example, if slicePath is '/files/some/path', also notify '/files' subscribers
     const parts = slicePath.split('/').filter(p => p.length > 0);
     for (let i = 1; i <= parts.length; i++) {
       const parentPath = '/' + parts.slice(0, i).join('/');
@@ -83,7 +109,7 @@ export class Server_WS extends Server_HTTP {
     }
   }
 
-  private handleWebSocketMessage(ws: WebSocket, message: any): void {
+  public handleWebSocketMessage(ws: WebSocket, message: any): void {
     if (!message || typeof message !== 'object') {
       return;
     }

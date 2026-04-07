@@ -152,7 +152,7 @@ export const watchInputFilePure = async (
   if (mode === "dev") {
     watchFile(inputFilePath, async (curr, prev) => {
       consoleLog(`[Server_Docker] File ${inputFilePath} changed`);
-      
+
       if (!existsSync(inputFilePath)) {
         consoleWarn(`${inputFilePath} does not exist yet.`);
         return;
@@ -180,10 +180,11 @@ export const watchInputFilePure = async (
 
         setState(updatedInputFiles, updatedHashs);
         // In unified approach, we broadcast graph updates instead
+        // TODO This should be defined in API 
         resourceChanged('/~/graph');
 
         consoleLog(`[Server_Docker] Input files changed for ${testsName}, hash changed: ${newHash !== oldHash}`);
-        
+
         if (newHash !== oldHash) {
           for (const [ck, configValue] of Object.entries(configs.runtimes)) {
             if (
@@ -193,12 +194,13 @@ export const watchInputFilePure = async (
               launchBddTest(runtime, testsName, ck, configValue);
               launchChecks(runtime, testsName, ck, configValue);
               informAider(runtime, testsName, ck, configValue, testInfo.files);
-              
+
               // Update graph with input files using unified approach
               if (updateGraphWithInputFiles && testInfo.files) {
                 try {
                   await updateGraphWithInputFiles(runtime, testsName, ck, testInfo.files);
                   // Broadcast graph update
+                  // TODO This should be defined in API 
                   resourceChanged('/~/graph');
                 } catch (error) {
                   consoleWarn(`[Server_Docker] Failed to update graph with input files: ${error}`);
@@ -268,6 +270,7 @@ export const watchOutputFilePure = (
           projectRoot,
         );
         // In unified approach, broadcast graph updates
+        // TODO This should be defined in API 
         resourceChanged('/~/graph');
       }
     });

@@ -1,10 +1,11 @@
+import { existsSync } from "fs";
+import path from "path";
+
 /**
  * Get test results data from reports directory
  */
 export async function getTestResultsData(): Promise<any> {
   const fs = require("fs").promises;
-  const path = require("path");
-  const { existsSync } = require("fs");
 
   const resultsDir = path.join(process.cwd(), "testeranto", "reports");
   if (!existsSync(resultsDir)) {

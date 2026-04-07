@@ -1,3 +1,5 @@
+import fs, { existsSync } from "fs";
+import path from "path";
 import type { ITesterantoConfig } from "../../../Types";
 
 /**
@@ -9,9 +11,6 @@ export async function collectTestResults(
   reportsDir: string,
   configs?: ITesterantoConfig
 ): Promise<Record<string, any>> {
-  const fs = require("fs").promises;
-  const path = require("path");
-  const { existsSync } = require("fs");
 
   const testResults: Record<string, any> = {};
 
@@ -28,12 +27,12 @@ export async function collectTestResults(
   // Only collect results for tests defined in the config
   for (const [configKey, runtimeConfig] of Object.entries(configs.runtimes)) {
     const tests = (runtimeConfig as any).tests || [];
-    
+
     for (const testName of tests) {
       // Construct the expected path for this test's results
       // Format: testeranto/reports/{configKey}/{testName}/tests.json
       const testResultsPath = path.join(reportsDir, configKey, testName, "tests.json");
-      
+
       if (existsSync(testResultsPath)) {
         try {
           const content = await fs.readFile(testResultsPath, "utf-8");

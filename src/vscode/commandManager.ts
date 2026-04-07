@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { TerminalManager } from "./TerminalManager";
 import { StatusBarManager } from "./statusBarManager";
-import { registerCommands } from "./registerCommands";
+import { registerCommands } from "./providers/utils/registerCommands";
 
 export class CommandManager {
     private terminalManager: TerminalManager;
@@ -11,6 +11,7 @@ export class CommandManager {
     private aiderProcessProvider: vscode.TreeDataProvider<any> | null;
     private fileTreeProvider: vscode.TreeDataProvider<any> | null;
     private agentProvider: vscode.TreeDataProvider<any> | null;
+    private chatProvider: vscode.TreeDataProvider<any> | null;
 
     constructor(terminalManager: TerminalManager, statusBarManager: StatusBarManager) {
         this.terminalManager = terminalManager;
@@ -42,6 +43,10 @@ export class CommandManager {
         this.agentProvider = provider;
     }
 
+    public setChatProvider(provider: vscode.TreeDataProvider<any>): void {
+        this.chatProvider = provider;
+    }
+
     public registerCommands(context: vscode.ExtensionContext): vscode.Disposable[] {
         const disposables = registerCommands(
             context,
@@ -53,14 +58,14 @@ export class CommandManager {
             this.fileTreeProvider,
             this.agentProvider
         );
-        
+
         // Add a test command for debugging
         const testCommand = vscode.commands.registerCommand('testeranto.testLogging', () => {
             vscode.window.showInformationMessage('Testeranto test command works!');
             console.log('[Testeranto] Test command executed successfully');
         });
         disposables.push(testCommand);
-        
+
         return disposables;
     }
 }

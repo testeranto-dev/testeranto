@@ -7,7 +7,7 @@ description: 'Feature: Readme.md'
 
 ## What is it?
 
-Testeranto lets you vibe code large, real-world polyglot codebases via tests written in javascript, python, golang, rust and java. By wrapping your code in BDD (Given-When-Then), AAA (Arrange-Act-Assert), and TDT (Table Driven Testing) semantics, you specify the behavior of your components. The tests are run and the output of those tests are passed into the context of your favorite LLM. Testeranto edits your code and tests using your documentation and then runs the tests again. Once all the tests pass, the results are committed to the repo. In short, testeranto is my attempt to automate my job. 
+Testeranto lets you vibe code large, real-world polyglot codebases via tests written in javascript, python, golang, rust and java. By wrapping your code in BDD (Given-When-Then), AAA (Arrange-Act-Assert), and TDT (Table Driven Testing) semantics, you specify the behavior of your components. The tests are run and the output of those tests are passed into the context of your favorite LLM. Testeranto edits your code and tests using your documentation and then runs the tests again. You can define any number of agents, customized to your liking all collaborating through a chat thread. In short, testeranto is my attempt to automate my job. 
 
 In more concrete terms, testeranto is
 

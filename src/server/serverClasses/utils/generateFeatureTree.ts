@@ -1,3 +1,5 @@
+import { existsSync } from "fs";
+import path from "path";
 import { findNodeInTree } from "../../stakeholder/StakeholderUtils";
 import { addFileToTree } from "./addFileToTree";
 import { addSourceFilesToTree } from "./addSourceFilesToTree";
@@ -8,9 +10,7 @@ import { getDocumentationData } from "./getDocumentationData";
  * Generate a feature tree from documentation files and source files
  */
 export async function generateFeatureTree(configs: any): Promise<any> {
-  const fs = require('fs').promises;
-  const path = require('path');
-  const { existsSync } = require('fs');
+
 
   const tree: any = {
     type: "directory",

@@ -33,6 +33,8 @@ export type GraphNodeType =
   | 'aider_process' // Aider process
   | 'builder_process' // Builder process
   | 'aider'        // Aider instance node
+  // Chat nodes
+  | 'chat_message' // Chat message nodes
 
 // Array of valid GraphNodeType values for validation
 export const graphNodeTypeValues: GraphNodeType[] = [
@@ -63,7 +65,9 @@ export const graphNodeTypeValues: GraphNodeType[] = [
   'check_process',
   'aider_process',
   'builder_process',
-  'aider'
+  'aider',
+  // Chat nodes
+  'chat_message'
 ];
 
 // Edge types in our graph
@@ -96,6 +100,9 @@ export type GraphEdgeType =
   | 'hasBuilderProcess' // Config has a builder process
   | 'processOf'    // Process belongs to entrypoint
   | 'hasAider'     // Entrypoint has an aider node
+  // Resource locking edges
+  | 'locks'        // Node locks another node (for resource locking)
+  | 'lockedBy';    // Node is locked by another node
 
 // Base node attributes
 export interface GraphNodeAttributes extends Attributes {
@@ -108,6 +115,12 @@ export interface GraphNodeAttributes extends Attributes {
   timestamp?: string;
   metadata?: Record<string, any>;
   icon?: string;
+  
+  // Add lock properties for resource locking
+  locked?: boolean;
+  lockOwner?: string; // agent/test ID that holds the lock
+  lockTimestamp?: string;
+  lockType?: 'read' | 'write' | 'exclusive';
 }
 
 // Base edge attributes

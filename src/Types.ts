@@ -28,6 +28,9 @@ export type ITesterantoConfig = {
     markdownFile: string;
     sliceFunction: (graphManager: any) => { nodes: any[]; edges: any[] };
   }>;
+
+  vscodeViews: Record<string, string>
+  stakeholderViews: Record<string, string>
 };
 
 export type IOtherTest = (x: any) => string;

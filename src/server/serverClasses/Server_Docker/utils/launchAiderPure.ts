@@ -108,6 +108,7 @@ export async function launchAiderPure({
       // In unified approach, we broadcast graphUpdated events
       // The actual graph update happens via updateGraphWithAiderNode
       // We'll trigger a refresh for clients
+      // TODO This should be defined in API 
       resourceChanged("/~/graph");
     }
     writeConfigForExtension();

@@ -2683,3 +2683,433 @@
 [2026-04-06T14:57:56.699Z] [NODE BUILDER] Metafile updated
 [2026-04-06T14:57:56.662Z] INFO: Build started for nodetests
 [2026-04-06T14:57:56.703Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-06T17:44:45.150Z] [NODE BUILDER] Process exiting
+[2026-04-06T17:49:26.261Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T17:49:26.263Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T17:49:26.263Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T17:49:26.263Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T17:49:26.304Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T17:49:26.308Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T20:11:02.708Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T20:11:02.710Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T20:11:02.710Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T20:11:02.710Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T20:11:02.758Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T20:11:02.768Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T20:21:52.854Z] [NODE BUILDER] Process exiting
+[2026-04-06T20:22:10.585Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T20:22:10.588Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T20:22:10.588Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T20:22:10.588Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T20:22:10.620Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T20:22:10.623Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T20:37:08.114Z] [NODE BUILDER] Process exiting
+[2026-04-06T20:37:21.756Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T20:37:21.758Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T20:37:21.759Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T20:37:21.759Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T20:37:21.786Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T20:37:21.788Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T20:42:16.728Z] [NODE BUILDER] Process exiting
+[2026-04-06T20:42:30.095Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T20:42:30.099Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T20:42:30.099Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T20:42:30.099Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T20:42:30.157Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T20:42:30.161Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T20:44:32.885Z] [NODE BUILDER] Process exiting
+[2026-04-06T20:44:59.498Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T20:44:59.499Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T20:44:59.499Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T20:44:59.499Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T20:44:59.526Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T20:44:59.528Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T20:46:51.637Z] [NODE BUILDER] Process exiting
+[2026-04-06T20:50:48.844Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T20:50:48.847Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T20:50:48.848Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T20:50:48.848Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T20:50:49.010Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T20:50:49.017Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T20:51:55.977Z] [NODE BUILDER] Process exiting
+[2026-04-06T20:54:45.351Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T20:54:45.352Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T20:54:45.352Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T20:54:45.352Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T20:54:45.367Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T20:54:45.372Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T20:58:37.064Z] [NODE BUILDER] Process exiting
+[2026-04-06T21:01:34.110Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T21:01:34.122Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T21:01:34.122Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T21:01:34.122Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T21:01:34.170Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T21:01:34.175Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T21:04:54.587Z] [NODE BUILDER] Process exiting
+[2026-04-06T21:07:46.143Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T21:07:46.144Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T21:07:46.145Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T21:07:46.145Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T21:07:46.185Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T21:07:46.189Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T21:08:16.546Z] [NODE BUILDER] Process exiting
+[2026-04-06T21:11:07.252Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T21:11:07.253Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T21:11:07.253Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T21:11:07.253Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T21:11:07.299Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T21:11:07.301Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T21:14:46.989Z] [NODE BUILDER] Process exiting
+[2026-04-06T21:17:41.737Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T21:17:41.738Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T21:17:41.738Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T21:17:41.738Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T21:17:41.784Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T21:17:41.787Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T22:44:56.595Z] [NODE BUILDER] Process exiting
+[2026-04-06T22:47:59.539Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T22:47:59.540Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T22:47:59.540Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T22:47:59.540Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T22:47:59.568Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T22:47:59.576Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T22:50:20.060Z] [NODE BUILDER] Process exiting
+[2026-04-06T22:57:10.744Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T22:57:10.745Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T22:57:10.745Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T22:57:10.745Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T22:57:10.786Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T22:57:10.790Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:02:13.540Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:12:40.822Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:12:40.824Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:12:40.824Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:12:40.824Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:12:40.870Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:12:40.874Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:15:17.729Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:15:30.601Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:15:30.603Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:15:30.603Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:15:30.603Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:15:30.646Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:15:30.647Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:18:21.061Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:18:34.573Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:18:34.573Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:18:34.573Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:18:34.573Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:18:34.612Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:18:34.614Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:24:42.047Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:24:56.705Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:24:56.706Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:24:56.706Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:24:56.706Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:24:56.743Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:24:56.749Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:32:48.515Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:33:03.903Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:33:03.905Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:33:03.905Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:33:03.905Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:33:03.924Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:33:03.928Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:37:57.279Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:38:13.435Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:38:13.436Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:38:13.436Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:38:13.436Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:38:13.467Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:38:13.470Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:45:04.871Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:45:19.156Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:45:19.158Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:45:19.158Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:45:19.158Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:45:19.188Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:45:19.189Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:51:18.909Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:51:31.223Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:51:31.224Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:51:31.224Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:51:31.224Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:51:31.243Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:51:31.245Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-06T23:54:56.886Z] [NODE BUILDER] Process exiting
+[2026-04-06T23:55:07.141Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-06T23:55:07.142Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-06T23:55:07.142Z] [NODE BUILDER] testName:  nodetests
+[2026-04-06T23:55:07.142Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-06T23:55:07.170Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-06T23:55:07.172Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:00:36.524Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:00:49.819Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:00:49.820Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:00:49.820Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:00:49.820Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:00:49.860Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:00:49.864Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:07:00.477Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:07:19.014Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:07:19.015Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:07:19.015Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:07:19.015Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:07:19.038Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:07:19.040Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:19:45.238Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:19:57.902Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:19:57.902Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:19:57.902Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:19:57.902Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:19:57.928Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:19:57.930Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:24:53.345Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:25:06.134Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:25:06.136Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:25:06.136Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:25:06.136Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:25:06.160Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:25:06.161Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:26:29.291Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:26:29.292Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:26:29.292Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:26:29.292Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:26:29.315Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:26:29.322Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:28:23.027Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:28:23.028Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:28:23.028Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:28:23.029Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:28:23.053Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:28:23.055Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:31:10.061Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:31:21.822Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:31:21.823Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:31:21.823Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:31:21.823Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:31:21.848Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:31:21.850Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:35:10.622Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:35:22.589Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:35:22.590Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:35:22.590Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:35:22.591Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:35:22.631Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:35:22.636Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:38:02.935Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:38:24.002Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:38:24.003Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:38:24.003Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:38:24.003Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:38:24.022Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:38:24.025Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:40:35.824Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:40:58.737Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:40:58.739Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:40:58.739Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:40:58.739Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:40:58.793Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:40:58.800Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:42:22.243Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:42:44.077Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:42:44.077Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:42:44.077Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:42:44.077Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:42:44.088Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:42:44.093Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:43:42.741Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:44:04.675Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:44:04.675Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:44:04.675Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:44:04.675Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:44:04.695Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:44:04.696Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:53:56.390Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:54:19.316Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:54:19.317Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:54:19.317Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:54:19.317Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:54:19.349Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:54:19.356Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T00:54:56.208Z] [NODE BUILDER] Process exiting
+[2026-04-07T00:55:19.469Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T00:55:19.470Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T00:55:19.470Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T00:55:19.470Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T00:55:19.495Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T00:55:19.500Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T01:24:19.338Z] [NODE BUILDER] Process exiting
+[2026-04-07T01:24:45.126Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T01:24:45.127Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T01:24:45.127Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T01:24:45.128Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T01:24:45.149Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T01:24:45.150Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T01:51:16.544Z] [NODE BUILDER] Process exiting
+[2026-04-07T01:51:41.553Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T01:51:41.555Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T01:51:41.555Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T01:51:41.555Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T01:51:41.593Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T01:51:41.595Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T01:58:23.163Z] [NODE BUILDER] Process exiting
+[2026-04-07T01:58:46.411Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T01:58:46.412Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T01:58:46.412Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T01:58:46.412Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T01:58:46.442Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T01:58:46.445Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T02:16:37.698Z] [NODE BUILDER] Process exiting
+[2026-04-07T02:17:03.846Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T02:17:03.847Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T02:17:03.847Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T02:17:03.847Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T02:17:03.878Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T02:17:03.880Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T02:19:31.997Z] [NODE BUILDER] Process exiting
+[2026-04-07T02:19:54.393Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T02:19:54.393Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T02:19:54.394Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T02:19:54.394Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T02:19:54.431Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T02:19:54.433Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T02:32:46.877Z] [NODE BUILDER] Process exiting
+[2026-04-07T02:33:12.470Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T02:33:12.470Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T02:33:12.470Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T02:33:12.470Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T02:33:12.496Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T02:33:12.498Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T02:35:52.115Z] [NODE BUILDER] Process exiting
+[2026-04-07T02:36:17.354Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T02:36:17.357Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T02:36:17.357Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T02:36:17.357Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T02:36:17.391Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T02:36:17.396Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T02:37:22.282Z] [NODE BUILDER] Process exiting
+[2026-04-07T02:37:46.428Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T02:37:46.428Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T02:37:46.428Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T02:37:46.429Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T02:37:46.444Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T02:37:46.445Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T02:38:50.508Z] [NODE BUILDER] Process exiting
+[2026-04-07T02:39:12.999Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T02:39:13.000Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T02:39:13.000Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T02:39:13.000Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T02:39:13.017Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T02:39:13.018Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T03:08:58.076Z] [NODE BUILDER] Process exiting
+[2026-04-07T03:09:23.173Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T03:09:23.175Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T03:09:23.175Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T03:09:23.175Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T03:09:23.197Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T03:09:23.213Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T03:21:54.308Z] [NODE BUILDER] Process exiting
+[2026-04-07T03:22:17.112Z] [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T03:22:17.112Z] [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
+[2026-04-07T03:22:17.112Z] [NODE BUILDER] testName:  nodetests
+[2026-04-07T03:22:17.112Z] [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
+[2026-04-07T03:22:17.138Z] ERROR: NODE BUILDER: Error: {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T03:22:17.140Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-07T16:56:37.229Z] [NODE BUILDER] Process exiting

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { type GraphData, type Node, EisenhowerMatrix, GanttChart, KanbanBoard, TreeGraph } from "../../grafeovidajo/index";
-import { getNodeStatus } from "../../grafeovidajo/charts/KanbanBoard";
+import { type GraphData, type Node } from "../../grafeovidajo/index";
+import { EisenhowerMatrix } from "testeranto/stakeholderApp/defaultViews/vscode/EisenhowerMatrix.tsx";
+import { KanbanBoard } from "testeranto/stakeholderApp/defaultViews/vscode/KanbanBoard.tsx";
+import { GanttChart } from "testeranto/stakeholderApp/defaultViews/vscode/GanttChart.tsx";
 
 interface HtmlTreeProps {
   data: GraphData;

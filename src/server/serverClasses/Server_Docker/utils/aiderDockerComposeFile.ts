@@ -11,7 +11,7 @@ export const aiderDockerComposeFile = (container_name: string, config: ITesteran
     volumes: [
       ...config.volumes,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
-
+      // Mount the aider config file
       `${processCwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
       // Mount the entire workspace to allow aider to access files
       `${processCwd()}:/workspace`,

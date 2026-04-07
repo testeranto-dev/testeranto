@@ -6,7 +6,7 @@ import { TestTreeDataProvider } from "./providers/TestTreeDataProvider";
 import { DockerProcessTreeDataProvider } from "./providers/DockerProcessTreeDataProvider";
 import { AiderProcessTreeDataProvider } from "./providers/AiderProcessTreeDataProvider";
 import { FileTreeDataProvider } from "./providers/FileTreeDataProvider";
-import { AgentTreeDataProvider } from "./providers/AgentTreeDataProvider";
+import { ChatTreeDataProvider } from "./providers/ChatTreeDataProvider";
 import { StatusBarManager } from "./statusBarManager";
 import { CommandManager } from "./commandManager";
 
@@ -22,37 +22,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         // SIMPLE TEST - Show a message to prove extension works
         vscode.window.showInformationMessage('Testeranto extension is loading...');
 
-        // Check if server is running by trying to load graph-data.json
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-        if (!workspaceFolders || workspaceFolders.length === 0) {
-            outputChannel.appendLine("[Testeranto] ERROR: No workspace folder open");
-            vscode.window.showErrorMessage("Testeranto: No workspace folder open. Please open a workspace folder first.");
-            return;
-        }
-
-        const workspaceRoot = workspaceFolders[0].uri.fsPath;
-        outputChannel.appendLine(`[Testeranto] Workspace root: ${workspaceRoot}`);
-
-        const graphDataPath = path.join(workspaceRoot, 'testeranto', 'reports', 'graph-data.json');
-
-        if (!fs.existsSync(graphDataPath)) {
-            outputChannel.appendLine(`[Testeranto] WARNING: graph-data.json not found at ${graphDataPath}`);
-            outputChannel.appendLine("[Testeranto] The graph-based data file is not available. Starting in fallback mode.");
-            vscode.window.showWarningMessage("Testeranto: Graph data not found. Some features may be limited.");
-        } else {
-            outputChannel.appendLine(`[Testeranto] Found graph-data.json at ${graphDataPath}`);
-            try {
-                const graphData = JSON.parse(fs.readFileSync(graphDataPath, 'utf-8'));
-                outputChannel.appendLine(`[Testeranto] Graph data loaded: ${graphData.data?.unifiedGraph?.nodes?.length || 0} nodes`);
-            } catch (error) {
-                outputChannel.appendLine(`[Testeranto] ERROR loading graph-data.json: ${error}`);
-            }
-        }
+        // Create output channel first
+        outputChannel.appendLine("[Testeranto] =========================================");
+        outputChannel.appendLine("[Testeranto] Extension activation started");
+        outputChannel.appendLine("[Testeranto] =========================================");
 
         // Create managers
         outputChannel.appendLine("[Testeranto] Creating TerminalManager...");
         const terminalManager = new TerminalManager();
-        terminalManager.createAllTerminals();
         outputChannel.appendLine("[Testeranto] TerminalManager created");
 
         outputChannel.appendLine("[Testeranto] Creating StatusBarManager...");
@@ -63,6 +40,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         // Initial status check
         outputChannel.appendLine("[Testeranto] Updating server status...");
         statusBarManager.updateServerStatus();
+
+        // Don't create terminals automatically - they should be created on demand
+        outputChannel.appendLine("[Testeranto] Skipping automatic terminal creation");
 
         // Create providers using graph-based approach
         outputChannel.appendLine("[Testeranto] Creating TestTreeDataProvider...");
@@ -84,10 +64,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         const fileTreeProvider = new FileTreeDataProvider();
         outputChannel.appendLine("[Testeranto] FileTreeDataProvider created successfully");
 
-        // Create Agent tree provider
-        outputChannel.appendLine("[Testeranto] Creating AgentTreeDataProvider...");
-        const agentProvider = new AgentTreeDataProvider();
-        outputChannel.appendLine("[Testeranto] AgentTreeDataProvider created successfully");
 
         // Verify providers implement required interface
         outputChannel.appendLine("[Testeranto] Verifying providers implement required methods...");
@@ -97,7 +73,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             dockerProcessProvider,
             aiderProcessProvider,
             fileTreeProvider,
-            agentProvider
         })) {
             outputChannel.appendLine(`[Testeranto] Checking provider: ${name}`);
             for (const method of requiredMethods) {
@@ -118,12 +93,41 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         commandManager.setDockerProcessProvider(dockerProcessProvider);
         commandManager.setAiderProcessProvider(aiderProcessProvider);
         commandManager.setFileTreeProvider(fileTreeProvider);
-        commandManager.setAgentProvider(agentProvider);
-        const commandDisposables = commandManager.registerCommands(context);
+        const commandDisposables = commandManager.registerCommands(
+            context,
+            terminalManager,
+            runtimeProvider,
+            statusBarManager,
+            dockerProcessProvider,
+            aiderProcessProvider,
+            fileTreeProvider,
+        );
         outputChannel.appendLine("[Testeranto] CommandManager created and commands registered");
 
         // Show a welcome message
         vscode.window.showInformationMessage('Testeranto extension is now active! Use the Testeranto view in the Activity Bar to explore tests.');
+
+        // Add a simple command to check server status
+        const checkServerCommand = vscode.commands.registerCommand('testeranto.checkServer', async () => {
+            try {
+                const response = await fetch('http://localhost:3000/~/configs', {
+                    method: 'GET',
+                    signal: AbortSignal.timeout?.(3000) || (() => {
+                        const controller = new AbortController();
+                        setTimeout(() => controller.abort(), 3000);
+                        return controller.signal;
+                    })()
+                });
+                if (response.ok) {
+                    vscode.window.showInformationMessage('✅ Testeranto server is running');
+                } else {
+                    vscode.window.showWarningMessage('⚠️ Server responded with error: ' + response.status);
+                }
+            } catch (error) {
+                vscode.window.showErrorMessage('❌ Cannot connect to Testeranto server. Make sure it is running on port 3000.');
+            }
+        });
+        context.subscriptions.push(checkServerCommand);
 
         // Register tree data providers FIRST
         outputChannel.appendLine("[Testeranto] Registering tree data providers with VS Code...");
@@ -131,7 +135,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         vscode.window.registerTreeDataProvider('testeranto.dockerProcessView', dockerProcessProvider);
         vscode.window.registerTreeDataProvider('testeranto.aiderProcessView', aiderProcessProvider);
         vscode.window.registerTreeDataProvider('testeranto.fileTreeView', fileTreeProvider);
-        vscode.window.registerTreeDataProvider('testeranto.agentView', agentProvider);
         outputChannel.appendLine("[Testeranto] Tree data providers registered successfully");
 
         // Create tree views AFTER registering providers
@@ -160,11 +163,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         });
         outputChannel.appendLine("[Testeranto] File tree view created successfully");
 
-        const agentTreeView = vscode.window.createTreeView("testeranto.agentView", {
-            treeDataProvider: agentProvider,
-            showCollapseAll: true
-        });
-        outputChannel.appendLine("[Testeranto] Agent tree view created successfully");
+        // const agentTreeView = vscode.window.createTreeView("testeranto.agentView", {
+        //     treeDataProvider: agentProvider,
+        //     showCollapseAll: true
+        // });
+        // outputChannel.appendLine("[Testeranto] Agent tree view created successfully");
+
 
         // Add tree views to subscriptions
         outputChannel.appendLine("[Testeranto] Adding tree views to context subscriptions...");
@@ -173,7 +177,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             dockerProcessTreeView,
             aiderProcessTreeView,
             fileTreeView,
-            agentTreeView
+            // agentTreeView
         );
         outputChannel.appendLine("[Testeranto] Tree views added to subscriptions");
 
@@ -183,19 +187,29 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             const runtimeChildren = await runtimeProvider.getChildren();
             outputChannel.appendLine(`[Testeranto] runtimeProvider.getChildren() returned ${runtimeChildren?.length || 0} items`);
 
+            // Log what items we got
+            if (runtimeChildren && runtimeChildren.length > 0) {
+                runtimeChildren.forEach((item, index) => {
+                    outputChannel.appendLine(`[Testeranto]   Item ${index}: ${item.label} (${item.type})`);
+                });
+            }
+        } catch (error) {
+            outputChannel.appendLine(`[Testeranto] ERROR testing runtimeProvider: ${error}`);
+        }
+
+        // Test other providers but don't fail if they error
+        try {
             const dockerChildren = await dockerProcessProvider.getChildren();
             outputChannel.appendLine(`[Testeranto] dockerProcessProvider.getChildren() returned ${dockerChildren?.length || 0} items`);
+        } catch (error) {
+            outputChannel.appendLine(`[Testeranto] dockerProcessProvider error (non-fatal): ${error}`);
+        }
 
-            const aiderChildren = await aiderProcessProvider.getChildren();
-            outputChannel.appendLine(`[Testeranto] aiderProcessProvider.getChildren() returned ${aiderChildren?.length || 0} items`);
-
+        try {
             const fileChildren = await fileTreeProvider.getChildren();
             outputChannel.appendLine(`[Testeranto] fileTreeProvider.getChildren() returned ${fileChildren?.length || 0} items`);
-
-            const agentChildren = await agentProvider.getChildren();
-            outputChannel.appendLine(`[Testeranto] agentProvider.getChildren() returned ${agentChildren?.length || 0} items`);
         } catch (error) {
-            outputChannel.appendLine(`[Testeranto] ERROR testing providers: ${error}`);
+            outputChannel.appendLine(`[Testeranto] fileTreeProvider error (non-fatal): ${error}`);
         }
 
         // Refresh all providers to load initial data
@@ -216,10 +230,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             outputChannel.appendLine("[Testeranto] Refreshing fileTreeProvider...");
             fileTreeProvider.refresh();
         }
-        if (typeof agentProvider.refresh === 'function') {
-            outputChannel.appendLine("[Testeranto] Refreshing agentProvider...");
-            agentProvider.refresh();
-        }
+        // if (typeof agentProvider.refresh === 'function') {
+        //     outputChannel.appendLine("[Testeranto] Refreshing agentProvider...");
+        //     agentProvider.refresh();
+        // }
         outputChannel.appendLine("[Testeranto] Tree data providers refreshed");
 
         // Clean up on deactivation
@@ -231,7 +245,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 dockerProcessProvider.dispose?.();
                 aiderProcessProvider.dispose?.();
                 fileTreeProvider.dispose?.();
-                agentProvider.dispose?.();
+                // agentProvider.dispose?.();
                 statusBarManager.dispose();
                 outputChannel.dispose();
             }

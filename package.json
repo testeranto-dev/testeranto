@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the AI powered test framework for polyglot projects",
-  "version": "0.242.0",
+  "version": "0.243.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -31,10 +31,12 @@
     "onCommand:testeranto.showProcessLogs",
     "onCommand:testeranto.openAiderTerminal",
     "onCommand:testeranto.openServerWebview",
+    "onCommand:testeranto.launchAgent",
     "onView:testeranto.runtimeView",
     "onView:testeranto.dockerProcessView",
     "onView:testeranto.aiderProcessView",
     "onView:testeranto.fileTreeView",
+    "onView:testeranto.agentView",
     "workspaceContains:**/testeranto/extension-config.json",
     "workspaceContains:**/testeranto/reports/**/*.json"
   ],
@@ -88,6 +90,11 @@
           "id": "testeranto.fileTreeView",
           "name": "File Perspective",
           "icon": "$(files)"
+        },
+        {
+          "id": "testeranto.agentView",
+          "name": "Agents",
+          "icon": "$(person)"
         }
       ]
     },
@@ -143,6 +150,18 @@
       {
         "command": "testeranto.openServerWebview",
         "title": "Testeranto: Open Server Webview"
+      },
+      {
+        "command": "testeranto.launchAgent",
+        "title": "Testeranto: Launch Agent"
+      },
+      {
+        "command": "testeranto.refreshAgents",
+        "title": "Testeranto: Refresh Agents"
+      },
+      {
+        "command": "testeranto.openChat",
+        "title": "Testeranto: Open Group Chat"
       }
     ]
   },
@@ -155,6 +174,7 @@
     "Other"
   ],
   "scripts": {
+    "dev3": "yarn package:vsce && yarn dev2 && testeranto init && testeranto dev",
     "serve": "testeranto dev",
     "dev2": "yarn bundle && bun build ./src/index.ts --compile --outfile ./dist/testeranto && bun link",
     "dev": "yarn build:server && yarn link:server",
@@ -181,6 +201,9 @@
     "ATDD"
   ],
   "exports": {
+    "./src/*": {
+      "import": "./src/*"
+    },
     "./stakeholderApp/*": {
       "import": "./src/stakeholderApp/*"
     },
@@ -239,7 +262,7 @@
     },
     "./src/Project": {
       "import": "./dist/module/src/Project.js",
-      "require": "./dist/module/src/Project.js"
+      "require": "./dist/common/src/Project.js"
     },
     "./src/Web": {
       "import": "./src/Web.ts",
@@ -284,6 +307,10 @@
     "./dist/module/NodeWriter": {
       "import": "./dist/module/NodeWriter.js",
       "require": "./dist/common/NodeWriter.js"
+    },
+    "./src/views": {
+      "import": "./src/views/index.ts",
+      "require": "./src/views/index.ts"
     },
     "./src/**/*": "./src/**/*.ts"
   },

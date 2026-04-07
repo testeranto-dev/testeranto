@@ -1,5 +1,5 @@
-=== Log started at 2026-04-06T14:58:00.497Z for service nodetests-builder (runtime: node) ===
-=== Container ID: 70b8d16fdbbbf3351400e1116112061cfa351f0d25f7037d80f01479e66ef828 ===
+=== Log started at 2026-04-07T03:22:21.787Z for service nodetests-builder (runtime: node) ===
+=== Container ID: 70a59b8aa85010ade9f333c173701bf0d449e980ed3ff42ba36f80be3308d59e ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
@@ -13,96 +13,19 @@ $ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /worksp
 [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
 [NODE BUILDER] testName:  nodetests
 [NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
-[NODE BUILDER] is now bundling:  nodetests
-[NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
-[NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts
-[NODE BUILDER] Using converter: jest
-[NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/circle/Circle.test.ts
-[NODE BUILDER] Using converter: jest
-[NODE BUILDER] Detected native jest test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
-[NODE BUILDER] Using converter: jest
-[NODE BUILDER] Running in dev mode - starting watch mode
-▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
+NODE BUILDER: Error: Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './src/vscode/defaultViews/index.ts' is not defined by "exports" in /workspace/package.json imported from /workspace/testeranto/testeranto.ts
+    at exportsNotFound (node:internal/modules/esm/resolve:322:10)
+    at packageExportsResolve (node:internal/modules/esm/resolve:670:9)
+    at packageResolve (node:internal/modules/esm/resolve:831:14)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at nextResolve (node:internal/modules/esm/hooks:864:28)
+    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775532136809:2:3744)
+    at resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775532136809:2:4243)
+    at resolveTsPaths (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775532136809:2:4984)
+    at resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775532136809:2:5361) {
+  code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+}
+[NODE BUILDER] Error occurred but keeping process alive in dev mode
 
-    package.json:222:6:
-      222 │       "types": "./src/CoreTypes.d.ts"
-          ╵       ~~~~~~~
-
-  The "import" condition comes earlier and will be used for all "import" statements:
-
-    package.json:220:6:
-      220 │       "import": "./src/CoreTypes.ts",
-          ╵       ~~~~~~~~
-
-  The "require" condition comes earlier and will be used for all "require" calls:
-
-    package.json:221:6:
-      221 │       "require": "./src/CoreTypes.ts",
-          ╵       ~~~~~~~~~
-
-▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
-
-    src/lib/tiposkripto/tests/calculator/Calculator.ts:10:21:
-      10 │       const result = eval(this.display);
-         ╵                      ~~~~
-
-  You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
-
-node > build ended with 0 errors
-[node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
-[node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
-[node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 757c74030885c60dd9f86dc71111dffc
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 9f9c60ec659d52bdeb9e60e71cbfc9d9
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 8132e9cfd114a5081cdd33de7cd84853
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs
-[node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
-[NODE BUILDER] Metafile updated
-[NODE BUILDER] Triggered inputFiles.json update
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 757c74030885c60dd9f86dc71111dffc
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 9f9c60ec659d52bdeb9e60e71cbfc9d9
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 8132e9cfd114a5081cdd33de7cd84853
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs
-[node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
-[NODE BUILDER] Watch mode active - waiting for file changes...
-[NODE BUILDER] Using onEnd plugin for rebuild detection
-[NODE BUILDER] Keeping process alive for continuous watching...
-▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
-
-    package.json:222:6:
-      222 │       "types": "./src/CoreTypes.d.ts"
-          ╵       ~~~~~~~
-
-  The "import" condition comes earlier and will be used for all "import" statements:
-
-    package.json:220:6:
-      220 │       "import": "./src/CoreTypes.ts",
-          ╵       ~~~~~~~~
-
-  The "require" condition comes earlier and will be used for all "require" calls:
-
-    package.json:221:6:
-      221 │       "require": "./src/CoreTypes.ts",
-          ╵       ~~~~~~~~~
-
-▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
-
-    src/lib/tiposkripto/tests/calculator/Calculator.ts:10:21:
-      10 │       const result = eval(this.display);
-         ╵                      ~~~~
-
-  You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
-
-node > build ended with 0 errors
-[node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
-[node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
-[node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
-[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 757c74030885c60dd9f86dc71111dffc
-[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 9f9c60ec659d52bdeb9e60e71cbfc9d9
-[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 8132e9cfd114a5081cdd33de7cd84853
-[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs
-[node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
-[NODE BUILDER] Metafile updated
-[NODE BUILDER] Triggered inputFiles.json update
-
-=== Log captured at 2026-04-06T14:58:21.476Z (container status: running) ===
+=== Log captured at 2026-04-07T03:22:42.941Z (container status: running) ===

@@ -14,7 +14,7 @@ import {
 import { BaseCompose } from "./BaseCompose";
 
 
-export const writeComposeFile = (services: Record<string, any>) => {
+export const writeComposeFile = (services: Record<string, any>, configs?: any) => {
   const composeFilePath = join(processCwd(), "testeranto/docker-compose.yml");
 
   // Delete the old file first to ensure fresh generation
@@ -29,6 +29,14 @@ export const writeComposeFile = (services: Record<string, any>) => {
     }
   }
 
+  // Log agent services for debugging
+  const agentServices = Object.keys(services).filter(key => key.startsWith('agent-'));
+  if (agentServices.length > 0) {
+    consoleLog(`[writeComposeFile] Found agent services: ${agentServices.join(', ')}`);
+  } else {
+    consoleLog(`[writeComposeFile] No agent services found in ${Object.keys(services).length} total services`);
+  }
+
   const dockerComposeFileContents = BaseCompose(services);
 
   // Log the structure for debugging
@@ -41,7 +49,6 @@ export const writeComposeFile = (services: Record<string, any>) => {
     null,
     2
   );
-
 
   const yamlContent = yamlDump(dockerComposeFileContents, {
     lineWidth: -1,
