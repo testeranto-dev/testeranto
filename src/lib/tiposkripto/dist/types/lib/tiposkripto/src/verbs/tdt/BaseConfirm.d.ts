@@ -21,6 +21,7 @@ export declare class BaseConfirm<I extends TestTypeParams_any> {
     setParent(parent: any): void;
     toObj(): any;
     confirm(subject: I["isubject"], key: string, testResourceConfiguration: ITestResourceConfiguration, tester: (t: Awaited<I["then"]> | undefined) => boolean, artifactory?: any, suiteNdx?: number): Promise<I["istore"]>;
+    afterEach(store: I["istore"], key: string, artifactory?: any): Promise<I["istore"]>;
     run(subject: I["isubject"], testResourceConfiguration: ITestResourceConfiguration, artifactory?: ITestArtifactory): Promise<I["istore"]>;
 }
 export type IConfirms<I extends TestTypeParams_any> = Record<string, BaseConfirm<I>>;

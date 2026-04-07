@@ -1,26 +1,30 @@
-import fs from 'fs';
-import path from 'path';
-import { Palette } from "../../colors";
 import type { ITesterantoConfig } from "../../Types";
 import { GraphManager } from "../graph/index";
 import type { GraphNodeAttributes, GraphEdgeAttributes } from "../../graph/index";
 import type { IMode } from "../types";
 import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
 import { resetGraphDataPure } from "./utils/resetGraphDataPure";
+import { saveGraphDataForStaticModePure } from "./utils/graphFileUtils";
+import { Server_GraphManagerCore } from "./Server_GraphManagerCore";
 
 export class Server_GraphManager {
   protected graphManager: GraphManager;
+  protected projectRoot: string;
+  protected core: Server_GraphManagerCore;
 
   constructor(
     protected configs: ITesterantoConfig,
     protected mode: IMode,
-    protected getCurrentTestResults: () => any
+    protected getCurrentTestResults: () => any,
+    projectRoot?: string
   ) {
+    this.projectRoot = projectRoot || process.cwd();
     this.graphManager = new GraphManager(
-      process.cwd(),
+      this.projectRoot,
       configs.featureIngestor,
       configs
     );
+    this.core = new Server_GraphManagerCore();
   }
 
   async resetGraphData(): Promise<any> {
@@ -30,90 +34,14 @@ export class Server_GraphManager {
       this.getCurrentTestResults
     );
 
-    this.saveGraphDataForStaticMode(fullGraphData);
+    saveGraphDataForStaticModePure(this.projectRoot, fullGraphData);
 
     return fullGraphData;
   }
 
-  saveGraphDataForStaticMode(fullGraphData: any): void {
-    try {
-      const projectRoot = process.cwd();
-      const filePath = path.join(projectRoot, 'testeranto', 'reports', 'graph-data.json');
-      const dir = path.dirname(filePath);
-
-      const staticGraphData = {
-        timestamp: new Date().toISOString(),
-        version: '1.0',
-        data: {
-          unifiedGraph: fullGraphData.unifiedGraph || { nodes: [], edges: [] },
-          vizConfig: fullGraphData.vizConfig || {
-            projection: {
-              xAttribute: 'status',
-              yAttribute: 'priority',
-              xType: 'categorical',
-              yType: 'continuous',
-              layout: 'grid'
-            },
-            style: {
-              nodeSize: 10,
-              nodeColor: Palette.rust,
-              nodeShape: 'circle'
-            }
-          },
-          configs: fullGraphData.configs || {}
-        }
-      };
-
-      fs.writeFileSync(filePath, JSON.stringify(staticGraphData, null, 2), 'utf-8');
-
-      try {
-        const writtenContent = fs.readFileSync(filePath, 'utf-8');
-        const parsed = JSON.parse(writtenContent);
-      } catch (verifyError) {
-        console.error(`[Server_GraphManager] Failed to verify written file:`, verifyError);
-      }
-    } catch (error) {
-      console.error('[Server_GraphManager] Error saving static graph data:', error);
-    }
-  }
-
   generateFeatureTree(): any {
     const graphData = this.graphManager ? this.graphManager.getGraphData() : { nodes: [], edges: [] };
-
-    const featureNodes = graphData.nodes.filter((node: any) => node.type === 'feature');
-    const featureEdges = graphData.edges.filter((edge: any) =>
-      edge.attributes.type === 'dependsUpon' || edge.attributes.type === 'blocks'
-    );
-
-    const tree: any = {};
-
-    featureNodes.forEach((node: any) => {
-      tree[node.id] = {
-        ...node,
-        children: [],
-        parents: []
-      };
-    });
-
-    featureEdges.forEach((edge: any) => {
-      if (edge.attributes.type === 'dependsUpon') {
-        if (tree[edge.source]) {
-          tree[edge.source].parents.push(edge.target);
-        }
-        if (tree[edge.target]) {
-          tree[edge.target].children.push(edge.source);
-        }
-      } else if (edge.attributes.type === 'blocks') {
-        if (tree[edge.source]) {
-          tree[edge.source].children.push(edge.target);
-        }
-        if (tree[edge.target]) {
-          tree[edge.target].parents.push(edge.source);
-        }
-      }
-    });
-
-    return tree;
+    return this.core.generateFeatureTree(graphData);
   }
 
   generateFeatureGraph(): any {
@@ -121,14 +49,13 @@ export class Server_GraphManager {
   }
 
   generateFileTreeGraph(): any {
-    const projectRoot = process.cwd();
     const testResults = this.getCurrentTestResults();
-    return generateFileTreeGraphPure(projectRoot, this.configs, testResults);
+    return generateFileTreeGraphPure(this.projectRoot, this.configs, testResults);
   }
 
   async handleMarkdownFileChange(filePath: string): Promise<void> {
     const { handleMarkdownFileChange } = await import('../stakeholder/markdown');
-    const result = await handleMarkdownFileChange(filePath, this.graphManager);
+    const result = await handleMarkdownFileChange(this.projectRoot, filePath, this.graphManager);
     return result;
   }
 
@@ -150,12 +77,12 @@ export class Server_GraphManager {
               style: {
                 nodeSize: 10,
                 nodeColor: '#882255',
-                nodeShape: 'circle'
+                nodeShape: 'circle' as const
               }
             },
             configs: this.configs
           };
-          this.saveGraphDataForStaticMode(fullGraphData);
+          saveGraphDataForStaticModePure(this.projectRoot, fullGraphData);
         }
       }
     } catch (error) {
@@ -165,7 +92,7 @@ export class Server_GraphManager {
 
   async writeMarkdownFile(filePath: string, frontmatterData: Record<string, any>, contentBody?: string): Promise<void> {
     const { updateMarkdownFile } = await import('../stakeholder/markdown');
-    await updateMarkdownFile(filePath, frontmatterData, contentBody);
+    await updateMarkdownFile(this.projectRoot, filePath, frontmatterData, contentBody);
   }
 
   getGraphManager(): GraphManager {

@@ -131,8 +131,15 @@ process.on('exit', () => {
   console.log('[NODE BUILDER] Process exiting');
   logStream.end();
 });
-process.on('SIGINT', () => {
-  console.log('[NODE BUILDER] Received SIGINT');
+process.on('SIGINT', async () => {
+  console.log('[NODE BUILDER] Received SIGINT - producing output artifacts');
+  await produceOutputArtifacts(projectConfigs, testName);
+  logStream.end();
+  process.exit(0);
+});
+process.on('SIGTERM', async () => {
+  console.log('[NODE BUILDER] Received SIGTERM - producing output artifacts');
+  await produceOutputArtifacts(projectConfigs, testName);
   logStream.end();
   process.exit(0);
 });
@@ -166,6 +173,53 @@ function generateNativeTestWrapper(
     translationResult,
     filesHash
   );
+}
+
+// Function to produce output artifacts when shutting down
+async function produceOutputArtifacts(projectConfig: ITesterantoConfig, configKey: string): Promise<void> {
+  console.log(`[NODE BUILDER] Producing output artifacts for config ${configKey}`);
+  
+  const runtimeConfig = projectConfig.runtimes[configKey];
+  if (!runtimeConfig) {
+    console.error(`[NODE BUILDER] No runtime config found for ${configKey}`);
+    return;
+  }
+  
+  const outputs = runtimeConfig.outputs;
+  if (!outputs || outputs.length === 0) {
+    console.log(`[NODE BUILDER] No outputs defined for ${configKey}`);
+    return;
+  }
+  
+  console.log(`[NODE BUILDER] Processing ${outputs.length} output artifacts`);
+  
+  // Create output directory
+  const outputDir = `testeranto/outputs/${configKey}`;
+  const fs = await import('fs');
+  const path = await import('path');
+  
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+  
+  for (const entrypoint of outputs) {
+    try {
+      const sourcePath = entrypoint;
+      const fileName = path.basename(entrypoint);
+      const destPath = path.join(outputDir, fileName);
+      
+      console.log(`[NODE BUILDER] Copying ${sourcePath} to ${destPath}`);
+      
+      // Copy file
+      fs.copyFileSync(sourcePath, destPath);
+      
+      console.log(`[NODE BUILDER] ✅ Copied ${fileName}`);
+    } catch (error: any) {
+      console.error(`[NODE BUILDER] Failed to process output artifact ${entrypoint}:`, error.message);
+    }
+  }
+  
+  console.log(`[NODE BUILDER] Finished producing output artifacts`);
 }
 
 // run esbuild in watch mode using esbuildConfigs. Write to fs the bundle and metafile

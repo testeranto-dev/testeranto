@@ -1,0 +1,35 @@
+=== Log started at 2026-04-07T19:27:03.344Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-bdd (runtime: node) ===
+=== Container ID: b75dd7b05eba6eb14e345f11b1af2f43579f1c8d86d2491c4575aa24bf00a98d ===
+=== Test: src/server/serverClasses/Server_GraphManagerCore.test.ts ===
+=== Config Key: nodetests ===
+
+=== ALL LOGS (stdout + stderr) ===
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+warning testeranto@0.342.1: The engine "vscode" appears to be invalid.
+warning testeranto@0.342.1: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphManagerCore.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/server/serverClasses/Server_GraphManagerCore.test.ts/"}'
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphManagerCore.test.mjs' imported from /workspace/
+    at finalizeResolution (node:internal/modules/esm/resolve:283:11)
+    at moduleResolve (node:internal/modules/esm/resolve:952:10)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at nextResolve (node:internal/modules/esm/hooks:864:28)
+    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775590023297:2:3744)
+    at async resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775590023297:2:4237)
+    at async resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775590023297:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:864:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:306:24)
+    at async handleMessage (node:internal/modules/esm/worker:196:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphManagerCore.test.mjs'
+}
+
+Node.js v20.19.4
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+
+=== Log captured at 2026-04-07T19:27:11.530Z (container status: exited, exit code: 1) ===

@@ -120,107 +120,6 @@ var CommonUtils = class {
   }
 };
 
-// src/verbs/aaa/BaseDescribe.ts
-var BaseDescribe = class {
-  constructor(features, its, describeCB, initialValues) {
-    this.error = null;
-    this.store = null;
-    this.key = "";
-    this.failed = false;
-    this.artifacts = [];
-    this.fails = 0;
-    this.features = features;
-    this.its = its;
-    this.describeCB = describeCB;
-    this.initialValues = initialValues;
-  }
-  addArtifact(path) {
-    CommonUtils.addArtifact(this.artifacts, path);
-  }
-  async describe(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
-    this.key = key;
-    this.fails = 0;
-    try {
-      this.store = await this.describeCB("x");
-      this.status = true;
-    } catch (e) {
-      this.status = false;
-      this.failed = true;
-      this.fails++;
-      this.error = e;
-      return this.store;
-    }
-    try {
-      for (const [itNdx, it] of this.its.entries()) {
-        try {
-          const result = await it.test(
-            this.store,
-            testResourceConfiguration,
-            artifactory
-          );
-          if (result !== void 0) {
-            tester(result);
-          }
-        } catch (e) {
-          this.failed = true;
-          this.fails++;
-          this.error = e;
-        }
-      }
-    } catch (e) {
-      this.error = e;
-      this.failed = true;
-      this.fails++;
-    }
-    return this.store;
-  }
-  toObj() {
-    return {
-      key: this.key,
-      its: this.its.map((it) => it.toObj()),
-      error: this.error ? [this.error.message, this.error.stack] : null,
-      failed: this.failed,
-      features: this.features || [],
-      artifacts: this.artifacts,
-      status: this.status,
-      fails: this.fails
-    };
-  }
-};
-
-// src/verbs/aaa/BaseIt.ts
-var BaseIt = class {
-  constructor(name, itCB) {
-    this.error = null;
-    this.artifacts = [];
-    this.name = name;
-    this.itCB = itCB;
-  }
-  addArtifact(path) {
-    CommonUtils.addArtifact(this.artifacts, path);
-  }
-  async test(store, testResourceConfiguration, artifactory) {
-    try {
-      const result = await this.itCB(store);
-      this.status = true;
-      return result;
-    } catch (e) {
-      this.status = false;
-      this.error = e;
-      throw e;
-    }
-  }
-  toObj() {
-    return {
-      name: this.name,
-      status: this.status,
-      error: this.error ? `${this.error.name}: ${this.error.message}
-${this.error.stack}` : null,
-      artifacts: this.artifacts
-    };
-  }
-};
-
 // src/verbs/bdd/BaseGiven.ts
 var BaseGiven = class {
   constructor(features, whens, thens, givenCB, initialValues) {
@@ -365,6 +264,38 @@ var BaseGiven = class {
   }
 };
 
+// src/verbs/bdd/BaseWhen.ts
+var BaseWhen = class {
+  constructor(name, whenCB) {
+    this.error = null;
+    this.name = name;
+    this.whenCB = whenCB;
+  }
+  async test(store, testResourceConfiguration, artifactory) {
+    try {
+      const result = await this.andWhen(
+        store,
+        this.whenCB,
+        testResourceConfiguration,
+        artifactory
+      );
+      this.status = true;
+      return result;
+    } catch (e) {
+      this.status = false;
+      this.error = e;
+      throw e;
+    }
+  }
+  toObj() {
+    return {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null
+    };
+  }
+};
+
 // src/verbs/bdd/BaseThen.ts
 var BaseThen = class {
   constructor(name, thenCB) {
@@ -409,21 +340,92 @@ var BaseThen = class {
   }
 };
 
-// src/verbs/bdd/BaseWhen.ts
-var BaseWhen = class {
-  constructor(name, whenCB) {
+// src/verbs/aaa/BaseDescribe.ts
+var BaseDescribe = class {
+  constructor(features, its, describeCB, initialValues) {
     this.error = null;
+    this.store = null;
+    this.key = "";
+    this.failed = false;
+    this.artifacts = [];
+    this.fails = 0;
+    this.features = features;
+    this.its = its;
+    this.describeCB = describeCB;
+    this.initialValues = initialValues;
+  }
+  addArtifact(path) {
+    CommonUtils.addArtifact(this.artifacts, path);
+  }
+  async describe(subject, key, testResourceConfiguration, tester, artifactory, suiteNdx) {
+    this.key = key;
+    this.fails = 0;
+    try {
+      if (typeof this.describeCB === "function") {
+        this.store = await this.describeCB(subject, this.initialValues);
+      } else {
+        this.store = this.describeCB;
+      }
+      this.status = true;
+    } catch (e) {
+      this.status = false;
+      this.failed = true;
+      this.fails++;
+      this.error = e;
+      return this.store;
+    }
+    try {
+      for (const [itNdx, it] of this.its.entries()) {
+        try {
+          const result = await it.test(
+            this.store,
+            testResourceConfiguration,
+            artifactory
+          );
+          if (result !== void 0) {
+            tester(result);
+          }
+        } catch (e) {
+          this.failed = true;
+          this.fails++;
+          this.error = e;
+        }
+      }
+    } catch (e) {
+      this.error = e;
+      this.failed = true;
+      this.fails++;
+    }
+    return this.store;
+  }
+  toObj() {
+    return {
+      key: this.key,
+      its: this.its.map((it) => it.toObj()),
+      error: this.error ? [this.error.message, this.error.stack] : null,
+      failed: this.failed,
+      features: this.features || [],
+      artifacts: this.artifacts,
+      status: this.status,
+      fails: this.fails
+    };
+  }
+};
+
+// src/verbs/aaa/BaseIt.ts
+var BaseIt = class {
+  constructor(name, itCB) {
+    this.error = null;
+    this.artifacts = [];
     this.name = name;
-    this.whenCB = whenCB;
+    this.itCB = itCB;
+  }
+  addArtifact(path) {
+    CommonUtils.addArtifact(this.artifacts, path);
   }
   async test(store, testResourceConfiguration, artifactory) {
     try {
-      const result = await this.andWhen(
-        store,
-        this.whenCB,
-        testResourceConfiguration,
-        artifactory
-      );
+      const result = await this.itCB(store);
       this.status = true;
       return result;
     } catch (e) {
@@ -436,7 +438,9 @@ var BaseWhen = class {
     return {
       name: this.name,
       status: this.status,
-      error: this.error ? `${this.error.name}: ${this.error.message}` : null
+      error: this.error ? `${this.error.name}: ${this.error.message}
+${this.error.stack}` : null,
+      artifacts: this.artifacts
     };
   }
 };
@@ -464,7 +468,7 @@ var BaseConfirm = class {
   toObj() {
     const testCases = this.testCases || [];
     return CommonUtils.toObj(this, {
-      testCases: testCases.map((testCase) => {
+      confirms: testCases.map((testCase, index) => {
         if (Array.isArray(testCase) && testCase.length >= 2) {
           const [value, should] = testCase;
           let inputData = null;
@@ -511,6 +515,7 @@ var BaseConfirm = class {
             testDescription = `Error: ${e.message}`;
           }
           return {
+            index,
             input: inputData,
             test: testDescription
           };
@@ -532,22 +537,13 @@ var BaseConfirm = class {
         try {
           if (Array.isArray(testCase) && testCase.length >= 2) {
             const [value, should] = testCase;
-            console.log("[BaseConfirm] value:", value);
-            console.log("[BaseConfirm] should:", should);
-            console.log("[BaseConfirm] value type:", typeof value);
-            console.log("[BaseConfirm] should type:", typeof should);
             let input;
             if (typeof value === "function") {
               input = value();
-              console.log("[BaseConfirm] input from function:", input);
             } else {
               input = value;
-              console.log("[BaseConfirm] input direct:", input);
             }
             if (typeof should === "function") {
-              console.log("[BaseConfirm] input:", input);
-              console.log("[BaseConfirm] confirmCB:", this.confirmCB);
-              console.log("[BaseConfirm] should function:", should);
               let testFn;
               if (typeof this.confirmCB === "function") {
                 const potentialTestFn = this.confirmCB();
@@ -560,12 +556,10 @@ var BaseConfirm = class {
                 testFn = this.confirmCB;
               }
               const actualResult = Array.isArray(input) ? testFn(...input) : testFn(input);
-              console.log("[BaseConfirm] actualResult:", actualResult);
               const passed = should(actualResult);
               tester(passed);
             } else if (should && typeof should.processRow === "function") {
               const actualResult = Array.isArray(input) ? this.confirmCB(...input) : this.confirmCB(input);
-              console.log("[BaseConfirm] actualResult:", actualResult);
               const passed = await should.processRow(
                 actualResult,
                 testResourceConfiguration,
@@ -585,6 +579,9 @@ var BaseConfirm = class {
     }
     return this.store;
   }
+  async afterEach(store, key, artifactory) {
+    return store;
+  }
   // Alias for run to match BaseSuite expectations
   async run(subject, testResourceConfiguration, artifactory) {
     return this.confirm(
@@ -594,82 +591,6 @@ var BaseConfirm = class {
       (t) => !!t,
       artifactory
     );
-  }
-};
-
-// src/verbs/tdt/BaseExpected.ts
-var BaseExpected = class {
-  constructor(name, expectedCB) {
-    this.expectedValue = null;
-    this.error = null;
-    this.name = name;
-    this.expectedCB = expectedCB;
-  }
-  // Set expected value for current row
-  setExpectedValue(expected) {
-    this.expectedValue = expected;
-  }
-  async test(store, testResourceConfiguration, filepath, artifactory) {
-    try {
-      const result = await this.expectedCB(store);
-      this.status = true;
-      return result;
-    } catch (e) {
-      this.status = false;
-      this.error = e;
-      throw e;
-    }
-  }
-  toObj() {
-    return {
-      name: this.name,
-      status: this.status,
-      error: this.error ? `${this.error.name}: ${this.error.message}` : null,
-      expectedValue: this.expectedValue
-    };
-  }
-};
-
-// src/verbs/tdt/BaseShould.ts
-var BaseShould = class {
-  constructor(name, shouldCB) {
-    this.currentRow = [];
-    this.rowIndex = -1;
-    this.error = null;
-    this.name = name;
-    this.shouldCB = shouldCB;
-  }
-  // Set current row data
-  setRowData(rowIndex, rowData) {
-    this.rowIndex = rowIndex;
-    this.currentRow = rowData;
-  }
-  // Process the current row
-  async processRow(actualResult, testResourceConfiguration, artifactory) {
-    try {
-      let success = false;
-      if (typeof this.shouldCB === "function") {
-        const result = await this.shouldCB(actualResult);
-        success = !!result;
-      } else {
-        success = actualResult === this.shouldCB;
-      }
-      this.status = success;
-      return success;
-    } catch (e) {
-      this.status = false;
-      this.error = e;
-      throw e;
-    }
-  }
-  toObj() {
-    return {
-      name: this.name,
-      status: this.status,
-      error: this.error ? `${this.error.name}: ${this.error.message}` : null,
-      rowIndex: this.rowIndex,
-      currentRow: this.currentRow
-    };
   }
 };
 
@@ -786,25 +707,28 @@ var BaseValue = class {
     return store;
   }
   toObj() {
-    const processedRows = (this.tableRows || []).map((row) => {
+    const processedRows = (this.tableRows || []).map((row, index) => {
       if (Array.isArray(row)) {
-        return row.map((item) => {
-          if (item && typeof item === "object") {
-            if (item.toObj) {
-              return item.toObj();
-            }
-            const result = {};
-            for (const [key, value] of Object.entries(item)) {
-              if (key !== "_parent" && key !== "testResourceConfiguration") {
-                result[key] = value;
+        return {
+          index,
+          values: row.map((item) => {
+            if (item && typeof item === "object") {
+              if (item.toObj) {
+                return item.toObj();
               }
+              const result = {};
+              for (const [key, value] of Object.entries(item)) {
+                if (key !== "_parent" && key !== "testResourceConfiguration") {
+                  result[key] = value;
+                }
+              }
+              return result;
             }
-            return result;
-          }
-          return item;
-        });
+            return item;
+          })
+        };
       }
-      return row;
+      return { index, values: [row] };
     });
     return {
       key: this.key,
@@ -819,558 +743,150 @@ var BaseValue = class {
   }
 };
 
-// src/BaseTiposkripto.ts
-var BaseTiposkripto = class {
-  constructor(webOrNode, input, testSpecification, testImplementation, testResourceRequirement = defaultTestResourceRequirement, testAdapter = {}, testResourceConfiguration) {
-    this.totalTests = 0;
-    this.artifacts = [];
-    this.testResourceConfiguration = testResourceConfiguration;
-    const fullAdapter = DefaultAdapter(testAdapter);
-    const instance = this;
-    const classySuites = {};
-    const classyGivens = {};
-    if (testImplementation.givens) {
-      Object.entries(testImplementation.givens).forEach(([key, g]) => {
-        classyGivens[key] = (features, whens, thens, gcb, initialValues) => {
-          const safeFeatures = Array.isArray(features) ? [...features] : [];
-          const safeWhens = Array.isArray(whens) ? [...whens] : [];
-          const safeThens = Array.isArray(thens) ? [...thens] : [];
-          const capturedFullAdapter = fullAdapter;
-          const givenInstance = new class extends BaseGiven {
-            async givenThat(subject, testResource, artifactory, initializer, initialValues2) {
-              const givenArtifactory = instance.createArtifactory({
-                givenKey: key,
-                suiteIndex: this._suiteIndex
-              });
-              return capturedFullAdapter.prepareEach(
-                subject,
-                initializer,
-                testResource,
-                initialValues2,
-                givenArtifactory
-              );
-            }
-            afterEach(store, key2, artifactory) {
-              return Promise.resolve(
-                capturedFullAdapter.cleanupEach(store, key2, artifactory)
-              );
-            }
-          }(
-            safeFeatures,
-            safeWhens,
-            safeThens,
-            testImplementation.givens[key],
-            initialValues
-          );
-          givenInstance._parent = instance;
-          if (givenInstance.setParent) {
-            givenInstance.setParent(instance);
-          }
-          return givenInstance;
-        };
-      });
-    }
-    const classyWhens = {};
-    if (testImplementation.whens) {
-      Object.entries(testImplementation.whens).forEach(
-        ([key, whEn]) => {
-          classyWhens[key] = (...payload) => {
-            const capturedFullAdapter = fullAdapter;
-            const whenInstance = new class extends BaseWhen {
-              async andWhen(store, whenCB, testResource, artifactory) {
-                return await capturedFullAdapter.execute(
-                  store,
-                  whenCB,
-                  testResource,
-                  artifactory
-                );
-              }
-            }(`${key}: ${payload && payload.toString()}`, whEn(...payload));
-            return whenInstance;
-          };
-        }
-      );
-    }
-    const classyThens = {};
-    if (testImplementation.thens) {
-      Object.entries(testImplementation.thens).forEach(
-        ([key, thEn]) => {
-          classyThens[key] = (...args) => {
-            const capturedFullAdapter = fullAdapter;
-            const thenInstance = new class extends BaseThen {
-              async butThen(store, thenCB, testResourceConfiguration2, artifactory) {
-                return capturedFullAdapter.verify(
-                  store,
-                  thenCB,
-                  testResourceConfiguration2,
-                  artifactory
-                );
-              }
-            }(`${key}: ${args && args.toString()}`, thEn(...args));
-            return thenInstance;
-          };
-        }
-      );
-    }
-    const classyConfirms = {};
-    if (testImplementation.confirms) {
-      Object.entries(testImplementation.confirms).forEach(([key, val]) => {
-        classyConfirms[key] = () => {
-          return (testCases, features) => {
-            let actualConfirmCB;
-            if (typeof val === "function") {
-              actualConfirmCB = val();
-            } else {
-              actualConfirmCB = val;
-            }
-            return new BaseConfirm(
-              features,
-              testCases,
-              actualConfirmCB,
-              void 0
-              // initialValues
-            );
-          };
-        };
-      });
-    }
-    const classyValues = {};
-    if (testImplementation.values) {
-      Object.entries(testImplementation.values).forEach(([key, val]) => {
-        classyValues[key] = (features, tableRows, confirmCB, initialValues) => {
-          return new BaseValue(
-            features,
-            tableRows,
-            confirmCB,
-            initialValues
-          );
-        };
-      });
-    }
-    const classyShoulds = {};
-    if (testImplementation.shoulds) {
-      Object.entries(testImplementation.shoulds).forEach(
-        ([key, shouldCB]) => {
-          classyShoulds[key] = (...args) => {
-            return new BaseShould(
-              `${key}: ${args && args.toString()}`,
-              shouldCB(...args)
-            );
-          };
-        }
-      );
-    }
-    const classyExpecteds = {};
-    if (testImplementation.expecteds) {
-      Object.entries(testImplementation.expecteds).forEach(
-        ([key, expectedCB]) => {
-          classyExpecteds[key] = (...args) => {
-            return new BaseExpected(
-              `${key}: ${args && args.toString()}`,
-              expectedCB(...args)
-            );
-          };
-        }
-      );
-    }
-    const classyDescribes = {};
-    if (testImplementation.describes && typeof testImplementation.describes === "object") {
-      Object.entries(testImplementation.describes).forEach(([key, desc]) => {
-        classyDescribes[key] = (features, its, describeCB, initialValues) => {
-          try {
-            let actualDescribeCB;
-            if (describeCB) {
-              actualDescribeCB = describeCB;
-            } else if (typeof desc === "function") {
-              actualDescribeCB = desc();
-            } else {
-              actualDescribeCB = desc;
-            }
-            if (typeof actualDescribeCB !== "function") {
-              console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
-              actualDescribeCB = () => {
-                throw new Error(`Describe implementation for "${key}" is not a valid function`);
-              };
-            }
-            return new BaseDescribe(
-              features,
-              its,
-              actualDescribeCB,
-              initialValues
-            );
-          } catch (error) {
-            console.error(`Error creating Describe for "${key}":`, error);
-            return new BaseDescribe(
-              features,
-              its,
-              () => {
-                throw new Error(`Describe implementation for "${key}" failed: ${error.message}`);
-              },
-              initialValues
-            );
-          }
-        };
-      });
-    } else {
-      console.warn("testImplementation.describes is not defined or not an object");
-    }
-    const classyIts = {};
-    if (testImplementation.its) {
-      Object.entries(testImplementation.its).forEach(
-        ([key, itCB]) => {
-          classyIts[key] = (...args) => {
-            return new BaseIt(
-              `${key}: ${args && args.toString()}`,
-              itCB(...args)
-            );
-          };
-        }
-      );
-    }
-    this.suitesOverrides = classySuites;
-    this.givenOverrides = classyGivens;
-    this.whenOverrides = classyWhens;
-    this.thenOverrides = classyThens;
-    this.valuesOverrides = classyValues;
-    this.shouldsOverrides = classyShoulds;
-    this.expectedsOverrides = classyExpecteds;
-    this.describesOverrides = classyDescribes;
-    this.itsOverrides = classyIts;
-    this.confirmsOverrides = classyConfirms;
-    this.testResourceRequirement = testResourceRequirement;
-    this.testSpecification = testSpecification;
-    let topLevelVerbs = [];
-    let specError = null;
+// src/verbs/tdt/BaseShould.ts
+var BaseShould = class {
+  constructor(name, shouldCB) {
+    this.currentRow = [];
+    this.rowIndex = -1;
+    this.error = null;
+    this.name = name;
+    this.shouldCB = shouldCB;
+  }
+  // Set current row data
+  setRowData(rowIndex, rowData) {
+    this.rowIndex = rowIndex;
+    this.currentRow = rowData;
+  }
+  // Process the current row
+  async processRow(actualResult, testResourceConfiguration, artifactory) {
     try {
-      topLevelVerbs = testSpecification(
-        this.Given(),
-        this.When(),
-        this.Then(),
-        this.Describe(),
-        this.It(),
-        this.Confirm(),
-        this.Value(),
-        this.Should()
-      );
-    } catch (error) {
-      console.error("Error during test specification:", error);
-      specError = error;
-      topLevelVerbs = [];
-    }
-    this.specs = topLevelVerbs;
-    this.totalTests = this.calculateTotalTestsDirectly();
-    this.testJobs = [];
-    for (let index = 0; index < this.specs.length; index++) {
-      const step = this.specs[index];
-      try {
-        const testJob = this.createTestJobForStep(step, index, input);
-        this.testJobs.push(testJob);
-      } catch (stepError) {
-        console.error(`Error creating test job for step ${index}:`, stepError);
-        const errorMessage = `Step ${index} failed to create test job: ${stepError.message}`;
-        const errorStep = {
-          constructor: { name: "ErrorStep" },
-          features: [],
-          artifacts: [],
-          fails: 1,
-          failed: true,
-          error: new Error(errorMessage),
-          toObj: () => ({
-            name: `Step_${index}_Error`,
-            type: "Error",
-            error: errorMessage
-          })
-        };
-        const errorTestJob = this.createErrorTestJob(errorStep, index, new Error(errorMessage));
-        this.testJobs.push(errorTestJob);
+      let success = false;
+      if (typeof this.shouldCB === "function") {
+        const result = await this.shouldCB(actualResult);
+        success = !!result;
+      } else {
+        success = actualResult === this.shouldCB;
       }
-    }
-    if (this.testJobs.length === 0) {
-      const errorMessage = specError ? `Test specification failed: ${specError.message}` : "No test steps were created by the specification";
-      const errorStep = {
-        constructor: { name: "ErrorStep" },
-        features: [],
-        artifacts: [],
-        fails: 1,
-        failed: true,
-        error: new Error(errorMessage),
-        toObj: () => ({
-          name: "Specification_Error",
-          type: "Error",
-          error: errorMessage
-        })
-      };
-      const errorTestJob = this.createErrorTestJob(errorStep, 0, new Error(errorMessage));
-      this.testJobs.push(errorTestJob);
-    }
-    if (this.testJobs.length > 0) {
-      const runAllTests = async () => {
-        const allResults = [];
-        let totalFails = 0;
-        let anyFailed = false;
-        const allFeatures = [];
-        const allArtifacts = [];
-        for (let i = 0; i < this.testJobs.length; i++) {
-          try {
-            const result = await this.testJobs[i].receiveTestResourceConfig(testResourceConfiguration);
-            allResults.push(result);
-            totalFails += result.fails;
-            anyFailed = anyFailed || result.failed;
-            if (result.features && Array.isArray(result.features)) {
-              allFeatures.push(...result.features);
-            }
-            if (result.artifacts && Array.isArray(result.artifacts)) {
-              allArtifacts.push(...result.artifacts);
-            }
-          } catch (e) {
-            console.error(`Error running test job ${i}:`, e);
-            totalFails++;
-            anyFailed = true;
-            allResults.push({
-              failed: true,
-              fails: 1,
-              features: [],
-              artifacts: [],
-              error: {
-                message: e.message,
-                stack: e.stack,
-                name: e.name
-              },
-              stepName: `Job_${i}`,
-              stepType: "Error",
-              testJob: { name: `Job_${i}_Error` }
-            });
-          }
-        }
-        const combinedResults = {
-          failed: anyFailed,
-          fails: totalFails,
-          artifacts: allArtifacts,
-          features: [...new Set(allFeatures)],
-          // Remove duplicates
-          tests: this.testJobs.length,
-          runTimeTests: this.totalTests,
-          testJob: { name: "CombinedResults" },
-          timestamp: Date.now(),
-          individualResults: allResults.map((result, idx) => ({
-            index: idx,
-            failed: result.failed,
-            fails: result.fails,
-            features: result.features || [],
-            error: result.error,
-            stepName: result.stepName,
-            stepType: result.stepType,
-            testJob: result.testJob
-          }))
-        };
-        combinedResults.summary = {
-          totalTests: this.testJobs.length,
-          passed: this.testJobs.length - totalFails,
-          failed: totalFails,
-          successRate: totalFails === this.testJobs.length ? "0%" : ((this.testJobs.length - totalFails) / this.testJobs.length * 100).toFixed(2) + "%"
-        };
-        console.log("testResourceConfiguration", testResourceConfiguration);
-        const reportJson = `${testResourceConfiguration.fs}/tests.json`;
-        this.writeFileSync(reportJson, JSON.stringify(combinedResults, null, 2));
-      };
-      runAllTests().catch((error) => {
-        console.error("Error running all test jobs:", error);
-        const errorResults = {
-          failed: true,
-          fails: -1,
-          artifacts: [],
-          features: [],
-          tests: 0,
-          runTimeTests: -1,
-          testJob: {},
-          timestamp: Date.now(),
-          error: {
-            message: error.message,
-            stack: error.stack,
-            name: error.name
-          },
-          individualResults: [],
-          summary: {
-            totalTests: 0,
-            passed: 0,
-            failed: 1,
-            successRate: "0%"
-          }
-        };
-        const reportJson = `${testResourceConfiguration.fs}/tests.json`;
-        this.writeFileSync(reportJson, JSON.stringify(errorResults, null, 2));
-      });
-    } else {
-      const emptyResults = {
-        failed: true,
-        fails: -1,
-        artifacts: [],
-        features: [],
-        tests: 0,
-        runTimeTests: -1,
-        testJob: {},
-        timestamp: Date.now(),
-        error: {
-          message: "No test jobs were created",
-          name: "ConfigurationError"
-        },
-        individualResults: [],
-        summary: {
-          totalTests: 0,
-          passed: 0,
-          failed: 1,
-          successRate: "0%"
-        }
-      };
-      const reportJson = `${testResourceConfiguration.fs}/tests.json`;
-      this.writeFileSync(reportJson, JSON.stringify(emptyResults, null, 2));
+      this.status = success;
+      return success;
+    } catch (e) {
+      this.status = false;
+      this.error = e;
+      throw e;
     }
   }
-  // Create an artifactory that tracks context
-  createArtifactory(context = {}) {
+  toObj() {
     return {
-      writeFileSync: (filename, payload) => {
-        let path = "";
-        const basePath = this.testResourceConfiguration?.fs || "testeranto";
-        console.log("[Artifactory] Base path:", basePath);
-        console.log("[Artifactory] Context:", context);
-        if (context.stepIndex !== void 0) {
-          path += `step-${context.stepIndex}/`;
-          if (context.stepType) {
-            path += `${context.stepType}/`;
-          }
-        } else if (context.suiteIndex !== void 0) {
-          path += `suite-${context.suiteIndex}/`;
-        }
-        if (context.givenKey) {
-          path += `given-${context.givenKey}/`;
-        }
-        if (context.whenIndex !== void 0) {
-          path += `when-${context.whenIndex} `;
-        } else if (context.thenIndex !== void 0) {
-          path += `then-${context.thenIndex} `;
-        }
-        path += filename;
-        if (!path.match(/\.[a-zA-Z0-9]+$/)) {
-          path += ".txt";
-        }
-        const basePathClean = basePath.replace(/\/$/, "");
-        const pathClean = path.replace(/^\//, "");
-        const fullPath = `${basePathClean}/${pathClean}`;
-        console.log("[Artifactory] Full path:", fullPath);
-        this.writeFileSync(fullPath, payload);
-      }
-      // screenshot, openScreencast, and closeScreencast are only applicable to web runtime
-      // They should be implemented in WebTiposkripto and will be added to the artifactory there
-      // For non-web runtimes, these methods will not be available
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null,
+      rowIndex: this.rowIndex,
+      currentRow: this.currentRow,
+      pattern: "tdt"
     };
   }
-  async receiveTestResourceConfig(testResourceConfig) {
-    if (this.testJobs && this.testJobs.length > 0) {
-      const allResults = [];
-      let totalFails = 0;
-      let anyFailed = false;
-      const allFeatures = [];
-      const allArtifacts = [];
-      for (let i = 0; i < this.testJobs.length; i++) {
-        try {
-          const result = await this.testJobs[i].receiveTestResourceConfig(testResourceConfig);
-          allResults.push(result);
-          totalFails += result.fails;
-          anyFailed = anyFailed || result.failed;
-          if (result.features && Array.isArray(result.features)) {
-            allFeatures.push(...result.features);
-          }
-          if (result.artifacts && Array.isArray(result.artifacts)) {
-            allArtifacts.push(...result.artifacts);
-          }
-        } catch (e) {
-          console.error(`Error running test job ${i}:`, e);
-          totalFails++;
-          anyFailed = true;
-        }
-      }
-      return {
-        failed: anyFailed,
-        fails: totalFails,
-        artifacts: allArtifacts,
-        features: [...new Set(allFeatures)],
-        // Remove duplicates
-        tests: this.testJobs.length,
-        runTimeTests: this.totalTests,
-        testJob: { name: "CombinedResults" },
-        timestamp: Date.now(),
-        individualResults: allResults.map((result, idx) => ({
-          index: idx,
-          failed: result.failed,
-          fails: result.fails,
-          features: result.features || [],
-          error: result.error,
-          stepName: result.stepName,
-          stepType: result.stepType,
-          testJob: result.testJob
-        })),
-        summary: {
-          totalTests: this.testJobs.length,
-          passed: this.testJobs.length - totalFails,
-          failed: totalFails,
-          successRate: totalFails === 0 ? "100%" : ((this.testJobs.length - totalFails) / this.testJobs.length * 100).toFixed(2) + "%"
-        }
-      };
-    } else {
-      throw new Error("No test jobs available");
+};
+
+// src/verbs/tdt/BaseExpected.ts
+var BaseExpected = class {
+  constructor(name, expectedCB) {
+    this.expectedValue = null;
+    this.error = null;
+    this.name = name;
+    this.expectedCB = expectedCB;
+  }
+  // Set expected value for current row
+  setExpectedValue(expected) {
+    this.expectedValue = expected;
+  }
+  async test(store, testResourceConfiguration, filepath, artifactory) {
+    try {
+      const result = await this.expectedCB(store);
+      this.status = true;
+      return result;
+    } catch (e) {
+      this.status = false;
+      this.error = e;
+      throw e;
     }
   }
-  Specs() {
-    return this.specs;
+  toObj() {
+    return {
+      name: this.name,
+      status: this.status,
+      error: this.error ? `${this.error.name}: ${this.error.message}` : null,
+      expectedValue: this.expectedValue
+    };
   }
-  Suites() {
-    console.warn("Suites() is deprecated and returns an empty object");
-    return {};
+};
+
+// src/VerbProxies.ts
+var VerbProxies = class {
+  constructor(givenOverrides, whenOverrides, thenOverrides, describesOverrides, itsOverrides, confirmsOverrides, valuesOverrides, shouldsOverrides, expectedsOverrides) {
+    this.givenOverrides = givenOverrides;
+    this.whenOverrides = whenOverrides;
+    this.thenOverrides = thenOverrides;
+    this.describesOverrides = describesOverrides;
+    this.itsOverrides = itsOverrides;
+    this.confirmsOverrides = confirmsOverrides;
+    this.valuesOverrides = valuesOverrides;
+    this.shouldsOverrides = shouldsOverrides;
+    this.expectedsOverrides = expectedsOverrides;
   }
   Given() {
-    const overrides = this.givenOverrides || {};
-    return new Proxy(overrides, {
+    return this.createVerbProxy("Given", this.givenOverrides, this.createMissingGivenHandler.bind(this));
+  }
+  createMissingGivenHandler(prop) {
+    return (initialValues) => {
+      console.error(`Given.${prop} is not defined in test implementation`);
+      return (whens = [], thens = [], features = []) => {
+        try {
+          return new class extends BaseGiven {
+            async givenThat(subject, testResource, artifactory, initializer, initialValues2) {
+              throw new Error(`Given.${prop} is not implemented`);
+            }
+          }(
+            features,
+            whens,
+            thens,
+            () => {
+              throw new Error(`Given.${prop} is not implemented`);
+            },
+            initialValues
+          );
+        } catch (e) {
+          console.error(`Error creating Given.${prop}:`, e);
+          return {
+            features,
+            whens,
+            thens,
+            givenCB: () => {
+              throw new Error(`Given.${prop} creation failed: ${e.message}`);
+            },
+            initialValues,
+            give: async () => {
+              throw new Error(`Given.${prop} creation failed: ${e.message}`);
+            },
+            toObj: () => ({
+              key: `Given_${prop}_error`,
+              error: `Given.${prop} creation failed: ${e.message}`,
+              failed: true,
+              features
+            })
+          };
+        }
+      };
+    };
+  }
+  createVerbProxy(verbName, overrides, missingHandler) {
+    const actualOverrides = overrides || {};
+    return new Proxy(actualOverrides, {
       get(target, prop) {
         if (typeof prop === "string") {
           if (prop in target) {
             return target[prop];
           } else {
-            return (features = [], whens = [], thens = [], givenCB = () => {
-            }, initialValues = void 0) => {
-              console.error(`Given.${prop} is not defined in test implementation`);
-              try {
-                return new class extends BaseGiven {
-                  async givenThat(subject, testResource, artifactory, initializer, initialValues2) {
-                    throw new Error(`Given.${prop} is not implemented`);
-                  }
-                }(
-                  features,
-                  whens,
-                  thens,
-                  givenCB,
-                  initialValues
-                );
-              } catch (e) {
-                console.error(`Error creating Given.${prop}:`, e);
-                return {
-                  features,
-                  whens,
-                  thens,
-                  givenCB,
-                  initialValues,
-                  give: async () => {
-                    throw new Error(`Given.${prop} creation failed: ${e.message}`);
-                  },
-                  toObj: () => ({
-                    key: `Given_${prop}_error`,
-                    error: `Given.${prop} creation failed: ${e.message}`,
-                    failed: true,
-                    features
-                  })
-                };
-              }
-            };
+            return missingHandler(prop);
           }
         }
         return target[prop];
@@ -1448,9 +964,9 @@ var BaseTiposkripto = class {
           if (prop in target) {
             return target[prop];
           } else {
-            return () => {
+            return (initialValues) => {
               console.error(`Describe.${prop} is not defined in test implementation`);
-              return (features, its, describeCB, initialValues) => {
+              return (its, features) => {
                 return new BaseDescribe(
                   features,
                   its,
@@ -1499,7 +1015,7 @@ var BaseTiposkripto = class {
           if (prop in target) {
             return target[prop];
           } else {
-            return () => {
+            return (...args) => {
               console.error(`Confirm.${prop} is not defined in test implementation`);
               return (testCases, features) => {
                 return new class extends BaseConfirm {
@@ -1530,7 +1046,7 @@ var BaseTiposkripto = class {
           if (prop in target) {
             return target[prop];
           } else {
-            return () => {
+            return (...args) => {
               console.error(`Value.${prop} is not defined in test implementation`);
               return (features, tableRows, confirmCB, initialValues) => {
                 return new class extends BaseValue {
@@ -1631,15 +1147,19 @@ var BaseTiposkripto = class {
       }
     });
   }
-  // Add a method to access test jobs which can be used by receiveTestResourceConfig
-  getTestJobs() {
-    return this.testJobs;
+};
+
+// src/TestJobCreator.ts
+var TestJobCreator = class {
+  constructor(createArtifactory, totalTests) {
+    this.createArtifactory = createArtifactory;
+    this.totalTests = totalTests;
   }
   createTestJobForStep(step, index, input) {
     const stepRunner = async (testResourceConfiguration) => {
       try {
         let result;
-        const constructorName = step.constructor.name;
+        const constructorName = step.constructor?.name || "Unknown";
         const stepArtifactory = this.createArtifactory({
           stepIndex: index,
           stepType: constructorName.toLowerCase().replace("base", "")
@@ -1650,7 +1170,6 @@ var BaseTiposkripto = class {
             `step_${index}`,
             testResourceConfiguration,
             (t) => !!t,
-            // Simple tester function
             stepArtifactory,
             index
           );
@@ -1660,7 +1179,6 @@ var BaseTiposkripto = class {
             `step_${index}`,
             testResourceConfiguration,
             (t) => !!t,
-            // Simple tester function
             stepArtifactory,
             index
           );
@@ -1677,7 +1195,6 @@ var BaseTiposkripto = class {
               `step_${index}`,
               testResourceConfiguration,
               (t) => !!t,
-              // Simple tester function
               stepArtifactory,
               index
             );
@@ -1687,11 +1204,14 @@ var BaseTiposkripto = class {
               `step_${index}`,
               testResourceConfiguration,
               (t) => !!t,
-              // Simple tester function
               stepArtifactory,
               index
             );
+          } else {
+            throw new Error(`TDT step has no runnable method (run, confirm, or value)`);
           }
+        } else if (constructorName === "SpecificationError") {
+          throw step.error || new Error("Test specification failed");
         } else {
           if (typeof step.run === "function") {
             result = await step.run(
@@ -1704,6 +1224,24 @@ var BaseTiposkripto = class {
               input,
               testResourceConfiguration,
               stepArtifactory
+            );
+          } else if (typeof step.give === "function") {
+            result = await step.give(
+              input,
+              `step_${index}`,
+              testResourceConfiguration,
+              (t) => !!t,
+              stepArtifactory,
+              index
+            );
+          } else if (typeof step.describe === "function") {
+            result = await step.describe(
+              input,
+              `step_${index}`,
+              testResourceConfiguration,
+              (t) => !!t,
+              stepArtifactory,
+              index
             );
           } else {
             throw new Error(`Step type ${constructorName} has no runnable method`);
@@ -1720,7 +1258,11 @@ var BaseTiposkripto = class {
     const testJob = {
       test: step,
       toObj: () => {
-        return step.toObj ? step.toObj() : { name: `Step_${index}`, type: step.constructor.name };
+        return step.toObj ? step.toObj() : {
+          name: `Step_${index}`,
+          type: step.constructor?.name || "Unknown",
+          key: step.key || `step_${index}`
+        };
       },
       runner,
       receiveTestResourceConfig: async (testResourceConfiguration) => {
@@ -1766,19 +1308,19 @@ var BaseTiposkripto = class {
           console.error(e.stack);
           return {
             failed: true,
-            fails: -1,
+            fails: 1,
             artifacts: [],
             features: [],
-            tests: 0,
-            runTimeTests: -1,
+            tests: 1,
+            runTimeTests: totalTests,
             testJob: testJob.toObj(),
             error: {
               message: e.message,
               stack: e.stack,
               name: e.name
             },
-            stepName: `Step_${index}`,
-            stepType: "Error"
+            stepName: step.key || `Step_${index}`,
+            stepType: step.constructor?.name || "Error"
           };
         }
       }
@@ -1818,8 +1360,602 @@ var BaseTiposkripto = class {
       }
     };
   }
-  calculateTotalTestsDirectly() {
-    return this.specs ? this.specs.length : 0;
+  calculateTotalTestsDirectly(specs) {
+    return specs ? specs.length : 0;
+  }
+};
+
+// src/ClassyImplementations.ts
+var ClassyImplementations = class {
+  static createClassyGivens(testImplementation, fullAdapter, instance) {
+    const classyGivens = {};
+    if (testImplementation.givens) {
+      Object.entries(testImplementation.givens).forEach(([key, g]) => {
+        classyGivens[key] = (initialValues) => {
+          return (whens, thens, features) => {
+            const safeFeatures = Array.isArray(features) ? [...features] : [];
+            const safeWhens = Array.isArray(whens) ? [...whens] : [];
+            const safeThens = Array.isArray(thens) ? [...thens] : [];
+            const capturedFullAdapter = fullAdapter;
+            const givenInstance = new class extends BaseGiven {
+              async givenThat(subject, testResource, artifactory, initializer, initialValues2) {
+                const givenArtifactory = instance.createArtifactory({
+                  givenKey: key,
+                  suiteIndex: this._suiteIndex
+                });
+                return capturedFullAdapter.prepareEach(
+                  subject,
+                  initializer,
+                  testResource,
+                  initialValues2,
+                  givenArtifactory
+                );
+              }
+              afterEach(store, key2, artifactory) {
+                return Promise.resolve(
+                  capturedFullAdapter.cleanupEach(store, key2, artifactory)
+                );
+              }
+            }(
+              safeFeatures,
+              safeWhens,
+              safeThens,
+              testImplementation.givens[key],
+              initialValues
+            );
+            givenInstance._parent = instance;
+            if (givenInstance.setParent) {
+              givenInstance.setParent(instance);
+            }
+            return givenInstance;
+          };
+        };
+      });
+    }
+    return classyGivens;
+  }
+  static createClassyWhens(testImplementation, fullAdapter) {
+    const classyWhens = {};
+    if (testImplementation.whens) {
+      Object.entries(testImplementation.whens).forEach(
+        ([key, whEn]) => {
+          classyWhens[key] = (...payload) => {
+            const capturedFullAdapter = fullAdapter;
+            const whenInstance = new class extends BaseWhen {
+              async andWhen(store, whenCB, testResource, artifactory) {
+                return await capturedFullAdapter.execute(
+                  store,
+                  whenCB,
+                  testResource,
+                  artifactory
+                );
+              }
+            }(`${key}: ${payload && payload.toString()}`, whEn(...payload));
+            return whenInstance;
+          };
+        }
+      );
+    }
+    return classyWhens;
+  }
+  static createClassyThens(testImplementation, fullAdapter) {
+    const classyThens = {};
+    if (testImplementation.thens) {
+      Object.entries(testImplementation.thens).forEach(
+        ([key, thEn]) => {
+          classyThens[key] = (...args) => {
+            const capturedFullAdapter = fullAdapter;
+            const thenInstance = new class extends BaseThen {
+              async butThen(store, thenCB, testResourceConfiguration, artifactory) {
+                return capturedFullAdapter.verify(
+                  store,
+                  thenCB,
+                  testResourceConfiguration,
+                  artifactory
+                );
+              }
+            }(`${key}: ${args && args.toString()}`, thEn(...args));
+            return thenInstance;
+          };
+        }
+      );
+    }
+    return classyThens;
+  }
+  static createClassyConfirms(testImplementation) {
+    const classyConfirms = {};
+    if (testImplementation.confirms) {
+      Object.entries(testImplementation.confirms).forEach(([key, val]) => {
+        classyConfirms[key] = () => {
+          return (testCases, features) => {
+            let actualConfirmCB;
+            if (typeof val === "function") {
+              actualConfirmCB = val();
+            } else {
+              actualConfirmCB = val;
+            }
+            return new BaseConfirm(
+              features,
+              testCases,
+              actualConfirmCB,
+              void 0
+            );
+          };
+        };
+      });
+    }
+    return classyConfirms;
+  }
+  static createClassyValues(testImplementation) {
+    const classyValues = {};
+    if (testImplementation.values) {
+      Object.entries(testImplementation.values).forEach(([key, val]) => {
+        classyValues[key] = (features, tableRows, confirmCB, initialValues) => {
+          return new BaseValue(
+            features,
+            tableRows,
+            confirmCB,
+            initialValues
+          );
+        };
+      });
+    }
+    return classyValues;
+  }
+  static createClassyShoulds(testImplementation) {
+    const classyShoulds = {};
+    if (testImplementation.shoulds) {
+      Object.entries(testImplementation.shoulds).forEach(
+        ([key, shouldCB]) => {
+          classyShoulds[key] = (...args) => {
+            return new BaseShould(
+              `${key}: ${args && args.toString()}`,
+              shouldCB(...args)
+            );
+          };
+        }
+      );
+    }
+    return classyShoulds;
+  }
+  static createClassyExpecteds(testImplementation) {
+    const classyExpecteds = {};
+    if (testImplementation.expecteds) {
+      Object.entries(testImplementation.expecteds).forEach(
+        ([key, expectedCB]) => {
+          classyExpecteds[key] = (...args) => {
+            return new BaseExpected(
+              `${key}: ${args && args.toString()}`,
+              expectedCB(...args)
+            );
+          };
+        }
+      );
+    }
+    return classyExpecteds;
+  }
+  static createClassyDescribes(testImplementation) {
+    const classyDescribes = {};
+    if (testImplementation.describes && typeof testImplementation.describes === "object") {
+      Object.entries(testImplementation.describes).forEach(([key, desc]) => {
+        classyDescribes[key] = (initialValues) => {
+          return (its, features) => {
+            try {
+              let actualDescribeCB;
+              if (typeof desc === "function") {
+                actualDescribeCB = desc(initialValues);
+              } else {
+                actualDescribeCB = desc;
+              }
+              if (typeof actualDescribeCB !== "function") {
+                console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
+                actualDescribeCB = () => {
+                  throw new Error(`Describe implementation for "${key}" is not a valid function`);
+                };
+              }
+              return new BaseDescribe(
+                features,
+                its,
+                actualDescribeCB,
+                initialValues
+              );
+            } catch (error) {
+              console.error(`Error creating Describe for "${key}":`, error);
+              return new BaseDescribe(
+                features,
+                its,
+                () => {
+                  throw new Error(`Describe implementation for "${key}" failed: ${error.message}`);
+                },
+                initialValues
+              );
+            }
+          };
+        };
+      });
+    } else {
+      console.warn("testImplementation.describes is not defined or not an object");
+    }
+    return classyDescribes;
+  }
+  static createClassyIts(testImplementation) {
+    const classyIts = {};
+    if (testImplementation.its) {
+      Object.entries(testImplementation.its).forEach(
+        ([key, itCB]) => {
+          classyIts[key] = (...args) => {
+            return new BaseIt(
+              `${key}: ${args && args.toString()}`,
+              itCB(...args)
+            );
+          };
+        }
+      );
+    }
+    return classyIts;
+  }
+};
+
+// src/TestRunner.ts
+var TestRunner = class {
+  static async runAllTests(testJobs, totalTests, testResourceConfiguration, writeFileSync) {
+    const allResults = [];
+    let totalFails = 0;
+    let anyFailed = false;
+    const allFeatures = [];
+    const allArtifacts = [];
+    for (let i = 0; i < testJobs.length; i++) {
+      try {
+        const result = await testJobs[i].receiveTestResourceConfig(testResourceConfiguration);
+        allResults.push(result);
+        totalFails += result.fails;
+        anyFailed = anyFailed || result.failed;
+        if (result.features && Array.isArray(result.features)) {
+          allFeatures.push(...result.features);
+        }
+        if (result.artifacts && Array.isArray(result.artifacts)) {
+          allArtifacts.push(...result.artifacts);
+        }
+      } catch (e) {
+        console.error(`Error running test job ${i}:`, e);
+        totalFails++;
+        anyFailed = true;
+        allResults.push({
+          failed: true,
+          fails: 1,
+          features: [],
+          artifacts: [],
+          error: {
+            message: e.message,
+            stack: e.stack,
+            name: e.name
+          },
+          stepName: `Job_${i}`,
+          stepType: "Error",
+          testJob: { name: `Job_${i}_Error` }
+        });
+      }
+    }
+    const combinedResults = {
+      failed: anyFailed,
+      fails: totalFails,
+      artifacts: allArtifacts,
+      features: [...new Set(allFeatures)],
+      tests: testJobs.length,
+      runTimeTests: totalTests,
+      testJob: { name: "CombinedResults" },
+      timestamp: Date.now(),
+      individualResults: allResults.map((result, idx) => ({
+        index: idx,
+        failed: result.failed,
+        fails: result.fails,
+        features: result.features || [],
+        error: result.error,
+        stepName: result.stepName,
+        stepType: result.stepType,
+        testJob: result.testJob
+      }))
+    };
+    combinedResults.summary = {
+      totalTests: testJobs.length,
+      passed: testJobs.length - totalFails,
+      failed: totalFails,
+      successRate: totalFails === 0 ? "100%" : ((testJobs.length - totalFails) / testJobs.length * 100).toFixed(2) + "%"
+    };
+    console.log("testResourceConfiguration", testResourceConfiguration);
+    const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+    writeFileSync(reportJson, JSON.stringify(combinedResults, null, 2));
+  }
+  static writeEmptyResults(testResourceConfiguration, writeFileSync) {
+    const emptyResults = {
+      failed: true,
+      fails: -1,
+      artifacts: [],
+      features: [],
+      tests: 0,
+      runTimeTests: -1,
+      testJob: {},
+      timestamp: Date.now(),
+      error: {
+        message: "No test jobs were created",
+        name: "ConfigurationError"
+      },
+      individualResults: [],
+      summary: {
+        totalTests: 0,
+        passed: 0,
+        failed: 1,
+        successRate: "0%"
+      }
+    };
+    const reportJson = `${testResourceConfiguration.fs}/tests.json`;
+    writeFileSync(reportJson, JSON.stringify(emptyResults, null, 2));
+  }
+  static async runAllTestsAndReturnResults(testJobs, totalTests, testResourceConfig) {
+    const allResults = [];
+    let totalFails = 0;
+    let anyFailed = false;
+    const allFeatures = [];
+    const allArtifacts = [];
+    for (let i = 0; i < testJobs.length; i++) {
+      try {
+        const result = await testJobs[i].receiveTestResourceConfig(testResourceConfig);
+        allResults.push(result);
+        totalFails += result.fails;
+        anyFailed = anyFailed || result.failed;
+        if (result.features && Array.isArray(result.features)) {
+          allFeatures.push(...result.features);
+        }
+        if (result.artifacts && Array.isArray(result.artifacts)) {
+          allArtifacts.push(...result.artifacts);
+        }
+      } catch (e) {
+        console.error(`Error running test job ${i}:`, e);
+        totalFails++;
+        anyFailed = true;
+      }
+    }
+    return {
+      failed: anyFailed,
+      fails: totalFails,
+      artifacts: allArtifacts,
+      features: [...new Set(allFeatures)],
+      tests: testJobs.length,
+      runTimeTests: totalTests,
+      testJob: { name: "CombinedResults" },
+      timestamp: Date.now(),
+      individualResults: allResults.map((result, idx) => ({
+        index: idx,
+        failed: result.failed,
+        fails: result.fails,
+        features: result.features || [],
+        error: result.error,
+        stepName: result.stepName,
+        stepType: result.stepType,
+        testJob: result.testJob
+      })),
+      summary: {
+        totalTests: testJobs.length,
+        passed: testJobs.length - totalFails,
+        failed: totalFails,
+        successRate: totalFails === 0 ? "100%" : ((testJobs.length - totalFails) / testJobs.length * 100).toFixed(2) + "%"
+      }
+    };
+  }
+};
+
+// src/BaseTiposkripto.ts
+var BaseTiposkripto = class {
+  constructor(webOrNode, input, testSpecification, testImplementation, testResourceRequirement = defaultTestResourceRequirement, testAdapter = {}, testResourceConfiguration) {
+    this.totalTests = 0;
+    this.artifacts = [];
+    this.testResourceConfiguration = testResourceConfiguration;
+    const fullAdapter = DefaultAdapter(testAdapter);
+    const instance = this;
+    const classySuites = {};
+    const classyGivens = ClassyImplementations.createClassyGivens(testImplementation, fullAdapter, instance);
+    const classyWhens = ClassyImplementations.createClassyWhens(testImplementation, fullAdapter);
+    const classyThens = ClassyImplementations.createClassyThens(testImplementation, fullAdapter);
+    const classyConfirms = ClassyImplementations.createClassyConfirms(testImplementation);
+    const classyValues = ClassyImplementations.createClassyValues(testImplementation);
+    const classyShoulds = ClassyImplementations.createClassyShoulds(testImplementation);
+    const classyExpecteds = ClassyImplementations.createClassyExpecteds(testImplementation);
+    const classyDescribes = ClassyImplementations.createClassyDescribes(testImplementation);
+    const classyIts = ClassyImplementations.createClassyIts(testImplementation);
+    this.suitesOverrides = classySuites;
+    this.givenOverrides = classyGivens;
+    this.whenOverrides = classyWhens;
+    this.thenOverrides = classyThens;
+    this.valuesOverrides = classyValues;
+    this.shouldsOverrides = classyShoulds;
+    this.expectedsOverrides = classyExpecteds;
+    this.describesOverrides = classyDescribes;
+    this.itsOverrides = classyIts;
+    this.confirmsOverrides = classyConfirms;
+    this.testResourceRequirement = testResourceRequirement;
+    this.testSpecification = testSpecification;
+    this.verbProxies = new VerbProxies(
+      this.givenOverrides,
+      this.whenOverrides,
+      this.thenOverrides,
+      this.describesOverrides,
+      this.itsOverrides,
+      this.confirmsOverrides,
+      this.valuesOverrides,
+      this.shouldsOverrides,
+      this.expectedsOverrides
+    );
+    this.testJobCreator = new TestJobCreator(
+      this.createArtifactory.bind(this),
+      0
+      // totalTests will be set later
+    );
+    let topLevelVerbs = [];
+    let specError = null;
+    try {
+      topLevelVerbs = testSpecification(
+        this.verbProxies.Given(),
+        this.verbProxies.When(),
+        this.verbProxies.Then(),
+        this.verbProxies.Describe(),
+        this.verbProxies.It(),
+        this.verbProxies.Confirm(),
+        this.verbProxies.Value(),
+        this.verbProxies.Should()
+      );
+    } catch (error) {
+      console.error("Error during test specification:", error);
+      specError = error;
+      topLevelVerbs = [];
+      const errorStep = {
+        constructor: { name: "SpecificationError" },
+        features: [],
+        artifacts: [],
+        fails: 1,
+        failed: true,
+        error: specError,
+        toObj: () => ({
+          name: "Specification_Error",
+          type: "Error",
+          error: `Test specification failed: ${specError?.message}`
+        })
+      };
+      topLevelVerbs.push(errorStep);
+    }
+    this.specs = topLevelVerbs;
+    this.totalTests = this.testJobCreator.calculateTotalTestsDirectly(this.specs);
+    this.testJobs = [];
+    for (let index = 0; index < this.specs.length; index++) {
+      const step = this.specs[index];
+      try {
+        const testJob = this.testJobCreator.createTestJobForStep(step, index, input);
+        this.testJobs.push(testJob);
+      } catch (stepError) {
+        console.error(`Error creating test job for step ${index}:`, stepError);
+        const errorMessage = `Step ${index} failed to create test job: ${stepError.message}`;
+        const errorStep = {
+          constructor: { name: "ErrorStep" },
+          features: [],
+          artifacts: [],
+          fails: 1,
+          failed: true,
+          error: new Error(errorMessage),
+          toObj: () => ({
+            name: `Step_${index}_Error`,
+            type: "Error",
+            error: errorMessage
+          })
+        };
+        const errorTestJob = this.testJobCreator.createErrorTestJob(errorStep, index, new Error(errorMessage));
+        this.testJobs.push(errorTestJob);
+      }
+    }
+    if (this.testJobs.length === 0) {
+      const errorMessage = specError ? `Test specification failed: ${specError.message}` : "No test steps were created by the specification";
+      const errorStep = {
+        constructor: { name: "ErrorStep" },
+        features: [],
+        artifacts: [],
+        fails: 1,
+        failed: true,
+        error: new Error(errorMessage),
+        toObj: () => ({
+          name: "Specification_Error",
+          type: "Error",
+          error: errorMessage
+        })
+      };
+      const errorTestJob = this.testJobCreator.createErrorTestJob(errorStep, 0, new Error(errorMessage));
+      this.testJobs.push(errorTestJob);
+    }
+    if (this.testJobs.length > 0) {
+      TestRunner.runAllTests(this.testJobs, this.totalTests, testResourceConfiguration, this.writeFileSync.bind(this));
+    } else {
+      TestRunner.writeEmptyResults(testResourceConfiguration, this.writeFileSync.bind(this));
+    }
+  }
+  // Create an artifactory that tracks context
+  createArtifactory(context = {}) {
+    return {
+      writeFileSync: (filename, payload) => {
+        let path = "";
+        const basePath = this.testResourceConfiguration?.fs || "testeranto";
+        console.log("[Artifactory] Base path:", basePath);
+        console.log("[Artifactory] Context:", context);
+        if (context.stepIndex !== void 0) {
+          path += `step-${context.stepIndex}/`;
+          if (context.stepType) {
+            path += `${context.stepType}/`;
+          }
+        } else if (context.suiteIndex !== void 0) {
+          path += `suite-${context.suiteIndex}/`;
+        }
+        if (context.givenKey) {
+          path += `given-${context.givenKey}/`;
+        }
+        if (context.whenIndex !== void 0) {
+          path += `when-${context.whenIndex} `;
+        } else if (context.thenIndex !== void 0) {
+          path += `then-${context.thenIndex} `;
+        }
+        path += filename;
+        if (!path.match(/\.[a-zA-Z0-9]+$/)) {
+          path += ".txt";
+        }
+        const basePathClean = basePath.replace(/\/$/, "");
+        const pathClean = path.replace(/^\//, "");
+        const fullPath = `${basePathClean}/${pathClean}`;
+        console.log("[Artifactory] Full path:", fullPath);
+        this.writeFileSync(fullPath, payload);
+      }
+    };
+  }
+  async receiveTestResourceConfig(testResourceConfig) {
+    return TestRunner.runAllTestsAndReturnResults(
+      this.testJobs,
+      this.totalTests,
+      testResourceConfig
+    );
+  }
+  Specs() {
+    return this.specs;
+  }
+  Suites() {
+    console.warn("Suites() is deprecated and returns an empty object");
+    return {};
+  }
+  Given() {
+    return this.verbProxies.Given();
+  }
+  When() {
+    return this.verbProxies.When();
+  }
+  Then() {
+    return this.verbProxies.Then();
+  }
+  Describe() {
+    return this.verbProxies.Describe();
+  }
+  It() {
+    return this.verbProxies.It();
+  }
+  Confirm() {
+    return this.verbProxies.Confirm();
+  }
+  Value() {
+    return this.verbProxies.Value();
+  }
+  Should() {
+    return this.verbProxies.Should();
+  }
+  Expect() {
+    return this.verbProxies.Expect();
+  }
+  Expected() {
+    return this.verbProxies.Expected();
+  }
+  getTestJobs() {
+    return this.testJobs;
   }
 };
 

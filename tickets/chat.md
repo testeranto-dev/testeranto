@@ -1,4 +1,6 @@
-## Status: Doing
+---
+status: in progress
+---
 
 agents need to be able to collaborate. we need to create the endpoints to handle this. We probably don't need to over-complicate this, unless there is a good reason make this a single new endpoint.
 

@@ -16,6 +16,7 @@ import { gfmTable } from 'micromark-extension-gfm-table';
  * According to SOUL.md: no fallbacks, no guessing
  */
 export async function updateMarkdownFile(
+  projectRoot: string,
   filePath: string,
   frontmatterData: Record<string, any>,
   contentBody?: string
@@ -25,7 +26,7 @@ export async function updateMarkdownFile(
   if (path.isAbsolute(filePath)) {
     fullPath = filePath;
   } else {
-    fullPath = path.join(process.cwd(), filePath);
+    fullPath = path.join(projectRoot, filePath);
   }
   
   // Read existing file to preserve the body if not provided
@@ -72,9 +73,10 @@ export async function updateMarkdownFile(
  * Read markdown file and extract frontmatter and body
  */
 export async function readMarkdownFile(
+  projectRoot: string,
   filePath: string
 ): Promise<{ frontmatter: Record<string, any>; body: string }> {
-  const fullPath = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
+  const fullPath = path.isAbsolute(filePath) ? filePath : path.join(projectRoot, filePath);
   
   if (!fs.existsSync(fullPath)) {
     throw new Error(`Markdown file not found: ${filePath}`);
@@ -126,6 +128,7 @@ export async function readMarkdownFile(
  * Handle markdown file changes by updating the specific file in the graph
  */
 export async function handleMarkdownFileChange(
+  projectRoot: string,
   filePath: string,
   graphManager: any
 ): Promise<any> {
@@ -137,13 +140,13 @@ export async function handleMarkdownFileChange(
       return null;
     }
 
-    const fullPath = path.join(process.cwd(), filePath);
+    const fullPath = path.join(projectRoot, filePath);
     if (!fs.existsSync(fullPath)) {
       console.log(`[Stakeholder] File ${filePath} no longer exists, skipping`);
       return null;
     }
 
-    const { frontmatter: frontmatterData, body } = await readMarkdownFile(filePath);
+    const { frontmatter: frontmatterData, body } = await readMarkdownFile(projectRoot, filePath);
     
     // Create feature ID from the file path
     const featureName = path.basename(filePath, '.md');
@@ -202,10 +205,11 @@ export async function handleMarkdownFileChange(
  * Create markdown file from graph node data
  */
 export async function createMarkdownFileFromNode(
+  projectRoot: string,
   nodeData: any,
   targetPath: string
 ): Promise<void> {
-  const fullPath = path.isAbsolute(targetPath) ? targetPath : path.join(process.cwd(), targetPath);
+  const fullPath = path.isAbsolute(targetPath) ? targetPath : path.join(projectRoot, targetPath);
   
   // Extract frontmatter from node metadata
   const frontmatterData = nodeData.metadata?.frontmatter || {};

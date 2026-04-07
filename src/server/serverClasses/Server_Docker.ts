@@ -440,11 +440,63 @@ export abstract class Server_Docker extends Server_Docker_Compose {
   }
 
   public async stop(): Promise<void> {
+    // First, stop builder services with SIGTERM so they can produce output artifacts
+    // We'll send SIGTERM to builder containers directly
+    for (const [configKey, config] of Object.entries(this.configs.runtimes)) {
+      const outputs = config.outputs;
+      if (!outputs || outputs.length === 0) continue;
+      
+      const builderServiceName = `builder-${configKey}`;
+      this.consoleLog(`[Server_Docker] Stopping builder ${builderServiceName} to produce output artifacts`);
+      
+      try {
+        // Send SIGTERM to builder container
+        await this.spawnPromise(`docker compose -f "testeranto/docker-compose.yml" kill -s SIGTERM ${builderServiceName}`);
+        // Wait for builder to exit and produce artifacts
+        await new Promise(resolve => setTimeout(resolve, 3000));
+      } catch (error) {
+        this.consoleError(`[Server_Docker] Error stopping builder ${builderServiceName}:`, error);
+      }
+    }
+    
+    // Now build docker images for output artifacts
+    for (const [configKey, config] of Object.entries(this.configs.runtimes)) {
+      const outputs = config.outputs;
+      if (!outputs || outputs.length === 0) continue;
+      
+      this.consoleLog(`[Server_Docker] Building docker images for ${configKey} outputs`);
+      
+      for (const entrypoint of outputs) {
+        try {
+          const dockerfile = config.dockerfile;
+          const projectRoot = this.processCwd();
+          
+          // Create image name
+          const cleanEntrypoint = entrypoint
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+          const imageName = `output-${configKey}-${cleanEntrypoint}:latest`;
+          
+          this.consoleLog(`[Server_Docker] Building ${imageName} from ${dockerfile}`);
+          
+          const buildCommand = `docker build -t ${imageName} -f ${dockerfile} ${projectRoot}`;
+          await this.spawnPromise(buildCommand);
+          
+          this.consoleLog(`[Server_Docker] ✅ Built ${imageName}`);
+        } catch (error) {
+          this.consoleError(`[Server_Docker] Failed to build docker image for ${entrypoint}:`, error);
+          // Continue with other outputs
+        }
+      }
+    }
+    
     // Clear any tracked processes
     this.logProcesses.clear();
     this.failedBuilderConfigs.clear();
 
-    // Stop Docker services
+    // Stop all remaining Docker services
     const result = await this.DC_down();
 
     // Wait for Docker services to fully stop
@@ -454,5 +506,29 @@ export abstract class Server_Docker extends Server_Docker_Compose {
     // TODO This should be defined in API 
     this.resourceChanged("/~/graph");
     await super.stop();
+  }
+
+  private async signalBuildersForOutputArtifacts(): Promise<void> {
+    // For each runtime config with outputs, signal its builder
+    for (const [configKey, config] of Object.entries(this.configs.runtimes)) {
+      const outputs = config.outputs;
+      if (!outputs || outputs.length === 0) continue;
+      
+      this.consoleLog(`[Server_Docker] Signaling builder for ${configKey} to produce output artifacts`);
+      
+      // Find the builder service name
+      const builderServiceName = `builder-${configKey}`;
+      
+      // Send signal to builder container
+      // We can create a trigger file that the builder watches for
+      const triggerPath = `${this.processCwd()}/testeranto/build-output-trigger-${configKey}`;
+      const fs = await import('fs');
+      fs.writeFileSync(triggerPath, JSON.stringify({ outputs }));
+      
+      this.consoleLog(`[Server_Docker] Created trigger file at ${triggerPath}`);
+      
+      // Wait a bit for builder to process
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
   }
 }

@@ -1,6 +1,3 @@
-import { Stakeholderviews, VscodeViews } from '../../views';
-
-// Export VS Code-specific implementations
 export { EisenhowerMatrix } from './EisenhowerMatrix';
 export { TreeGraph } from './TreeGraph';
 export { BaseChart } from './BaseChart';

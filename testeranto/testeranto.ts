@@ -184,10 +184,10 @@ const config: ITesterantoConfig = {
       ],
       dockerfile: `testeranto/runtimes/java/java.Dockerfile`,
       buildOptions: `testeranto/runtimes/java/java.java`,
-      outputs: [],
       buildKitOptions: {
         cacheMounts: ["/root/.m2", "/root/.gradle"],
       },
+      outputs: ["src/lib/kafe/examples/calculator/Calculator.java"]
     },
 
     rubytests: {
@@ -229,6 +229,8 @@ const config: ITesterantoConfig = {
         "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
         "src/lib/tiposkripto/tests/circle/Circle.test.ts",
         "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "src/server/serverClasses/Server_GraphManagerCore.test.ts",
         // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
         // "src/vscode/providers/utils/testTree/debugTest.js"
         // "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
@@ -375,7 +377,7 @@ const config: ITesterantoConfig = {
     },
   },
 
-  documentationGlob: "./src/**/*.md",
+  // documentationGlob: "./src/**/*.md",
 };
 
 export default config;

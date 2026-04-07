@@ -9,12 +9,23 @@ import type { BaseIt } from "./lib/tiposkripto/src/verbs/aaa/BaseIt";
 import type { BaseConfirm } from "./lib/tiposkripto/src/verbs/tdt/BaseConfirm";
 import type { BaseValue } from "./lib/tiposkripto/src/verbs/tdt/BaseValue";
 import type { BaseShould } from "./lib/tiposkripto/src/verbs/tdt/BaseShould";
-export type ITestconfigV2 = {
+export type ITesterantoConfig = {
     volumes: string[];
-    featureIngestor: (s: string) => Promise<string>;
+    featureIngestor: (s: string) => Promise<{
+        data: string;
+        filepath: string;
+    }>;
     runtimes: Record<string, IBaseTestConfig>;
-    documentationGlob?: string;
     stakeholderReactModule?: string;
+    agents: Record<string, {
+        markdownFile: string;
+        sliceFunction: (graphManager: any) => {
+            nodes: any[];
+            edges: any[];
+        };
+    }>;
+    vscodeViews: Record<string, string>;
+    stakeholderViews: Record<string, string>;
 };
 export type IOtherTest = (x: any) => string;
 export type IOtherTests = IOtherTest[];
@@ -120,3 +131,4 @@ export type IRunTime = `node` | `web` | `golang` | `python` | `ruby` | `java` | 
 export type ITestTypes = [string, IRunTime, {
     ports: number;
 }, ITestTypes[]];
+export type { TestResultFile, IndividualTestResult, TestResult, RuntimeTestResults, AllTestResults } from "./server/types/testResults";

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-07T03:22:21.787Z for service nodetests-builder (runtime: node) ===
-=== Container ID: 70a59b8aa85010ade9f333c173701bf0d449e980ed3ff42ba36f80be3308d59e ===
+=== Log started at 2026-04-07T19:26:11.945Z for service nodetests-builder (runtime: node) ===
+=== Container ID: 116dd5dad2520f80411735b36b30b30edd44e7e539b690b8ddb781497fb5dfe8 ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
@@ -8,7 +8,7 @@ yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.242.0: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs nodetests src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts src/lib/tiposkripto/tests/circle/Circle.test.ts src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+$ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs nodetests src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts src/lib/tiposkripto/tests/circle/Circle.test.ts src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts src/server/serverClasses/Server_GraphManagerCore.test.ts
 [NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
 [NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
 [NODE BUILDER] testName:  nodetests
@@ -20,12 +20,12 @@ NODE BUILDER: Error: Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './s
     at moduleResolve (node:internal/modules/esm/resolve:946:18)
     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
     at nextResolve (node:internal/modules/esm/hooks:864:28)
-    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775532136809:2:3744)
-    at resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775532136809:2:4243)
-    at resolveTsPaths (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775532136809:2:4984)
-    at resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775532136809:2:5361) {
+    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775589968019:2:3744)
+    at resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775589968019:2:4243)
+    at resolveTsPaths (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775589968019:2:4984)
+    at resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775589968019:2:5361) {
   code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
 }
 [NODE BUILDER] Error occurred but keeping process alive in dev mode
 
-=== Log captured at 2026-04-07T03:22:42.941Z (container status: running) ===
+=== Log captured at 2026-04-07T19:26:33.358Z (container status: running) ===

@@ -26,7 +26,10 @@ export declare class BaseValue<I extends TestTypeParams_any> {
     afterEach(store: I["istore"], key: string, artifactory: any): Promise<I["istore"]>;
     toObj(): {
         key: string;
-        values: any[][];
+        values: {
+            index: number;
+            values: any[];
+        }[];
         tableRows: any[][];
         error: (string | Error | undefined)[] | null;
         failed: boolean;

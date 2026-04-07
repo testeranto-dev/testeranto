@@ -559,3 +559,35 @@
 [2026-04-07T03:22:17.675Z] ERROR: WEB BUILDER: Error importing config: /workspace/testeranto/runtimes/web/web.ts {
   "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
 }
+[2026-04-07T17:55:39.833Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T17:55:39.834Z] [WEB BUILDER] nodeConfig:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-07T17:55:39.834Z] [WEB BUILDER] testName:  webtests
+[2026-04-07T17:55:39.834Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-07T17:55:39.834Z] [WEB BUILDER] CWD: /workspace
+[2026-04-07T17:55:39.844Z] ERROR: WEB BUILDER: Error importing config: /workspace/testeranto/runtimes/web/web.ts {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T18:19:55.716Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T18:19:55.717Z] [WEB BUILDER] nodeConfig:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-07T18:19:55.717Z] [WEB BUILDER] testName:  webtests
+[2026-04-07T18:19:55.717Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-07T18:19:55.717Z] [WEB BUILDER] CWD: /workspace
+[2026-04-07T18:19:55.750Z] ERROR: WEB BUILDER: Error importing config: /workspace/testeranto/runtimes/web/web.ts {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T19:09:54.915Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T19:09:54.916Z] [WEB BUILDER] nodeConfig:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-07T19:09:54.916Z] [WEB BUILDER] testName:  webtests
+[2026-04-07T19:09:54.916Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-07T19:09:54.916Z] [WEB BUILDER] CWD: /workspace
+[2026-04-07T19:09:54.923Z] ERROR: WEB BUILDER: Error importing config: /workspace/testeranto/runtimes/web/web.ts {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}
+[2026-04-07T19:26:09.269Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-07T19:26:09.274Z] [WEB BUILDER] nodeConfig:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-07T19:26:09.275Z] [WEB BUILDER] testName:  webtests
+[2026-04-07T19:26:09.275Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-07T19:26:09.275Z] [WEB BUILDER] CWD: /workspace
+[2026-04-07T19:26:09.301Z] ERROR: WEB BUILDER: Error importing config: /workspace/testeranto/runtimes/web/web.ts {
+  "code": "ERR_PACKAGE_PATH_NOT_EXPORTED"
+}

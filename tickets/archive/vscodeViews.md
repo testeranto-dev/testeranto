@@ -1,4 +1,6 @@
-## Status: IMPLEMENTED ✅
+---
+status: done-ish
+---
 
 Testeranto now supports user-defined React "microapps" as vscodeViews and stakeholderViews.
 

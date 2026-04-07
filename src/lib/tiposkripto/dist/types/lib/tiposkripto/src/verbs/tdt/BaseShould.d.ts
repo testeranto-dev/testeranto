@@ -19,6 +19,7 @@ export declare class BaseShould<I extends TestTypeParams_any> {
         error: string | null;
         rowIndex: number;
         currentRow: any[];
+        pattern: string;
     };
 }
 export type IShoulds<I extends TestTypeParams_any> = Record<string, BaseShould<I>>;

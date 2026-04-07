@@ -196,25 +196,28 @@ var BaseValue = class {
     return store;
   }
   toObj() {
-    const processedRows = (this.tableRows || []).map((row) => {
+    const processedRows = (this.tableRows || []).map((row, index) => {
       if (Array.isArray(row)) {
-        return row.map((item) => {
-          if (item && typeof item === "object") {
-            if (item.toObj) {
-              return item.toObj();
-            }
-            const result = {};
-            for (const [key, value] of Object.entries(item)) {
-              if (key !== "_parent" && key !== "testResourceConfiguration") {
-                result[key] = value;
+        return {
+          index,
+          values: row.map((item) => {
+            if (item && typeof item === "object") {
+              if (item.toObj) {
+                return item.toObj();
               }
+              const result = {};
+              for (const [key, value] of Object.entries(item)) {
+                if (key !== "_parent" && key !== "testResourceConfiguration") {
+                  result[key] = value;
+                }
+              }
+              return result;
             }
-            return result;
-          }
-          return item;
-        });
+            return item;
+          })
+        };
       }
-      return row;
+      return { index, values: [row] };
     });
     return {
       key: this.key,
@@ -267,7 +270,8 @@ var BaseShould = class {
       status: this.status,
       error: this.error ? `${this.error.name}: ${this.error.message}` : null,
       rowIndex: this.rowIndex,
-      currentRow: this.currentRow
+      currentRow: this.currentRow,
+      pattern: "tdt"
     };
   }
 };
@@ -326,7 +330,11 @@ var BaseDescribe = class {
     this.key = key;
     this.fails = 0;
     try {
-      this.store = await this.describeCB("x");
+      if (typeof this.describeCB === "function") {
+        this.store = await this.describeCB(subject, this.initialValues);
+      } else {
+        this.store = this.describeCB;
+      }
       this.status = true;
     } catch (e) {
       this.status = false;

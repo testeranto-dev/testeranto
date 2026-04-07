@@ -4,7 +4,6 @@ import { BaseSuite } from "./verbs/BaseSuite";
 import { BaseGiven } from "./verbs/bdd/BaseGiven";
 import { BaseThen } from "./verbs/bdd/BaseThen";
 import { BaseWhen } from "./verbs/bdd/BaseWhen";
-import { BaseConfirm } from "./verbs/tdt/BaseConfirm";
 export type IGivenKlasser<I extends Ibdd_in_any> = (name: string, features: string[], whens: BaseWhen<I>[], thens: BaseThen<I>[], givenCB: I["setup"]) => BaseGiven<I>;
 export type IWhenKlasser<I extends Ibdd_in_any> = (s: I["istore"], o: any) => BaseWhen<I>;
 export type IThenKlasser<I extends Ibdd_in_any> = (s: I["iselection"], o: any) => BaseThen<I>;

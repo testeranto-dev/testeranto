@@ -1,4 +1,6 @@
-## Status: IMPLEMENTED ✅
+---
+status: in progress
+---
 
 Three agents are fully implemented and operational:
 

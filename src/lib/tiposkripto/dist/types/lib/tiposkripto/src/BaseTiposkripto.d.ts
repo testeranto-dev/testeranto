@@ -18,6 +18,8 @@ export default abstract class BaseTiposkripto<I extends Ibdd_in_any = Ibdd_in_an
     valuesOverrides: Record<string, any>;
     shouldsOverrides: Record<string, any>;
     expectedsOverrides: Record<string, any>;
+    private verbProxies;
+    private testJobCreator;
     abstract writeFileSync(filename: string, payload: string): void;
     createArtifactory(context?: {
         givenKey?: string;
@@ -53,7 +55,4 @@ export default abstract class BaseTiposkripto<I extends Ibdd_in_any = Ibdd_in_an
     Expect(): Record<string, any>;
     Expected(): Record<string, any>;
     getTestJobs(): ITestJob[];
-    private createTestJobForStep;
-    private createErrorTestJob;
-    private calculateTotalTestsDirectly;
 }
