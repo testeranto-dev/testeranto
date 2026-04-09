@@ -1,6 +1,5 @@
 // src/server/runtimes/web/web.ts
 import esbuild from "esbuild";
-import "puppeteer-core";
 
 // src/esbuildConfigs/featuresPlugin.ts
 import path from "path";
@@ -105,8 +104,9 @@ var esbuild_default = (config, testName2, projectConfig, entryPoints2) => {
     "web",
     testName2
   );
+  const safeConfig = config || {};
   return {
-    ...esbuildConfigs_default(config),
+    ...esbuildConfigs_default(safeConfig),
     outdir: `testeranto/bundles/${testName2}`,
     outbase: ".",
     metafile: true,
@@ -128,7 +128,7 @@ var esbuild_default = (config, testName2, projectConfig, entryPoints2) => {
       featuresPlugin_default,
       inputFilesPluginFactory,
       rebuildPlugin_default("web"),
-      ...config.web?.plugins?.map((p) => p(register2, entryPoints2)) || []
+      ...(safeConfig.web?.plugins || safeConfig.plugins || [])?.map((p) => p(register2, entryPoints2)) || []
     ]
   };
 };
@@ -216,10 +216,25 @@ async function processMetafile(config, metafile, runtime, configKey) {
 // src/server/runtimes/web/web.ts
 import * as fs4 from "fs";
 import * as path3 from "path";
+var webConfigPath = process.argv[3];
+var configJson = process.argv[4];
+var entryPoints = [];
+var outputs = [];
+var testName = "";
 var projectConfigPath = process.argv[2];
-var nodeConfigPath = process.argv[3];
-var testName = process.argv[4];
-var entryPoints = process.argv.slice(5);
+try {
+  const config = JSON.parse(configJson);
+  entryPoints = config.tests || [];
+  outputs = config.outputs || [];
+  testName = config.name || "";
+} catch (error) {
+  console.error("[WEB BUILDER] Failed to parse config JSON:", error);
+  process.exit(1);
+}
+if (!testName) {
+  console.error("[WEB BUILDER] Config must include a name");
+  process.exit(1);
+}
 var reportDir = path3.join(process.cwd(), "testeranto", "reports", testName);
 if (!fs4.existsSync(reportDir)) {
   fs4.mkdirSync(reportDir, { recursive: true });
@@ -265,21 +280,39 @@ console.warn = (...args) => {
   originalConsoleWarn.apply(console, args);
 };
 console.log(`[WEB BUILDER] projectConfigPath:  ${projectConfigPath}`);
-console.log(`[WEB BUILDER] nodeConfig:  ${nodeConfigPath}`);
+console.log(`[WEB BUILDER] webConfigPath:  ${webConfigPath}`);
 console.log(`[WEB BUILDER] testName:  ${testName}`);
 console.log(`[WEB BUILDER] Log file: ${logFilePath}`);
 console.log(`[WEB BUILDER] CWD: ${process.cwd()}`);
+async function produceOutputArtifacts() {
+  console.log(`[WEB BUILDER] Producing output artifacts for config ${testName}`);
+  if (!outputs || outputs.length === 0) {
+    console.log(`[WEB BUILDER] No outputs defined for ${testName}`);
+    return;
+  }
+  console.log(`[WEB BUILDER] Processing ${outputs.length} output artifacts`);
+  const outputDir = `testeranto/outputs/${testName}`;
+  const fs5 = await import("fs");
+  const path4 = await import("path");
+  if (!fs5.existsSync(outputDir)) {
+    fs5.mkdirSync(outputDir, { recursive: true });
+  }
+  for (const entrypoint of outputs) {
+    try {
+      const sourcePath = entrypoint;
+      const fileName = path4.basename(entrypoint);
+      const destPath = path4.join(outputDir, fileName);
+      console.log(`[WEB BUILDER] Copying ${sourcePath} to ${destPath}`);
+      fs5.copyFileSync(sourcePath, destPath);
+      console.log(`[WEB BUILDER] \u2705 Copied ${fileName}`);
+    } catch (error) {
+      console.error(`[WEB BUILDER] Failed to process output artifact ${entrypoint}:`, error.message);
+    }
+  }
+  console.log(`[WEB BUILDER] Finished producing output artifacts`);
+}
 process.on("exit", () => {
   console.log("[WEB BUILDER] Process exiting");
-  logStream.end();
-});
-process.on("SIGINT", () => {
-  console.log("[WEB BUILDER] Received SIGINT");
-  logStream.end();
-  process.exit(0);
-});
-process.on("uncaughtException", (error) => {
-  console.error("[WEB BUILDER] Uncaught exception:", error);
   logStream.end();
 });
 async function startBundling(webConfigs, projectConfig, entryPoints2) {
@@ -381,17 +414,60 @@ async function startBundling(webConfigs, projectConfig, entryPoints2) {
 }
 async function main() {
   try {
-    const nodeConfigs = (await import(nodeConfigPath)).default;
-    const projectConfigs = (await import(projectConfigPath)).default;
-    await startBundling(nodeConfigs, projectConfigs, entryPoints);
+    console.log(`[WEB BUILDER] Loading web config from: ${webConfigPath}`);
+    if (!fs4.existsSync(webConfigPath)) {
+      throw new Error(`Web config file not found: ${webConfigPath}`);
+    }
+    const webConfigModule = await import(webConfigPath);
+    const webConfigs = webConfigModule.default;
+    if (!webConfigs) {
+      throw new Error(`Web config file ${webConfigPath} does not export a default object`);
+    }
+    console.log(`[WEB BUILDER] Web config loaded successfully:`, Object.keys(webConfigs));
+    const setupSignalHandlers = () => {
+      process.on("SIGINT", async () => {
+        console.log("[WEB BUILDER] Received SIGINT - producing output artifacts");
+        await produceOutputArtifacts();
+        logStream.end();
+        process.exit(0);
+      });
+      process.on("SIGTERM", async () => {
+        console.log("[WEB BUILDER] Received SIGTERM - producing output artifacts");
+        await produceOutputArtifacts();
+        logStream.end();
+        process.exit(0);
+      });
+      process.on("uncaughtException", (error) => {
+        console.error("[WEB BUILDER] Uncaught exception:", error);
+        logStream.end();
+        produceOutputArtifacts().finally(() => {
+          process.exit(1);
+        });
+      });
+    };
+    setupSignalHandlers();
+    const dummyProjectConfig = {};
+    await startBundling(webConfigs, dummyProjectConfig, entryPoints);
+    const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
+    if (isDevMode) {
+      process.on("unhandledRejection", (reason, promise) => {
+        console.error("[WEB BUILDER] Unhandled Rejection at:", promise, "reason:", reason);
+      });
+      setInterval(() => {
+      }, 3e4);
+    }
   } catch (error) {
-    console.error(
-      "WEB BUILDER: Error importing config:",
-      nodeConfigPath,
-      error
-    );
-    console.error(error);
-    process.exit(1);
+    console.error("WEB BUILDER: Error:", error);
+    const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
+    if (isDevMode) {
+      console.error("[WEB BUILDER] Error occurred but keeping process alive in dev mode");
+      setInterval(() => {
+      }, 1e3);
+    } else {
+      await produceOutputArtifacts();
+      logStream.end();
+      process.exit(1);
+    }
   }
 }
 main();

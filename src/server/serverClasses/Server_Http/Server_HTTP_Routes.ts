@@ -71,7 +71,7 @@ export class Server_HTTP_Routes {
 
   private async handleAgentRoute(routeName: string, request: Request): Promise<Response> {
     const agentPath = routeName.slice(7);
-    
+
     // Handle GET /~/agents (list all agents)
     if (agentPath === '' && request.method === 'GET') {
       const agents = this.configs.agents || {};
@@ -79,11 +79,13 @@ export class Server_HTTP_Routes {
         const agentConfig = agents[agentName];
         return {
           name: agentName,
-          markdownFile: agentConfig.markdownFile,
+          // markdownFile: agentConfig.markdownFile,
+          load: agentConfig.load,
+          message: agentConfig.message,
           hasSliceFunction: typeof agentConfig.sliceFunction === 'function'
         };
       });
-      
+
       return new Response(JSON.stringify({
         agents: agentList,
         count: agentList.length,
@@ -94,7 +96,7 @@ export class Server_HTTP_Routes {
         headers: { "Content-Type": "application/json" },
       });
     }
-    
+
     // Handle GET /~/agents/{agentName} (get specific agent slice)
     if (request.method === 'GET') {
       try {
@@ -121,17 +123,56 @@ export class Server_HTTP_Routes {
         });
       }
     } else if (request.method === 'POST') {
-      // Agents are now created as Docker services at startup, not dynamically
-      // This endpoint just acknowledges that the agent is already running
-      return new Response(JSON.stringify({
-        success: true,
-        agentName: agentPath,
-        message: `Agent ${agentPath} is already running as a Docker service. Agents are now created at startup.`,
-        timestamp: new Date().toISOString()
-      }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
+      // Start agent on-demand
+      try {
+        const server = this.server as any;
+        if (typeof server.startAgent === 'function') {
+          const result = await server.startAgent(agentPath);
+
+          if (result.success) {
+            return new Response(JSON.stringify({
+              success: true,
+              agentName: agentPath,
+              message: result.message,
+              containerId: result.containerId,
+              timestamp: new Date().toISOString()
+            }), {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            });
+          } else {
+            return new Response(JSON.stringify({
+              success: false,
+              agentName: agentPath,
+              message: result.message,
+              timestamp: new Date().toISOString()
+            }), {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            });
+          }
+        } else {
+          return new Response(JSON.stringify({
+            success: false,
+            agentName: agentPath,
+            message: 'Server does not support starting agents on-demand',
+            timestamp: new Date().toISOString()
+          }), {
+            status: 501,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+      } catch (error: any) {
+        return new Response(JSON.stringify({
+          success: false,
+          agentName: agentPath,
+          message: `Error starting agent: ${error.message}`,
+          timestamp: new Date().toISOString()
+        }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
     }
 
     return new Response(JSON.stringify({
@@ -149,13 +190,15 @@ export class Server_HTTP_Routes {
       const agentConfig = agents[agentName];
       return {
         name: agentName,
-        markdownFile: agentConfig.markdownFile,
+        // markdownFile: agentConfig.markdownFile,
+        load: agentConfig.load,
+        message: agentConfig.message,
         hasSliceFunction: typeof agentConfig.sliceFunction === 'function',
         description: `User-defined agent: ${agentName}`,
         type: 'user-defined'
       };
     });
-    
+
     return new Response(JSON.stringify({
       userAgents: agentList,
       count: agentList.length,
@@ -204,181 +247,180 @@ export class Server_HTTP_Routes {
   }
 
   private handleChatRoute(url: URL): Response {
-    const agent = url.searchParams.get('agent');
-    const message = url.searchParams.get('message');
-
-    if (!agent || !message) {
-      throw new Error("Missing agent or message parameter");
-    }
-
-    const timestamp = new Date().toISOString();
-    const chatId = `chat_message:${timestamp}:${agent}`;
-    const text = `${agent} said: '${message}'`;
-
-    // 1. Write to chat_slice.json
-    this.writeChatSlice(agent, message, timestamp, text);
-
-    // 2. Create graph node for chat message
-    this.createChatGraphNode(chatId, agent, message, timestamp, text);
-
-    if (typeof (this.server as any).broadcast === 'function') {
-      const broadcastMessage = {
-        type: 'chat',
-        agent,
-        message,
-        timestamp,
-        text
-      };
-      (this.server as any).broadcast(broadcastMessage);
-
-      // Also broadcast as a resourceChanged for /~/chat to notify subscribers
-      (this.server as any).resourceChanged('/~/chat');
-
-      // Send the message to all agent containers (except the sender)
-      this.sendMessageToAgents(agent, message);
-
-      return new Response(JSON.stringify({
-        success: true,
-        timestamp,
-        chatId
-      }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
-    } else {
-      throw new Error("WebSocket broadcast not available");
-    }
+    // According to tickets/chat.md, we no longer need the POST endpoint for chat
+    return new Response(JSON.stringify({
+      error: 'Chat endpoint is deprecated',
+      message: 'Chat is now handled via aider output streaming',
+      timestamp: new Date().toISOString()
+    }), {
+      status: 410, // Gone
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  private writeChatSlice(agent: string, message: string, timestamp: string, text: string): void {
+  private async handleOpenProcessTerminal(request: Request): Promise<Response> {
     try {
-      const fs = require('fs');
-      const path = require('path');
-      
-      const chatSliceDir = path.join(process.cwd(), 'testeranto', 'agents');
-      const chatSlicePath = path.join(chatSliceDir, 'chat_slice.json');
-      
-      // Ensure directory exists
-      if (!fs.existsSync(chatSliceDir)) {
-        fs.mkdirSync(chatSliceDir, { recursive: true });
-      }
-      
-      // Read existing chat slice or create empty array
-      let chatSlice: any[] = [];
-      if (fs.existsSync(chatSlicePath)) {
-        try {
-          const content = fs.readFileSync(chatSlicePath, 'utf-8');
-          chatSlice = JSON.parse(content);
-          if (!Array.isArray(chatSlice)) {
-            chatSlice = [];
-          }
-        } catch (error) {
-          console.error('[Server_HTTP_Routes] Error reading chat_slice.json:', error);
-          chatSlice = [];
-        }
-      }
-      
-      // Add new message
-      const chatEntry = {
-        agent,
-        message,
-        timestamp,
-        text,
-        id: `chat_message:${timestamp}:${agent}`
-      };
-      chatSlice.push(chatEntry);
-      
-      // Write back to file
-      fs.writeFileSync(chatSlicePath, JSON.stringify(chatSlice, null, 2), 'utf-8');
-      
-      console.log(`[Server_HTTP_Routes] Chat message written to ${chatSlicePath}`);
-    } catch (error) {
-      console.error('[Server_HTTP_Routes] Error writing chat slice:', error);
-      // Don't throw - allow chat to continue even if file write fails
-    }
-  }
+      const body = await request.json();
+      const { nodeId } = body;
 
-  private createChatGraphNode(chatId: string, agent: string, message: string, timestamp: string, text: string): void {
-    try {
-      const graphManager = this.server.graphManager?.getGraphManager();
-      if (!graphManager) {
-        console.error('[Server_HTTP_Routes] Graph manager not available for creating chat node');
-        return;
+      if (!nodeId) {
+        return new Response(JSON.stringify({
+          error: 'Missing nodeId parameter',
+          timestamp: new Date().toISOString()
+        }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
       }
-      
-      // Create chat message node
-      const nodeData = {
-        id: chatId,
-        type: 'chat_message' as const,
-        label: `Chat: ${agent}`,
-        description: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
-        status: 'done' as const,
-        timestamp,
-        metadata: {
-          agent,
-          message,
-          text,
-          timestamp
-        },
-        icon: 'message-circle'
-      };
-      
-      // Apply graph update
-      const update = {
-        operations: [
-          {
-            type: 'addNode' as const,
-            data: nodeData,
-            timestamp
-          }
-        ],
-        timestamp
-      };
-      
-      graphManager.applyUpdate(update);
-      console.log(`[Server_HTTP_Routes] Chat graph node created: ${chatId}`);
-    } catch (error) {
-      console.error('[Server_HTTP_Routes] Error creating chat graph node:', error);
-      // Don't throw - allow chat to continue even if graph update fails
-    }
-  }
 
-  private sendMessageToAgents(senderAgent: string, message: string): void {
-    try {
-      const { execSync } = require('child_process');
-      const agents = this.configs.agents || {};
-      
-      for (const [agentName, _] of Object.entries(agents)) {
-        // Skip the sender
-        if (agentName === senderAgent) {
-          continue;
-        }
-        
+      // Parse nodeId to determine what type of process it is
+      // Format examples:
+      // - agent:prodirek
+      // - aider_process:agent:prodirek
+      // - bdd_process:configKey:testName
+      // - check_process:configKey:testName:index
+      // - aider_process:configKey:testName
+      // - builder_process:configKey
+
+      const parts = nodeId.split(':');
+      const type = parts[0];
+
+      if (type === 'agent') {
+        // Handle agent terminal request
+        const agentName = parts[1];
         const containerName = `agent-${agentName}`;
-        
+
+        // Check if container exists and is running
+        const { execSync } = require('child_process');
+        let containerId = '';
+        let isRunning = false;
+        let containerStatus = 'unknown';
+
         try {
-          // Check if container is running
-          const isRunning = execSync(`docker ps -q -f name=${containerName}`, { 
+          const checkCmd = `docker ps -q -f name=${containerName}`;
+          containerId = execSync(checkCmd, {
             encoding: 'utf-8',
             stdio: ['pipe', 'pipe', 'ignore']
           }).trim();
-          
+          isRunning = !!containerId;
+
           if (isRunning) {
-            // Write to the container's stdin via /proc/1/fd/0
-            const chatMessage = `[Chat from ${senderAgent}] ${message}`;
-            execSync(`docker exec ${containerName} bash -c "echo '${chatMessage}' > /proc/1/fd/0"`, {
+            const inspectCmd = `docker inspect --format='{{.State.Status}}' ${containerName}`;
+            containerStatus = execSync(inspectCmd, {
               encoding: 'utf-8',
-              stdio: ['pipe', 'pipe', 'pipe']
-            });
-            console.log(`[Server_HTTP_Routes] Sent message to agent ${agentName}`);
+              stdio: ['pipe', 'pipe', 'ignore']
+            }).trim();
           }
         } catch (error) {
-          // Container might not be running or command failed
-          console.log(`[Server_HTTP_Routes] Could not send to agent ${agentName}: ${error.message}`);
+          // Container not found or error
+          console.error(`[Server_HTTP_Routes] Error checking container ${containerName}:`, error);
         }
+
+        if (isRunning) {
+          return new Response(JSON.stringify({
+            success: true,
+            nodeId,
+            containerIdentifier: containerName,
+            containerName,
+            containerId: containerId || containerName,
+            containerStatus,
+            nodeType: 'agent',
+            message: `Agent ${agentName} container is running`,
+            timestamp: new Date().toISOString()
+          }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        } else {
+          return new Response(JSON.stringify({
+            error: `Agent container ${containerName} is not running`,
+            nodeId,
+            message: `Agent ${agentName} is not running. Agents are started at server startup via docker-compose.`,
+            timestamp: new Date().toISOString()
+          }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+      } else if (type === 'aider_process' && parts[1] === 'agent') {
+        // Handle aider process for agent
+        const agentName = parts[2];
+        const containerName = `agent-${agentName}`;
+
+        // Check if container exists and is running
+        const { execSync } = require('child_process');
+        let containerId = '';
+        let isRunning = false;
+        let containerStatus = 'unknown';
+
+        try {
+          const checkCmd = `docker ps -q -f name=${containerName}`;
+          containerId = execSync(checkCmd, {
+            encoding: 'utf-8',
+            stdio: ['pipe', 'pipe', 'ignore']
+          }).trim();
+          isRunning = !!containerId;
+
+          if (isRunning) {
+            const inspectCmd = `docker inspect --format='{{.State.Status}}' ${containerName}`;
+            containerStatus = execSync(inspectCmd, {
+              encoding: 'utf-8',
+              stdio: ['pipe', 'pipe', 'ignore']
+            }).trim();
+          }
+        } catch (error) {
+          console.error(`[Server_HTTP_Routes] Error checking container ${containerName}:`, error);
+        }
+
+        if (isRunning) {
+          return new Response(JSON.stringify({
+            success: true,
+            nodeId,
+            containerIdentifier: containerName,
+            containerName,
+            containerId: containerId || containerName,
+            containerStatus,
+            nodeType: 'aider_process',
+            message: `Aider process for agent ${agentName} is running`,
+            timestamp: new Date().toISOString()
+          }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        } else {
+          return new Response(JSON.stringify({
+            error: `Agent container ${containerName} is not running`,
+            nodeId,
+            message: `Agent ${agentName} is not running. Agents are started at server startup.`,
+            timestamp: new Date().toISOString()
+          }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+      } else {
+        // For other process types (bdd, check, builder, etc.), return not implemented
+        // since we're simplifying and these are handled differently now
+        return new Response(JSON.stringify({
+          error: `Process type ${type} not supported in simplified mode`,
+          nodeId,
+          message: 'Only agent processes are supported for terminal access in simplified mode',
+          timestamp: new Date().toISOString()
+        }), {
+          status: 501,
+          headers: { "Content-Type": "application/json" },
+        });
       }
-    } catch (error) {
-      console.error('[Server_HTTP_Routes] Error in sendMessageToAgents:', error);
+    } catch (error: any) {
+      console.error('[Server_HTTP_Routes] Error in handleOpenProcessTerminal:', error);
+      return new Response(JSON.stringify({
+        error: 'Internal server error',
+        message: error.message,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
     }
   }
 
@@ -404,6 +446,7 @@ export class Server_HTTP_Routes {
       'git/merge': () => gitHandlers.handleGitMerge(request),
       'git/conflicts': () => gitHandlers.handleGitConflicts(),
       'git/resolve-conflict': () => gitHandlers.handleGitResolveConflict(request),
+      'open-process-terminal': () => this.handleOpenProcessTerminal(request),
     };
 
     for (const [key, definition] of Object.entries(vscodeHttpAPI)) {

@@ -85,12 +85,12 @@ export class Server_TestManager {
 
     // Check if any file nodes are locked by system restart
     if (lockManager.hasLockedFiles()) {
-      this.consoleLog(`[Server_TestManager] Skipping BDD test ${testName} because files are locked for restart`);
+      console.log(`[Server_TestManager] Skipping BDD test ${testName} because files are locked for restart`);
       return;
     }
 
     if (this.failedBuilderConfigs.has(configKey)) {
-      this.consoleLog(`[Server_TestManager] Skipping BDD test ${testName} because builder failed for config ${configKey}`);
+      console.log(`[Server_TestManager] Skipping BDD test ${testName} because builder failed for config ${configKey}`);
       return;
     }
 
@@ -130,7 +130,7 @@ export class Server_TestManager {
     writeConfigForExtension: () => void,
     graphManager?: any
   ) {
-    this.consoleLog(`[Server_TestManager] Launching checks for ${testName}`);
+    console.log(`[Server_TestManager] Launching checks for ${testName}`);
 
     // Check if files are locked before running checks
     if (graphManager && graphManager.graph) {
@@ -139,13 +139,13 @@ export class Server_TestManager {
 
       // Check if any file nodes are locked by system restart
       if (lockManager.hasLockedFiles()) {
-        this.consoleLog(`[Server_TestManager] Skipping checks for ${testName} because files are locked for restart`);
+        console.log(`[Server_TestManager] Skipping checks for ${testName} because files are locked for restart`);
         return;
       }
     }
 
     if (this.failedBuilderConfigs.has(configKey)) {
-      this.consoleLog(`[Server_TestManager] Skipping checks for ${testName} because builder failed for config ${configKey}`);
+      console.log(`[Server_TestManager] Skipping checks for ${testName} because builder failed for config ${configKey}`);
       return;
     }
 
@@ -193,7 +193,7 @@ export class Server_TestManager {
 
     // Check if any file nodes are locked by system restart
     if (lockManager.hasLockedFiles()) {
-      this.consoleLog(`[Server_TestManager] Skipping aider for ${testName} because files are locked for restart`);
+      console.log(`[Server_TestManager] Skipping aider for ${testName} because files are locked for restart`);
       return;
     }
     await launchAiderPure({
@@ -228,7 +228,8 @@ export class Server_TestManager {
     configKey: string,
     configValue: any,
     checkIndex?: number,
-    graphManager?: any
+    graphManager?: any,
+    status?: 'running' | 'stopped' | 'failed'
   ): Promise<void> {
     await addProcessNodeToGraphPure(
       processType,
@@ -238,9 +239,10 @@ export class Server_TestManager {
       configValue,
       checkIndex,
       graphManager,
-      this.consoleLog,
+      console.log,
       this.consoleError,
-      this.consoleWarn
+      this.consoleWarn,
+      status
     );
     // Graph updates will be broadcast via /~/graph
   }
@@ -272,7 +274,7 @@ export class Server_TestManager {
       configKey,
       inputFiles,
       graphManager,
-      this.consoleLog,
+      console.log,
       this.consoleError,
       this.consoleWarn
     );

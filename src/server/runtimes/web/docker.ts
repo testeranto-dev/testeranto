@@ -1,7 +1,8 @@
 import { join } from "node:path";
 import type { ITesterantoConfig } from "../../../Types";
+import type { IConfigSlice } from "../../types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
-
+// import nodeContent from "../../../../dist/node/node.js" with { type: "text" };
 import webContent from "../../../../dist/prebuild/web/web.mjs" with { type: "text" };
 import hoistContent from "../../../../dist/prebuild/web/hoist.mjs" with { type: "text" };
 
@@ -17,19 +18,19 @@ export const webDockerComposeFile = (
   container_name: string,
   projectConfigPath: string,
   webConfigPath: string,
-  runtimeTestsName: string,
+  slice: IConfigSlice
 ) => {
-  // For web builder service, we need a proper build configuration
-  // Since this is a builder service (not BuildKit), it needs a build field
-  const runtimeConfig = config.runtimes[runtimeTestsName];
-  if (!runtimeConfig) {
-    throw new Error(`Runtime config not found for ${runtimeTestsName}`);
-  }
+  // // For web builder service, we need a proper build configuration
+  // // Since this is a builder service (not BuildKit), it needs a build field
+  // const runtimeConfig = config.runtimes[runtimeTestsName];
+  // if (!runtimeConfig) {
+  //   throw new Error(`Runtime config not found for ${runtimeTestsName}`);
+  // }
 
   const service: any = {
     build: {
       context: process.cwd(),
-      dockerfile: runtimeConfig.dockerfile || "testeranto/runtimes/web/web.Dockerfile",
+      dockerfile: config.runtimes[container_name]?.dockerfile
     },
     container_name,
     environment: {
@@ -42,7 +43,11 @@ export const webDockerComposeFile = (
       ...config.volumes,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
-    command: webBuildCommand(projectConfigPath, webConfigPath, runtimeTestsName, runtimeConfig.tests || []),
+    command: webBuildCommand(
+      projectConfigPath,
+      webConfigPath,
+      slice
+    ),
     networks: ["allTests_network"],
     expose: ["8000"],
   };
@@ -74,20 +79,17 @@ export const chromeServiceConfig = () => {
 export const webBuildCommand = (
   projectConfigPath: string,
   webConfigPath: string,
-  testName: string,
-  tests: string[],
+  slice: IConfigSlice,
 ) => {
-  // MODE is already set in environment, so we don't need to prefix it
-  const entryPointsArg = tests.map(t => t.replace(/^\.\//, '')).join(' ');
-  // Return a simple command string
-  return `yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} ${testName} ${entryPointsArg}`;
+  const configJson = JSON.stringify(slice);
+  return `yarn tsx /workspace/testeranto/web_runtime.ts /workspace/${projectConfigPath} /workspace/${webConfigPath} '${configJson}'`;
 };
 
 export const webBddCommand = (
   fpath: string,
   webConfigPath: string,
   configKey: string,
-  containerName: string,
+  // containerName: string,
 ) => {
   // fpath has .mjs extension (the bundled file), but we need to use the original test file path
   // for the directory structure. The original test file has .ts extension.
@@ -100,7 +102,7 @@ export const webBddCommand = (
   });
 
   const command = `yarn tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`
-  console.log(`[SERVER.DOCKER.WEB] ${configKey} ${containerName} ${command}`)
+  // console.log(`[SERVER.DOCKER.WEB] ${configKey} ${containerName} ${command}`)
   // ESBUILD_HOST is now set via environment in the Docker Compose service configuration
   return command;
 };

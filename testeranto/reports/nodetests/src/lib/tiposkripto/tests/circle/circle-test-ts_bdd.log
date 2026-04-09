@@ -1,5 +1,5 @@
-=== Log started at 2026-04-07T21:17:47.604Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 10558d4ab423f6e9916952b18f15536ba4000c51a689bfc3d0828046ffad1822 ===
+=== Log started at 2026-04-09T02:41:17.183Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: f6ceda4e4c8b1573dbe0c46c07dc165c107e8ff7a2743f491256558e1658d5c7 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -10,30 +10,34 @@ warning testeranto@0.235.9: The engine "vscode" appears to be invalid.
 warning testeranto@0.235.9: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}'
 [NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}
-Describe implementation for "a circle with radius" is not a function, got: object
-[Circle adapter] beforeEach called with subject: [class Circle]
-[Circle adapter] beforeEach created circle: Circle { radius: [class Circle] }
-[Circle adapter] andWhen called with store: Circle { radius: [class Circle] }
-[Circle adapter] andWhen result: Circle { radius: NaN }
-[Circle adapter] andWhen called with store: Circle { radius: NaN }
-[Circle adapter] andWhen result: Circle { radius: NaN }
-[Circle adapter] verify called with store: Circle { radius: NaN }
-[Circle adapter] verificationFn: [AsyncFunction (anonymous)]
-[Circle adapter] verify called with store: Circle { radius: NaN }
-[Circle adapter] verificationFn: [AsyncFunction (anonymous)]
-[Circle adapter] afterEach called with store: Circle { radius: NaN }
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1251:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)
-    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)
-Error: Step type Function has no runnable method
-    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1251:19)
-    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)
-    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)
+Error during test specification: TypeError: Confirm.circumferenceCalculation(...) is not a function
+    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:214:42)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1802:5)
+    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:265:27
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+TypeError: Confirm.circumferenceCalculation(...) is not a function
+    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:214:42)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1802:5)
+    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:265:27
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+TypeError: Confirm.circumferenceCalculation(...) is not a function
+    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:214:42)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1802:5)
+    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:265:27
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
 testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 4.06s.
+Done in 0.94s.
 
-=== Log captured at 2026-04-07T21:17:54.006Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-09T02:41:27.610Z (container status: exited, exit code: 0) ===

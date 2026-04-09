@@ -128,6 +128,13 @@ export class AiderProcessTreeDataProviderCore {
           description: 'No aider processes in graph'
         });
       }
+    } else {
+      // graphData is null
+      if (agents.length === 0) {
+        items.push({
+          description: 'No aider processes in graph'
+        });
+      }
     }
 
     return items;

@@ -1,9 +1,12 @@
-=== Log started at 2026-04-06T23:16:30.575Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2 (runtime: node) ===
-=== Container ID: edd636e3bc809d6bcfe61c1116efb0021ed623b0333266226693e1ebb501f19a ===
+=== Log started at 2026-04-08T20:47:55.491Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2 (runtime: node) ===
+=== Container ID: 2b829c9659332d6cdb5628d7be5fd59a07158469c69f47531bf0934fbc565875 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
 === ALL LOGS (stdout + stderr) ===
 No calculator test found
+No calculator test found
+No calculator test found
+No calculator test found
 
-=== Log captured at 2026-04-06T23:16:33.574Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-08T20:48:04.559Z (container status: exited, exit code: 0) ===

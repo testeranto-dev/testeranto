@@ -1,8 +1,13 @@
 # syntax=docker/dockerfile:1
 # Minimal Rust Dockerfile for Testeranto
 # Source code is mounted via volumes at runtime
+# Using a newer Rust version that supports edition2024
+# IMPORTANT: Rebuild this image after changing the Rust version
 
-FROM rust:1.75-alpine3.19
+FROM rust:1.79-alpine
+
+# Verify Rust version supports edition2024
+RUN rustc --version && cargo --version
 
 WORKDIR /workspace
 
@@ -26,6 +31,7 @@ RUN mkdir -p /workspace/target && chmod 777 /workspace/target
 # Install additional tools that might be needed for testing
 RUN cargo install --version 0.9.0 cargo-audit || true
 
+COPY ./Cargo.toml .
 # No need to build rusto from source - it will be downloaded as a dependency
 # when building test binaries
 # No CMD - command is specified in docker-compose

@@ -1,0 +1,848 @@
+{
+  "failed": true,
+  "fails": 1,
+  "artifacts": [],
+  "features": [
+    "Test filtering folder nodes from graph data",
+    "Test filtering file nodes from graph data",
+    "Test filtering folder nodes by path",
+    "Test filtering file nodes by path",
+    "Test getting folder name",
+    "Test getting file name",
+    "Test building tree structure",
+    "Test counting files in tree",
+    "Test getting file icon",
+    "Test setting and getting graph data",
+    "Test hasGraphData with empty graph",
+    "Test basename function",
+    "Test dirname function",
+    "Test filtering folder nodes from empty graph",
+    "Test filtering folder nodes when only files exist",
+    "Test filtering file nodes when only folders exist",
+    "Test basename with root path",
+    "Test dirname with root path",
+    "Test Describe-It pattern for FileTreeLogic",
+    "Test table-driven testing for addition",
+    "Test path operations"
+  ],
+  "tests": 21,
+  "runTimeTests": 21,
+  "testJob": {
+    "name": "CombinedResults"
+  },
+  "timestamp": 1775702477844,
+  "individualResults": [
+    {
+      "index": 0,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering folder nodes from graph data"
+      ],
+      "error": null,
+      "stepName": "step_0",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_0",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering folder nodes from graph data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterFolderNodes: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFolderCount: 3",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering file nodes from graph data"
+      ],
+      "error": null,
+      "stepName": "step_1",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_1",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering file nodes from graph data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterFileNodes: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFileCount: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering folder nodes by path"
+      ],
+      "error": null,
+      "stepName": "step_2",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_2",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering folder nodes by path"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterFolderNodesByPath: root/folder1",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFilteredFolderCount: 1",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering file nodes by path"
+      ],
+      "error": null,
+      "stepName": "step_3",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_3",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering file nodes by path"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterFileNodesByPath: root/folder1",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFilteredFileCount: 1",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test getting folder name"
+      ],
+      "error": null,
+      "stepName": "step_4",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_4",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test getting folder name"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getFolderName: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFolderName: folder1",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test getting file name"
+      ],
+      "error": null,
+      "stepName": "step_5",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_5",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test getting file name"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getFileName: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFileName: file1.txt",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test building tree structure"
+      ],
+      "error": null,
+      "stepName": "step_6",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_6",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test building tree structure"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "buildTreeStructure: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveTreeStructure: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test counting files in tree"
+      ],
+      "error": null,
+      "stepName": "step_7",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_7",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test counting files in tree"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "countFilesInTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFileCountInTree: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test getting file icon"
+      ],
+      "error": null,
+      "stepName": "step_8",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_8",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test getting file icon"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getFileIcon: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFileIcon: file-code",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test setting and getting graph data"
+      ],
+      "error": null,
+      "stepName": "step_9",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_9",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test setting and getting graph data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setAndGetGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 10,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test hasGraphData with empty graph"
+      ],
+      "error": null,
+      "stepName": "step_10",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_10",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test hasGraphData with empty graph"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "hasGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldNotHaveGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 11,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test basename function"
+      ],
+      "error": null,
+      "stepName": "step_11",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_11",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test basename function"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "basename: /root/folder/file.txt",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveBasename: file.txt",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 12,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test dirname function"
+      ],
+      "error": null,
+      "stepName": "step_12",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_12",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test dirname function"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "dirname: /root/folder/file.txt",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveDirname: root/folder",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 13,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering folder nodes from empty graph"
+      ],
+      "error": null,
+      "stepName": "step_13",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_13",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering folder nodes from empty graph"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterFolderNodes: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFolderCount: 0",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 14,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering folder nodes when only files exist"
+      ],
+      "error": null,
+      "stepName": "step_14",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_14",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering folder nodes when only files exist"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterFolderNodes: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFolderCount: 0",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 15,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering file nodes when only folders exist"
+      ],
+      "error": null,
+      "stepName": "step_15",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_15",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering file nodes when only folders exist"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterFileNodes: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveFileCount: 0",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 16,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test basename with root path"
+      ],
+      "error": null,
+      "stepName": "step_16",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_16",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test basename with root path"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "basename: /",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveBasename: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 17,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test dirname with root path"
+      ],
+      "error": null,
+      "stepName": "step_17",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_17",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test dirname with root path"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "dirname: /",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveDirname: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 18,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "Test Describe-It pattern for FileTreeLogic"
+      ],
+      "error": {
+        "message": "expected true to be false",
+        "stack": "AssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:609:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_18",
+      "stepType": "BaseDescribe",
+      "testJob": {
+        "key": "step_18",
+        "its": [
+          {
+            "name": "shouldHandleGraphData: ",
+            "status": false,
+            "error": "AssertionError: expected true to be false\nAssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:609:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+            "artifacts": []
+          },
+          {
+            "name": "shouldBuildTreeCorrectly: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldFilterNodesCorrectly: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldComputePathsCorrectly: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          }
+        ],
+        "error": [
+          "expected true to be false",
+          "AssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:609:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test Describe-It pattern for FileTreeLogic"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1
+      }
+    },
+    {
+      "index": 19,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test table-driven testing for addition"
+      ],
+      "error": null,
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test table-driven testing for addition"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "confirms": [
+          {
+            "index": 0,
+            "input": [
+              1,
+              2
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 1,
+            "input": [
+              4,
+              5
+            ],
+            "test": "Test function"
+          },
+          {
+            "index": 2,
+            "input": [
+              0,
+              0
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 3,
+            "input": [
+              -5,
+              5
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 4,
+            "input": [
+              100,
+              200
+            ],
+            "test": "Test function"
+          }
+        ]
+      }
+    },
+    {
+      "index": 20,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test path operations"
+      ],
+      "error": null,
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test path operations"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "confirms": [
+          {
+            "index": 0,
+            "input": "/root/file.txt",
+            "test": "equal"
+          },
+          {
+            "index": 1,
+            "input": "/a/b/c",
+            "test": "equal"
+          },
+          {
+            "index": 2,
+            "input": "relative/path",
+            "test": "equal"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 21,
+    "passed": 20,
+    "failed": 1,
+    "successRate": "95.24%"
+  }
+}

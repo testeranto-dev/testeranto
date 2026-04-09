@@ -2,115 +2,10 @@
   "errors": [
     {
       "id": "",
-      "location": {
-        "column": 9,
-        "file": "src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-        "length": 11,
-        "line": 229,
-        "lineText": "export { BaseConfirm };",
-        "namespace": "",
-        "suggestion": ""
-      },
-      "notes": [
-        {
-          "location": {
-            "column": 13,
-            "file": "src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-            "length": 11,
-            "line": 9,
-            "lineText": "export class BaseConfirm<I extends TestTypeParams_any> {",
-            "namespace": "",
-            "suggestion": ""
-          },
-          "text": "The name \"BaseConfirm\" was originally exported here:"
-        }
-      ],
+      "location": null,
+      "notes": [],
       "pluginName": "",
-      "text": "Multiple exports with the same name \"BaseConfirm\""
-    },
-    {
-      "id": "",
-      "location": {
-        "column": 9,
-        "file": "src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-        "length": 12,
-        "line": 69,
-        "lineText": "export { BaseExpected };",
-        "namespace": "",
-        "suggestion": ""
-      },
-      "notes": [
-        {
-          "location": {
-            "column": 22,
-            "file": "src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-            "length": 12,
-            "line": 8,
-            "lineText": "export abstract class BaseExpected<I extends TestTypeParams_any> {",
-            "namespace": "",
-            "suggestion": ""
-          },
-          "text": "The name \"BaseExpected\" was originally exported here:"
-        }
-      ],
-      "pluginName": "",
-      "text": "Multiple exports with the same name \"BaseExpected\""
-    },
-    {
-      "id": "",
-      "location": {
-        "column": 9,
-        "file": "src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-        "length": 10,
-        "line": 66,
-        "lineText": "export { BaseShould };",
-        "namespace": "",
-        "suggestion": ""
-      },
-      "notes": [
-        {
-          "location": {
-            "column": 13,
-            "file": "src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-            "length": 10,
-            "line": 7,
-            "lineText": "export class BaseShould<I extends TestTypeParams_any> {",
-            "namespace": "",
-            "suggestion": ""
-          },
-          "text": "The name \"BaseShould\" was originally exported here:"
-        }
-      ],
-      "pluginName": "",
-      "text": "Multiple exports with the same name \"BaseShould\""
-    },
-    {
-      "id": "",
-      "location": {
-        "column": 9,
-        "file": "src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-        "length": 9,
-        "line": 217,
-        "lineText": "export { BaseValue };",
-        "namespace": "",
-        "suggestion": ""
-      },
-      "notes": [
-        {
-          "location": {
-            "column": 13,
-            "file": "src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-            "length": 9,
-            "line": 9,
-            "lineText": "export class BaseValue<I extends TestTypeParams_any> {",
-            "namespace": "",
-            "suggestion": ""
-          },
-          "text": "The name \"BaseValue\" was originally exported here:"
-        }
-      ],
-      "pluginName": "",
-      "text": "Multiple exports with the same name \"BaseValue\""
+      "text": "The entry point \"src/server/serverClasses/Server_GraphManagerCore.test.ts\" cannot be marked as external"
     }
   ],
   "warnings": [
@@ -120,7 +15,7 @@
         "column": 6,
         "file": "package.json",
         "length": 7,
-        "line": 211,
+        "line": 222,
         "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
         "namespace": "",
         "suggestion": ""
@@ -131,7 +26,7 @@
             "column": 6,
             "file": "package.json",
             "length": 8,
-            "line": 209,
+            "line": 220,
             "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
             "namespace": "",
             "suggestion": ""
@@ -143,7 +38,7 @@
             "column": 6,
             "file": "package.json",
             "length": 9,
-            "line": 210,
+            "line": 221,
             "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
             "namespace": "",
             "suggestion": ""

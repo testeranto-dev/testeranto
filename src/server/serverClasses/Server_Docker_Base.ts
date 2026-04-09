@@ -111,40 +111,40 @@ export abstract class Server_Docker_Base extends Server_WS {
 
   public getProcessLogs = (processId: string): string[] => {
     console.log(`[Server_Docker_Base] Getting log URLs for process ${processId}`);
-    
+
     // Get the graph manager
     const graphManager = this.graphManager?.getGraphManager();
     if (!graphManager) {
       throw new Error('Graph manager not available');
     }
-    
+
     const graph = graphManager.getGraphData();
-    
+
     // Find the process node
     const processNode = graph.nodes.find((node: any) => node.id === processId);
     if (!processNode) {
       throw new Error(`Process ${processId} not found in graph`);
     }
-    
+
     // Find all file nodes connected to this process
-    const connectedEdges = graph.edges.filter((edge: any) => 
+    const connectedEdges = graph.edges.filter((edge: any) =>
       edge.source === processId
     );
-    
+
     const logUrls: string[] = [];
-    
+
     for (const edge of connectedEdges) {
       const fileNode = graph.nodes.find((node: any) => node.id === edge.target);
       if (fileNode && fileNode.type === 'file') {
         const metadata = fileNode.metadata || {};
         const url = metadata.url || `file://${metadata.filePath || metadata.localPath}`;
-        
+
         if (url) {
           logUrls.push(url);
         }
       }
     }
-    
+
     // If no URLs found, return the process metadata
     if (logUrls.length === 0) {
       const metadata = processNode.metadata || {};
@@ -157,7 +157,7 @@ export abstract class Server_Docker_Base extends Server_WS {
         `No log files connected in graph`
       );
     }
-    
+
     return logUrls;
   };
 
@@ -323,14 +323,14 @@ export abstract class Server_Docker_Base extends Server_WS {
     );
   }
 
-  // Agents are now created as Docker services at startup, not dynamically
-  // This method is kept for compatibility but does nothing
-  async createAgent(agentName: string, suffix: string, runtime?: string, testName?: string): Promise<void> {
-    console.log(`[Server_Docker_Base] Agents are now created as Docker services at startup. Agent ${agentName} is already running.`);
-    // Broadcast updates to relevant slices to refresh the view
-    this.resourceChanged('/~/graph');
-    this.resourceChanged('/~/aider');
-    this.resourceChanged('/~/process');
-    this.resourceChanged(`/~/agents/${agentName}`);
+  /**
+   * Agents are now started via docker-compose at server startup
+   * This method is kept for compatibility but returns a simple response
+   */
+  async startAgent(agentName: string): Promise<{ success: boolean; message: string; containerId?: string }> {
+    return {
+      success: true,
+      message: `Agent ${agentName} is already running (started at server startup)`
+    };
   }
 }

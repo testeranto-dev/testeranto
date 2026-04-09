@@ -85,84 +85,84 @@ export const registerAgentCommands = (
         )
     );
 
-    disposables.push(
-        vscode.commands.registerCommand(
-            "testeranto.launchAgentSelection",
-            async () => {
-                // Get agents from the graph data
-                try {
-                    const workspaceFolders = vscode.workspace.workspaceFolders;
-                    if (!workspaceFolders || workspaceFolders.length === 0) {
-                        vscode.window.showErrorMessage('No workspace folder open');
-                        return;
-                    }
+    // disposables.push(
+    //     vscode.commands.registerCommand(
+    //         "testeranto.launchAgentSelection",
+    //         async () => {
+    //             // Get agents from the graph data
+    //             try {
+    //                 const workspaceFolders = vscode.workspace.workspaceFolders;
+    //                 if (!workspaceFolders || workspaceFolders.length === 0) {
+    //                     vscode.window.showErrorMessage('No workspace folder open');
+    //                     return;
+    //                 }
 
-                    const workspaceRoot = workspaceFolders[0].uri.fsPath;
+    //                 const workspaceRoot = workspaceFolders[0].uri.fsPath;
 
-                    // Get agents from configs in graph data
-                    // Note: This needs to be implemented based on actual data source
-                    // For now, we'll use a placeholder
-                    const agentsConfig = {}; // Placeholder
-                    if (!agentsConfig || typeof agentsConfig !== 'object') {
-                        vscode.window.showInformationMessage('No agents configured');
-                        return;
-                    }
+    //                 // Get agents from configs in graph data
+    //                 // Note: This needs to be implemented based on actual data source
+    //                 // For now, we'll use a placeholder
+    //                 const agentsConfig = {}; // Placeholder
+    //                 if (!agentsConfig || typeof agentsConfig !== 'object') {
+    //                     vscode.window.showInformationMessage('No agents configured');
+    //                     return;
+    //                 }
 
-                    const agentEntries = Object.entries(agentsConfig);
-                    if (agentEntries.length === 0) {
-                        vscode.window.showInformationMessage('No agents configured');
-                        return;
-                    }
+    //                 const agentEntries = Object.entries(agentsConfig);
+    //                 if (agentEntries.length === 0) {
+    //                     vscode.window.showInformationMessage('No agents configured');
+    //                     return;
+    //                 }
 
-                    // Create agent options for quick pick
-                    const agentOptions = agentEntries.map(([agentName, agentConfig]) => {
-                        const config = agentConfig as any;
-                        const markdownFile = config.markdownFile;
-                        let label = `${agentName.charAt(0).toUpperCase() + agentName.slice(1)}`;
+    //                 // Create agent options for quick pick
+    //                 const agentOptions = agentEntries.map(([agentName, agentConfig]) => {
+    //                     const config = agentConfig as any;
+    //                     const markdownFile = config.markdownFile;
+    //                     let label = `${agentName.charAt(0).toUpperCase() + agentName.slice(1)}`;
 
-                        // Try to read the markdown file for a better label
-                        if (markdownFile && typeof markdownFile === 'string') {
-                            const agentMdPath = path.isAbsolute(markdownFile)
-                                ? markdownFile
-                                : path.join(workspaceRoot, markdownFile);
+    //                     // Try to read the markdown file for a better label
+    //                     if (markdownFile && typeof markdownFile === 'string') {
+    //                         const agentMdPath = path.isAbsolute(markdownFile)
+    //                             ? markdownFile
+    //                             : path.join(workspaceRoot, markdownFile);
 
-                            if (fs.existsSync(agentMdPath)) {
-                                try {
-                                    const mdContent = fs.readFileSync(agentMdPath, 'utf-8');
-                                    const firstLine = mdContent.split('\n')[0];
-                                    const roleMatch = firstLine.match(/Your name is "([^"]+)". You are a ([^.]+)\./);
-                                    if (roleMatch) {
-                                        const name = roleMatch[1];
-                                        const role = roleMatch[2];
-                                        label = `${name} (${role})`;
-                                    }
-                                } catch (error) {
-                                    // If we can't read the markdown, use the agent name
-                                }
-                            }
-                        }
+    //                         if (fs.existsSync(agentMdPath)) {
+    //                             try {
+    //                                 const mdContent = fs.readFileSync(agentMdPath, 'utf-8');
+    //                                 const firstLine = mdContent.split('\n')[0];
+    //                                 const roleMatch = firstLine.match(/Your name is "([^"]+)". You are a ([^.]+)\./);
+    //                                 if (roleMatch) {
+    //                                     const name = roleMatch[1];
+    //                                     const role = roleMatch[2];
+    //                                     label = `${name} (${role})`;
+    //                                 }
+    //                             } catch (error) {
+    //                                 // If we can't read the markdown, use the agent name
+    //                             }
+    //                         }
+    //                     }
 
-                        return { label, value: agentName };
-                    });
+    //                     return { label, value: agentName };
+    //                 });
 
-                    const selected = await vscode.window.showQuickPick(
-                        agentOptions.map(a => a.label),
-                        { placeHolder: 'Select an agent to launch' }
-                    );
+    //                 const selected = await vscode.window.showQuickPick(
+    //                     agentOptions.map(a => a.label),
+    //                     { placeHolder: 'Select an agent to launch' }
+    //                 );
 
-                    if (selected) {
-                        const agent = agentOptions.find(a => a.label === selected);
-                        if (agent) {
-                            await vscode.commands.executeCommand('testeranto.launchAgent', agent.value);
-                        }
-                    }
-                } catch (error) {
-                    console.error('[registerCommands] Error launching agent selection:', error);
-                    vscode.window.showErrorMessage(`Error launching agent: ${error}`);
-                }
-            }
-        )
-    );
+    //                 if (selected) {
+    //                     const agent = agentOptions.find(a => a.label === selected);
+    //                     if (agent) {
+    //                         await vscode.commands.executeCommand('testeranto.launchAgent', agent.value);
+    //                     }
+    //                 }
+    //             } catch (error) {
+    //                 console.error('[registerCommands] Error launching agent selection:', error);
+    //                 vscode.window.showErrorMessage(`Error launching agent: ${error}`);
+    //             }
+    //         }
+    //     )
+    // );
 
     return disposables;
 };

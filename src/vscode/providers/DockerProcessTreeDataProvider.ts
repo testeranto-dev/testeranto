@@ -101,7 +101,8 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
       node.type === 'docker_process' ||
       node.type === 'bdd_process' ||
       node.type === 'check_process' ||
-      node.type === 'builder_process'
+      node.type === 'builder_process' ||
+      node.type === 'aider_process'
     );
 
     console.log(`[DockerProcessTreeDataProvider] Found ${dockerProcessNodes.length} docker process nodes`);
@@ -223,11 +224,11 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
 
   private createProcessItem(node: GraphNode): TestTreeItem {
     const metadata = node.metadata || {};
-    const state = metadata.state || 'unknown';
+    const state = metadata.state || metadata.status || 'unknown';
     const exitCode = metadata.exitCode;
     const isActive = metadata.isActive || false;
     const containerId = metadata.containerId || 'unknown';
-    const serviceName = metadata.serviceName || metadata.name || 'unknown';
+    const serviceName = metadata.serviceName || metadata.containerName || metadata.name || 'unknown';
 
     // Determine label
     let label = node.label || serviceName;
@@ -244,10 +245,15 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
     if (!isActive) {
       description += ' • inactive';
     }
+    if (node.type === 'aider_process') {
+      description += ' • aider';
+    }
 
     // Determine icon
     let icon: vscode.ThemeIcon;
-    if (state === 'running' && isActive) {
+    if (node.type === 'aider_process') {
+      icon = new vscode.ThemeIcon('comment-discussion', new vscode.ThemeColor('testing.iconPassed'));
+    } else if (state === 'running' && isActive) {
       icon = new vscode.ThemeIcon('play-circle', new vscode.ThemeColor('testing.iconPassed'));
     } else if (state === 'exited') {
       if (exitCode === 0) {
@@ -272,7 +278,11 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
         containerId,
         serviceName,
         processType: node.type,
-        isActive
+        isActive,
+        nodeId: node.id,
+        // Add aider-specific fields
+        agentName: metadata.agentName,
+        isAgentAider: metadata.isAgentAider
       },
       {
         command: 'testeranto.openProcessTerminal',
@@ -288,6 +298,14 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
     tooltip += `Container: ${containerId}\n`;
     tooltip += `State: ${state}\n`;
     tooltip += `Active: ${isActive ? 'Yes' : 'No'}\n`;
+    if (node.type === 'aider_process') {
+      if (metadata.agentName) {
+        tooltip += `Agent: ${metadata.agentName}\n`;
+      }
+      if (metadata.isAgentAider) {
+        tooltip += `Agent Aider: Yes\n`;
+      }
+    }
     if (exitCode !== undefined) {
       tooltip += `Exit Code: ${exitCode}\n`;
     }
@@ -311,7 +329,8 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
         (edge.attributes.type === 'hasProcess' ||
           edge.attributes.type === 'hasBddProcess' ||
           edge.attributes.type === 'hasCheckProcess' ||
-          edge.attributes.type === 'hasBuilderProcess')
+          edge.attributes.type === 'hasBuilderProcess' ||
+          edge.attributes.type === 'hasAiderProcess')
       );
 
       for (const edge of connectedEdges) {
@@ -321,6 +340,8 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
             tooltip += `\nConnected to entrypoint: ${sourceNode.label || sourceNode.id}`;
           } else if (sourceNode.type === 'config') {
             tooltip += `\nConnected to config: ${sourceNode.label || sourceNode.id}`;
+          } else if (sourceNode.type === 'agent') {
+            tooltip += `\nConnected to agent: ${sourceNode.label || sourceNode.id}`;
           }
         }
       }

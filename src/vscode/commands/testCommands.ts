@@ -66,10 +66,10 @@ export const registerTestCommands = (
     disposables.push(
         vscode.commands.registerCommand(
             "testeranto.openAiderTerminal",
-            async (runtime: string, testName: string, containerId?: string) => {
+            async (containerName?: string, label?: string, agentName?: string) => {
                 try {
-                    vscode.window.showInformationMessage(`Opening aider terminal for ${testName} (${runtime})...`);
-                    const terminal = await terminalManager.createAiderTerminal(runtime, testName);
+                    vscode.window.showInformationMessage(`Opening aider terminal for ${label || 'Aider'}...`);
+                    const terminal = await terminalManager.openAiderTerminal(containerName || '', label || 'Aider', agentName);
                     terminal.show();
                 } catch (err) {
                     vscode.window.showErrorMessage(`Error opening aider terminal: ${err}`);

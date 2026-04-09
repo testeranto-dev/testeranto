@@ -1,5 +1,5 @@
-=== Log started at 2026-04-07T21:19:19.163Z for service nodetests-builder (runtime: node) ===
-=== Container ID: 47c868d56bd40db6f3f842398ae817edb9394e7ed126b37348bd62eff8112521 ===
+=== Log started at 2026-04-09T02:40:24.124Z for service nodetests-builder (runtime: node) ===
+=== Container ID: e3a58d23a04a653987637a88ae4206a8c3f431b184f6efbc87c02a264caf5ae0 ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
@@ -8,24 +8,106 @@ yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.242.0: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs nodetests src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts src/lib/tiposkripto/tests/circle/Circle.test.ts src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts src/server/serverClasses/Server_GraphManagerCore.test.ts
-[NODE BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
-[NODE BUILDER] nodeConfig:  /workspace/testeranto/runtimes/node/node.mjs
-[NODE BUILDER] testName:  nodetests
-[NODE BUILDER] Log file: /workspace/testeranto/reports/nodetests/build.log
-NODE BUILDER: Error: Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './src/vscode/defaultViews/index.ts' is not defined by "exports" in /workspace/package.json imported from /workspace/testeranto/testeranto.ts
-    at exportsNotFound (node:internal/modules/esm/resolve:322:10)
-    at packageExportsResolve (node:internal/modules/esm/resolve:670:9)
-    at packageResolve (node:internal/modules/esm/resolve:831:14)
-    at moduleResolve (node:internal/modules/esm/resolve:946:18)
-    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
-    at nextResolve (node:internal/modules/esm/hooks:864:28)
-    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755817:2:3744)
-    at resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755817:2:4243)
-    at resolveTsPaths (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755817:2:4984)
-    at resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755817:2:5361) {
-  code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
-}
-[NODE BUILDER] Error occurred but keeping process alive in dev mode
+$ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs '{"name":"nodetests","tests":["src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts","src/lib/tiposkripto/tests/circle/Circle.test.ts","src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts","src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts","src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts","src/vscode/providers/logic/FileTreeLogic.test.ts"],"outputs":[]}'
+[NODE BUILDER] is now bundling:  nodetests
+[NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts
+[NODE BUILDER] Running in dev mode - starting watch mode
+▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
 
-=== Log captured at 2026-04-07T21:19:40.386Z (container status: running) ===
+    package.json:222:6:
+      222 │       "types": "./src/CoreTypes.d.ts"
+          ╵       ~~~~~~~
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:220:6:
+      220 │       "import": "./src/CoreTypes.ts",
+          ╵       ~~~~~~~~
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+
+    package.json:221:6:
+      221 │       "require": "./src/CoreTypes.ts",
+          ╵       ~~~~~~~~~
+
+▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
+
+    src/lib/tiposkripto/tests/calculator/Calculator.ts:10:21:
+      10 │       const result = eval(this.display);
+         ╵                      ~~~~
+
+  You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
+
+node > build ended with 0 errors
+[node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[node Builder] Created build log for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Server_GraphManagerCore.test.build.log
+[node Builder] Created build log for src/vscode/providers/logic/FileTreeLogic.test.ts at /workspace/testeranto/reports/nodetests/test-logs/FileTreeLogic.test.build.log
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 393546c878b52a96086c3f8c3c1e46e8
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[node Builder] Processed src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts: 24 files, hash: 1ed759b2a64a8800c8846125b032d949
+[node Builder] Processed src/vscode/providers/logic/FileTreeLogic.test.ts: 24 files, hash: 4110eb9e23bdf2ac592e64a4993e6b1a
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[node Builder] Wrote inputFiles.json for 6 tests to testeranto/bundles/nodetests/inputFiles.json
+[NODE BUILDER] Metafile updated
+[NODE BUILDER] Triggered inputFiles.json update
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 393546c878b52a96086c3f8c3c1e46e8
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[node Builder] Processed src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts: 24 files, hash: 1ed759b2a64a8800c8846125b032d949
+[node Builder] Processed src/vscode/providers/logic/FileTreeLogic.test.ts: 24 files, hash: 4110eb9e23bdf2ac592e64a4993e6b1a
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[node Builder] Wrote inputFiles.json for 6 tests to testeranto/bundles/nodetests/inputFiles.json
+[NODE BUILDER] Watch mode active - waiting for file changes...
+[NODE BUILDER] Using onEnd plugin for rebuild detection
+[NODE BUILDER] Keeping process alive for continuous watching...
+▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
+
+    package.json:222:6:
+      222 │       "types": "./src/CoreTypes.d.ts"
+          ╵       ~~~~~~~
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:220:6:
+      220 │       "import": "./src/CoreTypes.ts",
+          ╵       ~~~~~~~~
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+
+    package.json:221:6:
+      221 │       "require": "./src/CoreTypes.ts",
+          ╵       ~~~~~~~~~
+
+▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
+
+    src/lib/tiposkripto/tests/calculator/Calculator.ts:10:21:
+      10 │       const result = eval(this.display);
+         ╵                      ~~~~
+
+  You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
+
+node > build ended with 0 errors
+[node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts at /workspace/testeranto/reports/nodetests/test-logs/Calculator.test.node.build.log
+[node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[node Builder] Created build log for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Server_GraphManagerCore.test.build.log
+[node Builder] Created build log for src/vscode/providers/logic/FileTreeLogic.test.ts at /workspace/testeranto/reports/nodetests/test-logs/FileTreeLogic.test.build.log
+[node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts: 24 files, hash: 393546c878b52a96086c3f8c3c1e46e8
+[node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[node Builder] Processed src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts: 24 files, hash: 1ed759b2a64a8800c8846125b032d949
+[node Builder] Processed src/vscode/providers/logic/FileTreeLogic.test.ts: 24 files, hash: 4110eb9e23bdf2ac592e64a4993e6b1a
+[node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[node Builder] Wrote inputFiles.json for 6 tests to testeranto/bundles/nodetests/inputFiles.json
+[NODE BUILDER] Metafile updated
+[NODE BUILDER] Triggered inputFiles.json update
+
+=== Log captured at 2026-04-09T02:40:45.840Z (container status: running) ===

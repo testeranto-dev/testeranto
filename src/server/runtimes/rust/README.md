@@ -7,90 +7,88 @@
 - Detect criterion benchmark attributes
 - Use native detection module for AST-based analysis
 
-**Wrapper Generation:**
+**Native Test Adaptation:**
 
-- Compile with `--test` and custom test harness
-- Capture results via JSON output
-- Handle integration vs unit test differences
-- Generate Go-compatible wrappers for native test execution
+- Detect native Rust tests (files with `#[test]` attributes)
+- Generate Rust adapter code that wraps native tests to run within testeranto framework
+- Preserve original test logic while adding testeranto result reporting
+- Handle both unit tests and integration tests
 
-## Go Toolchain Compatibility
+## Native Rust Test Detection and Adaptation
 
-To make Rust tests acceptable to the native Go toolchain testing runner, we generate:
+The Rust builder detects native Rust tests (distinct from testeranto tests) and adapts them to run within the testeranto framework:
 
-### 1. Go-Compatible Wrappers
-- **Go wrapper files** (`*_go_wrapper.go`) that execute Rust binaries
-- **JSON output format** compatible with Go test runners
-- **Exit code handling** that matches Go test expectations
+### 1. Native Test Detection
+- **AST-based detection** of `#[test]`, `#[tokio::test]`, `#[async_std::test]` attributes
+- **Module detection** of `#[cfg(test)]` modules
+- **Framework identification** (standard Rust testing, criterion, specs)
+- **Test structure extraction** (test functions, imports, dependencies)
 
-### 2. Rust Test Runners  
-- **Rust runner binaries** that execute actual test code
-- **JSON result serialization** for standardized output
-- **Error propagation** to match Go test behavior
+### 2. Rust Adapter Generation  
+- **Rust adapter files** that wrap native test execution
+- **Testeranto result reporting** integration
+- **Error handling** that preserves original test behavior
+- **Resource cleanup** between test runs
 
 ### 3. Three-Parameter Architecture
 For native Rust tests, we generate:
 - **Specification**: Extracted from `#[test]` functions and modules
-- **Implementation**: Mapped from Rust test code to testeranto
-- **Adapter**: Bridges Rust test execution to Go toolchain
+- **Implementation**: Original Rust test code preserved
+- **Adapter**: Bridges native Rust test execution to testeranto framework
 
 ## Native Detection Module
 
-The Rust runtime now includes `native_detection.rs` which provides:
-1. **AST-based detection** of `#[test]` attributes and test modules
-2. **Framework identification** (standard Rust testing, criterion, specs)
-3. **Test structure extraction** (test functions, imports, dependencies)
-4. **JSON output** for integration with the builder
+The Rust runtime includes `native_detection.rs` which provides:
+1. **Simple detection** of test attributes in Rust source files
+2. **File content analysis** without full AST parsing
+3. **Framework hinting** based on attribute patterns
 
-## Go Toolchain Integration Workflow
+## Rust Test Adaptation Workflow
 
-1. **Detection**: Builder identifies Rust test files using native detection
-2. **Analysis**: AST parsing reveals `#[test]` functions and their structure
-3. **Wrapper Generation**: Creates Go-compatible wrapper executables
-4. **Binary Compilation**: Builds both Rust test binary and Go wrapper
-5. **Execution**: Tests run through Go wrapper, producing JSON results
-6. **Result Processing**: Go test runner processes JSON output
+1. **Detection**: Builder identifies native Rust test files using attribute detection
+2. **Analysis**: Determine test structure and dependencies
+3. **Adapter Generation**: Create Rust code that wraps native tests for testeranto
+4. **Binary Compilation**: Build adapted test binaries with `cargo build`
+5. **Execution**: Run adapted tests through testeranto framework
+6. **Result Processing**: Convert test results to testeranto format
 
 ## Example Usage
 
-For a Rust test file with `#[test]` attributes:
-1. Builder detects native test and generates Go wrapper
-2. Go wrapper executes Rust binary and captures output
-3. Results are formatted as JSON for Go test runner
-4. Exit codes match Go test expectations (0 for pass, 1 for fail)
+For a native Rust test file with `#[test]` attributes:
+1. Builder detects native test and generates Rust adapter
+2. Adapter wraps test execution while preserving original logic
+3. Results are captured and reported through testeranto
+4. Exit codes and test outcomes are maintained
 
 ## BuildKit Configuration
 ```typescript
 useBuildKit: true,
 buildKitOptions: {
   cacheMounts: ["/usr/local/cargo/registry", "/usr/local/cargo/git"],
-  // Optional: target stage for multi-stage builds
-  // targetStage: "runtime",
   buildArgs: {
-    RUST_VERSION: "1.75"
+    RUST_VERSION: "1.79"
   }
 }
 ```
 
 ## Dockerfile Requirements
-- Must include Rust toolchain (cargo, rustc)
-- Should include Go toolchain for wrapper compilation
+- Must include Rust toolchain (cargo, rustc) version 1.79 or newer to support edition2024
+- Should NOT include Go toolchain (no Go wrapper generation)
 - Can be single-stage or multi-stage
 
 ## Entry Point Processing
 1. Locate Cargo.toml and determine project structure
-2. Detect native tests using AST analysis
-3. Generate Go-compatible wrappers for native tests
-4. Build binary with `cargo build --release --bin`
-5. Copy compiled binary and wrapper to bundles directory
+2. Detect native tests using attribute analysis
+3. Generate Rust adapters for native tests when needed
+4. Build binary with `cargo build --release --bin` or `--example`
+5. Copy compiled binary to bundles directory
 6. Compute hash of all input files
 7. Write to `inputFiles.json`
 
 ## Native Test Execution
 For native Rust tests (non-testeranto), the builder will:
-1. Detect test attributes via AST analysis
-2. Generate Go-compatible wrapper for Go toolchain integration
+1. Detect test attributes via simple content analysis
+2. Generate Rust adapter code for testeranto integration when applicable
 3. Compile test binary with appropriate features
-4. Run tests through Go wrapper for standardized execution
-5. Capture results via JSON output format
-6. Convert results to testeranto format
+4. Run tests through testeranto execution framework
+5. Capture results and convert to testeranto format

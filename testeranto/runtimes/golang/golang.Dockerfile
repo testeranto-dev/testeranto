@@ -16,5 +16,7 @@ ENV GO111MODULE=on \
 # Version 1.54.2 is the latest that supports Go 1.22
 RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
 
+COPY go.mod .
+
 # Default command
 CMD ["go", "version"]

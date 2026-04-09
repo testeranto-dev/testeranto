@@ -1,5 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as parser from '@babel/parser';
+import traverse from '@babel/traverse';
+import * as t from '@babel/types';
 
 export const JestConverter = {
   name: 'jest',
@@ -8,22 +11,32 @@ export const JestConverter = {
     if (!fs.existsSync(filePath)) return false;
     
     const content = fs.readFileSync(filePath, 'utf-8');
-    const filename = path.basename(filePath);
     
-    // Check file naming patterns
-    const isNamedTest = filename.includes('.test.') || filename.includes('.spec.');
-    
-    // Check for Jest imports and patterns
-    const hasJestImport = content.includes('jest') || 
-                         content.includes('@jest/') ||
-                         content.includes('jest.mock') ||
-                         content.includes('jest.fn');
-    
-    // Check for Jest globals
-    const hasJestGlobals = content.includes('describe(') && 
-                          (content.includes('it(') || content.includes('test('));
-    
-    return isNamedTest || hasJestImport || hasJestGlobals;
+    try {
+      const ast = parser.parse(content, {
+        sourceType: 'module',
+        plugins: ['typescript', 'jsx']
+      });
+      
+      let hasJestImport = false;
+      
+      traverse(ast, {
+        ImportDeclaration(path) {
+          const source = path.node.source.value;
+          if (typeof source === 'string') {
+            if (source === 'jest' || source.startsWith('@jest/')) {
+              hasJestImport = true;
+            }
+          }
+        }
+      });
+      
+      return hasJestImport;
+      
+    } catch (error) {
+      // If AST parsing fails, don't detect as Jest
+      return false;
+    }
   },
   
   generateWrapper(

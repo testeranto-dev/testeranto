@@ -1,0 +1,7 @@
+[2026-04-09T02:40:20.306Z] Build log for test: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts
+Output: testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs
+Entry point: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts
+
+[2026-04-09T02:40:20.272Z] INFO: Build started for nodetests
+
+[2026-04-09T02:40:20.306Z] Build completed for: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts

@@ -10,6 +10,26 @@ import hashlib
 import time
 
 # Import native detection module - no fallback
+# Add the path to native_detection.py to sys.path
+# In the container, working directory is /workspace, and native_detection.py is at
+# testeranto/runtimes/python/native_detection.py
+import os
+import sys
+
+# Add possible paths where native_detection.py could be
+possible_paths = [
+    os.path.join(os.getcwd(), 'testeranto', 'runtimes', 'python'),
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'testeranto', 'runtimes', 'python'),
+    '/workspace/testeranto/runtimes/python',
+]
+
+for path in possible_paths:
+    if os.path.exists(os.path.join(path, 'native_detection.py')):
+        if path not in sys.path:
+            sys.path.insert(0, path)
+        break
+
+# Now import
 from native_detection import PythonNativeTestDetection
 
 def resolve_python_import(import_path: str, current_file: str) -> str:
@@ -224,24 +244,30 @@ else:
 def main():
     print(f"[Python Builder] ARGV: {sys.argv}")
     
-    # Parse command line arguments similar to Ruby runtime
-    # Expected: python.py project_config_file_path python_config_file_path test_name entryPoints...
-    if len(sys.argv) < 4:
+    # The only argument is the JSON config slice
+    if len(sys.argv) < 2:
         print("[Python Builder] Error: Insufficient arguments")
-        print("Usage: python.py <project_config> <python_config> <test_name> <entry_points...>")
+        print("Usage: python.py <config_json>")
         sys.exit(1)
     
-    project_config_file_path = sys.argv[1]
-    python_config_file_path = sys.argv[2]
-    test_name = sys.argv[3]
-    entry_points = sys.argv[4:]
+    config_json = sys.argv[3]
+    try:
+        config = json.loads(config_json)
+        entry_points = config.get('tests', [])
+        outputs = config.get('outputs', [])
+        test_name = config.get('name', '')
+    except Exception as e:
+        print(f"[Python Builder] Failed to parse config JSON: {e}")
+        sys.exit(1)
+    
+    if not test_name:
+        print("[Python Builder] Config must include a name")
+        sys.exit(1)
     
     # Check if we're in dev mode
     import os
     is_dev_mode = os.environ.get('MODE') == 'dev'
     
-    print(f"[Python Builder] Project config: {project_config_file_path}")
-    print(f"[Python Builder] Python config: {python_config_file_path}")
     print(f"[Python Builder] Test name: {test_name}")
     print(f"[Python Builder] Entry points: {entry_points}")
     print(f"[Python Builder] Mode: {'dev' if is_dev_mode else 'once'}")
@@ -392,33 +418,18 @@ exec(code, {{'__name__': '__main__', '__file__': r'{original_test_abs}'}})
     
     print("[Python Builder] Python builder completed")
     
-def produce_output_artifacts(project_config_path: str, config_key: str):
+def produce_output_artifacts():
     """Produce output artifacts before shutting down."""
-    print(f"[Python Builder] Producing output artifacts for config {config_key}")
+    print(f"[Python Builder] Producing output artifacts for config {test_name}")
     
-    # Load project config
-    import json
-    try:
-        with open(project_config_path, 'r', encoding='utf-8') as f:
-            project_config = json.load(f)
-    except Exception as e:
-        print(f"[Python Builder] Error loading project config: {e}")
-        return
-    
-    runtime_config = project_config.get('runtimes', {}).get(config_key)
-    if not runtime_config:
-        print(f"[Python Builder] No runtime config found for {config_key}")
-        return
-    
-    outputs = runtime_config.get('outputs', [])
     if not outputs:
-        print(f"[Python Builder] No outputs defined for {config_key}")
+        print(f"[Python Builder] No outputs defined for {test_name}")
         return
     
     print(f"[Python Builder] Processing {len(outputs)} output artifacts")
     
     # Create output directory
-    output_dir = f"testeranto/outputs/{config_key}"
+    output_dir = f"testeranto/outputs/{test_name}"
     os.makedirs(output_dir, exist_ok=True)
     
     for entrypoint in outputs:
@@ -439,53 +450,27 @@ def produce_output_artifacts(project_config_path: str, config_key: str):
     
     print(f"[Python Builder] Finished producing output artifacts")
 
+    # Set up signal handlers for graceful shutdown
+    import signal
+    import time
+    
+    def handle_shutdown(signum, frame):
+        print(f"[Python Builder] Received signal {signum} - producing output artifacts")
+        produce_output_artifacts()
+        sys.exit(0)
+    
+    signal.signal(signal.SIGTERM, handle_shutdown)
+    signal.signal(signal.SIGINT, handle_shutdown)
+    
     # In dev mode, keep the process alive
     if is_dev_mode:
         print("[Python Builder] Dev mode active - process will stay running")
-        import signal
-        import time
-        
-        def handle_sigterm(signum, frame):
-            print("[Python Builder] Received SIGTERM - producing output artifacts")
-            produce_output_artifacts(project_config_file_path, test_name)
-            sys.exit(0)
-        
-        def handle_sigint(signum, frame):
-            print("[Python Builder] Received SIGINT - producing output artifacts")
-            produce_output_artifacts(project_config_file_path, test_name)
-            sys.exit(0)
-        
-        signal.signal(signal.SIGTERM, handle_sigterm)
-        signal.signal(signal.SIGINT, handle_sigint)
-        
         # Keep process alive
         while True:
             time.sleep(1)
-    
-    # In dev mode, keep the process alive to watch for changes
-    # For now, we'll just keep the process running
-    # In a more complete implementation, we would watch for file changes
-    if is_dev_mode:
-        print("[Python Builder] Dev mode: keeping process alive...")
-        # Keep the process alive
-        # In a real implementation, we would watch for file changes here
-        # For now, just sleep indefinitely until SIGTERM
-        import signal
-        import time
-        
-        # Signal handler for SIGTERM to produce output artifacts
-        def sigterm_handler(signum, frame):
-            print("[Python Builder] Received SIGTERM - producing output artifacts")
-            # In a real implementation, we would produce output artifacts here
-            # For now, just exit
-            sys.exit(0)
-        
-        signal.signal(signal.SIGTERM, sigterm_handler)
-        signal.signal(signal.SIGINT, sigterm_handler)
-        
-        # Keep alive
-        while True:
-            time.sleep(1)
+    else:
+        # In once mode, we're done
+        print("[Python Builder] Once mode completed")
 
 if __name__ == "__main__":
     main()

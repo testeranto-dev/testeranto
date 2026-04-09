@@ -1,0 +1,7 @@
+[2026-04-09T02:40:20.306Z] Build log for test: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+Output: testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs
+Entry point: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+
+[2026-04-09T02:40:20.272Z] INFO: Build started for nodetests
+
+[2026-04-09T02:40:20.306Z] Build completed for: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts

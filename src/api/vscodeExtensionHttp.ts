@@ -265,20 +265,8 @@ export const vscodeHttpAPI: {
     }
   },
 
-  sendChatMessage: {
-    method: 'GET',
-    path: '/~/chat',
-    description: 'Send a chat message',
-    params: {},
-    query: {
-      agent: '',
-      message: ''
-    },
-    response: {} as any,
-    check: (routeName: string, request: { method: string }) => {
-      return routeName === 'chat' && request.method === 'GET'
-    }
-  },
+  // Note: According to tickets/chat.md, we no longer need POST endpoint for chat
+  // Chat is now handled via WebSocket messages
 
   launchAgent: {
     method: 'POST',
@@ -501,6 +489,18 @@ export const vscodeHttpAPI: {
     response: {} as any,
     check: (routeName: string, request: { method: string }) => {
       return routeName === 'up' && request.method === 'POST'
+    }
+  },
+
+  openProcessTerminal: {
+    method: 'POST',
+    path: '/~/open-process-terminal',
+    description: 'Open a terminal to a process container',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'open-process-terminal' && request.method === 'POST'
     }
   }
 } as const;

@@ -1,5 +1,11 @@
 import type { IBaseTestConfig, IRunTime } from "../Types";
 
+export type IConfigSlice = {
+  outputs: string[],
+  tests: string[],
+  name: string,
+};
+
 export type IDockerSteps = "RUN" | "WORKDIR" | "COPY";
 
 export type ITestconfigV2Ruby = IBaseTestConfig & { plugins: any[] }

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-07T21:18:15.491Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-check-0 (runtime: node) ===
-=== Container ID: a5c77461729d914102aeb34691f02ef334555b6673ee9ea90778520a44544de2 ===
+=== Log started at 2026-04-08T13:41:21.874Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-check-0 (runtime: node) ===
+=== Container ID: 39eb72c25c50e0f16b28f1d5b49e75d7224df3d3c0a0bcc0b4f42e45fe255e27 ===
 === Test: src/server/serverClasses/Server_GraphManagerCore.test.ts ===
 === Config Key: nodetests ===
 
@@ -24,4 +24,4 @@ Common causes of this problem include:
 error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-07T21:18:35.792Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-08T13:41:25.922Z (container status: exited, exit code: 2) ===

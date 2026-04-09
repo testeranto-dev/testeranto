@@ -102,6 +102,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             aiderProcessProvider,
             fileTreeProvider,
         );
+
         outputChannel.appendLine("[Testeranto] CommandManager created and commands registered");
 
         // Show a welcome message
@@ -128,6 +129,26 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }
         });
         context.subscriptions.push(checkServerCommand);
+
+        // Register the openProcessTerminal command
+        const openProcessTerminalCommand = vscode.commands.registerCommand('testeranto.openProcessTerminal', async (nodeId?: string, label?: string, containerId?: string, serviceName?: string) => {
+            try {
+                outputChannel.appendLine(`[Testeranto] Opening terminal for process: ${nodeId || 'unknown'}`);
+                
+                if (!nodeId) {
+                    vscode.window.showWarningMessage('No process node ID provided');
+                    return;
+                }
+                
+                // Use the TerminalManager to open the terminal
+                await terminalManager.openProcessTerminal(nodeId, label || 'Process', containerId || '', serviceName || '');
+                
+            } catch (error: any) {
+                outputChannel.appendLine(`[Testeranto] Error opening process terminal: ${error.message}`);
+                vscode.window.showErrorMessage(`Failed to open process terminal: ${error.message}`);
+            }
+        });
+        context.subscriptions.push(openProcessTerminalCommand);
 
         // Register tree data providers FIRST
         outputChannel.appendLine("[Testeranto] Registering tree data providers with VS Code...");

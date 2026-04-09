@@ -1,5 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as parser from '@babel/parser';
+import traverse from '@babel/traverse';
 
 export const MochaConverter = {
   name: 'mocha',
@@ -9,16 +11,30 @@ export const MochaConverter = {
     
     const content = fs.readFileSync(filePath, 'utf-8');
     
-    // Check for Mocha imports
-    const hasMochaImport = content.includes('mocha') || 
-                          content.includes('@types/mocha');
-    
-    // Check for Mocha patterns without Jest
-    const hasMochaPatterns = content.includes('describe(') && 
-                            content.includes('it(') &&
-                            !content.includes('jest');
-    
-    return hasMochaImport || hasMochaPatterns;
+    try {
+      const ast = parser.parse(content, {
+        sourceType: 'module',
+        plugins: ['typescript', 'jsx']
+      });
+      
+      let hasMochaImport = false;
+      
+      traverse(ast, {
+        ImportDeclaration(path) {
+          const source = path.node.source.value;
+          if (typeof source === 'string') {
+            if (source === 'mocha' || source.includes('@types/mocha')) {
+              hasMochaImport = true;
+            }
+          }
+        }
+      });
+      
+      return hasMochaImport;
+      
+    } catch (error) {
+      return false;
+    }
   },
   
   generateWrapper(

@@ -23,14 +23,14 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 
 // src/server/runtimes/node/native_detection.js
 var native_detection_exports = {};
-var fs10, path9, parse, traverse, generate, types, NodeNativeTestDetection;
+var fs10, path9, parse5, traverse5, generate, types, NodeNativeTestDetection;
 var init_native_detection = __esm({
   "src/server/runtimes/node/native_detection.js"() {
     "use strict";
     fs10 = __require("fs");
     path9 = __require("path");
-    ({ parse } = __require("@babel/parser"));
-    traverse = __require("@babel/traverse").default;
+    ({ parse: parse5 } = __require("@babel/parser"));
+    traverse5 = __require("@babel/traverse").default;
     generate = __require("@babel/generator").default;
     types = __require("@babel/types");
     NodeNativeTestDetection = class {
@@ -95,13 +95,13 @@ var init_native_detection = __esm({
        */
       static parseAST(content, isTypeScript) {
         try {
-          return parse(content, {
+          return parse5(content, {
             sourceType: "module",
             plugins: isTypeScript ? ["typescript", "decorators-legacy"] : ["jsx", "decorators-legacy"]
           });
         } catch (error) {
           try {
-            return parse(content, {
+            return parse5(content, {
               sourceType: "module",
               plugins: ["jsx", "decorators-legacy"]
             });
@@ -121,7 +121,7 @@ var init_native_detection = __esm({
           testClassNames: []
         };
         try {
-          traverse(ast, {
+          traverse5(ast, {
             FunctionDeclaration(path11) {
               const node = path11.node;
               if (node.id && node.id.name && node.id.name.startsWith("test")) {
@@ -192,7 +192,7 @@ var init_native_detection = __esm({
           hooks: []
         };
         try {
-          traverse(ast, {
+          traverse5(ast, {
             CallExpression(path11) {
               const node = path11.node;
               if (node.callee && node.callee.name === "describe") {
@@ -800,16 +800,34 @@ import * as path10 from "path";
 // src/server/runtimes/node/framework-converters/jest.ts
 import * as path4 from "path";
 import * as fs5 from "fs";
+import * as parser from "@babel/parser";
+import traverse from "@babel/traverse";
+import "@babel/types";
 var JestConverter = {
   name: "jest",
   detect(filePath) {
     if (!fs5.existsSync(filePath)) return false;
     const content = fs5.readFileSync(filePath, "utf-8");
-    const filename = path4.basename(filePath);
-    const isNamedTest = filename.includes(".test.") || filename.includes(".spec.");
-    const hasJestImport = content.includes("jest") || content.includes("@jest/") || content.includes("jest.mock") || content.includes("jest.fn");
-    const hasJestGlobals = content.includes("describe(") && (content.includes("it(") || content.includes("test("));
-    return isNamedTest || hasJestImport || hasJestGlobals;
+    try {
+      const ast = parser.parse(content, {
+        sourceType: "module",
+        plugins: ["typescript", "jsx"]
+      });
+      let hasJestImport = false;
+      traverse(ast, {
+        ImportDeclaration(path11) {
+          const source = path11.node.source.value;
+          if (typeof source === "string") {
+            if (source === "jest" || source.startsWith("@jest/")) {
+              hasJestImport = true;
+            }
+          }
+        }
+      });
+      return hasJestImport;
+    } catch (error) {
+      return false;
+    }
   },
   generateWrapper(entryPointPath, detectionResult, translationResult, filesHash) {
     const originalTestAbs = path4.resolve(entryPointPath);
@@ -943,14 +961,33 @@ const adapter = {
 // src/server/runtimes/node/framework-converters/mocha.ts
 import * as path5 from "path";
 import * as fs6 from "fs";
+import * as parser2 from "@babel/parser";
+import traverse2 from "@babel/traverse";
 var MochaConverter = {
   name: "mocha",
   detect(filePath) {
     if (!fs6.existsSync(filePath)) return false;
     const content = fs6.readFileSync(filePath, "utf-8");
-    const hasMochaImport = content.includes("mocha") || content.includes("@types/mocha");
-    const hasMochaPatterns = content.includes("describe(") && content.includes("it(") && !content.includes("jest");
-    return hasMochaImport || hasMochaPatterns;
+    try {
+      const ast = parser2.parse(content, {
+        sourceType: "module",
+        plugins: ["typescript", "jsx"]
+      });
+      let hasMochaImport = false;
+      traverse2(ast, {
+        ImportDeclaration(path11) {
+          const source = path11.node.source.value;
+          if (typeof source === "string") {
+            if (source === "mocha" || source.includes("@types/mocha")) {
+              hasMochaImport = true;
+            }
+          }
+        }
+      });
+      return hasMochaImport;
+    } catch (error) {
+      return false;
+    }
   },
   generateWrapper(entryPointPath, detectionResult, translationResult, filesHash) {
     const originalTestAbs = path5.resolve(entryPointPath);
@@ -1067,14 +1104,33 @@ const adapter = {
 // src/server/runtimes/node/framework-converters/vitest.ts
 import * as path6 from "path";
 import * as fs7 from "fs";
+import * as parser3 from "@babel/parser";
+import traverse3 from "@babel/traverse";
 var VitestConverter = {
   name: "vitest",
   detect(filePath) {
     if (!fs7.existsSync(filePath)) return false;
     const content = fs7.readFileSync(filePath, "utf-8");
-    const hasVitestImport = content.includes("vitest") || content.includes("@vitest/");
-    const hasVitestPatterns = content.includes("import { test") && content.includes("from 'vitest'");
-    return hasVitestImport || hasVitestPatterns;
+    try {
+      const ast = parser3.parse(content, {
+        sourceType: "module",
+        plugins: ["typescript", "jsx"]
+      });
+      let hasVitestImport = false;
+      traverse3(ast, {
+        ImportDeclaration(path11) {
+          const source = path11.node.source.value;
+          if (typeof source === "string") {
+            if (source === "vitest" || source.startsWith("@vitest/")) {
+              hasVitestImport = true;
+            }
+          }
+        }
+      });
+      return hasVitestImport;
+    } catch (error) {
+      return false;
+    }
   },
   generateWrapper(entryPointPath, detectionResult, translationResult, filesHash) {
     const originalTestAbs = path6.resolve(entryPointPath);
@@ -1187,14 +1243,33 @@ const adapter = {
 // src/server/runtimes/node/framework-converters/jasmine.ts
 import * as path7 from "path";
 import * as fs8 from "fs";
+import * as parser4 from "@babel/parser";
+import traverse4 from "@babel/traverse";
 var JasmineConverter = {
   name: "jasmine",
   detect(filePath) {
     if (!fs8.existsSync(filePath)) return false;
     const content = fs8.readFileSync(filePath, "utf-8");
-    const hasJasmineImport = content.includes("jasmine") || content.includes("@types/jasmine");
-    const hasJasminePatterns = content.includes("describe(") && content.includes("it(") && content.includes("expect(") && !content.includes("jest") && !content.includes("mocha");
-    return hasJasmineImport || hasJasminePatterns;
+    try {
+      const ast = parser4.parse(content, {
+        sourceType: "module",
+        plugins: ["typescript", "jsx"]
+      });
+      let hasJasmineImport = false;
+      traverse4(ast, {
+        ImportDeclaration(path11) {
+          const source = path11.node.source.value;
+          if (typeof source === "string") {
+            if (source === "jasmine" || source.includes("@types/jasmine")) {
+              hasJasmineImport = true;
+            }
+          }
+        }
+      });
+      return hasJasmineImport;
+    } catch (error) {
+      return false;
+    }
   },
   generateWrapper(entryPointPath, detectionResult, translationResult, filesHash) {
     const originalTestAbs = path7.resolve(entryPointPath);
@@ -1311,12 +1386,7 @@ import * as fs9 from "fs";
 var GenericConverter = {
   name: "generic",
   detect(filePath) {
-    if (!fs9.existsSync(filePath)) return false;
-    const content = fs9.readFileSync(filePath, "utf-8");
-    const filename = path8.basename(filePath);
-    const isNamedTest = filename.includes(".test.") || filename.includes(".spec.");
-    const hasTestPatterns = content.includes("describe(") || content.includes("it(") || content.includes("test(");
-    return isNamedTest || hasTestPatterns;
+    return fs9.existsSync(filePath);
   },
   generateWrapper(entryPointPath, detectionResult, translationResult, filesHash) {
     const originalTestAbs = path8.resolve(entryPointPath);
@@ -1457,10 +1527,24 @@ function detectFrameworkWithConverters(filePath) {
   }
   return GenericConverter;
 }
-var projectConfigPath = process.argv[2];
 var nodeConfigPath = process.argv[3];
-var testName = process.argv[4];
-var entryPoints = process.argv.slice(5);
+var configJson = process.argv[4];
+var entryPoints = [];
+var outputs = [];
+var testName = "";
+try {
+  const config = JSON.parse(configJson);
+  entryPoints = config.tests || [];
+  outputs = config.outputs || [];
+  testName = config.name || "";
+} catch (error) {
+  console.error("[NODE BUILDER] Failed to parse config JSON:", error);
+  process.exit(1);
+}
+if (!testName) {
+  console.error("[NODE BUILDER] Config must include a name");
+  process.exit(1);
+}
 var reportDir = path10.join(process.cwd(), "testeranto", "reports", testName);
 if (!fs11.existsSync(reportDir)) {
   fs11.mkdirSync(reportDir, { recursive: true });
@@ -1502,16 +1586,23 @@ console.warn = (...args) => {
 `);
   originalConsoleWarn.apply(console, args);
 };
-console.log(`[NODE BUILDER] projectConfigPath:  ${projectConfigPath}`);
-console.log(`[NODE BUILDER] nodeConfig:  ${nodeConfigPath}`);
-console.log(`[NODE BUILDER] testName:  ${testName}`);
-console.log(`[NODE BUILDER] Log file: ${logFilePath}`);
 process.on("exit", () => {
   console.log("[NODE BUILDER] Process exiting");
   logStream.end();
 });
-process.on("SIGINT", () => {
-  console.log("[NODE BUILDER] Received SIGINT");
+process.on("SIGINT", async () => {
+  console.log("[NODE BUILDER] Received SIGINT - producing output artifacts");
+  await produceOutputArtifacts(projectConfigs, testName);
+  logStream.end();
+  process.exit(0);
+});
+process.on("SIGTERM", async () => {
+  console.log("[NODE BUILDER] Received SIGTERM - producing output artifacts");
+  if (isDevMode && typeof ctx !== "undefined") {
+    console.log("[NODE BUILDER] Disposing esbuild context");
+    await ctx.dispose();
+  }
+  await produceOutputArtifacts(projectConfigs, testName);
   logStream.end();
   process.exit(0);
 });
@@ -1519,6 +1610,33 @@ process.on("uncaughtException", (error) => {
   console.error("[NODE BUILDER] Uncaught exception:", error);
   logStream.end();
 });
+async function produceOutputArtifacts() {
+  console.log(`[NODE BUILDER] Producing output artifacts for config ${testName}`);
+  if (!outputs || outputs.length === 0) {
+    console.log(`[NODE BUILDER] No outputs defined for ${testName}`);
+    return;
+  }
+  console.log(`[NODE BUILDER] Processing ${outputs.length} output artifacts`);
+  const outputDir = `testeranto/outputs/${testName}`;
+  const fs12 = await import("fs");
+  const path11 = await import("path");
+  if (!fs12.existsSync(outputDir)) {
+    fs12.mkdirSync(outputDir, { recursive: true });
+  }
+  for (const entrypoint of outputs) {
+    try {
+      const sourcePath = entrypoint;
+      const fileName = path11.basename(entrypoint);
+      const destPath = path11.join(outputDir, fileName);
+      console.log(`[NODE BUILDER] Copying ${sourcePath} to ${destPath}`);
+      fs12.copyFileSync(sourcePath, destPath);
+      console.log(`[NODE BUILDER] \u2705 Copied ${fileName}`);
+    } catch (error) {
+      console.error(`[NODE BUILDER] Failed to process output artifact ${entrypoint}:`, error.message);
+    }
+  }
+  console.log(`[NODE BUILDER] Finished producing output artifacts`);
+}
 async function startBundling(nodeConfigs, projectConfig, entryPoints2) {
   console.log(`[NODE BUILDER] is now bundling:  ${testName}`);
   console.log(`[NODE BUILDER] Entry points: ${entryPoints2.join(", ")}`);
@@ -1542,10 +1660,10 @@ async function startBundling(nodeConfigs, projectConfig, entryPoints2) {
     }
   }
   const n = esbuild_default(nodeConfigs, testName, projectConfig, entryPoints2);
-  const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
-  if (isDevMode) {
+  const isDevMode2 = process.env.MODE === "dev" || process.argv.includes("dev");
+  if (isDevMode2) {
     console.log(`[NODE BUILDER] Running in dev mode - starting watch mode`);
-    const ctx = await esbuild.context({
+    const ctx2 = await esbuild.context({
       ...n,
       plugins: [
         ...n.plugins || [],
@@ -1575,17 +1693,22 @@ async function startBundling(nodeConfigs, projectConfig, entryPoints2) {
         }
       ]
     });
-    const buildResult = await ctx.rebuild();
+    const buildResult = await ctx2.rebuild();
     if (buildResult.metafile) {
-      await processMetafile(projectConfig, buildResult.metafile, "node", testName);
+      await processMetafile(
+        projectConfig,
+        buildResult.metafile,
+        "node",
+        testName
+      );
     } else {
       console.warn("No metafile generated by esbuild");
     }
-    await ctx.watch();
+    await ctx2.watch();
     console.log(`[NODE BUILDER] Watch mode active - waiting for file changes...`);
     process.on("SIGINT", async () => {
       console.log("[NODE BUILDER] Shutting down...");
-      await ctx.dispose();
+      await ctx2.dispose();
       process.exit(0);
     });
     console.log(`[NODE BUILDER] Using onEnd plugin for rebuild detection`);
@@ -1607,27 +1730,52 @@ async function startBundling(nodeConfigs, projectConfig, entryPoints2) {
 async function main() {
   try {
     const nodeConfigs = (await import(nodeConfigPath)).default;
-    const projectConfigs = (await import(projectConfigPath)).default;
-    await startBundling(nodeConfigs, projectConfigs, entryPoints);
-    const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
-    if (isDevMode) {
-      process.on("unhandledRejection", (reason, promise) => {
-        console.error("[NODE BUILDER] Unhandled Rejection at:", promise, "reason:", reason);
+    const setupSignalHandlers = () => {
+      process.on("SIGINT", async () => {
+        console.log("[NODE BUILDER] Received SIGINT - producing output artifacts");
+        await produceOutputArtifacts();
+        logStream.end();
+        process.exit(0);
+      });
+      process.on("SIGTERM", async () => {
+        console.log("[NODE BUILDER] Received SIGTERM - producing output artifacts");
+        if (isDevMode2 && typeof ctx !== "undefined") {
+          console.log("[NODE BUILDER] Disposing esbuild context");
+          await ctx.dispose();
+        }
+        await produceOutputArtifacts();
+        logStream.end();
+        process.exit(0);
       });
       process.on("uncaughtException", (error) => {
-        console.error("[NODE BUILDER] Uncaught Exception:", error);
+        console.error("[NODE BUILDER] Uncaught exception:", error);
+        logStream.end();
+        produceOutputArtifacts().finally(() => {
+          process.exit(1);
+        });
+      });
+    };
+    setupSignalHandlers();
+    const dummyProjectConfig = {};
+    await startBundling(nodeConfigs, dummyProjectConfig, entryPoints);
+    const isDevMode2 = process.env.MODE === "dev" || process.argv.includes("dev");
+    if (isDevMode2) {
+      process.on("unhandledRejection", (reason, promise) => {
+        console.error("[NODE BUILDER] Unhandled Rejection at:", promise, "reason:", reason);
       });
       setInterval(() => {
       }, 3e4);
     }
   } catch (error) {
     console.error("NODE BUILDER: Error:", error);
-    const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
-    if (isDevMode) {
+    const isDevMode2 = process.env.MODE === "dev" || process.argv.includes("dev");
+    if (isDevMode2) {
       console.error("[NODE BUILDER] Error occurred but keeping process alive in dev mode");
       setInterval(() => {
       }, 1e3);
     } else {
+      await produceOutputArtifacts();
+      logStream.end();
       process.exit(1);
     }
   }

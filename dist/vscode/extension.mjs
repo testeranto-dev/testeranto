@@ -92,9 +92,101 @@ var TerminalManager = class {
     }
     terminal = vscode.window.createTerminal(`Aider: ${testName} (${runtime})`);
     this.terminals.set(key, terminal);
-    terminal.sendText(`echo "Aider and agent services are created as Docker services at server startup."`);
-    terminal.sendText(`echo "For ${testName} (${runtime}), check the Aider Processes view."`);
-    terminal.sendText(`echo "All user-defined agents are already running as separate services."`);
+    const configKey = await this.getConfigKeyForTest(runtime, testName);
+    if (configKey) {
+      const containerName = this.getAiderContainerName(configKey, testName);
+      const script = `echo "Checking container: ${containerName}";
+if docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then
+  echo "Container is running. Attaching...";
+  case "${containerName}" in
+    *-builder)
+      echo "Container is a builder container. Showing logs...";
+      docker logs -f ${containerName}
+      ;;
+    *)
+      echo "Container is not a builder container. Using docker exec with sh...";
+      docker exec -it ${containerName} /bin/sh
+      ;;
+  esac
+else
+  echo "Container ${containerName} is not running.";
+  echo "Available containers:";
+  docker ps --format "{{.Names}}";
+  echo "";
+  echo "To start the container, run:";
+  echo "  docker compose -f testeranto/docker-compose.yml up -d ${containerName}";
+  echo "";
+fi
+echo "Starting interactive shell...";
+if [ -n "$SHELL" ]; then
+  exec "$SHELL"
+else
+  exec sh -i
+fi`;
+      terminal.sendText(script);
+    } else {
+      const script = `bash -c '
+set +e  # Continue on errors
+echo "Could not find configuration for ${testName} (${runtime})"
+echo "Aider and agent services are created as Docker services at server startup."
+echo ""
+echo "Available containers:"
+docker ps --format "{{.Names}}"
+echo ""
+# Always start an interactive shell to keep terminal open
+echo "Starting interactive shell..."
+if [ -n "$SHELL" ]; then
+  exec "$SHELL"
+else
+  exec bash -i
+fi
+'`.trim();
+      terminal.sendText(script);
+    }
+    terminal.show();
+    return terminal;
+  }
+  // Open a terminal to a specific container
+  async openContainerTerminal(containerName, label, agentName) {
+    const key = `container:${containerName}`;
+    let terminal = this.terminals.get(key);
+    if (terminal && terminal.exitStatus === void 0) {
+      terminal.show();
+      return terminal;
+    }
+    const terminalName = agentName ? `Aider: ${agentName}` : `Container: ${label}`;
+    terminal = vscode.window.createTerminal(terminalName);
+    this.terminals.set(key, terminal);
+    let script;
+    script = `echo "Checking container: ${containerName}";
+if docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then
+  echo "Container is running. Attaching...";
+  case "${containerName}" in
+    *-builder)
+      echo "Container is a builder container. Showing logs...";
+      docker logs -f ${containerName}
+      ;;
+    *)
+      echo "Container is not a builder container. Using docker exec with sh...";
+      docker exec -it ${containerName} /bin/sh
+      ;;
+  esac
+else
+  echo "Container ${containerName} is not running.";
+  echo "Available containers:";
+  docker ps --format "{{.Names}}";
+  echo "";
+  echo "To start the container, run:";
+  echo "  docker compose -f testeranto/docker-compose.yml up -d ${containerName}";
+  echo "";
+fi
+echo "Starting interactive shell...";
+if [ -n "$SHELL" ]; then
+  exec "$SHELL"
+else
+  exec sh -i
+fi`;
+    terminal.sendText(script);
     terminal.show();
     return terminal;
   }
@@ -162,6 +254,125 @@ var TerminalManager = class {
     const cleanConfigKey = configKey.toLowerCase();
     return `${cleanConfigKey}-${cleanTestName}-aider`;
   }
+  // Open a terminal to a Docker process using the server API
+  async openProcessTerminal(nodeId, label, containerId, serviceName) {
+    const key = `process:${nodeId}`;
+    let terminal = this.terminals.get(key);
+    if (terminal && terminal.exitStatus === void 0) {
+      terminal.show();
+      return terminal;
+    }
+    const terminalName = `Process: ${label}`;
+    terminal = vscode.window.createTerminal(terminalName);
+    this.terminals.set(key, terminal);
+    try {
+      const response = await fetch("http://localhost:3000/~/open-process-terminal", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ nodeId })
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        const errorScript = `echo "Error: ${errorData.error || "Failed to open terminal"}";
+echo "Server response: ${JSON.stringify(errorData)}";
+# Keep terminal open for debugging
+exec $SHELL || exec bash -i`;
+        terminal.sendText(errorScript);
+        terminal.show();
+        return terminal;
+      }
+      const data = await response.json();
+      if (data.success) {
+        const containerIdentifier = data.containerIdentifier;
+        const containerStatus = data.containerStatus;
+        let script;
+        script = `echo "Opening terminal to container: ${containerIdentifier}";
+echo "Node ID: ${nodeId}";
+echo "Type: ${data.nodeType}";
+echo "";
+case "${containerIdentifier}" in
+  *-builder)
+    echo "Container is a builder container. Showing logs (Ctrl+C to stop):";
+    docker logs -f ${containerIdentifier}
+    ;;
+  *agent-*|*aider*)
+    echo "Container is an agent or aider container. Attaching (Ctrl+P, Ctrl+Q to detach):";
+    docker attach ${containerIdentifier}
+    ;;
+  *)
+    echo "Container is not a builder/agent/aider container. Attaching:";
+    docker exec -it ${containerIdentifier} /bin/sh
+    ;;
+esac`;
+        terminal.sendText(script);
+      } else {
+        const errorScript = `echo "Server reported failure: ${data.error || "Unknown error"}";
+# Keep terminal open for debugging
+exec $SHELL || exec sh -i`;
+        terminal.sendText(errorScript);
+      }
+    } catch (error) {
+      const errorScript = `echo "Error calling server API: ${error.message}";
+echo "Cannot open terminal without server connection.";
+exec $SHELL || exec sh -i`;
+      terminal.sendText(errorScript);
+    }
+    terminal.show();
+    return terminal;
+  }
+  // Open a terminal to an aider container
+  async openAiderTerminal(containerName, label, agentName) {
+    if (!containerName) {
+      const terminal2 = vscode.window.createTerminal(`Aider: ${label}`);
+      terminal2.sendText(`echo "Error: No container name provided for aider terminal"`);
+      terminal2.sendText(`echo "Available containers:"`);
+      terminal2.sendText(`docker ps --format "{{.Names}}"`);
+      terminal2.sendText(`exec $SHELL || exec bash -i`);
+      terminal2.show();
+      return terminal2;
+    }
+    const key = `aider:${containerName}`;
+    let terminal = this.terminals.get(key);
+    if (terminal && terminal.exitStatus === void 0) {
+      terminal.show();
+      return terminal;
+    }
+    const terminalName = agentName ? `Aider: ${agentName}` : `Aider: ${label}`;
+    terminal = vscode.window.createTerminal(terminalName);
+    this.terminals.set(key, terminal);
+    let script;
+    script = `echo "Opening terminal to container: ${containerName}";
+if docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then
+  echo "Container found. Attaching...";
+  case "${containerName}" in
+    *agent-*|*aider*)
+      echo "Container is an agent or aider container. Using docker attach to connect to aider process...";
+      echo "Note: To detach, use Ctrl+P, Ctrl+Q";
+      docker attach ${containerName}
+      ;;
+    *-builder)
+      echo "Container is a builder container. Using docker exec with sh...";
+      docker exec -it ${containerName} /bin/sh
+      ;;
+    *)
+      echo "Container is not an agent/aider/builder container. Using docker exec with sh...";
+      docker exec -it ${containerName} /bin/sh
+      ;;
+  esac
+else
+  echo "Container ${containerName} not found";
+  echo "Available containers:";
+  docker ps --format "{{.Names}}";
+  echo "";
+  echo "Starting host shell...";
+  exec $SHELL || exec sh -i
+fi`;
+    terminal.sendText(script);
+    terminal.show();
+    return terminal;
+  }
   getWorkspaceRoot() {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (workspaceFolders && workspaceFolders.length > 0) {
@@ -182,6 +393,18 @@ import * as path from "path";
 
 // src/vscode/TestTreeItem.ts
 import * as vscode2 from "vscode";
+
+// src/vscode/types.ts
+var TreeItemType = /* @__PURE__ */ ((TreeItemType2) => {
+  TreeItemType2[TreeItemType2["Runtime"] = 0] = "Runtime";
+  TreeItemType2[TreeItemType2["Test"] = 1] = "Test";
+  TreeItemType2[TreeItemType2["File"] = 2] = "File";
+  TreeItemType2[TreeItemType2["Info"] = 3] = "Info";
+  TreeItemType2[TreeItemType2["Config"] = 4] = "Config";
+  return TreeItemType2;
+})(TreeItemType || {});
+
+// src/vscode/TestTreeItem.ts
 var TestTreeItem2 = class extends vscode2.TreeItem {
   constructor(label, type, collapsibleState, data, command, iconPath, contextValue) {
     super(label, collapsibleState);
@@ -312,20 +535,8 @@ var vscodeHttpAPI = {
       return routeName === "lock-status" && request.method === "GET";
     }
   },
-  sendChatMessage: {
-    method: "GET",
-    path: "/~/chat",
-    description: "Send a chat message",
-    params: {},
-    query: {
-      agent: "",
-      message: ""
-    },
-    response: {},
-    check: (routeName, request) => {
-      return routeName === "chat" && request.method === "GET";
-    }
-  },
+  // Note: According to tickets/chat.md, we no longer need POST endpoint for chat
+  // Chat is now handled via WebSocket messages
   launchAgent: {
     method: "POST",
     path: "/~/agents/:agentName",
@@ -531,6 +742,17 @@ var vscodeHttpAPI = {
     check: (routeName, request) => {
       return routeName === "up" && request.method === "POST";
     }
+  },
+  openProcessTerminal: {
+    method: "POST",
+    path: "/~/open-process-terminal",
+    description: "Open a terminal to a process container",
+    params: {},
+    query: {},
+    response: {},
+    check: (routeName, request) => {
+      return routeName === "open-process-terminal" && request.method === "POST";
+    }
   }
 };
 
@@ -553,15 +775,15 @@ var ApiUtils2 = class {
     if (!endpoint) {
       throw new Error(`Endpoint ${endpointKey} not found in vscodeHttpAPI`);
     }
-    let path5 = endpoint.path;
+    let path3 = endpoint.path;
     if (params && endpoint.params) {
       for (const [key, value] of Object.entries(params)) {
         if (endpoint.params[key]) {
-          path5 = path5.replace(`:${key}`, value);
+          path3 = path3.replace(`:${key}`, value);
         }
       }
     }
-    const url = `${this.getBaseUrl()}${path5}`;
+    const url = `${this.getBaseUrl()}${path3}`;
     if (query && Object.keys(query).length > 0) {
       const queryParams = new URLSearchParams();
       for (const [key, value] of Object.entries(query)) {
@@ -1123,8 +1345,8 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
   }
   buildFileTree(filePaths) {
     const root = { type: "directory", children: {} };
-    for (const { node, path: path5 } of filePaths) {
-      const parts = path5.split(/[\\/]/).filter((part) => part.length > 0);
+    for (const { node, path: path3 } of filePaths) {
+      const parts = path3.split(/[\\/]/).filter((part) => part.length > 0);
       let current = root.children;
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
@@ -1133,9 +1355,9 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
           if (isLast) {
             current[part] = {
               type: "file",
-              path: path5,
+              path: path3,
               node,
-              label: node.label || path5.basename(path5) || part,
+              label: node.label || path3.basename(path3) || part,
               metadata: node.metadata
             };
           } else {
@@ -1147,9 +1369,9 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
         } else if (isLast) {
           current[part] = {
             type: "file",
-            path: path5,
+            path: path3,
             node,
-            label: node.label || path5.basename(path5) || part,
+            label: node.label || path3.basename(path3) || part,
             metadata: node.metadata
           };
         }
@@ -1300,7 +1522,7 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
     }
     console.log(`[DockerProcessTreeDataProvider] Processing graph with ${this.graphData.nodes.length} nodes, ${this.graphData.edges.length} edges`);
     const dockerProcessNodes = this.graphData.nodes.filter(
-      (node) => node.type === "docker_process" || node.type === "bdd_process" || node.type === "check_process" || node.type === "builder_process"
+      (node) => node.type === "docker_process" || node.type === "bdd_process" || node.type === "check_process" || node.type === "builder_process" || node.type === "aider_process"
     );
     console.log(`[DockerProcessTreeDataProvider] Found ${dockerProcessNodes.length} docker process nodes`);
     const items = [];
@@ -1395,11 +1617,11 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
   }
   createProcessItem(node) {
     const metadata = node.metadata || {};
-    const state = metadata.state || "unknown";
+    const state = metadata.state || metadata.status || "unknown";
     const exitCode = metadata.exitCode;
     const isActive = metadata.isActive || false;
     const containerId = metadata.containerId || "unknown";
-    const serviceName = metadata.serviceName || metadata.name || "unknown";
+    const serviceName = metadata.serviceName || metadata.containerName || metadata.name || "unknown";
     let label = node.label || serviceName;
     if (label === "unknown" && node.id) {
       const parts = node.id.split(":");
@@ -1412,8 +1634,13 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
     if (!isActive) {
       description += " \u2022 inactive";
     }
+    if (node.type === "aider_process") {
+      description += " \u2022 aider";
+    }
     let icon;
-    if (state === "running" && isActive) {
+    if (node.type === "aider_process") {
+      icon = new vscode6.ThemeIcon("comment-discussion", new vscode6.ThemeColor("testing.iconPassed"));
+    } else if (state === "running" && isActive) {
       icon = new vscode6.ThemeIcon("play-circle", new vscode6.ThemeColor("testing.iconPassed"));
     } else if (state === "exited") {
       if (exitCode === 0) {
@@ -1437,7 +1664,11 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
         containerId,
         serviceName,
         processType: node.type,
-        isActive
+        isActive,
+        nodeId: node.id,
+        // Add aider-specific fields
+        agentName: metadata.agentName,
+        isAgentAider: metadata.isAgentAider
       },
       {
         command: "testeranto.openProcessTerminal",
@@ -1456,6 +1687,16 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
 `;
     tooltip += `Active: ${isActive ? "Yes" : "No"}
 `;
+    if (node.type === "aider_process") {
+      if (metadata.agentName) {
+        tooltip += `Agent: ${metadata.agentName}
+`;
+      }
+      if (metadata.isAgentAider) {
+        tooltip += `Agent Aider: Yes
+`;
+      }
+    }
     if (exitCode !== void 0) {
       tooltip += `Exit Code: ${exitCode}
 `;
@@ -1478,7 +1719,7 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
     }
     if (this.graphData) {
       const connectedEdges = this.graphData.edges.filter(
-        (edge) => edge.target === node.id && (edge.attributes.type === "hasProcess" || edge.attributes.type === "hasBddProcess" || edge.attributes.type === "hasCheckProcess" || edge.attributes.type === "hasBuilderProcess")
+        (edge) => edge.target === node.id && (edge.attributes.type === "hasProcess" || edge.attributes.type === "hasBddProcess" || edge.attributes.type === "hasCheckProcess" || edge.attributes.type === "hasBuilderProcess" || edge.attributes.type === "hasAiderProcess")
       );
       for (const edge of connectedEdges) {
         const sourceNode = this.graphData.nodes.find((n) => n.id === edge.source);
@@ -1489,6 +1730,9 @@ Connected to entrypoint: ${sourceNode.label || sourceNode.id}`;
           } else if (sourceNode.type === "config") {
             tooltip += `
 Connected to config: ${sourceNode.label || sourceNode.id}`;
+          } else if (sourceNode.type === "agent") {
+            tooltip += `
+Connected to agent: ${sourceNode.label || sourceNode.id}`;
           }
         }
       }
@@ -1517,7 +1761,7 @@ Connected to config: ${sourceNode.label || sourceNode.id}`;
 };
 
 // src/vscode/providers/AiderProcessTreeDataProvider.ts
-import "vscode";
+import * as vscode9 from "vscode";
 
 // src/vscode/providers/utils/AiderGraphLoader.ts
 var AiderGraphLoader = class {
@@ -1867,20 +2111,83 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
     setTimeout(() => {
       this.loadGraphData().then(() => {
         this._onDidChangeTreeData.fire();
+      }).catch((error) => {
+        console.error("[AiderProcessTreeDataProvider] Initial load failed:", error);
+        this._onDidChangeTreeData.fire();
       });
     }, 100);
   }
   async loadGraphData() {
-    const result = await AiderGraphLoader.loadGraphData();
-    this.graphData = result.graphData;
-    this.agents = result.agents;
+    try {
+      const result = await AiderGraphLoader.loadGraphData();
+      this.graphData = result.graphData;
+      this.agents = result.agents;
+    } catch (error) {
+      console.error("[AiderProcessTreeDataProvider] Error loading graph data:", error);
+      await this.fetchAgentsDirectly();
+      await this.fetchAiderProcessesDirectly();
+    }
+  }
+  async fetchAgentsDirectly() {
+    this.agents = [];
+  }
+  async fetchAiderProcessesDirectly() {
+    try {
+      const response = await fetch("http://localhost:3000/~/aider", {
+        method: "GET"
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.graphData = this.graphData || { nodes: [], edges: [] };
+        const existingIds = new Set(this.graphData.nodes.map((n) => n.id));
+        const aiderProcessNodes = data.nodes?.filter(
+          (node) => node.type === "aider_process"
+        ) || [];
+        const agentNodes = data.nodes?.filter(
+          (node) => node.type === "agent"
+        ) || [];
+        aiderProcessNodes.forEach((node) => {
+          if (!existingIds.has(node.id)) {
+            this.graphData.nodes.push({
+              id: node.id,
+              type: node.type,
+              label: node.label,
+              metadata: node.metadata
+            });
+          }
+        });
+        this.agents = agentNodes.map((node) => ({
+          name: node.metadata?.agentName,
+          ...node.metadata
+        }));
+        console.log(`[AiderProcessTreeDataProvider] Successfully fetched ${aiderProcessNodes.length} aider processes and ${agentNodes.length} agents from /~/aider`);
+        return;
+      } else {
+        console.warn(`[AiderProcessTreeDataProvider] Failed to fetch from /~/aider:`, response.status);
+      }
+    } catch (error) {
+      console.error(`[AiderProcessTreeDataProvider] Error fetching from /~/aider:`, error);
+    }
   }
   refresh() {
-    this.loadGraphData().then(() => {
+    console.log("[AiderProcessTreeDataProvider] Manual refresh triggered");
+    this.graphData = null;
+    this.agents = [];
+    this._onDidChangeTreeData.fire();
+    const loadPromise = this.loadGraphData();
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Loading timeout after 10 seconds")), 1e4);
+    });
+    Promise.race([loadPromise, timeoutPromise]).then(() => {
       this._onDidChangeTreeData.fire();
     }).catch((error) => {
       console.error("[AiderProcessTreeDataProvider] Error in refresh:", error);
-      this._onDidChangeTreeData.fire();
+      return Promise.allSettled([
+        this.fetchAgentsDirectly(),
+        this.fetchAiderProcessesDirectly()
+      ]).then(() => {
+        this._onDidChangeTreeData.fire();
+      });
     });
   }
   getTreeItem(element) {
@@ -1901,7 +2208,161 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
     return [];
   }
   getAiderProcessItems() {
-    return AiderDataGrouper.getAiderProcessItems(this.graphData, this.agents);
+    const items = [];
+    items.push(
+      new TestTreeItem2(
+        "Refresh",
+        TreeItemType.Action,
+        vscode9.TreeItemCollapsibleState.None,
+        {
+          action: "refresh",
+          info: "Refresh the view to try loading data again."
+        },
+        {
+          command: "testeranto.refreshAiderProcesses",
+          title: "Refresh",
+          arguments: []
+        },
+        new vscode9.ThemeIcon("refresh")
+      )
+    );
+    if (!this.graphData || this.graphData.nodes.length === 0) {
+      items.push(
+        new TestTreeItem2(
+          "No aider data available",
+          3 /* Info */,
+          vscode9.TreeItemCollapsibleState.None,
+          {
+            info: 'The server may not be running or the /~/aider endpoint may be unavailable. Try running "Testeranto: Start Server" or check if the server is running on port 3000.'
+          },
+          void 0,
+          new vscode9.ThemeIcon("info")
+        )
+      );
+      return items;
+    }
+    const aiderProcessNodes = this.graphData.nodes.filter(
+      (node) => node.type === "aider_process"
+    );
+    const agentNodes = this.graphData.nodes.filter(
+      (node) => node.type === "agent"
+    );
+    if (aiderProcessNodes.length === 0) {
+      items.push(
+        new TestTreeItem2(
+          "No aider processes found",
+          3 /* Info */,
+          vscode9.TreeItemCollapsibleState.None,
+          {
+            info: agentNodes.length > 0 ? "Agents are running but no aider processes are active." : "No agents or aider processes found."
+          },
+          void 0,
+          new vscode9.ThemeIcon("info")
+        )
+      );
+      return items;
+    }
+    const aiderByAgent = /* @__PURE__ */ new Map();
+    for (const aiderNode of aiderProcessNodes) {
+      const edge = this.graphData.edges.find(
+        (e) => e.target === aiderNode.id && e.attributes.type === "hasAiderProcess"
+      );
+      if (edge) {
+        const agentId = edge.source;
+        if (!aiderByAgent.has(agentId)) {
+          aiderByAgent.set(agentId, []);
+        }
+        aiderByAgent.get(agentId).push(aiderNode);
+      } else {
+        if (!aiderByAgent.has("ungrouped")) {
+          aiderByAgent.set("ungrouped", []);
+        }
+        aiderByAgent.get("ungrouped").push(aiderNode);
+      }
+    }
+    for (const [agentId, aiderNodes] of aiderByAgent.entries()) {
+      let groupLabel = "Ungrouped Aider Processes";
+      let groupIcon = new vscode9.ThemeIcon("server");
+      if (agentId !== "ungrouped") {
+        const agentNode = agentNodes.find((n) => n.id === agentId);
+        if (agentNode) {
+          groupLabel = `Agent: ${agentNode.metadata?.agentName || agentNode.label || agentId}`;
+          groupIcon = new vscode9.ThemeIcon("person");
+        } else {
+          groupLabel = `Agent: ${agentId}`;
+          groupIcon = new vscode9.ThemeIcon("person");
+        }
+      }
+      const groupItem = new TestTreeItem2(
+        groupLabel,
+        3 /* Info */,
+        vscode9.TreeItemCollapsibleState.Collapsed,
+        {
+          description: `${aiderNodes.length} aider process(es)`,
+          groupId: agentId,
+          isGroup: true
+        },
+        void 0,
+        groupIcon
+      );
+      groupItem.children = aiderNodes.map((node) => {
+        const metadata = node.metadata || {};
+        const containerName = metadata.containerName || "";
+        const agentName = metadata.agentName || "";
+        const label = node.label || "Aider Process";
+        const status = node.status || "unknown";
+        let icon;
+        if (status === "running") {
+          icon = new vscode9.ThemeIcon("play-circle", new vscode9.ThemeColor("testing.iconPassed"));
+        } else if (status === "stopped") {
+          icon = new vscode9.ThemeIcon("circle-slash", new vscode9.ThemeColor("testing.iconUnset"));
+        } else {
+          icon = new vscode9.ThemeIcon("circle-outline", new vscode9.ThemeColor("testing.iconUnset"));
+        }
+        const item = new TestTreeItem2(
+          label,
+          3 /* Info */,
+          vscode9.TreeItemCollapsibleState.None,
+          {
+            description: `Status: ${status}`,
+            status,
+            containerName,
+            agentName,
+            metadata,
+            isAiderProcess: true,
+            nodeId: node.id
+          },
+          {
+            command: "testeranto.openAiderTerminal",
+            title: "Open Aider Terminal",
+            arguments: [containerName, label, agentName]
+          },
+          icon
+        );
+        let tooltip = `Type: ${node.type}
+`;
+        tooltip += `ID: ${node.id}
+`;
+        tooltip += `Container: ${containerName}
+`;
+        tooltip += `Status: ${status}
+`;
+        tooltip += `Agent: ${agentName || "None"}
+`;
+        if (metadata.containerId) {
+          tooltip += `Container ID: ${metadata.containerId}
+`;
+        }
+        if (metadata.timestamp) {
+          tooltip += `Created: ${metadata.timestamp}
+`;
+        }
+        item.tooltip = tooltip;
+        return item;
+      });
+      items.push(groupItem);
+    }
+    return items;
   }
   getAiderProcessesForEntrypoint(entrypointId) {
     if (!this.graphData) return [];
@@ -1933,132 +2394,44 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
 
 // src/vscode/providers/FileTreeDataProvider.ts
 import * as vscode10 from "vscode";
-import * as path2 from "path";
-var FileTreeDataProvider = class extends BaseTreeDataProvider {
+
+// src/vscode/providers/logic/FileTreeLogic.ts
+var FileTreeLogic = class {
   graphData = null;
-  graphDataPath = null;
-  constructor() {
-    super();
-    console.log("[FileTreeDataProvider] Constructor called");
-    setTimeout(() => {
-      this.loadGraphData().then(() => {
-        this._onDidChangeTreeData.fire();
-      });
-    }, 100);
+  setGraphData(data) {
+    this.graphData = data;
   }
-  async loadGraphData() {
-    try {
-      console.log("[FileTreeDataProvider] Loading graph data from files slice");
-      const url = ApiUtils2.getFilesSliceUrl();
-      console.log(`[FileTreeDataProvider] Fetching from URL: ${url}`);
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3e3);
-      const response = await fetch(url, {
-        signal: controller.signal
-      }).catch((error) => {
-        console.log(`[FileTreeDataProvider] Fetch error: ${error.message}`);
-        if (error.name === "AbortError") {
-          throw new Error(`Connection timeout to server at ${url}. Make sure the Testeranto server is running.`);
-        } else {
-          throw new Error(`Cannot connect to server at ${url}: ${error.message}`);
-        }
-      }).finally(() => {
-        clearTimeout(timeoutId);
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
-      }
-      const data = await response.json();
-      this.graphData = data;
-      console.log("[FileTreeDataProvider] Loaded graph data:", this.graphData?.nodes?.length, "nodes");
-    } catch (error) {
-      console.error("[FileTreeDataProvider] Failed to load graph data:", error);
-      this.graphData = null;
-    }
+  getGraphData() {
+    return this.graphData;
   }
-  refresh() {
-    this.loadGraphData().then(() => {
-      this._onDidChangeTreeData.fire();
-    }).catch((error) => {
-      console.error("[FileTreeDataProvider] Error in refresh:", error);
-      this._onDidChangeTreeData.fire();
-    });
+  hasGraphData() {
+    return this.graphData !== null;
   }
-  getTreeItem(element) {
-    return element;
-  }
-  async getChildren(element) {
-    if (!this.graphData) {
-      this.loadGraphData();
-    }
-    if (!element) {
-      return this.buildFileSystemTree();
-    }
-    const elementData = element.data || {};
-    if (elementData.isFolder) {
-      return this.getFolderChildren(elementData.folderPath || "", elementData.folderId || "");
-    }
-    return [];
-  }
-  buildFileSystemTree() {
-    const items = [];
-    items.push(new TestTreeItem2(
-      "Refresh",
-      3 /* Info */,
-      vscode10.TreeItemCollapsibleState.None,
-      {
-        description: "Reload graph data",
-        refresh: true
-      },
-      {
-        command: "testeranto.refreshFileTree",
-        title: "Refresh",
-        arguments: []
-      },
-      new vscode10.ThemeIcon("refresh")
-    ));
-    if (!this.graphData) {
-      items.push(new TestTreeItem2(
-        "Server not connected",
-        3 /* Info */,
-        vscode10.TreeItemCollapsibleState.None,
-        {
-          description: "Click to start server",
-          startServer: true
-        },
-        {
-          command: "testeranto.startServer",
-          title: "Start Server",
-          arguments: []
-        },
-        new vscode10.ThemeIcon("warning")
-      ));
-      return items;
-    }
-    const folderNodes = this.graphData.nodes.filter(
+  filterFolderNodes(graphData2) {
+    return graphData2.nodes.filter(
       (node) => node.type === "folder" || node.type === "domain"
     );
-    const fileNodes = this.graphData.nodes.filter(
+  }
+  filterFileNodes(graphData2) {
+    return graphData2.nodes.filter(
       (node) => node.type === "file" || node.type === "input_file"
     );
-    console.log(`[FileTreeDataProvider] Found ${folderNodes.length} folders, ${fileNodes.length} files`);
-    if (folderNodes.length === 0 && fileNodes.length === 0) {
-      items.push(new TestTreeItem2(
-        "No files or folders found",
-        3 /* Info */,
-        vscode10.TreeItemCollapsibleState.None,
-        {
-          description: "No file data in graph"
-        },
-        void 0,
-        new vscode10.ThemeIcon("info")
-      ));
-      return items;
-    }
-    const tree = this.buildTreeStructure(folderNodes, fileNodes);
-    const rootItems = this.convertTreeToItems(tree);
-    items.push(...rootItems);
-    return items;
+  }
+  filterFolderNodesByPath(graphData2, folderPath) {
+    return graphData2.nodes.filter(
+      (node) => (node.type === "folder" || node.type === "domain") && (node.metadata?.path === folderPath || node.metadata?.path?.startsWith(folderPath + "/"))
+    );
+  }
+  filterFileNodesByPath(graphData2, folderPath) {
+    return graphData2.nodes.filter(
+      (node) => (node.type === "file" || node.type === "input_file") && node.metadata?.filePath?.startsWith(folderPath + "/")
+    );
+  }
+  getFolderName(folder) {
+    return folder.label || this.basename(folder.metadata?.path || "");
+  }
+  getFileName(file) {
+    return this.basename(file.metadata?.filePath || file.label || "");
   }
   buildTreeStructure(folderNodes, fileNodes) {
     const tree = {
@@ -2109,11 +2482,10 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
     }
     for (const file of fileNodes) {
       const filePath = file.metadata?.filePath || file.label || "";
-      const fileName = path2.basename(filePath);
-      const dirPath = path2.dirname(filePath);
+      const fileName = this.basename(filePath);
+      const dirPath = this.dirname(filePath);
       const parts = dirPath.split("/").filter((p) => p.length > 0);
       let current = tree.children;
-      let found = true;
       for (const part of parts) {
         if (current[part]) {
           current = current[part].children;
@@ -2136,6 +2508,187 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
     }
     return tree;
   }
+  countFilesInTree(node) {
+    let count = 0;
+    for (const [childName, childNode] of Object.entries(node.children || {})) {
+      const typedChild = childNode;
+      if (typedChild.type === "file") {
+        count++;
+      } else if (typedChild.type === "folder") {
+        count += this.countFilesInTree(typedChild);
+      }
+    }
+    return count;
+  }
+  getFileIcon(fileNode) {
+    const fileType = fileNode.metadata?.fileType || fileNode.type;
+    switch (fileType) {
+      case "input_file":
+      case "source":
+        return { id: "file-code" };
+      case "log":
+        return { id: "output" };
+      case "documentation":
+        return { id: "book" };
+      case "config":
+        return { id: "settings-gear" };
+      default:
+        return { id: "file" };
+    }
+  }
+  basename(path3) {
+    const parts = path3.split("/").filter((p) => p.length > 0);
+    return parts.length > 0 ? parts[parts.length - 1] : "";
+  }
+  dirname(path3) {
+    const parts = path3.split("/").filter((p) => p.length > 0);
+    if (parts.length <= 1) return "";
+    return parts.slice(0, parts.length - 1).join("/");
+  }
+};
+
+// src/vscode/providers/logic/FileTreeDataFetcher.ts
+var FileTreeDataFetcher = class {
+  async fetchGraphData() {
+    try {
+      console.log("[FileTreeDataFetcher] Loading graph data from files slice");
+      const url = ApiUtils2.getFilesSliceUrl();
+      console.log(`[FileTreeDataFetcher] Fetching from URL: ${url}`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3e3);
+      const response = await fetch(url, {
+        signal: controller.signal
+      }).catch((error) => {
+        console.log(`[FileTreeDataFetcher] Fetch error: ${error.message}`);
+        if (error.name === "AbortError") {
+          throw new Error(`Connection timeout to server at ${url}. Make sure the Testeranto server is running.`);
+        } else {
+          throw new Error(`Cannot connect to server at ${url}: ${error.message}`);
+        }
+      }).finally(() => {
+        clearTimeout(timeoutId);
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("[FileTreeDataFetcher] Failed to load graph data:", error);
+      throw error;
+    }
+  }
+};
+
+// src/vscode/providers/FileTreeDataProvider.ts
+var FileTreeDataProvider = class extends BaseTreeDataProvider {
+  logic;
+  fetcher;
+  constructor() {
+    super();
+    console.log("[FileTreeDataProvider] Constructor called");
+    this.fetcher = new FileTreeDataFetcher();
+    this.logic = new FileTreeLogic();
+    setTimeout(() => {
+      this.loadGraphData().then(() => {
+        this._onDidChangeTreeData.fire();
+      });
+    }, 100);
+  }
+  async loadGraphData() {
+    try {
+      const graphData2 = await this.fetcher.fetchGraphData();
+      this.logic.setGraphData(graphData2);
+      console.log("[FileTreeDataProvider] Loaded graph data:", graphData2?.nodes?.length, "nodes");
+    } catch (error) {
+      console.error("[FileTreeDataProvider] Failed to load graph data:", error);
+      this.logic.setGraphData(null);
+    }
+  }
+  refresh() {
+    this.loadGraphData().then(() => {
+      this._onDidChangeTreeData.fire();
+    }).catch((error) => {
+      console.error("[FileTreeDataProvider] Error in refresh:", error);
+      this._onDidChangeTreeData.fire();
+    });
+  }
+  getTreeItem(element) {
+    return element;
+  }
+  async getChildren(element) {
+    if (!this.logic.hasGraphData()) {
+      this.loadGraphData();
+    }
+    if (!element) {
+      return this.buildFileSystemTree();
+    }
+    const elementData = element.data || {};
+    if (elementData.isFolder) {
+      return this.getFolderChildren(elementData.folderPath || "", elementData.folderId || "");
+    }
+    return [];
+  }
+  buildFileSystemTree() {
+    const items = [];
+    items.push(new TestTreeItem2(
+      "Refresh",
+      3 /* Info */,
+      vscode10.TreeItemCollapsibleState.None,
+      {
+        description: "Reload graph data",
+        refresh: true
+      },
+      {
+        command: "testeranto.refreshFileTree",
+        title: "Refresh",
+        arguments: []
+      },
+      new vscode10.ThemeIcon("refresh")
+    ));
+    if (!this.logic.hasGraphData()) {
+      items.push(new TestTreeItem2(
+        "Server not connected",
+        3 /* Info */,
+        vscode10.TreeItemCollapsibleState.None,
+        {
+          description: "Click to start server",
+          startServer: true
+        },
+        {
+          command: "testeranto.startServer",
+          title: "Start Server",
+          arguments: []
+        },
+        new vscode10.ThemeIcon("warning")
+      ));
+      return items;
+    }
+    const graphData2 = this.logic.getGraphData();
+    if (!graphData2) {
+      return items;
+    }
+    const folderNodes = this.logic.filterFolderNodes(graphData2);
+    const fileNodes = this.logic.filterFileNodes(graphData2);
+    console.log(`[FileTreeDataProvider] Found ${folderNodes.length} folders, ${fileNodes.length} files`);
+    if (folderNodes.length === 0 && fileNodes.length === 0) {
+      items.push(new TestTreeItem2(
+        "No files or folders found",
+        3 /* Info */,
+        vscode10.TreeItemCollapsibleState.None,
+        {
+          description: "No file data in graph"
+        },
+        void 0,
+        new vscode10.ThemeIcon("info")
+      ));
+      return items;
+    }
+    const tree = this.logic.buildTreeStructure(folderNodes, fileNodes);
+    const rootItems = this.convertTreeToItems(tree);
+    items.push(...rootItems);
+    return items;
+  }
   convertTreeToItems(tree) {
     const items = [];
     for (const [name, node] of Object.entries(tree.children || {})) {
@@ -2150,7 +2703,7 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
             folderPath: typedNode.path,
             folderId: typedNode.node?.id,
             description: "Folder",
-            fileCount: this.countFilesInTree(typedNode)
+            fileCount: this.logic.countFilesInTree(typedNode)
           },
           void 0,
           new vscode10.ThemeIcon("folder")
@@ -2173,7 +2726,7 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
             title: "Open File",
             arguments: [{ fileName: typedNode.path }]
           } : void 0,
-          this.getFileIcon(typedNode)
+          this.logic.getFileIcon(typedNode)
         );
         items.push(fileItem);
       }
@@ -2188,16 +2741,13 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
     return items;
   }
   getFolderChildren(folderPath, folderId) {
-    if (!this.graphData) return [];
-    const folderNodes = this.graphData.nodes.filter(
-      (node) => (node.type === "folder" || node.type === "domain") && node.metadata?.path?.startsWith(folderPath + "/")
-    );
-    const fileNodes = this.graphData.nodes.filter(
-      (node) => (node.type === "file" || node.type === "input_file") && node.metadata?.filePath?.startsWith(folderPath + "/")
-    );
+    const graphData2 = this.logic.getGraphData();
+    if (!graphData2) return [];
+    const folderNodes = this.logic.filterFolderNodesByPath(graphData2, folderPath);
+    const fileNodes = this.logic.filterFileNodesByPath(graphData2, folderPath);
     const items = [];
     for (const folder of folderNodes) {
-      const folderName = folder.label || path2.basename(folder.metadata?.path || "");
+      const folderName = this.logic.getFolderName(folder);
       const item = new TestTreeItem2(
         folderName,
         2 /* File */,
@@ -2214,7 +2764,7 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
       items.push(item);
     }
     for (const file of fileNodes) {
-      const fileName = path2.basename(file.metadata?.filePath || file.label || "");
+      const fileName = this.logic.getFileName(file);
       const item = new TestTreeItem2(
         fileName,
         2 /* File */,
@@ -2230,7 +2780,7 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
           title: "Open File",
           arguments: [{ fileName: file.metadata.filePath }]
         } : void 0,
-        this.getFileIcon(file)
+        this.logic.getFileIcon(file)
       );
       items.push(item);
     }
@@ -2242,34 +2792,6 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
       return a.label.toString().localeCompare(b.label.toString());
     });
     return items;
-  }
-  countFilesInTree(node) {
-    let count = 0;
-    for (const [childName, childNode] of Object.entries(node.children || {})) {
-      const typedChild = childNode;
-      if (typedChild.type === "file") {
-        count++;
-      } else if (typedChild.type === "folder") {
-        count += this.countFilesInTree(typedChild);
-      }
-    }
-    return count;
-  }
-  getFileIcon(fileNode) {
-    const fileType = fileNode.metadata?.fileType || fileNode.type;
-    switch (fileType) {
-      case "input_file":
-      case "source":
-        return new vscode10.ThemeIcon("file-code");
-      case "log":
-        return new vscode10.ThemeIcon("output");
-      case "documentation":
-        return new vscode10.ThemeIcon("book");
-      case "config":
-        return new vscode10.ThemeIcon("settings-gear");
-      default:
-        return new vscode10.ThemeIcon("file");
-    }
   }
   handleWebSocketMessage(message) {
     super.handleWebSocketMessage(message);
@@ -2531,10 +3053,10 @@ var registerTestCommands = (terminalManager) => {
   disposables.push(
     vscode13.commands.registerCommand(
       "testeranto.openAiderTerminal",
-      async (runtime, testName, containerId) => {
+      async (containerName, label, agentName) => {
         try {
-          vscode13.window.showInformationMessage(`Opening aider terminal for ${testName} (${runtime})...`);
-          const terminal = await terminalManager.createAiderTerminal(runtime, testName);
+          vscode13.window.showInformationMessage(`Opening aider terminal for ${label || "Aider"}...`);
+          const terminal = await terminalManager.openAiderTerminal(containerName || "", label || "Aider", agentName);
           terminal.show();
         } catch (err) {
           vscode13.window.showErrorMessage(`Error opening aider terminal: ${err}`);
@@ -2605,8 +3127,6 @@ var registerProcessCommands = (dockerProcessProvider, aiderProcessProvider, file
 
 // src/vscode/commands/agentCommands.ts
 import * as vscode15 from "vscode";
-import * as path3 from "path";
-import * as fs from "fs";
 var registerAgentCommands = (agentProvider, chatProvider) => {
   const disposables = [];
   disposables.push(
@@ -2670,66 +3190,6 @@ var registerAgentCommands = (agentProvider, chatProvider) => {
           vscode15.window.showInformationMessage(`Opening ${agentName} agent in browser...`);
         } catch (err) {
           vscode15.window.showErrorMessage(`Error opening agent webview: ${err}`);
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode15.commands.registerCommand(
-      "testeranto.launchAgentSelection",
-      async () => {
-        try {
-          const workspaceFolders = vscode15.workspace.workspaceFolders;
-          if (!workspaceFolders || workspaceFolders.length === 0) {
-            vscode15.window.showErrorMessage("No workspace folder open");
-            return;
-          }
-          const workspaceRoot = workspaceFolders[0].uri.fsPath;
-          const agentsConfig = {};
-          if (!agentsConfig || typeof agentsConfig !== "object") {
-            vscode15.window.showInformationMessage("No agents configured");
-            return;
-          }
-          const agentEntries = Object.entries(agentsConfig);
-          if (agentEntries.length === 0) {
-            vscode15.window.showInformationMessage("No agents configured");
-            return;
-          }
-          const agentOptions = agentEntries.map(([agentName, agentConfig]) => {
-            const config = agentConfig;
-            const markdownFile = config.markdownFile;
-            let label = `${agentName.charAt(0).toUpperCase() + agentName.slice(1)}`;
-            if (markdownFile && typeof markdownFile === "string") {
-              const agentMdPath = path3.isAbsolute(markdownFile) ? markdownFile : path3.join(workspaceRoot, markdownFile);
-              if (fs.existsSync(agentMdPath)) {
-                try {
-                  const mdContent = fs.readFileSync(agentMdPath, "utf-8");
-                  const firstLine = mdContent.split("\n")[0];
-                  const roleMatch = firstLine.match(/Your name is "([^"]+)". You are a ([^.]+)\./);
-                  if (roleMatch) {
-                    const name = roleMatch[1];
-                    const role = roleMatch[2];
-                    label = `${name} (${role})`;
-                  }
-                } catch (error) {
-                }
-              }
-            }
-            return { label, value: agentName };
-          });
-          const selected = await vscode15.window.showQuickPick(
-            agentOptions.map((a) => a.label),
-            { placeHolder: "Select an agent to launch" }
-          );
-          if (selected) {
-            const agent = agentOptions.find((a) => a.label === selected);
-            if (agent) {
-              await vscode15.commands.executeCommand("testeranto.launchAgent", agent.value);
-            }
-          }
-        } catch (error) {
-          console.error("[registerCommands] Error launching agent selection:", error);
-          vscode15.window.showErrorMessage(`Error launching agent: ${error}`);
         }
       }
     )
@@ -2902,897 +3362,9 @@ var registerConfigCommands = () => {
 };
 
 // src/vscode/commands/chatCommands.ts
-import * as vscode18 from "vscode";
-
-// src/vscode/commands/css.ts
-var css_default = () => {
-  return `<style>
-                * {
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
-                }
-                
-                body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-                    background-color: #1e1e1e;
-                    color: #ffffff;
-                    height: 100vh;
-                    overflow: hidden;
-                }
-                
-                .chat-container {
-                    display: flex;
-                    flex-direction: column;
-                    height: 100vh;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                }
-                
-                /* Header */
-                .header {
-                    padding: 16px 24px;
-                    border-bottom: 1px solid #333;
-                    background-color: #252526;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    flex-shrink: 0;
-                }
-                
-                .header-title {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                }
-                
-                .header-title h1 {
-                    font-size: 20px;
-                    color: #007acc;
-                    margin: 0;
-                }
-                
-                .connection-status {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    font-size: 13px;
-                }
-                
-                .status-dot {
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                }
-                
-                .status-connected {
-                    background-color: #4CAF50;
-                }
-                
-                .status-disconnected {
-                    background-color: #f44336;
-                }
-                
-                .agent-selector {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-                
-                .agent-select {
-                    padding: 6px 12px;
-                    border-radius: 6px;
-                    border: 1px solid #444;
-                    background-color: #2d2d30;
-                    color: white;
-                    font-size: 14px;
-                    cursor: pointer;
-                }
-                
-                /* Messages Area */
-                .messages-area {
-                    flex: 1;
-                    overflow-y: auto;
-                    padding: 24px;
-                    background-color: #1e1e1e;
-                }
-                
-                .date-divider {
-                    text-align: center;
-                    margin: 24px 0;
-                    position: relative;
-                }
-                
-                .date-label {
-                    display: inline-block;
-                    padding: 4px 12px;
-                    background-color: #252526;
-                    border-radius: 20px;
-                    font-size: 12px;
-                    color: #aaa;
-                    border: 1px solid #333;
-                }
-                
-                .message {
-                    margin-bottom: 16px;
-                    position: relative;
-                }
-                
-                .message-reply-line {
-                    position: absolute;
-                    left: -24px;
-                    top: 0;
-                    bottom: 0;
-                    width: 16px;
-                    border-left: 2px solid #444;
-                    border-bottom: 2px solid #444;
-                    border-bottom-left-radius: 10px;
-                }
-                
-                .message-card {
-                    background-color: #252526;
-                    border-radius: 12px;
-                    padding: 16px;
-                    border-left: 4px solid #007acc;
-                    transition: background-color 0.2s;
-                }
-                
-                .message-card:hover {
-                    background-color: #2d2d30;
-                }
-                
-                .message-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                    margin-bottom: 12px;
-                }
-                
-                .message-agent {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-                
-                .agent-avatar {
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 16px;
-                    font-weight: bold;
-                }
-                
-                .agent-info {
-                    display: flex;
-                    flex-direction: column;
-                }
-                
-                .agent-name {
-                    font-weight: 600;
-                    font-size: 14px;
-                }
-                
-                .message-time {
-                    font-size: 12px;
-                    color: #888;
-                }
-                
-                .message-actions {
-                    display: flex;
-                    gap: 8px;
-                }
-                
-                .action-btn {
-                    background: none;
-                    border: none;
-                    color: #aaa;
-                    cursor: pointer;
-                    font-size: 12px;
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                }
-                
-                .action-btn:hover {
-                    background-color: #333;
-                }
-                
-                .message-body {
-                    line-height: 1.5;
-                    font-size: 15px;
-                    color: #e0e0e0;
-                    white-space: pre-wrap;
-                    word-break: break-word;
-                }
-                
-                .message-footer {
-                    margin-top: 12px;
-                    display: flex;
-                    gap: 16px;
-                    font-size: 12px;
-                    color: #666;
-                }
-                
-                .footer-action {
-                    cursor: pointer;
-                }
-                
-                .footer-action:hover {
-                    color: #aaa;
-                }
-                
-                /* Reply Preview */
-                .reply-preview {
-                    padding: 12px 24px;
-                    background-color: #252526;
-                    border-top: 1px solid #333;
-                    border-bottom: 1px solid #333;
-                    font-size: 14px;
-                    color: #aaa;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    flex-shrink: 0;
-                }
-                
-                .cancel-reply {
-                    background: none;
-                    border: none;
-                    color: #f44336;
-                    cursor: pointer;
-                    font-size: 12px;
-                }
-                
-                /* Input Area */
-                .input-area {
-                    padding: 20px;
-                    border-top: 1px solid #333;
-                    background-color: #252526;
-                    flex-shrink: 0;
-                }
-                
-                .input-row {
-                    display: flex;
-                    gap: 12px;
-                }
-                
-                #messageInput {
-                    flex: 1;
-                    padding: 12px 16px;
-                    border-radius: 8px;
-                    border: 1px solid #444;
-                    background-color: #2d2d30;
-                    color: white;
-                    min-height: 60px;
-                    resize: vertical;
-                    font-family: inherit;
-                    font-size: 15px;
-                    line-height: 1.5;
-                }
-                
-                #messageInput:focus {
-                    outline: none;
-                    border-color: #007acc;
-                    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
-                }
-                
-                #sendButton {
-                    padding: 0 24px;
-                    background-color: #007acc;
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    font-size: 15px;
-                    font-weight: 500;
-                    align-self: flex-end;
-                    height: 60px;
-                    transition: background-color 0.2s;
-                }
-                
-                #sendButton:disabled {
-                    background-color: #444;
-                    cursor: not-allowed;
-                }
-                
-                #sendButton:not(:disabled):hover {
-                    background-color: #005a9e;
-                }
-                
-                .input-info {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 10px;
-                    font-size: 12px;
-                    color: #666;
-                }
-                
-                .key-hint {
-                    background-color: #333;
-                    padding: 2px 6px;
-                    border-radius: 4px;
-                    font-family: monospace;
-                }
-                
-                /* Agent Bar */
-                .agent-bar {
-                    padding: 12px 24px;
-                    background-color: #252526;
-                    border-top: 1px solid #333;
-                    display: flex;
-                    gap: 16px;
-                    overflow-x: auto;
-                    flex-shrink: 0;
-                }
-                
-                .agent-tag {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 6px 12px;
-                    border-radius: 20px;
-                    border: 1px solid #444;
-                    color: #aaa;
-                    font-size: 13px;
-                    white-space: nowrap;
-                }
-                
-                .agent-tag-active {
-                    border-color: #007acc;
-                    color: #007acc;
-                    background-color: rgba(0, 122, 204, 0.1);
-                }
-                
-                .agent-dot {
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                }
-                
-                /* Empty State */
-                .empty-state {
-                    text-align: center;
-                    padding: 60px 20px;
-                    color: #666;
-                }
-                
-                .empty-icon {
-                    font-size: 48px;
-                    margin-bottom: 20px;
-                }
-                
-                .empty-title {
-                    font-size: 24px;
-                    margin-bottom: 10px;
-                    color: #aaa;
-                }
-                
-                .empty-description {
-                    font-size: 16px;
-                    max-width: 500px;
-                    margin: 0 auto;
-                }
-            </style>`;
-};
-
-// src/vscode/commands/getWebviewContent.tsx
-function getWebviewContent() {
-  return `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Testeranto Chat</title>
-            ${css_default()}
-        </head>
-        <body>
-            <div class="chat-container">
-                <!-- Header -->
-                <div class="header">
-                    <div class="header-title">
-                        <h1>\u{1F4AC} Testeranto Chat</h1>
-                        <div class="connection-status">
-                            <div class="status-dot status-disconnected" id="statusDot"></div>
-                            <span id="connectionStatus">Disconnected</span>
-                        </div>
-                    </div>
-                    
-                    <div class="agent-selector">
-                        <span style="font-size: 14px; color: #aaa;">Send as:</span>
-                        <select class="agent-select" id="agentSelect">
-                            <option value="user">\u{1F464} User</option>
-                            <option value="Prodirek">\u{1F916} Prodirek</option>
-                            <option value="Arko">\u{1F468}\u200D\u{1F4BB} Arko</option>
-                            <option value="Juna">\u{1F469}\u200D\u{1F52C} Juna</option>
-                            <option value="Sipestro">\u{1F9D9}\u200D\u2642\uFE0F Sipestro</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Messages Area -->
-                <div class="messages-area" id="messagesArea">
-                    <div class="empty-state" id="emptyState">
-                        <div class="empty-icon">\u{1F4AC}</div>
-                        <h2 class="empty-title">Start a conversation</h2>
-                        <p class="empty-description">
-                            Send a message to begin chatting with agents. Your messages will appear here.
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Reply Preview -->
-                <div class="reply-preview" id="replyPreview" style="display: none;">
-                    <div id="replyText"></div>
-                    <button class="cancel-reply" id="cancelReply">Cancel</button>
-                </div>
-                
-                <!-- Input Area -->
-                <div class="input-area">
-                    <div class="input-row">
-                        <textarea 
-                            id="messageInput" 
-                            placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
-                        ></textarea>
-                        <button id="sendButton" disabled>Send</button>
-                    </div>
-                    <div class="input-info">
-                        <div>
-                            Press <span class="key-hint">Enter</span> to send, 
-                            <span class="key-hint">Shift+Enter</span> for new line
-                        </div>
-                        <div id="charCount">0 characters</div>
-                    </div>
-                </div>
-                
-                <!-- Agent Bar -->
-                <div class="agent-bar" id="agentBar">
-                    <!-- Agent tags will be added here -->
-                </div>
-            </div>
-            
-            <script>
-                const vscode = acquireVsCodeApi();
-                const messagesArea = document.getElementById('messagesArea');
-                const messageInput = document.getElementById('messageInput');
-                const sendButton = document.getElementById('sendButton');
-                const agentSelect = document.getElementById('agentSelect');
-                const connectionStatus = document.getElementById('connectionStatus');
-                const statusDot = document.getElementById('statusDot');
-                const emptyState = document.getElementById('emptyState');
-                const replyPreview = document.getElementById('replyPreview');
-                const replyText = document.getElementById('replyText');
-                const cancelReply = document.getElementById('cancelReply');
-                const charCount = document.getElementById('charCount');
-                const agentBar = document.getElementById('agentBar');
-                
-                let ws = null;
-                let isConnected = false;
-                let replyingTo = null;
-                let messages = [];
-                
-                // Agent colors and icons
-                const agentColors = {
-                    'user': '#007acc',
-                    'Prodirek': '#4CAF50',
-                    'Arko': '#FF9800',
-                    'Juna': '#9C27B0',
-                    'Sipestro': '#F44336'
-                };
-                
-                const agentIcons = {
-                    'user': '\u{1F464}',
-                    'Prodirek': '\u{1F916}',
-                    'Arko': '\u{1F468}\u200D\u{1F4BB}',
-                    'Juna': '\u{1F469}\u200D\u{1F52C}',
-                    'Sipestro': '\u{1F9D9}\u200D\u2642\uFE0F'
-                };
-                
-                const agents = ['user', 'Prodirek', 'Arko', 'Juna', 'Sipestro'];
-                
-                // Initialize agent bar
-                agents.forEach(agent => {
-                    const tag = document.createElement('div');
-                    tag.className = 'agent-tag';
-                    tag.id = \`agentTag-\${agent}\`;
-                    tag.innerHTML = \`
-                        <div class="agent-dot" style="background-color: \${agentColors[agent]}"></div>
-                        \${agentIcons[agent]} \${agent}
-                    \`;
-                    agentBar.appendChild(tag);
-                });
-                
-                // Update active agent tag
-                function updateAgentTags() {
-                    agents.forEach(agent => {
-                        const tag = document.getElementById(\`agentTag-\${agent}\`);
-                        if (agentSelect.value === agent) {
-                            tag.classList.add('agent-tag-active');
-                        } else {
-                            tag.classList.remove('agent-tag-active');
-                        }
-                    });
-                }
-                
-                // Connect to WebSocket
-                function connectWebSocket() {
-                    const wsUrl = 'ws://localhost:3000';
-                    
-                    try {
-                        ws = new WebSocket(wsUrl);
-                        
-                        ws.onopen = () => {
-                            console.log('WebSocket connected');
-                            isConnected = true;
-                            connectionStatus.textContent = 'Connected';
-                            statusDot.className = 'status-dot status-connected';
-                            sendButton.disabled = false;
-                            
-                            ws.send(JSON.stringify({
-                                type: 'subscribeToSlice',
-                                slicePath: '/~/chat'
-                            }));
-                            
-                            addSystemMessage('Connected to server');
-                        };
-                        
-                        ws.onmessage = (event) => {
-                            try {
-                                const data = JSON.parse(event.data);
-                                console.log('Received:', data);
-                                
-                                if (data.type === 'chat') {
-                                    addChatMessage(data.agent, data.message, data.timestamp);
-                                }
-                            } catch (error) {
-                                console.error('Error parsing message:', error);
-                            }
-                        };
-                        
-                        ws.onerror = (error) => {
-                            console.error('WebSocket error:', error);
-                            addSystemMessage('WebSocket error occurred');
-                        };
-                        
-                        ws.onclose = () => {
-                            console.log('WebSocket disconnected');
-                            isConnected = false;
-                            connectionStatus.textContent = 'Disconnected';
-                            statusDot.className = 'status-dot status-disconnected';
-                            sendButton.disabled = true;
-                            addSystemMessage('Disconnected from server');
-                            
-                            setTimeout(connectWebSocket, 3000);
-                        };
-                    } catch (error) {
-                        console.error('Error creating WebSocket:', error);
-                        addSystemMessage('Failed to connect to server');
-                    }
-                }
-                
-                // Format time
-                function formatTime(timestamp) {
-                    const date = new Date(timestamp);
-                    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                }
-                
-                // Format date
-                function formatDate(timestamp) {
-                    const date = new Date(timestamp);
-                    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-                }
-                
-                // Add system message
-                function addSystemMessage(text) {
-                    const message = {
-                        id: 'sys_' + Date.now(),
-                        agent: 'System',
-                        message: text,
-                        timestamp: new Date().toISOString(),
-                        isSystem: true
-                    };
-                    messages.push(message);
-                    renderMessages();
-                }
-                
-                // Add chat message
-                function addChatMessage(agent, messageText, timestamp) {
-                    const message = {
-                        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                        agent: agent,
-                        message: messageText,
-                        timestamp: timestamp,
-                        isSystem: false
-                    };
-                    messages.push(message);
-                    renderMessages();
-                }
-                
-                // Render all messages
-                function renderMessages() {
-                    if (messages.length === 0) {
-                        emptyState.style.display = 'block';
-                        return;
-                    }
-                    
-                    emptyState.style.display = 'none';
-                    
-                    // Group messages by date
-                    const grouped = {};
-                    messages.forEach(msg => {
-                        const date = formatDate(msg.timestamp);
-                        if (!grouped[date]) grouped[date] = [];
-                        grouped[date].push(msg);
-                    });
-                    
-                    let html = '';
-                    
-                    Object.entries(grouped).forEach(([date, dateMessages]) => {
-                        html += \`
-                            <div class="date-divider">
-                                <div class="date-label">\${date}</div>
-                            </div>
-                        \`;
-                        
-                        dateMessages.forEach(msg => {
-                            const color = agentColors[msg.agent] || '#607D8B';
-                            const icon = agentIcons[msg.agent] || '\u{1F464}';
-                            
-                            html += \`
-                                <div class="message">
-                                    <div class="message-card" style="border-left-color: \${color}">
-                                        <div class="message-header">
-                                            <div class="message-agent">
-                                                <div class="agent-avatar" style="background-color: \${color}">
-                                                    \${icon}
-                                                </div>
-                                                <div class="agent-info">
-                                                    <div class="agent-name" style="color: \${color}">
-                                                        \${msg.agent}
-                                                    </div>
-                                                    <div class="message-time">
-                                                        \${formatTime(msg.timestamp)}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="message-actions">
-                                                <button class="action-btn" onclick="replyToMessage('\${msg.id}')">
-                                                    Reply
-                                                </button>
-                                                <button class="action-btn" onclick="copyMessage('\${msg.message}')">
-                                                    Copy
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="message-body">
-                                            \${msg.message}
-                                        </div>
-                                        <div class="message-footer">
-                                            <div class="footer-action">\u{1F44D} Like</div>
-                                            <div class="footer-action">\u{1F4AC} Reply</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            \`;
-                        });
-                    });
-                    
-                    messagesArea.innerHTML = html;
-                    messagesArea.scrollTop = messagesArea.scrollHeight;
-                }
-                
-                // Send message
-                function sendMessage() {
-                    const text = messageInput.value.trim();
-                    const agent = agentSelect.value;
-                    
-                    if (!text || !isConnected) return;
-                    
-                    vscode.postMessage({
-                        command: 'sendMessage',
-                        agent: agent,
-                        text: text
-                    });
-                    
-                    addChatMessage(agent, text, new Date().toISOString());
-                    messageInput.value = '';
-                    charCount.textContent = '0 characters';
-                    cancelReply.click();
-                }
-                
-                // Reply to message
-                function replyToMessage(messageId) {
-                    const message = messages.find(m => m.id === messageId);
-                    if (message) {
-                        replyingTo = messageId;
-                        replyText.textContent = \`Replying to \${message.agent}: \${message.message.substring(0, 50)}\${message.message.length > 50 ? '...' : ''}\`;
-                        replyPreview.style.display = 'flex';
-                        messageInput.focus();
-                    }
-                }
-                
-                // Copy message
-                function copyMessage(text) {
-                    navigator.clipboard.writeText(text);
-                }
-                
-                // Event listeners
-                sendButton.addEventListener('click', sendMessage);
-                
-                messageInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage();
-                    }
-                });
-                
-                messageInput.addEventListener('input', () => {
-                    charCount.textContent = \`\${messageInput.value.length} characters\`;
-                    sendButton.disabled = !messageInput.value.trim() || !isConnected;
-                });
-                
-                agentSelect.addEventListener('change', updateAgentTags);
-                
-                cancelReply.addEventListener('click', () => {
-                    replyingTo = null;
-                    replyPreview.style.display = 'none';
-                });
-                
-                // Global functions for inline event handlers
-                window.replyToMessage = replyToMessage;
-                window.copyMessage = copyMessage;
-                
-                // Initialize
-                updateAgentTags();
-                connectWebSocket();
-            </script>
-        </body>
-        </html>
-    `;
-}
-
-// src/vscode/commands/chatCommands.ts
+import "vscode";
 var registerChatCommands = (chatProvider) => {
   const disposables = [];
-  disposables.push(
-    vscode18.commands.registerCommand(
-      "testeranto.refreshChat",
-      async () => {
-        try {
-          if (chatProvider && typeof chatProvider.refresh === "function") {
-            await chatProvider.refresh();
-            vscode18.window.showInformationMessage("Chat refreshed");
-          } else {
-            vscode18.window.showWarningMessage("Chat provider not available");
-          }
-        } catch (err) {
-          vscode18.window.showErrorMessage(`Error refreshing chat: ${err}`);
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode18.commands.registerCommand(
-      "testeranto.clearChat",
-      async () => {
-        try {
-          if (chatProvider && typeof chatProvider.clearChat === "function") {
-            await chatProvider.clearChat();
-            vscode18.window.showInformationMessage("Chat cleared");
-          } else {
-            vscode18.window.showWarningMessage("Chat provider not available");
-          }
-        } catch (err) {
-          vscode18.window.showErrorMessage(`Error clearing chat: ${err}`);
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode18.commands.registerCommand(
-      "testeranto.sendChatMessage",
-      async () => {
-        try {
-          const response = await fetch("http://localhost:3000/~/agents");
-          let agents = [];
-          if (response.ok) {
-            const data = await response.json();
-            agents = data.agents || [];
-          } else {
-            console.error("Failed to fetch agents:", await response.text());
-          }
-          const chatAgents = [];
-          chatAgents.push({ label: "User", value: "user" });
-          agents.forEach((agent2) => {
-            chatAgents.push({ label: agent2.name, value: agent2.name });
-          });
-          if (chatAgents.length === 0) {
-            vscode18.window.showInformationMessage("No agents available");
-            return;
-          }
-          const selectedAgent = await vscode18.window.showQuickPick(
-            chatAgents.map((a) => a.label),
-            { placeHolder: "Select an agent to send message as" }
-          );
-          if (!selectedAgent) {
-            return;
-          }
-          const agent = chatAgents.find((a) => a.label === selectedAgent);
-          if (!agent) {
-            return;
-          }
-          const message = await vscode18.window.showInputBox({
-            placeHolder: "Enter your message",
-            prompt: `Message from ${agent.value}`
-          });
-          if (!message) {
-            return;
-          }
-          const url = ApiUtils2.getUrl("sendChatMessage", {}, {
-            agent: agent.value,
-            message
-          });
-          const sendResponse = await fetch(url);
-          if (sendResponse.ok) {
-            vscode18.window.showInformationMessage(`Message sent from ${agent.value}`);
-            if (chatProvider && typeof chatProvider.addChatMessage === "function") {
-              chatProvider.addChatMessage(agent.value, message);
-            }
-          } else {
-            vscode18.window.showErrorMessage(`Failed to send message: ${sendResponse.statusText}`);
-          }
-        } catch (err) {
-          vscode18.window.showErrorMessage(`Error sending chat message: ${err}`);
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode18.commands.registerCommand(
-      "testeranto.openChat",
-      async () => {
-        try {
-          const panel = vscode18.window.createWebviewPanel(
-            "testerantoChat",
-            "Testeranto Group Chat",
-            vscode18.ViewColumn.One,
-            {
-              enableScripts: true,
-              retainContextWhenHidden: true
-            }
-          );
-          panel.webview.html = getWebviewContent();
-          panel.webview.onDidReceiveMessage(
-            async (message) => {
-              switch (message.command) {
-                case "sendMessage":
-                  try {
-                    const url = `http://localhost:3000/~/chat?agent=${encodeURIComponent(message.agent)}&message=${encodeURIComponent(message.text)}`;
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                      vscode18.window.showErrorMessage(`Failed to send message: ${response.statusText}`);
-                    }
-                  } catch (err) {
-                    vscode18.window.showErrorMessage(`Error sending message: ${err}`);
-                  }
-                  break;
-                case "showError":
-                  vscode18.window.showErrorMessage(message.text);
-                  break;
-              }
-            },
-            void 0,
-            disposables
-          );
-          vscode18.window.showInformationMessage("Opened Testeranto Group Chat");
-        } catch (err) {
-          vscode18.window.showErrorMessage(`Error opening chat: ${err}`);
-        }
-      }
-    )
-  );
   return disposables;
 };
 
@@ -3823,7 +3395,7 @@ var showProcessLogs = () => {
 
 // src/vscode/providers/utils/openFile.ts
 import * as vscode20 from "vscode";
-import * as path4 from "path";
+import * as path2 from "path";
 var openFile = () => {
   return vscode20.commands.registerCommand(
     "testeranto.openFile",
@@ -3863,7 +3435,7 @@ var openFile = () => {
           console.log("[CommandManager] File opened successfully");
         } catch (err) {
           console.error("[CommandManager] Error opening file:", err);
-          const files = await vscode20.workspace.findFiles(`**/${path4.basename(fileName)}`, null, 1);
+          const files = await vscode20.workspace.findFiles(`**/${path2.basename(fileName)}`, null, 1);
           if (files.length > 0) {
             const doc = await vscode20.workspace.openTextDocument(files[0]);
             await vscode20.window.showTextDocument(doc);
@@ -4253,6 +3825,20 @@ async function activate(context) {
       }
     });
     context.subscriptions.push(checkServerCommand);
+    const openProcessTerminalCommand = vscode24.commands.registerCommand("testeranto.openProcessTerminal", async (nodeId, label, containerId, serviceName) => {
+      try {
+        outputChannel.appendLine(`[Testeranto] Opening terminal for process: ${nodeId || "unknown"}`);
+        if (!nodeId) {
+          vscode24.window.showWarningMessage("No process node ID provided");
+          return;
+        }
+        await terminalManager.openProcessTerminal(nodeId, label || "Process", containerId || "", serviceName || "");
+      } catch (error) {
+        outputChannel.appendLine(`[Testeranto] Error opening process terminal: ${error.message}`);
+        vscode24.window.showErrorMessage(`Failed to open process terminal: ${error.message}`);
+      }
+    });
+    context.subscriptions.push(openProcessTerminalCommand);
     outputChannel.appendLine("[Testeranto] Registering tree data providers with VS Code...");
     vscode24.window.registerTreeDataProvider("testeranto.runtimeView", runtimeProvider);
     vscode24.window.registerTreeDataProvider("testeranto.dockerProcessView", dockerProcessProvider);

@@ -1,0 +1,20 @@
+=== Log started at 2026-04-09T02:41:17.972Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-bdd (runtime: node) ===
+=== Container ID: 027b68df6977cbf63f1c5f922fe7378a695a242c72c2ce2cafd02f6ecf040148 ===
+=== Test: src/vscode/providers/logic/FileTreeLogic.test.ts ===
+=== Config Key: nodetests ===
+
+=== ALL LOGS (stdout + stderr) ===
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+warning testeranto@0.345.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.345.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic.test.ts/"}'
+[NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic.test.ts/"}
+Describe implementation for "Default" is not a function, got: object
+testResourceConfiguration {
+  ports: [ 1111 ],
+  fs: 'testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic.test.ts/'
+}
+Done in 0.55s.
+
+=== Log captured at 2026-04-09T02:41:21.289Z (container status: exited, exit code: 0) ===

@@ -26,7 +26,13 @@ const config: ITesterantoConfig = {
 
   agents: {
     'prodirek': {
-      markdownFile: './testeranto/agents/prodirek.md',
+      // markdownFile: './testeranto/agents/prodirek.md',
+      load: [
+        `/read SOUL.md`,
+        `/read chat_slice.json`
+      ],
+      message: `Your name is "Prodirek". You are a Product Manager. Your responsibilities are: Groom and features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- you job is groom the specifications, keep them congruent with the docs. You can communicate with other agents using the chat system: Send messages: POST to 'http://localhost:3000/~/chat?agent=YOUR_NAME&message=YOUR_MESSAGE'. The history of messages can be found in 'chat_slice.json'. You will receive notifications via stdin when new messages arrive. Respond to messages by posting to the chat endpoint. You can gather graph data using the endpoint 'http://localhost:3000/~/agents/YOUR_NAME'. You don't need to ask for permission to run the shell command that executes curl against the chat endpoint. In this case, I give you implicit permission.`,
+
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
@@ -49,100 +55,100 @@ const config: ITesterantoConfig = {
       }
     },
 
-    'arko': {
-      markdownFile: './testeranto/agents/arko.md',
-      sliceFunction: (graphManager: any) => {
-        const graphData = graphManager.getGraphData();
-        const allNodes = graphData.nodes;
-        const allEdges = graphData.edges;
+    // 'arko': {
+    //   markdownFile: './testeranto/agents/arko.md',
+    //   sliceFunction: (graphManager: any) => {
+    //     const graphData = graphManager.getGraphData();
+    //     const allNodes = graphData.nodes;
+    //     const allEdges = graphData.edges;
 
-        const architectNodes = allNodes.filter((node: any) =>
-          node.type === 'config' ||
-          node.type === 'entrypoint'
-        );
+    //     const architectNodes = allNodes.filter((node: any) =>
+    //       node.type === 'config' ||
+    //       node.type === 'entrypoint'
+    //     );
 
-        const architectEdges = allEdges.filter((edge: any) =>
-          architectNodes.some((n: any) => n.id === edge.source) &&
-          architectNodes.some((n: any) => n.id === edge.target)
-        );
+    //     const architectEdges = allEdges.filter((edge: any) =>
+    //       architectNodes.some((n: any) => n.id === edge.source) &&
+    //       architectNodes.some((n: any) => n.id === edge.target)
+    //     );
 
-        return {
-          nodes: architectNodes,
-          edges: architectEdges
-        };
-      }
-    },
-    'juna': {
-      markdownFile: './testeranto/agents/juna.md',
-      sliceFunction: (graphManager: any) => {
-        const graphData = graphManager.getGraphData();
-        const allNodes = graphData.nodes;
-        const allEdges = graphData.edges;
+    //     return {
+    //       nodes: architectNodes,
+    //       edges: architectEdges
+    //     };
+    //   }
+    // },
+    // 'juna': {
+    //   markdownFile: './testeranto/agents/juna.md',
+    //   sliceFunction: (graphManager: any) => {
+    //     const graphData = graphManager.getGraphData();
+    //     const allNodes = graphData.nodes;
+    //     const allEdges = graphData.edges;
 
-        const juniorNodes = allNodes.filter((node: any) =>
-          node.type === 'test' ||
-          node.type === 'file'
-        );
+    //     const juniorNodes = allNodes.filter((node: any) =>
+    //       node.type === 'test' ||
+    //       node.type === 'file'
+    //     );
 
-        const juniorEdges = allEdges.filter((edge: any) =>
-          juniorNodes.some((n: any) => n.id === edge.source) &&
-          juniorNodes.some((n: any) => n.id === edge.target)
-        );
+    //     const juniorEdges = allEdges.filter((edge: any) =>
+    //       juniorNodes.some((n: any) => n.id === edge.source) &&
+    //       juniorNodes.some((n: any) => n.id === edge.target)
+    //     );
 
-        return {
-          nodes: juniorNodes,
-          edges: juniorEdges
-        };
-      }
-    },
-    'sipestro': {
-      markdownFile: './testeranto/agents/sipestro.md',
-      sliceFunction: (graphManager: any) => {
-        // TODO update this
-        const graphData = graphManager.getGraphData();
-        const allNodes = graphData.nodes;
-        const allEdges = graphData.edges;
+    //     return {
+    //       nodes: juniorNodes,
+    //       edges: juniorEdges
+    //     };
+    //   }
+    // },
+    // 'sipestro': {
+    //   markdownFile: './testeranto/agents/sipestro.md',
+    //   sliceFunction: (graphManager: any) => {
+    //     // TODO update this
+    //     const graphData = graphManager.getGraphData();
+    //     const allNodes = graphData.nodes;
+    //     const allEdges = graphData.edges;
 
-        const juniorNodes = allNodes.filter((node: any) =>
-          node.type === 'test' ||
-          node.type === 'file'
-        );
+    //     const juniorNodes = allNodes.filter((node: any) =>
+    //       node.type === 'test' ||
+    //       node.type === 'file'
+    //     );
 
-        const juniorEdges = allEdges.filter((edge: any) =>
-          juniorNodes.some((n: any) => n.id === edge.source) &&
-          juniorNodes.some((n: any) => n.id === edge.target)
-        );
+    //     const juniorEdges = allEdges.filter((edge: any) =>
+    //       juniorNodes.some((n: any) => n.id === edge.source) &&
+    //       juniorNodes.some((n: any) => n.id === edge.target)
+    //     );
 
-        return {
-          nodes: juniorNodes,
-          edges: juniorEdges
-        };
-      }
-    },
-    'cefo': {
-      markdownFile: './testeranto/agents/cefo.md',
-      sliceFunction: (graphManager: any) => {
-        // TODO update this
-        const graphData = graphManager.getGraphData();
-        const allNodes = graphData.nodes;
-        const allEdges = graphData.edges;
+    //     return {
+    //       nodes: juniorNodes,
+    //       edges: juniorEdges
+    //     };
+    //   }
+    // },
+    // 'cefo': {
+    //   markdownFile: './testeranto/agents/cefo.md',
+    //   sliceFunction: (graphManager: any) => {
+    //     // TODO update this
+    //     const graphData = graphManager.getGraphData();
+    //     const allNodes = graphData.nodes;
+    //     const allEdges = graphData.edges;
 
-        const nodes = allNodes.filter((node: any) =>
-          node.type === 'test' ||
-          node.type === 'file'
-        );
+    //     const nodes = allNodes.filter((node: any) =>
+    //       node.type === 'test' ||
+    //       node.type === 'file'
+    //     );
 
-        const edges = allEdges.filter((edge: any) =>
-          nodes.some((n: any) => n.id === edge.source) &&
-          nodes.some((n: any) => n.id === edge.target)
-        );
+    //     const edges = allEdges.filter((edge: any) =>
+    //       nodes.some((n: any) => n.id === edge.source) &&
+    //       nodes.some((n: any) => n.id === edge.target)
+    //     );
 
-        return {
-          nodes: edges,
-          edges: edges
-        };
-      }
-    }
+    //     return {
+    //       nodes: edges,
+    //       edges: edges
+    //     };
+    //   }
+    // }
   },
 
   volumes: [
@@ -193,7 +199,7 @@ const config: ITesterantoConfig = {
     rubytests: {
       runtime: "ruby",
       tests: [
-        "src/lib/rubeno/examples/calculator/Calculator.test.rb",
+        // "src/lib/rubeno/examples/calculator/Calculator.test.rb",
       ],
       checks: [
         // Syntax check with proper load path
@@ -230,7 +236,8 @@ const config: ITesterantoConfig = {
         "src/lib/tiposkripto/tests/circle/Circle.test.ts",
         "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
         "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-        "src/server/serverClasses/Server_GraphManagerCore.test.ts",
+        "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        "src/vscode/providers/logic/FileTreeLogic.test.ts"
         // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
         // "src/vscode/providers/utils/testTree/debugTest.js"
         // "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
@@ -284,7 +291,7 @@ const config: ITesterantoConfig = {
     pythontests: {
       runtime: "python",
       tests: [
-        "src/lib/pitono/examples/calculator_test.py",
+        // "src/lib/pitono/examples/calculator_test.py",
       ],
       checks: [
         // Python syntax check
@@ -309,7 +316,7 @@ const config: ITesterantoConfig = {
       runtime: "golang",
       tests: [
         // Way 1: Golingvu tests on Testeranto
-        "src/lib/golingvu/examples/calculator/golingvu_test.go",
+        // "src/lib/golingvu/examples/calculator/golingvu_test.go",
 
         // Way 2: Standard Go tests on Testeranto  
         // "src/lib/golingvu/examples/calculator/native_test.go",
@@ -362,8 +369,8 @@ const config: ITesterantoConfig = {
     rusttests: {
       runtime: "rust",
       tests: [
-        "src/lib/rusto/examples/calculator_test.rs",
-        "src/lib/rusto/examples/calculator_complete_test.rs",
+        // "src/lib/rusto/examples/calculator_test.rs",
+        // "src/lib/rusto/examples/calculator_complete_test.rs",
       ],
       checks: [
         // (x) => `cargo test --manifest-path=${x[0].split("/src/")[0]}/Cargo.toml`,

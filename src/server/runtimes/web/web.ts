@@ -1,16 +1,32 @@
 import esbuild from "esbuild";
-import puppeteer from "puppeteer-core";
 import configer from "./esbuild";
 import { processMetafile } from "../common";
 import * as fs from "fs";
 import * as path from "path";
 import type { ITesterantoConfig } from "../../../Types";
 
-// Setup logging to file
+const webConfigPath = process.argv[3];
+const configJson = process.argv[4];
+let entryPoints: string[] = [];
+let outputs: string[] = [];
+let testName = "";
+
 const projectConfigPath = process.argv[2];
-const nodeConfigPath = process.argv[3];
-const testName = process.argv[4];
-const entryPoints = process.argv.slice(5);
+
+try {
+  const config = JSON.parse(configJson);
+  entryPoints = config.tests || [];
+  outputs = config.outputs || [];
+  testName = config.name || "";
+} catch (error) {
+  console.error('[WEB BUILDER] Failed to parse config JSON:', error);
+  process.exit(1);
+}
+
+if (!testName) {
+  console.error('[WEB BUILDER] Config must include a name');
+  process.exit(1);
+}
 
 const reportDir = path.join(process.cwd(), "testeranto", "reports", testName);
 if (!fs.existsSync(reportDir)) {
@@ -72,57 +88,50 @@ console.warn = (...args) => {
 
 // Log startup information
 console.log(`[WEB BUILDER] projectConfigPath:  ${projectConfigPath}`);
-console.log(`[WEB BUILDER] nodeConfig:  ${nodeConfigPath}`);
+console.log(`[WEB BUILDER] webConfigPath:  ${webConfigPath}`);
 console.log(`[WEB BUILDER] testName:  ${testName}`);
 console.log(`[WEB BUILDER] Log file: ${logFilePath}`);
 console.log(`[WEB BUILDER] CWD: ${process.cwd()}`);
 
-const urlDomain = `http://webtests:8000/`;
+// const urlDomain = `http://webtests:8000/`;
 
 // Function to produce output artifacts when shutting down
-async function produceOutputArtifacts(projectConfig: ITesterantoConfig, configKey: string): Promise<void> {
-  console.log(`[WEB BUILDER] Producing output artifacts for config ${configKey}`);
-  
-  const runtimeConfig = projectConfig.runtimes[configKey];
-  if (!runtimeConfig) {
-    console.error(`[WEB BUILDER] No runtime config found for ${configKey}`);
-    return;
-  }
-  
-  const outputs = runtimeConfig.outputs;
+async function produceOutputArtifacts(): Promise<void> {
+  console.log(`[WEB BUILDER] Producing output artifacts for config ${testName}`);
+
   if (!outputs || outputs.length === 0) {
-    console.log(`[WEB BUILDER] No outputs defined for ${configKey}`);
+    console.log(`[WEB BUILDER] No outputs defined for ${testName}`);
     return;
   }
-  
+
   console.log(`[WEB BUILDER] Processing ${outputs.length} output artifacts`);
-  
+
   // Create output directory
-  const outputDir = `testeranto/outputs/${configKey}`;
+  const outputDir = `testeranto/outputs/${testName}`;
   const fs = await import('fs');
   const path = await import('path');
-  
+
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
-  
+
   for (const entrypoint of outputs) {
     try {
       const sourcePath = entrypoint;
       const fileName = path.basename(entrypoint);
       const destPath = path.join(outputDir, fileName);
-      
+
       console.log(`[WEB BUILDER] Copying ${sourcePath} to ${destPath}`);
-      
+
       // Copy file
       fs.copyFileSync(sourcePath, destPath);
-      
+
       console.log(`[WEB BUILDER] ✅ Copied ${fileName}`);
     } catch (error: any) {
       console.error(`[WEB BUILDER] Failed to process output artifact ${entrypoint}:`, error.message);
     }
   }
-  
+
   console.log(`[WEB BUILDER] Finished producing output artifacts`);
 }
 
@@ -261,57 +270,101 @@ async function startBundling(
 }
 
 async function main() {
-  let nodeConfigs: any;
-  let projectConfigs: ITesterantoConfig;
-  
   try {
-    nodeConfigs = (await import(nodeConfigPath)).default;
-    projectConfigs = (await import(projectConfigPath)).default;
+    console.log(`[WEB BUILDER] Loading web config from: ${webConfigPath}`);
     
-    // Set up signal handlers now that we have projectConfigs
+    // Check if file exists
+    if (!fs.existsSync(webConfigPath)) {
+      throw new Error(`Web config file not found: ${webConfigPath}`);
+    }
+    
+    const webConfigModule = await import(webConfigPath);
+    const webConfigs = webConfigModule.default;
+    
+    if (!webConfigs) {
+      throw new Error(`Web config file ${webConfigPath} does not export a default object`);
+    }
+    
+    console.log(`[WEB BUILDER] Web config loaded successfully:`, Object.keys(webConfigs));
+
+    // Set up signal handlers
     const setupSignalHandlers = () => {
       process.on("SIGINT", async () => {
         console.log("[WEB BUILDER] Received SIGINT - producing output artifacts");
-        await produceOutputArtifacts(projectConfigs, testName);
+        await produceOutputArtifacts();
         logStream.end();
         process.exit(0);
       });
-      
+
       process.on("SIGTERM", async () => {
         console.log("[WEB BUILDER] Received SIGTERM - producing output artifacts");
-        await produceOutputArtifacts(projectConfigs, testName);
+        await produceOutputArtifacts();
         logStream.end();
         process.exit(0);
       });
-      
+
       process.on("uncaughtException", (error) => {
         console.error("[WEB BUILDER] Uncaught exception:", error);
         logStream.end();
         // Try to produce output artifacts even on uncaught exception
-        produceOutputArtifacts(projectConfigs, testName).finally(() => {
+        produceOutputArtifacts().finally(() => {
           process.exit(1);
         });
       });
     };
-    
+
     setupSignalHandlers();
-    
-    await startBundling(nodeConfigs, projectConfigs, entryPoints);
-  } catch (error) {
-    console.error(
-      "WEB BUILDER: Error importing config:",
-      nodeConfigPath,
-      error,
-    );
-    console.error(error);
-    
-    // Try to produce output artifacts before exiting on error
-    if (projectConfigs) {
-      await produceOutputArtifacts(projectConfigs, testName);
+
+    // Create a dummy project config since it's not used
+    const dummyProjectConfig = {} as ITesterantoConfig;
+    await startBundling(webConfigs, dummyProjectConfig, entryPoints);
+
+    // In dev mode, keep the process running even if there's an error
+    const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
+    if (isDevMode) {
+      // Don't exit on unhandled rejections
+      process.on('unhandledRejection', (reason, promise) => {
+        console.error('[WEB BUILDER] Unhandled Rejection at:', promise, 'reason:', reason);
+      });
+
+      // Keep alive
+      setInterval(() => {
+        // console.log('[WEB BUILDER] Still watching for changes...');
+      }, 30000);
     }
-    logStream.end();
-    process.exit(1);
+  } catch (error) {
+    console.error("WEB BUILDER: Error:", error);
+
+    // In dev mode, don't exit immediately
+    const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
+    if (isDevMode) {
+      console.error('[WEB BUILDER] Error occurred but keeping process alive in dev mode');
+      // Keep the process alive to restart watching
+      setInterval(() => { }, 1000);
+    } else {
+      // Try to produce output artifacts before exiting on error
+      await produceOutputArtifacts()
+      logStream.end();
+      process.exit(1);
+    }
   }
+
+  //   // Create a dummy project config since it's not used
+  //   const dummyProjectConfig = {} as ITesterantoConfig;
+  //   await startBundling(webConfigs, dummyProjectConfig, entryPoints);
+  // } catch (error) {
+  //   console.error(
+  //     "WEB BUILDER: Error importing config:",
+  //     webConfigPath,
+  //     error,
+  //   );
+  //   console.error(error);
+
+  //   // Try to produce output artifacts before exiting on error
+  //   await produceOutputArtifacts();
+  //   logStream.end();
+  //   process.exit(1);
+  // }
 }
 
 main();

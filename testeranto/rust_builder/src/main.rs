@@ -1,14 +1,19 @@
 // The rust builder
 // runs in a docker image and produces built rust tests
 
+// Modules in the same directory
+mod test_processor;
+mod file_collector;
+mod native_detection;
+mod output_artifacts;
+mod permissions;
+mod wrapper_generator;
+
+extern crate ctrlc;
+
 use std::env;
-use std::fs;
-use std::path::Path;
 use std::process::Command;
 use serde_json;
-use std::collections::HashMap;
-#[cfg(unix)]
-use std::os::unix::process::ExitStatusExt;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Rust builder starting...");
@@ -16,16 +21,55 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Parse command line arguments
     let args: Vec<String> = env::args().collect();
     
-    if args.len() < 4 {
+    if args.len() < 3 {
         eprintln!("❌ Insufficient arguments");
-        eprintln!("Usage: {} <project_config> <rust_config> <config_key> <entry_points...>", args[0]);
+        eprintln!("Usage: {} <project_config> <rust_config> <config_slice>", args[0]);
+        eprintln!("Where config_slice is a JSON string with fields: name, tests, outputs");
         std::process::exit(1);
     }
     
-    let _project_config_file_path = &args[1];
-    let _rust_config_file_path = &args[2];
-    let config_key = &args[3];
-    let entry_points = &args[4..];
+    let _rust_config_file_path = &args[1];
+    // args[2] is a JSON string containing name, tests and outputs
+    let config_json = if args.len() > 2 { &args[3] } else { "{\"name\":\"default\",\"tests\":[],\"outputs\":[]}" };
+    let mut entry_points = Vec::new();
+    let mut outputs = Vec::new();
+    let mut config_key = "default".to_string();
+    
+    match serde_json::from_str::<serde_json::Value>(config_json) {
+        Ok(config) => {
+            // Parse config key from "name" field
+            if let Some(name) = config.get("name").and_then(|n| n.as_str()) {
+                config_key = name.to_string();
+            }
+            // Parse tests
+            if let Some(tests_array) = config.get("tests").and_then(|t| t.as_array()) {
+                for test in tests_array {
+                    if let Some(test_str) = test.as_str() {
+                        entry_points.push(test_str.to_string());
+                    }
+                }
+            }
+            // Parse outputs
+            if let Some(outputs_array) = config.get("outputs").and_then(|o| o.as_array()) {
+                for output in outputs_array {
+                    if let Some(output_str) = output.as_str() {
+                        outputs.push(output_str.to_string());
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            println!("[Rust Builder] Failed to parse config JSON: {}", e);
+            //  NO FALLBACKS! Observe SOUl.md
+            // Fallback to old behavior for compatibility
+            // if args.len() > 3 {
+            //     config_key = args[3].clone();
+            // }
+            // if args.len() > 4 {
+            //     entry_points = args[4..].iter().map(|s| s.to_string()).collect();
+            // }
+        }
+    }
     
     // Check if we're in dev mode
     let mode = std::env::var("MODE").unwrap_or_else(|_| "once".to_string());
@@ -40,65 +84,110 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     }
     
-    // Change to workspace directory
-    let workspace = Path::new("/workspace");
-    env::set_current_dir(workspace)?;
-    
-    // The Rust project is in src/rust/, not at workspace root
-    // Check if we're in a Cargo project by looking in src/rust/
-    let rust_project_dir = workspace.join("src/rust");
-    let cargo_toml_path = rust_project_dir.join("Cargo.toml");
-    
-    if !cargo_toml_path.exists() {
-        // Try to find Cargo.toml in the workspace root as fallback
-        let root_cargo_toml = workspace.join("Cargo.toml");
-        if root_cargo_toml.exists() {
-            println!("📁 Found Cargo.toml at workspace root");
+    // Check if entry points exist relative to current directory
+    println!("[Rust Builder] Checking entry points:");
+    for entry_point in &entry_points {
+        let full_path = std::path::Path::new(entry_point);
+        if full_path.exists() {
+            println!("  ✅ {} exists at: {}", entry_point, full_path.display());
         } else {
-            eprintln!("❌ Not a Cargo project: Cargo.toml not found in src/rust/ or workspace root");
-            eprintln!("   Looking for: {}", cargo_toml_path.display());
-            eprintln!("   Also tried: {}", root_cargo_toml.display());
-            std::process::exit(1);
-        }
-    } else {
-        // Change to the Rust project directory
-        env::set_current_dir(&rust_project_dir)?;
-        println!("📁 Changed to Rust project directory: {}", rust_project_dir.display());
-        
-        // Ensure the testeranto_rusto dependency is accessible
-        // The path in Cargo.toml points to ../../../testeranto/src/lib/rusto
-        // which should resolve correctly from /workspace/src/rust
-        let rusto_path = workspace.join("testeranto/src/lib/rusto");
-        if !rusto_path.exists() {
-            eprintln!("⚠️  Warning: testeranto_rusto not found at: {}", rusto_path.display());
-            eprintln!("   This may cause build errors if the path in Cargo.toml is incorrect");
-        } else {
-            println!("✅ Found testeranto_rusto at: {}", rusto_path.display());
+            println!("  ❌ {} does not exist at: {}", entry_point, full_path.display());
+            // Try with workspace
+            let workspace = env::current_dir()?;
+            let workspace_path = workspace.join(entry_point);
+            if workspace_path.exists() {
+                println!("     But exists at: {}", workspace_path.display());
+            }
         }
     }
     
-    // Create bundles directory
-    let bundles_dir = workspace.join("testeranto/bundles").join(config_key);
-    fs::create_dir_all(&bundles_dir)?;
+    // Use current directory as workspace root
+    let workspace_root = env::current_dir()?;
+    println!("[Rust Builder] Current directory: {}", workspace_root.display());
     
-    // Create a map to store all tests' information
-    let mut all_tests_info: HashMap<String, serde_json::Value> = HashMap::new();
+    // List contents of current directory for debugging
+    println!("[Rust Builder] Listing current directory contents:");
+    if let Ok(entries) = std::fs::read_dir(&workspace_root) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let name = path.file_name().unwrap_or_default().to_string_lossy();
+            let is_dir = path.is_dir();
+            println!("  {} {}", if is_dir { "📁" } else { "📄" }, name);
+        }
+    }
+    
+    // The actual Rust project is at src/lib/rusto
+    let rusto_project_dir = workspace_root.join("src/lib/rusto");
+    if !rusto_project_dir.exists() {
+        eprintln!("❌ Rust project directory not found: {}", rusto_project_dir.display());
+        std::process::exit(1);
+    }
+    
+    // Check for Cargo.toml in the rusto project directory
+    let cargo_toml_path = rusto_project_dir.join("Cargo.toml");
+    if !cargo_toml_path.exists() {
+        eprintln!("❌ Not a Cargo project: Cargo.toml not found in {}", rusto_project_dir.display());
+        eprintln!("   Looking for: {}", cargo_toml_path.display());
+        std::process::exit(1);
+    }
+    
+    println!("📁 Found Cargo.toml at: {}", cargo_toml_path.display());
+    
+    // Use the rusto project directory as the workspace for building
+    let workspace = rusto_project_dir;
+    
+    // Print workspace info for debugging
+    println!("[Rust Builder] Workspace directory: {}", workspace.display());
+    println!("[Rust Builder] Workspace Cargo.toml exists: {}", workspace.join("Cargo.toml").exists());
+    
+    // Ensure the testeranto_rusto dependency is accessible
+    // The path in Cargo.toml points to src/lib/rusto (which is our workspace)
+    let rusto_path = workspace.clone();
+    if !rusto_path.exists() {
+        eprintln!("⚠️  Warning: testeranto_rusto not found at: {}", rusto_path.display());
+        eprintln!("   This may cause build errors if the path in Cargo.toml is incorrect");
+    } else {
+        println!("✅ Found testeranto_rusto at: {}", rusto_path.display());
+    }
+    
+    // Create bundles directory relative to workspace root
+    let bundles_dir = workspace_root.join("testeranto/bundles").join(&config_key);
+    std::fs::create_dir_all(&bundles_dir)?;
     
     // First, check if the rusto dependency builds
     println!("🔨 Checking testeranto_rusto dependency...");
-    let rusto_path = workspace.join("testeranto/src/lib/rusto");
     if rusto_path.exists() {
+        // Check for and handle lock file version issues
+        let lock_file_path = rusto_path.join("Cargo.lock");
+        if lock_file_path.exists() {
+            // Try to read the lock file to check its version
+            if let Ok(content) = std::fs::read_to_string(&lock_file_path) {
+                if content.contains("version = 4") {
+                    println!("⚠️  Cargo lock file version 4 detected - removing incompatible lock file");
+                    // Remove the incompatible lock file
+                    if let Err(e) = std::fs::remove_file(&lock_file_path) {
+                        println!("⚠️  Failed to remove Cargo.lock: {}", e);
+                    } else {
+                        println!("✅ Removed incompatible Cargo.lock file");
+                    }
+                }
+            }
+        }
+        
+        // Try to check, but don't fail if there are other issues
         let rusto_check = Command::new("cargo")
             .current_dir(&rusto_path)
             .args(&["check"])
-            .status();
+            .output();
         
         match rusto_check {
-            Ok(status) => {
-                if status.success() {
+            Ok(output) => {
+                if output.status.success() {
                     println!("✅ testeranto_rusto dependency checks out");
                 } else {
-                    println!("⚠️  testeranto_rusto has issues, but continuing");
+                    let stderr = String::from_utf8_lossy(&output.stderr);
+                    println!("⚠️  testeranto_rusto has issues: {}", stderr);
+                    println!("⚠️  But continuing anyway");
                 }
             }
             Err(e) => {
@@ -113,7 +202,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Check if we can build the main project (but don't include test files)
     // First, check if there's a Cargo.toml and it's valid
     println!("🔨 Checking Cargo project...");
+    
+    // Check for lock file issues here too
+    let lock_file_path = workspace.join("Cargo.lock");
+    if lock_file_path.exists() {
+        if let Ok(content) = std::fs::read_to_string(&lock_file_path) {
+            if content.contains("version = 4") {
+                println!("⚠️  Cargo lock file version 4 detected in main check - removing");
+                let _ = std::fs::remove_file(&lock_file_path);
+            }
+        }
+    }
+    
     let check_status = Command::new("cargo")
+        .current_dir(&workspace)
         .args(&["check", "--release", "--bins"])
         .status();
     
@@ -128,557 +230,58 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
     
-    // Process each entry point
-    for entry_point in entry_points {
-        println!("\n📦 Processing Rust test: {}", entry_point);
-        
-        // Get entry point path - entry_point is relative to workspace root
-        let entry_point_path = workspace.join(entry_point);
-        if !entry_point_path.exists() {
-            eprintln!("  ❌ Entry point does not exist: {}", entry_point_path.display());
-            std::process::exit(1);
-        }
-        
-        // Get base name for binary
-        let file_name = entry_point_path.file_name()
-            .unwrap_or_default()
-            .to_str()
-            .unwrap_or("");
-        if !file_name.ends_with(".rs") {
-            eprintln!("  ❌ Entry point is not a Rust file: {}", entry_point);
-            std::process::exit(1);
-        }
-        
-        // Create a valid crate name: replace dots and slashes with underscores
-        // Also ensure it starts with a letter and contains only alphanumeric characters or underscores
-        let binary_name = entry_point
-            .replace("/", "_")
-            .replace(".", "_")
-            .replace("-", "_");
-        // Ensure the name is valid for Rust crate
-        let valid_binary_name = binary_name
-            .chars()
-            .filter(|c| c.is_alphanumeric() || *c == '_')
-            .collect::<String>();
-        
-        // Detect if this is a native test
-        let is_native_test = detect_native_test(&entry_point_path);
-        let framework_type = if is_native_test {
-            "rust_testing".to_string()
-        } else {
-            "unknown".to_string()
-        };
-        
-        if is_native_test {
-            println!("  Detected native Rust test (framework: {})", framework_type);
-            // Generate Go-compatible wrapper for native Rust tests
-            generate_go_compatible_wrapper(&entry_point_path, &bundles_dir, &valid_binary_name, &framework_type);
-        }
-        
-        // Collect input files
-        let input_files = collect_input_files(&entry_point_path, workspace);
-        
-        // Compute hash
-        use std::collections::hash_map::DefaultHasher;
-        use std::hash::{Hash, Hasher};
-        let mut hasher = DefaultHasher::new();
-        for file in &input_files {
-            file.hash(&mut hasher);
-        }
-        let hash = hasher.finish();
-        let hash_str = format!("{:x}", hash);
-        
-        // Store test information
-        let test_info = serde_json::json!({
-            "hash": hash_str,
-            "files": input_files,
-            "isNativeTest": is_native_test,
-            "frameworkType": framework_type
-        });
-        all_tests_info.insert(entry_point.to_string(), test_info);
-        
-        // Instead of building a separate binary, we'll use the existing Rust project
-        // and build the specific test binary that's already defined in Cargo.toml
-        
-        // The entry point is a Rust source file that should already be part of the project
-        // We need to determine which binary target it corresponds to
-        
-        // First, check if the entry point exists
-        if !entry_point_path.exists() {
-            eprintln!("  ❌ Entry point does not exist: {}", entry_point_path.display());
-            std::process::exit(1);
-        }
-        
-        // Get the binary name from the entry point path
-        // The Rust project already has binary targets defined in Cargo.toml
-        // We need to find which binary corresponds to this source file
-        
-        // Read the Cargo.toml to find binary targets
-        let cargo_toml_content = fs::read_to_string("Cargo.toml")?;
-        
-        // Simple parsing to find [[bin]] sections
-        let mut binary_targets = Vec::new();
-        let lines: Vec<&str> = cargo_toml_content.lines().collect();
-        let mut in_bin_section = false;
-        let mut current_bin_name = None;
-        let mut current_bin_path = None;
-        
-        for line in lines {
-            let trimmed = line.trim();
-            if trimmed.starts_with("[[bin]]") {
-                in_bin_section = true;
-                current_bin_name = None;
-                current_bin_path = None;
-            } else if in_bin_section && trimmed.starts_with("name =") {
-                current_bin_name = Some(trimmed.trim_start_matches("name =").trim().trim_matches('"'));
-            } else if in_bin_section && trimmed.starts_with("path =") {
-                current_bin_path = Some(trimmed.trim_start_matches("path =").trim().trim_matches('"'));
-            } else if trimmed.starts_with('[') && !trimmed.starts_with("[[") {
-                // New section starting
-                if in_bin_section {
-                    if let (Some(name), Some(path)) = (current_bin_name, current_bin_path) {
-                        binary_targets.push((name.to_string(), path.to_string()));
-                    }
-                    in_bin_section = false;
-                }
-            }
-        }
-        
-        // Check last section
-        if in_bin_section {
-            if let (Some(name), Some(path)) = (current_bin_name, current_bin_path) {
-                binary_targets.push((name.to_string(), path.to_string()));
-            }
-        }
-        
-        println!("  📋 Found {} binary targets in Cargo.toml", binary_targets.len());
-        
-        // Try to find which binary target matches our entry point
-        let mut matching_binary = None;
-        for (bin_name, bin_path) in &binary_targets {
-            let absolute_bin_path = Path::new(bin_path);
-            if absolute_bin_path == entry_point_path || 
-               absolute_bin_path.canonicalize().ok() == entry_point_path.canonicalize().ok() {
-                matching_binary = Some(bin_name.clone());
-                break;
-            }
-        }
-        
-        // If no exact match, try to find by filename
-        if matching_binary.is_none() {
-            let entry_filename = entry_point_path.file_name().unwrap_or_default().to_str().unwrap_or("");
-            for (bin_name, bin_path) in &binary_targets {
-                let path = Path::new(bin_path);
-                if path.file_name().unwrap_or_default() == entry_filename {
-                    matching_binary = Some(bin_name.clone());
-                    break;
-                }
-            }
-        }
-        
-        let binary_name = if let Some(bin) = matching_binary {
-            println!("  🔍 Found matching binary target: {}", bin);
-            bin
-        } else {
-            // Create a binary name from the entry point path
-            let name = entry_point
-                .replace("/", "_")
-                .replace(".", "_")
-                .replace("-", "_");
-            // Ensure valid Rust identifier
-            let valid_name: String = name.chars()
-                .filter(|c| c.is_alphanumeric() || *c == '_')
-                .collect();
-            println!("  ⚠️  No matching binary target found, using generated name: {}", valid_name);
-            valid_name
-        };
-        
-        // Build the specific binary
-        println!("  🔨 Building binary: {}...", binary_name);
-        let build_status = Command::new("cargo")
-            .args(&["build", "--release", "--bin", &binary_name])
-            .status()?;
-        
-        if !build_status.success() {
-            eprintln!("  ❌ Failed to build binary: {}", binary_name);
-            // Try to get more info
-            let _ = Command::new("cargo")
-                .args(&["build", "--release", "--bin", &binary_name, "--verbose"])
-                .status();
-            std::process::exit(1);
-        }
-        
-        // Copy the binary to bundles directory
-        let source_bin = Path::new("target/release").join(&binary_name);
-        if !source_bin.exists() {
-            // Try with .exe extension
-            let source_bin_exe = source_bin.with_extension("exe");
-            if source_bin_exe.exists() {
-                let dest_bin = bundles_dir.join(&binary_name).with_extension("exe");
-                fs::copy(&source_bin_exe, &dest_bin)?;
-                make_executable(&dest_bin)?;
-                println!("  ✅ Compiled binary at: {:?}", dest_bin);
+    // Adjust entry points to be relative to the rusto project directory
+    let adjusted_entry_points: Vec<String> = entry_points.iter()
+        .map(|ep| {
+            // Remove "src/lib/rusto/" prefix if present
+            if ep.starts_with("src/lib/rusto/") {
+                ep.strip_prefix("src/lib/rusto/").unwrap().to_string()
             } else {
-                eprintln!("  ❌ Compiled binary not found at {:?} or {:?}", source_bin, source_bin_exe);
-                // List target/release directory
-                let _ = Command::new("ls")
-                    .args(&["-la", "target/release/"])
-                    .status();
-                std::process::exit(1);
+                ep.clone()
             }
-        } else {
-            let dest_bin = bundles_dir.join(&binary_name);
-            fs::copy(&source_bin, &dest_bin)?;
-            make_executable(&dest_bin)?;
-            println!("  ✅ Compiled binary at: {:?}", dest_bin);
-        }
-    }
+        })
+        .collect();
+    
+    // Process each entry point
+    let all_tests_info = test_processor::process_entry_points(
+        &adjusted_entry_points,
+        &workspace,
+        &bundles_dir,
+    )?;
     
     // Write single inputFiles.json for all tests
     let input_files_path = bundles_dir.join("inputFiles.json");
-    fs::write(&input_files_path, serde_json::to_string_pretty(&all_tests_info)?)?;
+    std::fs::write(&input_files_path, serde_json::to_string_pretty(&all_tests_info)?)?;
     println!("\n✅ Created inputFiles.json at {:?} with {} tests", input_files_path, all_tests_info.len());
     
     println!("\n🎉 Rust builder completed successfully");
     
-fn produce_output_artifacts(project_config_path: &str, config_key: &str) {
-    println!("[Rust Builder] Producing output artifacts for config {}", config_key);
+    // Store project config path from arguments
+    let project_config_path = args[1].clone();
     
-    // Load project config
-    let config_content = match std::fs::read_to_string(project_config_path) {
-        Ok(content) => content,
-        Err(e) => {
-            println!("[Rust Builder] Error loading project config: {}", e);
-            return;
-        }
-    };
+    // Set up signal handlers for graceful shutdown
+    ctrlc::set_handler(move || {
+        println!("[Rust Builder] Received SIGINT - producing output artifacts");
+        output_artifacts::produce_output_artifacts(&project_config_path, &config_key);
+        std::process::exit(0);
+    }).expect("Error setting Ctrl-C handler");
     
-    let project_config: serde_json::Value = match serde_json::from_str(&config_content) {
-        Ok(config) => config,
-        Err(e) => {
-            println!("[Rust Builder] Error parsing project config: {}", e);
-            return;
-        }
-    };
-    
-    let runtimes = match project_config.get("runtimes") {
-        Some(r) => r,
-        None => {
-            println!("[Rust Builder] No runtimes found in config");
-            return;
-        }
-    };
-    
-    let runtime_config = match runtimes.get(config_key) {
-        Some(rc) => rc,
-        None => {
-            println!("[Rust Builder] No runtime config found for {}", config_key);
-            return;
-        }
-    };
-    
-    let outputs = match runtime_config.get("outputs") {
-        Some(o) => o.as_array(),
-        None => {
-            println!("[Rust Builder] No outputs defined for {}", config_key);
-            return;
-        }
-    };
-    
-    let outputs = match outputs {
-        Some(o) => o,
-        None => {
-            println!("[Rust Builder] Outputs is not an array");
-            return;
-        }
-    };
-    
-    println!("[Rust Builder] Processing {} output artifacts", outputs.len());
-    
-    // Create output directory
-    let output_dir = format!("testeranto/outputs/{}", config_key);
-    if let Err(e) = std::fs::create_dir_all(&output_dir) {
-        println!("[Rust Builder] Error creating output directory: {}", e);
-        return;
-    }
-    
-    for output in outputs {
-        let entrypoint = match output.as_str() {
-            Some(s) => s,
-            None => continue,
-        };
-        
-        let source_path = entrypoint;
-        let file_name = match std::path::Path::new(entrypoint).file_name() {
-            Some(name) => name.to_string_lossy().to_string(),
-            None => continue,
-        };
-        
-        let dest_path = format!("{}/{}", output_dir, file_name);
-        
-        println!("[Rust Builder] Copying {} to {}", source_path, dest_path);
-        
-        // Copy file
-        if let Err(e) = std::fs::copy(source_path, &dest_path) {
-            println!("[Rust Builder] Failed to copy {}: {}", source_path, e);
-            continue;
-        }
-        
-        println!("[Rust Builder] ✅ Copied {}", file_name);
-    }
-    
-    println!("[Rust Builder] Finished producing output artifacts");
-}
-
     // In dev mode, keep the process alive
     if is_dev_mode {
         println!("[Rust Builder] Dev mode active - process will stay running");
         
-        // Set up signal handlers
-        ctrlc::set_handler(move || {
-            println!("[Rust Builder] Received SIGINT - producing output artifacts");
-            produce_output_artifacts(&_project_config_file_path, &config_key);
-            std::process::exit(0);
-        }).expect("Error setting Ctrl-C handler");
-        
-        // Simple approach: sleep until interrupted
+        // Keep process alive until interrupted
         loop {
             std::thread::sleep(std::time::Duration::from_secs(1));
         }
-    }
-    
-    Ok(())
-}
-
-fn collect_input_files(test_path: &Path, workspace: &Path) -> Vec<String> {
-    let mut files = Vec::new();
-    
-    // Get the current directory (should be src/rust/)
-    let current_dir = env::current_dir().unwrap_or_else(|_| workspace.to_path_buf());
-    
-    // Add the test file itself
-    if let Ok(relative) = test_path.strip_prefix(workspace) {
-        files.push(relative.to_string_lossy().to_string());
-    } else if let Ok(relative) = test_path.strip_prefix(&current_dir) {
-        // If test_path is relative to current directory (src/rust/)
-        files.push(format!("src/rust/{}", relative.to_string_lossy()));
     } else {
-        files.push(test_path.to_string_lossy().to_string());
+        println!("[Rust Builder] Once mode completed");
+        // Give a moment for any signal
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        // Also set up a timeout to exit after a short delay
+        // This ensures we don't hang forever
+        std::thread::sleep(std::time::Duration::from_secs(1));
     }
     
-    // Add Cargo.toml (relative to current directory)
-    let cargo_toml = current_dir.join("Cargo.toml");
-    if cargo_toml.exists() {
-        if let Ok(relative) = cargo_toml.strip_prefix(workspace) {
-            files.push(relative.to_string_lossy().to_string());
-        } else {
-            files.push("src/rust/Cargo.toml".to_string());
-        }
-    }
-    
-    // Add Cargo.lock if present
-    let cargo_lock = current_dir.join("Cargo.lock");
-    if cargo_lock.exists() {
-        if let Ok(relative) = cargo_lock.strip_prefix(workspace) {
-            files.push(relative.to_string_lossy().to_string());
-        } else {
-            files.push("src/rust/Cargo.lock".to_string());
-        }
-    }
-    
-    // Add all .rs files in the same directory as the test
-    if let Some(parent) = test_path.parent() {
-        if let Ok(entries) = fs::read_dir(parent) {
-            for entry in entries.flatten() {
-                let path = entry.path();
-                if path.extension().map(|e| e == "rs").unwrap_or(false) {
-                    if let Ok(relative) = path.strip_prefix(workspace) {
-                        files.push(relative.to_string_lossy().to_string());
-                    } else if let Ok(relative) = path.strip_prefix(&current_dir) {
-                        files.push(format!("src/rust/{}", relative.to_string_lossy()));
-                    }
-                }
-            }
-        }
-    }
-    
-    // Add src/ directory files (relative to current Rust project)
-    let src_dir = current_dir.join("src");
-    if src_dir.exists() {
-        collect_rs_files_recursive(&src_dir, workspace, &mut files);
-    }
-    
-    files
-}
-
-fn collect_rs_files_recursive(dir: &Path, workspace: &Path, files: &mut Vec<String>) {
-    if let Ok(entries) = fs::read_dir(dir) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.is_dir() {
-                collect_rs_files_recursive(&path, workspace, files);
-            } else if path.extension().map(|e| e == "rs").unwrap_or(false) {
-                // Try to get path relative to workspace
-                if let Ok(relative) = path.strip_prefix(workspace) {
-                    files.push(relative.to_string_lossy().to_string());
-                } else {
-                    // Try to get path relative to current directory
-                    let current_dir = env::current_dir().unwrap_or_else(|_| workspace.to_path_buf());
-                    if let Ok(relative) = path.strip_prefix(&current_dir) {
-                        files.push(format!("src/rust/{}", relative.to_string_lossy()));
-                    } else {
-                        // Fallback to absolute path
-                        files.push(path.to_string_lossy().to_string());
-                    }
-                }
-            }
-        }
-    }
-}
-
-fn detect_native_test(file_path: &Path) -> bool {
-    // Simple detection: check for #[test] attributes
-    if let Ok(content) = fs::read_to_string(file_path) {
-        content.contains("#[test]") || 
-        content.contains("#[cfg(test)]") ||
-        content.contains("#[tokio::test]") ||
-        content.contains("#[async_std::test]")
-    } else {
-        false
-    }
-}
-
-fn generate_go_compatible_wrapper(
-    test_file_path: &Path,
-    bundles_dir: &Path,
-    binary_name: &str,
-    framework_type: &str,
-) {
-    // Create a Go wrapper that can execute the Rust binary
-    let wrapper_path = bundles_dir.join(format!("{}_go_wrapper.go", binary_name));
-    
-    let wrapper_content = format!(r#"// Go-compatible wrapper for Rust test
-// Original test: {}
-// Framework: {}
-
-package main
-
-import (
-    "fmt"
-    "os"
-    "os/exec"
-    "path/filepath"
-    "encoding/json"
-)
-
-type TestResult struct {{
-    Name   string `json:"name"`
-    Passed bool   `json:"passed"`
-    Output string `json:"output,omitempty"`
-}}
-
-func main() {{
-    // Get the path to the Rust binary
-    exePath := filepath.Join(filepath.Dir(os.Args[0]), "{}")
-    
-    // Check if binary exists
-    if _, err := os.Stat(exePath); os.IsNotExist(err) {{
-        // Try with .exe extension
-        exePath = exePath + ".exe"
-        if _, err := os.Stat(exePath); os.IsNotExist(err) {{
-            fmt.Fprintf(os.Stderr, "Rust binary not found: %s\n", exePath)
-            os.Exit(1)
-        }}
-    }}
-    
-    // Execute the Rust binary
-    cmd := exec.Command(exePath)
-    output, err := cmd.CombinedOutput()
-    
-    result := TestResult{{
-        Name:   "{}",
-        Passed: err == nil,
-        Output: string(output),
-    }}
-    
-    // Output JSON result for Go test runner
-    jsonResult, jsonErr := json.Marshal(result)
-    if jsonErr != nil {{
-        fmt.Fprintf(os.Stderr, "Failed to marshal result: %v\n", jsonErr)
-        os.Exit(1)
-    }}
-    
-    fmt.Println(string(jsonResult))
-    
-    if err != nil {{
-        os.Exit(1)
-    }}
-}}
-"#, 
-        test_file_path.display(), 
-        framework_type,
-        binary_name,
-        binary_name
-    );
-    
-    if let Err(e) = fs::write(&wrapper_path, wrapper_content) {
-        eprintln!("  ⚠️  Failed to generate Go wrapper: {}", e);
-        return;
-    }
-    
-    println!("  ✅ Generated Go-compatible wrapper for Rust test");
-    
-    // Also create a simple Rust test runner that outputs JSON
-    let rust_runner_path = bundles_dir.join(format!("{}_runner.rs", binary_name));
-    let rust_runner_content = format!(r#"// Rust test runner for Go compatibility
-use std::process::Command;
-use std::env;
-use serde_json::json;
-
-fn main() {{
-    // Run the actual test binary
-    let current_exe = env::current_exe().expect("Failed to get current executable path");
-    let test_binary = current_exe.with_file_name("{}");
-    
-    let output = Command::new(test_binary)
-        .output()
-        .expect("Failed to execute test binary");
-    
-    // Create JSON result
-    let result = json!({{
-        "name": "{}",
-        "passed": output.status.success(),
-        "output": String::from_utf8_lossy(&output.stdout),
-        "error": String::from_utf8_lossy(&output.stderr),
-    }});
-    
-    println!("{{}}", result);
-    
-    // Exit with appropriate code
-    std::process::exit(if output.status.success() {{ 0 }} else {{ 1 }});
-}}
-"#,
-        binary_name,
-        binary_name
-    );
-    
-    if let Err(e) = fs::write(&rust_runner_path, rust_runner_content) {
-        eprintln!("  ⚠️  Failed to generate Rust runner: {}", e);
-    }
-}
-
-fn make_executable(path: &Path) -> Result<(), Box<dyn std::error::Error>> {
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        let mut perms = fs::metadata(path)?.permissions();
-        perms.set_mode(0o755);
-        fs::set_permissions(path, perms)?;
-    }
-    #[cfg(windows)]
-    {
-        // Windows doesn't have executable permissions in the same way
-        // Just ensure the file exists
-    }
     Ok(())
 }

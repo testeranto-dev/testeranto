@@ -219,27 +219,25 @@ export class VerbProxies<I extends Ibdd_in_any> {
           if (prop in target) {
             return target[prop];
           } else {
-            return (...args: any[]) => {
+            return (testCases: any[][], features: string[]) => {
               console.error(`Confirm.${prop} is not defined in test implementation`);
-              return (testCases: any[][], features: string[]) => {
-                return new (class extends BaseConfirm<I> {
-                  constructor(
-                    features: string[],
-                    testCases: any[][],
-                    confirmCB: any,
-                    initialValues: any,
-                  ) {
-                    super(features, testCases, confirmCB, initialValues);
-                  }
-                })(
-                  features,
-                  testCases,
-                  () => {
-                    throw new Error(`Confirm.${prop} is not implemented`);
-                  },
-                  undefined,
-                );
-              };
+              return new (class extends BaseConfirm<I> {
+                constructor(
+                  features: string[],
+                  testCases: any[][],
+                  confirmCB: any,
+                  initialValues: any,
+                ) {
+                  super(features, testCases, confirmCB, initialValues);
+                }
+              })(
+                features,
+                testCases,
+                () => {
+                  throw new Error(`Confirm.${prop} is not implemented`);
+                },
+                undefined,
+              );
             };
           }
         }
@@ -258,24 +256,10 @@ export class VerbProxies<I extends Ibdd_in_any> {
           } else {
             return (...args: any[]) => {
               console.error(`Value.${prop} is not defined in test implementation`);
-              return (features: string[], tableRows: any[][], confirmCB: any, initialValues: any) => {
-                return new (class extends BaseValue<I> {
-                  constructor(
-                    features: string[],
-                    tableRows: any[][],
-                    confirmCB: any,
-                    initialValues: any,
-                  ) {
-                    super(features, tableRows, confirmCB, initialValues);
-                  }
-                })(
-                  features,
-                  tableRows,
-                  () => {
-                    throw new Error(`Value.${prop} is not implemented`);
-                  },
-                  initialValues,
-                );
+              // For TDT, Value.of should return input data, not a BaseValue
+              // The BaseValue is created by Confirm
+              return () => {
+                throw new Error(`Value.${prop} is not implemented`);
               };
             };
           }

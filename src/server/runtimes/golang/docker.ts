@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import type { ITesterantoConfig } from "../../../Types";
+import type { IConfigSlice } from "../../types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the golang runtime file as text
@@ -20,9 +21,10 @@ export const golangDockerComposeFile = (
   container_name: string,
   projectConfigPath: string,
   golangConfigPath: string,
-  testName: string
+  slice: IConfigSlice
 ) => {
-  const tests = config.runtimes[testName]?.tests || [];
+  // const tests = config.runtimes[testName]?.tests || [];
+  // const outputs = config.runtimes[testName]?.outputs || [];
 
   // For golang builder service, we need a proper build configuration
   const service: any = {
@@ -42,16 +44,20 @@ export const golangDockerComposeFile = (
       // `${process.cwd()}/dist:/workspace/dist`,
       `${process.cwd()}/testeranto:/workspace/testeranto`,
     ],
-    command: golangBuildCommand(projectConfigPath, golangConfigPath, testName, tests),
+    command: golangBuildCommand(projectConfigPath, golangConfigPath, slice),
     networks: ["allTests_network"],
   };
 
   return service;
 };
 
-export const golangBuildCommand = (projectConfigPath: string, golangConfigPath: string, testName: string, tests: string[]) => {
-  // MODE is now passed via environment in the service configuration
-  return `go run /workspace/testeranto/golang_runtime.go /workspace/${projectConfigPath} /workspace/${golangConfigPath} ${testName} ${tests.join(' ')}`
+export const golangBuildCommand = (
+  projectConfigPath: string,
+  golangConfigPath: string,
+  slice: IConfigSlice
+) => {
+  const configJson = JSON.stringify(slice);
+  return `go run /workspace/testeranto/golang_runtime.go /workspace/${projectConfigPath} /workspace/${golangConfigPath} '${configJson}'`
 }
 
 export const golangBddCommand = (fpath: string, golangConfigPath: string, configKey: string) => {

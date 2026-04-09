@@ -1,0 +1,1 @@
+AiderProcessTreeDataProvider is a vscode component for interacting with graph data via the slice endpoints. It should show a list of aider processes, and when clicking upon one, it opens a terminal tab showing that process, interactively. the user will need to be able to interact with the aider process.

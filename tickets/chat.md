@@ -1,46 +1,11 @@
 ---
-status: in progress
+status: doing
+apiBreaking: true
 ---
 
-agents need to be able to collaborate. we need to create the endpoints to handle this. We probably don't need to over-complicate this, unless there is a good reason make this a single new endpoint.
+our previous attempts to make a chat system are now (mostly) deprecated. 
 
-`localhost:3000/~/chat?agent=...&message=...`
+Our new strategy: 
+the server reads the output from the aider processes and streams that to the chat UI. It breaks each message up by line of '─' chars which denote blocks in aider. The server will need to actively filter the output of each aider process to form these blocks. Make this generic because we'll need to add user interactivity too. Aider sometimes asks for user input so ( for instance, if the llm runs out of context, it needs a way to be reset, approve of urls, etc) Once a message is received, it needs to be sent to the other agents via the stdin. As the LLM send output, the server should transmit the live changes to the chat app (not the other agents)
 
-this should be broadcast back to all agents 
-`${AGENT} said: 'something to say'`
-
-## Implementation Details:
-- Endpoint: `GET /~/chat?agent=...&message=...`
-- Validates agent and message parameters
-- Broadcasts to all WebSocket clients with type 'chat'
-- Returns JSON response with success/error status
-- Implemented in `Server_HTTP_Routes.ts` (lines 130-165)
-
-## Vscode
-
-We need to add a provider/section for the chat thread between the user and agents. This will be a standard chat thread with multiple participants.
-
-# Chat System
-
-## Problem
-Agents need to send/receive chat messages but aren't HTTP servers.
-
-## Solution
-1. **Single file**: `testeranto/agents/chat_slice.json`
-2. **All agents watch** this file
-3. **Post messages** via `/~/chat?agent=NAME&message=TEXT`
-4. **Server writes** all messages to the file
-5. **Agents see** file change, read full history
-6. **Agents respond** by posting to `/~/chat`
-
-## Flow
-User/Agent → POST /~/chat → Graph node → Write file → All agents watch → All agents are informed -> Read → Respond
-
-## Files
-- `chat_slice.json`: All messages
-- Chat nodes in graph: `type: 'chat_message'`
-
-Note: we need 
-1) a url for getting messages out of the agent
-2) a history file for getting messages into the agent
-3) A way for the server to alert the agent that the message file has been updated. it will need to hijack the input.
+We no longer need the POST endpoint for chat. We no longer need to store chat in the graph. The server is responsible for capturing these logs and transmitting them to the other agents and the chat app. 

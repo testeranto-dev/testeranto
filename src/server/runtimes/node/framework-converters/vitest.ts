@@ -1,5 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as parser from '@babel/parser';
+import traverse from '@babel/traverse';
 
 export const VitestConverter = {
   name: 'vitest',
@@ -9,15 +11,30 @@ export const VitestConverter = {
     
     const content = fs.readFileSync(filePath, 'utf-8');
     
-    // Check for Vitest imports
-    const hasVitestImport = content.includes('vitest') || 
-                           content.includes('@vitest/');
-    
-    // Check for Vitest patterns
-    const hasVitestPatterns = content.includes('import { test') && 
-                             content.includes('from \'vitest\'');
-    
-    return hasVitestImport || hasVitestPatterns;
+    try {
+      const ast = parser.parse(content, {
+        sourceType: 'module',
+        plugins: ['typescript', 'jsx']
+      });
+      
+      let hasVitestImport = false;
+      
+      traverse(ast, {
+        ImportDeclaration(path) {
+          const source = path.node.source.value;
+          if (typeof source === 'string') {
+            if (source === 'vitest' || source.startsWith('@vitest/')) {
+              hasVitestImport = true;
+            }
+          }
+        }
+      });
+      
+      return hasVitestImport;
+      
+    } catch (error) {
+      return false;
+    }
   },
   
   generateWrapper(

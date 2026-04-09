@@ -1,0 +1,1881 @@
+{
+  "failed": true,
+  "fails": 14,
+  "artifacts": [],
+  "features": [
+    "Test generating feature tree with feature nodes",
+    "Test feature tree with dependency edges",
+    "Test feature tree with block edges",
+    "Test feature tree with multiple edge types",
+    "Test feature tree with empty graph",
+    "Test feature tree with no feature nodes",
+    "Test agent slice with missing agent configuration",
+    "Test agent slice with invalid agent function",
+    "Test agent slice with valid agent configuration",
+    "Test agent slice returns correct nodes",
+    "Test handling of circular dependencies in graph",
+    "Test handling of self-referencing nodes",
+    "Test error handling for malformed graph data",
+    "Test performance with large graph data",
+    "Test handling of duplicate feature names",
+    "Test processing of mixed edge types",
+    "Test handling of invalid edge attributes",
+    "Test agent slice with agent having no assigned nodes",
+    "Test agent slice with agent having all nodes",
+    "Test handling of null values in graph data",
+    "Test handling of undefined properties in graph data",
+    "Test processing of deeply nested dependencies",
+    "Test resolution of conflicting edge types",
+    "Test error handling for empty agent name",
+    "Test handling of special characters in agent name",
+    "Test graph data consistency validation",
+    "Test adding node and edge then generating tree",
+    "Test stateful node addition and attribute update",
+    "Test clear graph and rebuild with new structure",
+    "Test caching behavior with invalidation",
+    "Test batch operations and graph traversal",
+    "Test cloning, modifying, merging, and exporting",
+    "Test sequential add, connect, disconnect, and remove operations",
+    "Test import, process, and validate graph",
+    "Test complex stateful operations maintaining invariants",
+    "Test rollback and recovery scenarios",
+    "Test Describe-It pattern for Server_GraphManagerCore",
+    "Test table-driven testing for addition",
+    "Test graph validation performance metrics"
+  ],
+  "tests": 39,
+  "runTimeTests": 39,
+  "testJob": {
+    "name": "CombinedResults"
+  },
+  "timestamp": 1775702477615,
+  "individualResults": [
+    {
+      "index": 0,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test generating feature tree with feature nodes"
+      ],
+      "error": null,
+      "stepName": "step_0",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_0",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test generating feature tree with feature nodes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveTreeStructure: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldHaveFeatureNodes: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test feature tree with dependency edges"
+      ],
+      "error": null,
+      "stepName": "step_1",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_1",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test feature tree with dependency edges"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveDependencies: 1",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test feature tree with block edges"
+      ],
+      "error": null,
+      "stepName": "step_2",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_2",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test feature tree with block edges"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveBlocks: 1",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test feature tree with multiple edge types"
+      ],
+      "error": null,
+      "stepName": "step_3",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_3",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test feature tree with multiple edge types"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveMultipleEdgeTypes: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test feature tree with empty graph"
+      ],
+      "error": null,
+      "stepName": "step_4",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_4",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test feature tree with empty graph"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldReturnEmptyTreeForEmptyGraph: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test feature tree with no feature nodes"
+      ],
+      "error": null,
+      "stepName": "step_5",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_5",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test feature tree with no feature nodes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldReturnEmptyTreeForNoFeatures: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test agent slice with missing agent configuration"
+      ],
+      "error": null,
+      "stepName": "step_6",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_6",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test agent slice with missing agent configuration"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getAgentSlice: agent1",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldThrowForMissingAgent: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test agent slice with invalid agent function"
+      ],
+      "error": null,
+      "stepName": "step_7",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_7",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test agent slice with invalid agent function"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getAgentSlice: invalidAgent",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldThrowForInvalidAgent: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test agent slice with valid agent configuration"
+      ],
+      "error": null,
+      "stepName": "step_8",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_8",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test agent slice with valid agent configuration"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getAgentSliceWithValidAgent: agent1",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldReturnSliceForValidAgent: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test agent slice returns correct nodes"
+      ],
+      "error": null,
+      "stepName": "step_9",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_9",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test agent slice returns correct nodes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getAgentSliceWithValidAgent: agent2",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldReturnSliceWithNodesForAgent2: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 10,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of circular dependencies in graph"
+      ],
+      "error": null,
+      "stepName": "step_10",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_10",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of circular dependencies in graph"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldDetectCircularDependencies: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 11,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of self-referencing nodes"
+      ],
+      "error": null,
+      "stepName": "step_11",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_11",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of self-referencing nodes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleSelfReferences: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 12,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test error handling for malformed graph data"
+      ],
+      "error": null,
+      "stepName": "step_12",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_12",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test error handling for malformed graph data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTreeWithInvalidInput: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldThrowForMalformedData: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 13,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test performance with large graph data"
+      ],
+      "error": null,
+      "stepName": "step_13",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_13",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test performance with large graph data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTreeWithPerformanceThreshold: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleLargeGraphWithinTimeLimit: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 14,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of duplicate feature names"
+      ],
+      "error": null,
+      "stepName": "step_14",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_14",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of duplicate feature names"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleDuplicateNamesGracefully: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 15,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test processing of mixed edge types"
+      ],
+      "error": null,
+      "stepName": "step_15",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_15",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test processing of mixed edge types"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldProcessMixedEdgeTypesCorrectly: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 16,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of invalid edge attributes"
+      ],
+      "error": null,
+      "stepName": "step_16",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_16",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of invalid edge attributes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleInvalidEdgeAttributes: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 17,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test agent slice with agent having no assigned nodes"
+      ],
+      "error": null,
+      "stepName": "step_17",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_17",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test agent slice with agent having no assigned nodes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getAgentSliceWithValidAgent: emptyAgent",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldReturnEmptySliceForAgentWithNoNodes: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 18,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test agent slice with agent having all nodes"
+      ],
+      "error": null,
+      "stepName": "step_18",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_18",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test agent slice with agent having all nodes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getAgentSliceWithValidAgent: fullAgent",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldReturnCompleteGraphForAgentWithAllNodes: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 19,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of null values in graph data"
+      ],
+      "error": null,
+      "stepName": "step_19",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_19",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of null values in graph data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleNullValues: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 20,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of undefined properties in graph data"
+      ],
+      "error": null,
+      "stepName": "step_20",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_20",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of undefined properties in graph data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleUndefinedProperties: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 21,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test processing of deeply nested dependencies"
+      ],
+      "error": null,
+      "stepName": "step_21",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_21",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test processing of deeply nested dependencies"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldProcessDeepNesting: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 22,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test resolution of conflicting edge types"
+      ],
+      "error": null,
+      "stepName": "step_22",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_22",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test resolution of conflicting edge types"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldResolveConflictingEdges: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 23,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test error handling for empty agent name"
+      ],
+      "error": null,
+      "stepName": "step_23",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_23",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test error handling for empty agent name"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getAgentSliceWithEmptyString: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldThrowForEmptyAgentName: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 24,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of special characters in agent name"
+      ],
+      "error": null,
+      "stepName": "step_24",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_24",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of special characters in agent name"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "getAgentSliceWithSpecialCharacters: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleSpecialCharactersInAgentName: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 25,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test graph data consistency validation"
+      ],
+      "error": null,
+      "stepName": "step_25",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_25",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test graph data consistency validation"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "validateGraphConsistency: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldMaintainGraphConsistency: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 26,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "Test adding node and edge then generating tree"
+      ],
+      "error": {
+        "message": "expected 2 to equal 3",
+        "stack": "AssertionError: expected 2 to equal 3\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:624:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_26",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_26",
+        "error": [
+          {
+            "message": "expected 2 to equal 3",
+            "actual": 2,
+            "expected": 3,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected 2 to equal 3\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:624:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+          },
+          "AssertionError: expected 2 to equal 3\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:624:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test adding node and edge then generating tree"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "whens": [
+          {
+            "name": "addNodeToGraph: newNode,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addEdgeBetweenNodes: node1,newNode,dependency",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldAddNodeSuccessfully: newNode",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldAddEdgeSuccessfully: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldHaveFeatureNodes: 3",
+            "status": false,
+            "error": "AssertionError: expected 2 to equal 3"
+          }
+        ]
+      }
+    },
+    {
+      "index": 27,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "Test stateful node addition and attribute update"
+      ],
+      "error": {
+        "message": "expected null to be an object",
+        "stack": "AssertionError: expected null to be an object\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:683:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_27",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_27",
+        "error": [
+          {
+            "message": "expected null to be an object",
+            "actual": null,
+            "showDiff": false,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected null to be an object\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:683:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+          },
+          "AssertionError: expected null to be an object\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:683:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test stateful node addition and attribute update"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "whens": [
+          {
+            "name": "addNodeToGraph: nodeA,agent",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "updateNodeAttributes: nodeA,[object Object]",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getAgentSlice: agent1",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldAddNodeSuccessfully: nodeA",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldUpdateNodeAttributes: nodeA",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldReturnSliceForValidAgent: ",
+            "status": false,
+            "error": "AssertionError: expected null to be an object"
+          }
+        ]
+      }
+    },
+    {
+      "index": 28,
+      "failed": true,
+      "fails": 3,
+      "features": [
+        "Test clear graph and rebuild with new structure"
+      ],
+      "error": {
+        "message": "Cannot read properties of undefined (reading 'parents')",
+        "stack": "TypeError: Cannot read properties of undefined (reading 'parents')\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:631:31)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "TypeError"
+      },
+      "stepName": "step_28",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_28",
+        "error": [
+          {},
+          "TypeError: Cannot read properties of undefined (reading 'parents')\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:631:31)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test clear graph and rebuild with new structure"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 3,
+        "whens": [
+          {
+            "name": "clearGraph: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addNodeToGraph: root,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addNodeToGraph: child,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addEdgeBetweenNodes: root,child,dependency",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldClearGraph: ",
+            "status": false,
+            "error": "AssertionError: Graph should have no nodes after clearing: expected [ …(2) ] to be empty"
+          },
+          {
+            "name": "shouldHaveFeatureNodes: 2",
+            "status": false,
+            "error": "AssertionError: expected +0 to equal 2"
+          },
+          {
+            "name": "shouldHaveDependencies: 1",
+            "status": false,
+            "error": "TypeError: Cannot read properties of undefined (reading 'parents')"
+          }
+        ]
+      }
+    },
+    {
+      "index": 29,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "Test caching behavior with invalidation"
+      ],
+      "error": {
+        "message": "Feature tree should be cached: expected false to be true",
+        "stack": "AssertionError: Feature tree should be cached: expected false to be true\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:832:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_29",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_29",
+        "error": [
+          {
+            "message": "Feature tree should be cached: expected false to be true",
+            "actual": false,
+            "expected": true,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: Feature tree should be cached: expected false to be true\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:832:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+          },
+          "AssertionError: Feature tree should be cached: expected false to be true\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:832:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test caching behavior with invalidation"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "whens": [
+          {
+            "name": "generateAndCacheFeatureTree: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getCachedFeatureTree: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "invalidateCache: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getCachedFeatureTree: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldCacheFeatureTree: ",
+            "status": false,
+            "error": "AssertionError: Feature tree should be cached: expected false to be true"
+          },
+          {
+            "name": "shouldRetrieveCachedTree: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldInvalidateCache: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 30,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test batch operations and graph traversal"
+      ],
+      "error": null,
+      "stepName": "step_30",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_30",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test batch operations and graph traversal"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "batchUpdateNodes: node1,node2,node3",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "traverseGraphFromNode: node1",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "findShortestPath: node1,node3",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldBatchUpdateNodes: 3",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldTraverseGraph: 3",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldFindShortestPath: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 31,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test cloning, modifying, merging, and exporting"
+      ],
+      "error": null,
+      "stepName": "step_31",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_31",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test cloning, modifying, merging, and exporting"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "cloneGraph: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addNodeToGraph: extraNode,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "mergeGraphs: [object Object]",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "exportGraphToJson: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldCloneGraph: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldAddNodeSuccessfully: extraNode",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldMergeGraphs: 1",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldExportGraph: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 32,
+      "failed": true,
+      "fails": 2,
+      "features": [
+        "Test sequential add, connect, disconnect, and remove operations"
+      ],
+      "error": {
+        "message": "Edge from nodeX to nodeY of type block should exist: expected false to be true",
+        "stack": "AssertionError: Edge from nodeX to nodeY of type block should exist: expected false to be true\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:798:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_32",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_32",
+        "error": [
+          {
+            "message": "Edge from nodeX to nodeY of type block should exist: expected false to be true",
+            "actual": false,
+            "expected": true,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: Edge from nodeX to nodeY of type block should exist: expected false to be true\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:798:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+          },
+          "AssertionError: Edge from nodeX to nodeY of type block should exist: expected false to be true\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:798:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test sequential add, connect, disconnect, and remove operations"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 2,
+        "whens": [
+          {
+            "name": "addNodeToGraph: nodeX,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addNodeToGraph: nodeY,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addEdgeBetweenNodes: nodeX,nodeY,block",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "removeEdgeBetweenNodes: nodeX,nodeY",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "removeNodeFromGraph: nodeX",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldAddNodeSuccessfully: nodeX",
+            "status": false,
+            "error": "AssertionError: Node nodeX should exist in graph: expected false to be true"
+          },
+          {
+            "name": "shouldAddNodeSuccessfully: nodeY",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldAddEdgeSuccessfully: ",
+            "status": false,
+            "error": "AssertionError: Edge from nodeX to nodeY of type block should exist: expected false to be true"
+          },
+          {
+            "name": "shouldRemoveEdgeSuccessfully: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldRemoveNodeSuccessfully: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 33,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "Test import, process, and validate graph"
+      ],
+      "error": {
+        "message": "expected undefined to not equal undefined",
+        "stack": "AssertionError: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:617:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_33",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_33",
+        "error": [
+          {
+            "message": "expected undefined to not equal undefined",
+            "showDiff": false,
+            "operator": "notStrictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:617:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+          },
+          "AssertionError: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:617:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs:1269:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test import, process, and validate graph"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "whens": [
+          {
+            "name": "importGraphFromJson: {\"nodes\": [\"imported\"], \"edges\": []}",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "validateGraphConsistency: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldImportGraph: 1",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldHaveTreeStructure: ",
+            "status": false,
+            "error": "AssertionError: expected undefined to not equal undefined"
+          },
+          {
+            "name": "shouldMaintainGraphConsistency: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 34,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test complex stateful operations maintaining invariants"
+      ],
+      "error": null,
+      "stepName": "step_34",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_34",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test complex stateful operations maintaining invariants"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "addNodeToGraph: test1,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addNodeToGraph: test2,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addEdgeBetweenNodes: test1,test2,dependency",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "updateNodeAttributes: test1,[object Object]",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "generateFeatureTree: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getAgentSliceWithValidAgent: agent1",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldMaintainStateAfterMultipleOperations: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldHandleSequentialUpdates: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldPreserveGraphInvariants: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 35,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test rollback and recovery scenarios"
+      ],
+      "error": null,
+      "stepName": "step_35",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_35",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test rollback and recovery scenarios"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "addNodeToGraph: temp,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "removeNodeFromGraph: temp",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "addNodeToGraph: temp,feature",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "updateNodeAttributes: temp,[object Object]",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "clearGraph: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleSequentialUpdates: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldRollbackFailedOperation: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldClearGraph: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 36,
+      "failed": true,
+      "fails": 3,
+      "features": [
+        "Test Describe-It pattern for Server_GraphManagerCore"
+      ],
+      "error": {
+        "message": "It.shouldEnsureDataIntegrity is not implemented",
+        "stack": "Error: It.shouldEnsureDataIntegrity is not implemented\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:856:23)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_36",
+      "stepType": "BaseDescribe",
+      "testJob": {
+        "key": "step_36",
+        "its": [
+          {
+            "name": "shouldGenerateFeatureTree: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldHandleAgentSlices: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldHandleEdgeCases: ",
+            "status": false,
+            "error": "Error: It.shouldHandleEdgeCases is not implemented\nError: It.shouldHandleEdgeCases is not implemented\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:856:23)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+            "artifacts": []
+          },
+          {
+            "name": "shouldMaintainPerformance: ",
+            "status": false,
+            "error": "Error: It.shouldMaintainPerformance is not implemented\nError: It.shouldMaintainPerformance is not implemented\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:856:23)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+            "artifacts": []
+          },
+          {
+            "name": "shouldEnsureDataIntegrity: ",
+            "status": false,
+            "error": "Error: It.shouldEnsureDataIntegrity is not implemented\nError: It.shouldEnsureDataIntegrity is not implemented\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:856:23)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+            "artifacts": []
+          }
+        ],
+        "error": [
+          "It.shouldEnsureDataIntegrity is not implemented",
+          "Error: It.shouldEnsureDataIntegrity is not implemented\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:856:23)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test Describe-It pattern for Server_GraphManagerCore"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 3
+      }
+    },
+    {
+      "index": 37,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test table-driven testing for addition"
+      ],
+      "error": null,
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test table-driven testing for addition"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "confirms": [
+          {
+            "index": 0,
+            "input": [
+              1,
+              2
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 1,
+            "input": [
+              4,
+              5
+            ],
+            "test": "Test function"
+          },
+          {
+            "index": 2,
+            "input": [
+              0,
+              0
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 3,
+            "input": [
+              -1,
+              1
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 4,
+            "input": [
+              1000,
+              2000
+            ],
+            "test": "Test function"
+          }
+        ]
+      }
+    },
+    {
+      "index": 38,
+      "failed": true,
+      "fails": 2,
+      "features": [
+        "Test graph validation performance metrics"
+      ],
+      "error": {
+        "message": "Value.graphSize is not implemented",
+        "stack": "Error: Value.graphSize is not implemented\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:905:23\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:546:23)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1059:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:42)",
+        "name": "Error"
+      },
+      "stepName": "confirm",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "confirm",
+        "error": [
+          {},
+          "Error: Value.graphSize is not implemented\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:905:23\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:546:23)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1059:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:42)"
+        ],
+        "failed": true,
+        "features": [
+          "Test graph validation performance metrics"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 2,
+        "confirms": [
+          {
+            "index": 0,
+            "input": "Error: Value.graphSize is not implemented",
+            "test": "beLessThan: 5000"
+          },
+          {
+            "index": 1,
+            "input": "Error: Value.graphSize is not implemented",
+            "test": "beWithinRange: 800,1200"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 39,
+    "passed": 25,
+    "failed": 14,
+    "successRate": "64.10%"
+  }
+}

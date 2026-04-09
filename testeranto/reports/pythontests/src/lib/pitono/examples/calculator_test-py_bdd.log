@@ -1,0 +1,26 @@
+=== Log started at 2026-04-08T20:50:41.053Z for service pythontests-src_lib_pitono_examples_calculator_test-py-bdd (runtime: python) ===
+=== Container ID: 018f337729b38b430dc3ae7b6c939c3a99a4f6c0d89504619022aeea9317879d ===
+=== Test: src/lib/pitono/examples/calculator_test.py ===
+=== Config Key: pythontests ===
+
+=== ALL LOGS (stdout + stderr) ===
+Traceback (most recent call last):
+  File "/workspace/testeranto/bundles/pythontests/src/lib/pitono/examples/calculator_test.py", line 40, in <module>
+    exec(code, {'__name__': '__main__', '__file__': r'/workspace/src/lib/pitono/examples/calculator_test.py'})
+  File "<string>", line 59
+    return given_fluent("calculator for fluent test", Calculator) \
+        .when("adding numbers", lambda calc, x, y: calc.add(x, y), 3, 4) \
+        .then("result is correct", lambda calc, expected: assert calc.get_result() == expected, 7) \
+                                                          ^^^^^^
+SyntaxError: invalid syntax
+Traceback (most recent call last):
+  File "/workspace/testeranto/bundles/pythontests/src/lib/pitono/examples/calculator_test.py", line 40, in <module>
+    exec(code, {'__name__': '__main__', '__file__': r'/workspace/src/lib/pitono/examples/calculator_test.py'})
+  File "<string>", line 59
+    return given_fluent("calculator for fluent test", Calculator) \
+        .when("adding numbers", lambda calc, x, y: calc.add(x, y), 3, 4) \
+        .then("result is correct", lambda calc, expected: assert calc.get_result() == expected, 7) \
+                                                          ^^^^^^
+SyntaxError: invalid syntax
+
+=== Log captured at 2026-04-08T20:50:41.325Z (container status: exited, exit code: 1) ===

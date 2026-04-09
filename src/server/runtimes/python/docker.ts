@@ -6,6 +6,7 @@ import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 import pythonContent from "./python.py" with { type: "text" };
 // Import the native detection module
 import nativeDetectionContent from "./native_detection.py" with { type: "text" };
+import type { IConfigSlice } from "../../types";
 
 // Write the python file to a location that will be mounted in the container
 const pythonScriptPath = join(process.cwd(), "testeranto", "python_runtime.py");
@@ -20,9 +21,10 @@ export const pythonDockerComposeFile = (
   container_name: string,
   projectConfigPath: string,
   pythonConfigPath: string,
-  testName: string,
+  slice: IConfigSlice
 ) => {
-  const tests = config.runtimes[testName]?.tests || [];
+  // const tests = config.runtimes[testName]?.tests || [];
+  // const outputs = config.runtimes[testName]?.outputs || [];
 
   // For python builder service, we need a proper build configuration
   const service: any = {
@@ -45,8 +47,7 @@ export const pythonDockerComposeFile = (
     command: pythonBuildCommand(
       projectConfigPath,
       pythonConfigPath,
-      testName,
-      tests,
+      slice
     ),
     networks: ["allTests_network"],
   };
@@ -57,12 +58,10 @@ export const pythonDockerComposeFile = (
 export const pythonBuildCommand = (
   projectConfigPath: string,
   pythonConfigPath: string,
-  testName: string,
-  tests: string[],
+  slice: IConfigSlice,
 ) => {
-  // MODE is now passed via environment in the service configuration
-  // Ensure native detection module is available
-  return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath} ${testName} ${tests.join(" ")}`;
+  const configJson = JSON.stringify(slice);
+  return `python /workspace/testeranto/python_runtime.py /workspace/${projectConfigPath} /workspace/${pythonConfigPath}  '${configJson}'`;
 };
 
 export const pythonBddCommand = (

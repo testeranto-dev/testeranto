@@ -1,5 +1,5 @@
-=== Log started at 2026-04-07T21:19:19.460Z for service webtests-builder (runtime: web) ===
-=== Container ID: 17edf19d8dfc80be372aec846f8232d718de76d3055fcc72076850d435f4145b ===
+=== Log started at 2026-04-09T02:40:24.240Z for service webtests-builder (runtime: web) ===
+=== Container ID: e1801f9bd0655a975e4b27002e182bdc539fd1b131c4c5f0731a137bf19643bb ===
 === Test: N/A ===
 === Config Key: webtests ===
 
@@ -8,40 +8,29 @@ yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.242.0: The engine "bun" appears to be invalid.
-$ /workspace/node_modules/.bin/tsx /workspace/testeranto/web_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/web/web.ts webtests
+$ /workspace/node_modules/.bin/tsx /workspace/testeranto/web_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/web/web.ts '{"name":"webtests","tests":[],"outputs":[]}'
 [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
-[WEB BUILDER] nodeConfig:  /workspace/testeranto/runtimes/web/web.ts
+[WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
 [WEB BUILDER] testName:  webtests
 [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
 [WEB BUILDER] CWD: /workspace
-WEB BUILDER: Error importing config: /workspace/testeranto/runtimes/web/web.ts Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './src/vscode/defaultViews/index.ts' is not defined by "exports" in /workspace/package.json imported from /workspace/testeranto/testeranto.ts
-    at exportsNotFound (node:internal/modules/esm/resolve:322:10)
-    at packageExportsResolve (node:internal/modules/esm/resolve:670:9)
-    at packageResolve (node:internal/modules/esm/resolve:831:14)
-    at moduleResolve (node:internal/modules/esm/resolve:946:18)
-    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
-    at nextResolve (node:internal/modules/esm/hooks:864:28)
-    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755922:2:3744)
-    at resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755922:2:4243)
-    at resolveTsPaths (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755922:2:4984)
-    at resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755922:2:5361) {
-  code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
-}
-[WEB BUILDER] Process exiting
-Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './src/vscode/defaultViews/index.ts' is not defined by "exports" in /workspace/package.json imported from /workspace/testeranto/testeranto.ts
-    at exportsNotFound (node:internal/modules/esm/resolve:322:10)
-    at packageExportsResolve (node:internal/modules/esm/resolve:670:9)
-    at packageResolve (node:internal/modules/esm/resolve:831:14)
-    at moduleResolve (node:internal/modules/esm/resolve:946:18)
-    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
-    at nextResolve (node:internal/modules/esm/hooks:864:28)
-    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755922:2:3744)
-    at resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755922:2:4243)
-    at resolveTsPaths (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755922:2:4984)
-    at resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596755922:2:5361) {
-  code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
-}
-error Command failed with exit code 1.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+[WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[WEB BUILDER] Web config loaded successfully: [ 'loaders' ]
+[WEB BUILDER] is now bundling: webtests
+[WEB BUILDER] Entry points: 
+[WEB BUILDER] Running in dev mode - starting watch mode
+web > build ended with 0 errors
+[web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER] Metafile updated
+[WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.5, port 8000, /workspace
+[WEB BUILDER] Watch mode active - waiting for file changes...
+[WEB BUILDER] Using onEnd plugin for rebuild detection
+Chrome is a separate service, not launched in builder
+web > build ended with 0 errors
+[web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER] Metafile updated
+[WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
 
-=== Log captured at 2026-04-07T21:19:21.043Z (container status: exited, exit code: 1) ===
+=== Log captured at 2026-04-09T02:40:46.761Z (container status: running) ===

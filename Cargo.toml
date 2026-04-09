@@ -1,13 +1,20 @@
 [package]
 name = "rust-server-runtime"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
+rust-version = "1.77"
+autobins = false
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 md5 = "0.8.0"
 rusto = { path = "src/lib/rusto", version = "0.1.22" }
+ctrlc = "3.4"
+
+[[bin]]
+name = "rust-builder"
+path = "src/server/runtimes/rust/main.rs"
 
 [lib]
 name = "rust_server_runtime"

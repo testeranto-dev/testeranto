@@ -1,307 +1,38 @@
 {
   "failed": true,
-  "fails": 6,
+  "fails": 1,
   "artifacts": [],
-  "features": [
-    "./Readme.md"
-  ],
-  "tests": 6,
-  "runTimeTests": 6,
+  "features": [],
+  "tests": 1,
+  "runTimeTests": 1,
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1775596671582,
+  "timestamp": 1775702477080,
   "individualResults": [
     {
       "index": 0,
       "failed": true,
-      "fails": 2,
-      "features": [
-        "./Readme.md"
-      ],
-      "error": {
-        "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
-        "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)",
-        "name": "AssertionError"
-      },
-      "stepName": "confirm",
-      "stepType": "BaseConfirm",
-      "testJob": {
-        "key": "confirm",
-        "error": [
-          {
-            "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
-            "name": "AssertionError",
-            "ok": false,
-            "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)"
-          },
-          "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:179:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)"
-        ],
-        "failed": true,
-        "features": [
-          "./Readme.md"
-        ],
-        "artifacts": [],
-        "status": true,
-        "fails": 2,
-        "confirms": [
-          {
-            "index": 0,
-            "input": [
-              1,
-              1
-            ],
-            "test": "beEqualTo: 2222"
-          },
-          {
-            "index": 1,
-            "input": [
-              2,
-              3
-            ],
-            "test": "beGreaterThan: 4"
-          }
-        ]
-      }
-    },
-    {
-      "index": 1,
-      "failed": true,
       "fails": 1,
-      "features": [
-        "./Readme.md"
-      ],
+      "features": [],
       "error": {
-        "message": "Describe.another simple calculator is not implemented",
-        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:978:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:369:33)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1181:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)",
-        "name": "Error"
+        "message": "Confirm.addition(...) is not a function",
+        "stack": "TypeError: Confirm.addition(...) is not a function\n    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:281:26)\n    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1802:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:329:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+        "name": "TypeError"
       },
-      "stepName": "step_1",
-      "stepType": "BaseDescribe",
+      "stepName": "Step_0",
+      "stepType": "SpecificationError",
       "testJob": {
-        "key": "step_1",
-        "its": [
-          {
-            "name": "can save 1 memory: ",
-            "error": null,
-            "artifacts": []
-          },
-          {
-            "name": "can save 2 memories: ",
-            "error": null,
-            "artifacts": []
-          }
-        ],
-        "error": [
-          "Describe.another simple calculator is not implemented",
-          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:978:27)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:369:33)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1181:31)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)"
-        ],
-        "failed": true,
-        "features": [
-          "./Readme.md"
-        ],
-        "artifacts": [],
-        "status": false,
-        "fails": 1
-      }
-    },
-    {
-      "index": 2,
-      "failed": false,
-      "fails": 0,
-      "features": [
-        "./Readme.md"
-      ],
-      "error": null,
-      "stepName": "step_2",
-      "stepType": "Unknown",
-      "testJob": {
-        "key": "step_2",
-        "error": null,
-        "failed": false,
-        "features": [
-          "./Readme.md"
-        ],
-        "artifacts": [],
-        "status": true,
-        "fails": 0,
-        "whens": [
-          {
-            "name": "press: 5",
-            "status": true,
-            "error": null
-          },
-          {
-            "name": "press: +",
-            "status": true,
-            "error": null
-          },
-          {
-            "name": "press: 3",
-            "status": true,
-            "error": null
-          },
-          {
-            "name": "enter: ",
-            "status": true,
-            "error": null
-          }
-        ],
-        "thens": [
-          {
-            "name": "result: 8",
-            "status": true,
-            "error": null
-          }
-        ]
-      }
-    },
-    {
-      "index": 3,
-      "failed": true,
-      "fails": 1,
-      "features": [
-        "./Readme.md"
-      ],
-      "error": {
-        "message": "expected [Function] to equal 3",
-        "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)",
-        "name": "AssertionError"
-      },
-      "stepName": "confirm",
-      "stepType": "BaseConfirm",
-      "testJob": {
-        "key": "confirm",
-        "error": [
-          {
-            "message": "expected [Function] to equal 3",
-            "expected": 3,
-            "showDiff": true,
-            "operator": "strictEqual",
-            "name": "AssertionError",
-            "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)"
-          },
-          "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)"
-        ],
-        "failed": true,
-        "features": [
-          "./Readme.md"
-        ],
-        "artifacts": [],
-        "status": true,
-        "fails": 1,
-        "confirms": [
-          {
-            "index": 0,
-            "input": [
-              3,
-              3
-            ],
-            "test": "beEqualTo: 3"
-          }
-        ]
-      }
-    },
-    {
-      "index": 4,
-      "failed": true,
-      "fails": 1,
-      "features": [
-        "./Readme.md"
-      ],
-      "error": {
-        "message": "expected [Function] to equal 32",
-        "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)",
-        "name": "AssertionError"
-      },
-      "stepName": "confirm",
-      "stepType": "BaseConfirm",
-      "testJob": {
-        "key": "confirm",
-        "error": [
-          {
-            "message": "expected [Function] to equal 32",
-            "expected": 32,
-            "showDiff": true,
-            "operator": "strictEqual",
-            "name": "AssertionError",
-            "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)"
-          },
-          "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)"
-        ],
-        "failed": true,
-        "features": [
-          "./Readme.md"
-        ],
-        "artifacts": [],
-        "status": true,
-        "fails": 1,
-        "confirms": [
-          {
-            "index": 0,
-            "input": [
-              3,
-              32
-            ],
-            "test": "beEqualTo: 32"
-          }
-        ]
-      }
-    },
-    {
-      "index": 5,
-      "failed": true,
-      "fails": 1,
-      "features": [
-        "./Readme.md"
-      ],
-      "error": {
-        "message": "expected [Function] to equal 332",
-        "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)",
-        "name": "AssertionError"
-      },
-      "stepName": "confirm",
-      "stepType": "BaseConfirm",
-      "testJob": {
-        "key": "confirm",
-        "error": [
-          {
-            "message": "expected [Function] to equal 332",
-            "expected": 332,
-            "showDiff": true,
-            "operator": "strictEqual",
-            "name": "AssertionError",
-            "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)"
-          },
-          "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:174:23)\n    at BaseShould.processRow (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:769:35)\n    at BaseConfirm.confirm (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:567:43)\n    at BaseConfirm.run (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:591:17)\n    at stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1191:33)\n    at Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1274:36)\n    at TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-GUYEQDP4.mjs:1613:42)"
-        ],
-        "failed": true,
-        "features": [
-          "./Readme.md"
-        ],
-        "artifacts": [],
-        "status": true,
-        "fails": 1,
-        "confirms": [
-          {
-            "index": 0,
-            "input": [
-              3,
-              332
-            ],
-            "test": "beEqualTo: 332"
-          }
-        ]
+        "name": "Specification_Error",
+        "type": "Error",
+        "error": "Test specification failed: Confirm.addition(...) is not a function"
       }
     }
   ],
   "summary": {
-    "totalTests": 6,
+    "totalTests": 1,
     "passed": 0,
-    "failed": 6,
+    "failed": 1,
     "successRate": "0.00%"
   }
 }

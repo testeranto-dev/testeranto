@@ -1,5 +1,5 @@
-=== Log started at 2026-04-07T21:17:49.279Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-bdd (runtime: node) ===
-=== Container ID: add82343f5a0475f866c52681f6b2edadd76fee248702400095d7e8df1b35aee ===
+=== Log started at 2026-04-08T13:41:08.684Z for service nodetests-src_server_serverclasses_server_graphmanagercore-test-ts-bdd (runtime: node) ===
+=== Container ID: c51891102ac301095308d394d9b81a38e9b7f1daa97211fe15237f452b317386 ===
 === Test: src/server/serverClasses/Server_GraphManagerCore.test.ts ===
 === Config Key: nodetests ===
 
@@ -18,9 +18,9 @@ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/testeranto/bundles/
     at moduleResolve (node:internal/modules/esm/resolve:952:10)
     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
     at nextResolve (node:internal/modules/esm/hooks:864:28)
-    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596672073:2:3744)
-    at async resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596672073:2:4237)
-    at async resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775596672073:2:5355)
+    at resolveBase (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775655668296:2:3744)
+    at async resolveDirectory (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775655668296:2:4237)
+    at async resolve (file:///workspace/node_modules/tsx/dist/esm/index.mjs?1775655668296:2:5355)
     at async nextResolve (node:internal/modules/esm/hooks:864:22)
     at async Hooks.resolve (node:internal/modules/esm/hooks:306:24)
     at async handleMessage (node:internal/modules/esm/worker:196:18) {
@@ -29,7 +29,7 @@ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/testeranto/bundles/
 }
 
 Node.js v20.19.4
-error Command failed with exit code 1.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.
 
-=== Log captured at 2026-04-07T21:18:05.417Z (container status: exited, exit code: 1) ===
+=== Log captured at 2026-04-08T13:41:16.002Z (container status: exited, exit code: 1) ===

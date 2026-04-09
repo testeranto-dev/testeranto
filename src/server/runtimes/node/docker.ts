@@ -1,11 +1,15 @@
 import { join } from "node:path";
-import type { ITesterantoConfig } from "../../../Types";
+import type { IBaseTestConfig, ITesterantoConfig } from "../../../Types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 // Import the node runtime file as text
+// import nodeContent from "../../../../../../dist/prebuild/node/node.mjs" with { type: "text" };
+// dist / prebuild / server / runtimes / web / web.mjs
 import nodeContent from "../../../../dist/prebuild/node/node.mjs" with { type: "text" };
 // Import the native detection module
 import nativeDetectionContent from "./native_detection.js" with { type: "text" };
+import { config } from "node:process";
+import type { IConfigSlice } from "../../types.js";
 
 // Write the node file to a location that will be mounted in the container
 const nodeScriptPath = join(process.cwd(), "testeranto", "node_runtime.ts");
@@ -20,10 +24,8 @@ export const nodeDockerComposeFile = (
   container_name: string,
   projectConfigPath: string,
   nodeConfigPath: string,
-  testName: string,
+  slice: IConfigSlice
 ) => {
-  const tests = config.runtimes[testName]?.tests || [];
-
   // For node builder service, we need a proper build configuration
   const service: any = {
     build: {
@@ -47,8 +49,7 @@ export const nodeDockerComposeFile = (
     command: nodeBuildCommand(
       projectConfigPath,
       nodeConfigPath,
-      testName,
-      tests,
+      slice
     ),
     networks: ["allTests_network"],
   };
@@ -59,13 +60,10 @@ export const nodeDockerComposeFile = (
 export const nodeBuildCommand = (
   projectConfigPath: string,
   nodeConfigPath: string,
-  testName: string,
-  tests: string[],
+  configSlice: IConfigSlice,
 ) => {
-  // The MODE environment variable should be set in the container environment
-  // We'll use the value from the environment, defaulting to 'once'
-  const entryPointsArg = tests.map(t => t.replace(/^\.\//, '')).join(' ');
-  return `yarn tsx /workspace/testeranto/node_runtime.ts /workspace/${projectConfigPath} /workspace/${nodeConfigPath} ${testName} ${entryPointsArg}`;
+  const configJson = JSON.stringify(configSlice);
+  return `yarn tsx /workspace/testeranto/node_runtime.ts /workspace/${projectConfigPath} /workspace/${nodeConfigPath} '${configJson}'`;
 };
 
 export const nodeBddCommand = (

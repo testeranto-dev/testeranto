@@ -1,5 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as parser from '@babel/parser';
+import traverse from '@babel/traverse';
 
 export const JasmineConverter = {
   name: 'jasmine',
@@ -9,18 +11,30 @@ export const JasmineConverter = {
     
     const content = fs.readFileSync(filePath, 'utf-8');
     
-    // Check for Jasmine imports
-    const hasJasmineImport = content.includes('jasmine') || 
-                            content.includes('@types/jasmine');
-    
-    // Check for Jasmine patterns
-    const hasJasminePatterns = content.includes('describe(') && 
-                              content.includes('it(') &&
-                              content.includes('expect(') &&
-                              !content.includes('jest') &&
-                              !content.includes('mocha');
-    
-    return hasJasmineImport || hasJasminePatterns;
+    try {
+      const ast = parser.parse(content, {
+        sourceType: 'module',
+        plugins: ['typescript', 'jsx']
+      });
+      
+      let hasJasmineImport = false;
+      
+      traverse(ast, {
+        ImportDeclaration(path) {
+          const source = path.node.source.value;
+          if (typeof source === 'string') {
+            if (source === 'jasmine' || source.includes('@types/jasmine')) {
+              hasJasmineImport = true;
+            }
+          }
+        }
+      });
+      
+      return hasJasmineImport;
+      
+    } catch (error) {
+      return false;
+    }
   },
   
   generateWrapper(

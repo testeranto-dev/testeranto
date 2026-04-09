@@ -5,20 +5,9 @@ export const GenericConverter = {
   name: 'generic',
   
   detect(filePath: string): boolean {
-    // Generic converter is a fallback, so it always returns true
-    // but we should check if it's actually a test file
-    if (!fs.existsSync(filePath)) return false;
-    
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const filename = path.basename(filePath);
-    
-    // Basic test file detection
-    const isNamedTest = filename.includes('.test.') || filename.includes('.spec.');
-    const hasTestPatterns = content.includes('describe(') || 
-                           content.includes('it(') || 
-                           content.includes('test(');
-    
-    return isNamedTest || hasTestPatterns;
+    // Generic converter is the fallback - always return true if file exists
+    // Other converters will have returned false if they matched
+    return fs.existsSync(filePath);
   },
   
   generateWrapper(

@@ -5,8 +5,9 @@ import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import fs from 'fs';
 import { processCwd, processExit } from './Server_Docker/Server_Docker_Dependents';
+import { ServerChat } from './Server_Chat';
 
-export class Server extends Server_Docker {
+export class Server extends ServerChat {
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);

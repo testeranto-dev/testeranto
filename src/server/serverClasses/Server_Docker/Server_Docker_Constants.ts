@@ -1,43 +1,6 @@
 // Server_Docker_Constants: this file contains constants, types, string interpolations and very simple functions
 // This file should not contain anything that needs to be tested
 
-import type { IRunTime, ITesterantoConfig } from "../../../Types";
-import {
-  golangBddCommand,
-  golangBuildCommand,
-  golangDockerComposeFile,
-} from "../../runtimes/golang/docker";
-import {
-  javaBddCommand,
-  javaBuildCommand,
-  javaDockerComposeFile,
-} from "../../runtimes/java/docker";
-import {
-  nodeBddCommand,
-  nodeBuildCommand,
-  nodeDockerComposeFile,
-} from "../../runtimes/node/docker";
-import {
-  pythonBddCommand,
-  pythonBuildCommand,
-  pythonDockerComposeFile,
-} from "../../runtimes/python/docker";
-import {
-  rubyBddCommand,
-  rubyBuildCommand,
-  rubyDockerComposeFile,
-} from "../../runtimes/ruby/docker";
-import {
-  rustBddCommand,
-  rustBuildCommand,
-  rustDockerComposeFile,
-} from "../../runtimes/rust/docker";
-import {
-  webBddCommand,
-  webBuildCommand,
-  webDockerComposeFile,
-} from "../../runtimes/web/docker";
-
 export const getReportDirPure = (): string => {
   return `testeranto/reports`;
 };
@@ -45,7 +8,6 @@ export const getReportDirPure = (): string => {
 export const getDockerComposeDownPure = (): string => {
   return 'docker compose -f "testeranto/docker-compose.yml" down -v --remove-orphans';
 };
-
 
 export const SERVICE_SUFFIXES = {
   BUILDER: "builder",
@@ -99,35 +61,6 @@ export interface IDockerComposeResult {
   err: string;
   data: any;
 }
-
-// Runtime configuration
-export const runTimeToCompose: Record<
-  IRunTime,
-  [
-    (
-      config: ITesterantoConfig,
-      container_name: string,
-      projectConfigPath: string,
-      nodeConfigPath: string,
-      testName: string,
-    ) => object,
-    (
-      projectConfig: string,
-      nodeConfigPath: string,
-      testname: string,
-      tests: string[],
-    ) => string,
-    (fpath: string, nodeConfigPath: string, configKey: string) => string,
-  ]
-> = {
-  node: [nodeDockerComposeFile, nodeBuildCommand, nodeBddCommand],
-  web: [webDockerComposeFile, webBuildCommand, webBddCommand],
-  python: [pythonDockerComposeFile, pythonBuildCommand, pythonBddCommand],
-  golang: [golangDockerComposeFile, golangBuildCommand, golangBddCommand],
-  ruby: [rubyDockerComposeFile, rubyBuildCommand, rubyBddCommand],
-  rust: [rustDockerComposeFile, rustBuildCommand, rustBddCommand],
-  java: [javaDockerComposeFile, javaBuildCommand, javaBddCommand],
-};
 
 // Docker Compose Commands
 export const DC_COMMANDS = {

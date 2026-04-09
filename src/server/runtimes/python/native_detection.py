@@ -53,6 +53,21 @@ class PythonNativeTestDetection:
         has_unittest_import = 'import unittest' in content or 'from unittest import' in content
         has_behave_import = 'import behave' in content or 'from behave import' in content
         
+        # Check for testeranto imports to avoid false positives
+        has_testeranto_import = (
+            'import tiposkripto' in content or 
+            'from tiposkripto import' in content or
+            'import testeranto' in content or
+            'from testeranto import' in content
+        )
+        if has_testeranto_import:
+            # This is a testeranto test, not a native test
+            return {
+                "is_native_test": False,
+                "framework_type": None,
+                "test_structure": {}
+            }
+        
         # Check for test patterns in AST
         ast_test_patterns = PythonNativeTestDetection._analyze_ast(content, file_path)
         
@@ -136,6 +151,10 @@ class PythonNativeTestDetection:
         ast_patterns: Dict[str, Any]
     ) -> str:
         """Identify the specific test framework."""
+        # Check for testeranto imports first
+        if 'import tiposkripto' in content or 'from tiposkripto import' in content:
+            return 'testeranto'
+        
         if has_pytest_import or '@pytest.mark' in content or 'pytest.fixture' in content:
             return 'pytest'
         elif has_unittest_import or 'unittest.TestCase' in content:

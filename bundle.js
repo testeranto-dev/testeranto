@@ -1,48 +1,20 @@
-
 import fs from "fs"
 import path from "path"
 import * as esbuild from 'esbuild'
-
-// await esbuild.build({
-//   outExtension: { '.js': '.mjs' },
-//   entryPoints: [
-//     'src/server/runtimes/node/node.ts',
-//     'src/server/runtimes/web/web.ts',
-//     'src/server/runtimes/web/hoist.ts'
-//   ],
-//   bundle: true,
-//   format: "esm",
-//   splitting: false,
-//   platform: "node",
-//   target: "node20",
-//   outdir: "dist/prebuild",
-//   packages: "external",
-//   external: ['./src/server/serverClasses/index.tsx'],
-//   // supported: {
-//   //   "dynamic-import": true,
-//   // },
-//   // external: [
-//   //   "fs", "path", "child_process", "util", "os", "events", "stream",
-//   //   "http", "https", "zlib", "crypto", "buffer", "net", "dns", "tls",
-//   //   "assert", "querystring", "punycode", "readline", "repl", "vm",
-//   //   "perf_hooks", "async_hooks", "timers", "console", "module", "process",
-//   //   "vscode"
-//   // ],
-// })
-
 await esbuild.build({
   outExtension: { '.js': '.mjs' },
   entryPoints: [
     // 'src/init-docs.ts',
-    'src/esbuildConfigs/eslint-formatter-testeranto.ts',
-    // 'src/server/runtimes/node/node.ts',
-    // 'src/server/runtimes/web/web.ts',
+    // 'src/esbuildConfigs/eslint-formatter-testeranto.ts',
+    'src/server/runtimes/node/node.ts',
+    'src/server/runtimes/web/web.ts',
     // 'src/testeranto.ts',
-    // 'src/server/runtimes/web/hoist.ts'
+    'src/server/runtimes/web/hoist.ts',
+    // stakeholderSrcPath
   ],
   bundle: true,
   format: "esm",
-  splitting: true,
+  // splitting: true,
   platform: "node",
   target: "node20",
   outdir: "dist/prebuild",
@@ -59,6 +31,8 @@ await esbuild.build({
     "vscode"
   ],
 })
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Build VS Code extension
 try {
@@ -78,6 +52,8 @@ try {
   console.error("Failed to build VS Code extension:", error);
   process.exit(1);
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Build grafeovidajo first using its own bundle.js (tiposkripto pattern)
 try {
@@ -150,9 +126,24 @@ try {
 
 // Copy stakeholder tsx. Will bundle it the fly
 // No need to copy html, we generate it from a template on the fly
-const stakeholderSrcPath = 'src/stakeholderApp/index.tsx';
-const stakeholderDistDir = 'dist/stakeholder/index.tsx';
-fs.copyFileSync(stakeholderSrcPath, stakeholderDistDir);
+// const stakeholderSrcPath = 'src/stakeholderApp/index.tsx';
+// const stakeholderDistDir = 'dist/stakeholder/index.tsx';
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+// if (!fs.existsSync(stakeholderDistDir)) {
+//   fs.mkdirSync(stakeholderDistDir, { recursive: true });
+// }
+
+// if (fs.existsSync(stakeholderDistFile)) {
+//   const stat = fs.statSync(stakeholderDistFile);
+//   if (stat.isDirectory()) {
+//     fs.rmSync(stakeholderDistFile, { recursive: true });
+//   }
+// }
+
+// fs.copyFileSync(stakeholderSrcPath, stakeholderDistFile);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Copy media files for webview
 const mediaDir = 'media';
@@ -161,6 +152,8 @@ const distMediaDir = 'dist/vscode/media';
 if (!fs.existsSync(distMediaDir)) {
   fs.mkdirSync(distMediaDir, { recursive: true });
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Copy icon files
 const mediaFiles = ['icon.svg'];
@@ -175,87 +168,69 @@ for (const file of mediaFiles) {
   }
 }
 
-// Copy Ruby artifact to dist/ruby folder
-const rubySrcPath = 'src/server/runtimes/ruby/ruby.rb';
-const rubyDistDir = 'dist/ruby';
-const rubyDestPath = path.join(rubyDistDir, 'ruby.rb');
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if (!fs.existsSync(rubyDistDir)) {
-  fs.mkdirSync(rubyDistDir, { recursive: true });
-}
+// const copyRuntimeFile = (srcpath, distpath, destpath) => {
 
-if (fs.existsSync(rubySrcPath)) {
-  fs.copyFileSync(rubySrcPath, rubyDestPath);
-  console.log(`Copied Ruby artifact from ${rubySrcPath} to ${rubyDestPath}`);
-} else {
-  console.warn(`Ruby source file not found: ${rubySrcPath}`);
-}
+//   if (!fs.existsSync(distpath)) {
+//     fs.mkdirSync(distpath, { recursive: true });
+//   }
 
+//   if (fs.existsSync(srcpath)) {
+//     fs.copyFileSync(srcpath, destpath);
+//     console.log(`Copied artifact from ${srcpath} to ${destpath}`);
+//   } else {
+//     console.warn(`source file not found: ${srcpath}`);
+//   }
 
+// }
 
-const pythonSrcPath = 'src/server/runtimes/python/python.py';
-const pythonDistDir = 'dist/python';
-const pythonDestPath = path.join(pythonDistDir, 'python.py');
+// copyRuntimeFile(
+//   'src/server/runtimes/node/node.ts',
+//   'dist/node',
+//   'dist/node/node.ts',
+// );
 
-if (!fs.existsSync(pythonDistDir)) {
-  fs.mkdirSync(pythonDistDir, { recursive: true });
-}
+// copyRuntimeFile(
+//   'src/server/runtimes/web/web.ts',
+//   'dist/web',
+//   'dist/web/web.ts',
+// );
 
-if (fs.existsSync(pythonSrcPath)) {
-  fs.copyFileSync(pythonSrcPath, pythonDestPath);
-  console.log(`Copied Python artifact from ${pythonSrcPath} to ${pythonDestPath}`);
-} else {
-  console.warn(`Python source file not found: ${pythonSrcPath}`);
-}
+// copyRuntimeFile(
+//   'src/server/runtimes/ruby/ruby.rb',
+//   'dist/ruby',
+//   'dist/ruby/ruby.rb',
+// );
 
+// copyRuntimeFile(
+//   'src/server/runtimes/python/python.py',
+//   'dist/python',
+//   'dist/python/python.py',
+// );
 
+// copyRuntimeFile(
+//   'src/server/runtimes/rust/main.rs',
+//   'dist/rust',
+//   'dist/rust/main.rs'
+// );
 
-const golangSrcPath = 'src/server/runtimes/golang/main.go';
-const golangDistDir = 'dist/golang';
-const golangDestPath = path.join(golangDistDir, 'main.go');
+// copyRuntimeFile(
+//   'src/server/runtimes/java/main.java',
+//   'dist/java',
+//   'dist/java/main.java'
+// );
 
-if (!fs.existsSync(golangDistDir)) {
-  fs.mkdirSync(golangDistDir, { recursive: true });
-}
+// copyRuntimeFile(
+//   'src/server/runtimes/web/hoist.ts',
+//   'dist/web',
+//   'dist/web/hoist.ts'
+// );
 
-if (fs.existsSync(golangSrcPath)) {
-  fs.copyFileSync(golangSrcPath, golangDestPath);
-  console.log(`Copied Golang artifact from ${golangSrcPath} to ${golangDestPath}`);
-} else {
-  console.warn(`Golang source file not found: ${golangSrcPath}`);
-}
+// const stakeholderDistDir = 'dist/stakeholder/';
+// const stakeholderDistFile = 'dist/stakeholder/index.tsx';
+// const stakeholderSrcPath = 'src/stakeholderApp/index.tsx';
 
-
-
-const rustSrcPath = 'src/server/runtimes/rust/main.rs';
-const rustDistDir = 'dist/rust';
-const rustDestPath = path.join(rustDistDir, 'main.rs');
-
-if (!fs.existsSync(rustDistDir)) {
-  fs.mkdirSync(rustDistDir, { recursive: true });
-}
-
-if (fs.existsSync(rustSrcPath)) {
-  fs.copyFileSync(rustSrcPath, rustDestPath);
-  console.log(`Copied Rust artifact from ${rustSrcPath} to ${rustDestPath}`);
-} else {
-  console.warn(`Golang source file not found: ${rustSrcPath}`);
-}
-
-
-
-const javaSrcPath = 'src/server/runtimes/java/main.java';
-const javaDistDir = 'dist/java';
-const javaDestPath = path.join(javaDistDir, 'main.java');
-
-if (!fs.existsSync(javaDistDir)) {
-  fs.mkdirSync(javaDistDir, { recursive: true });
-}
-
-if (fs.existsSync(javaSrcPath)) {
-  fs.copyFileSync(javaSrcPath, javaDestPath);
-  console.log(`Copied Java artifact from ${javaSrcPath} to ${javaDestPath}`);
-} else {
-  console.warn(`Java source file not found: ${javaSrcPath}`);
-}
-
+// if (!fs.existsSync(stakeholderDistDir)) {
+//   fs.mkdirSync(stakeholderDistDir, { recursive: true });
+// }

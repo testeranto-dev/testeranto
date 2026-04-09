@@ -17,8 +17,11 @@ export default (
     testName
   );
 
+  // Handle case where config might be undefined
+  const safeConfig = config || {};
+  
   return {
-    ...baseEsBuildConfig(config),
+    ...baseEsBuildConfig(safeConfig),
     outdir: `testeranto/bundles/${testName}`,
     outbase: ".",
     metafile: true,
@@ -40,7 +43,7 @@ export default (
       featuresPlugin,
       inputFilesPluginFactory,
       rebuildPlugin("web"),
-      ...(config.web?.plugins?.map((p) => p(register, entryPoints)) || []),
+      ...((safeConfig.web?.plugins || safeConfig.plugins || [])?.map((p) => p(register, entryPoints)) || []),
     ],
   };
 };

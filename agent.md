@@ -1,1 +1,1 @@
-/workspace/agents/cefo.md
+/workspace/agents/arko.md

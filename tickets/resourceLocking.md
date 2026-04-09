@@ -16,3 +16,5 @@ we need the means of locking resources. Our first goal is to allow the app to sa
 
 
 Make sure you are leaning on the graph to do the locking. You can apply the locks on the file nodes in the graph
+
+Notes: we need to add a list the list of output artifacts to the arguments passed to the build functions. This should behave similar to the entrypoint (output artifacts are basically just entrypoints). Each runtime has a build function in a docker.ts. this will be passed into the runtime for each language.

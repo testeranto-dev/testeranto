@@ -1,39 +1,19 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
-import { ApiUtils } from './utils/apiUtils';
-
-interface GraphNode {
-  id: string;
-  type: string;
-  label: string;
-  description?: string;
-  metadata?: Record<string, any>;
-}
-
-interface GraphEdge {
-  source: string;
-  target: string;
-  attributes: {
-    type: string;
-  };
-}
-
-interface GraphData {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-}
+import { FileTreeLogic } from './logic/FileTreeLogic';
+import { FileTreeDataFetcher } from './logic/FileTreeDataFetcher';
 
 export class FileTreeDataProvider extends BaseTreeDataProvider {
-  private graphData: GraphData | null = null;
-  private graphDataPath: string | null = null;
+  private logic: FileTreeLogic;
+  private fetcher: FileTreeDataFetcher;
 
   constructor() {
     super();
     console.log('[FileTreeDataProvider] Constructor called');
+    this.fetcher = new FileTreeDataFetcher();
+    this.logic = new FileTreeLogic();
     // Load data asynchronously
     setTimeout(() => {
       this.loadGraphData().then(() => {
@@ -44,37 +24,12 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
 
   private async loadGraphData(): Promise<void> {
     try {
-      console.log('[FileTreeDataProvider] Loading graph data from files slice');
-      const url = ApiUtils.getFilesSliceUrl();
-      console.log(`[FileTreeDataProvider] Fetching from URL: ${url}`);
-      
-      // Create an AbortController for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-      
-      const response = await fetch(url, { 
-        signal: controller.signal 
-      }).catch(error => {
-        console.log(`[FileTreeDataProvider] Fetch error: ${error.message}`);
-        if (error.name === 'AbortError') {
-          throw new Error(`Connection timeout to server at ${url}. Make sure the Testeranto server is running.`);
-        } else {
-          throw new Error(`Cannot connect to server at ${url}: ${error.message}`);
-        }
-      }).finally(() => {
-        clearTimeout(timeoutId);
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      this.graphData = data;
-      console.log('[FileTreeDataProvider] Loaded graph data:', this.graphData?.nodes?.length, 'nodes');
+      const graphData = await this.fetcher.fetchGraphData();
+      this.logic.setGraphData(graphData);
+      console.log('[FileTreeDataProvider] Loaded graph data:', graphData?.nodes?.length, 'nodes');
     } catch (error) {
       console.error('[FileTreeDataProvider] Failed to load graph data:', error);
-      this.graphData = null;
+      this.logic.setGraphData(null);
     }
   }
 
@@ -92,7 +47,7 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
   }
 
   async getChildren(element?: TestTreeItem): Promise<TestTreeItem[]> {
-    if (!this.graphData) {
+    if (!this.logic.hasGraphData()) {
       this.loadGraphData();
     }
 
@@ -133,7 +88,7 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
     ));
 
     // Add server status item
-    if (!this.graphData) {
+    if (!this.logic.hasGraphData()) {
       items.push(new TestTreeItem(
         'Server not connected',
         TreeItemType.Info,
@@ -152,14 +107,13 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
       return items;
     }
 
-    // Get all folder and file nodes
-    const folderNodes = this.graphData.nodes.filter(node =>
-      node.type === 'folder' || node.type === 'domain'
-    );
+    const graphData = this.logic.getGraphData();
+    if (!graphData) {
+      return items;
+    }
 
-    const fileNodes = this.graphData.nodes.filter(node =>
-      node.type === 'file' || node.type === 'input_file'
-    );
+    const folderNodes = this.logic.filterFolderNodes(graphData);
+    const fileNodes = this.logic.filterFileNodes(graphData);
 
     console.log(`[FileTreeDataProvider] Found ${folderNodes.length} folders, ${fileNodes.length} files`);
 
@@ -177,108 +131,14 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
       return items;
     }
 
-    // Build a tree structure
-    const tree = this.buildTreeStructure(folderNodes, fileNodes);
+    // Build a tree structure using pure logic
+    const tree = this.logic.buildTreeStructure(folderNodes, fileNodes);
 
     // Convert tree to items
     const rootItems = this.convertTreeToItems(tree);
     items.push(...rootItems);
 
     return items;
-  }
-
-  private buildTreeStructure(folderNodes: GraphNode[], fileNodes: GraphNode[]): any {
-    const tree: any = {
-      type: 'root',
-      children: {}
-    };
-
-    // Process folder nodes
-    for (const folder of folderNodes) {
-      const folderPath = folder.metadata?.path || '';
-      const folderName = folder.label || folder.id.replace('folder:', '');
-      const isRoot = folder.metadata?.isRoot || folder.id === 'folder:';
-
-      if (isRoot) {
-        // Root folder
-        tree.children[folderName] = {
-          type: 'folder',
-          node: folder,
-          path: folderPath,
-          name: folderName,
-          children: {}
-        };
-      } else {
-        // Build path hierarchy
-        const parts = folderPath.split('/').filter(p => p.length > 0);
-        let current = tree.children;
-
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const isLast = i === parts.length - 1;
-
-          if (!current[part]) {
-            if (isLast) {
-              current[part] = {
-                type: 'folder',
-                node: folder,
-                path: folderPath,
-                name: folderName,
-                children: {}
-              };
-            } else {
-              current[part] = {
-                type: 'folder',
-                path: parts.slice(0, i + 1).join('/'),
-                name: part,
-                children: {}
-              };
-            }
-          }
-
-          if (!isLast) {
-            current = current[part].children;
-          }
-        }
-      }
-    }
-
-    // Process file nodes
-    for (const file of fileNodes) {
-      const filePath = file.metadata?.filePath || file.label || '';
-      const fileName = path.basename(filePath);
-      const dirPath = path.dirname(filePath);
-
-      // Find the folder in the tree
-      const parts = dirPath.split('/').filter(p => p.length > 0);
-      let current = tree.children;
-      let found = true;
-
-      for (const part of parts) {
-        if (current[part]) {
-          current = current[part].children;
-        } else {
-          // Folder not in tree, create it
-          current[part] = {
-            type: 'folder',
-            path: dirPath,
-            name: part,
-            children: {}
-          };
-          current = current[part].children;
-        }
-      }
-
-      // Add file to current folder
-      current[fileName] = {
-        type: 'file',
-        node: file,
-        path: filePath,
-        name: fileName
-      };
-    }
-
-    return tree;
   }
 
   private convertTreeToItems(tree: any): TestTreeItem[] {
@@ -297,7 +157,7 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
             folderPath: typedNode.path,
             folderId: typedNode.node?.id,
             description: 'Folder',
-            fileCount: this.countFilesInTree(typedNode)
+            fileCount: this.logic.countFilesInTree(typedNode)
           },
           undefined,
           new vscode.ThemeIcon('folder')
@@ -322,7 +182,7 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
             title: 'Open File',
             arguments: [{ fileName: typedNode.path }]
           } : undefined,
-          this.getFileIcon(typedNode)
+          this.logic.getFileIcon(typedNode)
         );
         items.push(fileItem);
       }
@@ -341,24 +201,17 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
   }
 
   private getFolderChildren(folderPath: string, folderId: string): TestTreeItem[] {
-    if (!this.graphData) return [];
+    const graphData = this.logic.getGraphData();
+    if (!graphData) return [];
 
-    // Find files and subfolders that belong to this folder
-    const folderNodes = this.graphData.nodes.filter(node =>
-      (node.type === 'folder' || node.type === 'domain') &&
-      node.metadata?.path?.startsWith(folderPath + '/')
-    );
-
-    const fileNodes = this.graphData.nodes.filter(node =>
-      (node.type === 'file' || node.type === 'input_file') &&
-      node.metadata?.filePath?.startsWith(folderPath + '/')
-    );
+    const folderNodes = this.logic.filterFolderNodesByPath(graphData, folderPath);
+    const fileNodes = this.logic.filterFileNodesByPath(graphData, folderPath);
 
     const items: TestTreeItem[] = [];
 
     // Add subfolders
     for (const folder of folderNodes) {
-      const folderName = folder.label || path.basename(folder.metadata?.path || '');
+      const folderName = this.logic.getFolderName(folder);
       const item = new TestTreeItem(
         folderName,
         TreeItemType.File,
@@ -377,7 +230,7 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
 
     // Add files
     for (const file of fileNodes) {
-      const fileName = path.basename(file.metadata?.filePath || file.label || '');
+      const fileName = this.logic.getFileName(file);
       const item = new TestTreeItem(
         fileName,
         TreeItemType.File,
@@ -393,7 +246,7 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
           title: 'Open File',
           arguments: [{ fileName: file.metadata.filePath }]
         } : undefined,
-        this.getFileIcon(file)
+        this.logic.getFileIcon(file)
       );
       items.push(item);
     }
@@ -408,39 +261,6 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
     });
 
     return items;
-  }
-
-  private countFilesInTree(node: any): number {
-    let count = 0;
-
-    for (const [childName, childNode] of Object.entries(node.children || {})) {
-      const typedChild = childNode as any;
-      if (typedChild.type === 'file') {
-        count++;
-      } else if (typedChild.type === 'folder') {
-        count += this.countFilesInTree(typedChild);
-      }
-    }
-
-    return count;
-  }
-
-  private getFileIcon(fileNode: any): vscode.ThemeIcon {
-    const fileType = fileNode.metadata?.fileType || fileNode.type;
-
-    switch (fileType) {
-      case 'input_file':
-      case 'source':
-        return new vscode.ThemeIcon('file-code');
-      case 'log':
-        return new vscode.ThemeIcon('output');
-      case 'documentation':
-        return new vscode.ThemeIcon('book');
-      case 'config':
-        return new vscode.ThemeIcon('settings-gear');
-      default:
-        return new vscode.ThemeIcon('file');
-    }
   }
 
   protected handleWebSocketMessage(message: any): void {

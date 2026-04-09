@@ -146,21 +146,19 @@ export class ClassyImplementations<I extends Ibdd_in_any> {
     const classyConfirms: Record<string, any> = {};
     if (testImplementation.confirms) {
       Object.entries(testImplementation.confirms).forEach(([key, val]) => {
-        classyConfirms[key] = () => {
-          return (testCases: any[][], features: string[]) => {
-            let actualConfirmCB;
-            if (typeof val === 'function') {
-              actualConfirmCB = val();
-            } else {
-              actualConfirmCB = val;
-            }
-            return new BaseConfirm<I>(
-              features,
-              testCases,
-              actualConfirmCB,
-              undefined,
-            );
-          };
+        classyConfirms[key] = (testCases: any[][], features: string[]) => {
+          let actualConfirmCB;
+          if (typeof val === 'function') {
+            actualConfirmCB = val();
+          } else {
+            actualConfirmCB = val;
+          }
+          return new BaseConfirm<I>(
+            features,
+            testCases,
+            actualConfirmCB,
+            undefined,
+          );
         };
       });
     }
@@ -173,18 +171,14 @@ export class ClassyImplementations<I extends Ibdd_in_any> {
     const classyValues: Record<string, any> = {};
     if (testImplementation.values) {
       Object.entries(testImplementation.values).forEach(([key, val]) => {
-        classyValues[key] = (
-          features: string[],
-          tableRows: any[][],
-          confirmCB: any,
-          initialValues: any,
-        ) => {
-          return new BaseValue<I>(
-            features,
-            tableRows,
-            confirmCB,
-            initialValues,
-          );
+        // For TDT, Value.of should return input data, not create a BaseValue
+        // The BaseValue is created by Confirm
+        classyValues[key] = (...args: any[]) => {
+          if (typeof val === 'function') {
+            return val(...args);
+          } else {
+            return val;
+          }
         };
       });
     }
@@ -198,11 +192,10 @@ export class ClassyImplementations<I extends Ibdd_in_any> {
     if (testImplementation.shoulds) {
       Object.entries(testImplementation.shoulds).forEach(
         ([key, shouldCB]: [string, (...x: any[]) => any]) => {
+          // For TDT, Should.beEqualTo should return a validation function, not a BaseShould
+          // The BaseShould is handled internally by Confirm
           classyShoulds[key] = (...args: any[]) => {
-            return new BaseShould<I>(
-              `${key}: ${args && args.toString()}`,
-              shouldCB(...args),
-            );
+            return shouldCB(...args);
           };
         },
       );
@@ -250,9 +243,9 @@ export class ClassyImplementations<I extends Ibdd_in_any> {
 
               if (typeof actualDescribeCB !== 'function') {
                 console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
-                actualDescribeCB = () => {
-                  throw new Error(`Describe implementation for "${key}" is not a valid function`);
-                };
+                // If it's not a function, wrap it in a function that returns it
+                const nonFunctionValue = actualDescribeCB;
+                actualDescribeCB = (subject: any, initialValues: any) => nonFunctionValue;
               }
 
               return new BaseDescribe<I>(

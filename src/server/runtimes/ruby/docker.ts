@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import type { ITesterantoConfig } from "../../../Types";
+import type { IConfigSlice } from "../../types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
 import rubyContent from "./ruby.rb" with { type: "text" };
@@ -21,10 +22,8 @@ export const rubyDockerComposeFile = (
   container_name: string,
   projectConfigPath: string,
   rubyConfigPath: string,
-  testName: string,
+  slice: IConfigSlice
 ) => {
-  const tests = config.runtimes[testName]?.tests || [];
-
   // For ruby builder service, we need a proper build configuration
   const service: any = {
     build: {
@@ -46,8 +45,7 @@ export const rubyDockerComposeFile = (
     command: rubyBuildCommand(
       projectConfigPath,
       rubyConfigPath,
-      testName,
-      tests,
+      slice,
     ),
     networks: ["allTests_network"],
   };
@@ -58,47 +56,10 @@ export const rubyDockerComposeFile = (
 export const rubyBuildCommand = (
   projectConfigPath: string,
   rubyConfigPath: string,
-  testName: string,
-  tests: string[],
+  slice: IConfigSlice,
 ) => {
-  // First run native detection to analyze dependencies and generate bundles
-  // Then run the tests
-  if (tests.length === 0) {
-    return "echo 'No tests specified'";
-  }
-  
-  // Run native detection first to generate inputFiles.json and copy test files to bundles
-  const nativeDetectionCmd = `ruby /workspace/testeranto/native_detection.rb /workspace/${projectConfigPath} /workspace/${rubyConfigPath} ${testName} ${tests.join(" ")}`;
-  
-  // Default configuration for Rubeno tests
-  const defaultConfig = JSON.stringify({
-    name: testName,
-    fs: `/workspace/testeranto/reports/${testName}`,
-    ports: [],
-    timeout: 30000,
-    retries: 0,
-    environment: {}
-  });
-  
-  // Build commands for each test file
-  const testCmds = tests.map(test => {
-    const testPath = `/workspace/${test}`;
-    const bundleTestPath = `/workspace/testeranto/bundles/${testName}/${test}`;
-    
-    // Add bundle directory to LOAD_PATH
-    const bundleDir = `/workspace/testeranto/bundles/${testName}`;
-    const rubyLoadPath = `RUBYLIB="${bundleDir}:${bundleDir}/src/ruby:$RUBYLIB"`;
-    
-    if (test.includes('.rspec.test.rb')) {
-      // RSpec test - run with rspec command if available, or ruby -r rspec
-      return `if command -v rspec >/dev/null 2>&1; then ${rubyLoadPath} rspec "${bundleTestPath}"; else ${rubyLoadPath} ruby -r rspec -e "RSpec::Core::Runner.run(['${bundleTestPath}'])"; fi`;
-    } else {
-      // Rubeno test - pass the configuration
-      return `${rubyLoadPath} ruby "${bundleTestPath}" '${defaultConfig}'`;
-    }
-  }).join(' && ');
-  
-  return `${nativeDetectionCmd} && ${testCmds}`;
+  const configJson = JSON.stringify(slice);
+  return `ruby /workspace/testeranto/ruby_runtime.rb /workspace/${projectConfigPath} /workspace/${rubyConfigPath} '${configJson}'`;
 };
 
 export const rubyBddCommand = (

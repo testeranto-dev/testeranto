@@ -10,9 +10,10 @@ export async function addProcessNodeToGraphPure(
   graphManager: any,
   consoleLog: (message: string) => void,
   consoleError: (message: string, error?: any) => void,
-  consoleWarn: (message: string) => void
+  consoleWarn: (message: string) => void,
+  status?: 'running' | 'stopped' | 'failed'
 ): Promise<void> {
-  consoleLog(`[Server_Docker] addProcessNodeToGraph called: ${processType} for ${testName} (${configKey})`);
+  consoleLog(`[Server_Docker] addProcessNodeToGraph called: ${processType} for ${testName} (${configKey}) with status: ${status || 'default'}`);
   try {
     consoleLog(`[Server_Docker] graphManager exists: ${!!graphManager}`);
     consoleLog(`[Server_Docker] graphManager.applyUpdate is function: ${typeof graphManager?.applyUpdate === 'function'}`);
@@ -46,6 +47,9 @@ export async function addProcessNodeToGraphPure(
       const timestamp = new Date().toISOString();
       const operations = [];
 
+      // Determine the actual status
+      const actualStatus = status || 'running';
+
       // Create process node operation
       const nodeAttributes = {
         id: processId,
@@ -54,7 +58,7 @@ export async function addProcessNodeToGraphPure(
             processType === 'aider' ? 'aider_process' : 'builder_process',
         label: label,
         description: `${processType} process for ${testName} (${configKey})`,
-        status: 'running',
+        status: actualStatus,
         priority: 'medium',
         metadata: {
           runtime,
@@ -62,7 +66,8 @@ export async function addProcessNodeToGraphPure(
           configKey,
           processType,
           checkIndex,
-          timestamp
+          timestamp,
+          actualStatus
         }
       };
 

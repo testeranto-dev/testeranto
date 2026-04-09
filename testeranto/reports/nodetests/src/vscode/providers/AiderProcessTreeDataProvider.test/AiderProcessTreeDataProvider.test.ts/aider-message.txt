@@ -1,2 +1,4 @@
+/read testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts/tests.json
+
 Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.
 

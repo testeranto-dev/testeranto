@@ -1,48 +1,53 @@
 import { join } from "node:path";
 import type { ITesterantoConfig } from "../../../Types";
+import type { IConfigSlice } from "../../types";
 import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
 
-// Import the rust runtime file as text
-import rustContent from "./main.rs" with { type: "text" };
-// Import the native detection module
-import nativeDetectionContent from "./native_detection.rs" with { type: "text" };
-
-// Write the rust file and a Cargo.toml to a location that will be mounted in the container
-const rustDir = join(process.cwd(), "testeranto", "rust_builder");
-const rustScriptPath = join(rustDir, "src", "main.rs");
-const cargoTomlPath = join(rustDir, "Cargo.toml");
-const nativeDetectionPath = join(rustDir, "src", "native_detection.rs");
-
-// Create directory structure
-await Bun.$`mkdir -p ${join(rustDir, "src")}`;
-
-// Write the Rust builder source
-await Bun.write(rustScriptPath, rustContent);
-
-// Write the native detection module
-await Bun.write(nativeDetectionPath, nativeDetectionContent);
-
-// Write a minimal Cargo.toml for the rust builder
 const cargoTomlContent = `[package]
 name = "rust_builder"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
+rust-version = "1.77"
 
 [dependencies]
 serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }`;
+serde = { version = "1.0", features = ["derive"] }
+ctrlc = "3.4"
+md5 = "0.8.0"`;
 
-await Bun.write(cargoTomlPath, cargoTomlContent);
+const rustDir = join(process.cwd(), "testeranto", "rust_builder");
+await Bun.$`mkdir -p ${join(rustDir, "src")}`;
+
+await Bun.write(join(rustDir, "Cargo.toml"), cargoTomlContent);
+
+import rustContent from "./main.rs" with { type: "text" };
+await Bun.write(join(rustDir, "src", "main.rs"), rustContent);
+
+import filCollectorContent from "./file_collector.rs" with { type: "text" };
+await Bun.write(join(rustDir, "src", "file_collector.rs"), filCollectorContent);
+
+import nativeDetectionContent from "./native_detection.rs" with { type: "text" };
+await Bun.write(join(rustDir, "src", "native_detection.rs"), nativeDetectionContent);
+
+import output_artifactsContent from "./output_artifacts.rs" with { type: "text" };
+await Bun.write(join(rustDir, "src", "output_artifacts.rs"), output_artifactsContent);
+
+import permissions_artifactsContent from "./permissions.rs" with { type: "text" };
+await Bun.write(join(rustDir, "src", "permissions.rs"), permissions_artifactsContent);
+
+import test_processor_artifactsContent from "./test_processor.rs" with { type: "text" };
+await Bun.write(join(rustDir, "src", "test_processor.rs"), test_processor_artifactsContent);
+
+import wrapperContent from "./wrapper_generator.rs" with { type: "text" };
+await Bun.write(join(rustDir, "src", "wrapper_generator.rs"), wrapperContent);
 
 export const rustDockerComposeFile = (
   config: ITesterantoConfig,
   container_name: string,
   projectConfigPath: string,
   rustConfigPath: string,
-  testName: string,
+  slice: IConfigSlice
 ) => {
-  const tests = config.runtimes[testName]?.tests || [];
-
   // For rust builder service, we need a proper build configuration
   const service: any = {
     build: {
@@ -64,8 +69,7 @@ export const rustDockerComposeFile = (
     command: rustBuildCommand(
       projectConfigPath,
       rustConfigPath,
-      testName,
-      tests,
+      slice,
     ),
     networks: ["allTests_network"],
   };
@@ -76,11 +80,10 @@ export const rustDockerComposeFile = (
 export const rustBuildCommand = (
   projectConfigPath: string,
   rustConfigPath: string,
-  testName: string,
-  tests: string[],
+  slice: IConfigSlice,
 ) => {
-  // MODE is now passed via environment in the service configuration
-  return `cargo run --manifest-path /workspace/testeranto/rust_builder/Cargo.toml -- /workspace/${projectConfigPath} /workspace/${rustConfigPath} ${testName} ${tests.join(" ")}`;
+  const configJson = JSON.stringify(slice);
+  return `cargo run --manifest-path /workspace/testeranto/rust_builder/Cargo.toml -- /workspace/${projectConfigPath} /workspace/${rustConfigPath} '${configJson}'`;
 };
 
 export const rustBddCommand = (
