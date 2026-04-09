@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { BaseChart } from '../BaseChart';
-import { NodeDetailsModal } from './NodeDetailsModal';
+import { BaseChart } from './BaseChart';
+import { NodeDetailsModal } from './stakeholder/NodeDetailsModal';
 
-import { Palette } from '../../../colors';
+import { Palette } from '../../colors';
 import type { VizConfig, VizComponentProps, GraphData, Edge } from 'grafeovidajo';
 import type { Node } from 'typescript';
 

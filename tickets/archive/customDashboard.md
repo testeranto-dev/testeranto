@@ -1,5 +1,5 @@
 ---
-status: planning
+status: defunt
 title: customDashboard
 description: ''
 priority: medium

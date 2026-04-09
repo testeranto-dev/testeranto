@@ -1,5 +1,5 @@
 import React from 'react';
-import type { GraphData } from '../../../graph';
+import type { GraphData } from '../../graph';
 import { type VizConfig, type VizComponentProps, BaseChart } from 'grafeovidajo';
 
 export interface TreeConfig extends VizConfig {

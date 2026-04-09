@@ -1,5 +1,5 @@
 ---
-status: planning
+status: defunct
 title: featureReporter
 description: ''
 priority: medium

@@ -4,7 +4,7 @@ import { getFeatureGraphStats } from "./stateless/featureGraphStats";
 import { renderVisualization } from "./stateless/renderVisualization";
 
 import { Palette } from "../colors";
-import { DebugGraph } from "testeranto/stakeholderApp/defaultViews/stakeholder/DebugGraph.tsx";
+import { DebugGraph } from "./defaultViews/DebugGraph";
 
 export interface VisualizationTabsProps {
   data: any;

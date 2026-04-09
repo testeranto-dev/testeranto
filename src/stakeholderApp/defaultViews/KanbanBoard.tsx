@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import { NodeDetailsModal } from '../stakeholder/NodeDetailsModal';
+import { NodeDetailsModal } from '../NodeDetailsModal';
 import type { VizConfig, VizComponentProps } from 'grafeovidajo';
 import type { Node } from 'typescript';
 
