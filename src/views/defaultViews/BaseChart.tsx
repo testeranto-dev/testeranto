@@ -15,7 +15,7 @@ interface TreeConfig extends VizConfig {
 
 export const BaseChart: React.FC<VizComponentProps> = (props) => {
   // Destructure props inside the component
-  const { data, config, width, height, onNodeClick, onNodeHover, onNodeUpdate } = props;
+  const { data, config, width, height, onNodeClick, onNodeHover } = props;
 
   // Camera state
   const [camera, setCamera] = useState({

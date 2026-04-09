@@ -4,7 +4,7 @@ import { getFeatureGraphStats } from "./stateless/featureGraphStats";
 import { renderVisualization } from "./stateless/renderVisualization";
 
 import { Palette } from "../colors";
-import { DebugGraph } from "./defaultViews/DebugGraph";
+import { DebugGraph } from "../views/defaultViews/DebugGraph";
 
 export interface VisualizationTabsProps {
   data: any;

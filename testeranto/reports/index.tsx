@@ -24,8 +24,8 @@ const isDevelopmentMode = typeof window !== 'undefined' &&
 console.log(`[StakeholderApp] Mode: ${isDevelopmentMode ? 'Development (WebSocket enabled)' : 'Static (read-only)'}`);
 
 // Export views for use in testeranto.ts
-export { EisenhowerMatrix, GanttChart, KanbanBoard } from 'testeranto/stakeholderApp/defaultViews/index.ts';
-export type { EisenhowerConfig, GanttConfig, KanbanConfig } from 'testeranto/stakeholderApp/defaultViews/index.ts';
+export { EisenhowerMatrix, GanttChart, KanbanBoard } from '../../src/views/defaultViews';
+export type { EisenhowerConfig, GanttConfig, KanbanConfig } from '../../src/views/defaultViews';
 
 // Import types from the graph module
 import type { GraphData } from '../graph/index';

@@ -1,5 +1,5 @@
 ---
-status: in progress
+status: done
 ---
 
 make testeranto tests of AiderProcessTreeDataProvider

@@ -31,8 +31,7 @@ export type ITesterantoConfig = {
     sliceFunction: (graphManager: any) => { nodes: any[]; edges: any[] };
   }>;
 
-  vscodeViews: Record<string, string>
-  stakeholderViews: Record<string, string>
+  views: Record<string, string>
 };
 
 export type IOtherTest = (x: any) => string;

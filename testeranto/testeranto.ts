@@ -10,23 +10,16 @@ export const golangciLintCommand = (files: string[]): string => {
 
 const config: ITesterantoConfig = {
 
-  // User defined views that appear in vscode in a tree within a section
-  vscodeViews: {
+  views: {
     featuretree: VscodeViews.featuretree,
     debugVisualization: VscodeViews.debugVisualization,
-  },
-
-  // User defined views that appear in stakeholder app as a tab
-  stakeholderViews: {
     Kanban: Stakeholderviews.Kanban,
     Gantt: Stakeholderviews.Gantt,
     Eisenhower: Stakeholderviews.Eisenhower,
   },
 
-
   agents: {
     'prodirek': {
-      // markdownFile: './testeranto/agents/prodirek.md',
       load: [
         `/read SOUL.md`,
         `/read chat_slice.json`

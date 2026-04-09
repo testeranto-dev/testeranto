@@ -1,4 +1,6 @@
-## Status: IMPLEMENTED ✅
+---
+status:  defunt
+---
 
 Endpoints serve slices of the graph. Clients can register for WebSocket updates when they subscribe to a slice.
 
