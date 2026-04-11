@@ -30,7 +30,7 @@
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1775921079436,
+  "timestamp": 1775939359954,
   "individualResults": [
     {
       "index": 0,
@@ -689,7 +689,7 @@
       ],
       "error": {
         "message": "expected true to be false",
-        "stack": "AssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:609:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "stack": "AssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:605:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1292:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1244:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1879:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1972:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:2304:24)",
         "name": "AssertionError"
       },
       "stepName": "step_18",
@@ -700,7 +700,7 @@
           {
             "name": "shouldHandleGraphData: ",
             "status": false,
-            "error": "AssertionError: expected true to be false\nAssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:609:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+            "error": "AssertionError: expected true to be false\nAssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:605:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1292:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1244:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1879:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1972:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:2304:24)",
             "artifacts": []
           },
           {
@@ -724,7 +724,7 @@
         ],
         "error": [
           "expected true to be false",
-          "AssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:609:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:432:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:384:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1019:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+          "AssertionError: expected true to be false\n    at BaseIt.itCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:605:14)\n    at BaseIt.test (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1292:33)\n    at BaseDescribe.describe (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1244:35)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1879:20)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:1972:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs:2304:24)"
         ],
         "failed": true,
         "features": [

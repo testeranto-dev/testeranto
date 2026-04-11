@@ -10,20 +10,30 @@ function normalizeConfigs(configs: ITesterantoConfig): ITesterantoConfig {
   if (!configs.runtimes) {
     return configs;
   }
+
+  // Create a shallow copy of the config to avoid mutating the original
+  // We only need to copy the runtimes object and modify its tests/outputs arrays
+  const result = { ...configs };
   
-  // Create a deep copy to avoid mutating the original
-  const normalized = JSON.parse(JSON.stringify(configs));
+  // Create a new runtimes object
+  result.runtimes = { ...configs.runtimes };
   
-  for (const [runtimeName, runtimeConfig] of Object.entries(normalized.runtimes)) {
-    if (runtimeConfig.tests) {
-      runtimeConfig.tests = runtimeConfig.tests.map(normalizePath);
+  for (const [runtimeName, runtimeConfig] of Object.entries(configs.runtimes)) {
+    // Create a copy of this runtime config
+    const newRuntimeConfig = { ...runtimeConfig };
+    
+    // Only modify tests and outputs if they exist
+    if (newRuntimeConfig.tests) {
+      newRuntimeConfig.tests = [...newRuntimeConfig.tests.map(normalizePath)];
     }
-    if (runtimeConfig.outputs) {
-      runtimeConfig.outputs = runtimeConfig.outputs.map(normalizePath);
+    if (newRuntimeConfig.outputs) {
+      newRuntimeConfig.outputs = [...newRuntimeConfig.outputs.map(normalizePath)];
     }
+    
+    result.runtimes[runtimeName] = newRuntimeConfig;
   }
   
-  return normalized;
+  return result;
 }
 
 export abstract class Server_Base {
@@ -31,11 +41,9 @@ export abstract class Server_Base {
   configs: ITesterantoConfig;
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
-    console.log('[Server_Base] Constructor called with configs:', 
-      configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
-    
-    // Normalize all paths in the configs
+    console.log('[Server_Base] Constructor called with configs:', configs);
     this.configs = normalizeConfigs(configs);
+
     this.mode = mode;
   }
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Testeranto - Eisenhower View</title>
+  <title>Testeranto - EisenhowerMatrix View</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -33,32 +33,47 @@
 <body>
   <div id="root">
     <div class="loading">
-      <h2>Loading Eisenhower View...</h2>
+      <h2>Loading EisenhowerMatrix View...</h2>
     </div>
   </div>
 
   <script>
     // View configuration
+    const viewKey = 'EisenhowerMatrix';
+    const viewPath = 'src/views/defaultViews/EisenhowerMatrixView.tsx';
+    const dataPath = '/testeranto/slices/views/' + viewKey + '.json';
+    
+    console.log('[View HTML] Setting up configuration for view:', viewKey);
+    console.log('[View HTML] Data path:', dataPath);
+    
     window.TESTERANTO_VIEW_CONFIG = {
-      viewKey: 'Eisenhower',
-      viewPath: 'testeranto/views/stakeholder/Eisenhower',
-      dataPath: '/testeranto/slices/views/Eisenhower.json',
+      viewKey: viewKey,
+      viewPath: viewPath,
+      dataPath: dataPath,
       apiEndpoint: '/~/api'
     };
 
-    // Load the view bundle
+    console.log('[View HTML] Configuration set:', window.TESTERANTO_VIEW_CONFIG);
+
+    // Load the view-specific bundle
     const script = document.createElement('script');
-    script.src = '/testeranto/views/Eisenhower.bundle.js';
+    script.src = '/testeranto/views/' + viewKey + '.bundle.js';
+    script.onload = function() {
+      console.log('[View HTML] View bundle loaded successfully');
+    };
     script.onerror = function() {
+      console.error('[View HTML] Failed to load view bundle');
       document.getElementById('root').innerHTML = `
         <div class="error">
           <h1>Error Loading View</h1>
-          <p>Failed to load Eisenhower view bundle.</p>
-          <p>Make sure the view has been properly compiled.</p>
+          <p>Failed to load ${viewKey} view bundle.</p>
+          <p>Make sure the server has generated the bundle.</p>
+          <p>View path: ${viewPath}</p>
         </div>
       `;
     };
     document.head.appendChild(script);
+    console.log('[View HTML] Script element added to head');
   </script>
 </body>
 </html>

@@ -39,26 +39,41 @@
 
   <script>
     // View configuration
+    const viewKey = 'Gantt';
+    const viewPath = 'src/views/defaultViews/GanttView.tsx';
+    const dataPath = '/testeranto/slices/views/' + viewKey + '.json';
+    
+    console.log('[View HTML] Setting up configuration for view:', viewKey);
+    console.log('[View HTML] Data path:', dataPath);
+    
     window.TESTERANTO_VIEW_CONFIG = {
-      viewKey: 'Gantt',
-      viewPath: 'testeranto/views/stakeholder/Gantt',
-      dataPath: '/testeranto/slices/views/Gantt.json',
+      viewKey: viewKey,
+      viewPath: viewPath,
+      dataPath: dataPath,
       apiEndpoint: '/~/api'
     };
 
-    // Load the view bundle
+    console.log('[View HTML] Configuration set:', window.TESTERANTO_VIEW_CONFIG);
+
+    // Load the view-specific bundle
     const script = document.createElement('script');
-    script.src = '/testeranto/views/Gantt.bundle.js';
+    script.src = '/testeranto/views/' + viewKey + '.bundle.js';
+    script.onload = function() {
+      console.log('[View HTML] View bundle loaded successfully');
+    };
     script.onerror = function() {
+      console.error('[View HTML] Failed to load view bundle');
       document.getElementById('root').innerHTML = `
         <div class="error">
           <h1>Error Loading View</h1>
-          <p>Failed to load Gantt view bundle.</p>
-          <p>Make sure the view has been properly compiled.</p>
+          <p>Failed to load ${viewKey} view bundle.</p>
+          <p>Make sure the server has generated the bundle.</p>
+          <p>View path: ${viewPath}</p>
         </div>
       `;
     };
     document.head.appendChild(script);
+    console.log('[View HTML] Script element added to head');
   </script>
 </body>
 </html>

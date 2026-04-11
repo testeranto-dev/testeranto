@@ -6,6 +6,7 @@
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
@@ -25,6 +26,7 @@
     isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
     mod
   ));
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
   // node_modules/react/cjs/react.production.js
   var require_react_production = __commonJS({
@@ -768,7 +770,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React8 = require_react();
+      var React4 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -808,7 +810,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React8.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if ("font" === as) return "";
         if ("string" === typeof input)
@@ -944,7 +946,7 @@
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler();
-      var React8 = require_react();
+      var React4 = require_react();
       var ReactDOM2 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
@@ -1135,7 +1137,7 @@
         return null;
       }
       var isArrayImpl = Array.isArray;
-      var ReactSharedInternals = React8.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var ReactDOMSharedInternals = ReactDOM2.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var sharedNotPendingObject = {
         pending: false,
@@ -12581,7 +12583,7 @@
           0 === i && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_1840 = React8.version;
+      var isomorphicReactPackageVersion$jscomp$inline_1840 = React4.version;
       if ("19.2.5" !== isomorphicReactPackageVersion$jscomp$inline_1840)
         throw Error(
           formatProdErrorMessage(
@@ -12748,299 +12750,261 @@
     }
   });
 
-  // testeranto/views/Kanban.entry.js
-  var import_react8 = __toESM(require_react(), 1);
+  // testeranto/views/Kanban.wrapper.tsx
+  var import_react3 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
-  // src/views/View.tsx
+  // src/views/defaultViews/KanbanBoardView.tsx
+  var import_react2 = __toESM(require_react(), 1);
+
+  // src/views/BaseViewClass.tsx
   var import_react = __toESM(require_react(), 1);
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/ViewManager.tsx
-  var import_react2 = __toESM(require_react(), 1);
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  var ViewManagerContext = (0, import_react2.createContext)(void 0);
-
-  // src/views/defaultViews/KanbanBoard.tsx
-  var import_react4 = __toESM(require_react(), 1);
-
-  // src/views/defaultViews/NodeDetailsModal.tsx
-  var import_react3 = __toESM(require_react(), 1);
-
-  // src/colors.ts
-  var Palette = {
-    // Base & Canvas
-    black: "#000000",
-    ivory: "#FFFDF0",
-    obsidian: "#1A1918",
-    silver: "#BDC0C3",
-    // Success (Greens)
-    oliveDark: "#004949",
-    oliveDarkSubtle: "#E6F4EA",
-    oliveDeep: "#002D2D",
-    bluishGreen: "#009E73",
-    // Warning (Ambers/Yellows)
-    amberGold: "#F5C710",
-    amberGoldSubtle: "#FFF8E1",
-    amberDeep: "#332B00",
-    amberDark: "#856404",
-    // Error (Oranges/Reds)
-    deepOrange: "#D55E00",
-    deepOrangeSubtle: "#FCE8E6",
-    deepOrangeDeep: "#331600",
-    vermillionLight: "#FFB07C",
-    // Neutral (Greys)
-    charcoal: "#494949",
-    charcoalSubtle: "#F5F5F5",
-    charcoalDeep: "#1A1A1A",
-    // Progress (Rust/Purples)
-    rust: "#882255",
-    rustSubtle: "#F3E5F5",
-    rustDeep: "#2D0015",
-    reddishPurple: "#CC79A7",
-    // Muted (Warm Greys)
-    warmGrey: "#706A63",
-    warmGreySubtle: "#EFEBE7",
-    warmGreyDeep: "#2A2826",
-    warmGreyLight: "#A8A199"
-  };
-
-  // src/views/defaultViews/NodeDetailsModal.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-  var NodeDetailsModal = ({ node, isOpen, onClose }) => {
-    if (!isOpen || !node) return null;
-    const handleBackgroundClick = (e) => {
-      if (e.target === e.currentTarget) {
-        onClose();
+  var BaseViewClass = class extends import_react.default.Component {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "state", {
+        data: null,
+        loading: true,
+        error: null
+      });
+    }
+    componentDidMount() {
+      this.loadData();
+    }
+    componentDidUpdate(prevProps) {
+      if (prevProps.slicePath !== this.props.slicePath) {
+        this.loadData();
       }
-    };
-    const formatNodeProperties = (node2) => {
-      const result = [];
-      const directProps = {
-        id: node2.id,
-        type: node2.type,
-        label: node2.label,
-        description: node2.description,
-        icon: node2.icon
-      };
-      for (const [key, value] of Object.entries(directProps)) {
-        if (value !== void 0 && value !== null && value !== "") {
-          result.push({
-            key,
-            value: typeof value === "object" ? JSON.stringify(value, null, 2) : value.toString()
-          });
+    }
+    async loadData() {
+      const { slicePath } = this.props;
+      if (!slicePath) {
+        this.setState({ error: "slicePath is empty or undefined", loading: false });
+        return;
+      }
+      try {
+        this.setState({ loading: true, error: null });
+        const response = await fetch(slicePath);
+        if (!response.ok) {
+          throw new Error(`Failed to load slice data from ${slicePath}: ${response.status} ${response.statusText}`);
         }
+        const jsonData = await response.json();
+        this.setState({ data: jsonData, loading: false });
+      } catch (err) {
+        this.setState({
+          error: err instanceof Error ? err.message : "Unknown error loading slice data",
+          loading: false
+        });
       }
-      if (node2.metadata) {
-        for (const [key, value] of Object.entries(node2.metadata)) {
-          if (value !== void 0 && value !== null) {
-            result.push({
-              key: `metadata.${key}`,
-              value: typeof value === "object" ? JSON.stringify(value, null, 2) : value.toString()
-            });
-          }
-        }
-      }
-      return result.sort((a, b) => a.key.localeCompare(b.key));
-    };
-    const attributes = formatNodeProperties(node);
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-      "div",
-      {
-        style: {
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+    }
+    render() {
+      const { loading, error, data } = this.state;
+      const { width = 800, height = 600 } = this.props;
+      if (loading) {
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: {
           display: "flex",
-          alignItems: "center",
           justifyContent: "center",
-          zIndex: 1e3
-        },
-        onClick: handleBackgroundClick,
-        children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
-          "div",
-          {
-            style: {
-              backgroundColor: "white",
-              borderRadius: "8px",
-              padding: "24px",
-              maxWidth: "600px",
-              maxHeight: "80vh",
-              width: "90%",
-              overflow: "auto",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)"
-            },
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { style: { margin: 0, color: Palette.rust }, children: "Node Details" }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-                  "button",
-                  {
-                    onClick: onClose,
-                    style: {
-                      background: "none",
-                      border: "none",
-                      fontSize: "24px",
-                      cursor: "pointer",
-                      color: "#666",
-                      padding: "0",
-                      width: "30px",
-                      height: "30px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: "4px"
-                    },
-                    onMouseEnter: (e) => e.currentTarget.style.backgroundColor = "#f0f0f0",
-                    onMouseLeave: (e) => e.currentTarget.style.backgroundColor = "transparent",
-                    children: "\xD7"
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginBottom: "20px" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginBottom: "8px" }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { style: { color: Palette.charcoal }, children: "ID:" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
-                    fontFamily: "monospace",
-                    backgroundColor: "#f5f5f5",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    marginTop: "4px",
-                    wordBreak: "break-all"
-                  }, children: node.id })
-                ] }),
-                node.type && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginBottom: "8px" }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { style: { color: Palette.charcoal }, children: "Type:" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
-                    display: "inline-block",
-                    backgroundColor: Palette.rustSubtle,
-                    color: Palette.rust,
-                    padding: "4px 8px",
-                    borderRadius: "4px",
-                    marginLeft: "8px",
-                    fontSize: "14px",
-                    fontWeight: "bold"
-                  }, children: node.type })
-                ] }),
-                node.label && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginBottom: "8px" }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { style: { color: Palette.charcoal }, children: "Label:" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
-                    padding: "8px",
-                    marginTop: "4px",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "4px"
-                  }, children: node.label })
-                ] })
-              ] }),
-              attributes.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { style: { marginBottom: "12px", color: Palette.charcoal }, children: "Attributes" }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
-                  border: "1px solid #e0e0e0",
-                  borderRadius: "6px",
-                  overflow: "hidden"
-                }, children: attributes.map((attr) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
-                  "div",
-                  {
-                    style: {
-                      display: "flex",
-                      borderBottom: "1px solid #e0e0e0",
-                      padding: "12px",
-                      backgroundColor: "#fff"
-                    },
-                    children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
-                        flex: "0 0 150px",
-                        fontWeight: "bold",
-                        color: Palette.rust
-                      }, children: attr.key }),
-                      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
-                        flex: 1,
-                        fontFamily: typeof attr.value === "string" && attr.value.includes("{") ? "monospace" : "inherit",
-                        whiteSpace: "pre-wrap",
-                        wordBreak: "break-all",
-                        maxHeight: "200px",
-                        overflow: "auto"
-                      }, children: attr.value })
-                    ]
-                  },
-                  attr.key
-                )) })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { marginTop: "20px", display: "flex", justifyContent: "flex-end" }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-                "button",
-                {
-                  onClick: onClose,
-                  style: {
-                    backgroundColor: Palette.rust,
-                    color: "white",
-                    border: "none",
-                    padding: "10px 20px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    fontWeight: "bold"
-                  },
-                  onMouseEnter: (e) => e.currentTarget.style.backgroundColor = Palette.rustDark,
-                  onMouseLeave: (e) => e.currentTarget.style.backgroundColor = Palette.rust,
-                  children: "Close"
-                }
-              ) })
-            ]
-          }
-        )
+          alignItems: "center",
+          width,
+          height,
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          backgroundColor: "#fafafa"
+        }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { textAlign: "center" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Loading view..." }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Loading slice data from:" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { style: {
+            fontFamily: "monospace",
+            backgroundColor: "#f0f0f0",
+            padding: "5px",
+            borderRadius: "3px",
+            margin: "10px",
+            wordBreak: "break-all"
+          }, children: this.props.slicePath })
+        ] }) });
       }
-    );
+      if (error) {
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+          padding: "20px",
+          border: "1px solid #d32f2f",
+          borderRadius: "4px",
+          backgroundColor: "#ffebee",
+          color: "#d32f2f",
+          width,
+          height,
+          overflow: "auto"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Error loading view" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Error message:" }),
+            " ",
+            error
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Slice path:" }),
+            " ",
+            this.props.slicePath
+          ] })
+        ] });
+      }
+      if (!data) {
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+          padding: "20px",
+          border: "1px solid #ff9800",
+          borderRadius: "4px",
+          backgroundColor: "#fff3e0",
+          color: "#f57c00",
+          width,
+          height
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "No data available" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Slice data is empty or could not be parsed." }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+            "Slice path: ",
+            this.props.slicePath
+          ] })
+        ] });
+      }
+      return this.renderContent();
+    }
   };
 
-  // src/views/defaultViews/KanbanBoard.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
-  var KanbanBoard = (props) => {
-    const { config: config2, height } = props;
-    const width = props.width || "100%";
-    const [selectedNode, setSelectedNode] = (0, import_react4.useState)(null);
-    const [isModalOpen, setIsModalOpen] = (0, import_react4.useState)(false);
-    const [columnWidths, setColumnWidths] = (0, import_react4.useState)([]);
-    const [isResizing, setIsResizing] = (0, import_react4.useState)(false);
-    const [resizeStartX, setResizeStartX] = (0, import_react4.useState)(0);
-    const [resizeStartWidths, setResizeStartWidths] = (0, import_react4.useState)([]);
-    const [resizeColumnIndex, setResizeColumnIndex] = (0, import_react4.useState)(null);
-    const [draggedNode, setDraggedNode] = (0, import_react4.useState)(null);
-    const [dragOverColumn, setDragOverColumn] = (0, import_react4.useState)(null);
-    const containerRef = (0, import_react4.useRef)(null);
-    const featureNodes = props.data.nodes.filter((node) => {
-      if (!node) return false;
-      const isFeatureById = node.id?.startsWith("feature:");
-      const nodeType = node.type;
-      const hasFeatureMetadata = node.metadata?.frontmatter?.feature || node.metadata?.frontmatter?.scenario;
-      const label = node.label || "";
-      const description = node.description || "";
-      const isFeatureByText = label.toLowerCase().includes("feature") || description.toLowerCase().includes("scenario");
-      const idContainsFeature = node.id?.toLowerCase().includes("feature");
-      const hasFrontmatterFields = node.metadata?.frontmatter?.status || node.metadata?.frontmatter?.title || node.metadata?.frontmatter?.description;
-      return isFeatureById || nodeType === "feature" || hasFeatureMetadata || isFeatureByText || idContainsFeature || hasFrontmatterFields;
-    });
-    const featureNodeIds = new Set(featureNodes.map((node) => node.id));
-    const featureEdges = props.data.edges?.filter((edge) => {
-      return featureNodeIds.has(edge.source) && featureNodeIds.has(edge.target);
-    });
-    const featureData = {
-      ...props.data,
-      nodes: featureNodes,
-      edges: featureEdges || []
-    };
-    (0, import_react4.useEffect)(() => {
-      const allColumns2 = [
-        ...config2.columns,
+  // src/views/defaultViews/KanbanBoardView.tsx
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var KanbanBoard = class extends BaseViewClass {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "state", {
+        selectedItem: null,
+        columnWidths: [],
+        isResizing: false,
+        resizeStartX: 0,
+        resizeStartWidths: [],
+        resizeColumnIndex: null,
+        draggedItem: null,
+        dragOverColumn: null
+      });
+      __publicField(this, "containerRef", import_react2.default.createRef());
+      __publicField(this, "handleResizeStart", (index, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({
+          isResizing: true,
+          resizeColumnIndex: index,
+          resizeStartX: e.clientX,
+          resizeStartWidths: [...this.state.columnWidths]
+        });
+      });
+      __publicField(this, "handleMouseMove", (e) => {
+        if (!this.state.isResizing || this.state.resizeColumnIndex === null) return;
+        const deltaX = e.clientX - this.state.resizeStartX;
+        const containerWidth = this.containerRef.current?.clientWidth || this.props.width || 800;
+        const deltaPercent = deltaX / containerWidth * 100;
+        const newWidths = [...this.state.resizeStartWidths];
+        const leftIndex = this.state.resizeColumnIndex - 1;
+        const rightIndex = this.state.resizeColumnIndex;
+        const minWidth = 5;
+        if (newWidths[leftIndex] + deltaPercent >= minWidth && newWidths[rightIndex] - deltaPercent >= minWidth) {
+          newWidths[leftIndex] += deltaPercent;
+          newWidths[rightIndex] -= deltaPercent;
+          this.setState({ columnWidths: newWidths });
+        }
+      });
+      __publicField(this, "handleMouseUp", () => {
+        this.setState({
+          isResizing: false,
+          resizeColumnIndex: null
+        });
+      });
+      __publicField(this, "handleDragStart", (item, e) => {
+        e.dataTransfer.setData("text/plain", item.id);
+        this.setState({ draggedItem: item });
+        e.dataTransfer.effectAllowed = "move";
+      });
+      __publicField(this, "handleDragOver", (columnId, e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        this.setState({ dragOverColumn: columnId });
+      });
+      __publicField(this, "handleDrop", (columnId, e) => {
+        e.preventDefault();
+        const itemId = e.dataTransfer.getData("text/plain");
+        const item = this.getItems().find((n) => n.id === itemId);
+        if (item) {
+          const targetColumn = this.getAdjustedColumns().find((col) => col.id === columnId);
+          if (targetColumn) {
+            const targetStatus = targetColumn.targetStatus || (columnId === "backlog" ? "todo" : columnId);
+            if (this.props.onItemUpdate) {
+              this.props.onItemUpdate(item.id, { ...item, status: targetStatus });
+            }
+            if (this.props.onItemClick) {
+              this.props.onItemClick(item);
+            }
+          }
+        }
+        this.setState({ dragOverColumn: null, draggedItem: null });
+      });
+      __publicField(this, "handleDragEnd", () => {
+        this.setState({ dragOverColumn: null, draggedItem: null });
+      });
+    }
+    get config() {
+      return this.props.config || {
+        columns: [
+          {
+            id: "todo",
+            title: "To Do",
+            statusFilter: (item) => {
+              const status = item.status;
+              return status === "todo" || status === void 0;
+            },
+            width: 25,
+            targetStatus: "todo"
+          },
+          {
+            id: "doing",
+            title: "In Progress",
+            statusFilter: (item) => {
+              const status = item.status;
+              return status === "doing";
+            },
+            width: 25,
+            targetStatus: "doing"
+          },
+          {
+            id: "done",
+            title: "Done",
+            statusFilter: (item) => {
+              const status = item.status;
+              return status === "done";
+            },
+            width: 25,
+            targetStatus: "done"
+          },
+          {
+            id: "blocked",
+            title: "Blocked",
+            statusFilter: (item) => {
+              const status = item.status;
+              return status === "blocked";
+            },
+            width: 25,
+            targetStatus: "blocked"
+          }
+        ]
+      };
+    }
+    initializeColumnWidths() {
+      const allColumns = [
+        ...this.config.columns,
         {
           id: "backlog",
           title: "Backlog",
-          statusFilter: (node) => {
-            for (const column of config2.columns) {
+          statusFilter: (item) => {
+            for (const column of this.config.columns) {
               try {
-                if (column.statusFilter(node)) {
+                if (column.statusFilter(item)) {
                   return false;
                 }
               } catch (error) {
@@ -13050,135 +13014,64 @@
             return true;
           },
           width: 20
-          // Default width for backlog column
         }
       ];
-      const totalWidth = allColumns2.reduce((sum, col) => sum + col.width, 0);
-      const initialWidths = allColumns2.map((col) => col.width / totalWidth * 100);
-      setColumnWidths(initialWidths);
-    }, [config2.columns]);
-    const allColumns = [
-      ...config2.columns,
-      {
-        id: "backlog",
-        title: "Backlog",
-        statusFilter: (node) => {
-          for (const column of config2.columns) {
-            try {
-              if (column.statusFilter(node)) {
-                return false;
-              }
-            } catch (error) {
-              continue;
-            }
-          }
-          return true;
-        },
-        width: 20
-      }
-    ];
-    const adjustedColumns = allColumns.map((col, index) => ({
-      ...col,
-      width: columnWidths[index] || col.width / 100 * 100
-    }));
-    const handleResizeStart = (index, e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsResizing(true);
-      setResizeColumnIndex(index);
-      setResizeStartX(e.clientX);
-      setResizeStartWidths([...columnWidths]);
-    };
-    (0, import_react4.useEffect)(() => {
-      const handleMouseMove = (e) => {
-        if (!isResizing || resizeColumnIndex === null) return;
-        const deltaX = e.clientX - resizeStartX;
-        const containerWidth = containerRef.current?.clientWidth || (typeof width === "number" ? width : 800);
-        const deltaPercent = deltaX / containerWidth * 100;
-        const newWidths = [...resizeStartWidths];
-        const leftIndex = resizeColumnIndex - 1;
-        const rightIndex = resizeColumnIndex;
-        const minWidth = 5;
-        if (newWidths[leftIndex] + deltaPercent >= minWidth && newWidths[rightIndex] - deltaPercent >= minWidth) {
-          newWidths[leftIndex] += deltaPercent;
-          newWidths[rightIndex] -= deltaPercent;
-          setColumnWidths(newWidths);
-        }
-      };
-      const handleMouseUp = () => {
-        setIsResizing(false);
-        setResizeColumnIndex(null);
-      };
-      if (isResizing) {
-        document.addEventListener("mousemove", handleMouseMove);
-        document.addEventListener("mouseup", handleMouseUp);
-      }
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-      };
-    }, [isResizing, resizeColumnIndex, resizeStartX, resizeStartWidths, width]);
-    const handleDragStart = (node, e) => {
-      e.dataTransfer.setData("text/plain", node.id);
-      setDraggedNode(node);
-      e.dataTransfer.effectAllowed = "move";
-    };
-    const handleDragOver = (columnId, e) => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      setDragOverColumn(columnId);
-    };
-    const handleDrop = (columnId, e) => {
-      e.preventDefault();
-      const nodeId = e.dataTransfer.getData("text/plain");
-      const node = featureNodes.find((n) => n.id === nodeId);
-      if (node) {
-        const targetColumn = adjustedColumns.find((col) => col.id === columnId);
-        if (targetColumn) {
-          console.log(`Dropped node ${nodeId} into column ${columnId}`);
-          const targetStatus = targetColumn.targetStatus || (columnId === "backlog" ? "todo" : columnId);
-          const updatedAttributes = {
-            ...node,
-            metadata: {
-              ...node.metadata,
-              frontmatter: {
-                ...node.metadata.frontmatter,
-                status: targetStatus
+      const totalWidth = allColumns.reduce((sum, col) => sum + col.width, 0);
+      const initialWidths = allColumns.map((col) => col.width / totalWidth * 100);
+      this.setState({ columnWidths: initialWidths });
+    }
+    getItems() {
+      const data = this.state.data;
+      if (!data) return [];
+      return data.items;
+    }
+    getAdjustedColumns() {
+      const allColumns = [
+        ...this.config.columns,
+        {
+          id: "backlog",
+          title: "Backlog",
+          statusFilter: (item) => {
+            for (const column of this.config.columns) {
+              try {
+                if (column.statusFilter(item)) {
+                  return false;
+                }
+              } catch (error) {
+                continue;
               }
             }
-          };
-          if (props.onNodeUpdate) {
-            props.onNodeUpdate(node.id, updatedAttributes);
-          }
-          props.onNodeClick?.(node);
+            return true;
+          },
+          width: 20
         }
-      }
-      setDragOverColumn(null);
-      setDraggedNode(null);
-    };
-    const handleDragEnd = () => {
-      setDragOverColumn(null);
-      setDraggedNode(null);
-    };
-    const renderColumns = () => {
+      ];
+      return allColumns.map((col, index) => ({
+        ...col,
+        width: this.state.columnWidths[index] || col.width / 100 * 100
+      }));
+    }
+    renderColumns() {
+      const adjustedColumns = this.getAdjustedColumns();
+      const items = this.getItems();
       return adjustedColumns.map((column, index) => {
-        const columnNodes = featureNodes.filter((node) => {
-          if (!node) return false;
+        const columnItems = items.filter((item) => {
+          if (!item) return false;
           try {
-            return column.statusFilter(node);
+            return column.statusFilter(item);
           } catch (error) {
             console.warn(`Error in statusFilter for column "${column.title}":`, error);
             return false;
           }
         });
-        const isDragOver = dragOverColumn === column.id;
-        return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_react4.default.Fragment, { children: [
-          index > 0 && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        const isDragOver = this.state.dragOverColumn === column.id;
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_react2.default.Fragment, { children: [
+          index > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
             "div",
             {
               style: {
                 width: "5px",
-                backgroundColor: isResizing && resizeColumnIndex === index ? "#007acc" : "#ddd",
+                backgroundColor: this.state.isResizing && this.state.resizeColumnIndex === index ? "#007acc" : "#ddd",
                 cursor: "col-resize",
                 display: "flex",
                 alignItems: "center",
@@ -13186,21 +13079,12 @@
                 position: "relative",
                 zIndex: 2
               },
-              onMouseDown: (e) => handleResizeStart(index, e),
+              onMouseDown: (e) => this.handleResizeStart(index, e),
               title: "Drag to resize",
-              children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                "div",
-                {
-                  style: {
-                    width: "1px",
-                    height: "20px",
-                    backgroundColor: "#999"
-                  }
-                }
-              )
+              children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { width: "1px", height: "20px", backgroundColor: "#999" } })
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
             "div",
             {
               style: {
@@ -13214,121 +13098,118 @@
                 minWidth: "50px",
                 transition: "background-color 0.2s"
               },
-              onDragOver: (e) => handleDragOver(column.id, e),
-              onDrop: (e) => handleDrop(column.id, e),
-              onDragLeave: () => setDragOverColumn(null),
+              onDragOver: (e) => this.handleDragOver(column.id, e),
+              onDrop: (e) => this.handleDrop(column.id, e),
+              onDragLeave: () => this.setState({ dragOverColumn: null }),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
-                  "div",
-                  {
-                    style: {
-                      padding: "10px",
-                      borderBottom: "1px solid #ddd",
-                      backgroundColor: "#e0e0e0",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center"
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+                  padding: "10px",
+                  borderBottom: "1px solid #ddd",
+                  backgroundColor: "#e0e0e0",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                    column.title,
+                    " (",
+                    columnItems.length,
+                    ")"
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { fontSize: "12px", color: "#666" }, children: [
+                    column.width.toFixed(1),
+                    "%"
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { flex: 1, padding: "10px", overflowY: "auto" }, children: columnItems.map((item) => {
+                  const isDragging = this.state.draggedItem?.id === item.id;
+                  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+                    "div",
+                    {
+                      draggable: true,
+                      style: {
+                        padding: "8px",
+                        marginBottom: "8px",
+                        backgroundColor: isDragging ? "#f0f0f0" : "white",
+                        border: isDragging ? "2px dashed #007acc" : "1px solid #ccc",
+                        borderRadius: "4px",
+                        cursor: "grab",
+                        opacity: isDragging ? 0.5 : 1,
+                        transition: "all 0.2s"
+                      },
+                      onClick: () => {
+                        this.setState({ selectedItem: item });
+                        if (this.props.onItemClick) {
+                          this.props.onItemClick(item);
+                        }
+                      },
+                      onMouseEnter: () => this.props.onItemHover?.(item),
+                      onMouseLeave: () => this.props.onItemHover?.(null),
+                      onDragStart: (e) => this.handleDragStart(item, e),
+                      onDragEnd: this.handleDragEnd,
+                      children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { fontWeight: "bold", marginBottom: "4px" }, children: item.label }),
+                        item.status && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: "12px", color: "#666", marginBottom: "2px" }, children: [
+                          "Status: ",
+                          item.status
+                        ] }),
+                        item.priority && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: "12px", color: "#666" }, children: [
+                          "Priority: ",
+                          item.priority
+                        ] })
+                      ]
                     },
-                    children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
-                        column.title,
-                        " (",
-                        columnNodes.length,
-                        ")"
-                      ] }),
-                      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { style: { fontSize: "12px", color: "#666" }, children: [
-                        column.width.toFixed(1),
-                        "%"
-                      ] })
-                    ]
-                  }
-                ),
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                  "div",
-                  {
-                    style: {
-                      flex: 1,
-                      padding: "10px",
-                      overflowY: "auto"
-                    },
-                    children: columnNodes.map((node) => {
-                      const label = node.label || node.id;
-                      const status = node.metadata?.frontmatter?.status;
-                      const priority = node.metadata?.frontmatter?.priority;
-                      const isDragging = draggedNode?.id === node.id;
-                      return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
-                        "div",
-                        {
-                          draggable: true,
-                          style: {
-                            padding: "8px",
-                            marginBottom: "8px",
-                            backgroundColor: isDragging ? "#f0f0f0" : "white",
-                            border: isDragging ? "2px dashed #007acc" : "1px solid #ccc",
-                            borderRadius: "4px",
-                            cursor: "grab",
-                            opacity: isDragging ? 0.5 : 1,
-                            transition: "all 0.2s"
-                          },
-                          onClick: () => {
-                            setSelectedNode(node);
-                            setIsModalOpen(true);
-                            props.onNodeClick?.(node);
-                          },
-                          onMouseEnter: () => props.onNodeHover?.(node),
-                          onMouseLeave: () => props.onNodeHover?.(null),
-                          onDragStart: (e) => handleDragStart(node, e),
-                          onDragEnd: handleDragEnd,
-                          children: [
-                            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { style: { fontWeight: "bold", marginBottom: "4px" }, children: label }),
-                            status && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { style: { fontSize: "12px", color: "#666", marginBottom: "2px" }, children: [
-                              "Status: ",
-                              status
-                            ] }),
-                            priority && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { style: { fontSize: "12px", color: "#666" }, children: [
-                              "Priority: ",
-                              priority
-                            ] })
-                          ]
-                        },
-                        node.id
-                      );
-                    })
-                  }
-                )
+                    item.id
+                  );
+                }) })
               ]
             }
           )
         ] }, `column-${column.id}`);
       });
-    };
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+    }
+    componentDidMount() {
+      super.componentDidMount();
+      this.initializeColumnWidths();
+      document.addEventListener("mousemove", this.handleMouseMove);
+      document.addEventListener("mouseup", this.handleMouseUp);
+    }
+    componentWillUnmount() {
+      document.removeEventListener("mousemove", this.handleMouseMove);
+      document.removeEventListener("mouseup", this.handleMouseUp);
+    }
+    componentDidUpdate(prevProps, prevState) {
+      super.componentDidUpdate(prevProps, prevState);
+      if (prevProps.config !== this.props.config) {
+        this.initializeColumnWidths();
+      }
+    }
+    renderContent() {
+      const { width = "100%", height = 600 } = this.props;
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
         "div",
         {
-          ref: containerRef,
+          ref: this.containerRef,
           style: {
             width: "100%",
             height,
             position: "relative"
           },
-          onDragOver: (e) => {
-            e.preventDefault();
-          },
+          onDragOver: (e) => e.preventDefault(),
           onDrop: (e) => {
             e.preventDefault();
-            setDragOverColumn(null);
+            this.setState({ dragOverColumn: null });
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { style: {
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
               display: "flex",
               height: "100%",
               overflow: "hidden",
-              userSelect: isResizing ? "none" : "auto"
-            }, children: renderColumns() }),
-            isResizing && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { style: {
+              userSelect: this.state.isResizing ? "none" : "auto"
+            }, children: this.renderColumns() }),
+            this.state.isResizing && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
               position: "fixed",
               top: 0,
               left: 0,
@@ -13337,7 +13218,7 @@
               zIndex: 1e3,
               cursor: "col-resize"
             } }),
-            draggedNode && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { style: {
+            this.state.draggedItem && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
               position: "absolute",
               top: 10,
               right: 10,
@@ -13349,104 +13230,49 @@
               zIndex: 1001
             }, children: [
               "Dragging: ",
-              draggedNode.label || draggedNode.id
+              this.state.draggedItem.label
             ] })
           ]
         }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-        NodeDetailsModal,
-        {
-          node: selectedNode,
-          isOpen: isModalOpen,
-          onClose: () => {
-            setIsModalOpen(false);
-            setSelectedNode(null);
-          }
-        }
-      )
-    ] });
+      );
+    }
+  };
+  var KanbanView = ({
+    slicePath,
+    width = 800,
+    height = 600
+  }) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+      KanbanBoard,
+      {
+        slicePath,
+        width,
+        height
+      }
+    );
   };
 
-  // src/views/defaultViews/GanttChart.tsx
-  var import_react6 = __toESM(require_react(), 1);
-
-  // src/views/defaultViews/BaseChart.tsx
-  var import_react5 = __toESM(require_react(), 1);
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/defaultViews/GanttChart.tsx
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/defaultViews/EisenhowerMatrix.tsx
-  var import_react7 = __toESM(require_react(), 1);
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
-
-  // testeranto/views/Kanban.entry.js
-  var config = window.TESTERANTO_VIEW_CONFIG || {};
-  function ViewApp() {
-    const [data, setData] = import_react8.default.useState(null);
-    const [loading, setLoading] = import_react8.default.useState(true);
-    const [error, setError] = import_react8.default.useState(null);
-    import_react8.default.useEffect(() => {
-      async function loadData() {
-        try {
-          const response = await fetch(config.dataPath || "/testeranto/slices/views/Kanban.json");
-          if (!response.ok) {
-            throw new Error(`Failed to load data: ${response.status}`);
-          }
-          const jsonData = await response.json();
-          setData(jsonData);
-        } catch (err) {
-          setError(err.message);
-          console.error("Error loading view data:", err);
-        } finally {
-          setLoading(false);
-        }
-      }
-      loadData();
-      const interval = setInterval(loadData, 5e3);
-      return () => clearInterval(interval);
-    }, []);
-    if (loading) {
-      return import_react8.default.createElement("div", null, "Loading Kanban view...");
-    }
-    if (error) {
-      return import_react8.default.createElement("div", { style: { color: "red", padding: "20px" } }, `Error: ${error}`);
-    }
-    if (!data) {
-      return import_react8.default.createElement("div", null, "No data available");
-    }
-    const props = {
-      data,
-      width: window.innerWidth - 40,
-      height: window.innerHeight - 40,
-      config: {
-        projection: {
-          xAttribute: "status",
-          yAttribute: "priority",
-          xType: "categorical",
-          yType: "continuous",
-          layout: "grid"
-        },
-        style: {
-          nodeSize: 10,
-          nodeColor: "#007acc",
-          nodeShape: "circle"
-        }
-      },
-      onNodeClick: (node) => console.log("Node clicked:", node),
-      onNodeHover: (node) => console.log("Node hover:", node)
-    };
-    return import_react8.default.createElement(KanbanBoard, props);
+  // testeranto/views/Kanban.wrapper.tsx
+  var config = window.TESTERANTO_VIEW_CONFIG;
+  if (!config) {
+    console.error("TESTERANTO_VIEW_CONFIG not found in window");
+    document.getElementById("root").innerHTML = `
+    <div style="padding: 40px; text-align: center; color: #d32f2f;">
+      <h1>Configuration Error</h1>
+      <p>View configuration not found.</p>
+    </div>
+  `;
+  } else {
+    console.log("Mounting view with config:", config);
+    const root = import_client.default.createRoot(document.getElementById("root"));
+    root.render(
+      import_react3.default.createElement(KanbanView, {
+        slicePath: config.dataPath,
+        width: window.innerWidth - 40,
+        height: window.innerHeight - 40
+      })
+    );
   }
-  document.addEventListener("DOMContentLoaded", () => {
-    const rootElement = document.getElementById("root");
-    if (rootElement) {
-      const root = import_client.default.createRoot(rootElement);
-      root.render(import_react8.default.createElement(ViewApp));
-    }
-  });
 })();
 /*! Bundled license information:
 

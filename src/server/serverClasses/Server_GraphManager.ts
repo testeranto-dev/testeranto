@@ -1,15 +1,12 @@
+import fs from "fs";
+import path from "path";
+import type { GraphEdgeAttributes, GraphNodeAttributes } from "../../graph/index";
 import type { ITesterantoConfig } from "../../Types";
 import { GraphManager } from "../graph/index";
-import type { GraphNodeAttributes, GraphEdgeAttributes } from "../../graph/index";
 import type { IMode } from "../types";
-import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
-import { resetGraphDataPure } from "./utils/resetGraphDataPure";
-import { saveGraphDataForStaticModePure } from "./utils/graphFileUtils";
 import { Server_GraphManagerCore } from "./Server_GraphManagerCore";
-// import { AiderOutputCapturer } from "../chat/AiderOutputCapturer";
-import { getSliceFunction } from "../../views";
-import path from "path";
-import fs from "fs";
+import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
+
 import { handleMarkdownFileChange } from "../stakeholder";
 
 export class Server_GraphManager {
@@ -67,14 +64,14 @@ export class Server_GraphManager {
       agentNodes.map((node: any) => ({ id: node.id, label: node.label })));
 
     // Write view slice files
-    const views = (this.configs as any).views;
-    if (views) {
+    // const views = (this.configs as any).views;
+    if (this.configs.views) {
       // Import slice definitions from views
 
       // For each view, generate its slice and write to file
-      for (const [viewKey, viewPath] of Object.entries(views)) {
+      for (const [viewKey, v] of Object.entries(this.configs.views)) {
         // Get slice function for this view
-        const sliceFunction = getSliceFunction(viewKey);
+        const sliceFunction = v.slicer;
         let sliceData: any;
 
         if (sliceFunction) {
@@ -92,11 +89,8 @@ export class Server_GraphManager {
           };
         }
 
-        // Write the slice to a file
         await this.writeSliceFile(viewKey, sliceData);
-
-        // Add or update view node in the graph
-        this.addViewNodeToGraph(viewKey, viewPath as string, sliceData);
+        this.addViewNodeToGraph(viewKey, v.filePath, sliceData);
       }
     }
     // Write agent slice files
@@ -267,20 +261,20 @@ export class Server_GraphManager {
       // Check if the view node already exists by getting graph data
       const graphData = graphManager.getGraphData();
       const existingNode = graphData.nodes.find((node: any) => node.id === viewNodeId);
-      
+
       const operationType = existingNode ? 'updateNode' : 'addNode';
-      
+
       const operations = [{
         type: operationType,
         data: viewNodeAttributes,
         timestamp: timestamp
       }];
-      
+
       const update = {
         operations,
         timestamp
       };
-      
+
       graphManager.applyUpdate(update);
 
       // Connect view node to relevant nodes in its slice
@@ -379,7 +373,7 @@ export class Server_GraphManager {
       if (sliceData?.nodes) {
         for (const node of sliceData.nodes) {
           const nodeId = node.id;
-          
+
           // Add edge from view to node
           operations.push({
             type: 'addEdge',
@@ -394,7 +388,7 @@ export class Server_GraphManager {
             },
             timestamp: timestamp
           });
-          
+
           // Add edge from node to view
           operations.push({
             type: 'addEdge',
@@ -496,6 +490,13 @@ export class Server_GraphManager {
     return this.graphManager ? this.graphManager.getGraphData() : { nodes: [], edges: [] };
   }
 
+  getGraphData(): any {
+    if (!this.graphManager) {
+      throw new Error('Graph manager not available');
+    }
+    return this.graphManager.getGraphData();
+  }
+
   generateFileTreeGraph(): any {
     const testResults = this.getCurrentTestResults();
     return generateFileTreeGraphPure(this.projectRoot, this.configs, testResults);
@@ -512,7 +513,7 @@ export class Server_GraphManager {
 
     // Also write view slice files
     await this.writeViewSliceFiles();
-    
+
     // Update all agent slice files to ensure they're current
     this.updateAllAgentSliceFiles();
   }

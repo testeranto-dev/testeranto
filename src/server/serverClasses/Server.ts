@@ -103,6 +103,9 @@ export class Server extends Server_Docker {
       throw new Error(`HTML source file not found at ${htmlSource}`);
     }
 
+    // Generate slice data for views
+    await this.generateViewSlices();
+
     // Generate HTML files for configured views
     await this.generateViewHtmlFiles();
 
@@ -128,17 +131,17 @@ export class Server extends Server_Docker {
       fs.mkdirSync(viewsDir, { recursive: true });
     }
 
-    // Generate HTML file and bundle for each view
-    for (const [viewKey, viewPath] of Object.entries(views)) {
+    // Generate bundle for each view based on its configuration
+    for (const [viewKey, v] of Object.entries(views)) {
       // Generate HTML file
       const htmlFilePath = join(viewsDir, `${viewKey}.html`);
-      const htmlContent = this.generateViewHtml(viewKey, viewPath as string);
+      const htmlContent = this.generateViewHtml(viewKey, v.filePath);
 
       fs.writeFileSync(htmlFilePath, htmlContent, 'utf-8');
       console.log(`[Server] Generated HTML file for view ${viewKey} at ${htmlFilePath}`);
 
-      // Generate JavaScript bundle
-      await this.generateViewBundle(viewKey, viewPath as string);
+      // Generate JavaScript bundle for this view
+      await this.generateViewBundle(viewKey, v.filePath);
     }
 
     // Also generate a simple index.html that lists all views
@@ -190,26 +193,41 @@ export class Server extends Server_Docker {
 
   <script>
     // View configuration
+    const viewKey = '${viewKey}';
+    const viewPath = '${viewPath}';
+    const dataPath = '/testeranto/slices/views/' + viewKey + '.json';
+    
+    console.log('[View HTML] Setting up configuration for view:', viewKey);
+    console.log('[View HTML] Data path:', dataPath);
+    
     window.TESTERANTO_VIEW_CONFIG = {
-      viewKey: '${viewKey}',
-      viewPath: '${viewPath}',
-      dataPath: '/testeranto/slices/views/${viewKey}.json',
+      viewKey: viewKey,
+      viewPath: viewPath,
+      dataPath: dataPath,
       apiEndpoint: '/~/api'
     };
 
-    // Load the view bundle
+    console.log('[View HTML] Configuration set:', window.TESTERANTO_VIEW_CONFIG);
+
+    // Load the view-specific bundle
     const script = document.createElement('script');
-    script.src = '/testeranto/views/${viewKey}.bundle.js';
+    script.src = '/testeranto/views/' + viewKey + '.bundle.js';
+    script.onload = function() {
+      console.log('[View HTML] View bundle loaded successfully');
+    };
     script.onerror = function() {
+      console.error('[View HTML] Failed to load view bundle');
       document.getElementById('root').innerHTML = \`
         <div class="error">
           <h1>Error Loading View</h1>
-          <p>Failed to load ${viewKey} view bundle.</p>
-          <p>Make sure the view has been properly compiled.</p>
+          <p>Failed to load \${viewKey} view bundle.</p>
+          <p>Make sure the server has generated the bundle.</p>
+          <p>View path: \${viewPath}</p>
         </div>
       \`;
     };
     document.head.appendChild(script);
+    console.log('[View HTML] Script element added to head');
   </script>
 </body>
 </html>`;
@@ -307,199 +325,7 @@ export class Server extends Server_Docker {
 </html>`;
   }
 
-  private async generateViewBundle(viewKey: string, viewPath: string): Promise<void> {
-    try {
-      const viewsDir = join(process.cwd(), "testeranto", "views");
-      const bundlePath = join(viewsDir, `${viewKey}.bundle.js`);
 
-      // Get the project root to resolve node_modules
-      const projectRoot = process.cwd();
-      const nodeModulesPath = join(projectRoot, 'node_modules');
-
-      // Create a simple entry point for the view
-      const entryPoint = join(viewsDir, `${viewKey}.entry.js`);
-
-      // Determine which view component to use based on the viewKey
-      let componentImport = '';
-      let componentName = '';
-
-      // Map view keys to their corresponding components
-      // The views are exported from src/views/index.ts
-      switch (viewKey) {
-        case 'Kanban':
-          componentImport = `import { KanbanBoard } from '../../src/views';`;
-          componentName = 'KanbanBoard';
-          break;
-        case 'Gantt':
-          componentImport = `import { GanttChart } from '../../src/views';`;
-          componentName = 'GanttChart';
-          break;
-        case 'Eisenhower':
-          componentImport = `import { EisenhowerMatrix } from '../../src/views';`;
-          componentName = 'EisenhowerMatrix';
-          break;
-        default:
-          // For custom views, try to import from the specified path
-          // We need to handle this differently - for now, use a placeholder
-          componentImport = `
-// Custom view import
-const ${viewKey} = () => React.createElement('div', null, 
-  \`Custom view '\${viewKey}' from '\${viewPath}' is not yet implemented. 
-   Check the console for configuration details.\`
-);`;
-          componentName = viewKey;
-      }
-
-      const entryContent = `
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-${componentImport}
-
-// Get configuration from window
-const config = window.TESTERANTO_VIEW_CONFIG || {};
-
-// Simple view component that loads data and renders the view
-function ViewApp() {
-  const [data, setData] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(null);
-
-  React.useEffect(() => {
-    async function loadData() {
-      try {
-        const response = await fetch(config.dataPath || '/testeranto/slices/views/${viewKey}.json');
-        if (!response.ok) {
-          throw new Error(\`Failed to load data: \${response.status}\`);
-        }
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error loading view data:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    
-    loadData();
-    
-    // Set up polling for updates
-    const interval = setInterval(loadData, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  if (loading) {
-    return React.createElement('div', null, 'Loading ${viewKey} view...');
-  }
-
-  if (error) {
-    return React.createElement('div', { style: { color: 'red', padding: '20px' } }, \`Error: \${error}\`);
-  }
-
-  if (!data) {
-    return React.createElement('div', null, 'No data available');
-  }
-
-  // Create props for the view component
-  const props = {
-    data: data,
-    width: window.innerWidth - 40,
-    height: window.innerHeight - 40,
-    config: {
-      projection: {
-        xAttribute: 'status',
-        yAttribute: 'priority',
-        xType: 'categorical',
-        yType: 'continuous',
-        layout: 'grid'
-      },
-      style: {
-        nodeSize: 10,
-        nodeColor: '#007acc',
-        nodeShape: 'circle'
-      }
-    },
-    onNodeClick: (node) => console.log('Node clicked:', node),
-    onNodeHover: (node) => console.log('Node hover:', node)
-  };
-
-  return React.createElement(${componentName}, props);
-}
-
-// Initialize the app when the DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  const rootElement = document.getElementById('root');
-  if (rootElement) {
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(React.createElement(ViewApp));
-  }
-});
-`;
-
-      // Write the entry point file
-      fs.writeFileSync(entryPoint, entryContent, 'utf-8');
-
-      // Bundle the entry point
-      try {
-        const buildOptions: esbuild.BuildOptions = {
-          entryPoints: [entryPoint],
-          bundle: true,
-          format: "iife",
-          platform: "browser",
-          target: "es2020",
-          jsx: "automatic",
-          outfile: bundlePath,
-          define: {
-            'process.env.NODE_ENV': '"production"'
-          },
-          alias: {
-            'react': path.dirname(require.resolve('react')),
-            'react-dom': path.dirname(require.resolve('react-dom')),
-          },
-          nodePaths: [nodeModulesPath],
-          loader: {
-            '.tsx': 'tsx',
-            '.ts': 'ts',
-            '.jsx': 'jsx',
-            '.js': 'js'
-          },
-          external: [], // Don't externalize any packages
-        };
-
-        console.log(`[Server] Bundling view ${viewKey} from ${entryPoint} to ${bundlePath}`);
-        const result = esbuild.buildSync(buildOptions);
-
-        if (result.errors && result.errors.length > 0) {
-          console.error(`[Server] Errors bundling view ${viewKey}:`, result.errors);
-          // Create a simple error bundle instead
-          this.createErrorBundle(bundlePath, viewKey, result.errors.map(e => e.text).join(', '));
-        } else {
-          console.log(`[Server] Successfully generated bundle for view ${viewKey} at ${bundlePath}`);
-        }
-
-      } catch (buildError) {
-        console.error(`[Server] Build error for view ${viewKey}:`, buildError);
-        // Create a simple error bundle
-        this.createErrorBundle(bundlePath, viewKey, buildError instanceof Error ? buildError.message : String(buildError));
-      } finally {
-        // Clean up the entry point file
-        try {
-          if (fs.existsSync(entryPoint)) {
-            fs.unlinkSync(entryPoint);
-          }
-        } catch (cleanupError) {
-          console.warn(`[Server] Could not clean up entry point for ${viewKey}:`, cleanupError);
-        }
-      }
-
-    } catch (error) {
-      console.error(`[Server] Error generating bundle for view ${viewKey}:`, error);
-      // Try to create an error bundle
-      const viewsDir = join(process.cwd(), "testeranto", "views");
-      const bundlePath = join(viewsDir, `${viewKey}.bundle.js`);
-      this.createErrorBundle(bundlePath, viewKey, error instanceof Error ? error.message : String(error));
-    }
-  }
 
   private createErrorBundle(bundlePath: string, viewKey: string, errorMessage: string): void {
     const errorBundle = `
@@ -526,6 +352,148 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  private async generateViewBundle(viewKey: string, viewPath: string): Promise<void> {
+    const viewsDir = join(process.cwd(), "testeranto", "views");
+    const bundlePath = join(viewsDir, `${viewKey}.bundle.js`);
+    const absoluteViewPath = join(process.cwd(), viewPath);
+
+    // Delete existing bundle to ensure fresh generation
+    if (fs.existsSync(bundlePath)) {
+      console.log(`[Server] Deleting existing bundle for ${viewKey} at ${bundlePath}`);
+      fs.unlinkSync(bundlePath);
+    }
+
+    if (!fs.existsSync(absoluteViewPath)) {
+      console.error(`[Server] View file not found: ${absoluteViewPath}`);
+      this.createErrorBundle(bundlePath, viewKey, `View file not found: ${absoluteViewPath}`);
+      return;
+    }
+
+    // Generate component name: capitalize first letter and add "View"
+    // e.g., "kanban" -> "KanbanView", "gantt" -> "GanttView"
+    const componentName = viewKey.charAt(0).toUpperCase() + viewKey.slice(1) + 'View';
+
+    // Create a wrapper entry point that mounts the component
+    const wrapperContent = `
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { ${componentName} } from '${absoluteViewPath.replace(/\\/g, '/')}';
+
+const config = window.TESTERANTO_VIEW_CONFIG;
+if (!config) {
+  console.error('TESTERANTO_VIEW_CONFIG not found in window');
+  document.getElementById('root').innerHTML = \`
+    <div style="padding: 40px; text-align: center; color: #d32f2f;">
+      <h1>Configuration Error</h1>
+      <p>View configuration not found.</p>
+    </div>
+  \`;
+} else {
+  console.log('Mounting view with config:', config);
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    React.createElement(${componentName}, {
+      slicePath: config.dataPath,
+      width: window.innerWidth - 40,
+      height: window.innerHeight - 40
+    })
+  );
+}
+`;
+
+    const wrapperPath = join(viewsDir, `${viewKey}.wrapper.tsx`);
+    fs.writeFileSync(wrapperPath, wrapperContent, 'utf-8');
+
+    const buildOptions: esbuild.BuildOptions = {
+      entryPoints: [wrapperPath],
+      bundle: true,
+      format: "iife",
+      platform: "browser",
+      target: "es2020",
+      jsx: "automatic",
+      outfile: bundlePath,
+      define: {
+        'process.env.NODE_ENV': '"production"'
+      },
+      alias: {
+        'react': path.dirname(require.resolve('react')),
+        'react-dom': path.dirname(require.resolve('react-dom')),
+      },
+      nodePaths: [join(process.cwd(), 'node_modules')],
+      loader: {
+        '.tsx': 'tsx',
+        '.ts': 'ts',
+        '.jsx': 'jsx',
+        '.js': 'js'
+      },
+      // Mark React and ReactDOM as external to prevent multiple copies
+      external: ['react', 'react-dom'],
+    };
+
+    try {
+      console.log(`[Server] Bundling view ${viewKey} from ${wrapperPath} to ${bundlePath}`);
+      const result = esbuild.buildSync(buildOptions);
+
+      // Clean up wrapper file
+      fs.unlinkSync(wrapperPath);
+
+      if (result.errors && result.errors.length > 0) {
+        console.error(`[Server] Errors bundling view ${viewKey}:`, result.errors);
+        this.createErrorBundle(bundlePath, viewKey, result.errors.map(e => e.text).join(', '));
+      } else {
+        console.log(`[Server] Successfully bundled view ${viewKey} to ${bundlePath}`);
+        
+        // Verify the bundle was created
+        if (fs.existsSync(bundlePath)) {
+          const stats = fs.statSync(bundlePath);
+          console.log(`[Server] Bundle created: ${bundlePath} (${stats.size} bytes)`);
+        } else {
+          console.error(`[Server] Bundle not created at ${bundlePath}`);
+        }
+      }
+    } catch (error) {
+      console.error(`[Server] Error bundling view ${viewKey}:`, error);
+      this.createErrorBundle(bundlePath, viewKey, error instanceof Error ? error.message : String(error));
+    }
+  }
+
+
+  private async generateViewSlices(): Promise<void> {
+    const views = this.configs.views;
+    if (!views || Object.keys(views).length === 0) {
+      return;
+    }
+
+    // Create the slices directory if it doesn't exist
+    const slicesDir = join(process.cwd(), "testeranto", "slices", "views");
+    if (!fs.existsSync(slicesDir)) {
+      fs.mkdirSync(slicesDir, { recursive: true });
+    }
+
+    const graphData = await this.getGraphDataForSlices();
+
+    for (const [viewKey, v] of Object.entries(views)) {
+
+      const slicePath = join(slicesDir, `${viewKey}.json`);
+      const sliceData = v.slicer(graphData)
+      fs.writeFileSync(slicePath, JSON.stringify(sliceData, null, 2), 'utf-8');
+    }
+  }
+
+  private async getGraphDataForSlices(): Promise<any> {
+
+    const graphData = this.graphManager.getGraphData();
+    if (!graphData) {
+      throw new Error('No graph data available for generating view slices');
+    }
+
+    console.log(`[Server] Retrieved graph data with ${graphData.nodes?.length || 0} nodes for view slices`);
+    return graphData;
+  }
+
+  // Note: Slice creation is now handled by view-specific slice functions
+  // or by passing the entire graph data to the view component
+  // The view component is responsible for filtering what it needs
 
   private getViewsModulePath(): string {
     // Return the path to the views module relative to the project root

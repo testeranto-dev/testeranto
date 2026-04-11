@@ -30,16 +30,30 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
   const [spacePressed, setSpacePressed] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
+  // Ensure config has projection with defaults
+  const safeConfig = {
+    ...config,
+    projection: {
+      xAttribute: 'x',
+      yAttribute: 'y',
+      xType: 'continuous' as const,
+      yType: 'continuous' as const,
+      layout: 'none' as const,
+      ...config.projection
+    }
+  };
+
   // Project the graph data
-  const projectedGraph = projectGraph(data, config.projection);
+  const projectedGraph = projectGraph(data, safeConfig.projection);
 
   // Apply layout
   const nodes = projectedGraph.nodes;
   let laidOutNodes = [...nodes];
 
-  switch (config.projection.layout) {
+  const layout = safeConfig.projection.layout;
+  switch (layout) {
     // case 'grid':
-    //   laidOutNodes = layoutGrid(nodes, config.projection.spacing);
+    //   laidOutNodes = layoutGrid(nodes, safeConfig.projection.spacing);
     //   break;
     // case 'force':
     //   // Use d3-force for proper force-directed layout
@@ -49,9 +63,9 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
     //     {
     //       width,
     //       height,
-    //       strength: config.projection.repulsionStrength,
-    //       distance: config.projection.distance,
-    //       iterations: config.projection.iterations
+    //       strength: safeConfig.projection.repulsionStrength,
+    //       distance: safeConfig.projection.distance,
+    //       iterations: safeConfig.projection.iterations
     //     }
     //   );
     //   // Ensure all nodes have screen coordinates
@@ -64,7 +78,7 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
     case 'tree':
       if (data.edges) {
         // Cast config to TreeConfig to access tree-specific properties
-        const treeConfig = config as TreeConfig;
+        const treeConfig = safeConfig as TreeConfig;
         laidOutNodes = layoutTree(
           nodes,
           data.edges,
@@ -76,8 +90,8 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
       }
       break;
     case 'timeline':
-      if (config.projection.xAttribute) {
-        laidOutNodes = layoutTimeline(nodes, config.projection.xAttribute);
+      if (safeConfig.projection.xAttribute) {
+        laidOutNodes = layoutTimeline(nodes, safeConfig.projection.xAttribute);
       }
       break;
     default:
@@ -94,8 +108,11 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
     nodes: laidOutNodes
   };
 
+  // Ensure style exists
+  const safeStyle = config.style || {};
+  
   // Apply styles
-  const styledGraph = applyStyles(laidOutGraph, config.style);
+  const styledGraph = applyStyles(laidOutGraph, safeStyle);
 
   // Calculate bounds for camera constraints
   const bounds = useMemo(() => {
@@ -368,8 +385,8 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
           y1={sourceScreen.y}
           x2={targetScreen.x}
           y2={targetScreen.y}
-          stroke={config.style?.edgeColor || '#999'}
-          strokeWidth={(config.style?.edgeWidth || 1) * camera.scale}
+          stroke={safeStyle?.edgeColor || '#999'}
+          strokeWidth={(safeStyle?.edgeWidth || 1) * camera.scale}
         />
       );
     });
@@ -377,7 +394,7 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
 
   // Render labels
   const renderLabels = () => {
-    if (!config.style?.labels?.show) return null;
+    if (!safeStyle?.labels?.show) return null;
 
     return styledGraph.nodes.map((node) => {
       if (!node.label) return null;
@@ -394,7 +411,7 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
         //   x={screenCoords.x}
         //   y={screenCoords.y + screenSize + 15}
         //   textAnchor="middle"
-        //   fontSize={(config.style.labels?.fontSize || 12) * camera.scale}
+        //   fontSize={(safeStyle.labels?.fontSize || 12) * camera.scale}
         //   fill="#333"
         // >
         //   {node.label}

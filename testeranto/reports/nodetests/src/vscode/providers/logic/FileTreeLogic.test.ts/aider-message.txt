@@ -2,7 +2,6 @@
 /add src/vscode/providers/logic/FileTreeLogic.ts
 /add src/vscode/providers/logic/FileTreeLogic.test.specification.ts
 /add src/vscode/providers/logic/FileTreeLogic.test.adapter.ts
-/add src/vscode/providers/logic/FileTreeLogic.test.ts
 /add src/lib/tiposkripto/src/Node.ts
 /add src/lib/tiposkripto/src/BaseTiposkripto.ts
 /add src/lib/tiposkripto/src/Adapters.ts
@@ -22,10 +21,12 @@
 /add src/lib/tiposkripto/src/TestJobCreator.ts
 /add src/lib/tiposkripto/src/ClassyImplementations.ts
 /add src/lib/tiposkripto/src/TestRunner.ts
+/add src/vscode/providers/logic/FileTreeLogic.test.ts
 
 /read testeranto/reports/nodetests/src/vscode/providers/logic/filetreelogic-test-ts_bdd.log
 /read testeranto/reports/nodetests/src/vscode/providers/logic/filetreelogic-test-ts_check-0.log
 /read testeranto/reports/nodetests/src/vscode/providers/logic/filetreelogic-test-ts_check-1.log
+/read testeranto/reports/nodetests/src/vscode/providers/logic/filetreelogic-test-ts_check-2.log
 /read testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic.test.ts/tests.json
 
 Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.

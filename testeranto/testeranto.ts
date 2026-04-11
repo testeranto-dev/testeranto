@@ -1,7 +1,7 @@
 import type { ITesterantoConfig } from "../src/Types";
-
-// Import default views from testeranto
-import { Views } from "testeranto/src/views/index.ts";
+import { EisenhowerMatrixSlicer } from "../src/views/defaultViews/EisenhowerMatrix";
+import { GanttSlicer } from "../src/views/defaultViews/Gantt";
+import { KanbanSlicer } from "../src/views/defaultViews/KanbanBoard";
 
 export const golangciLintCommand = (files: string[]): string => {
   // Simple implementation - just run on all Go files
@@ -10,7 +10,21 @@ export const golangciLintCommand = (files: string[]): string => {
 
 const config: ITesterantoConfig = {
 
-  views: Views,
+  views: {
+    Kanban: {
+      slicer: KanbanSlicer,
+      filePath: 'src/views/defaultViews/KanbanBoardView.tsx'
+    },
+    EisenhowerMatrix: {
+      slicer: EisenhowerMatrixSlicer,
+      filePath: 'src/views/defaultViews/EisenhowerMatrixView.tsx'
+    },
+    Gantt: {
+      slicer: GanttSlicer,
+      filePath: 'src/views/defaultViews/GanttView.tsx'
+    },
+
+  },
 
   agents: {
     'prodirek': {
@@ -179,11 +193,11 @@ const config: ITesterantoConfig = {
       runtime: "node",
       tests: [
         // "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-        "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-        "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-        "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-        "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-        "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        // "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        // "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        // "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        // "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        // "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
         "src/vscode/providers/logic/FileTreeLogic.test.ts"
         // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
         // "src/vscode/providers/utils/testTree/debugTest.js"

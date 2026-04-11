@@ -10,7 +10,15 @@ export interface TreeConfig extends VizConfig {
   levelSeparation: number;
 }
 
-export const TreeGraph: React.FC<VizComponentProps & { config: TreeConfig }> = (props) => {
+import type { GraphData } from '../../graph';
+import type { ViewComponentProps } from '../BaseView';
+
+// Define the specific props for TreeGraph
+export interface TreeGraphProps extends ViewComponentProps<GraphData> {
+  config: TreeConfig;
+}
+
+export const TreeGraph: React.FC<TreeGraphProps> = (props) => {
   // Extract tree structure from graph data by filtering to only include parentOf edges
   const extractTreeData = (graphData: GraphData): GraphData => {
     // Filter edges to only include parentOf relationships
@@ -42,7 +50,26 @@ export const TreeGraph: React.FC<VizComponentProps & { config: TreeConfig }> = (
   return <BaseChart {...props} data={treeData} />;
 };
 
-// TODO
-export const TreeGraphSlice = () => {
+// Wrapper component that uses BaseView
+export const TreeGraphView: React.FC<{ slicePath: string; width?: number; height?: number }> = ({ 
+  slicePath, 
+  width = 800, 
+  height = 600 
+}) => {
+  const treeConfig: TreeConfig = {
+    rootId: undefined,
+    orientation: 'horizontal',
+    nodeSeparation: 100,
+    levelSeparation: 100
+  };
 
-}
+  return (
+    <BaseView
+      slicePath={slicePath}
+      component={TreeGraph}
+      config={treeConfig}
+      width={width}
+      height={height}
+    />
+  );
+};

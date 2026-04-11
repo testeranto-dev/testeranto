@@ -1,0 +1,1 @@
+The default views are provided as a courtesy to the user. Each view is a type, a slice function that returns an instance of that type for a given graph, and a react component which consumes this type as props. 

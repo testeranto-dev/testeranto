@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T15:24:42.686Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (runtime: node) ===
-=== Container ID: 5772a24579af5f25f08569718157703278625fba2556f7c6d332daa3ad64a091 ===
+=== Log started at 2026-04-11T17:40:45.064Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (runtime: node) ===
+=== Container ID: 7da3792765b62f921f0f60b3d65c1556cf50307bc9c2eed03ae4e737b20c941f ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
@@ -515,4 +515,4 @@ testeranto/rust_builder/src/wrapper_generator.ts(121,1): error TS1128: Declarati
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
 
-=== Log captured at 2026-04-11T15:24:46.877Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-11T17:40:47.303Z (container status: exited, exit code: 2) ===

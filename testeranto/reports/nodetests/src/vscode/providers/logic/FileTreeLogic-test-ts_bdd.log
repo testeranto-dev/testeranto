@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T00:42:50.714Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-bdd (runtime: node) ===
-=== Container ID: d6c9dd59fcd01a5427f7fa11beccbf8d759a96b83bcc321053831cdf8fe741ae ===
+=== Log started at 2026-04-11T17:35:24.080Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-bdd (runtime: node) ===
+=== Container ID: 606e05dd3a5e4c3c361e4de6cc2bb25776e4f7f295cd2ad406b0398282ce114c ===
 === Test: src/vscode/providers/logic/FileTreeLogic.test.ts ===
 === Config Key: nodetests ===
 
@@ -15,7 +15,7 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic.test.ts/'
 }
-Done in 3.10s.
+Done in 3.04s.
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.345.0: The engine "vscode" appears to be invalid.
@@ -27,6 +27,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic.test.ts/'
 }
-Done in 0.54s.
+Done in 0.60s.
 
-=== Log captured at 2026-04-11T00:42:52.257Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-11T17:35:24.278Z (container status: exited, exit code: 0) ===

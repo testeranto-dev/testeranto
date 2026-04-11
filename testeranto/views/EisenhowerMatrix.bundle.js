@@ -6,6 +6,7 @@
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
@@ -25,6 +26,7 @@
     isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
     mod
   ));
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
   // node_modules/react/cjs/react.production.js
   var require_react_production = __commonJS({
@@ -768,7 +770,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React8 = require_react();
+      var React4 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -808,7 +810,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React8.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if ("font" === as) return "";
         if ("string" === typeof input)
@@ -944,7 +946,7 @@
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler();
-      var React8 = require_react();
+      var React4 = require_react();
       var ReactDOM2 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
@@ -1135,7 +1137,7 @@
         return null;
       }
       var isArrayImpl = Array.isArray;
-      var ReactSharedInternals = React8.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var ReactDOMSharedInternals = ReactDOM2.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var sharedNotPendingObject = {
         pending: false,
@@ -12581,7 +12583,7 @@
           0 === i && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_1840 = React8.version;
+      var isomorphicReactPackageVersion$jscomp$inline_1840 = React4.version;
       if ("19.2.5" !== isomorphicReactPackageVersion$jscomp$inline_1840)
         throw Error(
           formatProdErrorMessage(
@@ -12748,24 +12750,15 @@
     }
   });
 
-  // testeranto/views/Eisenhower.entry.js
-  var import_react8 = __toESM(require_react(), 1);
+  // testeranto/views/EisenhowerMatrix.wrapper.tsx
+  var import_react4 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
-  // src/views/View.tsx
-  var import_react = __toESM(require_react(), 1);
-  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/ViewManager.tsx
-  var import_react2 = __toESM(require_react(), 1);
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  var ViewManagerContext = (0, import_react2.createContext)(void 0);
-
-  // src/views/defaultViews/KanbanBoard.tsx
-  var import_react4 = __toESM(require_react(), 1);
-
-  // src/views/defaultViews/NodeDetailsModal.tsx
+  // src/views/defaultViews/EisenhowerMatrixView.tsx
   var import_react3 = __toESM(require_react(), 1);
+
+  // src/views/defaultViews/BaseChart.tsx
+  var import_react = __toESM(require_react(), 1);
 
   // src/colors.ts
   var Palette = {
@@ -12804,18 +12797,6 @@
     warmGreyDeep: "#2A2826",
     warmGreyLight: "#A8A199"
   };
-
-  // src/views/defaultViews/NodeDetailsModal.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/defaultViews/KanbanBoard.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/defaultViews/GanttChart.tsx
-  var import_react6 = __toESM(require_react(), 1);
-
-  // src/views/defaultViews/BaseChart.tsx
-  var import_react5 = __toESM(require_react(), 1);
 
   // src/grafeovidajo/core/projection.ts
   function projectGraph(graph, config2) {
@@ -13060,24 +13041,36 @@
   }
 
   // src/views/defaultViews/BaseChart.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   var BaseChart = (props) => {
     const { data, config: config2, width, height, onNodeClick, onNodeHover } = props;
-    const [camera, setCamera] = (0, import_react5.useState)({
+    const [camera, setCamera] = (0, import_react.useState)({
       x: 0,
       y: 0,
       scale: 1
     });
-    const [isDragging, setIsDragging] = (0, import_react5.useState)(false);
-    const [dragStart, setDragStart] = (0, import_react5.useState)({ x: 0, y: 0 });
-    const [spacePressed, setSpacePressed] = (0, import_react5.useState)(false);
-    const svgRef = (0, import_react5.useRef)(null);
-    const projectedGraph = projectGraph(data, config2.projection);
+    const [isDragging, setIsDragging] = (0, import_react.useState)(false);
+    const [dragStart, setDragStart] = (0, import_react.useState)({ x: 0, y: 0 });
+    const [spacePressed, setSpacePressed] = (0, import_react.useState)(false);
+    const svgRef = (0, import_react.useRef)(null);
+    const safeConfig = {
+      ...config2,
+      projection: {
+        xAttribute: "x",
+        yAttribute: "y",
+        xType: "continuous",
+        yType: "continuous",
+        layout: "none",
+        ...config2.projection
+      }
+    };
+    const projectedGraph = projectGraph(data, safeConfig.projection);
     const nodes = projectedGraph.nodes;
     let laidOutNodes = [...nodes];
-    switch (config2.projection.layout) {
+    const layout = safeConfig.projection.layout;
+    switch (layout) {
       // case 'grid':
-      //   laidOutNodes = layoutGrid(nodes, config.projection.spacing);
+      //   laidOutNodes = layoutGrid(nodes, safeConfig.projection.spacing);
       //   break;
       // case 'force':
       //   // Use d3-force for proper force-directed layout
@@ -13087,9 +13080,9 @@
       //     {
       //       width,
       //       height,
-      //       strength: config.projection.repulsionStrength,
-      //       distance: config.projection.distance,
-      //       iterations: config.projection.iterations
+      //       strength: safeConfig.projection.repulsionStrength,
+      //       distance: safeConfig.projection.distance,
+      //       iterations: safeConfig.projection.iterations
       //     }
       //   );
       //   // Ensure all nodes have screen coordinates
@@ -13101,7 +13094,7 @@
       //   break;
       case "tree":
         if (data.edges) {
-          const treeConfig = config2;
+          const treeConfig = safeConfig;
           laidOutNodes = layoutTree(
             nodes,
             data.edges,
@@ -13113,8 +13106,8 @@
         }
         break;
       case "timeline":
-        if (config2.projection.xAttribute) {
-          laidOutNodes = layoutTimeline(nodes, config2.projection.xAttribute);
+        if (safeConfig.projection.xAttribute) {
+          laidOutNodes = layoutTimeline(nodes, safeConfig.projection.xAttribute);
         }
         break;
       default:
@@ -13128,8 +13121,9 @@
       ...projectedGraph,
       nodes: laidOutNodes
     };
-    const styledGraph = applyStyles(laidOutGraph, config2.style);
-    const bounds = (0, import_react5.useMemo)(() => {
+    const safeStyle = config2.style || {};
+    const styledGraph = applyStyles(laidOutGraph, safeStyle);
+    const bounds = (0, import_react.useMemo)(() => {
       if (styledGraph.nodes.length === 0) {
         return { minX: 0, maxX: width, minY: 0, maxY: height };
       }
@@ -13153,7 +13147,7 @@
         maxY: maxY + padding
       };
     }, [styledGraph.nodes, width, height]);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react.useEffect)(() => {
       const handleKeyDown = (e) => {
         if (e.code === "Space") {
           e.preventDefault();
@@ -13225,7 +13219,7 @@
       const y = height / 2 - centerY * scale;
       setCamera({ x, y, scale });
     };
-    (0, import_react5.useEffect)(() => {
+    (0, import_react.useEffect)(() => {
       resetCamera();
     }, [data, width, height]);
     const toScreenCoords = (x, y) => {
@@ -13261,7 +13255,7 @@
             "check": "\u2705"
           };
           const emoji = iconEmojiMap[icon] || "\u2753";
-          iconElement = /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          iconElement = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "text",
             {
               x: screenCoords.x,
@@ -13278,7 +13272,7 @@
         let shapeElement;
         switch (node.shape) {
           case "square":
-            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
               "rect",
               {
                 ...nodeProps,
@@ -13292,7 +13286,7 @@
             );
             break;
           case "diamond":
-            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
               "polygon",
               {
                 ...nodeProps,
@@ -13308,7 +13302,7 @@
             );
             break;
           default:
-            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
               "circle",
               {
                 ...nodeProps,
@@ -13320,7 +13314,7 @@
               }
             );
         }
-        return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
           shapeElement,
           iconElement
         ] }, node.id);
@@ -13338,35 +13332,35 @@
         const targetY = targetNode.screenY || targetNode.y * height;
         const sourceScreen = toScreenCoords(sourceX, sourceY);
         const targetScreen = toScreenCoords(targetX, targetY);
-        return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "line",
           {
             x1: sourceScreen.x,
             y1: sourceScreen.y,
             x2: targetScreen.x,
             y2: targetScreen.y,
-            stroke: config2.style?.edgeColor || "#999",
-            strokeWidth: (config2.style?.edgeWidth || 1) * camera.scale
+            stroke: safeStyle?.edgeColor || "#999",
+            strokeWidth: (safeStyle?.edgeWidth || 1) * camera.scale
           },
           `edge-${index}`
         );
       });
     };
     const renderLabels = () => {
-      if (!config2.style?.labels?.show) return null;
+      if (!safeStyle?.labels?.show) return null;
       return styledGraph.nodes.map((node) => {
         if (!node.label) return null;
         const graphX = node.screenX || node.x * width;
         const graphY = node.screenY || node.y * height;
         const screenCoords = toScreenCoords(graphX, graphY);
         const screenSize = node.size * camera.scale;
-        return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_jsx_runtime5.Fragment, {});
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {});
       });
     };
     const renderSpaceIndicator = () => {
       if (!spacePressed) return null;
-      return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "rect",
           {
             x: 10,
@@ -13379,7 +13373,7 @@
             strokeWidth: 1
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "text",
           {
             x: 70,
@@ -13394,8 +13388,8 @@
       ] });
     };
     const renderCameraControls = () => {
-      return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "rect",
           {
             x: 10,
@@ -13408,7 +13402,7 @@
             style: { cursor: "pointer" }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "text",
           {
             x: 60,
@@ -13422,7 +13416,7 @@
           }
         ),
         renderSpaceIndicator(),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
           "text",
           {
             x: width - 10,
@@ -13437,7 +13431,7 @@
             ]
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "text",
           {
             x: width - 10,
@@ -13448,7 +13442,7 @@
             children: "Pan: Space+Click or Middle Click"
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "text",
           {
             x: width - 10,
@@ -13462,7 +13456,7 @@
       ] });
     };
     const cursorStyle = isDragging ? "grabbing" : spacePressed ? "grab" : "default";
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { style: { position: "relative", width: "100%", height: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: { position: "relative", width: "100%", height: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
       "svg",
       {
         ref: svgRef,
@@ -13475,14 +13469,14 @@
         onMouseLeave: handleMouseUp,
         onWheel: handleWheel,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("defs", { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("defs", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "pattern",
             {
               id: "grid",
               width: 50 * camera.scale,
               height: 50 * camera.scale,
               patternUnits: "userSpaceOnUse",
-              children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+              children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                 "path",
                 {
                   d: `M ${50 * camera.scale} 0 L 0 0 0 ${50 * camera.scale}`,
@@ -13493,7 +13487,7 @@
               )
             }
           ) }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "rect",
             {
               width: "100%",
@@ -13501,7 +13495,7 @@
               fill: "url(#grid)"
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
             renderEdges(),
             renderNodes(),
             renderLabels()
@@ -13512,61 +13506,196 @@
     ) });
   };
 
-  // src/views/defaultViews/GanttChart.tsx
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  // src/views/BaseViewClass.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var BaseViewClass = class extends import_react2.default.Component {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "state", {
+        data: null,
+        loading: true,
+        error: null
+      });
+    }
+    componentDidMount() {
+      this.loadData();
+    }
+    componentDidUpdate(prevProps) {
+      if (prevProps.slicePath !== this.props.slicePath) {
+        this.loadData();
+      }
+    }
+    async loadData() {
+      const { slicePath } = this.props;
+      if (!slicePath) {
+        this.setState({ error: "slicePath is empty or undefined", loading: false });
+        return;
+      }
+      try {
+        this.setState({ loading: true, error: null });
+        const response = await fetch(slicePath);
+        if (!response.ok) {
+          throw new Error(`Failed to load slice data from ${slicePath}: ${response.status} ${response.statusText}`);
+        }
+        const jsonData = await response.json();
+        this.setState({ data: jsonData, loading: false });
+      } catch (err) {
+        this.setState({
+          error: err instanceof Error ? err.message : "Unknown error loading slice data",
+          loading: false
+        });
+      }
+    }
+    render() {
+      const { loading, error, data } = this.state;
+      const { width = 800, height = 600 } = this.props;
+      if (loading) {
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width,
+          height,
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          backgroundColor: "#fafafa"
+        }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { textAlign: "center" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { children: "Loading view..." }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: "Loading slice data from:" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: {
+            fontFamily: "monospace",
+            backgroundColor: "#f0f0f0",
+            padding: "5px",
+            borderRadius: "3px",
+            margin: "10px",
+            wordBreak: "break-all"
+          }, children: this.props.slicePath })
+        ] }) });
+      }
+      if (error) {
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+          padding: "20px",
+          border: "1px solid #d32f2f",
+          borderRadius: "4px",
+          backgroundColor: "#ffebee",
+          color: "#d32f2f",
+          width,
+          height,
+          overflow: "auto"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { children: "Error loading view" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Error message:" }),
+            " ",
+            error
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Slice path:" }),
+            " ",
+            this.props.slicePath
+          ] })
+        ] });
+      }
+      if (!data) {
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+          padding: "20px",
+          border: "1px solid #ff9800",
+          borderRadius: "4px",
+          backgroundColor: "#fff3e0",
+          color: "#f57c00",
+          width,
+          height
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { children: "No data available" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: "Slice data is empty or could not be parsed." }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+            "Slice path: ",
+            this.props.slicePath
+          ] })
+        ] });
+      }
+      return this.renderContent();
+    }
+  };
 
-  // src/views/defaultViews/EisenhowerMatrix.tsx
-  var import_react7 = __toESM(require_react(), 1);
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
-  var EisenhowerMatrix = (props) => {
-    const { config: config2, width, height, data } = props;
-    const [showUncategorized, setShowUncategorized] = (0, import_react7.useState)(false);
-    const uncategorizedFeatures = data.nodes.filter((node) => {
-      const nodeType = node.type || node.attributes?.type;
-      const isFeature = nodeType === "feature" || node.id.startsWith("feature:") || node.attributes?.label && !nodeType;
-      if (!isFeature) {
-        return false;
-      }
-      const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
-      const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
-      const hasUrgency = urgency !== void 0;
-      const hasImportance = importance !== void 0;
-      return !hasUrgency || !hasImportance;
-    });
-    const categorizedNodes = data.nodes.filter((node) => {
-      const nodeType = node.type || node.attributes?.type;
-      const isFeature = nodeType === "feature" || node.id.startsWith("feature:") || node.attributes?.label && !nodeType;
-      if (!isFeature) {
-        return false;
-      }
-      const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
-      const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
-      const hasUrgency = urgency !== void 0;
-      const hasImportance = importance !== void 0;
-      return hasUrgency && hasImportance;
-    });
-    const categorizedData = {
-      ...data,
-      nodes: categorizedNodes.map((node) => {
-        const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
-        const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
-        const urgencyNum = typeof urgency === "string" ? parseFloat(urgency) : urgency;
-        const importanceNum = typeof importance === "string" ? parseFloat(importance) : importance;
-        return {
-          ...node,
-          attributes: {
-            ...node.attributes,
-            urgency: urgencyNum,
-            importance: importanceNum
+  // src/views/defaultViews/EisenhowerMatrixView.tsx
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var EisenhowerMatrixView = class extends BaseViewClass {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "state", {
+        showUncategorized: false
+      });
+    }
+    get config() {
+      return this.props.config || {
+        quadrants: {
+          urgentImportant: { x: [0.5, 1], y: [0, 0.5] },
+          notUrgentImportant: { x: [0, 0.5], y: [0, 0.5] },
+          urgentNotImportant: { x: [0.5, 1], y: [0.5, 1] },
+          notUrgentNotImportant: { x: [0, 0.5], y: [0.5, 1] }
+        },
+        projection: {
+          xAttribute: "urgency",
+          yAttribute: "importance",
+          xType: "continuous",
+          yType: "continuous",
+          layout: "none"
+        },
+        style: {
+          nodeSize: 10,
+          nodeColor: "#4a90e2",
+          nodeShape: "circle",
+          edgeColor: "#999",
+          edgeWidth: 1,
+          labels: {
+            show: true,
+            attribute: "label",
+            fontSize: 12
           }
-        };
-      })
-    };
-    const renderQuadrantLines = () => {
+        }
+      };
+    }
+    getUncategorizedItems() {
+      const data = this.state.data;
+      if (!data) return [];
+      return data.items.filter((item) => {
+        const hasUrgency = item.urgency !== void 0;
+        const hasImportance = item.importance !== void 0;
+        return !hasUrgency || !hasImportance;
+      });
+    }
+    getCategorizedItems() {
+      const data = this.state.data;
+      if (!data) return [];
+      return data.items.filter((item) => {
+        const hasUrgency = item.urgency !== void 0;
+        const hasImportance = item.importance !== void 0;
+        return hasUrgency && hasImportance;
+      });
+    }
+    getCategorizedData() {
+      const categorizedItems = this.getCategorizedItems();
+      return {
+        nodes: categorizedItems.map((item) => ({
+          id: item.id,
+          label: item.label,
+          attributes: {
+            urgency: item.urgency,
+            importance: item.importance,
+            label: item.label
+          }
+        })),
+        edges: []
+      };
+    }
+    renderQuadrantLines() {
+      const { width = 800, height = 600 } = this.props;
       const midX = width / 2;
       const midY = height / 2;
-      return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
           "line",
           {
             x1: midX,
@@ -13578,7 +13707,7 @@
             strokeDasharray: "5,5"
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
           "line",
           {
             x1: 0,
@@ -13590,24 +13719,26 @@
             strokeDasharray: "5,5"
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("text", { x: width * 0.25, y: 20, textAnchor: "middle", fontWeight: "bold", children: "Urgent" }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("text", { x: width * 0.75, y: 20, textAnchor: "middle", fontWeight: "bold", children: "Not Urgent" }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("text", { x: 10, y: height * 0.25, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.25})`, children: "Important" }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("text", { x: 10, y: height * 0.75, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.75})`, children: "Not Important" })
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("text", { x: width * 0.25, y: 20, textAnchor: "middle", fontWeight: "bold", children: "Urgent" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("text", { x: width * 0.75, y: 20, textAnchor: "middle", fontWeight: "bold", children: "Not Urgent" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("text", { x: 10, y: height * 0.25, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.25})`, children: "Important" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("text", { x: 10, y: height * 0.75, textAnchor: "start", fontWeight: "bold", transform: `rotate(-90, 10, ${height * 0.75})`, children: "Not Important" })
       ] });
-    };
-    const renderUncategorizedList = () => {
-      if (uncategorizedFeatures.length === 0) {
-        return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { padding: "20px", textAlign: "center" }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "All Features Are Categorized" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { children: [
+    }
+    renderUncategorizedList() {
+      const uncategorizedItems = this.getUncategorizedItems();
+      const categorizedItems = this.getCategorizedItems();
+      if (uncategorizedItems.length === 0) {
+        return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: "20px", textAlign: "center" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h4", { children: "All Items Are Categorized" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { children: [
             "Great! All ",
-            categorizedNodes.length,
-            " feature nodes have both urgency and importance attributes and are shown on the matrix."
+            categorizedItems.length,
+            " items have both urgency and importance values and are shown on the matrix."
           ] })
         ] });
       }
-      return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: {
         border: "1px solid #ddd",
         borderRadius: "4px",
         padding: "20px",
@@ -13615,32 +13746,30 @@
         overflow: "auto",
         marginTop: "20px"
       }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "15px"
         }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("h4", { style: { margin: 0 }, children: [
-            "Uncategorized Features (",
-            uncategorizedFeatures.length,
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("h4", { style: { margin: 0 }, children: [
+            "Uncategorized Items (",
+            uncategorizedItems.length,
             ")"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: {
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
             backgroundColor: "#f5f5f5",
             padding: "5px 10px",
             borderRadius: "4px",
             fontSize: "0.9em"
           }, children: "Missing urgency or importance" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("ul", { style: {
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { style: {
           listStyleType: "none",
           paddingLeft: "0",
           margin: 0
-        }, children: uncategorizedFeatures.map((node) => {
-          const urgency = node.attributes?.urgency ?? node.attributes?.metadata?.urgency;
-          const importance = node.attributes?.importance ?? node.attributes?.metadata?.importance;
-          return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("li", { style: { marginBottom: "10px" }, children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+        }, children: uncategorizedItems.map((item) => {
+          return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { style: { marginBottom: "10px" }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
             "div",
             {
               style: {
@@ -13654,239 +13783,206 @@
                 justifyContent: "space-between",
                 transition: "background-color 0.2s"
               },
-              onClick: () => props.onNodeClick?.(node),
-              onMouseEnter: () => props.onNodeHover?.(node),
-              onMouseLeave: () => props.onNodeHover?.(null),
+              onClick: () => this.props.onItemClick?.(item),
+              onMouseEnter: () => this.props.onItemHover?.(item),
+              onMouseLeave: () => this.props.onItemHover?.(null),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { flex: 1 }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { fontWeight: "600", marginBottom: "4px" }, children: node.attributes?.label || node.id }),
-                  /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { fontSize: "0.85em", color: "#666" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { flex: 1 }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { fontWeight: "600", marginBottom: "4px" }, children: item.label }),
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { fontSize: "0.85em", color: "#666" }, children: [
                     "ID: ",
-                    node.id
+                    item.id
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: {
                   display: "flex",
                   gap: "10px",
                   fontSize: "0.8em"
                 }, children: [
-                  urgency === void 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { style: {
+                  item.urgency === void 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: {
                     backgroundColor: "#ffebee",
                     padding: "2px 8px",
                     borderRadius: "10px",
                     color: "#d32f2f"
                   }, children: "Missing urgency" }),
-                  importance === void 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { style: {
+                  item.importance === void 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: {
                     backgroundColor: "#fff3e0",
                     padding: "2px 8px",
                     borderRadius: "10px",
                     color: "#f57c00"
                   }, children: "Missing importance" }),
-                  urgency !== void 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { style: {
+                  item.urgency !== void 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { style: {
                     backgroundColor: "#e3f2fd",
                     padding: "2px 8px",
                     borderRadius: "10px",
                     color: "#1976d2"
                   }, children: [
                     "Urgency: ",
-                    urgency
+                    item.urgency
                   ] }),
-                  importance !== void 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { style: {
+                  item.importance !== void 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { style: {
                     backgroundColor: "#e8f5e8",
                     padding: "2px 8px",
                     borderRadius: "10px",
                     color: "#388e3c"
                   }, children: [
                     "Importance: ",
-                    importance
+                    item.importance
                   ] })
                 ] })
               ]
             }
-          ) }, node.id);
-        }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
-          marginTop: "15px",
-          padding: "10px",
-          backgroundColor: "#f5f5f5",
-          borderRadius: "4px",
-          fontSize: "0.9em"
-        }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("strong", { children: "Note:" }),
-          " These features cannot be placed on the Eisenhower matrix because they're missing either ",
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("code", { children: "urgency" }),
-          " or ",
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("code", { children: "importance" }),
-          " attributes in their YAML frontmatter. Add these attributes to your feature markdown files to categorize them:",
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("pre", { style: {
-            backgroundColor: "#fff",
-            padding: "10px",
-            borderRadius: "4px",
-            marginTop: "5px",
-            fontSize: "0.85em",
-            overflow: "auto"
-          }, children: "--- urgency: 0.7    # Value between 0 and 1 importance: 0.9 # Value between 0 and 1 ---" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { style: { marginTop: "5px", marginBottom: 0 }, children: "Features are identified by: type='feature', ID starting with 'feature:', or having a label without a specific type." })
-        ] })
+          ) }, item.id);
+        }) })
       ] });
-    };
-    const renderToggleButton = () => {
-      if (uncategorizedFeatures.length === 0) {
-        return null;
-      }
-      return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: {
-        position: "absolute",
-        top: 10,
-        right: 10,
-        zIndex: 10
-      }, children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
-        "button",
-        {
-          onClick: () => setShowUncategorized(!showUncategorized),
-          style: {
-            padding: "8px 16px",
-            backgroundColor: showUncategorized ? "#007acc" : "#f0f0f0",
-            color: showUncategorized ? "white" : "#333",
+    }
+    renderContent() {
+      const { width = 800, height = 600 } = this.props;
+      const categorizedItems = this.getCategorizedItems();
+      const uncategorizedItems = this.getUncategorizedItems();
+      const categorizedData = this.getCategorizedData();
+      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { position: "relative" }, children: [
+        uncategorizedItems.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+          position: "absolute",
+          top: 10,
+          right: 10,
+          zIndex: 10
+        }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          "button",
+          {
+            onClick: () => this.setState({ showUncategorized: !this.state.showUncategorized }),
+            style: {
+              padding: "8px 16px",
+              backgroundColor: this.state.showUncategorized ? "#007acc" : "#f0f0f0",
+              color: this.state.showUncategorized ? "white" : "#333",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "12px"
+            },
+            children: this.state.showUncategorized ? "Hide Uncategorized" : `Show Uncategorized (${uncategorizedItems.length})`
+          }
+        ) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: {
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: {
             border: "1px solid #ccc",
             borderRadius: "4px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            fontSize: "12px"
-          },
-          children: showUncategorized ? "Hide Uncategorized" : `Show Uncategorized (${uncategorizedFeatures.length})`
-        }
-      ) });
-    };
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: { position: "relative" }, children: [
-      renderToggleButton(),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px"
-      }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-          padding: "10px",
-          backgroundColor: "#fafafa"
-        }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "10px"
+            padding: "10px",
+            backgroundColor: "#fafafa"
           }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { style: { margin: 0 }, children: "Eisenhower Matrix" }),
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { style: { margin: "5px 0 0 0", fontSize: "0.9em", color: "#666" }, children: [
-                "Using YAML frontmatter attributes: ",
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("code", { children: "urgency" }),
-                " (x-axis, 0-1) and ",
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("code", { children: "importance" }),
-                " (y-axis, 0-1)"
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: {
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "10px"
+            }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { style: { margin: 0 }, children: "Eisenhower Matrix" }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { style: { margin: "5px 0 0 0", fontSize: "0.9em", color: "#666" }, children: [
+                  "Using YAML frontmatter attributes: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("code", { children: "urgency" }),
+                  " (x-axis, 0-1) and ",
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("code", { children: "importance" }),
+                  " (y-axis, 0-1)"
+                ] })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: {
+                fontSize: "0.9em",
+                color: "#666",
+                backgroundColor: "#f0f0f0",
+                padding: "5px 10px",
+                borderRadius: "4px"
+              }, children: [
+                categorizedItems.length,
+                " on matrix | ",
+                uncategorizedItems.length,
+                " uncategorized | Total: ",
+                categorizedItems.length + uncategorizedItems.length
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
-              fontSize: "0.9em",
+            categorizedItems.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: {
+              fontSize: "0.8em",
               color: "#666",
-              backgroundColor: "#f0f0f0",
+              backgroundColor: "#e8f5e8",
               padding: "5px 10px",
-              borderRadius: "4px"
+              borderRadius: "4px",
+              marginBottom: "10px"
             }, children: [
-              categorizedNodes.length,
-              " on matrix | ",
-              uncategorizedFeatures.length,
-              " uncategorized | Total: ",
-              categorizedNodes.length + uncategorizedFeatures.length
+              "Showing ",
+              categorizedItems.length,
+              " items with both urgency and importance values."
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("svg", { width, height, style: { border: "1px solid #ddd", borderRadius: "4px" }, children: [
+              this.renderQuadrantLines(),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                BaseChart,
+                {
+                  data: categorizedData,
+                  config: this.config,
+                  width,
+                  height,
+                  onNodeClick: this.props.onItemClick,
+                  onNodeHover: this.props.onItemHover
+                }
+              )
             ] })
           ] }),
-          categorizedNodes.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { style: {
-            fontSize: "0.8em",
-            color: "#666",
-            backgroundColor: "#e8f5e8",
-            padding: "5px 10px",
-            borderRadius: "4px",
-            marginBottom: "10px"
-          }, children: [
-            "Showing ",
-            categorizedNodes.length,
-            " features with both urgency and importance values."
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("svg", { width, height, style: { border: "1px solid #ddd", borderRadius: "4px" }, children: [
-            renderQuadrantLines(),
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(BaseChart, { ...props, data: categorizedData })
-          ] })
-        ] }),
-        showUncategorized && renderUncategorizedList()
-      ] })
-    ] });
+          this.state.showUncategorized && this.renderUncategorizedList()
+        ] })
+      ] });
+    }
   };
-
-  // testeranto/views/Eisenhower.entry.js
-  var config = window.TESTERANTO_VIEW_CONFIG || {};
-  function ViewApp() {
-    const [data, setData] = import_react8.default.useState(null);
-    const [loading, setLoading] = import_react8.default.useState(true);
-    const [error, setError] = import_react8.default.useState(null);
-    import_react8.default.useEffect(() => {
-      async function loadData() {
-        try {
-          const response = await fetch(config.dataPath || "/testeranto/slices/views/Eisenhower.json");
-          if (!response.ok) {
-            throw new Error(`Failed to load data: ${response.status}`);
-          }
-          const jsonData = await response.json();
-          setData(jsonData);
-        } catch (err) {
-          setError(err.message);
-          console.error("Error loading view data:", err);
-        } finally {
-          setLoading(false);
+  if (typeof window !== "undefined") {
+    const config2 = window.TESTERANTO_VIEW_CONFIG;
+    if (config2 && config2.viewKey === "EisenhowerMatrix") {
+      console.log("[EisenhowerMatrix] Auto-mounting EisenhowerMatrixView with config:", config2);
+      Promise.resolve().then(() => __toESM(require_client(), 1)).then(({ createRoot }) => {
+        const rootElement = document.getElementById("root");
+        if (rootElement) {
+          const root = createRoot(rootElement);
+          root.render(
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              EisenhowerMatrixView,
+              {
+                slicePath: config2.dataPath,
+                width: window.innerWidth - 40,
+                height: window.innerHeight - 40
+              }
+            )
+          );
         }
-      }
-      loadData();
-      const interval = setInterval(loadData, 5e3);
-      return () => clearInterval(interval);
-    }, []);
-    if (loading) {
-      return import_react8.default.createElement("div", null, "Loading Eisenhower view...");
+      }).catch((error) => {
+        console.error("[EisenhowerMatrix] Failed to mount:", error);
+      });
     }
-    if (error) {
-      return import_react8.default.createElement("div", { style: { color: "red", padding: "20px" } }, `Error: ${error}`);
-    }
-    if (!data) {
-      return import_react8.default.createElement("div", null, "No data available");
-    }
-    const props = {
-      data,
-      width: window.innerWidth - 40,
-      height: window.innerHeight - 40,
-      config: {
-        projection: {
-          xAttribute: "status",
-          yAttribute: "priority",
-          xType: "categorical",
-          yType: "continuous",
-          layout: "grid"
-        },
-        style: {
-          nodeSize: 10,
-          nodeColor: "#007acc",
-          nodeShape: "circle"
-        }
-      },
-      onNodeClick: (node) => console.log("Node clicked:", node),
-      onNodeHover: (node) => console.log("Node hover:", node)
-    };
-    return import_react8.default.createElement(EisenhowerMatrix, props);
   }
-  document.addEventListener("DOMContentLoaded", () => {
-    const rootElement = document.getElementById("root");
-    if (rootElement) {
-      const root = import_client.default.createRoot(rootElement);
-      root.render(import_react8.default.createElement(ViewApp));
-    }
-  });
+
+  // testeranto/views/EisenhowerMatrix.wrapper.tsx
+  var config = window.TESTERANTO_VIEW_CONFIG;
+  if (!config) {
+    console.error("TESTERANTO_VIEW_CONFIG not found in window");
+    document.getElementById("root").innerHTML = `
+    <div style="padding: 40px; text-align: center; color: #d32f2f;">
+      <h1>Configuration Error</h1>
+      <p>View configuration not found.</p>
+    </div>
+  `;
+  } else {
+    console.log("Mounting view with config:", config);
+    const root = import_client.default.createRoot(document.getElementById("root"));
+    root.render(
+      import_react4.default.createElement(EisenhowerMatrixView, {
+        slicePath: config.dataPath,
+        width: window.innerWidth - 40,
+        height: window.innerHeight - 40
+      })
+    );
+  }
 })();
 /*! Bundled license information:
 

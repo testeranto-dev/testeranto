@@ -6,6 +6,7 @@
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
@@ -25,6 +26,7 @@
     isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
     mod
   ));
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
   // node_modules/react/cjs/react.production.js
   var require_react_production = __commonJS({
@@ -768,7 +770,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React8 = require_react();
+      var React4 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -808,7 +810,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React8.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if ("font" === as) return "";
         if ("string" === typeof input)
@@ -944,7 +946,7 @@
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler();
-      var React8 = require_react();
+      var React4 = require_react();
       var ReactDOM2 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
@@ -1135,7 +1137,7 @@
         return null;
       }
       var isArrayImpl = Array.isArray;
-      var ReactSharedInternals = React8.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var ReactDOMSharedInternals = ReactDOM2.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var sharedNotPendingObject = {
         pending: false,
@@ -12581,7 +12583,7 @@
           0 === i && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_1840 = React8.version;
+      var isomorphicReactPackageVersion$jscomp$inline_1840 = React4.version;
       if ("19.2.5" !== isomorphicReactPackageVersion$jscomp$inline_1840)
         throw Error(
           formatProdErrorMessage(
@@ -12748,784 +12750,147 @@
     }
   });
 
-  // testeranto/views/Gantt.entry.js
-  var import_react8 = __toESM(require_react(), 1);
+  // testeranto/views/Gantt.wrapper.tsx
+  var import_react3 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
-  // src/views/View.tsx
+  // src/views/defaultViews/GanttView.tsx
+  var import_react2 = __toESM(require_react(), 1);
+
+  // src/views/BaseViewClass.tsx
   var import_react = __toESM(require_react(), 1);
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/ViewManager.tsx
-  var import_react2 = __toESM(require_react(), 1);
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  var ViewManagerContext = (0, import_react2.createContext)(void 0);
-
-  // src/views/defaultViews/KanbanBoard.tsx
-  var import_react4 = __toESM(require_react(), 1);
-
-  // src/views/defaultViews/NodeDetailsModal.tsx
-  var import_react3 = __toESM(require_react(), 1);
-
-  // src/colors.ts
-  var Palette = {
-    // Base & Canvas
-    black: "#000000",
-    ivory: "#FFFDF0",
-    obsidian: "#1A1918",
-    silver: "#BDC0C3",
-    // Success (Greens)
-    oliveDark: "#004949",
-    oliveDarkSubtle: "#E6F4EA",
-    oliveDeep: "#002D2D",
-    bluishGreen: "#009E73",
-    // Warning (Ambers/Yellows)
-    amberGold: "#F5C710",
-    amberGoldSubtle: "#FFF8E1",
-    amberDeep: "#332B00",
-    amberDark: "#856404",
-    // Error (Oranges/Reds)
-    deepOrange: "#D55E00",
-    deepOrangeSubtle: "#FCE8E6",
-    deepOrangeDeep: "#331600",
-    vermillionLight: "#FFB07C",
-    // Neutral (Greys)
-    charcoal: "#494949",
-    charcoalSubtle: "#F5F5F5",
-    charcoalDeep: "#1A1A1A",
-    // Progress (Rust/Purples)
-    rust: "#882255",
-    rustSubtle: "#F3E5F5",
-    rustDeep: "#2D0015",
-    reddishPurple: "#CC79A7",
-    // Muted (Warm Greys)
-    warmGrey: "#706A63",
-    warmGreySubtle: "#EFEBE7",
-    warmGreyDeep: "#2A2826",
-    warmGreyLight: "#A8A199"
-  };
-
-  // src/views/defaultViews/NodeDetailsModal.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/defaultViews/KanbanBoard.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
-
-  // src/views/defaultViews/GanttChart.tsx
-  var import_react6 = __toESM(require_react(), 1);
-
-  // src/views/defaultViews/BaseChart.tsx
-  var import_react5 = __toESM(require_react(), 1);
-
-  // src/grafeovidajo/core/projection.ts
-  function projectGraph(graph, config2) {
-    const nodes = [];
-    const edges = [];
-    let minX = Infinity;
-    let maxX = -Infinity;
-    let minY = Infinity;
-    let maxY = -Infinity;
-    const validNodes = (graph.nodes || []).filter((node) => node && typeof node.id === "string");
-    for (const node of validNodes) {
-      const nodeWithAttributes = {
-        ...node,
-        attributes: node.attributes || {}
-      };
-      const x = getProjectedValue(nodeWithAttributes, config2.xAttribute, config2.xType, config2.xTransform);
-      const y = getProjectedValue(nodeWithAttributes, config2.yAttribute, config2.yType, config2.yTransform);
-      minX = Math.min(minX, x);
-      maxX = Math.max(maxX, x);
-      minY = Math.min(minY, y);
-      maxY = Math.max(maxY, y);
-      nodes.push({
-        ...nodeWithAttributes,
-        x,
-        y
+  var BaseViewClass = class extends import_react.default.Component {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "state", {
+        data: null,
+        loading: true,
+        error: null
       });
     }
-    if (graph.edges) {
-      for (const edge of graph.edges) {
-        if (edge && edge.source && edge.target) {
-          edges.push({
-            ...edge,
-            attributes: edge.attributes || {}
-          });
+    componentDidMount() {
+      this.loadData();
+    }
+    componentDidUpdate(prevProps) {
+      if (prevProps.slicePath !== this.props.slicePath) {
+        this.loadData();
+      }
+    }
+    async loadData() {
+      const { slicePath } = this.props;
+      if (!slicePath) {
+        this.setState({ error: "slicePath is empty or undefined", loading: false });
+        return;
+      }
+      try {
+        this.setState({ loading: true, error: null });
+        const response = await fetch(slicePath);
+        if (!response.ok) {
+          throw new Error(`Failed to load slice data from ${slicePath}: ${response.status} ${response.statusText}`);
         }
+        const jsonData = await response.json();
+        this.setState({ data: jsonData, loading: false });
+      } catch (err) {
+        this.setState({
+          error: err instanceof Error ? err.message : "Unknown error loading slice data",
+          loading: false
+        });
       }
     }
-    return {
-      nodes,
-      edges: edges.length > 0 ? edges : void 0,
-      bounds: {
-        x: [minX, maxX],
-        y: [minY, maxY]
+    render() {
+      const { loading, error, data } = this.state;
+      const { width = 800, height = 600 } = this.props;
+      if (loading) {
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width,
+          height,
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          backgroundColor: "#fafafa"
+        }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { textAlign: "center" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Loading view..." }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Loading slice data from:" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { style: {
+            fontFamily: "monospace",
+            backgroundColor: "#f0f0f0",
+            padding: "5px",
+            borderRadius: "3px",
+            margin: "10px",
+            wordBreak: "break-all"
+          }, children: this.props.slicePath })
+        ] }) });
       }
-    };
-  }
-  function getProjectedValue(node, attribute, type, transform) {
-    if (!attribute) return 0.5;
-    const attributes = node.attributes || {};
-    const value = attributes[attribute];
-    if (transform) {
-      return transform(value);
-    }
-    switch (type) {
-      case "continuous":
-        return typeof value === "number" ? value : 0;
-      case "categorical":
-        return typeof value === "string" ? value.charCodeAt(0) % 10 / 10 : 0;
-      case "ordinal":
-        return typeof value === "number" ? value : 0;
-      case "temporal":
-        return value instanceof Date ? value.getTime() : 0;
-      default:
-        return typeof value === "number" ? value : 0.5;
-    }
-  }
-
-  // src/grafeovidajo/core/layout.ts
-  function layoutTree(nodes, edges, rootId, orientation, nodeSeparation, levelSeparation) {
-    const incomingEdges = /* @__PURE__ */ new Map();
-    const outgoingEdges = /* @__PURE__ */ new Map();
-    nodes.forEach((node) => {
-      incomingEdges.set(node.id, []);
-      outgoingEdges.set(node.id, []);
-    });
-    edges.forEach((edge) => {
-      const sourceOutgoing = outgoingEdges.get(edge.source) || [];
-      sourceOutgoing.push(edge.target);
-      outgoingEdges.set(edge.source, sourceOutgoing);
-      const targetIncoming = incomingEdges.get(edge.target) || [];
-      targetIncoming.push(edge.source);
-      incomingEdges.set(edge.target, targetIncoming);
-    });
-    let rootNodes = [];
-    if (rootId) {
-      const rootNode = nodes.find((n) => n.id === rootId);
-      if (rootNode) {
-        rootNodes = [rootNode];
-      }
-    }
-    if (rootNodes.length === 0) {
-      rootNodes = nodes.filter((node) => {
-        const incoming = incomingEdges.get(node.id) || [];
-        return incoming.length === 0;
-      });
-    }
-    if (rootNodes.length === 0 && nodes.length > 0) {
-      rootNodes = [nodes[0]];
-    }
-    const depthMap = /* @__PURE__ */ new Map();
-    const queue = [];
-    rootNodes.forEach((root) => {
-      depthMap.set(root.id, 0);
-      queue.push({ nodeId: root.id, depth: 0 });
-    });
-    while (queue.length > 0) {
-      const current = queue.shift();
-      const currentDepth = current.depth;
-      const currentNodeId = current.nodeId;
-      const children = outgoingEdges.get(currentNodeId) || [];
-      for (const childId of children) {
-        if (!depthMap.has(childId)) {
-          depthMap.set(childId, currentDepth + 1);
-          queue.push({ nodeId: childId, depth: currentDepth + 1 });
-        }
-      }
-    }
-    nodes.forEach((node) => {
-      if (!depthMap.has(node.id)) {
-        depthMap.set(node.id, 0);
-      }
-    });
-    const nodesByDepth = /* @__PURE__ */ new Map();
-    nodes.forEach((node) => {
-      const depth = depthMap.get(node.id) || 0;
-      if (!nodesByDepth.has(depth)) {
-        nodesByDepth.set(depth, []);
-      }
-      nodesByDepth.get(depth).push(node);
-    });
-    const levelSep = levelSeparation || 100;
-    const nodeSep = nodeSeparation || 80;
-    const isHorizontal = orientation === "horizontal";
-    return nodes.map((node) => {
-      const depth = depthMap.get(node.id) || 0;
-      const nodesAtDepth = nodesByDepth.get(depth) || [];
-      const index = nodesAtDepth.findIndex((n) => n.id === node.id);
-      if (isHorizontal) {
-        return {
-          ...node,
-          screenX: depth * levelSep,
-          screenY: index * nodeSep
-        };
-      } else {
-        return {
-          ...node,
-          screenX: index * nodeSep,
-          screenY: depth * levelSep
-        };
-      }
-    });
-  }
-  function layoutTimeline(nodes, timeAttribute) {
-    const timeNodes = nodes.map((node) => ({
-      node,
-      time: node.attributes[timeAttribute]
-    })).sort((a, b) => a.time - b.time);
-    return timeNodes.map(({ node }, index) => ({
-      ...node,
-      screenX: index * 80,
-      screenY: 50
-    }));
-  }
-
-  // src/grafeovidajo/core/styling.ts
-  function applyStyles(projectedGraph, styleConfig = {}) {
-    const styledNodes = projectedGraph.nodes.map((node) => {
-      const size = getNodeSize(node, styleConfig.nodeSize);
-      const color = getNodeColor(node, styleConfig.nodeColor);
-      const shape = getNodeShape(node, styleConfig.nodeShape);
-      const label = getNodeLabel(node, styleConfig.labels);
-      return {
-        ...node,
-        size,
-        color,
-        shape,
-        label
-      };
-    });
-    return {
-      ...projectedGraph,
-      nodes: styledNodes
-    };
-  }
-  function getNodeSize(node, sizeConfig) {
-    if (typeof sizeConfig === "function") {
-      return sizeConfig(node);
-    }
-    return sizeConfig || 10;
-  }
-  function getNodeColor(node, colorConfig) {
-    if (typeof colorConfig === "function") {
-      return colorConfig(node);
-    }
-    const type = node.attributes?.type || "unknown";
-    if (type === "test_result") {
-      const metadata = node.attributes?.metadata || {};
-      const result = metadata.result;
-      if (result === 0 || result === false) {
-        return Palette.bluishGreen;
-      } else if (result > 0) {
-        return Palette.amberGold;
-      } else if (result < 0 || result === true) {
-        return Palette.deepOrange;
-      }
-      return Palette.deepOrange;
-    }
-    if (type === "test") {
-      const metadata = node.attributes?.metadata || {};
-      const failed = metadata.failed;
-      if (failed === false) {
-        return Palette.bluishGreen;
-      } else if (failed === true) {
-        return Palette.deepOrange;
-      }
-    }
-    const typeColors = {
-      "feature": Palette.bluishGreen,
-      "entrypoint": Palette.rust,
-      "test": Palette.amberGold,
-      "test_result": Palette.deepOrange,
-      "file": Palette.warmGrey,
-      "documentation": Palette.oliveDark,
-      "config": Palette.charcoal,
-      "attribute": Palette.amberGold,
-      "folder": Palette.oliveDark,
-      "domain": Palette.rust,
-      "unknown": Palette.charcoal
-    };
-    return typeColors[type] || colorConfig || "#3498db";
-  }
-  function getNodeShape(node, shapeConfig) {
-    if (typeof shapeConfig === "function") {
-      return shapeConfig(node);
-    }
-    return shapeConfig || "circle";
-  }
-  function getNodeLabel(node, labelsConfig) {
-    if (!labelsConfig?.show) return void 0;
-    const attribute = labelsConfig.attribute || "id";
-    return node.attributes[attribute] || node.id;
-  }
-
-  // src/views/defaultViews/BaseChart.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
-  var BaseChart = (props) => {
-    const { data, config: config2, width, height, onNodeClick, onNodeHover } = props;
-    const [camera, setCamera] = (0, import_react5.useState)({
-      x: 0,
-      y: 0,
-      scale: 1
-    });
-    const [isDragging, setIsDragging] = (0, import_react5.useState)(false);
-    const [dragStart, setDragStart] = (0, import_react5.useState)({ x: 0, y: 0 });
-    const [spacePressed, setSpacePressed] = (0, import_react5.useState)(false);
-    const svgRef = (0, import_react5.useRef)(null);
-    const projectedGraph = projectGraph(data, config2.projection);
-    const nodes = projectedGraph.nodes;
-    let laidOutNodes = [...nodes];
-    switch (config2.projection.layout) {
-      // case 'grid':
-      //   laidOutNodes = layoutGrid(nodes, config.projection.spacing);
-      //   break;
-      // case 'force':
-      //   // Use d3-force for proper force-directed layout
-      //   laidOutNodes = layoutForce(
-      //     nodes,
-      //     data.edges,
-      //     {
-      //       width,
-      //       height,
-      //       strength: config.projection.repulsionStrength,
-      //       distance: config.projection.distance,
-      //       iterations: config.projection.iterations
-      //     }
-      //   );
-      //   // Ensure all nodes have screen coordinates
-      //   laidOutNodes = laidOutNodes.map(node => ({
-      //     ...node,
-      //     screenX: node.screenX || node.x * width,
-      //     screenY: node.screenY || node.y * height
-      //   }));
-      //   break;
-      case "tree":
-        if (data.edges) {
-          const treeConfig = config2;
-          laidOutNodes = layoutTree(
-            nodes,
-            data.edges,
-            treeConfig.rootId,
-            treeConfig.orientation,
-            treeConfig.nodeSeparation,
-            treeConfig.levelSeparation
-          );
-        }
-        break;
-      case "timeline":
-        if (config2.projection.xAttribute) {
-          laidOutNodes = layoutTimeline(nodes, config2.projection.xAttribute);
-        }
-        break;
-      default:
-        laidOutNodes = nodes.map((node) => ({
-          ...node,
-          screenX: node.x * width,
-          screenY: node.y * height
-        }));
-    }
-    const laidOutGraph = {
-      ...projectedGraph,
-      nodes: laidOutNodes
-    };
-    const styledGraph = applyStyles(laidOutGraph, config2.style);
-    const bounds = (0, import_react5.useMemo)(() => {
-      if (styledGraph.nodes.length === 0) {
-        return { minX: 0, maxX: width, minY: 0, maxY: height };
-      }
-      let minX = Infinity;
-      let maxX = -Infinity;
-      let minY = Infinity;
-      let maxY = -Infinity;
-      styledGraph.nodes.forEach((node) => {
-        const x = node.screenX || node.x * width;
-        const y = node.screenY || node.y * height;
-        minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x);
-        minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y);
-      });
-      const padding = 50;
-      return {
-        minX: minX - padding,
-        maxX: maxX + padding,
-        minY: minY - padding,
-        maxY: maxY + padding
-      };
-    }, [styledGraph.nodes, width, height]);
-    (0, import_react5.useEffect)(() => {
-      const handleKeyDown = (e) => {
-        if (e.code === "Space") {
-          e.preventDefault();
-          setSpacePressed(true);
-        }
-      };
-      const handleKeyUp = (e) => {
-        if (e.code === "Space") {
-          setSpacePressed(false);
-        }
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      window.addEventListener("keyup", handleKeyUp);
-      return () => {
-        window.removeEventListener("keydown", handleKeyDown);
-        window.removeEventListener("keyup", handleKeyUp);
-      };
-    }, []);
-    const handleMouseDown = (e) => {
-      if (e.button === 1 || e.button === 0 && spacePressed) {
-        e.preventDefault();
-        setIsDragging(true);
-        setDragStart({ x: e.clientX, y: e.clientY });
-      }
-    };
-    const handleMouseMove = (e) => {
-      if (isDragging) {
-        const dx = e.clientX - dragStart.x;
-        const dy = e.clientY - dragStart.y;
-        setCamera((prev) => ({
-          ...prev,
-          x: prev.x + dx / prev.scale,
-          y: prev.y + dy / prev.scale
-        }));
-        setDragStart({ x: e.clientX, y: e.clientY });
-      }
-    };
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-    const handleWheel = (e) => {
-      e.preventDefault();
-      const rect = svgRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
-      const graphX = (mouseX - camera.x) / camera.scale;
-      const graphY = (mouseY - camera.y) / camera.scale;
-      const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      const newScale = Math.max(0.1, Math.min(5, camera.scale * delta));
-      const newX = mouseX - graphX * newScale;
-      const newY = mouseY - graphY * newScale;
-      setCamera({
-        x: newX,
-        y: newY,
-        scale: newScale
-      });
-    };
-    const resetCamera = () => {
-      const graphWidth = bounds.maxX - bounds.minX;
-      const graphHeight = bounds.maxY - bounds.minY;
-      if (graphWidth === 0 || graphHeight === 0) return;
-      const scaleX = width / graphWidth;
-      const scaleY = height / graphHeight;
-      const scale = Math.min(scaleX, scaleY) * 0.8;
-      const centerX = (bounds.minX + bounds.maxX) / 2;
-      const centerY = (bounds.minY + bounds.maxY) / 2;
-      const x = width / 2 - centerX * scale;
-      const y = height / 2 - centerY * scale;
-      setCamera({ x, y, scale });
-    };
-    (0, import_react5.useEffect)(() => {
-      resetCamera();
-    }, [data, width, height]);
-    const toScreenCoords = (x, y) => {
-      return {
-        x: x * camera.scale + camera.x,
-        y: y * camera.scale + camera.y
-      };
-    };
-    const renderNodes = () => {
-      return styledGraph.nodes.map((node) => {
-        const graphX = node.screenX || node.x * width;
-        const graphY = node.screenY || node.y * height;
-        const screenCoords = toScreenCoords(graphX, graphY);
-        const screenSize = node.size * camera.scale;
-        const nodeProps = {
-          key: node.id,
-          onClick: () => onNodeClick?.(node),
-          onMouseEnter: () => onNodeHover?.(node),
-          onMouseLeave: () => onNodeHover?.(null),
-          style: { cursor: "pointer" }
-        };
-        const icon = node.icon || node.attributes?.icon;
-        let iconElement = null;
-        if (icon) {
-          const iconEmojiMap = {
-            "document": "\u{1F4C4}",
-            "folder": "\u{1F4C1}",
-            "globe": "\u{1F310}",
-            "file-text": "\u{1F4DD}",
-            "test": "\u{1F9EA}",
-            "circle": "\u2B55",
-            "play": "\u25B6\uFE0F",
-            "check": "\u2705"
-          };
-          const emoji = iconEmojiMap[icon] || "\u2753";
-          iconElement = /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-            "text",
-            {
-              x: screenCoords.x,
-              y: screenCoords.y,
-              textAnchor: "middle",
-              dominantBaseline: "central",
-              fontSize: screenSize * 1.5,
-              fill: "#333",
-              style: { pointerEvents: "none" },
-              children: emoji
-            }
-          );
-        }
-        let shapeElement;
-        switch (node.shape) {
-          case "square":
-            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-              "rect",
-              {
-                ...nodeProps,
-                x: screenCoords.x - screenSize,
-                y: screenCoords.y - screenSize,
-                width: screenSize * 2,
-                height: screenSize * 2,
-                fill: node.color,
-                opacity: icon ? 0.3 : 1
-              }
-            );
-            break;
-          case "diamond":
-            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-              "polygon",
-              {
-                ...nodeProps,
-                points: `
-                ${screenCoords.x},${screenCoords.y - screenSize}
-                ${screenCoords.x + screenSize},${screenCoords.y}
-                ${screenCoords.x},${screenCoords.y + screenSize}
-                ${screenCoords.x - screenSize},${screenCoords.y}
-              `,
-                fill: node.color,
-                opacity: icon ? 0.3 : 1
-              }
-            );
-            break;
-          default:
-            shapeElement = /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-              "circle",
-              {
-                ...nodeProps,
-                cx: screenCoords.x,
-                cy: screenCoords.y,
-                r: screenSize,
-                fill: node.color,
-                opacity: icon ? 0.3 : 1
-              }
-            );
-        }
-        return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
-          shapeElement,
-          iconElement
-        ] }, node.id);
-      });
-    };
-    const renderEdges = () => {
-      if (!styledGraph.edges) return null;
-      return styledGraph.edges.map((edge, index) => {
-        const sourceNode = styledGraph.nodes.find((n) => n.id === edge.source);
-        const targetNode = styledGraph.nodes.find((n) => n.id === edge.target);
-        if (!sourceNode || !targetNode) return null;
-        const sourceX = sourceNode.screenX || sourceNode.x * width;
-        const sourceY = sourceNode.screenY || sourceNode.y * height;
-        const targetX = targetNode.screenX || targetNode.x * width;
-        const targetY = targetNode.screenY || targetNode.y * height;
-        const sourceScreen = toScreenCoords(sourceX, sourceY);
-        const targetScreen = toScreenCoords(targetX, targetY);
-        return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          "line",
-          {
-            x1: sourceScreen.x,
-            y1: sourceScreen.y,
-            x2: targetScreen.x,
-            y2: targetScreen.y,
-            stroke: config2.style?.edgeColor || "#999",
-            strokeWidth: (config2.style?.edgeWidth || 1) * camera.scale
-          },
-          `edge-${index}`
-        );
-      });
-    };
-    const renderLabels = () => {
-      if (!config2.style?.labels?.show) return null;
-      return styledGraph.nodes.map((node) => {
-        if (!node.label) return null;
-        const graphX = node.screenX || node.x * width;
-        const graphY = node.screenY || node.y * height;
-        const screenCoords = toScreenCoords(graphX, graphY);
-        const screenSize = node.size * camera.scale;
-        return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_jsx_runtime5.Fragment, {});
-      });
-    };
-    const renderSpaceIndicator = () => {
-      if (!spacePressed) return null;
-      return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          "rect",
-          {
-            x: 10,
-            y: 50,
-            width: 120,
-            height: 25,
-            rx: 5,
-            fill: Palette.rustSubtle,
-            stroke: Palette.rust,
-            strokeWidth: 1
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          "text",
-          {
-            x: 70,
-            y: 66,
-            textAnchor: "middle",
-            fill: Palette.rust,
-            fontSize: 11,
-            fontWeight: "bold",
-            children: "Space: Pan Mode"
-          }
-        )
-      ] });
-    };
-    const renderCameraControls = () => {
-      return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          "rect",
-          {
-            x: 10,
-            y: 10,
-            width: 100,
-            height: 30,
-            rx: 5,
-            fill: Palette.rust,
-            onClick: resetCamera,
-            style: { cursor: "pointer" }
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          "text",
-          {
-            x: 60,
-            y: 28,
-            textAnchor: "middle",
-            fill: "white",
-            fontSize: 12,
-            onClick: resetCamera,
-            style: { cursor: "pointer" },
-            children: "Reset View"
-          }
-        ),
-        renderSpaceIndicator(),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-          "text",
-          {
-            x: width - 10,
-            y: 20,
-            textAnchor: "end",
-            fill: "#666",
-            fontSize: 11,
-            children: [
-              "Scale: ",
-              camera.scale.toFixed(2),
-              "x"
-            ]
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          "text",
-          {
-            x: width - 10,
-            y: 35,
-            textAnchor: "end",
-            fill: "#666",
-            fontSize: 11,
-            children: "Pan: Space+Click or Middle Click"
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          "text",
-          {
-            x: width - 10,
-            y: 50,
-            textAnchor: "end",
-            fill: "#666",
-            fontSize: 11,
-            children: "Zoom: Mouse Wheel"
-          }
-        )
-      ] });
-    };
-    const cursorStyle = isDragging ? "grabbing" : spacePressed ? "grab" : "default";
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { style: { position: "relative", width: "100%", height: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-      "svg",
-      {
-        ref: svgRef,
-        width,
-        height,
-        style: { border: "1px solid #ccc", cursor: cursorStyle },
-        onMouseDown: handleMouseDown,
-        onMouseMove: handleMouseMove,
-        onMouseUp: handleMouseUp,
-        onMouseLeave: handleMouseUp,
-        onWheel: handleWheel,
-        children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("defs", { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-            "pattern",
-            {
-              id: "grid",
-              width: 50 * camera.scale,
-              height: 50 * camera.scale,
-              patternUnits: "userSpaceOnUse",
-              children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-                "path",
-                {
-                  d: `M ${50 * camera.scale} 0 L 0 0 0 ${50 * camera.scale}`,
-                  fill: "none",
-                  stroke: "#e0e0e0",
-                  strokeWidth: 1
-                }
-              )
-            }
-          ) }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-            "rect",
-            {
-              width: "100%",
-              height: "100%",
-              fill: "url(#grid)"
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("g", { children: [
-            renderEdges(),
-            renderNodes(),
-            renderLabels()
+      if (error) {
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+          padding: "20px",
+          border: "1px solid #d32f2f",
+          borderRadius: "4px",
+          backgroundColor: "#ffebee",
+          color: "#d32f2f",
+          width,
+          height,
+          overflow: "auto"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Error loading view" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Error message:" }),
+            " ",
+            error
           ] }),
-          renderCameraControls()
-        ]
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Slice path:" }),
+            " ",
+            this.props.slicePath
+          ] })
+        ] });
       }
-    ) });
+      if (!data) {
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {
+          padding: "20px",
+          border: "1px solid #ff9800",
+          borderRadius: "4px",
+          backgroundColor: "#fff3e0",
+          color: "#f57c00",
+          width,
+          height
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "No data available" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Slice data is empty or could not be parsed." }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+            "Slice path: ",
+            this.props.slicePath
+          ] })
+        ] });
+      }
+      return this.renderContent();
+    }
   };
 
-  // src/views/defaultViews/GanttChart.tsx
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
-  var GanttChart = (props) => {
-    const { config: config2, width, height } = props;
-    const [startTime, endTime] = config2.timeRange;
-    const totalDuration = endTime.getTime() - startTime.getTime();
-    const renderTimeline = () => {
+  // src/views/defaultViews/GanttView.tsx
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var Gantt = class extends BaseViewClass {
+    get config() {
+      return this.props.config || {
+        timeRange: [new Date(Date.now() - 7 * 24 * 60 * 60 * 1e3), new Date(Date.now() + 7 * 24 * 60 * 60 * 1e3)],
+        rowHeight: 40,
+        showDependencies: true
+      };
+    }
+    renderTimeline() {
+      const { width = 800, height = 600 } = this.props;
+      const [startTime, endTime] = this.config.timeRange;
+      const totalDuration = endTime.getTime() - startTime.getTime();
       const hours = Math.ceil(totalDuration / (1e3 * 60 * 60));
       const segments = Math.min(hours, 24);
       return Array.from({ length: segments }).map((_, i) => {
         const x = i / segments * width;
         const time = new Date(startTime.getTime() + i / segments * totalDuration);
-        return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("g", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
             "line",
             {
               x1: x,
@@ -13536,7 +12901,7 @@
               strokeWidth: 1
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
             "text",
             {
               x,
@@ -13552,82 +12917,100 @@
           )
         ] }, `timeline-${i}`);
       });
-    };
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("svg", { width, height, style: { border: "1px solid #ccc" }, children: [
-      renderTimeline(),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(BaseChart, { ...props })
-    ] });
+    }
+    renderDataBars() {
+      const { width = 800, height = 600 } = this.props;
+      const [startTime, endTime] = this.config.timeRange;
+      const totalDuration = endTime.getTime() - startTime.getTime();
+      const data = this.state.data;
+      if (!data || !data.nodes) return null;
+      return data.nodes.map((node, index) => {
+        const startDate = node.timestamp ? new Date(node.timestamp) : node.metadata?.frontmatter?.startDate ? new Date(node.metadata.frontmatter.startDate) : startTime;
+        const endDate = node.metadata?.frontmatter?.dueDate ? new Date(node.metadata.frontmatter.dueDate) : new Date(startDate.getTime() + 24 * 60 * 60 * 1e3);
+        const startX = (startDate.getTime() - startTime.getTime()) / totalDuration * width;
+        const endX = (endDate.getTime() - startTime.getTime()) / totalDuration * width;
+        const barWidth = Math.max(endX - startX, 5);
+        const y = 50 + index * this.config.rowHeight;
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+          "g",
+          {
+            onClick: () => this.props.onNodeClick?.(node),
+            onMouseEnter: () => this.props.onNodeHover?.(node),
+            onMouseLeave: () => this.props.onNodeHover?.(null),
+            style: { cursor: this.props.onNodeClick ? "pointer" : "default" },
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                "rect",
+                {
+                  x: startX,
+                  y,
+                  width: barWidth,
+                  height: this.config.rowHeight - 10,
+                  fill: "#4a90e2",
+                  rx: 3
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                "text",
+                {
+                  x: startX + 5,
+                  y: y + this.config.rowHeight / 2,
+                  fontSize: 11,
+                  fill: "white",
+                  dominantBaseline: "middle",
+                  children: node.label || node.id
+                }
+              )
+            ]
+          },
+          `bar-${node.id}`
+        );
+      });
+    }
+    renderContent() {
+      const { width = 800, height = 600 } = this.props;
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { width: "100%", height: "100%", overflow: "auto" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { width, height, style: { border: "1px solid #ccc", background: "white" }, children: [
+        this.renderTimeline(),
+        this.renderDataBars()
+      ] }) });
+    }
+  };
+  var GanttView = ({
+    slicePath,
+    width = 800,
+    height = 600
+  }) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+      Gantt,
+      {
+        slicePath,
+        width,
+        height
+      }
+    );
   };
 
-  // src/views/defaultViews/EisenhowerMatrix.tsx
-  var import_react7 = __toESM(require_react(), 1);
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
-
-  // testeranto/views/Gantt.entry.js
-  var config = window.TESTERANTO_VIEW_CONFIG || {};
-  function ViewApp() {
-    const [data, setData] = import_react8.default.useState(null);
-    const [loading, setLoading] = import_react8.default.useState(true);
-    const [error, setError] = import_react8.default.useState(null);
-    import_react8.default.useEffect(() => {
-      async function loadData() {
-        try {
-          const response = await fetch(config.dataPath || "/testeranto/slices/views/Gantt.json");
-          if (!response.ok) {
-            throw new Error(`Failed to load data: ${response.status}`);
-          }
-          const jsonData = await response.json();
-          setData(jsonData);
-        } catch (err) {
-          setError(err.message);
-          console.error("Error loading view data:", err);
-        } finally {
-          setLoading(false);
-        }
-      }
-      loadData();
-      const interval = setInterval(loadData, 5e3);
-      return () => clearInterval(interval);
-    }, []);
-    if (loading) {
-      return import_react8.default.createElement("div", null, "Loading Gantt view...");
-    }
-    if (error) {
-      return import_react8.default.createElement("div", { style: { color: "red", padding: "20px" } }, `Error: ${error}`);
-    }
-    if (!data) {
-      return import_react8.default.createElement("div", null, "No data available");
-    }
-    const props = {
-      data,
-      width: window.innerWidth - 40,
-      height: window.innerHeight - 40,
-      config: {
-        projection: {
-          xAttribute: "status",
-          yAttribute: "priority",
-          xType: "categorical",
-          yType: "continuous",
-          layout: "grid"
-        },
-        style: {
-          nodeSize: 10,
-          nodeColor: "#007acc",
-          nodeShape: "circle"
-        }
-      },
-      onNodeClick: (node) => console.log("Node clicked:", node),
-      onNodeHover: (node) => console.log("Node hover:", node)
-    };
-    return import_react8.default.createElement(GanttChart, props);
+  // testeranto/views/Gantt.wrapper.tsx
+  var config = window.TESTERANTO_VIEW_CONFIG;
+  if (!config) {
+    console.error("TESTERANTO_VIEW_CONFIG not found in window");
+    document.getElementById("root").innerHTML = `
+    <div style="padding: 40px; text-align: center; color: #d32f2f;">
+      <h1>Configuration Error</h1>
+      <p>View configuration not found.</p>
+    </div>
+  `;
+  } else {
+    console.log("Mounting view with config:", config);
+    const root = import_client.default.createRoot(document.getElementById("root"));
+    root.render(
+      import_react3.default.createElement(GanttView, {
+        slicePath: config.dataPath,
+        width: window.innerWidth - 40,
+        height: window.innerHeight - 40
+      })
+    );
   }
-  document.addEventListener("DOMContentLoaded", () => {
-    const rootElement = document.getElementById("root");
-    if (rootElement) {
-      const root = import_client.default.createRoot(rootElement);
-      root.render(import_react8.default.createElement(ViewApp));
-    }
-  });
 })();
 /*! Bundled license information:
 

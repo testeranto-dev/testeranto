@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BaseView Example</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .view-container {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>BaseView Example</h1>
+    <p>This example shows how to use BaseView with different view components.</p>
+    
+    <div class="view-container">
+      <h2>Kanban View</h2>
+      <div id="kanban-root"></div>
+    </div>
+    
+    <div class="view-container">
+      <h2>Eisenhower Matrix</h2>
+      <div id="eisenhower-root"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { KanbanView, EisenhowerView } from './index.ts';
+    
+    // In a real implementation, you would use ReactDOM to render these components
+    // This is just a conceptual example
+    console.log('BaseView example loaded');
+    console.log('KanbanView:', KanbanView);
+    console.log('EisenhowerView:', EisenhowerView);
+  </script>
+</body>
+</html>

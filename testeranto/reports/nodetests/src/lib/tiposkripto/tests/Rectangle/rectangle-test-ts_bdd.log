@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T15:17:38.370Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (runtime: node) ===
-=== Container ID: 38cfcb940573bc410e37466922117bb84d8c5ac7e8f9fc0bde9dd9a42820dd8f ===
+=== Log started at 2026-04-11T17:40:37.347Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (runtime: node) ===
+=== Container ID: 8783cdf31f38bdc8bb6d836d099806e691be8dac83ae8ce6fb2012f9fcf15a09 ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
@@ -16,7 +16,7 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/'
 }
-Done in 3.73s.
+Done in 4.88s.
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
@@ -29,6 +29,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/'
 }
-Done in 0.91s.
+Done in 0.84s.
 
-=== Log captured at 2026-04-11T15:17:38.774Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-11T17:40:43.094Z (container status: exited, exit code: 0) ===

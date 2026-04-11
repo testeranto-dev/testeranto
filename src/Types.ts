@@ -16,6 +16,12 @@ import type { BaseIt } from "./lib/tiposkripto/src/verbs/aaa/BaseIt";
 import type { BaseConfirm } from "./lib/tiposkripto/src/verbs/tdt/BaseConfirm";
 import type { BaseValue } from "./lib/tiposkripto/src/verbs/tdt/BaseValue";
 import type { BaseShould } from "./lib/tiposkripto/src/verbs/tdt/BaseShould";
+import type { GraphData } from "./graph";
+
+export type IView = {
+  slicer: (graphData: GraphData) => unknown,
+  filePath: string
+}
 
 export type ITesterantoConfig = {
   volumes: string[],
@@ -30,7 +36,7 @@ export type ITesterantoConfig = {
     sliceFunction: (graphManager: any) => { nodes: any[]; edges: any[] };
   }>;
 
-  views: Record<string, string>
+  views: Record<string, IView>
 };
 
 export type IOtherTest = (x: any) => string;

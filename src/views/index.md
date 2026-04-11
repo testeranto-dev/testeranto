@@ -13,11 +13,3 @@ Each view is a react component associated with a slice of data. Our strategy wil
 7) remove the stakeholderApp folder
 8) consolidate the api definitions
 9) vscode views section contains list of views. clicking on item opens the page in chrome in vscode
-
-src/views
-src/api
-src/graph
-src/server/serverClasses/Server_GraphManager.ts
-src/server/serverClasses/Server_GraphManagerCore.ts
-src/server/serverClasses/Server_HTTP_Base.ts
-src/server/serverClasses/Server_HTTP.ts

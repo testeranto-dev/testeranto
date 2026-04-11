@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T15:24:39.271Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 705c77712e4f0b3f981381e068e88db75a5cb14a9c7c083ee9db08ad34f40ae2 ===
+=== Log started at 2026-04-11T17:40:37.147Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: 9ecea2e281a7e430fc302d41281be6bcdb190ae89b2c9eb18f5ad58ee42afa4d ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -10,6 +10,10 @@ warning testeranto@0.235.9: The engine "vscode" appears to be invalid.
 warning testeranto@0.235.9: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}'
 [NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}
+testResourceConfiguration {
+  ports: [ 1111 ],
+  fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
+}
 Error during test specification: TypeError: Confirm.circumferenceCalculation(...) is not a function
     at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:214:42)
     at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)
@@ -34,11 +38,7 @@ TypeError: Confirm.circumferenceCalculation(...) is not a function
     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
-testResourceConfiguration {
-  ports: [ 1111 ],
-  fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
-}
-Done in 2.14s.
+Done in 4.71s.
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.235.9: The engine "vscode" appears to be invalid.
@@ -73,6 +73,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 0.82s.
+Done in 0.85s.
 
-=== Log captured at 2026-04-11T15:24:40.956Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-11T17:40:41.354Z (container status: exited, exit code: 0) ===
