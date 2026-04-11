@@ -37,6 +37,7 @@
     "onView:testeranto.aiderProcessView",
     "onView:testeranto.fileTreeView",
     "onView:testeranto.agentView",
+    "onView:testeranto.viewView",
     "workspaceContains:**/testeranto/extension-config.json",
     "workspaceContains:**/testeranto/reports/**/*.json"
   ],
@@ -95,6 +96,11 @@
           "id": "testeranto.agentView",
           "name": "Agents",
           "icon": "$(person)"
+        },
+        {
+          "id": "testeranto.viewView",
+          "name": "Views",
+          "icon": "$(eye)"
         }
       ]
     },
@@ -140,6 +146,10 @@
         "title": "Testeranto: Refresh File Tree"
       },
       {
+        "command": "testeranto.refreshViewTree",
+        "title": "Testeranto: Refresh Views"
+      },
+      {
         "command": "testeranto.showProcessLogs",
         "title": "Testeranto: Show Process Logs"
       },
@@ -166,6 +176,18 @@
       {
         "command": "testeranto.openProcessTerminal",
         "title": "Testeranto: Open Process Terminal"
+      },
+      {
+        "command": "testeranto.openView",
+        "title": "Testeranto: Open View"
+      },
+      {
+        "command": "testeranto.refreshViewTree",
+        "title": "Testeranto: Refresh Views"
+      },
+      {
+        "command": "testeranto.openView",
+        "title": "Testeranto: Open View"
       }
     ]
   },
@@ -330,7 +352,6 @@
     "@types/react-dom": "18.2.0",
     "@types/react-test-renderer": "19.0.0",
     "eslint": "9.23.0",
-    "grafeovidajo": "^0.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "ts-node": "^10.9.1",
@@ -355,7 +376,6 @@
     "@vscode/codicons": "^0.0.39",
     "@vscode/vsce": "^3.7.1",
     "@vscode/webview-ui-toolkit": "^1.4.0",
-    "grafeovidajo": "^0.0.4",
     "react-app-rewired": "^2.2.1",
     "self-import": "*",
     "testeranto-react": "0.0.9",

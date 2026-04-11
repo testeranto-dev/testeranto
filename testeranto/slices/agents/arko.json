@@ -1,0 +1,68 @@
+{
+  "nodes": [
+    {
+      "id": "agent:prodirek",
+      "type": "agent",
+      "label": "Agent: prodirek",
+      "description": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, t...",
+      "agentName": "prodirek",
+      "agentConfig": {
+        "load": [
+          "/read SOUL.md",
+          "/read testeranto/slices/agents/prodirek.json"
+        ],
+        "hasSliceFunction": true
+      },
+      "timestamp": "2026-04-11T15:01:03.626Z",
+      "metadata": {
+        "frontmatter": {
+          "title": "Agent: prodirek",
+          "type": "agent",
+          "agentType": "user-defined"
+        }
+      }
+    },
+    {
+      "id": "agent:arko",
+      "type": "agent",
+      "label": "Agent: arko",
+      "description": "Your name is \"Arko\". You are a Software Architect. Your responsibilities are: 1) You will be give a ...",
+      "agentName": "arko",
+      "agentConfig": {
+        "load": [
+          "/read SOUL.md",
+          "/read chat_slice.json"
+        ],
+        "hasSliceFunction": true
+      },
+      "timestamp": "2026-04-11T15:01:03.626Z",
+      "metadata": {
+        "frontmatter": {
+          "title": "Agent: arko",
+          "type": "agent",
+          "agentType": "user-defined"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "agent:prodirek",
+      "target": "agent:arko",
+      "attributes": {
+        "type": "hasAgent",
+        "timestamp": "2026-04-11T15:01:03.726Z",
+        "directed": true
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "agent:prodirek",
+      "attributes": {
+        "type": "agentOf",
+        "timestamp": "2026-04-11T15:01:03.726Z",
+        "directed": true
+      }
+    }
+  ]
+}

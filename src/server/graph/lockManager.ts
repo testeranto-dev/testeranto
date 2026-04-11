@@ -1,7 +1,7 @@
 import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../graph/index";
 
 export class LockManager {
-  constructor(private graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>) {}
+  constructor(private graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>) { }
 
   /**
    * Acquire a lock on a file node
@@ -16,7 +16,7 @@ export class LockManager {
     }
 
     const attrs = this.graph.getNodeAttributes(nodeId);
-    
+
     // Check if node is already locked
     if (attrs.locked) {
       // For read locks, multiple readers are allowed
@@ -57,7 +57,7 @@ export class LockManager {
     }
 
     const attrs = this.graph.getNodeAttributes(nodeId);
-    
+
     // Check if node is locked by this owner
     if (!attrs.locked || attrs.lockOwner !== ownerId) {
       return false;
@@ -107,7 +107,7 @@ export class LockManager {
    */
   releaseAllLocks(ownerId: string): number {
     let releasedCount = 0;
-    
+
     this.graph.forEachNode((nodeId) => {
       const attrs = this.graph.getNodeAttributes(nodeId);
       if (attrs.locked && attrs.lockOwner === ownerId) {
@@ -131,12 +131,12 @@ export class LockManager {
    */
   lockAllFiles(ownerId: string = 'system:restart'): number {
     let lockedCount = 0;
-    
+
     this.graph.forEachNode((nodeId) => {
       const attrs = this.graph.getNodeAttributes(nodeId);
       // Lock file nodes (file, input_file, entrypoint, test)
-      if (attrs.type === 'file' || attrs.type === 'input_file' || 
-          attrs.type === 'entrypoint' || attrs.type === 'test') {
+      if (attrs.type === 'file' || attrs.type === 'input_file' ||
+        attrs.type === 'entrypoint' || attrs.type === 'test') {
         if (!attrs.locked) {
           this.graph.mergeNodeAttributes(nodeId, {
             locked: true,
@@ -158,12 +158,12 @@ export class LockManager {
    */
   unlockAllFiles(): number {
     let unlockedCount = 0;
-    
+
     this.graph.forEachNode((nodeId) => {
       const attrs = this.graph.getNodeAttributes(nodeId);
       // Unlock file nodes (file, input_file, entrypoint, test)
-      if (attrs.type === 'file' || attrs.type === 'input_file' || 
-          attrs.type === 'entrypoint' || attrs.type === 'test') {
+      if (attrs.type === 'file' || attrs.type === 'input_file' ||
+        attrs.type === 'entrypoint' || attrs.type === 'test') {
         if (attrs.locked) {
           this.graph.mergeNodeAttributes(nodeId, {
             locked: false,
@@ -185,16 +185,16 @@ export class LockManager {
    */
   hasLockedFiles(): boolean {
     let hasLocked = false;
-    
-    this.graph.forEachNode((nodeId) => {
-      const attrs = this.graph.getNodeAttributes(nodeId);
-      if (attrs.locked && (attrs.type === 'file' || attrs.type === 'input_file' || 
-          attrs.type === 'entrypoint' || attrs.type === 'test')) {
-        hasLocked = true;
-      }
-    });
+    return false;
+    // this.graph.forEachNode((nodeId) => {
+    //   const attrs = this.graph.getNodeAttributes(nodeId);
+    //   if (attrs.locked && (attrs.type === 'file' || attrs.type === 'input_file' || 
+    //       attrs.type === 'entrypoint' || attrs.type === 'test')) {
+    //     hasLocked = true;
+    //   }
+    // });
 
-    return hasLocked;
+    // return hasLocked;
   }
 
   /**
@@ -203,11 +203,11 @@ export class LockManager {
    */
   getLockedFiles(): string[] {
     const lockedFiles: string[] = [];
-    
+
     this.graph.forEachNode((nodeId) => {
       const attrs = this.graph.getNodeAttributes(nodeId);
-      if (attrs.locked && (attrs.type === 'file' || attrs.type === 'input_file' || 
-          attrs.type === 'entrypoint' || attrs.type === 'test')) {
+      if (attrs.locked && (attrs.type === 'file' || attrs.type === 'input_file' ||
+        attrs.type === 'entrypoint' || attrs.type === 'test')) {
         lockedFiles.push(nodeId);
       }
     });
@@ -228,7 +228,7 @@ export class LockManager {
     }
 
     const attrs = this.graph.getNodeAttributes(nodeId);
-    
+
     // If not locked, access is allowed
     if (!attrs.locked) {
       return true;

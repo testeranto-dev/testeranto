@@ -20,10 +20,20 @@ export abstract class Server_HTTP_Base extends Server_Base {
   async start(): Promise<void> {
     await super.start();
 
+    // The graph is built from scratch in Server_GraphManager constructor
+    // Write slice files
     try {
-      await this.resetGraphData();
+      await this.graphManager.writeViewSliceFiles();
     } catch (error) {
-      console.error('[Server_HTTP_Base] Error generating initial graph data:', error);
+      console.error('[Server_HTTP_Base] Error writing view slice files:', error);
+    }
+
+    // Start capturing aider output for all agents
+    try {
+      console.log('[Server_HTTP_Base] Starting aider output capture for all agents');
+      // this.graphManager.startCapturingAllAgentsOutput();
+    } catch (error) {
+      console.error('[Server_HTTP_Base] Error starting aider output capture:', error);
     }
   }
 
@@ -37,9 +47,9 @@ export abstract class Server_HTTP_Base extends Server_Base {
     return this.graphManager.resetGraphData();
   }
 
-  public saveGraphDataForStaticMode(fullGraphData: any): void {
-    this.graphManager.saveGraphDataForStaticMode(fullGraphData);
-  }
+  // public saveGraphDataForStaticMode(fullGraphData: any): void {
+  //   this.graphManager.saveGraphDataForStaticMode(fullGraphData);
+  // }
 
   protected getCurrentTestResults(): any {
     return {};
@@ -71,10 +81,12 @@ export abstract class Server_HTTP_Base extends Server_Base {
         }
       });
     }
+    // Save the graph and write slice files
+    await this.saveCurrentGraph();
   }
 
-  public saveCurrentGraph(): void {
-    this.graphManager.saveCurrentGraph();
+  public async saveCurrentGraph(): Promise<void> {
+    await this.graphManager.saveCurrentGraph();
   }
 
   public async writeMarkdownFile(filePath: string, frontmatterData: Record<string, any>, contentBody?: string): Promise<void> {

@@ -1,6 +1,25 @@
-import { type VizConfig, type VizComponentProps } from 'grafeovidajo';
 import React, { useState } from 'react';
-import { BaseChart } from '../BaseChart';
+import { BaseChart } from './BaseChart';
+import type { GraphData } from '../../graph';
+import type { VizComponentProps, VizConfig } from '../../grafeovidajo';
+
+export const EisenhowerSlicer = (graphData: GraphData): GraphData => {
+  // Filter nodes with urgency and importance
+  const nodesWithUrgencyImportance = graphData.nodes.filter(node =>
+    (node.metadata?.frontmatter?.urgency !== undefined) ||
+    (node.metadata?.frontmatter?.importance !== undefined)
+  );
+
+  const edgesWithUrgencyImportance = graphData.edges.filter(edge =>
+    nodesWithUrgencyImportance.some(n => n.id === edge.source) &&
+    nodesWithUrgencyImportance.some(n => n.id === edge.target)
+  );
+
+  return {
+    nodes: nodesWithUrgencyImportance,
+    edges: edgesWithUrgencyImportance,
+  };
+}
 
 export interface EisenhowerConfig extends VizConfig {
   quadrants: {
@@ -375,3 +394,8 @@ export const EisenhowerMatrix: React.FC<VizComponentProps & { config: Eisenhower
     </div>
   );
 };
+
+// TODO
+export const EisenhowerSlice = () => {
+
+}

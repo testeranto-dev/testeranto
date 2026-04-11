@@ -1,8 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react';
-
-import { NodeDetailsModal } from '../NodeDetailsModal';
-import type { VizConfig, VizComponentProps } from 'grafeovidajo';
+import { NodeDetailsModal } from './NodeDetailsModal';
 import type { Node } from 'typescript';
+import type { GraphData } from '../../graph';
+import type { VizConfig, VizComponentProps } from '../../grafeovidajo';
+
+export const KanbanSlicer = (graphData: GraphData): GraphData => {
+  // Filter feature nodes with status
+  const featureNodes = graphData.nodes.filter(node =>
+    node.type === 'feature' ||
+    node.id.startsWith('feature:') ||
+    (node.metadata?.frontmatter?.status !== undefined)
+  );
+
+  const featureEdges = graphData.edges.filter(edge =>
+    featureNodes.some(n => n.id === edge.source) &&
+    featureNodes.some(n => n.id === edge.target)
+  );
+
+  return {
+    nodes: featureNodes,
+    edges: featureEdges,
+    metadata: {
+      ...graphData.metadata,
+      viewType: 'kanban',
+      timestamp: new Date().toISOString()
+    }
+  };
+}
 
 export interface KanbanConfig extends VizConfig {
   columns: Array<{
@@ -497,3 +521,7 @@ export const KanbanBoard: React.FC<VizComponentProps & { config: KanbanConfig }>
     </>
   );
 };
+// TODO
+export const KanbanSlice = () => {
+
+}

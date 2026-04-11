@@ -55,7 +55,6 @@ export function getConfigsData(configs: ITesterantoConfig): any {
 
   return {
     runtimes: simplifiedConfigs,
-    documentationGlob: configs.documentationGlob,
     stakeholderReactModule: configs.stakeholderReactModule,
   };
 }
@@ -85,13 +84,13 @@ export function getStakeholderGraphConfig(): any {
  */
 export function validateStakeholderRequest(request: any, requiredFields: string[]): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
-  
+
   for (const field of requiredFields) {
     if (!request[field]) {
       errors.push(`Missing required field: ${field}`);
     }
   }
-  
+
   return {
     valid: errors.length === 0,
     errors

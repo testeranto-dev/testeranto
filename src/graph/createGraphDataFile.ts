@@ -1,5 +1,4 @@
-import type { GraphData } from "grafeovidajo";
-import type { GraphDataFile } from ".";
+import type { GraphData, GraphDataFile } from ".";
 import { Palette } from "../colors";
 
 // Helper to create a GraphDataFile

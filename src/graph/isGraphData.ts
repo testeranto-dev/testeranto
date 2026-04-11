@@ -1,6 +1,4 @@
-import type { GraphData } from "grafeovidajo";
-import type { GraphDataFile, GraphNodeAttributes, GraphEdgeAttributes, GraphNodeType, GraphEdgeType } from ".";
-import { Palette } from "../colors";
+import type { GraphData, GraphDataFile } from ".";
 
 // Type guard to check if an object is GraphData
 export function isGraphData(obj: any): obj is GraphData {

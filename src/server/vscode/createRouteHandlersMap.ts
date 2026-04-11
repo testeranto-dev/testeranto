@@ -57,7 +57,7 @@ export const createRouteHandlersMap = (): Record<string, (server: any, url?: URL
         // Handle POST request for graph updates
         try {
           const body = await request.json();
-          
+
           if (!graphManagerInstance.applyUpdate) {
             return jsonResponse({
               error: 'Graph manager does not support updates',
@@ -65,11 +65,7 @@ export const createRouteHandlersMap = (): Record<string, (server: any, url?: URL
           }
 
           const updatedGraph = graphManagerInstance.applyUpdate(body);
-
-          // Save the updated graph
-          if (graphManager.saveCurrentGraph) {
-            graphManager.saveCurrentGraph();
-          }
+          graphManager.saveCurrentGraph();
 
           // Broadcast graph update to WebSocket clients
           if (server.broadcast) {

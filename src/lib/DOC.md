@@ -15,7 +15,21 @@ Each implementation follows the same core BDD pattern while respecting language 
 
 ## Core Philosophy
 
-### 1. Multiple Patterns, Single Framework
+### 1. Code Structure and Abstraction
+
+Testeranto follows a strict separation of concerns to preserve context space and improve testability:
+
+1. **Business Logic Class**: A class that implements core business logic without importing external packages or using globals. It delegates to utility functions and is designed to be easily tested statefully with testeranto.
+2. **Utility Functions**: Each pure function resides in its own file, organized by folder. This abstraction by file and folder minimizes context size and promotes reusability.
+3. **Constants**: Centralized constant definitions.
+4. **Translatable Strings**: Internationalization support.
+5. **Dependents Abstraction**: A thin wrapper around external packages (fs, path, network, etc.) with two implementations:
+   - Real implementation for production
+   - Mock implementation for testing
+
+This structure ensures that the business logic remains pure and testable, while external dependencies are isolated and easily substitutable.
+
+### 2. Multiple Patterns, Single Framework
 
 Testeranto supports multiple testing patterns while maintaining a consistent API:
 

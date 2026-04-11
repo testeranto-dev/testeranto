@@ -48,6 +48,12 @@ export abstract class Server_Docker extends Server_Docker_Compose {
     // Agents will be started on-demand via the API
     await this.DC_upAll();
 
+    // Log information about accessing the HTTP server from services
+    consoleLog('[Server_Docker] Services can access the HTTP server at host.docker.internal:3000');
+    consoleLog('[Server_Docker] Network configuration includes extra_hosts for host.docker.internal');
+    consoleLog('[Server_Docker] Ensure the server is running on port 3000 and accessible from Docker containers');
+    consoleLog('[Server_Docker] Note: Server must bind to 0.0.0.0 (not localhost) to accept connections from containers');
+
     // Launch all agents at startup
     await this.launchAllAgents();
 
@@ -239,11 +245,11 @@ export abstract class Server_Docker extends Server_Docker_Compose {
     // Agents are defined in docker-compose.yml via generateServicesPure
     // They will be started automatically with docker-compose up
     // We just need to wait for them to be ready
-    
+
     // Wait a moment for services to fully start
     await new Promise(resolve => setTimeout(resolve, 5000));
 
-    // Check if agent services are running
+    // Check if agent services are running and update graph with actual status
     const agentServiceNames = Object.keys(agents).map(agentName => `agent-${agentName}`);
     for (const serviceName of agentServiceNames) {
       try {
@@ -253,6 +259,46 @@ export abstract class Server_Docker extends Server_Docker_Compose {
           const statusCmd = `docker inspect --format='{{.State.Status}}' ${containerId}`;
           const status = execSyncWrapper(statusCmd, { cwd: processCwd() }).trim();
           consoleLog(`[Server_Docker] Agent service ${serviceName}: ${status} (container: ${containerId.substring(0, 12)})`);
+          
+          // Update the graph with actual container status
+          // Extract agent name from service name (agent-{agentName})
+          const agentName = serviceName.replace('agent-', '');
+          const aiderProcessId = `aider_process:agent:${agentName}`;
+          const graphManager = this.graphManager?.getGraphManager ? this.graphManager.getGraphManager() : null;
+          
+          if (graphManager && typeof graphManager.applyUpdate === 'function') {
+            const graphData = graphManager.getGraphData();
+            const nodeExists = graphData.nodes.some((node: any) => node.id === aiderProcessId);
+            
+            if (nodeExists) {
+              const timestamp = new Date().toISOString();
+              const update = {
+                operations: [{
+                  type: 'updateNode',
+                  data: {
+                    id: aiderProcessId,
+                    metadata: {
+                      runtime: 'node',
+                      testName: agentName,
+                      configKey: 'agent',
+                      processType: 'aider',
+                      timestamp: timestamp,
+                      actualStatus: status,
+                      containerName: serviceName,
+                      containerId: containerId
+                    }
+                  },
+                  timestamp: timestamp
+                }],
+                timestamp: timestamp
+              };
+              graphManager.applyUpdate(update);
+              if (typeof graphManager.saveGraph === 'function') {
+                graphManager.saveGraph();
+              }
+              consoleLog(`[Server_Docker] Updated graph for ${aiderProcessId} with status: ${status}`);
+            }
+          }
         } else {
           consoleError(`[Server_Docker] Agent service ${serviceName} not found`);
         }
@@ -267,12 +313,12 @@ export abstract class Server_Docker extends Server_Docker_Compose {
 
   private async createAgentNodesAndAiderProcesses(): Promise<void> {
     const agents = this.configs.agents || {};
-    
+
     for (const [agentName, agentConfig] of Object.entries(agents)) {
       const containerName = `agent-${agentName}`;
       const agentNodeId = `agent:${agentName}`;
       const aiderProcessId = `aider_process:agent:${agentName}`;
-      
+
       // Create agent node in graph
       await this.addProcessNodeToGraph(
         'aider',
@@ -284,7 +330,47 @@ export abstract class Server_Docker extends Server_Docker_Compose {
         this.graphManager?.getGraphManager ? this.graphManager.getGraphManager() : null,
         'running'
       );
-      
+
+      // Update the aider process node to include container information
+      const graphManager = this.graphManager?.getGraphManager ? this.graphManager.getGraphManager() : null;
+      if (graphManager && typeof graphManager.applyUpdate === 'function') {
+        // First, check if the node exists in the graph
+        const graphData = graphManager.getGraphData();
+        const nodeExists = graphData.nodes.some((node: any) => node.id === aiderProcessId);
+        
+        if (nodeExists) {
+          const timestamp = new Date().toISOString();
+          const update = {
+            operations: [{
+              type: 'updateNode',
+              data: {
+                id: aiderProcessId,
+                metadata: {
+                  runtime: 'node',
+                  testName: agentName,
+                  configKey: 'agent',
+                  processType: 'aider',
+                  timestamp: timestamp,
+                  actualStatus: 'running',
+                  containerName: containerName,
+                  containerId: containerName
+                }
+              },
+              timestamp: timestamp
+            }],
+            timestamp: timestamp
+          };
+          graphManager.applyUpdate(update);
+          // Save the graph to persist the changes
+          if (typeof graphManager.saveGraph === 'function') {
+            graphManager.saveGraph();
+          }
+          consoleLog(`[Server_Docker] Updated aider process node ${aiderProcessId} with container info: ${containerName}`);
+        } else {
+          consoleLog(`[Server_Docker] Aider process node ${aiderProcessId} not found in graph, cannot update with container info`);
+        }
+      }
+
       consoleLog(`[Server_Docker] Created agent nodes for ${agentName}`);
     }
   }

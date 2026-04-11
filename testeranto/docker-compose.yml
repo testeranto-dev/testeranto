@@ -1,34 +1,4 @@
 services:
-  javatests-builder:
-    container_name: javatests-builder
-    environment:
-      ENV: java
-      MODE: dev
-    working_dir: /workspace
-    volumes:
-      - /Users/adam/Code/testeranto/src:/workspace/src
-      - /Users/adam/Code/testeranto/test:/workspace/test
-      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
-    command: sh -c "cd /workspace && javac -cp \".:lib/*\" testeranto/*.java && java -cp \"testeranto:.:lib/*\" java_runtime /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/java/java.java '{"name":"javatests","tests":[],"outputs":["src/lib/kafe/examples/calculator/Calculator.java"]}'"
-    networks:
-      - allTests_network
-    restart: 'no'
-    image: testeranto-java-javatests:latest
-  rubytests-builder:
-    container_name: rubytests-builder
-    environment:
-      ENV: ruby
-      MODE: dev
-    working_dir: /workspace
-    volumes:
-      - /Users/adam/Code/testeranto/src:/workspace/src
-      - /Users/adam/Code/testeranto/test:/workspace/test
-      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
-    command: ruby /workspace/testeranto/ruby_runtime.rb /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/ruby/ruby.rb '{"name":"rubytests","tests":[],"outputs":["test_output","testeranto/reports/rubytests"]}'
-    networks:
-      - allTests_network
-    restart: 'no'
-    image: testeranto-ruby-rubytests:latest
   nodetests-builder:
     container_name: nodetests-builder
     environment:
@@ -45,6 +15,8 @@ services:
       - allTests_network
     restart: 'no'
     image: testeranto-node-nodetests:latest
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -60,6 +32,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider:
     image: testeranto-aider:latest
     container_name: nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider
@@ -78,6 +52,8 @@ services:
     tty: true
     stdin_open: true
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0:
     build:
       context: /Users/adam/Code/testeranto
@@ -93,6 +69,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1:
     build:
       context: /Users/adam/Code/testeranto
@@ -108,6 +86,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2:
     build:
       context: /Users/adam/Code/testeranto
@@ -123,6 +103,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -138,6 +120,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider:
     image: testeranto-aider:latest
     container_name: nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider
@@ -156,6 +140,8 @@ services:
     tty: true
     stdin_open: true
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0:
     build:
       context: /Users/adam/Code/testeranto
@@ -171,6 +157,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1:
     build:
       context: /Users/adam/Code/testeranto
@@ -186,6 +174,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2:
     build:
       context: /Users/adam/Code/testeranto
@@ -201,6 +191,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -216,6 +208,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider:
     image: testeranto-aider:latest
     container_name: nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider
@@ -234,6 +228,8 @@ services:
     tty: true
     stdin_open: true
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0:
     build:
       context: /Users/adam/Code/testeranto
@@ -249,6 +245,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1:
     build:
       context: /Users/adam/Code/testeranto
@@ -264,6 +262,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2:
     build:
       context: /Users/adam/Code/testeranto
@@ -279,6 +279,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -294,6 +296,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider:
     image: testeranto-aider:latest
     container_name: nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider
@@ -312,6 +316,8 @@ services:
     tty: true
     stdin_open: true
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-0:
     build:
       context: /Users/adam/Code/testeranto
@@ -327,6 +333,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-1:
     build:
       context: /Users/adam/Code/testeranto
@@ -342,6 +350,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-2:
     build:
       context: /Users/adam/Code/testeranto
@@ -357,6 +367,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -372,6 +384,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-aider:
     image: testeranto-aider:latest
     container_name: nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-aider
@@ -390,6 +404,8 @@ services:
     tty: true
     stdin_open: true
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-0:
     build:
       context: /Users/adam/Code/testeranto
@@ -405,6 +421,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-1:
     build:
       context: /Users/adam/Code/testeranto
@@ -420,6 +438,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-2:
     build:
       context: /Users/adam/Code/testeranto
@@ -435,6 +455,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_logic_filetreelogic-test-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -450,6 +472,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider:
     image: testeranto-aider:latest
     container_name: nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider
@@ -468,6 +492,8 @@ services:
     tty: true
     stdin_open: true
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0:
     build:
       context: /Users/adam/Code/testeranto
@@ -483,6 +509,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1:
     build:
       context: /Users/adam/Code/testeranto
@@ -498,6 +526,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-2:
     build:
       context: /Users/adam/Code/testeranto
@@ -513,86 +543,8 @@ services:
     networks:
       - allTests_network
     restart: 'no'
-  webtests-builder:
-    container_name: webtests-builder
-    environment:
-      NODE_ENV: production
-      ENV: web
-      MODE: dev
-    working_dir: /workspace
-    volumes:
-      - /Users/adam/Code/testeranto/src:/workspace/src
-      - /Users/adam/Code/testeranto/test:/workspace/test
-      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
-    command: yarn tsx /workspace/testeranto/web_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/web/web.ts '{"name":"webtests","tests":[],"outputs":[]}'
-    networks:
-      - allTests_network
-    expose:
-      - '8000'
-    restart: 'no'
-    image: testeranto-web-webtests:latest
-  pythontests-builder:
-    container_name: pythontests-builder
-    environment:
-      ENV: python
-      MODE: dev
-    working_dir: /workspace
-    volumes:
-      - /Users/adam/Code/testeranto/src:/workspace/src
-      - /Users/adam/Code/testeranto/test:/workspace/test
-      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
-    command: python /workspace/testeranto/python_runtime.py /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/python/python.py  '{"name":"pythontests","tests":[],"outputs":["testeranto/reports/pythontests"]}'
-    networks:
-      - allTests_network
-    restart: 'no'
-    image: testeranto-python-pythontests:latest
-  golangtests-builder:
-    container_name: golangtests-builder
-    environment:
-      ENV: golang
-      MODE: dev
-    working_dir: /workspace
-    volumes:
-      - /Users/adam/Code/testeranto/src:/workspace/src
-      - /Users/adam/Code/testeranto/test:/workspace/test
-      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
-    command: go run /workspace/testeranto/golang_runtime.go /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/golang/golang.ts '{"name":"golangtests","tests":[],"outputs":["coverage.out","coverage.html"]}'
-    networks:
-      - allTests_network
-    restart: 'no'
-    image: testeranto-golang-golangtests:latest
-  rusttests-builder:
-    container_name: rusttests-builder
-    environment:
-      ENV: rust
-      MODE: dev
-    working_dir: /workspace
-    volumes:
-      - /Users/adam/Code/testeranto/src:/workspace/src
-      - /Users/adam/Code/testeranto/test:/workspace/test
-      - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
-    command: cargo run --manifest-path /workspace/testeranto/rust_builder/Cargo.toml -- /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/rust/rust.ts '{"name":"rusttests","tests":[],"outputs":[]}'
-    networks:
-      - allTests_network
-    restart: 'no'
-    image: testeranto-rust-rusttests:latest
-  chrome-service:
-    image: browserless/chrome:latest
-    container_name: chrome-service
-    environment:
-      CONNECTION_TIMEOUT: '60000'
-      MAX_CONCURRENT_SESSIONS: '1'
-      ENABLE_CORS: 'true'
-      PREBOOT_CHROME: 'true'
-      DEFAULT_BLOCK_ADS: 'true'
-    shm_size: 2g
-    expose:
-      - '3000'
-    ports:
-      - '9222:3000'
-    networks:
-      - allTests_network
-    restart: 'no'
+    extra_hosts:
+      - host.docker.internal:host-gateway
   agent-prodirek:
     image: testeranto-aider:latest
     container_name: agent-prodirek
@@ -633,6 +585,50 @@ services:
       - allTests_network
     tty: true
     stdin_open: true
+    extra_hosts:
+      - host.docker.internal:host-gateway
+  agent-arko:
+    image: testeranto-aider:latest
+    container_name: agent-arko
+    volumes:
+      - /Users/adam/Code/testeranto/src:/workspace/src
+      - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto:/workspace
+      - /Users/adam/Code/testeranto/testeranto/agents:/workspace/agents:ro
+      - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
+    working_dir: /workspace
+    command:
+      - sh
+      - '-c'
+      - |-
+        # Create symlink for agent markdown file
+                 if [ -f "/workspace/agents/arko.md" ]; then
+                   ln -sf "/workspace/agents/arko.md" /workspace/agent.md
+                   echo "Created symlink to agent markdown file at /workspace/agent.md"
+                 else
+                   echo "Agent markdown file not found at /workspace/agents/arko.md"
+                   touch /workspace/agent.md
+                 fi
+                 
+                 # Start aider and keep it running
+                 echo "Starting aider for agent arko"
+                 cat /workspace/agent.md - | aider --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
+                 EXIT_CODE=$?
+                 echo "Aider exited with code $EXIT_CODE"
+                 # Exit with the same code (no restart)
+                 exit $EXIT_CODE
+    environment:
+      MODE: dev
+      NODE_ENV: production
+      AGENT_MARKDOWN_FILE: /workspace/agents/arko.md
+      EDITOR: vim
+    restart: 'no'
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    extra_hosts:
+      - host.docker.internal:host-gateway
 volumes:
   node_modules:
     driver: local

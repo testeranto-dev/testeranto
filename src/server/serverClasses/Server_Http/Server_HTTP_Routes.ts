@@ -5,6 +5,7 @@ import type { ITesterantoConfig } from "../../../Types";
 import * as gitHandlers from "./utils/gitHandlers";
 import * as serviceHandlers from "./utils/serviceHandlers";
 import * as lockHandlers from "./utils/lockHandlers";
+import { execSync } from "child_process";
 
 export class Server_HTTP_Routes {
   constructor(
@@ -248,9 +249,10 @@ export class Server_HTTP_Routes {
 
   private handleChatRoute(url: URL): Response {
     // According to tickets/chat.md, we no longer need the POST endpoint for chat
+    // Chat is now handled via aider output streaming
     return new Response(JSON.stringify({
       error: 'Chat endpoint is deprecated',
-      message: 'Chat is now handled via aider output streaming',
+      message: 'Chat is now handled via aider output streaming and added to the graph as message nodes',
       timestamp: new Date().toISOString()
     }), {
       status: 410, // Gone
@@ -261,7 +263,7 @@ export class Server_HTTP_Routes {
   private async handleOpenProcessTerminal(request: Request): Promise<Response> {
     try {
       const body = await request.json();
-      const { nodeId } = body;
+      const { nodeId, label, containerId, serviceName } = body;
 
       if (!nodeId) {
         return new Response(JSON.stringify({
@@ -274,140 +276,285 @@ export class Server_HTTP_Routes {
       }
 
       // Parse nodeId to determine what type of process it is
-      // Format examples:
-      // - agent:prodirek
-      // - aider_process:agent:prodirek
-      // - bdd_process:configKey:testName
-      // - check_process:configKey:testName:index
-      // - aider_process:configKey:testName
-      // - builder_process:configKey
-
       const parts = nodeId.split(':');
       const type = parts[0];
 
-      if (type === 'agent') {
-        // Handle agent terminal request
-        const agentName = parts[1];
-        const containerName = `agent-${agentName}`;
-
-        // Check if container exists and is running
-        const { execSync } = require('child_process');
-        let containerId = '';
-        let isRunning = false;
-        let containerStatus = 'unknown';
-
+      // Get the server instance to access process information
+      const server = this.server as any;
+      
+      // Try to determine the container name
+      let containerName = containerId;
+      let processInfo: any = null;
+      
+      // If containerId is provided, use it
+      if (containerName) {
+        // Check if container exists
         try {
           const checkCmd = `docker ps -q -f name=${containerName}`;
-          containerId = execSync(checkCmd, {
+          execSync(checkCmd, {
             encoding: 'utf-8',
             stdio: ['pipe', 'pipe', 'ignore']
           }).trim();
-          isRunning = !!containerId;
-
-          if (isRunning) {
-            const inspectCmd = `docker inspect --format='{{.State.Status}}' ${containerName}`;
-            containerStatus = execSync(inspectCmd, {
-              encoding: 'utf-8',
-              stdio: ['pipe', 'pipe', 'ignore']
-            }).trim();
-          }
         } catch (error) {
-          // Container not found or error
-          console.error(`[Server_HTTP_Routes] Error checking container ${containerName}:`, error);
-        }
-
-        if (isRunning) {
-          return new Response(JSON.stringify({
-            success: true,
-            nodeId,
-            containerIdentifier: containerName,
-            containerName,
-            containerId: containerId || containerName,
-            containerStatus,
-            nodeType: 'agent',
-            message: `Agent ${agentName} container is running`,
-            timestamp: new Date().toISOString()
-          }), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          });
-        } else {
-          return new Response(JSON.stringify({
-            error: `Agent container ${containerName} is not running`,
-            nodeId,
-            message: `Agent ${agentName} is not running. Agents are started at server startup via docker-compose.`,
-            timestamp: new Date().toISOString()
-          }), {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-          });
-        }
-      } else if (type === 'aider_process' && parts[1] === 'agent') {
-        // Handle aider process for agent
-        const agentName = parts[2];
-        const containerName = `agent-${agentName}`;
-
-        // Check if container exists and is running
-        const { execSync } = require('child_process');
-        let containerId = '';
-        let isRunning = false;
-        let containerStatus = 'unknown';
-
-        try {
-          const checkCmd = `docker ps -q -f name=${containerName}`;
-          containerId = execSync(checkCmd, {
-            encoding: 'utf-8',
-            stdio: ['pipe', 'pipe', 'ignore']
-          }).trim();
-          isRunning = !!containerId;
-
-          if (isRunning) {
-            const inspectCmd = `docker inspect --format='{{.State.Status}}' ${containerName}`;
-            containerStatus = execSync(inspectCmd, {
-              encoding: 'utf-8',
-              stdio: ['pipe', 'pipe', 'ignore']
-            }).trim();
-          }
-        } catch (error) {
-          console.error(`[Server_HTTP_Routes] Error checking container ${containerName}:`, error);
-        }
-
-        if (isRunning) {
-          return new Response(JSON.stringify({
-            success: true,
-            nodeId,
-            containerIdentifier: containerName,
-            containerName,
-            containerId: containerId || containerName,
-            containerStatus,
-            nodeType: 'aider_process',
-            message: `Aider process for agent ${agentName} is running`,
-            timestamp: new Date().toISOString()
-          }), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          });
-        } else {
-          return new Response(JSON.stringify({
-            error: `Agent container ${containerName} is not running`,
-            nodeId,
-            message: `Agent ${agentName} is not running. Agents are started at server startup.`,
-            timestamp: new Date().toISOString()
-          }), {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-          });
+          // Container not found, but we'll still generate a script
+          console.warn(`[Server_HTTP_Routes] Container ${containerName} may not be running`);
         }
       } else {
-        // For other process types (bdd, check, builder, etc.), return not implemented
-        // since we're simplifying and these are handled differently now
+        // Try to determine container name from nodeId
+        if (type === 'agent') {
+          const agentName = parts[1];
+          containerName = `agent-${agentName}`;
+        } else if (type === 'aider_process') {
+          if (parts[1] === 'agent') {
+            const agentName = parts[2];
+            containerName = `agent-${agentName}`;
+          } else {
+            // Try to get aider process info from server
+            const aiderProcesses = server.getAiderProcesses ? server.getAiderProcesses() : [];
+            const identifier = parts.length > 1 ? parts.slice(1).join(':') : '';
+            const aiderProcess = aiderProcesses.find((p: any) => 
+              p.id === nodeId || 
+              p.containerName?.includes(identifier) ||
+              p.testName?.includes(identifier)
+            );
+            if (aiderProcess) {
+              containerName = aiderProcess.containerName;
+              processInfo = aiderProcess;
+            }
+          }
+        } else if (type === 'container') {
+          containerName = parts[1] || nodeId.replace('container:', '');
+        } else if (type === 'process') {
+          // Try to get process info from graph
+          const graphManager = server.graphManager?.getGraphManager ? server.graphManager.getGraphManager() : null;
+          if (graphManager) {
+            try {
+              const graphData = graphManager.getGraphData();
+              const processNode = graphData.nodes.find((n: any) => n.id === nodeId);
+              if (processNode) {
+                const metadata = processNode.metadata || {};
+                containerName = metadata.containerId || metadata.containerName;
+                processInfo = metadata;
+              }
+            } catch (error) {
+              console.warn(`[Server_HTTP_Routes] Error getting process info from graph:`, error);
+            }
+          }
+        } else if (type === 'aider') {
+          // Try to get aider process info
+          const aiderProcesses = server.getAiderProcesses ? server.getAiderProcesses() : [];
+          const identifier = parts.length > 1 ? parts.slice(1).join(':') : '';
+          const aiderProcess = aiderProcesses.find((p: any) => 
+            p.id === nodeId || 
+            p.containerName?.includes(identifier) ||
+            p.testName?.includes(identifier)
+          );
+          if (aiderProcess) {
+            containerName = aiderProcess.containerName;
+            processInfo = aiderProcess;
+          }
+        }
+        
+        // If still no container name, try serviceName
+        if (!containerName && serviceName) {
+          containerName = serviceName;
+        }
+      }
+
+      // If we have a container name, generate a script
+      if (containerName) {
+        // First, try to get container info from the graph
+        let graphContainerName = containerName;
+        let graphContainerId = '';
+        let graphContainerStatus = 'unknown';
+        
+        // Get graph manager from server
+        const graphManager = server.graphManager?.getGraphManager ? server.graphManager.getGraphManager() : null;
+        if (graphManager) {
+          try {
+            const graphData = graphManager.getGraphData();
+            
+            // Find the node in the graph
+            let processNode = graphData.nodes.find((n: any) => n.id === nodeId);
+            
+            // If node not found, try to find related agent node for aider_process:agent:xxx
+            if (!processNode && type === 'aider_process' && parts[1] === 'agent') {
+              const agentName = parts[2];
+              const agentNodeId = `agent:${agentName}`;
+              processNode = graphData.nodes.find((n: any) => n.id === agentNodeId);
+              
+              if (processNode) {
+                console.log(`[Server_HTTP_Routes] Found agent node ${agentNodeId} for aider_process ${nodeId}`);
+              }
+            }
+            
+            if (processNode) {
+              const metadata = processNode.metadata || {};
+              // Get container info from metadata
+              const graphContainer = metadata.containerId || metadata.containerName;
+              if (graphContainer) {
+                graphContainerName = graphContainer;
+                console.log(`[Server_HTTP_Routes] Graph has container: ${graphContainerName} for node ${nodeId}`);
+              }
+              graphContainerId = metadata.containerId || '';
+              // Check both node status and metadata status
+              graphContainerStatus = processNode.status || metadata.status || 'unknown';
+              console.log(`[Server_HTTP_Routes] Node ${nodeId} status: node.status=${processNode.status}, metadata.status=${metadata.status}, final=${graphContainerStatus}`);
+            } else {
+              console.warn(`[Server_HTTP_Routes] Node ${nodeId} not found in graph`);
+            }
+          } catch (error) {
+            console.warn(`[Server_HTTP_Routes] Error getting container info from graph:`, error);
+          }
+        }
+        
+        // Use the container name from graph if available, otherwise use derived name
+        const finalContainerName = graphContainerName || containerName;
+        
+        // Use graph status, not Docker directly
+        // The graph should have been updated with actual container status
+        const isRunning = graphContainerStatus === 'running';
+        const containerStatus = graphContainerStatus;
+        const actualContainerId = graphContainerId;
+        
+        // Generate appropriate script based on container type
+        let script: string;
+        const isAgentOrAider = finalContainerName.includes('agent-') || finalContainerName.includes('aider');
+        
+        if (isRunning) {
+          // Check if this is an aider or agent container
+          const isAiderOrAgent = finalContainerName.includes('agent-') || finalContainerName.includes('aider');
+          
+          if (isAiderOrAgent) {
+            // For aider/agent containers, we need to ensure Ctrl+C reaches the aider process
+            script = `#!/bin/sh
+echo "Opening terminal to ${type} process: ${label || nodeId}"
+echo "Container: ${finalContainerName}"
+echo "Status: ${containerStatus}"
+echo ""
+# Check if container exists (running or stopped)
+if docker ps -a --format "{{.Names}}" | grep -q "^${finalContainerName}\$"; then
+    # Check if it's running
+    if docker ps --format "{{.Names}}" | grep -q "^${finalContainerName}\$"; then
+        echo "Container is running. Attaching to aider process..."
+        echo "Note: Ctrl+C will send SIGINT to the aider process inside the container"
+        echo "      Use Ctrl+P, Ctrl+Q to detach without stopping the container"
+        echo ""
+        # Don't trap signals - let them pass through to docker
+        trap '' INT
+        # Reset terminal settings
+        stty sane
+        # Use docker attach to connect to the running aider process
+        # This allows Ctrl+C to reach the process inside
+        exec docker attach ${finalContainerName}
+    else
+        echo "Container exists but is stopped."
+        echo "You can start it with:"
+        echo "  docker compose -f testeranto/docker-compose.yml up -d ${finalContainerName}"
+        echo ""
+        echo "Starting interactive shell..."
+        stty sane
+        exec "/bin/sh" -i
+    fi
+else
+    echo "Container does not exist."
+    echo "Available containers:"
+    docker ps -a --format "{{.Names}}"
+    echo ""
+    echo "Starting interactive shell..."
+    stty sane
+    exec "/bin/sh" -i
+fi`;
+          } else {
+            // For other containers, use docker exec -it with proper signal handling
+            script = `#!/bin/sh
+echo "Opening terminal to ${type} process: ${label || nodeId}"
+echo "Container: ${finalContainerName}"
+echo "Status: ${containerStatus}"
+echo ""
+# Check if container exists (running or stopped)
+if docker ps -a --format "{{.Names}}" | grep -q "^${finalContainerName}\$"; then
+    # Check if it's running
+    if docker ps --format "{{.Names}}" | grep -q "^${finalContainerName}\$"; then
+        echo "Container is running. Opening interactive shell..."
+        echo "Note: Ctrl+C will send SIGINT to the process inside the container"
+        echo "      Use exit or Ctrl+D to exit the shell"
+        echo ""
+        # Don't trap signals - let them pass through to docker
+        trap '' INT
+        # Reset terminal settings
+        stty sane
+        # Use exec to replace the shell with docker exec
+        exec docker exec -it ${finalContainerName} /bin/sh
+    else
+        echo "Container exists but is stopped."
+        echo "You can start it with:"
+        echo "  docker compose -f testeranto/docker-compose.yml up -d ${finalContainerName}"
+        echo ""
+        echo "Starting interactive shell..."
+        stty sane
+        exec "/bin/sh" -i
+    fi
+else
+    echo "Container does not exist."
+    echo "Available containers:"
+    docker ps -a --format "{{.Names}}"
+    echo ""
+    echo "Starting interactive shell..."
+    stty sane
+    exec "/bin/sh" -i
+fi`;
+          }
+        } else {
+          script = `#!/bin/sh
+echo "Container ${finalContainerName} is not running."
+echo "Node ID: ${nodeId}"
+echo "Type: ${type}"
+echo ""
+echo "Available containers:"
+docker ps --format "{{.Names}}"
+echo ""
+echo "You can try to start the container with:"
+echo "  docker compose -f testeranto/docker-compose.yml up -d ${finalContainerName}"
+echo ""
+echo "Starting interactive shell..."
+# Reset terminal settings
+stty sane
+# Don't trap signals
+trap '' INT
+exec "/bin/sh" -i`;
+        }
+
         return new Response(JSON.stringify({
-          error: `Process type ${type} not supported in simplified mode`,
+          success: true,
+          script,
           nodeId,
-          message: 'Only agent processes are supported for terminal access in simplified mode',
+          containerName,
+          containerId: actualContainerId || containerName,
+          containerStatus: isRunning ? containerStatus : 'not_running',
+          nodeType: type,
+          message: isRunning ? 
+            `${type} container ${containerName} is running` : 
+            `${type} container ${containerName} is not running`,
+          terminalNotes: isRunning ? {
+            aiderOrAgent: isAgentOrAider,
+            detachSequence: isAgentOrAider ? 'Ctrl+P, Ctrl+Q' : 'exit or Ctrl+D',
+            sigint: 'Ctrl+C sends SIGINT to the process inside container'
+          } : null,
           timestamp: new Date().toISOString()
         }), {
-          status: 501,
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      } else {
+        // No container name could be determined
+        return new Response(JSON.stringify({
+          error: `Cannot determine container for process type ${type}`,
+          nodeId,
+          message: `Unable to find container information for ${nodeId}. Please provide containerId parameter.`,
+          timestamp: new Date().toISOString()
+        }), {
+          status: 400,
           headers: { "Content-Type": "application/json" },
         });
       }
@@ -424,6 +571,85 @@ export class Server_HTTP_Routes {
     }
   }
 
+  private async handleAddChatMessage(request: Request): Promise<Response> {
+    try {
+      console.log(`[Server_HTTP_Routes] handleAddChatMessage called`);
+      const body = await request.json();
+      console.log(`[Server_HTTP_Routes] Request body:`, body);
+      const { agentName, content } = body;
+
+      if (!agentName || !content) {
+        console.log(`[Server_HTTP_Routes] Missing agentName or content`);
+        return new Response(JSON.stringify({
+          error: 'Missing agentName or content parameter',
+          timestamp: new Date().toISOString()
+        }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      console.log(`[Server_HTTP_Routes] Manually adding chat message for ${agentName}: ${content.substring(0, 50)}...`);
+
+      // Add the chat message
+      console.log(`[Server_HTTP_Routes] Calling graphManager.addChatMessage`);
+      this.server.graphManager.addChatMessage(agentName, content);
+      console.log(`[Server_HTTP_Routes] addChatMessage called successfully`);
+
+      return new Response(JSON.stringify({
+        success: true,
+        agentName,
+        message: 'Chat message added',
+        timestamp: new Date().toISOString()
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error: any) {
+      console.error('[Server_HTTP_Routes] Error in handleAddChatMessage:', error);
+      console.error('[Server_HTTP_Routes] Error stack:', error.stack);
+      return new Response(JSON.stringify({
+        error: 'Internal server error',
+        message: error.message,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+
+  private async handleViewSlice(request: Request, url: URL, viewKey: string): Promise<Response> {
+    try {
+      console.log(`[Server_HTTP_Routes] Getting slice for view: ${viewKey}`);
+      
+      // Get the slice data from the graph manager
+      const sliceData = this.server.graphManager.getViewSlice(viewKey);
+      
+      return new Response(JSON.stringify({
+        viewKey,
+        sliceData,
+        timestamp: new Date().toISOString(),
+        message: `Slice data for view ${viewKey}`
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    } catch (error: any) {
+      console.error(`[Server_HTTP_Routes] Error getting slice for view ${viewKey}:`, error);
+      return new Response(JSON.stringify({
+        error: "Failed to get view slice",
+        message: error.message,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+  }
+
+
+
   async handleRoute(
     routeName: string,
     request: Request,
@@ -435,6 +661,7 @@ export class Server_HTTP_Routes {
       process: () => this.handleProcessRoute(),
       aider: () => this.handleAiderRoute(),
       runtime: () => this.handleRuntimeRoute(),
+      agents: () => this.handleAgentRoute('', request),
       'user-agents': () => this.handleUserAgentsRoute(),
       chat: () => this.handleChatRoute(url),
       'lock-status': () => lockHandlers.handleLockStatusRoute(this.server),
@@ -447,7 +674,22 @@ export class Server_HTTP_Routes {
       'git/conflicts': () => gitHandlers.handleGitConflicts(),
       'git/resolve-conflict': () => gitHandlers.handleGitResolveConflict(request),
       'open-process-terminal': () => this.handleOpenProcessTerminal(request),
+      'add-chat-message': () => this.handleAddChatMessage(request),
     };
+
+    // Handle view requests
+    if (routeName === 'views' && request.method === 'GET') {
+      return this.handleGetViews(request, url);
+    }
+    
+    // Handle view slice requests
+    if (routeName.startsWith('views/')) {
+      const parts = routeName.split('/');
+      if (parts.length >= 3 && parts[1] && parts[2] === 'slice') {
+        const viewKey = parts[1];
+        return this.handleViewSlice(request, url, viewKey);
+      }
+    }
 
     for (const [key, definition] of Object.entries(vscodeHttpAPI)) {
       const apiDef = definition as any;
@@ -469,5 +711,78 @@ export class Server_HTTP_Routes {
     }
 
     return handleRoutePure(routeName, request, url, this.server);
+  }
+  private getViewName(key: string): string {
+    // Convert key to display name
+    switch (key) {
+      case 'featuretree':
+        return 'Feature Tree';
+      case 'debugVisualization':
+        return 'Debug Visualization';
+      case 'Kanban':
+        return 'Kanban Board';
+      case 'Gantt':
+        return 'Gantt Chart';
+      case 'Eisenhower':
+        return 'Eisenhower Matrix';
+      default:
+        // Convert camelCase or snake_case to Title Case
+        return key
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/_/g, ' ')
+          .replace(/^./, str => str.toUpperCase())
+          .trim();
+    }
+  }
+
+  private async handleGetViews(request: Request, url: URL): Promise<Response> {
+    try {
+      console.log('[Server_HTTP_Routes] Getting views from configs:', this.configs);
+      console.log('[Server_HTTP_Routes] Configs type:', typeof this.configs);
+      console.log('[Server_HTTP_Routes] Configs keys:', Object.keys(this.configs || {}));
+      
+      const views = this.configs.views || {};
+      console.log('[Server_HTTP_Routes] Raw views object:', views);
+      console.log('[Server_HTTP_Routes] Views type:', typeof views);
+      console.log('[Server_HTTP_Routes] Views keys:', Object.keys(views));
+      
+      // Convert views object to array
+      const viewArray = Object.entries(views).map(([key, path]) => {
+        // Ensure path starts with a slash for web URLs
+        const normalizedPath = (path as string).startsWith('/') ? path : `/${path}`;
+        const viewItem = {
+          key,
+          path: normalizedPath,
+          name: this.getViewName(key),
+          htmlUrl: `/testeranto/views/${key}.html`,
+          bundleUrl: `/testeranto/views/${key}.bundle.js`
+        };
+        console.log(`[Server_HTTP_Routes] View item ${key}:`, viewItem);
+        return viewItem;
+      });
+
+      console.log('[Server_HTTP_Routes] Processed view array:', viewArray);
+      console.log('[Server_HTTP_Routes] Number of views:', viewArray.length);
+
+      return new Response(JSON.stringify({
+        views: viewArray,
+        message: `Found ${viewArray.length} views`,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    } catch (error: any) {
+      console.error('[Server_HTTP_Routes] Error in handleGetViews:', error);
+      console.error('[Server_HTTP_Routes] Error stack:', error.stack);
+      return new Response(JSON.stringify({
+        error: "Failed to get views",
+        message: error.message,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
   }
 }

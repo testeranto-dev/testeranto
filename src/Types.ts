@@ -21,7 +21,6 @@ export type ITesterantoConfig = {
   volumes: string[],
   featureIngestor: (s: string) => Promise<{ data: string; filepath: string }>;
   runtimes: Record<string, IBaseTestConfig>;
-  // documentationGlob?: string; // New field: glob pattern to find documentation files
   stakeholderReactModule?: string; // Path to custom React component module
 
   agents: Record<string, {

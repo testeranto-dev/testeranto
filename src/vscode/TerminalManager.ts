@@ -56,30 +56,15 @@ export class TerminalManager {
 
   async fetchAiderProcesses(): Promise<any[]> {
     try {
-
-      // Extract aider nodes from graph
-      const aiderNodes = graphData.data?.unifiedGraph?.nodes?.filter((node: any) =>
-        node.type === 'aider' || node.type === 'aider_process'
-      ) || [];
-
-      return aiderNodes.map((node: any) => {
-        const metadata = node.metadata || {};
-        return {
-          id: node.id,
-          containerId: metadata.containerId || 'unknown',
-          containerName: metadata.aiderServiceName || metadata.containerName || 'unknown',
-          runtime: metadata.runtime || 'unknown',
-          testName: metadata.testName || 'unknown',
-          configKey: metadata.configKey || 'unknown',
-          isActive: metadata.isActive || false,
-          status: metadata.status || 'stopped',
-          exitCode: metadata.exitCode,
-          startedAt: metadata.startedAt || '',
-          lastActivity: metadata.lastActivity
-        };
-      });
+      // Use the server API to get aider processes
+      const response = await fetch('http://localhost:3000/~/aider-processes');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.aiderProcesses || [];
     } catch (error) {
-      console.error('Failed to fetch aider processes from graph:', error);
+      console.error('Failed to fetch aider processes from server:', error);
       return [];
     }
   }
@@ -113,59 +98,74 @@ export class TerminalManager {
     terminal = vscode.window.createTerminal(`Aider: ${testName} (${runtime})`);
     this.terminals.set(key, terminal);
 
-    // Try to get the container name and attach to it
-    const configKey = await this.getConfigKeyForTest(runtime, testName);
-    if (configKey) {
-      const containerName = this.getAiderContainerName(configKey, testName);
-      // Send the entire script as a single command using POSIX sh syntax
-      const script = `echo "Checking container: ${containerName}";
-if docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then
-  echo "Container is running. Attaching...";
-  case "${containerName}" in
-    *-builder)
-      echo "Container is a builder container. Showing logs...";
-      docker logs -f ${containerName}
-      ;;
-    *)
-      echo "Container is not a builder container. Using docker exec with sh...";
-      docker exec -it ${containerName} /bin/sh
-      ;;
-  esac
-else
-  echo "Container ${containerName} is not running.";
-  echo "Available containers:";
-  docker ps --format "{{.Names}}";
-  echo "";
-  echo "To start the container, run:";
-  echo "  docker compose -f testeranto/docker-compose.yml up -d ${containerName}";
-  echo "";
-fi
-echo "Starting interactive shell...";
-if [ -n "$SHELL" ]; then
-  exec "$SHELL"
-else
-  exec sh -i
-fi`;
-      terminal.sendText(script);
-    } else {
-      // Send a simpler script when config not found - wrap in a subshell
-      const script = `bash -c '
-set +e  # Continue on errors
-echo "Could not find configuration for ${testName} (${runtime})"
-echo "Aider and agent services are created as Docker services at server startup."
-echo ""
-echo "Available containers:"
-docker ps --format "{{.Names}}"
-echo ""
-# Always start an interactive shell to keep terminal open
-echo "Starting interactive shell..."
-if [ -n "$SHELL" ]; then
-  exec "$SHELL"
-else
-  exec bash -i
-fi
-'`.trim();
-      terminal.sendText(script);
+    // Show immediate feedback
+    terminal.sendText(`echo "Opening aider terminal for: ${testName}"`);
+    terminal.sendText(`echo "Runtime: ${runtime}"`);
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Note: Aider terminal support requires server implementation."`);
+    terminal.sendText(`echo "This endpoint may not be fully implemented yet."`);
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Attempting to connect to server..."`);
+
+    try {
+      // Try to use the existing open-process-terminal endpoint with appropriate parameters
+      // We'll construct a nodeId that indicates this is an aider terminal
+      const nodeId = `aider:${runtime}:${testName}`;
+      const response = await fetch('http://localhost:3000/~/open-process-terminal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          nodeId,
+          label: `Aider: ${testName}`,
+          containerId: '',
+          serviceName: `aider-${runtime}-${testName}`
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: `Server error: ${response.status} ${response.statusText}` };
+        }
+        
+        terminal.sendText(`echo "❌ Server error: ${errorData.error || 'Failed to open aider terminal'}"`);
+        terminal.sendText(`echo "Message: ${errorData.message || 'No details provided'}"`);
+        terminal.sendText(`echo ""`);
+        terminal.sendText(`echo "Aider terminals may require additional server configuration."`);
+      } else {
+        const data = await response.json();
+        
+        if (data.success && data.script) {
+          terminal.sendText(`echo "✅ Server provided terminal script"`);
+          terminal.sendText(`echo "Executing..."`);
+          terminal.sendText(`echo ""`);
+          
+          // Execute the script directly (it's already executable)
+          const workspaceRoot = this.getWorkspaceRoot();
+          if (workspaceRoot) {
+            const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
+            fs.writeFileSync(scriptPath, data.script, { mode: 0o755 });
+            // Run the script directly - it has a shebang line
+            terminal.sendText(`"${scriptPath}" && rm -f "${scriptPath}"`);
+          } else {
+            const escapedScript = data.script.replace(/'/g, "'\"'\"'");
+            terminal.sendText(`/bin/sh << 'EOF'\n${escapedScript}\nEOF`);
+          }
+        } else {
+          terminal.sendText(`echo "⚠️ Server response indicates failure"`);
+          terminal.sendText(`echo "Error: ${data.error || 'Unknown error'}"`);
+        }
+      }
+    } catch (error: any) {
+      terminal.sendText(`echo "❌ Failed to connect to server"`);
+      terminal.sendText(`echo "Error: ${error.message}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "Make sure the Testeranto server is running on port 3000."`);
     }
 
     terminal.show();
@@ -186,37 +186,74 @@ fi
     terminal = vscode.window.createTerminal(terminalName);
     this.terminals.set(key, terminal);
 
-    // Send the entire script as a single command using POSIX sh syntax
-    let script: string;
-    script = `echo "Checking container: ${containerName}";
-if docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then
-  echo "Container is running. Attaching...";
-  case "${containerName}" in
-    *-builder)
-      echo "Container is a builder container. Showing logs...";
-      docker logs -f ${containerName}
-      ;;
-    *)
-      echo "Container is not a builder container. Using docker exec with sh...";
-      docker exec -it ${containerName} /bin/sh
-      ;;
-  esac
-else
-  echo "Container ${containerName} is not running.";
-  echo "Available containers:";
-  docker ps --format "{{.Names}}";
-  echo "";
-  echo "To start the container, run:";
-  echo "  docker compose -f testeranto/docker-compose.yml up -d ${containerName}";
-  echo "";
-fi
-echo "Starting interactive shell...";
-if [ -n "$SHELL" ]; then
-  exec "$SHELL"
-else
-  exec sh -i
-fi`;
-    terminal.sendText(script);
+    // Show immediate feedback
+    terminal.sendText(`echo "Opening terminal to container: ${containerName}"`);
+    terminal.sendText(`echo "Label: ${label}"`);
+    if (agentName) {
+      terminal.sendText(`echo "Agent: ${agentName}"`);
+    }
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Connecting to server..."`);
+
+    try {
+      // Use the existing open-process-terminal endpoint
+      const nodeId = `container:${containerName}`;
+      const response = await fetch('http://localhost:3000/~/open-process-terminal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          nodeId,
+          label: label || `Container: ${containerName}`,
+          containerId: containerName,
+          serviceName: agentName || containerName
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: `Server error: ${response.status} ${response.statusText}` };
+        }
+        
+        terminal.sendText(`echo "❌ Server error: ${errorData.error || 'Failed to open container terminal'}"`);
+        terminal.sendText(`echo "Message: ${errorData.message || 'No details provided'}"`);
+        terminal.sendText(`echo ""`);
+        terminal.sendText(`echo "You may need to manually connect to the container:"`);
+        terminal.sendText(`echo "  docker exec -it ${containerName} /bin/sh"`);
+      } else {
+        const data = await response.json();
+        
+        if (data.success && data.script) {
+          terminal.sendText(`echo "✅ Server provided terminal script"`);
+          terminal.sendText(`echo "Executing..."`);
+          terminal.sendText(`echo ""`);
+          
+          // Execute the script without trapping signals
+          const workspaceRoot = this.getWorkspaceRoot();
+          if (workspaceRoot) {
+            const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
+            fs.writeFileSync(scriptPath, data.script, { mode: 0o755 });
+            terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
+          } else {
+            const escapedScript = data.script.replace(/'/g, "'\"'\"'");
+            terminal.sendText(`/bin/sh << 'EOF'\n${escapedScript}\nEOF`);
+          }
+        } else {
+          terminal.sendText(`echo "⚠️ Server response indicates failure"`);
+          terminal.sendText(`echo "Error: ${data.error || 'Unknown error'}"`);
+        }
+      }
+    } catch (error: any) {
+      terminal.sendText(`echo "❌ Failed to connect to server"`);
+      terminal.sendText(`echo "Error: ${error.message}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "Make sure the Testeranto server is running."`);
+    }
     
     terminal.show();
     return terminal;
@@ -246,78 +283,6 @@ fi`;
     }
   }
 
-  private async getConfigKeyForTest(runtime: string, testName: string): Promise<string | null> {
-    try {
-      const response = await fetch(ApiUtils.getConfigsUrl());
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-
-      if (data.configs && data.configs.runtimes) {
-        for (const [configKey, configValue] of Object.entries(data.configs.runtimes)) {
-          const runtimeConfig = configValue as any;
-          // Check if runtime matches (handle cases like 'webtests' vs 'web')
-          const runtimeMatches =
-            runtimeConfig.runtime === runtime ||
-            configKey.toLowerCase().includes(runtime.toLowerCase()) ||
-            runtime.toLowerCase().includes(configKey.toLowerCase());
-
-          if (runtimeMatches) {
-            const tests = runtimeConfig.tests || [];
-            // Try exact match first
-            if (tests.includes(testName)) {
-              return configKey;
-            }
-            // Try matching by filename (without path)
-            const testFileName = testName.split('/').pop();
-            if (testFileName && tests.includes(testFileName)) {
-              return configKey;
-            }
-            // Try matching any test that contains the testName as a substring
-            for (const test of tests) {
-              if (test.includes(testName) || testName.includes(test)) {
-                return configKey;
-              }
-            }
-            // Try cleaning the test name and comparing
-            const cleanTestName = testName
-              .toLowerCase()
-              .replaceAll("/", "_")
-              .replaceAll(".", "-")
-              .replace(/[^a-z0-9_-]/g, "");
-            for (const test of tests) {
-              const cleanTest = test
-                .toLowerCase()
-                .replaceAll("/", "_")
-                .replaceAll(".", "-")
-                .replace(/[^a-z0-9_-]/g, "");
-              if (cleanTest === cleanTestName) {
-                return configKey;
-              }
-            }
-          }
-        }
-      }
-      return null;
-    } catch (error) {
-      console.error('Failed to fetch configs:', error);
-      return null;
-    }
-  }
-
-  private getAiderContainerName(configKey: string, testName: string): string {
-    // Replicate the exact cleaning logic from Server_Docker_Constants.cleanTestName
-    const cleanTestName = testName
-      .toLowerCase()
-      .replaceAll("/", "_")
-      .replaceAll(".", "-")
-      .replace(/[^a-z0-9_-]/g, "");
-    const cleanConfigKey = configKey.toLowerCase();
-    // The aider service name is generated using getAiderServiceName(uid) where uid = `${cleanConfigKey}-${cleanTestName}`
-    // So the container name should be `${cleanConfigKey}-${cleanTestName}-aider`
-    return `${cleanConfigKey}-${cleanTestName}-aider`;
-  }
 
   // Open a terminal to a Docker process using the server API
   async openProcessTerminal(nodeId: string, label: string, containerId: string, serviceName: string): Promise<vscode.Terminal> {
@@ -333,67 +298,74 @@ fi`;
     terminal = vscode.window.createTerminal(terminalName);
     this.terminals.set(key, terminal);
 
+    // Show immediate feedback
+    terminal.sendText(`echo "Opening terminal for: ${label}"`);
+    terminal.sendText(`echo "Node ID: ${nodeId}"`);
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Connecting to server to get container information..."`);
+
     try {
-      // Call the server API to get container information
+      // Call the server API to handle terminal creation
       const response = await fetch('http://localhost:3000/~/open-process-terminal', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ nodeId })
+        body: JSON.stringify({ nodeId, label, containerId, serviceName })
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        const errorScript = `echo "Error: ${errorData.error || 'Failed to open terminal'}";
-echo "Server response: ${JSON.stringify(errorData)}";
-# Keep terminal open for debugging
-exec $SHELL || exec bash -i`;
-        terminal.sendText(errorScript);
+        const errorText = await response.text();
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: `Server error: ${response.status} ${response.statusText}` };
+        }
+        
+        terminal.sendText(`echo "❌ Server error: ${errorData.error || 'Failed to open terminal'}"`);
+        terminal.sendText(`echo "Message: ${errorData.message || 'No details provided'}"`);
+        terminal.sendText(`echo ""`);
+        terminal.sendText(`echo "Note: The server may not support this type of terminal."`);
+        terminal.sendText(`echo "Check server logs for more information."`);
         terminal.show();
         return terminal;
       }
 
       const data = await response.json();
       
-      if (data.success) {
-        const containerIdentifier = data.containerIdentifier;
-        const containerStatus = data.containerStatus;
+      if (data.success && data.script) {
+        // Use the script provided by the server
+        terminal.sendText(`echo "✅ Server provided terminal script"`);
+        terminal.sendText(`echo "Executing..."`);
+        terminal.sendText(`echo ""`);
         
-        // Send the entire script as a single command using POSIX sh syntax
-        let script: string;
-        // Use case statement for pattern matching
-        script = `echo "Opening terminal to container: ${containerIdentifier}";
-echo "Node ID: ${nodeId}";
-echo "Type: ${data.nodeType}";
-echo "";
-case "${containerIdentifier}" in
-  *-builder)
-    echo "Container is a builder container. Showing logs (Ctrl+C to stop):";
-    docker logs -f ${containerIdentifier}
-    ;;
-  *agent-*|*aider*)
-    echo "Container is an agent or aider container. Attaching (Ctrl+P, Ctrl+Q to detach):";
-    docker attach ${containerIdentifier}
-    ;;
-  *)
-    echo "Container is not a builder/agent/aider container. Attaching:";
-    docker exec -it ${containerIdentifier} /bin/sh
-    ;;
-esac`;
-        terminal.sendText(script);
+        // The script from server already includes #!/bin/sh
+        // We need to execute it properly
+        // Write to a temporary file and execute it
+        const workspaceRoot = this.getWorkspaceRoot();
+        if (workspaceRoot) {
+          const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
+          fs.writeFileSync(scriptPath, data.script, { mode: 0o755 });
+          terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
+        } else {
+          // Fallback: use heredoc to execute the script
+          // Escape any single quotes in the script
+          const escapedScript = data.script.replace(/'/g, "'\"'\"'");
+          terminal.sendText(`/bin/sh << 'EOF'\n${escapedScript}\nEOF`);
+        }
       } else {
-        const errorScript = `echo "Server reported failure: ${data.error || 'Unknown error'}";
-# Keep terminal open for debugging
-exec $SHELL || exec sh -i`;
-        terminal.sendText(errorScript);
+        terminal.sendText(`echo "⚠️ Server response indicates failure"`);
+        terminal.sendText(`echo "Error: ${data.error || 'Unknown error'}"`);
+        terminal.sendText(`echo "Message: ${data.message || 'No message'}"`);
       }
     } catch (error: any) {
-      // If server API fails, don't try fallback - just show error
-      const errorScript = `echo "Error calling server API: ${error.message}";
-echo "Cannot open terminal without server connection.";
-exec $SHELL || exec sh -i`;
-      terminal.sendText(errorScript);
+      // If server API fails
+      terminal.sendText(`echo "❌ Failed to connect to server"`);
+      terminal.sendText(`echo "Error: ${error.message}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "Make sure the Testeranto server is running on port 3000."`);
+      terminal.sendText(`echo "Run 'testeranto dev' in your project to start the server."`);
     }
     
     terminal.show();
@@ -402,17 +374,9 @@ exec $SHELL || exec sh -i`;
 
   // Open a terminal to an aider container
   async openAiderTerminal(containerName: string, label: string, agentName?: string): Promise<vscode.Terminal> {
-    // For aider terminals, we need to find the node ID first
-    // Since we don't have it directly, we'll use the container name
-    // In a real implementation, we should pass nodeId from the tree item
-    // For now, use the container name directly
-    
     if (!containerName) {
       const terminal = vscode.window.createTerminal(`Aider: ${label}`);
-      terminal.sendText(`echo "Error: No container name provided for aider terminal"`);
-      terminal.sendText(`echo "Available containers:"`);
-      terminal.sendText(`docker ps --format "{{.Names}}"`);
-      terminal.sendText(`exec $SHELL || exec bash -i`);
+      terminal.sendText(`echo "❌ Error: No container name provided for aider terminal"`);
       terminal.show();
       return terminal;
     }
@@ -429,36 +393,76 @@ exec $SHELL || exec sh -i`;
     terminal = vscode.window.createTerminal(terminalName);
     this.terminals.set(key, terminal);
 
-    // Send the entire script as a single command using POSIX sh syntax
-    let script: string;
-    // Use case statement for pattern matching in POSIX sh
-    script = `echo "Opening terminal to container: ${containerName}";
-if docker ps --format "{{.Names}}" | grep -q "^${containerName}$"; then
-  echo "Container found. Attaching...";
-  case "${containerName}" in
-    *agent-*|*aider*)
-      echo "Container is an agent or aider container. Using docker attach to connect to aider process...";
-      echo "Note: To detach, use Ctrl+P, Ctrl+Q";
-      docker attach ${containerName}
-      ;;
-    *-builder)
-      echo "Container is a builder container. Using docker exec with sh...";
-      docker exec -it ${containerName} /bin/sh
-      ;;
-    *)
-      echo "Container is not an agent/aider/builder container. Using docker exec with sh...";
-      docker exec -it ${containerName} /bin/sh
-      ;;
-  esac
-else
-  echo "Container ${containerName} not found";
-  echo "Available containers:";
-  docker ps --format "{{.Names}}";
-  echo "";
-  echo "Starting host shell...";
-  exec $SHELL || exec sh -i
-fi`;
-    terminal.sendText(script);
+    // Show immediate feedback
+    terminal.sendText(`echo "Opening aider terminal to container: ${containerName}"`);
+    terminal.sendText(`echo "Label: ${label}"`);
+    if (agentName) {
+      terminal.sendText(`echo "Agent: ${agentName}"`);
+    }
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Connecting to server..."`);
+
+    try {
+      // Use the existing open-process-terminal endpoint
+      const nodeId = `aider-container:${containerName}`;
+      const response = await fetch('http://localhost:3000/~/open-process-terminal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          nodeId,
+          label: label || `Aider: ${containerName}`,
+          containerId: containerName,
+          serviceName: agentName || `aider-${containerName}`
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: `Server error: ${response.status} ${response.statusText}` };
+        }
+        
+        terminal.sendText(`echo "❌ Server error: ${errorData.error || 'Failed to open aider container terminal'}"`);
+        terminal.sendText(`echo "Message: ${errorData.message || 'No details provided'}"`);
+        terminal.sendText(`echo ""`);
+        terminal.sendText(`echo "You may need to manually attach to the aider container:"`);
+        terminal.sendText(`echo "  docker attach ${containerName}"`);
+        terminal.sendText(`echo "  (Use Ctrl+P, Ctrl+Q to detach)"`);
+      } else {
+        const data = await response.json();
+        
+        if (data.success && data.script) {
+          terminal.sendText(`echo "✅ Server provided terminal script"`);
+          terminal.sendText(`echo "Executing..."`);
+          terminal.sendText(`echo ""`);
+          
+          // Execute the script without trapping signals
+          const workspaceRoot = this.getWorkspaceRoot();
+          if (workspaceRoot) {
+            const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
+            fs.writeFileSync(scriptPath, data.script, { mode: 0o755 });
+            terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
+          } else {
+            const escapedScript = data.script.replace(/'/g, "'\"'\"'");
+            terminal.sendText(`/bin/sh << 'EOF'\n${escapedScript}\nEOF`);
+          }
+        } else {
+          terminal.sendText(`echo "⚠️ Server response indicates failure"`);
+          terminal.sendText(`echo "Error: ${data.error || 'Unknown error'}"`);
+        }
+      }
+    } catch (error: any) {
+      terminal.sendText(`echo "❌ Failed to connect to server"`);
+      terminal.sendText(`echo "Error: ${error.message}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "Make sure the Testeranto server is running."`);
+    }
+    
     terminal.show();
     return terminal;
   }
@@ -477,4 +481,5 @@ fi`;
       console.error('Error in createAllTerminals:', error);
     });
   }
+
 }

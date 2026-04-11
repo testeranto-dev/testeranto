@@ -502,5 +502,17 @@ export const vscodeHttpAPI: {
     check: (routeName: string, request: { method: string }) => {
       return routeName === 'open-process-terminal' && request.method === 'POST'
     }
+  },
+
+  addChatMessage: {
+    method: 'POST',
+    path: '/~/add-chat-message',
+    description: 'Add a chat message to the graph',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'add-chat-message' && request.method === 'POST'
+    }
   }
 } as const;

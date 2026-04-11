@@ -2538,3 +2538,57 @@
 [2026-04-09T02:40:19.923Z] [web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
 [2026-04-09T02:40:19.923Z] [WEB BUILDER] Metafile updated
 [2026-04-09T02:40:19.924Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T02:48:34.306Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-10T02:48:34.310Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-10T02:48:34.310Z] [WEB BUILDER] testName:  webtests
+[2026-04-10T02:48:34.310Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-10T02:48:34.310Z] [WEB BUILDER] CWD: /workspace
+[2026-04-10T02:48:34.311Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-10T02:48:34.499Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders"
+]
+[2026-04-10T02:48:34.501Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-10T02:48:34.504Z] [WEB BUILDER] Entry points: 
+[2026-04-10T02:48:34.505Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-10T02:48:34.551Z] web > build ended with 0 errors
+[2026-04-10T02:48:34.553Z] [web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T02:48:34.553Z] [WEB BUILDER] Metafile updated
+[2026-04-10T02:48:34.555Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T02:48:34.557Z] [web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T02:48:34.751Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.5, port 8000, /workspace
+[2026-04-10T02:48:34.752Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-10T02:48:34.752Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-10T02:48:34.752Z] Chrome is a separate service, not launched in builder
+[2026-04-10T02:48:34.754Z] web > build ended with 0 errors
+[2026-04-10T02:48:34.756Z] [web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T02:48:34.756Z] [WEB BUILDER] Metafile updated
+[2026-04-10T02:48:34.757Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T14:24:43.608Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-10T14:28:32.587Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-10T14:28:32.590Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-10T14:28:32.590Z] [WEB BUILDER] testName:  webtests
+[2026-04-10T14:28:32.590Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-10T14:28:32.590Z] [WEB BUILDER] CWD: /workspace
+[2026-04-10T14:28:32.591Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-10T14:28:32.625Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders"
+]
+[2026-04-10T14:28:32.629Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-10T14:28:32.630Z] [WEB BUILDER] Entry points: 
+[2026-04-10T14:28:32.631Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-10T14:28:32.705Z] web > build ended with 0 errors
+[2026-04-10T14:28:32.707Z] [web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T14:28:32.707Z] [WEB BUILDER] Metafile updated
+[2026-04-10T14:28:32.711Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T14:28:32.714Z] [web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T14:28:32.768Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.5, port 8000, /workspace
+[2026-04-10T14:28:32.776Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-10T14:28:32.777Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-10T14:28:32.777Z] Chrome is a separate service, not launched in builder
+[2026-04-10T14:28:32.786Z] web > build ended with 0 errors
+[2026-04-10T14:28:32.798Z] [web Builder] Wrote inputFiles.json for 0 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T14:28:32.798Z] [WEB BUILDER] Metafile updated
+[2026-04-10T14:28:32.801Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-10T14:33:03.310Z] [WEB BUILDER] Received SIGTERM - producing output artifacts

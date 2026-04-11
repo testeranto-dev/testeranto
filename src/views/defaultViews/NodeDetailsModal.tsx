@@ -1,6 +1,6 @@
 import React from 'react';
 import { Palette } from '../../colors';
-import type { Node } from 'grafeovidajo';
+import type { Node } from 'typescript';
 
 export interface NodeDetailsModalProps {
   node: Node | null;

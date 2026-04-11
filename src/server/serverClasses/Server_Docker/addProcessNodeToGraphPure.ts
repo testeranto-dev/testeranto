@@ -157,16 +157,6 @@ export async function addProcessNodeToGraphPure(
       if (typeof graphManager.saveGraph === 'function') {
         graphManager.saveGraph();
         consoleLog(`[Server_Docker] Saved graph after adding ${processType} process node`);
-
-        // Also save to graph-data.json
-        if (typeof (graphManager as any).saveCurrentGraph === 'function') {
-          try {
-            (graphManager as any).saveCurrentGraph();
-            consoleLog(`[Server_Docker] Updated graph-data.json with ${processType} process node`);
-          } catch (error) {
-            consoleError(`[Server_Docker] Error saving graph-data.json:`, error);
-          }
-        }
       }
 
       // Broadcast graph update via WebSocket if available

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { TerminalManager } from "./TerminalManager";
 import { StatusBarManager } from "./statusBarManager";
 import { registerCommands } from "./providers/utils/registerCommands";
+import { ViewTreeDataProvider } from "./providers/ViewTreeDataProvider";
 
 export class CommandManager {
     private terminalManager: TerminalManager;
@@ -10,6 +11,7 @@ export class CommandManager {
     private dockerProcessProvider: vscode.TreeDataProvider<any> | null;
     private aiderProcessProvider: vscode.TreeDataProvider<any> | null;
     private fileTreeProvider: vscode.TreeDataProvider<any> | null;
+    private viewTreeProvider: ViewTreeDataProvider | null;
     private agentProvider: vscode.TreeDataProvider<any> | null;
     private chatProvider: vscode.TreeDataProvider<any> | null;
 
@@ -20,6 +22,7 @@ export class CommandManager {
         this.dockerProcessProvider = null;
         this.aiderProcessProvider = null;
         this.fileTreeProvider = null;
+        this.viewTreeProvider = null;
         this.agentProvider = null;
     }
 
@@ -39,6 +42,10 @@ export class CommandManager {
         this.fileTreeProvider = provider;
     }
 
+    public setViewTreeProvider(provider: ViewTreeDataProvider): void {
+        this.viewTreeProvider = provider;
+    }
+
     public setAgentProvider(provider: vscode.TreeDataProvider<any>): void {
         this.agentProvider = provider;
     }
@@ -56,7 +63,8 @@ export class CommandManager {
             this.dockerProcessProvider,
             this.aiderProcessProvider,
             this.fileTreeProvider,
-            this.agentProvider
+            this.agentProvider,
+            this.viewTreeProvider
         );
 
         // Add a test command for debugging

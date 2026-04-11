@@ -56,7 +56,6 @@ Step 2: Create a FileStructureTreeDataProvider
 
 This would show the actual project structure but filter to show only:
 
-• Documentation files (from documentationGlob)
 • Test input/output files
 • Test result files
 • Configuration files

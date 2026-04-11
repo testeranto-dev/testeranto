@@ -1,5 +1,5 @@
-=== Log started at 2026-04-09T02:41:30.306Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (runtime: node) ===
-=== Container ID: 5e0dc8bae0524eb8fb76b398d8948409beb176ebc56a775c0066916c8ce29949 ===
+=== Log started at 2026-04-11T15:01:52.130Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (runtime: node) ===
+=== Container ID: bb56bb0bc4169c57485ffcb6c5760c600b256cdcaf8c758c0e137c524d337d3d ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
@@ -9,7 +9,261 @@ warning package.json: "dependencies" has dependency "typescript" with range "^5.
 warning testeranto@0.233.9: The engine "vscode" appears to be invalid.
 warning testeranto@0.233.9: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsc --noEmit
-src/grafeovidajo/dist/grafeovidajo/charts/NodeDetailsModal.js(143,1): error TS1109: Expression expected.
+src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
+src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
+testeranto/rust_builder/src/native_detection.ts(1,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/native_detection.ts(1,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/native_detection.ts(2,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/native_detection.ts(2,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/native_detection.ts(2,15): error TS1109: Expression expected.
+testeranto/rust_builder/src/native_detection.ts(4,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/native_detection.ts(4,5): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/native_detection.ts(4,36): error TS1005: ',' expected.
+testeranto/rust_builder/src/native_detection.ts(4,38): error TS1109: Expression expected.
+testeranto/rust_builder/src/native_detection.ts(4,46): error TS1109: Expression expected.
+testeranto/rust_builder/src/native_detection.ts(4,53): error TS1005: ';' expected.
+testeranto/rust_builder/src/native_detection.ts(6,8): error TS1005: '(' expected.
+testeranto/rust_builder/src/native_detection.ts(6,12): error TS1005: ')' expected.
+testeranto/rust_builder/src/native_detection.ts(6,28): error TS1005: ';' expected.
+testeranto/rust_builder/src/native_detection.ts(6,29): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/native_detection.ts(6,56): error TS1005: ';' expected.
+testeranto/rust_builder/src/native_detection.ts(11,7): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/output_artifacts.ts(1,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/output_artifacts.ts(3,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/output_artifacts.ts(3,5): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/output_artifacts.ts(3,52): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(3,54): error TS1109: Expression expected.
+testeranto/rust_builder/src/output_artifacts.ts(3,70): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(3,72): error TS1109: Expression expected.
+testeranto/rust_builder/src/output_artifacts.ts(3,78): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(7,32): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(7,36): error TS1110: Type expected.
+testeranto/rust_builder/src/output_artifacts.ts(7,40): error TS1110: Type expected.
+testeranto/rust_builder/src/output_artifacts.ts(7,55): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(7,77): error TS1005: '=>' expected.
+testeranto/rust_builder/src/output_artifacts.ts(8,21): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(9,16): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(15,35): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(15,36): error TS1134: Variable declaration expected.
+testeranto/rust_builder/src/output_artifacts.ts(15,51): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(15,62): error TS1110: Type expected.
+testeranto/rust_builder/src/output_artifacts.ts(15,71): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(15,72): error TS1109: Expression expected.
+testeranto/rust_builder/src/output_artifacts.ts(15,89): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(16,20): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(17,16): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(23,26): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(23,40): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(23,44): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(23,57): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(24,17): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(31,32): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(31,40): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(31,44): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(31,57): error TS1005: '=>' expected.
+testeranto/rust_builder/src/output_artifacts.ts(32,18): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(39,25): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(39,39): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(39,43): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(39,55): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(40,17): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(47,25): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(47,33): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(48,13): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(59,8): error TS1005: '(' expected.
+testeranto/rust_builder/src/output_artifacts.ts(59,12): error TS1005: ')' expected.
+testeranto/rust_builder/src/output_artifacts.ts(59,24): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(59,25): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/output_artifacts.ts(59,29): error TS1109: Expression expected.
+testeranto/rust_builder/src/output_artifacts.ts(59,45): error TS1109: Expression expected.
+testeranto/rust_builder/src/output_artifacts.ts(59,58): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(64,9): error TS1005: '(' expected.
+testeranto/rust_builder/src/output_artifacts.ts(64,27): error TS1005: ')' expected.
+testeranto/rust_builder/src/output_artifacts.ts(65,32): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(65,38): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(65,45): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(65,48): error TS1005: '=>' expected.
+testeranto/rust_builder/src/output_artifacts.ts(66,21): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(67,21): error TS1005: '{' expected.
+testeranto/rust_builder/src/output_artifacts.ts(67,29): error TS1003: Identifier expected.
+testeranto/rust_builder/src/output_artifacts.ts(71,31): error TS1005: ',' expected.
+testeranto/rust_builder/src/output_artifacts.ts(71,35): error TS1110: Type expected.
+testeranto/rust_builder/src/output_artifacts.ts(71,41): error TS1110: Type expected.
+testeranto/rust_builder/src/output_artifacts.ts(71,47): error TS1110: Type expected.
+testeranto/rust_builder/src/output_artifacts.ts(71,48): error TS1389: 'new' is not allowed as a variable declaration name.
+testeranto/rust_builder/src/output_artifacts.ts(71,76): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(72,24): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(73,21): error TS1005: '{' expected.
+testeranto/rust_builder/src/output_artifacts.ts(73,29): error TS1003: Identifier expected.
+testeranto/rust_builder/src/output_artifacts.ts(81,12): error TS1005: '(' expected.
+testeranto/rust_builder/src/output_artifacts.ts(81,16): error TS1005: ')' expected.
+testeranto/rust_builder/src/output_artifacts.ts(81,28): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(81,29): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/output_artifacts.ts(81,33): error TS1109: Expression expected.
+testeranto/rust_builder/src/output_artifacts.ts(81,52): error TS1109: Expression expected.
+testeranto/rust_builder/src/output_artifacts.ts(81,64): error TS1005: ';' expected.
+testeranto/rust_builder/src/output_artifacts.ts(91,1): error TS1005: '}' expected.
+testeranto/rust_builder/src/permissions.ts(1,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/permissions.ts(1,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(2,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/permissions.ts(2,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(2,15): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(4,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/permissions.ts(4,5): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/permissions.ts(4,28): error TS1005: ',' expected.
+testeranto/rust_builder/src/permissions.ts(4,30): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(4,38): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(4,48): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(4,59): error TS1005: ';' expected.
+testeranto/rust_builder/src/permissions.ts(4,63): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(4,70): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(5,5): error TS1127: Invalid character.
+testeranto/rust_builder/src/permissions.ts(5,6): error TS1005: ':' expected.
+testeranto/rust_builder/src/permissions.ts(6,5): error TS1005: ',' expected.
+testeranto/rust_builder/src/permissions.ts(7,9): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/permissions.ts(7,17): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(7,21): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(7,27): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(7,31): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(8,17): error TS1005: ',' expected.
+testeranto/rust_builder/src/permissions.ts(8,27): error TS1005: ',' expected.
+testeranto/rust_builder/src/permissions.ts(8,28): error TS1134: Variable declaration expected.
+testeranto/rust_builder/src/permissions.ts(8,37): error TS1005: ',' expected.
+testeranto/rust_builder/src/permissions.ts(10,12): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(10,42): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(12,5): error TS1127: Invalid character.
+testeranto/rust_builder/src/permissions.ts(17,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/permissions.ts(18,1): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(1,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/wrapper_generator.ts(1,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(2,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/wrapper_generator.ts(2,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(2,15): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(4,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/wrapper_generator.ts(4,5): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/wrapper_generator.ts(5,19): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(5,21): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(6,16): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(6,18): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(7,16): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(7,18): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(8,19): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(8,21): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(9,3): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(13,36): error TS1127: Invalid character.
+testeranto/rust_builder/src/wrapper_generator.ts(13,37): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(13,76): error TS1002: Unterminated string literal.
+testeranto/rust_builder/src/wrapper_generator.ts(17,1): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(17,9): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(19,1): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(21,5): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(22,5): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(23,5): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(24,5): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(27,1): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(27,6): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(27,17): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(27,24): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(27,25): error TS1136: Property assignment expected.
+testeranto/rust_builder/src/wrapper_generator.ts(28,12): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(28,19): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(29,5): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(29,12): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(30,5): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(30,12): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(31,1): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(31,2): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(33,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/wrapper_generator.ts(33,13): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(35,14): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(38,8): error TS1005: '(' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(38,15): error TS1005: ')' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(38,16): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(38,55): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(41,12): error TS1005: '(' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(41,19): error TS1005: ')' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(41,20): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(41,59): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(48,10): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(49,17): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(49,18): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(51,13): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(51,25): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(53,15): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(54,15): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(55,5): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(58,25): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(58,26): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(59,8): error TS1005: '(' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(59,23): error TS1005: ')' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(66,8): error TS1005: '(' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(66,19): error TS1005: ')' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(70,5): error TS1002: Unterminated string literal.
+testeranto/rust_builder/src/wrapper_generator.ts(75,5): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(77,8): error TS1005: '(' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(77,12): error TS1005: ')' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(77,23): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(77,24): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(77,31): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(77,63): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(86,40): error TS1127: Invalid character.
+testeranto/rust_builder/src/wrapper_generator.ts(86,41): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(86,82): error TS1002: Unterminated string literal.
+testeranto/rust_builder/src/wrapper_generator.ts(87,1): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(87,5): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(87,8): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(87,9): error TS1135: Argument expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(87,17): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(87,18): error TS1135: Argument expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(87,26): error TS1005: ')' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(88,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/wrapper_generator.ts(88,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(89,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/wrapper_generator.ts(89,16): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(91,1): error TS1434: Unexpected keyword or identifier.
+testeranto/rust_builder/src/wrapper_generator.ts(91,11): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(93,26): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(93,27): error TS1134: Variable declaration expected.
+testeranto/rust_builder/src/wrapper_generator.ts(93,39): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(93,40): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(96,25): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(96,26): error TS1134: Variable declaration expected.
+testeranto/rust_builder/src/wrapper_generator.ts(96,27): error TS1389: 'new' is not allowed as a variable declaration name.
+testeranto/rust_builder/src/wrapper_generator.ts(101,25): error TS1136: Property assignment expected.
+testeranto/rust_builder/src/wrapper_generator.ts(104,25): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(104,26): error TS1136: Property assignment expected.
+testeranto/rust_builder/src/wrapper_generator.ts(104,43): error TS1003: Identifier expected.
+testeranto/rust_builder/src/wrapper_generator.ts(104,50): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(104,57): error TS1005: ',' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(105,16): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(105,25): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(105,42): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(106,5): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(106,7): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(111,9): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(111,18): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(111,24): error TS1135: Argument expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(111,27): error TS1005: '(' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(111,51): error TS1005: ')' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(111,71): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(112,1): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(112,2): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(113,4): error TS1002: Unterminated string literal.
+testeranto/rust_builder/src/wrapper_generator.ts(116,5): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(118,8): error TS1005: '(' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(118,12): error TS1005: ')' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(118,23): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(118,24): error TS1128: Declaration or statement expected.
+testeranto/rust_builder/src/wrapper_generator.ts(118,31): error TS1109: Expression expected.
+testeranto/rust_builder/src/wrapper_generator.ts(118,71): error TS1005: ';' expected.
+testeranto/rust_builder/src/wrapper_generator.ts(121,1): error TS1128: Declaration or statement expected.
+error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+warning testeranto@0.233.9: The engine "vscode" appears to be invalid.
+warning testeranto@0.233.9: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsc --noEmit
 src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
 src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
 testeranto/rust_builder/src/native_detection.ts(1,1): error TS1434: Unexpected keyword or identifier.
@@ -261,4 +515,4 @@ testeranto/rust_builder/src/wrapper_generator.ts(121,1): error TS1128: Declarati
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
 
-=== Log captured at 2026-04-09T02:41:34.396Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-11T15:01:56.195Z (container status: exited, exit code: 2) ===

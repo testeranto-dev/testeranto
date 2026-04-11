@@ -10,7 +10,8 @@ export function registerCommands(
   dockerProcessProvider: any,
   aiderProcessProvider: any,
   fileTreeProvider: any,
-  agentProvider?: any
+  agentProvider?: any,
+  viewTreeProvider?: any
 ): vscode.Disposable[] {
   const disposables: vscode.Disposable[] = [];
 
@@ -39,6 +40,20 @@ export function registerCommands(
   const refreshFileTreeCommand = vscode.commands.registerCommand('testeranto.refreshFileTree', () => {
     if (fileTreeProvider && typeof fileTreeProvider.refresh === 'function') {
       fileTreeProvider.refresh();
+    }
+  });
+
+  // Refresh view tree
+  const refreshViewTreeCommand = vscode.commands.registerCommand('testeranto.refreshViewTree', () => {
+    if (viewTreeProvider && typeof viewTreeProvider.refresh === 'function') {
+      viewTreeProvider.refresh();
+    }
+  });
+
+  // Refresh agents
+  const refreshAgentsCommand = vscode.commands.registerCommand('testeranto.refreshAgents', () => {
+    if (agentProvider && typeof agentProvider.refresh === 'function') {
+      agentProvider.refresh();
     }
   });
 
@@ -188,6 +203,50 @@ export function registerCommands(
     }
   });
 
+  // Open view command
+  const openViewCommand = vscode.commands.registerCommand('testeranto.openView', async (viewKey: string, viewName: string, viewPath: string) => {
+    try {
+      console.log(`[Testeranto] Opening view: ${viewKey} (${viewName})`);
+      
+      // Create and show webview panel
+      const panel = vscode.window.createWebviewPanel(
+        `testeranto.view.${viewKey}`,
+        `View: ${viewName}`,
+        vscode.ViewColumn.One,
+        {
+          enableScripts: true,
+          retainContextWhenHidden: true,
+          localResourceRoots: []
+        }
+      );
+      
+      // Get the URL for the view
+      const baseUrl = 'http://localhost:3000';
+      // Ensure viewPath starts with a slash
+      const normalizedPath = viewPath.startsWith('/') ? viewPath : `/${viewPath}`;
+      const viewUrl = `${baseUrl}${normalizedPath}`;
+      
+      panel.webview.html = getWebviewContent(viewUrl, viewName);
+      
+      // Handle messages from the webview
+      panel.webview.onDidReceiveMessage(
+        message => {
+          switch (message.command) {
+            case 'alert':
+              vscode.window.showErrorMessage(message.text);
+              break;
+          }
+        },
+        undefined,
+        context.subscriptions
+      );
+      
+    } catch (error: any) {
+      console.error(`[Testeranto] Error opening view: ${error.message}`);
+      vscode.window.showErrorMessage(`Failed to open view: ${error.message}`);
+    }
+  });
+
   // Test logging command
   const testLoggingCommand = vscode.commands.registerCommand('testeranto.testLogging', () => {
     vscode.window.showInformationMessage('Test logging command works!');
@@ -199,6 +258,8 @@ export function registerCommands(
     refreshDockerProcessesCommand,
     refreshAiderProcessesCommand,
     refreshFileTreeCommand,
+    refreshViewTreeCommand,
+    refreshAgentsCommand,
     openFileCommand,
     openAiderTerminalCommand,
     restartAiderProcessCommand,
@@ -209,6 +270,62 @@ export function registerCommands(
     refreshChatCommand,
     clearChatCommand,
     launchAgentCommand,
+    openViewCommand,
     testLoggingCommand
   ];
+}
+
+function getWebviewContent(url: string, title: string): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${title}</title>
+      <style>
+        body {
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          height: 100vh;
+        }
+        iframe {
+          border: none;
+          width: 100%;
+          height: 100vh;
+        }
+        .loading {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          font-family: sans-serif;
+        }
+      </style>
+    </head>
+    <body>
+      <div id="content">
+        <div class="loading">
+          <h2>Loading ${title}...</h2>
+        </div>
+        <iframe id="viewFrame" src="${url}" style="display: none;"></iframe>
+      </div>
+      <script>
+        const iframe = document.getElementById('viewFrame');
+        const loading = document.querySelector('.loading');
+        
+        iframe.onload = function() {
+          loading.style.display = 'none';
+          iframe.style.display = 'block';
+        };
+        
+        // Handle errors
+        iframe.onerror = function() {
+          loading.innerHTML = '<h2>Failed to load view</h2><p>Make sure the Testeranto server is running on port 3000.</p>';
+        };
+      </script>
+    </body>
+    </html>
+  `;
 }

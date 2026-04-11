@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import type { ITesterantoConfig } from "../../Types";
 import { graphToData } from '../../graph/graphToData';
+import { dataToGraph } from '../../graph/dataToGraph';
+import { createGraph } from '../../graph/createGraph';
 import {
   type GraphData,
   type GraphEdgeAttributes,
@@ -18,7 +20,7 @@ import { createGraphDataFilePure } from './createGraphDataFilePure';
 import { generateEdgesPure } from './generateEdgesPure';
 import { getGraphStatsPure } from './getGraphStatsPure';
 import { hasFeatureUpdatesPure } from './hasFeatureUpdatesPure';
-import { loadGraphPure } from './loadGraphPure';
+// import { loadGraphPure } from './loadGraphPure';
 import { processFeatureUrlPure } from './processFeatureUrlPure';
 import { updateFromTestResultsPure } from './updateFromTestResultsPure';
 import { parseMarkdownFilesPure } from './utils/markdownParseUtils';
@@ -46,35 +48,106 @@ export class GraphManager {
 
     // Use the same file that the stakeholder app reads from
     this.graphDataPath = path.join(projectRoot, 'testeranto', 'reports', 'graph-data.json');
+    console.log(`[GraphManager] Graph data path: ${this.graphDataPath}`);
 
-    // Load graph using pure function
-    this.graph = loadGraphPure(this.graphDataPath, projectRoot);
+    // Always create a fresh graph - don't load old data
+    // This ensures ZERO chat messages at startup
+    this.graph = createGraph();
+    console.log(`[GraphManager] Created fresh graph`);
+    
+    // Save the initial empty graph
+    console.log(`[GraphManager] Saving initial graph...`);
+    this.saveGraph();
+    console.log(`[GraphManager] Initial graph saved`);
   }
 
   // Load graph from file or create new
-  private loadGraph(): TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes> {
-    // Note: This method is kept for compatibility but not used in constructor
-    // since we always start fresh
-    return loadGraphPure(this.graphDataPath, this.projectRoot);
-  }
+  // private loadGraph(): TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes> {
+  //   // Note: This method is kept for compatibility but not used in constructor
+  //   // since we always start fresh
+  //   return loadGraphPure(this.graphDataPath, this.projectRoot);
+  // }
 
   // Save graph to file in unified format
   public saveGraph(): void {
     try {
+      if (!this.graph) {
+        console.error('[GraphManager] Cannot save graph: graph is undefined');
+        return;
+      }
+      
       const graphData = graphToData(this.graph);
+      console.log(`[GraphManager] Converting graph to data: ${graphData.nodes.length} nodes, ${graphData.edges.length} edges`);
+      
       const dir = path.dirname(this.graphDataPath);
+      console.log(`[GraphManager] Directory path: ${dir}`);
+      console.log(`[GraphManager] Full file path: ${this.graphDataPath}`);
+      
       if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
+        console.log(`[GraphManager] Creating directory: ${dir}`);
+        try {
+          fs.mkdirSync(dir, { recursive: true });
+          console.log(`[GraphManager] Directory created successfully`);
+        } catch (mkdirError) {
+          console.error(`[GraphManager] Failed to create directory ${dir}:`, mkdirError);
+          return;
+        }
       }
 
       // Use pure function to create graph data file structure
       const graphDataFile = createGraphDataFilePure(graphData);
+      console.log(`[GraphManager] Created graph data file structure`);
 
       // DO NOT try to preserve old data - always write new unified format
-      fs.writeFileSync(this.graphDataPath, JSON.stringify(graphDataFile, null, 2), 'utf-8');
+      const jsonContent = JSON.stringify(graphDataFile, null, 2);
+      console.log(`[GraphManager] JSON content length: ${jsonContent.length} characters`);
+      
+      try {
+        fs.writeFileSync(this.graphDataPath, jsonContent, 'utf-8');
+        console.log(`[GraphManager] Successfully wrote to ${this.graphDataPath}`);
+      } catch (writeError) {
+        console.error(`[GraphManager] Failed to write to ${this.graphDataPath}:`, writeError);
+        // Try to write to a temp location as fallback
+        const tempPath = path.join(process.cwd(), 'temp-graph-data.json');
+        console.log(`[GraphManager] Trying fallback location: ${tempPath}`);
+        try {
+          fs.writeFileSync(tempPath, jsonContent, 'utf-8');
+          console.log(`[GraphManager] Successfully wrote to fallback location: ${tempPath}`);
+        } catch (tempError) {
+          console.error(`[GraphManager] Failed to write to fallback location:`, tempError);
+        }
+        return;
+      }
+      
+      console.log(`[GraphManager] Saved graph to ${this.graphDataPath} with ${graphData.nodes.length} nodes and ${graphData.edges.length} edges`);
+      
+      // Verify the file was written
+      if (fs.existsSync(this.graphDataPath)) {
+        const stats = fs.statSync(this.graphDataPath);
+        console.log(`[GraphManager] File verified: ${stats.size} bytes`);
+        if (stats.size === 0) {
+          console.error(`[GraphManager] WARNING: File is empty (0 bytes)!`);
+        }
+      } else {
+        console.error(`[GraphManager] ERROR: File was not created at ${this.graphDataPath}`);
+      }
+      
+      // Notify that graph was saved (for slice updates)
+      this.emitGraphSaved();
     } catch (error) {
       console.error('[GraphManager] Error saving graph:', error);
+      // Log the full error stack
+      if (error instanceof Error) {
+        console.error('[GraphManager] Error stack:', error.stack);
+      }
     }
+  }
+  
+  // Emit event when graph is saved
+  private emitGraphSaved(): void {
+    // This is a placeholder for event emission
+    // In a real implementation, this would emit an event that Server_GraphManager listens to
+    console.log('[GraphManager] Graph saved, slices should be updated');
   }
 
   // Get current graph data
@@ -84,13 +157,17 @@ export class GraphManager {
 
   // Apply graph updates
   public applyUpdate(update: GraphUpdate): GraphData {
+    console.log(`[GraphManager] Applying update with ${update.operations.length} operations`);
+    
     update.operations.forEach(op => {
       try {
         switch (op.type) {
           case 'addNode':
+            console.log(`[GraphManager] Adding node: ${op.data.id} (${op.data.type})`);
             this.graph.addNode(op.data.id, op.data);
             break;
           case 'updateNode':
+            console.log(`[GraphManager] Updating node: ${op.data.id}`);
             // For feature nodes, we need to update metadata.content and metadata.frontmatter when attributes change
             const existingAttrs = this.graph.getNodeAttributes(op.data.id);
             if (existingAttrs.type === 'feature') {
@@ -147,18 +224,22 @@ export class GraphManager {
             }
             break;
           case 'removeNode':
+            console.log(`[GraphManager] Removing node: ${op.data.id}`);
             this.graph.dropNode(op.data.id);
             break;
           case 'addEdge':
+            console.log(`[GraphManager] Adding edge: ${op.data.source} -> ${op.data.target}`);
             this.graph.addEdge(op.data.source, op.data.target, op.data.attributes);
             break;
           case 'updateEdge':
+            console.log(`[GraphManager] Updating edge: ${op.data.source} -> ${op.data.target}`);
             const edge = this.graph.edge(op.data.source, op.data.target);
             if (edge) {
               this.graph.mergeEdgeAttributes(edge, op.data.attributes);
             }
             break;
           case 'removeEdge':
+            console.log(`[GraphManager] Removing edge: ${op.data.source} -> ${op.data.target}`);
             const edgeToRemove = this.graph.edge(op.data.source, op.data.target);
             if (edgeToRemove) {
               this.graph.dropEdge(edgeToRemove);
@@ -166,7 +247,7 @@ export class GraphManager {
             break;
         }
       } catch (error) {
-        // console.warn(`[GraphManager] Error applying operation ${op.type}:`, error);
+        console.warn(`[GraphManager] Error applying operation ${op.type}:`, error);
       }
     });
 
@@ -175,6 +256,7 @@ export class GraphManager {
     // Check if there are feature updates and serialize to markdown
     const hasFeatureUpdates = hasFeatureUpdatesPure(update.operations, this.graph);
     if (hasFeatureUpdates) {
+      console.log(`[GraphManager] Has feature updates, serializing to markdown`);
       this.serializeToMarkdown();
     }
 
@@ -426,7 +508,7 @@ export class GraphManager {
         writtenCount++;
 
       } catch (error) {
-        console.error(`[GraphManager] Error serializing feature ${nodeId}:`, error);
+        // console.error(`[GraphManager] Error serializing feature ${nodeId}:`, error);
         errorCount++;
       }
     }
@@ -458,47 +540,47 @@ export class GraphManager {
     this.saveGraph();
   }
 
-  // Create aider node for an entrypoint (for manual testing)
-  public createAiderNodeForEntrypoint(entrypointId: string, aiderServiceName: string, containerId?: string): void {
-    const timestamp = new Date().toISOString();
-    const aiderNodeId = `aider:${aiderServiceName}`;
+  // // Create aider node for an entrypoint (for manual testing)
+  // public createAiderNodeForEntrypoint(entrypointId: string, aiderServiceName: string, containerId?: string): void {
+  //   const timestamp = new Date().toISOString();
+  //   const aiderNodeId = `aider:${aiderServiceName}`;
 
-    // Create aider node
-    this.graph.addNode(aiderNodeId, {
-      id: aiderNodeId,
-      type: 'aider',
-      label: `Aider: ${aiderServiceName}`,
-      description: `Aider instance for ${entrypointId}`,
-      status: 'done',
-      icon: 'aider',
-      metadata: {
-        aiderServiceName,
-        containerId,
-        timestamp
-      }
-    });
+  //   // Create aider node
+  //   this.graph.addNode(aiderNodeId, {
+  //     id: aiderNodeId,
+  //     type: 'aider',
+  //     label: `Aider: ${aiderServiceName}`,
+  //     description: `Aider instance for ${entrypointId}`,
+  //     status: 'done',
+  //     icon: 'aider',
+  //     metadata: {
+  //       aiderServiceName,
+  //       containerId,
+  //       timestamp
+  //     }
+  //   });
 
-    // Connect entrypoint to aider node
-    if (this.graph.hasNode(entrypointId)) {
-      this.graph.addEdge(entrypointId, aiderNodeId, {
-        type: 'hasAider',
+  //   // Connect entrypoint to aider node
+  //   if (this.graph.hasNode(entrypointId)) {
+  //     this.graph.addEdge(entrypointId, aiderNodeId, {
+  //       type: 'hasAider',
 
-        timestamp
-      });
-    }
+  //       timestamp
+  //     });
+  //   }
 
-    // Connect aider to docker process if containerId exists
-    if (containerId) {
-      const dockerProcessId = `docker_process:${containerId}`;
-      if (this.graph.hasNode(dockerProcessId)) {
-        this.graph.addEdge(aiderNodeId, dockerProcessId, {
-          type: 'hasProcess',
+  //   // Connect aider to docker process if containerId exists
+  //   if (containerId) {
+  //     const dockerProcessId = `docker_process:${containerId}`;
+  //     if (this.graph.hasNode(dockerProcessId)) {
+  //       this.graph.addEdge(aiderNodeId, dockerProcessId, {
+  //         type: 'hasProcess',
 
-          timestamp
-        });
-      }
-    }
+  //         timestamp
+  //       });
+  //     }
+  //   }
 
-    this.saveGraph();
-  }
+  //   this.saveGraph();
+  // }
 }

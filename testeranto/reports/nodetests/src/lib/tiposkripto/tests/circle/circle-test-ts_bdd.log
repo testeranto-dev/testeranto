@@ -1,5 +1,5 @@
-=== Log started at 2026-04-09T02:41:17.183Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: f6ceda4e4c8b1573dbe0c46c07dc165c107e8ff7a2743f491256558e1658d5c7 ===
+=== Log started at 2026-04-11T15:01:45.576Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: 8099c6b94e3dcd53951515f8725b6a2359eefa95071e815ee2c934bf7b6b8b8c ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -38,6 +38,41 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 0.94s.
+Done in 2.50s.
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+warning testeranto@0.235.9: The engine "vscode" appears to be invalid.
+warning testeranto@0.235.9: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}'
+[NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}
+Error during test specification: TypeError: Confirm.circumferenceCalculation(...) is not a function
+    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:214:42)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1802:5)
+    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:265:27
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+TypeError: Confirm.circumferenceCalculation(...) is not a function
+    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:214:42)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1802:5)
+    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:265:27
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+TypeError: Confirm.circumferenceCalculation(...) is not a function
+    at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:214:42)
+    at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)
+    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1802:5)
+    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:265:27
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+testResourceConfiguration {
+  ports: [ 1111 ],
+  fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
+}
+Done in 0.97s.
 
-=== Log captured at 2026-04-09T02:41:27.610Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-11T15:01:49.566Z (container status: exited, exit code: 0) ===

@@ -1,0 +1,1592 @@
+{
+  "timestamp": "2026-04-11T15:02:57.384Z",
+  "version": "1.0",
+  "data": {
+    "unifiedGraph": {
+      "nodes": [
+        {
+          "id": "agent:prodirek",
+          "type": "agent",
+          "label": "Agent: prodirek",
+          "description": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, t...",
+          "agentName": "prodirek",
+          "agentConfig": {
+            "load": [
+              "/read SOUL.md",
+              "/read testeranto/slices/agents/prodirek.json"
+            ],
+            "hasSliceFunction": true
+          },
+          "timestamp": "2026-04-11T15:01:03.626Z",
+          "metadata": {
+            "frontmatter": {
+              "title": "Agent: prodirek",
+              "type": "agent",
+              "agentType": "user-defined"
+            }
+          }
+        },
+        {
+          "id": "agent:arko",
+          "type": "agent",
+          "label": "Agent: arko",
+          "description": "Your name is \"Arko\". You are a Software Architect. Your responsibilities are: 1) You will be give a ...",
+          "agentName": "arko",
+          "agentConfig": {
+            "load": [
+              "/read SOUL.md",
+              "/read chat_slice.json"
+            ],
+            "hasSliceFunction": true
+          },
+          "timestamp": "2026-04-11T15:01:03.626Z",
+          "metadata": {
+            "frontmatter": {
+              "title": "Agent: arko",
+              "type": "agent",
+              "agentType": "user-defined"
+            }
+          }
+        },
+        {
+          "id": "view:Kanban",
+          "type": "view",
+          "label": "View: Kanban",
+          "description": "A view for Kanban",
+          "viewKey": "Kanban",
+          "viewPath": "testeranto/views/stakeholder/Kanban",
+          "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
+          "sliceNodeCount": 5,
+          "sliceEdgeCount": 14,
+          "timestamp": "2026-04-11T15:01:03.728Z",
+          "metadata": {
+            "frontmatter": {
+              "title": "View: Kanban",
+              "type": "view",
+              "viewType": "kanban"
+            }
+          }
+        },
+        {
+          "id": "view:Gantt",
+          "type": "view",
+          "label": "View: Gantt",
+          "description": "A view for Gantt",
+          "viewKey": "Gantt",
+          "viewPath": "testeranto/views/stakeholder/Gantt",
+          "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
+          "sliceNodeCount": 5,
+          "sliceEdgeCount": 14,
+          "timestamp": "2026-04-11T15:01:03.729Z",
+          "metadata": {
+            "frontmatter": {
+              "title": "View: Gantt",
+              "type": "view",
+              "viewType": "gantt"
+            }
+          }
+        },
+        {
+          "id": "view:Eisenhower",
+          "type": "view",
+          "label": "View: Eisenhower",
+          "description": "A view for Eisenhower",
+          "viewKey": "Eisenhower",
+          "viewPath": "testeranto/views/stakeholder/Eisenhower",
+          "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/Eisenhower.json",
+          "sliceNodeCount": 5,
+          "sliceEdgeCount": 14,
+          "timestamp": "2026-04-11T15:01:03.730Z",
+          "metadata": {
+            "frontmatter": {
+              "title": "View: Eisenhower",
+              "type": "view",
+              "viewType": "eisenhower"
+            }
+          }
+        },
+        {
+          "id": "aider_process:agent:prodirek",
+          "type": "aider_process",
+          "label": "Aider Process: prodirek",
+          "description": "aider process for prodirek (agent)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "prodirek",
+            "configKey": "agent",
+            "processType": "aider",
+            "timestamp": "2026-04-11T15:01:17.937Z",
+            "actualStatus": "running",
+            "containerName": "agent-prodirek",
+            "containerId": "agent-prodirek"
+          }
+        },
+        {
+          "id": "aider_process:agent:arko",
+          "type": "aider_process",
+          "label": "Aider Process: arko",
+          "description": "aider process for arko (agent)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "arko",
+            "configKey": "agent",
+            "processType": "aider",
+            "timestamp": "2026-04-11T15:01:17.938Z",
+            "actualStatus": "running",
+            "containerName": "agent-arko",
+            "containerId": "agent-arko"
+          }
+        },
+        {
+          "id": "logfile:nodetests-builder.log:mnugq4jb",
+          "type": "file",
+          "label": "nodetests-builder.log",
+          "description": "Log file for nodetests-builder (builder)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log",
+            "relativePath": "testeranto/reports/nodetests/nodetests-builder.log",
+            "serviceName": "nodetests-builder",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "isLogFile": true,
+            "logType": "builder",
+            "timestamp": "2026-04-11T15:01:21.911Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
+          }
+        },
+        {
+          "id": "builder_process:nodetests",
+          "type": "builder_process",
+          "label": "Builder Process: nodetests",
+          "description": "builder process for builder (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "builder",
+            "configKey": "nodetests",
+            "processType": "builder",
+            "timestamp": "2026-04-11T15:01:43.973Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "config:nodetests",
+          "type": "config",
+          "label": "Config: nodetests",
+          "description": "Configuration for nodetests",
+          "status": "todo",
+          "priority": "medium",
+          "metadata": {
+            "configKey": "nodetests",
+            "runtime": "node",
+            "timestamp": "2026-04-11T15:01:43.973Z"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_bdd.log:mnugqlkd",
+          "type": "file",
+          "label": "Calculator-test-node-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-11T15:01:43.981Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_bdd.log:mnugqlmg",
+          "type": "file",
+          "label": "Circle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-11T15:01:44.056Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_bdd.log:mnugqlor",
+          "type": "file",
+          "label": "Rectangle-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-11T15:01:44.139Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:AiderProcessTreeDataProvider-test-ts_bdd.log:mnugqlri",
+          "type": "file",
+          "label": "AiderProcessTreeDataProvider-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_bdd.log",
+            "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-11T15:01:44.238Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:Server_GraphManagerCore-test-ts_bdd.log:mnugqlux",
+          "type": "file",
+          "label": "Server_GraphManagerCore-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_bdd.log",
+            "serviceName": "nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-11T15:01:44.361Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "logfile:FileTreeLogic-test-ts_bdd.log:mnugqlyt",
+          "type": "file",
+          "label": "FileTreeLogic-test-ts_bdd.log",
+          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-bdd (bdd)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_bdd.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_bdd.log",
+            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-bdd",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "isLogFile": true,
+            "logType": "bdd",
+            "timestamp": "2026-04-11T15:01:44.501Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_bdd.log"
+          }
+        },
+        {
+          "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "bdd process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-11T15:01:47.416Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-1.log:mnugqoiw",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:47.816Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "bdd process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-11T15:01:49.497Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "bdd process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-11T15:01:51.392Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-2.log:mnugqrac",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:51.396Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_check-0.log:mnugqrei",
+          "type": "file",
+          "label": "Rectangle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:51.546Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-2.log:mnugqrib",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:51.683Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-0.log:mnugqrlr",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:51.807Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_check-1.log:mnugqrp9",
+          "type": "file",
+          "label": "Calculator-test-node-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:51.933Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-0.log:mnugqs6k",
+          "type": "file",
+          "label": "Circle-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:52.556Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-1.log:mnugqsbv",
+          "type": "file",
+          "label": "Circle-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:52.747Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_check-2.log:mnugqsfq",
+          "type": "file",
+          "label": "Circle-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:01:52.886Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "bdd_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "description": "bdd process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-11T15:02:02.874Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+          "description": "bdd process for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-11T15:02:03.868Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "bdd_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "type": "bdd_process",
+          "label": "BDD Process: src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "description": "bdd process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "configKey": "nodetests",
+            "processType": "bdd",
+            "timestamp": "2026-04-11T15:02:05.873Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "logfile:AiderProcessTreeDataProvider-test-ts_check-2.log:mnugr2no",
+          "type": "file",
+          "label": "AiderProcessTreeDataProvider-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-2.log",
+            "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:06.132Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:AiderProcessTreeDataProvider-test-ts_check-1.log:mnugr2qm",
+          "type": "file",
+          "label": "AiderProcessTreeDataProvider-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-1.log",
+            "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:06.238Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:AiderProcessTreeDataProvider-test-ts_check-0.log:mnugr2wb",
+          "type": "file",
+          "label": "AiderProcessTreeDataProvider-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-0.log",
+            "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:06.443Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Server_GraphManagerCore-test-ts_check-1.log:mnugr30l",
+          "type": "file",
+          "label": "Server_GraphManagerCore-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-1.log",
+            "serviceName": "nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:06.597Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "logfile:Server_GraphManagerCore-test-ts_check-0.log:mnugr36j",
+          "type": "file",
+          "label": "Server_GraphManagerCore-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-0.log",
+            "serviceName": "nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:06.811Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:Server_GraphManagerCore-test-ts_check-2.log:mnugr39g",
+          "type": "file",
+          "label": "Server_GraphManagerCore-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-2.log",
+            "serviceName": "nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:06.916Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:FileTreeLogic-test-ts_check-0.log:mnugr3n9",
+          "type": "file",
+          "label": "FileTreeLogic-test-ts_check-0.log",
+          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-0.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-0.log",
+            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:07.413Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-0.log"
+          }
+        },
+        {
+          "id": "logfile:FileTreeLogic-test-ts_check-2.log:mnugr3rv",
+          "type": "file",
+          "label": "FileTreeLogic-test-ts_check-2.log",
+          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-2 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-2.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-2.log",
+            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-2",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:07.579Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-2.log"
+          }
+        },
+        {
+          "id": "logfile:FileTreeLogic-test-ts_check-1.log:mnugr3vb",
+          "type": "file",
+          "label": "FileTreeLogic-test-ts_check-1.log",
+          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1 (check)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-1.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-1.log",
+            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "isLogFile": true,
+            "logType": "check",
+            "timestamp": "2026-04-11T15:02:07.703Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-1.log"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-11T15:02:14.776Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-11T15:02:14.776Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:2",
+          "type": "check_process",
+          "label": "Check Process 2: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 2,
+            "timestamp": "2026-04-11T15:02:14.777Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider:nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+          "type": "aider",
+          "label": "Aider: nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+          "description": "Aider instance for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "status": "done",
+          "icon": "aider",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "aiderServiceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "timestamp": "2026-04-11T15:02:15.013Z"
+          }
+        },
+        {
+          "id": "logfile:Rectangle-test-ts_aider.log:mnugr9ie",
+          "type": "file",
+          "label": "Rectangle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-11T15:02:15.014Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "check process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-11T15:02:17.669Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "check process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-11T15:02:17.670Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:2",
+          "type": "check_process",
+          "label": "Check Process 2: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "check process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 2,
+            "timestamp": "2026-04-11T15:02:17.670Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider:nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+          "type": "aider",
+          "label": "Aider: nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+          "description": "Aider instance for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "status": "done",
+          "icon": "aider",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "aiderServiceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "timestamp": "2026-04-11T15:02:17.857Z"
+          }
+        },
+        {
+          "id": "logfile:Calculator-test-node-ts_aider.log:mnugrbpe",
+          "type": "file",
+          "label": "Calculator-test-node-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-11T15:02:17.858Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator-test-node-ts_aider.log"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-11T15:02:19.572Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-11T15:02:19.573Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:2",
+          "type": "check_process",
+          "label": "Check Process 2: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 2,
+            "timestamp": "2026-04-11T15:02:19.573Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider:nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+          "type": "aider",
+          "label": "Aider: nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+          "description": "Aider instance for src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "status": "done",
+          "icon": "aider",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "aiderServiceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "timestamp": "2026-04-11T15:02:19.741Z"
+          }
+        },
+        {
+          "id": "logfile:Circle-test-ts_aider.log:mnugrd5q",
+          "type": "file",
+          "label": "Circle-test-ts_aider.log",
+          "description": "Log file for nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log",
+            "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-11T15:02:19.742Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "description": "check process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-11T15:02:29.014Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "description": "check process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-11T15:02:29.014Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:2",
+          "type": "check_process",
+          "label": "Check Process 2: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "description": "check process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 2,
+            "timestamp": "2026-04-11T15:02:29.015Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider:nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+          "type": "aider",
+          "label": "Aider: nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+          "description": "Aider instance for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "status": "done",
+          "icon": "aider",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "aiderServiceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+            "timestamp": "2026-04-11T15:02:29.273Z"
+          }
+        },
+        {
+          "id": "logfile:AiderProcessTreeDataProvider-test-ts_aider.log:mnugrkii",
+          "type": "file",
+          "label": "AiderProcessTreeDataProvider-test-ts_aider.log",
+          "description": "Log file for nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_aider.log",
+            "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-11T15:02:29.274Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvidertest/AiderProcessTreeDataProvider-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+          "description": "check process for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-11T15:02:30.279Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+          "description": "check process for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-11T15:02:30.280Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:2",
+          "type": "check_process",
+          "label": "Check Process 2: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+          "description": "check process for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 2,
+            "timestamp": "2026-04-11T15:02:30.280Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider:nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-aider",
+          "type": "aider",
+          "label": "Aider: nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-aider",
+          "description": "Aider instance for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+          "status": "done",
+          "icon": "aider",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "configKey": "nodetests",
+            "aiderServiceName": "nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-aider",
+            "timestamp": "2026-04-11T15:02:30.481Z"
+          }
+        },
+        {
+          "id": "logfile:Server_GraphManagerCore-test-ts_aider.log:mnugrlg4",
+          "type": "file",
+          "label": "Server_GraphManagerCore-test-ts_aider.log",
+          "description": "Log file for nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_aider.log",
+            "serviceName": "nodetests-src_server_serverclasses_server_graphmangercore-test_server_graphmanagercore-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-11T15:02:30.484Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCoretest/Server_GraphManagerCore-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:0",
+          "type": "check_process",
+          "label": "Check Process 0: src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "description": "check process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 0,
+            "timestamp": "2026-04-11T15:02:31.861Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:1",
+          "type": "check_process",
+          "label": "Check Process 1: src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "description": "check process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 1,
+            "timestamp": "2026-04-11T15:02:31.862Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:2",
+          "type": "check_process",
+          "label": "Check Process 2: src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "description": "check process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "configKey": "nodetests",
+            "processType": "check",
+            "checkIndex": 2,
+            "timestamp": "2026-04-11T15:02:31.863Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider:nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider",
+          "type": "aider",
+          "label": "Aider: nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider",
+          "description": "Aider instance for src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "status": "done",
+          "icon": "aider",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "configKey": "nodetests",
+            "aiderServiceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider",
+            "timestamp": "2026-04-11T15:02:32.053Z"
+          }
+        },
+        {
+          "id": "logfile:FileTreeLogic-test-ts_aider.log:mnugrmnq",
+          "type": "file",
+          "label": "FileTreeLogic-test-ts_aider.log",
+          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider (aider)",
+          "status": "done",
+          "icon": "document",
+          "metadata": {
+            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_aider.log",
+            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_aider.log",
+            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider",
+            "runtime": "node",
+            "configKey": "nodetests",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "isLogFile": true,
+            "logType": "aider",
+            "timestamp": "2026-04-11T15:02:32.054Z",
+            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_aider.log"
+          }
+        },
+        {
+          "id": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "aider process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-11T15:02:45.130Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+          "description": "aider process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-11T15:02:46.459Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "aider process for src/lib/tiposkripto/tests/circle/Circle.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-11T15:02:47.738Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "description": "aider process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-11T15:02:55.179Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+          "description": "aider process for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-11T15:02:55.248Z",
+            "actualStatus": "running"
+          }
+        },
+        {
+          "id": "aider_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "type": "aider_process",
+          "label": "Aider Process: src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "description": "aider process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
+          "status": "running",
+          "priority": "medium",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "configKey": "nodetests",
+            "processType": "aider",
+            "timestamp": "2026-04-11T15:02:57.384Z",
+            "actualStatus": "running"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "view:Kanban",
+          "target": "agent:prodirek",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.678Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "agent:prodirek",
+          "target": "view:Kanban",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.678Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Kanban",
+          "target": "agent:arko",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.678Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "agent:arko",
+          "target": "view:Kanban",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.678Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Gantt",
+          "target": "agent:prodirek",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.701Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "agent:prodirek",
+          "target": "view:Gantt",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.701Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Gantt",
+          "target": "agent:arko",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.701Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "agent:arko",
+          "target": "view:Gantt",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.701Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Eisenhower",
+          "target": "agent:prodirek",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.725Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "agent:prodirek",
+          "target": "view:Eisenhower",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.725Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Eisenhower",
+          "target": "agent:arko",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.725Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "agent:arko",
+          "target": "view:Eisenhower",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.725Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "agent:prodirek",
+          "target": "agent:arko",
+          "attributes": {
+            "type": "hasAgent",
+            "timestamp": "2026-04-11T15:01:03.726Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "agent:arko",
+          "target": "agent:prodirek",
+          "attributes": {
+            "type": "agentOf",
+            "timestamp": "2026-04-11T15:01:03.726Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Kanban",
+          "target": "view:Gantt",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.729Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Gantt",
+          "target": "view:Kanban",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.729Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Kanban",
+          "target": "view:Eisenhower",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.729Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Eisenhower",
+          "target": "view:Kanban",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.729Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Gantt",
+          "target": "view:Eisenhower",
+          "attributes": {
+            "type": "hasView",
+            "timestamp": "2026-04-11T15:01:03.729Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "view:Eisenhower",
+          "target": "view:Gantt",
+          "attributes": {
+            "type": "viewOf",
+            "timestamp": "2026-04-11T15:01:03.729Z",
+            "directed": true
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "builder_process:nodetests",
+          "attributes": {
+            "type": "hasBuilderProcess",
+            "timestamp": "2026-04-11T15:01:43.973Z"
+          }
+        }
+      ],
+      "metadata": {
+        "version": "1.0",
+        "timestamp": "2026-04-11T15:02:57.384Z"
+      }
+    },
+    "vizConfig": {
+      "projection": {
+        "xAttribute": "status",
+        "yAttribute": "priority",
+        "xType": "categorical",
+        "yType": "continuous",
+        "layout": "grid"
+      },
+      "style": {
+        "nodeSize": 10,
+        "nodeColor": "#882255",
+        "nodeShape": "circle"
+      }
+    },
+    "configs": {}
+  }
+}

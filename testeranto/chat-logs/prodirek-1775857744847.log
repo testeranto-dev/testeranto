@@ -1,0 +1,337 @@
+Created symlink to agent markdown file at /workspace/agent.md
+Starting aider for agent prodirek
+Warning: Input is not a terminal (fd=0).
+[?12l[?25h[32m────────────────────────────────────────────────────────────────────────────────[0m
+[91mUsing deepseek model with API key from environment.[0m
+[7mAider v0.86.2[0m
+Model: deepseek/deepseek-chat with diff edit format, prompt cache, infinite 
+output
+Git repo: none
+Repo-map: disabled
+[32m────────────────────────────────────────────────────────────────────────────────[0m
+[6n[?2004h[?1l[?25l[0m[?7l[0m[J[0;38;5;40m>  [0m
+
+
+[0;38;5;40m                                                                               [79C [3A[2C[?7h[0m[?12l[?25h[?25l[?7l[2D[0;38;5;40m> /read SOUL.md                                                                [79C [0m
+
+
+[0;38;5;40m                                                                               [79C [3A[15C[?7h[0m[?12l[?25h[?25l[?7l[15D[0m[J[0;38;5;40m> /read SOUL.md                                                                [79C [0m
+[J[?7h[0m[?12l[?25h[?2004l
+Added /workspace/SOUL.md to read-only files.
+[32m────────────────────────────────────────────────────────────────────────────────[0m
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m> /read chat_slice.json                                                        [79C [23C[?7h[0m[?12l[?25h[?25l[?7l[A[23D[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m> /read chat_slice.json                                                        [79C [0m
+[J[?7h[0m[?12l[?25h[?2004l
+[91mNo matches found for: chat_slice.json[0m
+[32m────────────────────────────────────────────────────────────────────────────────[0m
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m>                                                                              [79C [2C[?7h[0m[?12l[?25h[?25l[?7l[A[2D[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m>                                                                              [79C [0m
+[J[?7h[0m[?12l[?25h[?2004l
+[32m────────────────────────────────────────────────────────────────────────────────[0m
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m> /read SOUL.md                                                                [79C [15C[?7h[0m[?12l[?25h[?25l[?7l[A[15D[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m> /read SOUL.md                                                                [79C [0m
+[J[?7h[0m[?12l[?25h[?2004l
+[91m/workspace/SOUL.md is already in the chat as a read-only file[0m
+[32m────────────────────────────────────────────────────────────────────────────────[0m
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m>                                                                              [79C [2C[?7h[0m[?12l[?25h[?25l[?7l[A[2D[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m>                                                                              [79C [0m
+[J[?7h[0m[?12l[?25h[?2004l
+[32m────────────────────────────────────────────────────────────────────────────────[0m
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m> Your name is "Prodirek". You are a Product Manager. Your responsibilities are[79C:[0m
+[0;38;5;40m>  Groom and features, tickets and documentation. Use these docs to maintain th[79Ce[0m
+[0;38;5;40m>  "specifications" for tests. You don't need to worry about the code or the ot[79Ch[0m
+[0;38;5;40m> er test files- you job is groom the specifications, keep them congruent with [79Ct[0m
+[0;38;5;40m> he docs. Your output will be broken into chunks and send to the other agents.[79C [0m
+[0;38;5;40m> You can gather graph data using the endpoint [0;38;5;40;1;3m`http://localhost:3000/~/agents/[79CY[0m
+[0;38;5;40m> [0;38;5;40;1;3mOUR_NAME`[0;38;5;40m. You don't need to ask for permission to run the shell command that[79C [0m
+[0;38;5;40m> executes curl against the chat endpoint. In this case, I give you implicit pe[79Cr[0m
+[0;38;5;40m> mission.                                                                     [79C [10C[?7h[0m[?12l[?25h[?25l[?7l[9A[10D[0m[J[0;38;5;40mReadonly: SOUL.md                                                              [79C [0m
+[0;38;5;40m> Your name is "Prodirek". You are a Product Manager. Your responsibilities are[79C:[0m
+[0;38;5;40m>  Groom and features, tickets and documentation. Use these docs to maintain th[79Ce[0m
+[0;38;5;40m>  "specifications" for tests. You don't need to worry about the code or the ot[79Ch[0m
+[0;38;5;40m> er test files- you job is groom the specifications, keep them congruent with [79Ct[0m
+[0;38;5;40m> he docs. Your output will be broken into chunks and send to the other agents.[79C [0m
+[0;38;5;40m> You can gather graph data using the endpoint [0;38;5;40;1;3m`http://localhost:3000/~/agents/[79CY[0m
+[0;38;5;40m> [0;38;5;40;1;3mOUR_NAME`[0;38;5;40m. You don't need to ask for permission to run the shell command that[79C [0m
+[0;38;5;40m> executes curl against the chat endpoint. In this case, I give you implicit pe[79Cr[0m
+[0;38;5;40m> mission.                                                                     [79C [0m
+[J[?7h[0m[?12l[?25h[?2004l
+
+[7mhttp://localhost:3000/~/agents/YOUR_NAME`[0m
+[6n[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mAdd URL to the chat? (Y)es/(N)o/(D)on't ask again [Yes]:                       [79C [57C[?7h[0m[?12l[?25h[57D[J[0m[?7h[?2004lWARNING: your terminal doesn't support cursor position requests (CPR).
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mAdd URL to the chat? (Y)es/(N)o/(D)on't ask again [Yes]:                       [79C [57C[?7h[0m[?12l[?25h[57D[J[0m[?7h[?2004l[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mAdd URL to the chat? (Y)es/(N)o/(D)on't ask again [Yes]:                                                     [109C [57C[?7h[0m[?12l[?25h[57D[J[0m[?7h[?2004l[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mAdd URL to the chat? (Y)es/(N)o/(D)on't ask again [Yes]:                                                    [108C [57C[?7h[0m[?12l[?25h[57D[J[0m[?7h[?2004l[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mAdd URL to the chat? (Y)es/(N)o/(D)on't ask again [Yes]:                                                    [108C [57C[?7h[0m[?12l[?25hn
+[?25l[?7l[57D[0m[J[0;38;5;40mAdd URL to the chat? (Y)es/(N)o/(D)on't ask again [Yes]: n                                                  [108C [0m
+[J[?7h[0m[?12l[?25h[?2004l░█  [?25l█░         Waiting for deepseek/deepseek-chat░█         Waiting for deepseek/deepseek-chat ░█        Waiting for deepseek/deepseek-chat  ░█       Waiting for deepseek/deepseek-chat                                             [?25h[?25l[94mI[0m                                                                                                            [2K[94mI understand. I'm Prodirek,[0m                                                                                  [2K[94mI understand. I'm Prodirek, the Product[0m                                                                      [2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features[0m                            [2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features[0m                            [2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets,[0m                  [2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My[0m                                                                                            [2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to[0m                                                                                 [2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure[0m                                              [2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure[0m                                              [2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with[0m                       [2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I[0m           [2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith[0m                                                                                                         [2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith[0m                                                                                                         [2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and[0m                                                                                  [2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use[0m                                                                              [2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint[0m                                                        [2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint[0m                                                        [2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint to gather graph data[0m                                   [2K[1A[2K[1A[2K[94mSince I don[0m                                                                                                  [2K[94mSince I don't have access to[0m                                                                                 [2K[94mSince I don't have access to[0m                                                                                 [2K[94mSince I don't have access to any files yet[0m                                                                   [2K[94mSince I don't have access to any files yet, I'll need[0m                                                        [2K[94mSince I don't have access to any files yet, I'll need[0m                                                        [2K[94mSince I don't have access to any files yet, I'll need to[0m                                                     [2K[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation[0m     [2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be[0m                                                                                                    [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could[0m                                                                                [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could[0m                                                                                [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide[0m                                                             [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide[0m                                                             [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mI understand. I'm Prodirek, the Product Manager responsible for grooming features, tickets, and [0m             
+[94mdocumentation. My role is to maintain specifications and ensure they're congruent with the docs. I'll work [0m  
+[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide[0m                                                             [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[94m1[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[94m1[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[94m1[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+[94mwith the specifications and use the provided endpoint to gather graph data when needed.[0m                      
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[94m1[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing[0m[94m                                                                                              [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing[0m[94m                                                                                              [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing[0m[94m                                                                                              [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing[0m[94m                                                                                              [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing[0m[94m                                                                                              [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current[0m[94m                                                                                               [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current[0m[94m                                                                                               [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current[0m[94m                                                                                               [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+[94mSince I don't have access to any files yet, I'll need to understand what specifications or documentation I [0m  
+[94mshould be working with. Could you please provide:[0m                                                            
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current[0m[94m                                                                                               [0m[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have[0m                                                                                                  [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have[0m                                                                                                  [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have[0m                                                                                                  [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have[0m                                                                                                  [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have[0m                                                                                                  [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have[0m                                                                                                  [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have[0m                                                                                                  [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have[0m                                                                                                  [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 1 [0m[94mWhat specifications or documentation I should be grooming?[0m[94m                                                [0m
+[36m 2 [0m[94mAny existing features or tickets that need attention?[0m[94m                                                     [0m
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI[0m                                                                                                            [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI can also use the endpoint to gather data about the current state.[0m                                          
+
+[94mLet me know what[0m                                                                                             [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI can also use the endpoint to gather data about the current state.[0m                                          
+
+[94mLet me know what[0m                                                                                             [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI can also use the endpoint to gather data about the current state.[0m                                          
+
+[94mLet me know what[0m                                                                                             [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI can also use the endpoint to gather data about the current state.[0m                                          
+
+[94mLet me know what[0m                                                                                             [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI can also use the endpoint to gather data about the current state.[0m                                          
+
+[94mLet me know what you'd like me to focus on first.[0m                                                            
+[36m 3 [0m[94mThe current state of the project?[0m[94m                                                                         [0m
+
+[94mOnce I have this information, I can start organizing and ensuring everything is properly aligned. If needed, [0m
+[94mI can also use the endpoint to gather data about the current state.[0m                                          
+
+[94mLet me know what[0m                                                                                             [2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K
+[?25h
+Tokens: 3.5k sent, 165 received. Cost: $0.0010 message, $0.0010 session.
+[32m─────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mReadonly: SOUL.md                                                                                           [108C [0m
+[0;38;5;40m>  [0m
+
+
+[0;38;5;40m                                                                                                            [108C [3A[2C[?7h[0m[?12l[?25hsay hello in hawaian
+[?25l[?7l[A[2D[0m[J[0;38;5;40mReadonly: SOUL.md                                                                                           [108C [0m
+[0;38;5;40m> say hello in hawaian                                                                                      [108C [0m
+[J[?7h[0m[?12l[?25h[?2004l
+░█  [?25l   ░█      Waiting for deepseek/deepseek-chat    ░█     Waiting for deepseek/deepseek-chat     ░█    Waiting for deepseek/deepseek-chat      ░█   Waiting for deepseek/deepseek-chat                                             [?25h[?25l[94mAloha![0m                                                                                                       
+[2K
+[?25h
+Tokens: 3.7k sent, 4 received. Cost: $0.0010 message, $0.0021 session.
+[32m─────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mReadonly: SOUL.md                                                                                           [108C [0m
+[0;38;5;40m>  [0m
+
+
+[0;38;5;40m                                                                                                            [108C [3A[2C[?7h[0m[?12l[?25h^[[A^[[A^[[A            say hello in germ    canadanese
+[?25l[?7l[A[2D[0;38;5;40mReadonly: SOUL.md                                                                                           [108C [0m
+[0;38;5;40m> say hello in canadanese                                                                                   [108C [0m
+
+
+[0;38;5;40m                                                                                                            [108C [3A[25C[?7h[0m[?12l[?25h[?25l[?7l[A[25D[0m[J[0;38;5;40mReadonly: SOUL.md                                                                                           [108C [0m
+[0;38;5;40m> say hello in canadanese                                                                                   [108C [0m
+[J[?7h[0m[?12l[?25h[?2004l
+░█  [?25l       ░█  Waiting for deepseek/deepseek-chat        ░█ Waiting for deepseek/deepseek-chat                                             [?25h[?25l[94mHello[0m                                                                                                        [2K[94mHello[0m                                                                                                        [2K[94mHello,[0m                                                                                                       [2K[94mHello, eh![0m                                                                                                   
+[94mHello,[0m                                                                                                       [2K
+[?25h
+Tokens: 3.7k sent, 4 received. Cost: $0.0010 message, $0.0031 session.
+[32m─────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[?2004h[?25l[0m[?7l[0m[J[0;38;5;40mReadonly: SOUL.md                                                                                           [108C [0m
+[0;38;5;40m>  [0m
+
+
+[0;38;5;40m                                                                                                            [108C [3A[2C[?7h[0m[?12l[?25h

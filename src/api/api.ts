@@ -190,62 +190,6 @@ export const stakeholderWsAPI = {
     data: {} as { message: string }
   },
 
-  // Chat-related WebSocket messages
-  chatMessage: {
-    type: 'chatMessage' as const,
-    description: 'Chat message from an agent or user',
-    data: {} as {
-      id: string;
-      agent: string;
-      content: string;
-      timestamp: string;
-      type: 'aider_output' | 'user_input' | 'system';
-      blockIndex: number;
-      totalBlocks: number;
-    }
-  },
-  subscribeToChat: {
-    type: 'subscribeToChat' as const,
-    description: 'Subscribe to chat messages for an agent',
-    data: {} as { agentName: string }
-  },
-  unsubscribeFromChat: {
-    type: 'unsubscribeFromChat' as const,
-    description: 'Unsubscribe from chat messages for an agent',
-    data: {} as { agentName: string }
-  },
-  sendChatMessage: {
-    type: 'sendChatMessage' as const,
-    description: 'Send a chat message to an agent',
-    data: {} as { agentName: string; content: string }
-  },
-  getChatHistory: {
-    type: 'getChatHistory' as const,
-    description: 'Get chat history for an agent',
-    data: {} as { agentName?: string; limit?: number }
-  },
-  chatHistory: {
-    type: 'chatHistory' as const,
-    description: 'Response with chat history',
-    data: {} as {
-      agentName?: string;
-      messages: Array<{
-        id: string;
-        agent: string;
-        content: string;
-        timestamp: string;
-        type: 'aider_output' | 'user_input' | 'system';
-        blockIndex: number;
-        totalBlocks: number;
-      }>;
-      timestamp: string;
-    }
-  },
-  chatMessageSent: {
-    type: 'chatMessageSent' as const,
-    description: 'Confirmation that a chat message was sent',
-    data: {} as { messageId: string; timestamp: string }
-  },
 
   // HTTP endpoint definitions with check functions
   files: {

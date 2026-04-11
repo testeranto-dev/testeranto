@@ -35,6 +35,8 @@ export type GraphNodeType =
   | 'aider'        // Aider instance node
   // Chat nodes
   | 'chat_message' // Chat message nodes
+  | 'view'         // View nodes for different visualizations
+  | 'agent'        // Agent nodes
 
 // Array of valid GraphNodeType values for validation
 export const graphNodeTypeValues: GraphNodeType[] = [
@@ -67,7 +69,11 @@ export const graphNodeTypeValues: GraphNodeType[] = [
   'builder_process',
   'aider',
   // Chat nodes
-  'chat_message'
+  'chat_message',
+  // View nodes
+  'view',
+  // Agent nodes
+  'agent'
 ];
 
 // Edge types in our graph
@@ -102,7 +108,13 @@ export type GraphEdgeType =
   | 'hasAider'     // Entrypoint has an aider node
   // Resource locking edges
   | 'locks'        // Node locks another node (for resource locking)
-  | 'lockedBy';    // Node is locked by another node
+  | 'lockedBy'     // Node is locked by another node
+  // View relationship edges
+  | 'hasView'      // Node has a view
+  | 'viewOf'       // Node is part of a view
+  // Agent relationship edges
+  | 'hasAgent'     // Node has an agent
+  | 'agentOf';     // Node is part of an agent's slice
 
 // Base node attributes
 export interface GraphNodeAttributes extends Attributes {

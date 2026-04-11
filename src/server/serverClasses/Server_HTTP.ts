@@ -24,6 +24,7 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
 
     const serverOptions: any = {
       port,
+      hostname: "0.0.0.0", // Bind to all interfaces, not just localhost
       idleTimeout: 60,
       fetch: async (request: Request, server: any) => {
         try {
@@ -93,7 +94,9 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
     }
 
     if (typeof Bun !== 'undefined') {
+      console.log(`[Server_HTTP] Starting HTTP server on ${serverOptions.hostname}:${serverOptions.port}`);
       this.bunServer = Bun.serve(serverOptions);
+      console.log(`[Server_HTTP] HTTP server started on ${this.bunServer.hostname}:${this.bunServer.port}`);
     } else {
       console.error('Bun is not available');
     }
@@ -144,6 +147,7 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
       return this.handleOptions();
     }
 
+
     try {
       const result = await this.routesHandler.handleRoute(routeName, request, url);
       // Ensure we always return a Response
@@ -165,6 +169,8 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
       });
     }
   }
+
+
 
   protected getCurrentTestResults(): AllTestResults {
     // Try to get test results from the server

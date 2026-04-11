@@ -1,4 +1,4 @@
-import type { GraphData } from "grafeovidajo";
+import type { GraphData, GraphDataFile } from ".";
 import type Graph from "graphology";
 import type { GraphEdgeAttributes, GraphNodeAttributes } from ".";
 import { createGraph } from "./createGraph";

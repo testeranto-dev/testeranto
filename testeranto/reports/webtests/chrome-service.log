@@ -1,11 +1,11 @@
-=== Log started at 2026-04-09T02:40:53.580Z for service chrome-service (runtime: web) ===
-=== Container ID: b425fac6206568500031fda855ffa834a9305dbe84282da5e7ce046724a83554 ===
+=== Log started at 2026-04-10T14:29:07.335Z for service chrome-service (runtime: web) ===
+=== Container ID: 9b5b3eb24527bd3a06c14dc323d0c05f66c7ab4e7e6d1956c4bfc286b0b044cf ===
 === Test: N/A ===
 === Config Key: webtests ===
 
 === ALL LOGS (stdout + stderr) ===
-2026-04-09T02:40:48.928Z browserless:server Using configuration: 
-2026-04-09T02:40:48.930Z browserless:server {
+2026-04-10T14:29:03.179Z browserless:server Using configuration: 
+2026-04-10T14:29:03.182Z browserless:server {
   CONNECTION_TIMEOUT: 60000,
   MAX_CONCURRENT_SESSIONS: 1,
   QUEUE_LENGTH: 10,
@@ -56,50 +56,33 @@
   PROXY_URL: undefined,
   MAX_PAYLOAD_SIZE: '5mb'
 }
-2026-04-09T02:40:48.930Z browserless:server 
+2026-04-10T14:29:03.183Z browserless:server 
 
 Running on port 3000
 	Localhost	 ws:localhost:3000
 	Local network	 ws:172.18.0.6:3000
-2026-04-09T02:40:48.930Z browserless:server 
+2026-04-10T14:29:03.183Z browserless:server 
 Get started at	 https://www.browserless.io/docs/start
 Get a license at	 https://www.browserless.io/sign-up?type=commercial
 Get support at	 https://www.browserless.io/contact
 
 Happy coding!
 
-2026-04-09T02:40:48.933Z browserless:system Starting chrome swarm: 1 chrome instances starting
-2026-04-09T02:40:48.935Z browserless:chrome-helper Launching Chrome with args: {
-  "args": [
-    "--no-sandbox",
-    "--enable-logging",
-    "--v1=1",
-    "--disable-dev-shm-usage",
-    "--no-first-run",
-    "--remote-debugging-port=34189",
-    "--user-data-dir=/tmp/browserless-data-dir-1yINUb"
-  ],
-  "blockAds": true,
-  "headless": "new",
-  "ignoreDefaultArgs": false,
-  "ignoreHTTPSErrors": false,
-  "pauseOnConnect": false,
-  "userDataDir": "/tmp/browserless-data-dir-1yINUb",
-  "playwright": false,
-  "stealth": false,
-  "meta": null,
-  "executablePath": "/usr/bin/google-chrome",
-  "handleSIGINT": false,
-  "handleSIGTERM": false,
-  "handleSIGHUP": false
+2026-04-10T14:29:03.187Z browserless:system Starting chrome swarm: 1 chrome instances starting
+2026-04-10T14:29:03.191Z browserless:system Error: ENOSPC: no space left on device, mkdtemp '/tmp/browserless-data-dir-QVYube' Issue launching Chrome, retrying 1 times.
+2026-04-10T14:29:03.192Z browserless:system Error: ENOSPC: no space left on device, mkdtemp '/tmp/browserless-data-dir-CWPqXm' Issue launching Chrome, retries exhausted.
+Unhandled Rejection at: Promise {
+  <rejected> [Error: ENOSPC: no space left on device, mkdtemp '/tmp/browserless-data-dir-CWPqXm'] {
+    errno: -28,
+    code: 'ENOSPC',
+    syscall: 'mkdtemp',
+    path: '/tmp/browserless-data-dir-CWPqXm'
+  }
+} reason: [Error: ENOSPC: no space left on device, mkdtemp '/tmp/browserless-data-dir-CWPqXm'] {
+  errno: -28,
+  code: 'ENOSPC',
+  syscall: 'mkdtemp',
+  path: '/tmp/browserless-data-dir-CWPqXm'
 }
-2026-04-09T02:40:49.340Z browserless:chrome-helper Chrome PID: 22
-2026-04-09T02:40:49.341Z browserless:chrome-helper Finding prior pages
-2026-04-09T02:40:49.349Z browserless:chrome-helper Found 1 pages
-2026-04-09T02:40:49.350Z browserless:chrome-helper Setting up page Unknown
-2026-04-09T02:40:49.350Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
-2026-04-09T02:40:49.350Z browserless:system Chrome launched 417ms
-2026-04-09T02:40:49.362Z browserless:chrome-helper Setting up file:// protocol request rejection
-2026-04-09T02:40:49.362Z browserless:chrome-helper Setting up page for ad-blocking
 
-=== Log captured at 2026-04-09T02:41:14.545Z (container status: running) ===
+=== Log captured at 2026-04-10T14:29:28.210Z (container status: running) ===

@@ -113,6 +113,17 @@ buildKitOptions: {
 
 ## Philosophy
 
+### Code Structure
+
+Testeranto promotes a clean architecture where:
+
+1. **Business Logic Classes** are pure and testable, delegating to utility functions.
+2. **Utility Functions** are each in their own file, organized by folder to preserve context space.
+3. **External Dependencies** are abstracted behind a thin wrapper with real and mock implementations.
+4. **Testing** focuses on the business logic class using testeranto's BDD, AAA, and TDT patterns.
+
+### Testing and Packaging Approach
+
 The common pattern of testing and packaging software is
 
 1. static tests of entire codebase

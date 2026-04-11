@@ -117,7 +117,6 @@ export async function resetGraphDataPure(
     },
     configs: {
       runtimes: configs?.runtimes || {},
-      documentationGlob: configs?.documentationGlob,
       stakeholderReactModule: configs?.stakeholderReactModule,
       featureIngestor: configs?.featureIngestor ? 'present' : 'not present'
     }

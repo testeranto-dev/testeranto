@@ -1,7 +1,7 @@
 import React from "react";
 import { getFeatureGraphStats } from "./stateless/featureGraphStats";
 import { renderVisualization } from "./stateless/renderVisualization";
-import type { Node } from "grafeovidajo/core";
+import type { Node } from "../grafeovidajo";
 
 export interface VisualizationPanelProps {
   data: any;

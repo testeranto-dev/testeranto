@@ -3,9 +3,9 @@ import { TestTreeItem } from '../TestTreeItem';
 import { ApiUtils } from './utils/apiUtils';
 
 export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<TestTreeItem> {
-    protected _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> = 
+    protected _onDidChangeTreeData: vscode.EventEmitter<TestTreeItem | undefined | null | void> =
         new vscode.EventEmitter<TestTreeItem | undefined | null | void>();
-    readonly onDidChangeTreeData: vscode.Event<TestTreeItem | undefined | null | void> = 
+    readonly onDidChangeTreeData: vscode.Event<TestTreeItem | undefined | null | void> =
         this._onDidChangeTreeData.event;
 
     protected ws: WebSocket | null = null;
@@ -13,9 +13,7 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
     protected subscribedSlices: Set<string> = new Set();
 
     constructor() {
-        console.log('[BaseTreeDataProvider] Constructor called');
         this.setupWebSocket();
-        console.log('[BaseTreeDataProvider] Constructor completed');
     }
 
     abstract getChildren(element?: TestTreeItem): Thenable<TestTreeItem[]>;
@@ -50,16 +48,16 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
             // Use the same base URL as HTTP, but with ws:// protocol
             const wsUrl = ApiUtils.getWebSocketUrl();
             console.log(`[BaseTreeDataProvider] Attempting to connect to WebSocket at ${wsUrl}`);
-            
+
             this.ws = new WebSocket(wsUrl);
-            
+
             this.ws.onopen = () => {
                 console.log('[BaseTreeDataProvider] WebSocket connection established');
                 this.isConnected = true;
-                
+
                 // Subscribe to graph updates
                 this.subscribeToGraphUpdates();
-                
+
                 this._onDidChangeTreeData.fire();
             };
 
@@ -166,7 +164,7 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
                 this.ws.send(JSON.stringify(unsubscribeMessage));
             }
             this.subscribedSlices.clear();
-            
+
             this.ws.close();
             this.ws = null;
         }

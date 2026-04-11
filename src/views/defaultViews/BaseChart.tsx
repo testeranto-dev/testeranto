@@ -1,9 +1,11 @@
 
-import {
-  type VizConfig, type VizComponentProps, projectGraph, layoutGrid, layoutForce, layoutTree, layoutTimeline, applyStyles
-} from 'grafeovidajo';
 import { useState, useRef, useMemo, useEffect } from 'react';
 import { Palette } from '../../colors';
+import {
+  type VizConfig, type VizComponentProps, projectGraph, layoutGrid,
+  // layoutForce,
+  layoutTree, layoutTimeline, applyStyles
+} from '../../grafeovidajo';
 
 // Define TreeConfig interface locally since we need it for type checking
 interface TreeConfig extends VizConfig {
@@ -36,29 +38,29 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
   let laidOutNodes = [...nodes];
 
   switch (config.projection.layout) {
-    case 'grid':
-      laidOutNodes = layoutGrid(nodes, config.projection.spacing);
-      break;
-    case 'force':
-      // Use d3-force for proper force-directed layout
-      laidOutNodes = layoutForce(
-        nodes,
-        data.edges,
-        {
-          width,
-          height,
-          strength: config.projection.repulsionStrength,
-          distance: config.projection.distance,
-          iterations: config.projection.iterations
-        }
-      );
-      // Ensure all nodes have screen coordinates
-      laidOutNodes = laidOutNodes.map(node => ({
-        ...node,
-        screenX: node.screenX || node.x * width,
-        screenY: node.screenY || node.y * height
-      }));
-      break;
+    // case 'grid':
+    //   laidOutNodes = layoutGrid(nodes, config.projection.spacing);
+    //   break;
+    // case 'force':
+    //   // Use d3-force for proper force-directed layout
+    //   laidOutNodes = layoutForce(
+    //     nodes,
+    //     data.edges,
+    //     {
+    //       width,
+    //       height,
+    //       strength: config.projection.repulsionStrength,
+    //       distance: config.projection.distance,
+    //       iterations: config.projection.iterations
+    //     }
+    //   );
+    //   // Ensure all nodes have screen coordinates
+    //   laidOutNodes = laidOutNodes.map(node => ({
+    //     ...node,
+    //     screenX: node.screenX || node.x * width,
+    //     screenY: node.screenY || node.y * height
+    //   }));
+    //   break;
     case 'tree':
       if (data.edges) {
         // Cast config to TreeConfig to access tree-specific properties

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { GraphData } from '../../graph';
-import { type VizConfig, type VizComponentProps, BaseChart } from 'grafeovidajo';
+import { type VizConfig, type VizComponentProps } from './../../grafeovidajo';
+import { BaseChart } from './BaseChart';
 
 export interface TreeConfig extends VizConfig {
   rootId?: string;
@@ -40,3 +41,8 @@ export const TreeGraph: React.FC<VizComponentProps & { config: TreeConfig }> = (
 
   return <BaseChart {...props} data={treeData} />;
 };
+
+// TODO
+export const TreeGraphSlice = () => {
+
+}

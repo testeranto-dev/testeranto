@@ -10,6 +10,9 @@ Each view is a react component associated with a slice of data. Our strategy wil
 4) The server will update these slices of data, saving the changes to the graph and re-writing the slice json files.
 5) The react app is triggered to change it's state, given the changed file
 6) The react app also works in static mode, reading the same file but not sending update to the server api.
+7) remove the stakeholderApp folder
+8) consolidate the api definitions
+9) vscode views section contains list of views. clicking on item opens the page in chrome in vscode
 
 src/views
 src/api

@@ -1,5 +1,5 @@
-import { layoutForceWithD3 } from './forceLayout';
-import { ProjectedNode, Edge } from './types';
+// import { layoutForceWithD3 } from ".";
+import type { ProjectedNode, Edge } from "./types";
 
 export function layoutGrid(
   nodes: ProjectedNode[],
@@ -19,29 +19,29 @@ export function layoutGrid(
 
 
 
-export function layoutForce(
-  nodes: ProjectedNode[],
-  edges?: Edge[],
-  options?: {
-    width?: number;
-    height?: number;
-    strength?: number;
-    distance?: number;
-    iterations?: number;
-  }
-): ProjectedNode[] {
-  // If no nodes, return empty array
-  if (nodes.length === 0) {
-    return nodes;
-  }
-  
-  // If no edges or edges array is empty, use grid layout
-  if (!edges || edges.length === 0) {
-    return layoutGrid(nodes, { x: 100, y: 100 });
-  }
-  
-  return layoutForceWithD3(nodes, edges, options);
-}
+// export function layoutForce(
+//   nodes: ProjectedNode[],
+//   edges?: Edge[],
+//   options?: {
+//     width?: number;
+//     height?: number;
+//     strength?: number;
+//     distance?: number;
+//     iterations?: number;
+//   }
+// ): ProjectedNode[] {
+//   // If no nodes, return empty array
+//   if (nodes.length === 0) {
+//     return nodes;
+//   }
+
+//   // If no edges or edges array is empty, use grid layout
+//   if (!edges || edges.length === 0) {
+//     return layoutGrid(nodes, { x: 100, y: 100 });
+//   }
+
+//   return layoutForceWithD3(nodes, edges, options);
+// }
 
 export function layoutTree(
   nodes: ProjectedNode[],

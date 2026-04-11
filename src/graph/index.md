@@ -17,8 +17,7 @@ The graph system uses a single `graph-data.json` file as the baseline data sourc
 1. Load baseline from `graph-data.json`
 2. Connect WebSocket
 3. Send mutations via POST `/~/graph`
-4. Server applies and saves
-5. Broadcast `graphUpdated`
+4. Server applies and saves file
 6. Clients update
 
 ## File Structure

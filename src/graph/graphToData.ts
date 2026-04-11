@@ -1,4 +1,4 @@
-import type { GraphData } from "grafeovidajo";
+import type { GraphData, GraphDataFile } from ".";
 import type Graph from "graphology";
 import type {
   GraphNodeAttributes, GraphEdgeAttributes, GraphNodeType, GraphEdgeType
@@ -6,6 +6,19 @@ import type {
 
 // Convert graph to serializable data
 export function graphToData(graph: Graph<GraphNodeAttributes, GraphEdgeAttributes>): GraphData {
+  // Check if graph is undefined
+  if (!graph) {
+    console.error('[graphToData] Graph is undefined, returning empty data');
+    return {
+      nodes: [],
+      edges: [],
+      metadata: {
+        version: '1.0',
+        timestamp: new Date().toISOString()
+      }
+    };
+  }
+
   const nodes: GraphNodeAttributes[] = [];
   const edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }> = [];
 

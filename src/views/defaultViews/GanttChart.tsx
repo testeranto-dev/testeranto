@@ -1,6 +1,26 @@
-import { type VizConfig, type VizComponentProps } from 'grafeovidajo';
 import React from 'react';
-import { BaseChart } from '../BaseChart';
+import { BaseChart } from './BaseChart';
+import type { GraphData } from '../../graph';
+import type { VizConfig, VizComponentProps } from '../../grafeovidajo';
+
+export const Gantt = (graphData: GraphData): GraphData => {
+  // Filter nodes with timestamps
+  const nodesWithTime = graphData.nodes.filter(node =>
+    node.timestamp ||
+    node.metadata?.frontmatter?.dueDate ||
+    node.metadata?.frontmatter?.startDate
+  );
+
+  const edgesWithTime = graphData.edges.filter(edge =>
+    nodesWithTime.some(n => n.id === edge.source) &&
+    nodesWithTime.some(n => n.id === edge.target)
+  );
+
+  return {
+    nodes: nodesWithTime,
+    edges: edgesWithTime,
+  };
+}
 
 export interface GanttConfig extends VizConfig {
   timeRange: [Date, Date];
@@ -53,3 +73,8 @@ export const GanttChart: React.FC<VizComponentProps & { config: GanttConfig }> =
     </svg>
   );
 };
+
+// TODO
+export const GanttSlice = () => {
+
+}

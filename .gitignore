@@ -38,4 +38,3 @@ dist/testeranto
 testeranto/rust_builder/target
 src/lib/kafe/target
 testeranto/bundles
-testeranto/reports/graph-data.json

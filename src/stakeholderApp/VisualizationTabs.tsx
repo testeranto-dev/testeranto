@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import type { Node } from "grafeovidajo/core";
 import { getFeatureGraphStats } from "./stateless/featureGraphStats";
 import { renderVisualization } from "./stateless/renderVisualization";
-
 import { Palette } from "../colors";
-import { DebugGraph } from "../views/defaultViews/DebugGraph";
+import type { Node } from "../grafeovidajo";
+import { DebugGraph } from ".";
 
 export interface VisualizationTabsProps {
   data: any;

@@ -1,21 +1,18 @@
-import { stakeholderWsAPI } from "../../api/api";
+
 import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
 import { WsManager } from "./WsManager";
-import { ChatManager, type ChatMessage } from "../chat/ChatManager";
 
 export class Server_WS extends Server_HTTP {
   protected wsClients: Set<WebSocket> = new Set();
   protected sliceSubscriptions: Map<string, Set<WebSocket>> = new Map();
   protected chatSubscriptions: Map<string, Set<WebSocket>> = new Map();
   wsManager: WsManager;
-  chatManager: ChatManager;
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
     this.wsManager = new WsManager();
-    this.chatManager = new ChatManager();
   }
 
   async start(): Promise<void> {
@@ -38,20 +35,20 @@ export class Server_WS extends Server_HTTP {
 
   resourceChanged(url: string) {
     console.log(`[Server_WS] Resource changed: ${url}`);
-    
+
     const message = {
       type: 'resourceChanged',
       url: url,
       timestamp: new Date().toISOString(),
       message: `Resource at ${url} has been updated`
     };
-    
+
     // Broadcast to all clients
     this.broadcast(message);
-    
+
     // Also notify slice subscribers
     this.notifySliceSubscribers(url, message);
-    
+
     // Also broadcast graphUpdated for compatibility with existing code
     if (url.startsWith('/~/')) {
       const graphMessage = {
@@ -68,13 +65,13 @@ export class Server_WS extends Server_HTTP {
    */
   processAiderOutput(agentName: string, output: string): void {
     const messages = this.chatManager.processAiderOutput(agentName, output);
-    
+
     if (messages.length > 0) {
       // Broadcast each message to chat subscribers
       messages.forEach(message => {
         this.broadcastChatMessage(message);
       });
-      
+
       // Send to other agents via stdin (placeholder - needs implementation)
       this.sendToOtherAgents(agentName, messages);
     }
@@ -89,14 +86,14 @@ export class Server_WS extends Server_HTTP {
       data: message,
       timestamp: new Date().toISOString()
     });
-    
+
     // Broadcast to all chat subscribers
     this.wsClients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data);
       }
     });
-    
+
     // Also send to specific agent subscribers
     const agentSubscribers = this.chatSubscriptions.get(message.agent);
     if (agentSubscribers) {
@@ -137,7 +134,7 @@ export class Server_WS extends Server_HTTP {
         }
       });
     }
-    
+
     // Also notify without the /~ prefix
     if (slicePath.startsWith('/~/')) {
       const withoutTilde = slicePath.slice(2); // Remove /~
@@ -151,7 +148,7 @@ export class Server_WS extends Server_HTTP {
         });
       }
     }
-    
+
     // Also notify subscribers of parent paths
     const parts = slicePath.split('/').filter(p => p.length > 0);
     for (let i = 1; i <= parts.length; i++) {
@@ -174,10 +171,10 @@ export class Server_WS extends Server_HTTP {
     }
 
     const { type } = message;
-    
+
     // Check if it's a chat-related message
-    if (type === 'subscribeToChat' || type === 'unsubscribeFromChat' || 
-        type === 'sendChatMessage' || type === 'getChatHistory') {
+    if (type === 'subscribeToChat' || type === 'unsubscribeFromChat' ||
+      type === 'sendChatMessage' || type === 'getChatHistory') {
       // Delegate to ServerChat if available
       if ((this as any).handleChatWebSocketMessage) {
         (this as any).handleChatWebSocketMessage(ws, message);
@@ -327,12 +324,9 @@ export class Server_WS extends Server_HTTP {
       return;
     }
 
-    // Add user message
-    const chatMessage = this.chatManager.addUserMessage(agentName, content);
-    
     // Broadcast to all subscribers
     this.broadcastChatMessage(chatMessage);
-    
+
     // Send confirmation
     ws.send(JSON.stringify({
       type: 'chatMessageSent',
@@ -343,8 +337,6 @@ export class Server_WS extends Server_HTTP {
 
   private handleGetChatHistory(ws: WebSocket, message: any): void {
     const { agentName, limit } = message;
-    const messages = this.chatManager.getRecentMessages(agentName, limit || 50);
-    
     ws.send(JSON.stringify({
       type: 'chatHistory',
       agentName,
@@ -363,7 +355,7 @@ export class Server_WS extends Server_HTTP {
         }
       }
     }
-    
+
     for (const [agentName, subscribers] of this.chatSubscriptions.entries()) {
       if (subscribers.has(ws)) {
         subscribers.delete(ws);

@@ -16,6 +16,7 @@ import {
 import { aiderDockerComposeFile } from "./aiderDockerComposeFile";
 import { bddTestDockerComposeFile } from "./bddTestDockerComposeFile";
 import { staticTestDockerComposeFile } from "./staticTestDockerComposeFile";
+import { consoleLog } from "../Server_Docker_Dependents";
 
 export const generateServicesPure = (
   configs: ITesterantoConfig,
@@ -153,7 +154,7 @@ export const generateServicesPure = (
 
   // Create agent services in docker-compose.yml
   const agents = configs.agents || {};
-  console.log(`[generateServicesPure] Creating ${Object.keys(agents).length} agent services in docker-compose.yml`);
+  consoleLog(`[generateServicesPure] Creating ${Object.keys(agents).length} agent services in docker-compose.yml`);
   
   for (const [agentName, agentConfig] of Object.entries(agents)) {
     const agentServiceName = `agent-${agentName}`;
@@ -203,6 +204,19 @@ export const generateServicesPure = (
   for (const serviceName in services) {
     if (!services[serviceName].networks) {
       services[serviceName].networks = ["allTests_network"];
+    }
+    // Add extra_hosts to allow services to access the host's HTTP server on port 3000
+    // This enables services to reach the server via host.docker.internal:3000
+    // Merge with existing extra_hosts if any
+    const currentExtraHosts = services[serviceName].extra_hosts || [];
+    // Add host.docker.internal:host-gateway for accessing the host machine
+    // host-gateway is a special Docker Compose feature that resolves to the host's IP
+    // Avoid adding duplicates
+    const hostEntry = "host.docker.internal:host-gateway";
+    if (!currentExtraHosts.includes(hostEntry)) {
+      services[serviceName].extra_hosts = [...currentExtraHosts, hostEntry];
+    } else {
+      services[serviceName].extra_hosts = currentExtraHosts;
     }
   }
 
