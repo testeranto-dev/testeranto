@@ -180,28 +180,25 @@ export class Server_GraphManager {
 
       console.log(`[Server_GraphManager] Wrote slice for agent ${agentName} to ${sliceFilePath}`);
       console.log(`[Server_GraphManager] File size: ${content.length} bytes`);
-      console.log(`[Server_GraphManager] Slice data has ${sliceData?.nodes?.length || 0} nodes, ${sliceData?.edges?.length || 0} edges`);
-
-      // Log all node types in the slice
-      if (sliceData?.nodes?.length > 0) {
-        const nodeTypes: Record<string, number> = {};
-        sliceData.nodes.forEach((node: any) => {
-          nodeTypes[node.type] = (nodeTypes[node.type] || 0) + 1;
-        });
-        console.log(`[Server_GraphManager] Node types in ${agentName} slice:`, nodeTypes);
+      
+      // Log the structure of the slice data
+      console.log(`[Server_GraphManager] Slice data type: ${sliceData.viewType || 'unknown'}`);
+      console.log(`[Server_GraphManager] Agent name in slice: ${sliceData.agentName || 'not specified'}`);
+      
+      // Log summary if available
+      if (sliceData.data?.summary) {
+        console.log(`[Server_GraphManager] Slice summary:`, sliceData.data.summary);
       }
+      
+      // Check for chat messages in the new structure
+      const chatMessages = sliceData.data?.chatMessages || [];
+      console.log(`[Server_GraphManager] Found ${chatMessages.length} chat messages in slice for ${agentName}`);
 
-      // Check for chat_message nodes
-      const chatMessageNodes = sliceData?.nodes?.filter((node: any) => node.type === 'chat_message') || [];
-      console.log(`[Server_GraphManager] Found ${chatMessageNodes.length} chat_message nodes in slice for ${agentName}`);
-
-      if (chatMessageNodes.length > 0) {
+      if (chatMessages.length > 0) {
         console.log(`[Server_GraphManager] Chat message details:`);
-        chatMessageNodes.forEach((node: any, index: number) => {
-          console.log(`[Server_GraphManager]   ${index + 1}. ID: ${node.id}`);
-          console.log(`[Server_GraphManager]      Agent: ${node.agentName}`);
-          console.log(`[Server_GraphManager]      Content length: ${node.content?.length || 0} chars`);
-          console.log(`[Server_GraphManager]      Preview: ${node.content?.substring(0, 100)?.replace(/\n/g, '\\n')}...`);
+        chatMessages.forEach((msg: any, index: number) => {
+          console.log(`[Server_GraphManager]   ${index + 1}. From: ${msg.agentName}`);
+          console.log(`[Server_GraphManager]      Preview: ${msg.preview || msg.content?.substring(0, 100)?.replace(/\n/g, '\\n')}...`);
         });
       }
 
@@ -292,6 +289,16 @@ export class Server_GraphManager {
       const agentNodeId = `agent:${agentName}`;
       const timestamp = new Date().toISOString();
 
+      // Calculate item counts from the new slice structure
+      const chatMessageCount = sliceData.data?.chatMessages?.length || 0;
+      const featureCount = sliceData.data?.features?.length || 0;
+      const configCount = sliceData.data?.configs?.length || 0;
+      const entrypointCount = sliceData.data?.entrypoints?.length || 0;
+      const documentationCount = sliceData.data?.documentation?.length || 0;
+      
+      const totalItems = chatMessageCount + featureCount + configCount + 
+                         entrypointCount + documentationCount;
+
       // Create agent node attributes
       const agentNodeAttributes: any = {
         id: agentNodeId,
@@ -304,15 +311,16 @@ export class Server_GraphManager {
           hasSliceFunction: typeof agentConfig.sliceFunction === 'function'
         },
         sliceFilePath: this.getAgentSliceFilePath(agentName),
-        sliceNodeCount: sliceData?.nodes?.length || 0,
-        sliceEdgeCount: sliceData?.edges?.length || 0,
+        sliceItemCount: totalItems,
+        sliceStructure: sliceData.viewType || 'unknown',
         timestamp: timestamp,
         metadata: {
           frontmatter: {
             title: `Agent: ${agentName}`,
             type: 'agent',
             agentType: 'user-defined'
-          }
+          },
+          sliceSummary: sliceData.data?.summary || {}
         }
       };
 
@@ -333,8 +341,10 @@ export class Server_GraphManager {
 
       graphManager.applyUpdate(update);
 
-      // Connect agent node to relevant nodes in its slice
-      this.connectAgentToSliceNodes(agentNodeId, sliceData);
+      // Note: Since slice data is now minimal and doesn't contain nodes/edges in the same way,
+      // we can't connect to slice nodes in the same manner
+      // The agent node will still be connected to chat messages when they're added to the graph
+      // via addChatMessage
 
     } catch (error) {
       console.error(`[Server_GraphManager] Error adding agent node for ${agentName}:`, error);
@@ -560,10 +570,7 @@ export class Server_GraphManager {
   }
 
   // Get slice for a specific agent
-  getAgentSlice(agentName: string): {
-    nodes: GraphNodeAttributes[],
-    edges: Array<{ source: string; target: string; attributes: GraphEdgeAttributes }>
-  } {
+  getAgentSlice(agentName: string): any {
     if (!this.configs.agents) {
       throw new Error(`No agents configured`);
     }
@@ -713,17 +720,15 @@ export class Server_GraphManager {
       console.log(`[Server_GraphManager] Calling sliceFunction for ${agentName}`);
       const sliceData = agentConfig.sliceFunction(this.graphManager);
 
-      // Log what nodes are in the slice
-      const chatMessageNodes = sliceData?.nodes?.filter((node: any) => node.type === 'chat_message') || [];
-      console.log(`[Server_GraphManager] Found ${chatMessageNodes.length} chat_message nodes in slice for ${agentName}`);
+      // Log what's in the slice with the new structure
+      const chatMessages = sliceData.data?.chatMessages || [];
+      console.log(`[Server_GraphManager] Found ${chatMessages.length} chat messages in slice for ${agentName}`);
 
-      if (chatMessageNodes.length > 0) {
-        console.log(`[Server_GraphManager] Chat message nodes in ${agentName} slice:`,
-          chatMessageNodes.map((node: any) => ({
-            id: node.id,
-            agentName: node.agentName,
-            contentLength: node.content?.length,
-            preview: node.content?.substring(0, 100)
+      if (chatMessages.length > 0) {
+        console.log(`[Server_GraphManager] Chat messages in ${agentName} slice:`,
+          chatMessages.map((msg: any) => ({
+            from: msg.agentName,
+            preview: msg.preview || msg.content?.substring(0, 50)
           })));
       }
 
@@ -732,7 +737,10 @@ export class Server_GraphManager {
         console.error(`[Server_GraphManager] Error writing agent slice file for ${agentName}:`, error);
       });
 
-      console.log(`[Server_GraphManager] Updated agent slice for ${agentName} with ${sliceData.nodes?.length || 0} nodes, ${sliceData.edges?.length || 0} edges`);
+      console.log(`[Server_GraphManager] Updated agent slice for ${agentName} with viewType: ${sliceData.viewType || 'unknown'}`);
+      if (sliceData.data?.summary) {
+        console.log(`[Server_GraphManager] Summary:`, sliceData.data.summary);
+      }
     } catch (error: any) {
       console.error(`[Server_GraphManager] Error updating agent slice file for ${agentName}:`, error);
       console.error(`[Server_GraphManager] Error stack:`, error.stack);
@@ -761,13 +769,13 @@ export class Server_GraphManager {
         console.log(`[Server_GraphManager] Calling sliceFunction for ${agentName}`);
         const sliceData = agentConfig.sliceFunction(this.graphManager);
 
-        // Log what nodes are in the slice
-        const chatMessageNodes = sliceData?.nodes?.filter((node: any) => node.type === 'chat_message') || [];
-        console.log(`[Server_GraphManager] Agent ${agentName} slice has ${sliceData?.nodes?.length || 0} total nodes, ${chatMessageNodes.length} chat_message nodes`);
+        // Log what's in the slice with the new structure
+        const chatMessages = sliceData.data?.chatMessages || [];
+        console.log(`[Server_GraphManager] Agent ${agentName} slice has viewType: ${sliceData.viewType || 'unknown'}, ${chatMessages.length} chat messages`);
 
-        if (chatMessageNodes.length > 0) {
-          console.log(`[Server_GraphManager] Chat message nodes in ${agentName} slice:`,
-            chatMessageNodes.map((node: any) => ({ id: node.id, agentName: node.agentName, content: node.content?.substring(0, 50) })));
+        if (chatMessages.length > 0) {
+          console.log(`[Server_GraphManager] Chat messages in ${agentName} slice:`,
+            chatMessages.map((msg: any) => ({ from: msg.agentName, preview: msg.preview || msg.content?.substring(0, 30) })));
         }
 
         // Write the slice file
@@ -775,7 +783,7 @@ export class Server_GraphManager {
           console.error(`[Server_GraphManager] Error writing agent slice file for ${agentName}:`, error);
         });
 
-        console.log(`[Server_GraphManager] Updated agent slice for ${agentName} with ${sliceData.nodes?.length || 0} nodes`);
+        console.log(`[Server_GraphManager] Updated agent slice for ${agentName}`);
       }
     } catch (error) {
       console.error(`[Server_GraphManager] Error updating all agent slice files:`, error);

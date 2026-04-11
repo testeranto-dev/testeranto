@@ -1,7 +1,7 @@
-[2026-04-11T20:28:51.344Z] Build log for test: src/vscode/providers/logic/FileTreeLogic.test.ts
+[2026-04-11T21:04:50.502Z] Build log for test: src/vscode/providers/logic/FileTreeLogic.test.ts
 Output: testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs
 Entry point: src/vscode/providers/logic/FileTreeLogic.test.ts
 
-[2026-04-11T20:28:51.315Z] INFO: Build started for nodetests
+[2026-04-11T21:04:50.465Z] INFO: Build started for nodetests
 
-[2026-04-11T20:28:51.344Z] Build completed for: src/vscode/providers/logic/FileTreeLogic.test.ts
+[2026-04-11T21:04:50.502Z] Build completed for: src/vscode/providers/logic/FileTreeLogic.test.ts

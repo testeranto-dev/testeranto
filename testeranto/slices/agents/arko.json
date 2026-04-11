@@ -1,68 +1,30 @@
 {
-  "nodes": [
-    {
-      "id": "agent:prodirek",
-      "type": "agent",
-      "label": "Agent: prodirek",
-      "description": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, t...",
-      "agentName": "prodirek",
-      "agentConfig": {
-        "load": [
-          "/read SOUL.md",
-          "/read testeranto/slices/agents/prodirek.json"
-        ],
-        "hasSliceFunction": true
+  "viewType": "agent",
+  "agentName": "arko",
+  "timestamp": "2026-04-11T21:04:42.242Z",
+  "data": {
+    "configs": [],
+    "entrypoints": [],
+    "chatMessages": [],
+    "agents": [
+      {
+        "id": "agent:prodirek",
+        "name": "prodirek",
+        "label": "Agent: prodirek",
+        "role": "agent"
       },
-      "timestamp": "2026-04-11T20:28:44.253Z",
-      "metadata": {
-        "frontmatter": {
-          "title": "Agent: prodirek",
-          "type": "agent",
-          "agentType": "user-defined"
-        }
+      {
+        "id": "agent:arko",
+        "name": "arko",
+        "label": "Agent: arko",
+        "role": "agent"
       }
-    },
-    {
-      "id": "agent:arko",
-      "type": "agent",
-      "label": "Agent: arko",
-      "description": "Your name is \"Arko\". You are a Software Architect. Your responsibilities are: 1) You will be give a ...",
-      "agentName": "arko",
-      "agentConfig": {
-        "load": [
-          "/read SOUL.md",
-          "/read chat_slice.json"
-        ],
-        "hasSliceFunction": true
-      },
-      "timestamp": "2026-04-11T20:28:44.253Z",
-      "metadata": {
-        "frontmatter": {
-          "title": "Agent: arko",
-          "type": "agent",
-          "agentType": "user-defined"
-        }
-      }
+    ],
+    "summary": {
+      "totalConfigs": 0,
+      "totalEntrypoints": 0,
+      "totalChatMessages": 0,
+      "totalAgents": 2
     }
-  ],
-  "edges": [
-    {
-      "source": "agent:prodirek",
-      "target": "agent:arko",
-      "attributes": {
-        "type": "hasAgent",
-        "timestamp": "2026-04-11T20:28:44.327Z",
-        "directed": true
-      }
-    },
-    {
-      "source": "agent:arko",
-      "target": "agent:prodirek",
-      "attributes": {
-        "type": "agentOf",
-        "timestamp": "2026-04-11T20:28:44.327Z",
-        "directed": true
-      }
-    }
-  ]
+  }
 }

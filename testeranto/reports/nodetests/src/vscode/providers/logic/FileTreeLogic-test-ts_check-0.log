@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T20:29:31.061Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0 (runtime: node) ===
-=== Container ID: f252020f02bb4be7a0442e770f5ee7ee3c8c713bdf1302516291950c05e4620b ===
+=== Log started at 2026-04-11T21:05:29.624Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0 (runtime: node) ===
+=== Container ID: 1e68e322f177a3e70202a1de65ff114dc788437c0ddd6cb02a0d2abc851daa3b ===
 === Test: src/vscode/providers/logic/FileTreeLogic.test.ts ===
 === Config Key: nodetests ===
 
@@ -43,4 +43,4 @@ Common causes of this problem include:
 error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-11T20:29:32.355Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-11T21:05:30.937Z (container status: exited, exit code: 2) ===

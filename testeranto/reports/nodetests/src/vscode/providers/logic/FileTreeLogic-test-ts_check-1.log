@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T20:29:30.925Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1 (runtime: node) ===
-=== Container ID: d98551958acc4620687bc48348373fcf227ae1465fa09f2958cd18eff30271fe ===
+=== Log started at 2026-04-11T21:05:29.740Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1 (runtime: node) ===
+=== Container ID: 32046d0c2537d21c2a2b20044b1f0f620531a190c3d9f21fbc6d88e1fb817f18 ===
 === Test: src/vscode/providers/logic/FileTreeLogic.test.ts ===
 === Config Key: nodetests ===
 
@@ -512,7 +512,7 @@ testeranto/rust_builder/src/wrapper_generator.ts(118,24): error TS1128: Declarat
 testeranto/rust_builder/src/wrapper_generator.ts(118,31): error TS1109: Expression expected.
 testeranto/rust_builder/src/wrapper_generator.ts(118,71): error TS1005: ';' expected.
 testeranto/rust_builder/src/wrapper_generator.ts(121,1): error TS1128: Declaration or statement expected.
-error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 2.
 
-=== Log captured at 2026-04-11T20:29:34.306Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-11T21:05:33.090Z (container status: exited, exit code: 2) ===

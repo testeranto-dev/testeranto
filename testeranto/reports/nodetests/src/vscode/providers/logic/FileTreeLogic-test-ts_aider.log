@@ -1,9 +1,9 @@
-=== Log started at 2026-04-11T20:29:42.905Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider (runtime: node) ===
-=== Container ID: e7e90041c5515bd4bc280ed7c1aa1a96fe727111c2e5161b910efb7807d835e3 ===
+=== Log started at 2026-04-11T21:05:41.251Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider (runtime: node) ===
+=== Container ID: c6d0f099d27c5d1d83ef3ad364db4c283ec34ae496ffd9eb034788879e85e753 ===
 === Test: src/vscode/providers/logic/FileTreeLogic.test.ts ===
 === Config Key: nodetests ===
 
 
 === No logs captured (container may have exited without output) ===
 
-=== Log captured at 2026-04-11T20:30:04.068Z (container status: running) ===
+=== Log captured at 2026-04-11T21:06:02.141Z (container status: running) ===

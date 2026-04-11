@@ -37,24 +37,68 @@ const config: ITesterantoConfig = {
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
-        const allEdges = graphData.edges;
-
-        // Include all chat_message nodes from all agents
-        const productNodes = allNodes.filter((node: any) =>
-          node.type === 'feature' ||
-          node.type === 'documentation' ||
-          node.type === 'chat_message' ||
-          node.type === 'agent'
-        );
-
-        const productEdges = allEdges.filter((edge: any) =>
-          productNodes.some((n: any) => n.id === edge.source) &&
-          productNodes.some((n: any) => n.id === edge.target)
-        );
+        
+        // Collect minimal data for product management
+        const features = allNodes
+          .filter((node: any) => node.type === 'feature')
+          .map((node: any) => ({
+            id: node.id,
+            label: node.label,
+            status: node.status || node.metadata?.frontmatter?.status,
+            priority: node.priority || node.metadata?.frontmatter?.priority,
+            description: node.description,
+            metadata: node.metadata ? {
+              frontmatter: node.metadata.frontmatter
+            } : undefined
+          }));
+        
+        const documentation = allNodes
+          .filter((node: any) => node.type === 'documentation')
+          .map((node: any) => ({
+            id: node.id,
+            label: node.label,
+            content: node.metadata?.content ? 
+              node.metadata.content.substring(0, 200) + (node.metadata.content.length > 200 ? '...' : '') : 
+              undefined
+          }));
+        
+        const chatMessages = allNodes
+          .filter((node: any) => node.type === 'chat_message')
+          .map((node: any) => ({
+            id: node.id,
+            agentName: node.agentName,
+            content: node.content,
+            timestamp: node.timestamp,
+            preview: node.content ? 
+              node.content.substring(0, 100) + (node.content.length > 100 ? '...' : '') : 
+              undefined
+          }));
+        
+        const agents = allNodes
+          .filter((node: any) => node.type === 'agent')
+          .map((node: any) => ({
+            id: node.id,
+            name: node.agentName,
+            label: node.label,
+            description: node.description
+          }));
 
         return {
-          nodes: productNodes,
-          edges: productEdges
+          viewType: 'agent',
+          agentName: 'prodirek',
+          timestamp: new Date().toISOString(),
+          data: {
+            features,
+            documentation,
+            chatMessages,
+            agents,
+            summary: {
+              totalFeatures: features.length,
+              totalDocumentation: documentation.length,
+              totalChatMessages: chatMessages.length,
+              totalAgents: agents.length
+            }
+          }
         };
       }
     },
@@ -68,24 +112,64 @@ const config: ITesterantoConfig = {
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
-        const allEdges = graphData.edges;
-
-        // Include all chat_message nodes from all agents
-        const nodes = allNodes.filter((node: any) =>
-          node.type === 'config' ||
-          node.type === 'entrypoint' ||
-          node.type === 'chat_message' ||
-          node.type === 'agent'
-        );
-
-        const edges = allEdges.filter((edge: any) =>
-          nodes.some((n: any) => n.id === edge.source) &&
-          nodes.some((n: any) => n.id === edge.target)
-        );
+        
+        // Collect minimal data for architecture
+        const configs = allNodes
+          .filter((node: any) => node.type === 'config')
+          .map((node: any) => ({
+            id: node.id,
+            label: node.label,
+            key: node.metadata?.configKey,
+            runtime: node.metadata?.runtime
+          }));
+        
+        const entrypoints = allNodes
+          .filter((node: any) => node.type === 'entrypoint')
+          .map((node: any) => ({
+            id: node.id,
+            label: node.label,
+            testName: node.metadata?.testName,
+            configKey: node.metadata?.configKey,
+            runtime: node.metadata?.runtime
+          }));
+        
+        const chatMessages = allNodes
+          .filter((node: any) => node.type === 'chat_message')
+          .map((node: any) => ({
+            id: node.id,
+            agentName: node.agentName,
+            content: node.content,
+            timestamp: node.timestamp,
+            preview: node.content ? 
+              node.content.substring(0, 100) + (node.content.length > 100 ? '...' : '') : 
+              undefined
+          }));
+        
+        const agents = allNodes
+          .filter((node: any) => node.type === 'agent')
+          .map((node: any) => ({
+            id: node.id,
+            name: node.agentName,
+            label: node.label,
+            role: 'agent'
+          }));
 
         return {
-          nodes: nodes,
-          edges: edges
+          viewType: 'agent',
+          agentName: 'arko',
+          timestamp: new Date().toISOString(),
+          data: {
+            configs,
+            entrypoints,
+            chatMessages,
+            agents,
+            summary: {
+              totalConfigs: configs.length,
+              totalEntrypoints: entrypoints.length,
+              totalChatMessages: chatMessages.length,
+              totalAgents: agents.length
+            }
+          }
         };
       }
     },

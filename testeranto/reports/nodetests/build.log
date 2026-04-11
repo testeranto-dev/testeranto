@@ -13227,3 +13227,26 @@
 [2026-04-11T20:28:51.346Z] [NODE BUILDER] Metafile updated
 [2026-04-11T20:28:51.350Z] [NODE BUILDER] Triggered inputFiles.json update
 [2026-04-11T20:28:51.315Z] INFO: Build started for nodetests
+[2026-04-11T21:04:50.317Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-11T21:04:50.319Z] [NODE BUILDER] Entry points: src/vscode/providers/logic/FileTreeLogic.test.ts
+[2026-04-11T21:04:50.353Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-11T21:04:50.446Z] node > build ended with 0 errors
+[2026-04-11T21:04:50.448Z] [node Builder] Created build log for src/vscode/providers/logic/FileTreeLogic.test.ts at /workspace/testeranto/reports/nodetests/test-logs/FileTreeLogic.test.build.log
+[2026-04-11T21:04:50.454Z] [node Builder] Processed src/vscode/providers/logic/FileTreeLogic.test.ts: 24 files, hash: 499ad3209e9507be3703d1f0d7aaae45
+[2026-04-11T21:04:50.455Z] [node Builder] Wrote inputFiles.json for 1 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-11T21:04:50.455Z] [NODE BUILDER] Metafile updated
+[2026-04-11T21:04:50.380Z] INFO: Build started for nodetests
+[2026-04-11T21:04:50.446Z] LOG: node > build ended with 0 errors
+[2026-04-11T21:04:50.458Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-11T21:04:50.462Z] [node Builder] Processed src/vscode/providers/logic/FileTreeLogic.test.ts: 24 files, hash: 499ad3209e9507be3703d1f0d7aaae45
+[2026-04-11T21:04:50.464Z] [node Builder] Wrote inputFiles.json for 1 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-11T21:04:50.465Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-11T21:04:50.466Z] [NODE BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-11T21:04:50.466Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-11T21:04:50.499Z] node > build ended with 0 errors
+[2026-04-11T21:04:50.502Z] [node Builder] Created build log for src/vscode/providers/logic/FileTreeLogic.test.ts at /workspace/testeranto/reports/nodetests/test-logs/FileTreeLogic.test.build.log
+[2026-04-11T21:04:50.502Z] [node Builder] Processed src/vscode/providers/logic/FileTreeLogic.test.ts: 24 files, hash: 499ad3209e9507be3703d1f0d7aaae45
+[2026-04-11T21:04:50.504Z] [node Builder] Wrote inputFiles.json for 1 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-11T21:04:50.504Z] [NODE BUILDER] Metafile updated
+[2026-04-11T21:04:50.465Z] INFO: Build started for nodetests
+[2026-04-11T21:04:50.506Z] [NODE BUILDER] Triggered inputFiles.json update

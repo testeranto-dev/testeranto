@@ -21,87 +21,87 @@ export class Server extends Server_Docker {
     );
     const outfile = join(process.cwd(), "testeranto", "reports", "index.js");
 
-    // Get the path to the stakeholder app source
-    const stakeholderAppSource = join(__dirname, "../../stakeholderApp/index.tsx");
+    // // Get the path to the stakeholder app source
+    // const stakeholderAppSource = join(__dirname, "../../stakeholderApp/index.tsx");
 
-    // First, check if the entry point exists
-    if (!fs.existsSync(entryPoint)) {
-      console.log(`[Server] Entry point not found at ${entryPoint}, using default stakeholder app`);
-      // Copy the default stakeholder app to the reports directory
-      const defaultStakeholderApp = fs.readFileSync(stakeholderAppSource, 'utf-8');
-      // Ensure the directory exists
-      const reportsDir = join(process.cwd(), "testeranto", "reports");
-      if (!fs.existsSync(reportsDir)) {
-        fs.mkdirSync(reportsDir, { recursive: true });
-      }
-      fs.writeFileSync(entryPoint, defaultStakeholderApp, 'utf-8');
-    }
+    // // First, check if the entry point exists
+    // if (!fs.existsSync(entryPoint)) {
+    //   console.log(`[Server] Entry point not found at ${entryPoint}, using default stakeholder app`);
+    //   // Copy the default stakeholder app to the reports directory
+    //   const defaultStakeholderApp = fs.readFileSync(stakeholderAppSource, 'utf-8');
+    //   // Ensure the directory exists
+    //   const reportsDir = join(process.cwd(), "testeranto", "reports");
+    //   if (!fs.existsSync(reportsDir)) {
+    //     fs.mkdirSync(reportsDir, { recursive: true });
+    //   }
+    //   fs.writeFileSync(entryPoint, defaultStakeholderApp, 'utf-8');
+    // }
 
     // Get the project root to resolve node_modules
-    const projectRoot = process.cwd();
-    const nodeModulesPath = join(projectRoot, 'node_modules');
+    // const projectRoot = process.cwd();
+    // const nodeModulesPath = join(projectRoot, 'node_modules');
 
-    const buildOptions: esbuild.BuildOptions = {
-      entryPoints: [entryPoint],
-      metafile: false,
-      bundle: true,
-      format: "iife", // Use IIFE format for browser compatibility
-      platform: "browser",
-      target: "es2020",
-      jsx: "automatic",
-      outfile: outfile,
-      globalName: "TesterantoStakeholderApp", // Global variable name
-      define: {
-        'process.env.NODE_ENV': '"production"'
-      },
-      // Add aliases to ensure React is only bundled once
-      // Use path.dirname to get the directory containing the module, not the entry file
-      alias: {
-        'react': path.dirname(require.resolve('react')),
-        'react-dom': path.dirname(require.resolve('react-dom')),
-      },
-      nodePaths: [nodeModulesPath],
-      loader: {
-        '.tsx': 'tsx',
-        '.ts': 'ts',
-        '.jsx': 'jsx',
-        '.js': 'js'
-      }
-    };
+    // const buildOptions: esbuild.BuildOptions = {
+    //   entryPoints: [entryPoint],
+    //   metafile: false,
+    //   bundle: true,
+    //   format: "iife", // Use IIFE format for browser compatibility
+    //   platform: "browser",
+    //   target: "es2020",
+    //   jsx: "automatic",
+    //   outfile: outfile,
+    //   globalName: "TesterantoStakeholderApp", // Global variable name
+    //   define: {
+    //     'process.env.NODE_ENV': '"production"'
+    //   },
+    //   // Add aliases to ensure React is only bundled once
+    //   // Use path.dirname to get the directory containing the module, not the entry file
+    //   alias: {
+    //     'react': path.dirname(require.resolve('react')),
+    //     'react-dom': path.dirname(require.resolve('react-dom')),
+    //   },
+    //   nodePaths: [nodeModulesPath],
+    //   loader: {
+    //     '.tsx': 'tsx',
+    //     '.ts': 'ts',
+    //     '.jsx': 'jsx',
+    //     '.js': 'js'
+    //   }
+    // };
 
-    try {
-      console.log(`[Server] Bundling stakeholder app from ${entryPoint} to ${outfile}`);
-      const result = esbuild.buildSync(buildOptions);
-      console.log(`[Server] Successfully bundled stakeholder app`);
+    // try {
+    //   console.log(`[Server] Bundling stakeholder app from ${entryPoint} to ${outfile}`);
+    //   const result = esbuild.buildSync(buildOptions);
+    //   console.log(`[Server] Successfully bundled stakeholder app`);
 
-      // Verify the bundle was created
-      if (fs.existsSync(outfile)) {
-        const stats = fs.statSync(outfile);
-        console.log(`[Server] Bundle created: ${outfile} (${stats.size} bytes)`);
-      } else {
-        console.error(`[Server] Bundle not created at ${outfile}`);
-        throw new Error(`Bundle not created at ${outfile}`);
-      }
-    } catch (error) {
-      console.error(`[Server] Error bundling stakeholder app:`, error);
-      throw error;
-    }
+    //   // Verify the bundle was created
+    //   if (fs.existsSync(outfile)) {
+    //     const stats = fs.statSync(outfile);
+    //     console.log(`[Server] Bundle created: ${outfile} (${stats.size} bytes)`);
+    //   } else {
+    //     console.error(`[Server] Bundle not created at ${outfile}`);
+    //     throw new Error(`Bundle not created at ${outfile}`);
+    //   }
+    // } catch (error) {
+    //   console.error(`[Server] Error bundling stakeholder app:`, error);
+    //   throw error;
+    // }
 
-    // Copy the HTML file to the reports directory
-    const htmlSource = join(__dirname, "../../stakeholderApp/index.html");
-    const htmlDest = join(process.cwd(), "testeranto", "reports", "index.html");
+    // // Copy the HTML file to the reports directory
+    // const htmlSource = join(__dirname, "../../stakeholderApp/index.html");
+    // const htmlDest = join(process.cwd(), "testeranto", "reports", "index.html");
 
-    if (fs.existsSync(htmlSource)) {
-      const htmlDir = path.dirname(htmlDest);
-      if (!fs.existsSync(htmlDir)) {
-        fs.mkdirSync(htmlDir, { recursive: true });
-      }
-      fs.copyFileSync(htmlSource, htmlDest);
-      console.log(`[Server] Copied HTML file to ${htmlDest}`);
-    } else {
-      console.error(`[Server] HTML source file not found at ${htmlSource}`);
-      throw new Error(`HTML source file not found at ${htmlSource}`);
-    }
+    // if (fs.existsSync(htmlSource)) {
+    //   const htmlDir = path.dirname(htmlDest);
+    //   if (!fs.existsSync(htmlDir)) {
+    //     fs.mkdirSync(htmlDir, { recursive: true });
+    //   }
+    //   fs.copyFileSync(htmlSource, htmlDest);
+    //   console.log(`[Server] Copied HTML file to ${htmlDest}`);
+    // } else {
+    //   console.error(`[Server] HTML source file not found at ${htmlSource}`);
+    //   throw new Error(`HTML source file not found at ${htmlSource}`);
+    // }
 
     // Generate slice data for views
     await this.generateViewSlices();
@@ -442,7 +442,7 @@ if (!config) {
         this.createErrorBundle(bundlePath, viewKey, result.errors.map(e => e.text).join(', '));
       } else {
         console.log(`[Server] Successfully bundled view ${viewKey} to ${bundlePath}`);
-        
+
         // Verify the bundle was created
         if (fs.existsSync(bundlePath)) {
           const stats = fs.statSync(bundlePath);
