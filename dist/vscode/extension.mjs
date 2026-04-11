@@ -1,6 +1,5 @@
 // src/vscode/extension.ts
 import * as vscode26 from "vscode";
-import * as fs2 from "fs";
 
 // src/vscode/TerminalManager.ts
 import * as vscode from "vscode";
@@ -2860,41 +2859,23 @@ var ViewTreeDataProvider = class extends BaseTreeDataProvider {
     try {
       await this.loadViews();
       if (this.views.length === 0) {
-        return [
-          new TestTreeItem2(
-            "No views configured",
-            3 /* Info */,
-            vscode11.TreeItemCollapsibleState.None,
-            {
-              info: "Configure views in testeranto.ts"
-            }
-          ),
-          new TestTreeItem2(
-            "Refresh views",
-            3 /* Info */,
-            vscode11.TreeItemCollapsibleState.None,
-            {
-              action: "refresh",
-              description: "Click to refresh views"
-            },
-            {
-              command: "testeranto.refreshViewTree",
-              title: "Refresh Views"
-            }
-          )
-        ];
+        const defaultViewKeys = ["Kanban", "Gantt", "Eisenhower"];
+        this.views = defaultViewKeys.map((key) => ({
+          key,
+          name: key,
+          url: `http://localhost:3000/testeranto/views/${key}.html`
+        }));
       }
       return this.views.map((view) => {
         const viewKey = view.key || view.id;
         const viewName = view.name || viewKey;
-        const viewPath = view.path || view.dataPath;
         return new TestTreeItem2(
           viewName,
           4 /* Config */,
           vscode11.TreeItemCollapsibleState.Collapsed,
           {
             runtimeKey: viewKey,
-            description: viewPath,
+            description: `Open ${viewName} view`,
             action: "openView"
           },
           void 0,
@@ -2939,28 +2920,7 @@ var ViewTreeDataProvider = class extends BaseTreeDataProvider {
       return [];
     }
     const details = [];
-    details.push(new TestTreeItem2(
-      `Key: ${viewKey}`,
-      3 /* Info */,
-      vscode11.TreeItemCollapsibleState.None,
-      { info: viewKey }
-    ));
-    if (view.name) {
-      details.push(new TestTreeItem2(
-        `Name: ${view.name}`,
-        3 /* Info */,
-        vscode11.TreeItemCollapsibleState.None,
-        { info: view.name }
-      ));
-    }
-    if (view.path || view.dataPath) {
-      details.push(new TestTreeItem2(
-        `Data: ${view.path || view.dataPath}`,
-        3 /* Info */,
-        vscode11.TreeItemCollapsibleState.None,
-        { info: view.path || view.dataPath }
-      ));
-    }
+    const viewUrl = `http://localhost:3000/testeranto/views/${viewKey}.html`;
     details.push(new TestTreeItem2(
       "Open View",
       4 /* Config */,
@@ -2973,7 +2933,7 @@ var ViewTreeDataProvider = class extends BaseTreeDataProvider {
       {
         command: "testeranto.openView",
         title: "Open View",
-        arguments: [viewKey, view.name || viewKey, view.path || view.dataPath]
+        arguments: [viewKey, viewUrl]
       },
       new vscode11.ThemeIcon("link-external"),
       "viewOpenItem"
@@ -2995,18 +2955,28 @@ var ViewTreeDataProvider = class extends BaseTreeDataProvider {
       const data = await response.json();
       console.log("[ViewTreeDataProvider] Response:", data);
       if (data && data.views) {
-        this.views = data.views;
-        console.log(
-          `[ViewTreeDataProvider] Loaded ${this.views.length} views:`,
-          this.views.map((v) => `${v.key} (${v.name})`).join(", ")
-        );
+        this.views = data.views.map((view) => {
+          const viewKey = view.key || view.id;
+          let viewUrl = view.url;
+          if (!viewUrl) {
+            viewUrl = `http://localhost:3000/testeranto/views/${viewKey}.html`;
+          } else if (viewUrl.includes("/stakeholder/")) {
+            viewUrl = viewUrl.replace("/stakeholder/", "/");
+          }
+          return {
+            key: viewKey,
+            name: view.name || viewKey,
+            url: viewUrl
+          };
+        });
+        console.log(`[ViewTreeDataProvider] Loaded ${this.views.length} views from server`);
       } else {
-        console.warn("[ViewTreeDataProvider] No views found in response");
+        console.warn("[ViewTreeDataProvider] No views found in server response");
         this.views = [];
       }
     } catch (error) {
-      console.error("[ViewTreeDataProvider] Failed to load views:", error);
-      throw error;
+      console.error("[ViewTreeDataProvider] Failed to load views from server:", error);
+      this.views = [];
     }
   }
   refresh() {
@@ -4263,29 +4233,14 @@ async function activate(context) {
       }
     });
     context.subscriptions.push(openProcessTerminalCommand);
-    const openViewCommand = vscode26.commands.registerCommand("testeranto.openView", async (viewKey, viewPath) => {
+    const openViewCommand = vscode26.commands.registerCommand("testeranto.openView", async (viewKey, viewUrl) => {
       try {
         outputChannel.appendLine(`[Testeranto] Opening view: ${viewKey || "unknown"}`);
         if (!viewKey) {
           vscode26.window.showWarningMessage("No view key provided");
           return;
         }
-        let actualViewPath = viewPath;
-        if (!actualViewPath) {
-          try {
-            const response = await fetch(`http://localhost:3000/~/vscode-views/${viewKey}`);
-            if (response.ok) {
-              const data = await response.json();
-              actualViewPath = data.viewPath;
-            }
-          } catch (error) {
-            outputChannel.appendLine(`[Testeranto] Error fetching view path from server: ${error}`);
-          }
-        }
-        if (!actualViewPath) {
-          vscode26.window.showErrorMessage(`Could not determine path for view: ${viewKey}`);
-          return;
-        }
+        const actualViewUrl = viewUrl || `http://localhost:3000/testeranto/views/${viewKey}.html`;
         const panel = vscode26.window.createWebviewPanel(
           `testeranto.view.${viewKey}`,
           `View: ${viewKey}`,
@@ -4295,21 +4250,30 @@ async function activate(context) {
             retainContextWhenHidden: true
           }
         );
-        if (actualViewPath.startsWith("file://")) {
-          const filePath = actualViewPath.replace("file://", "");
-          try {
-            const content = fs2.readFileSync(filePath, "utf8");
-            panel.webview.html = content;
-          } catch (error) {
-            panel.webview.html = `<html><body><h1>Error loading view</h1><p>Could not read file: ${filePath}</p><p>${error}</p></body></html>`;
-          }
-        } else if (actualViewPath.startsWith("http://") || actualViewPath.startsWith("https://")) {
-          panel.webview.html = `<html><body><iframe src="${actualViewPath}" style="width:100%; height:100vh; border:none;"></iframe></body></html>`;
-        } else {
-          const serverUrl = `http://localhost:3000${actualViewPath.startsWith("/") ? actualViewPath : "/" + actualViewPath}`;
-          panel.webview.html = `<html><body><iframe src="${serverUrl}" style="width:100%; height:100vh; border:none;"></iframe></body></html>`;
-        }
-        outputChannel.appendLine(`[Testeranto] Opened view: ${viewKey} at ${actualViewPath}`);
+        panel.webview.html = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            body, html {
+                                margin: 0;
+                                padding: 0;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+                            iframe {
+                                width: 100%;
+                                height: 100vh;
+                                border: none;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="${actualViewUrl}"></iframe>
+                    </body>
+                    </html>
+                `;
+        outputChannel.appendLine(`[Testeranto] Opened view: ${viewKey} at ${actualViewUrl}`);
       } catch (error) {
         outputChannel.appendLine(`[Testeranto] Error opening view: ${error.message}`);
         vscode26.window.showErrorMessage(`Failed to open view: ${error.message}`);

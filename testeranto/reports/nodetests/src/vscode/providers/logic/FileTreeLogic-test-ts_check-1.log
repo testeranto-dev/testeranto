@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T15:02:07.833Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1 (runtime: node) ===
-=== Container ID: 60d8af1e86f218dccd7fd8a9e94a6a6721f96bc5871a72e6f07c5542b31304fb ===
+=== Log started at 2026-04-11T15:25:04.360Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1 (runtime: node) ===
+=== Container ID: dbc680b8b89e44ccf8f86bf0ae9c51973b4a2a1c116350e1d60584e3837ea2eb ===
 === Test: src/vscode/providers/logic/FileTreeLogic.test.ts ===
 === Config Key: nodetests ===
 
@@ -515,4 +515,4 @@ testeranto/rust_builder/src/wrapper_generator.ts(121,1): error TS1128: Declarati
 error Command failed with exit code 2.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-11T15:02:20.431Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-11T15:25:12.404Z (container status: exited, exit code: 2) ===

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T15:01:45.334Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
-=== Container ID: 90ed43121b08b2b646227861803def861bb551b76b252586916c79987c2a8bcb ===
+=== Log started at 2026-04-11T15:24:38.962Z for service nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd (runtime: node) ===
+=== Container ID: 6d879bfbd1bcff0597161c457819816ceb590f8d0446422153514f82d18981af ===
 === Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts ===
 === Config Key: nodetests ===
 
@@ -38,17 +38,13 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/'
 }
-Done in 2.68s.
+Done in 3.16s.
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.233.9: The engine "vscode" appears to be invalid.
 warning testeranto@0.233.9: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}'
 [NodeTiposkripto] /usr/local/bin/node,/workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs,{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}
-testResourceConfiguration {
-  ports: [ 1111 ],
-  fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/'
-}
 Error during test specification: TypeError: Confirm.addition(...) is not a function
     at specification (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:281:26)
     at new BaseTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1631:23)
@@ -73,6 +69,10 @@ TypeError: Confirm.addition(...) is not a function
     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
-Done in 0.96s.
+testResourceConfiguration {
+  ports: [ 1111 ],
+  fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/'
+}
+Done in 0.83s.
 
-=== Log captured at 2026-04-11T15:01:48.048Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-11T15:24:39.603Z (container status: exited, exit code: 0) ===

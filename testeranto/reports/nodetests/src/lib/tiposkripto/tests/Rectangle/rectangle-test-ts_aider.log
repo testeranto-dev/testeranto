@@ -1,9 +1,9 @@
-=== Log started at 2026-04-11T15:02:15.114Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (runtime: node) ===
-=== Container ID: 36ec05851cedd5270f9454d7cb0fb871119df4c1d3e348420067d4de5754bbb5 ===
+=== Log started at 2026-04-11T15:25:22.315Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider (runtime: node) ===
+=== Container ID: 8b2ed2ec7677ced40ca9f4e1ca2b4b9d8f5e128aa9895d8cf2cf3f22b4206204 ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
 
 === No logs captured (container may have exited without output) ===
 
-=== Log captured at 2026-04-11T15:02:43.840Z (container status: running) ===
+=== Log captured at 2026-04-11T15:25:46.907Z (container status: running) ===

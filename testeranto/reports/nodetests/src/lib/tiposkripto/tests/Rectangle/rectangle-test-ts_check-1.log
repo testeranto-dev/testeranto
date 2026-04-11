@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T15:01:47.974Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
-=== Container ID: b57dea54767942681fab06ca52fec87bd61333ebc9f93e97c75b39aab7fb83b7 ===
+=== Log started at 2026-04-11T15:24:58.691Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-1 (runtime: node) ===
+=== Container ID: 73eb4d499a47cb8fae547cf83f0a33931bf6cfdf6d7188ca93579585b7e43334 ===
 === Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
 === Config Key: nodetests ===
 
@@ -7,8 +7,8 @@
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
-$ /workspace/node_modules/.bin/tsc --noEmit
 warning testeranto@0.239.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsc --noEmit
 src/lib/tiposkripto/tests/calculator/example.ts(25,14): error TS1005: ';' expected.
 src/lib/tiposkripto/tests/calculator/example.ts(34,5): error TS1109: Expression expected.
 testeranto/rust_builder/src/native_detection.ts(1,1): error TS1434: Unexpected keyword or identifier.
@@ -257,8 +257,8 @@ testeranto/rust_builder/src/wrapper_generator.ts(118,24): error TS1128: Declarat
 testeranto/rust_builder/src/wrapper_generator.ts(118,31): error TS1109: Expression expected.
 testeranto/rust_builder/src/wrapper_generator.ts(118,71): error TS1005: ';' expected.
 testeranto/rust_builder/src/wrapper_generator.ts(121,1): error TS1128: Declaration or statement expected.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
@@ -515,4 +515,4 @@ testeranto/rust_builder/src/wrapper_generator.ts(121,1): error TS1128: Declarati
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
 
-=== Log captured at 2026-04-11T15:01:53.106Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-11T15:25:11.330Z (container status: exited, exit code: 2) ===

@@ -1,9 +1,9 @@
-=== Log started at 2026-04-11T15:02:19.824Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (runtime: node) ===
-=== Container ID: 532f26be46306208d31bb1094ed2cba3adbe3aadca21cbffa83a8af3f401c672 ===
+=== Log started at 2026-04-11T15:25:10.954Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (runtime: node) ===
+=== Container ID: 11448ef0ab3360ad7d3665da3e4b0b19bfb8188390be07141dd63deec00afbca ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
 
 === No logs captured (container may have exited without output) ===
 
-=== Log captured at 2026-04-11T15:02:46.540Z (container status: running) ===
+=== Log captured at 2026-04-11T15:25:38.240Z (container status: running) ===

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T15:01:45.576Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
-=== Container ID: 8099c6b94e3dcd53951515f8725b6a2359eefa95071e815ee2c934bf7b6b8b8c ===
+=== Log started at 2026-04-11T15:24:39.271Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd (runtime: node) ===
+=== Container ID: 705c77712e4f0b3f981381e068e88db75a5cb14a9c7c083ee9db08ad34f40ae2 ===
 === Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
 === Config Key: nodetests ===
 
@@ -38,7 +38,7 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 2.50s.
+Done in 2.14s.
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
 warning testeranto@0.235.9: The engine "vscode" appears to be invalid.
@@ -73,6 +73,6 @@ testResourceConfiguration {
   ports: [ 1111 ],
   fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/'
 }
-Done in 0.97s.
+Done in 0.82s.
 
-=== Log captured at 2026-04-11T15:01:49.566Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-11T15:24:40.956Z (container status: exited, exit code: 0) ===

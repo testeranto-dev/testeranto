@@ -13,7 +13,7 @@
         ],
         "hasSliceFunction": true
       },
-      "timestamp": "2026-04-11T15:01:03.626Z",
+      "timestamp": "2026-04-11T15:23:57.296Z",
       "metadata": {
         "frontmatter": {
           "title": "Agent: prodirek",
@@ -35,7 +35,7 @@
         ],
         "hasSliceFunction": true
       },
-      "timestamp": "2026-04-11T15:01:03.626Z",
+      "timestamp": "2026-04-11T15:23:57.296Z",
       "metadata": {
         "frontmatter": {
           "title": "Agent: arko",
@@ -51,7 +51,7 @@
       "target": "agent:arko",
       "attributes": {
         "type": "hasAgent",
-        "timestamp": "2026-04-11T15:01:03.726Z",
+        "timestamp": "2026-04-11T15:23:57.397Z",
         "directed": true
       }
     },
@@ -60,7 +60,7 @@
       "target": "agent:prodirek",
       "attributes": {
         "type": "agentOf",
-        "timestamp": "2026-04-11T15:01:03.726Z",
+        "timestamp": "2026-04-11T15:23:57.397Z",
         "directed": true
       }
     }

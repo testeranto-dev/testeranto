@@ -13,7 +13,7 @@
         ],
         "hasSliceFunction": true
       },
-      "timestamp": "2026-04-11T15:01:03.626Z",
+      "timestamp": "2026-04-11T15:23:57.296Z",
       "metadata": {
         "frontmatter": {
           "title": "Agent: prodirek",
@@ -35,7 +35,7 @@
         ],
         "hasSliceFunction": true
       },
-      "timestamp": "2026-04-11T15:01:03.626Z",
+      "timestamp": "2026-04-11T15:23:57.296Z",
       "metadata": {
         "frontmatter": {
           "title": "Agent: arko",
@@ -54,7 +54,7 @@
       "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
       "sliceNodeCount": 2,
       "sliceEdgeCount": 0,
-      "timestamp": "2026-04-11T15:01:03.677Z",
+      "timestamp": "2026-04-11T15:23:57.348Z",
       "metadata": {
         "frontmatter": {
           "title": "View: Kanban",
@@ -73,7 +73,7 @@
       "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
       "sliceNodeCount": 2,
       "sliceEdgeCount": 0,
-      "timestamp": "2026-04-11T15:01:03.701Z",
+      "timestamp": "2026-04-11T15:23:57.371Z",
       "metadata": {
         "frontmatter": {
           "title": "View: Gantt",
@@ -92,7 +92,7 @@
       "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/Eisenhower.json",
       "sliceNodeCount": 2,
       "sliceEdgeCount": 0,
-      "timestamp": "2026-04-11T15:01:03.725Z",
+      "timestamp": "2026-04-11T15:23:57.395Z",
       "metadata": {
         "frontmatter": {
           "title": "View: Eisenhower",
@@ -108,7 +108,7 @@
       "target": "agent:prodirek",
       "attributes": {
         "type": "hasView",
-        "timestamp": "2026-04-11T15:01:03.678Z",
+        "timestamp": "2026-04-11T15:23:57.348Z",
         "directed": true
       }
     },
@@ -117,7 +117,7 @@
       "target": "view:Kanban",
       "attributes": {
         "type": "viewOf",
-        "timestamp": "2026-04-11T15:01:03.678Z",
+        "timestamp": "2026-04-11T15:23:57.348Z",
         "directed": true
       }
     },
@@ -126,7 +126,7 @@
       "target": "agent:arko",
       "attributes": {
         "type": "hasView",
-        "timestamp": "2026-04-11T15:01:03.678Z",
+        "timestamp": "2026-04-11T15:23:57.348Z",
         "directed": true
       }
     },
@@ -135,7 +135,7 @@
       "target": "view:Kanban",
       "attributes": {
         "type": "viewOf",
-        "timestamp": "2026-04-11T15:01:03.678Z",
+        "timestamp": "2026-04-11T15:23:57.348Z",
         "directed": true
       }
     },
@@ -144,7 +144,7 @@
       "target": "agent:prodirek",
       "attributes": {
         "type": "hasView",
-        "timestamp": "2026-04-11T15:01:03.701Z",
+        "timestamp": "2026-04-11T15:23:57.371Z",
         "directed": true
       }
     },
@@ -153,7 +153,7 @@
       "target": "view:Gantt",
       "attributes": {
         "type": "viewOf",
-        "timestamp": "2026-04-11T15:01:03.701Z",
+        "timestamp": "2026-04-11T15:23:57.371Z",
         "directed": true
       }
     },
@@ -162,7 +162,7 @@
       "target": "agent:arko",
       "attributes": {
         "type": "hasView",
-        "timestamp": "2026-04-11T15:01:03.701Z",
+        "timestamp": "2026-04-11T15:23:57.371Z",
         "directed": true
       }
     },
@@ -171,7 +171,7 @@
       "target": "view:Gantt",
       "attributes": {
         "type": "viewOf",
-        "timestamp": "2026-04-11T15:01:03.701Z",
+        "timestamp": "2026-04-11T15:23:57.371Z",
         "directed": true
       }
     },
@@ -180,7 +180,7 @@
       "target": "agent:prodirek",
       "attributes": {
         "type": "hasView",
-        "timestamp": "2026-04-11T15:01:03.725Z",
+        "timestamp": "2026-04-11T15:23:57.395Z",
         "directed": true
       }
     },
@@ -189,7 +189,7 @@
       "target": "view:Eisenhower",
       "attributes": {
         "type": "viewOf",
-        "timestamp": "2026-04-11T15:01:03.725Z",
+        "timestamp": "2026-04-11T15:23:57.395Z",
         "directed": true
       }
     },
@@ -198,7 +198,7 @@
       "target": "agent:arko",
       "attributes": {
         "type": "hasView",
-        "timestamp": "2026-04-11T15:01:03.725Z",
+        "timestamp": "2026-04-11T15:23:57.395Z",
         "directed": true
       }
     },
@@ -207,7 +207,7 @@
       "target": "view:Eisenhower",
       "attributes": {
         "type": "viewOf",
-        "timestamp": "2026-04-11T15:01:03.725Z",
+        "timestamp": "2026-04-11T15:23:57.395Z",
         "directed": true
       }
     },
@@ -216,7 +216,7 @@
       "target": "agent:arko",
       "attributes": {
         "type": "hasAgent",
-        "timestamp": "2026-04-11T15:01:03.726Z",
+        "timestamp": "2026-04-11T15:23:57.397Z",
         "directed": true
       }
     },
@@ -225,14 +225,14 @@
       "target": "agent:prodirek",
       "attributes": {
         "type": "agentOf",
-        "timestamp": "2026-04-11T15:01:03.726Z",
+        "timestamp": "2026-04-11T15:23:57.397Z",
         "directed": true
       }
     }
   ],
   "metadata": {
     "version": "1.0",
-    "timestamp": "2026-04-11T15:01:03.729Z",
+    "timestamp": "2026-04-11T15:23:57.399Z",
     "viewType": "generic"
   }
 }

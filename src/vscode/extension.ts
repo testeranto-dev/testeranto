@@ -166,7 +166,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         context.subscriptions.push(openProcessTerminalCommand);
 
         // Register the openView command
-        const openViewCommand = vscode.commands.registerCommand('testeranto.openView', async (viewKey?: string, viewPath?: string) => {
+        const openViewCommand = vscode.commands.registerCommand('testeranto.openView', async (viewKey?: string, viewUrl?: string) => {
             try {
                 outputChannel.appendLine(`[Testeranto] Opening view: ${viewKey || 'unknown'}`);
 
@@ -175,25 +175,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     return;
                 }
 
-                // Get the view path from config if not provided
-                let actualViewPath = viewPath;
-                if (!actualViewPath) {
-                    // Try to fetch from server
-                    try {
-                        const response = await fetch(`http://localhost:3000/~/vscode-views/${viewKey}`);
-                        if (response.ok) {
-                            const data = await response.json() as { viewPath: string };
-                            actualViewPath = data.viewPath;
-                        }
-                    } catch (error) {
-                        outputChannel.appendLine(`[Testeranto] Error fetching view path from server: ${error}`);
-                    }
-                }
-
-                if (!actualViewPath) {
-                    vscode.window.showErrorMessage(`Could not determine path for view: ${viewKey}`);
-                    return;
-                }
+                // Construct the URL directly - views are always at http://localhost:3000/testeranto/views/{viewKey}.html
+                const actualViewUrl = viewUrl || `http://localhost:3000/testeranto/views/${viewKey}.html`;
 
                 // Open the view in a webview panel
                 const panel = vscode.window.createWebviewPanel(
@@ -206,26 +189,32 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     }
                 );
 
-                // Load the view content
-                // If it's a local file, read it
-                if (actualViewPath.startsWith('file://')) {
-                    const filePath = actualViewPath.replace('file://', '');
-                    try {
-                        const content = fs.readFileSync(filePath, 'utf8');
-                        panel.webview.html = content;
-                    } catch (error) {
-                        panel.webview.html = `<html><body><h1>Error loading view</h1><p>Could not read file: ${filePath}</p><p>${error}</p></body></html>`;
-                    }
-                } else if (actualViewPath.startsWith('http://') || actualViewPath.startsWith('https://')) {
-                    // If it's a URL, navigate to it
-                    panel.webview.html = `<html><body><iframe src="${actualViewPath}" style="width:100%; height:100vh; border:none;"></iframe></body></html>`;
-                } else {
-                    // Assume it's a relative path to a static file served by the server
-                    const serverUrl = `http://localhost:3000${actualViewPath.startsWith('/') ? actualViewPath : '/' + actualViewPath}`;
-                    panel.webview.html = `<html><body><iframe src="${serverUrl}" style="width:100%; height:100vh; border:none;"></iframe></body></html>`;
-                }
+                // Load the view in an iframe
+                panel.webview.html = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            body, html {
+                                margin: 0;
+                                padding: 0;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+                            iframe {
+                                width: 100%;
+                                height: 100vh;
+                                border: none;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="${actualViewUrl}"></iframe>
+                    </body>
+                    </html>
+                `;
 
-                outputChannel.appendLine(`[Testeranto] Opened view: ${viewKey} at ${actualViewPath}`);
+                outputChannel.appendLine(`[Testeranto] Opened view: ${viewKey} at ${actualViewUrl}`);
 
             } catch (error: any) {
                 outputChannel.appendLine(`[Testeranto] Error opening view: ${error.message}`);

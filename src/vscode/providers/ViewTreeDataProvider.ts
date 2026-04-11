@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
-import { ApiUtils } from './utils/apiUtils';
 
 export class ViewTreeDataProvider extends BaseTreeDataProvider {
     private views: any[] = [];
@@ -26,45 +25,29 @@ export class ViewTreeDataProvider extends BaseTreeDataProvider {
         try {
             // Load views from the server - this will fail if server is not running
             await this.loadViews();
-            
+
+            // If no views loaded from server, use default views
             if (this.views.length === 0) {
-                return [
-                    new TestTreeItem(
-                        'No views configured',
-                        TreeItemType.Info,
-                        vscode.TreeItemCollapsibleState.None,
-                        { 
-                            info: 'Configure views in testeranto.ts'
-                        }
-                    ),
-                    new TestTreeItem(
-                        'Refresh views',
-                        TreeItemType.Info,
-                        vscode.TreeItemCollapsibleState.None,
-                        {
-                            action: 'refresh',
-                            description: 'Click to refresh views'
-                        },
-                        {
-                            command: 'testeranto.refreshViewTree',
-                            title: 'Refresh Views'
-                        }
-                    )
-                ];
+                // Default views based on common configuration
+                const defaultViewKeys = ['Kanban', 'Gantt', 'Eisenhower'];
+                this.views = defaultViewKeys.map(key => ({
+                    key,
+                    name: key,
+                    url: `http://localhost:3000/testeranto/views/${key}.html`
+                }));
             }
 
             return this.views.map(view => {
                 const viewKey = view.key || view.id;
                 const viewName = view.name || viewKey;
-                const viewPath = view.path || view.dataPath;
-                
+
                 return new TestTreeItem(
                     viewName,
                     TreeItemType.Config,
                     vscode.TreeItemCollapsibleState.Collapsed,
                     {
                         runtimeKey: viewKey,
-                        description: viewPath,
+                        description: `Open ${viewName} view`,
                         action: 'openView'
                     },
                     undefined,
@@ -79,7 +62,7 @@ export class ViewTreeDataProvider extends BaseTreeDataProvider {
                     'Cannot connect to server',
                     TreeItemType.Info,
                     vscode.TreeItemCollapsibleState.None,
-                    { 
+                    {
                         info: 'Testeranto server is not running on port 3000.'
                     }
                 ),
@@ -113,35 +96,9 @@ export class ViewTreeDataProvider extends BaseTreeDataProvider {
 
         const details: TestTreeItem[] = [];
 
-        // Add view key
-        details.push(new TestTreeItem(
-            `Key: ${viewKey}`,
-            TreeItemType.Info,
-            vscode.TreeItemCollapsibleState.None,
-            { info: viewKey }
-        ));
-
-        // Add view name
-        if (view.name) {
-            details.push(new TestTreeItem(
-                `Name: ${view.name}`,
-                TreeItemType.Info,
-                vscode.TreeItemCollapsibleState.None,
-                { info: view.name }
-            ));
-        }
-
-        // Add data path
-        if (view.path || view.dataPath) {
-            details.push(new TestTreeItem(
-                `Data: ${view.path || view.dataPath}`,
-                TreeItemType.Info,
-                vscode.TreeItemCollapsibleState.None,
-                { info: view.path || view.dataPath }
-            ));
-        }
-
         // Add open action
+        // Views are always at http://localhost:3000/testeranto/views/{viewKey}.html
+        const viewUrl = `http://localhost:3000/testeranto/views/${viewKey}.html`;
         details.push(new TestTreeItem(
             'Open View',
             TreeItemType.Config,
@@ -154,7 +111,7 @@ export class ViewTreeDataProvider extends BaseTreeDataProvider {
             {
                 command: 'testeranto.openView',
                 title: 'Open View',
-                arguments: [viewKey, view.name || viewKey, view.path || view.dataPath]
+                arguments: [viewKey, viewUrl]
             },
             new vscode.ThemeIcon('link-external'),
             'viewOpenItem'
@@ -172,26 +129,41 @@ export class ViewTreeDataProvider extends BaseTreeDataProvider {
                     'Accept': 'application/json',
                 },
             });
-            
+
             if (!response.ok) {
                 throw new Error(`Server returned ${response.status}: ${response.statusText}`);
             }
-            
+
             const data = await response.json();
             console.log('[ViewTreeDataProvider] Response:', data);
-            
+
             if (data && data.views) {
-                this.views = data.views;
-                console.log(`[ViewTreeDataProvider] Loaded ${this.views.length} views:`, 
-                    this.views.map(v => `${v.key} (${v.name})`).join(', '));
+                // Process views from server
+                this.views = data.views.map((view: any) => {
+                    const viewKey = view.key || view.id;
+                    // Ensure URL is correct
+                    let viewUrl = view.url;
+                    if (!viewUrl) {
+                        viewUrl = `http://localhost:3000/testeranto/views/${viewKey}.html`;
+                    } else if (viewUrl.includes('/stakeholder/')) {
+                        // Fix URLs with /stakeholder/ in them
+                        viewUrl = viewUrl.replace('/stakeholder/', '/');
+                    }
+                    return {
+                        key: viewKey,
+                        name: view.name || viewKey,
+                        url: viewUrl
+                    };
+                });
+                console.log(`[ViewTreeDataProvider] Loaded ${this.views.length} views from server`);
             } else {
-                console.warn('[ViewTreeDataProvider] No views found in response');
+                console.warn('[ViewTreeDataProvider] No views found in server response');
                 this.views = [];
             }
         } catch (error) {
-            console.error('[ViewTreeDataProvider] Failed to load views:', error);
-            // Re-throw so getViewItems can handle it
-            throw error;
+            console.error('[ViewTreeDataProvider] Failed to load views from server:', error);
+            // If we can't load from server, we'll use default views
+            this.views = [];
         }
     }
 
