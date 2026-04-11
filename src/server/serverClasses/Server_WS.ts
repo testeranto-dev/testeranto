@@ -2,7 +2,7 @@
 import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
-import { WsManager } from "./WsManager";
+import { WsManager } from "./utils/WsManager";
 
 export class Server_WS extends Server_HTTP {
   protected wsClients: Set<WebSocket> = new Set();

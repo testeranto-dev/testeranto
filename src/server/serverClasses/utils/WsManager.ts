@@ -1,5 +1,3 @@
-import { stakeholderWsAPI } from '../../api/api';
-
 export class WsManager {
   escapeXml(unsafe: string): string {
     if (!unsafe) return '';
