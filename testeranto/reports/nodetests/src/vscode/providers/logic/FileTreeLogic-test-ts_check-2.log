@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T19:26:48.166Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-2 (runtime: node) ===
-=== Container ID: 055fb65f6f9c70b1241f9c6189f9d0080d638ade52cf082b7b84948ac88f7475 ===
+=== Log started at 2026-04-11T21:32:42.182Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-2 (runtime: node) ===
+=== Container ID: c6461202fa84bace0a0084d417258f5709c7b1b6013e6927f13433b865952106 ===
 === Test: src/vscode/providers/logic/FileTreeLogic.test.ts ===
 === Config Key: nodetests ===
 
@@ -7,4 +7,4 @@
 No calculator test found
 No calculator test found
 
-=== Log captured at 2026-04-11T19:26:48.535Z (container status: exited, exit code: 0) ===
+=== Log captured at 2026-04-11T21:32:42.590Z (container status: exited, exit code: 0) ===

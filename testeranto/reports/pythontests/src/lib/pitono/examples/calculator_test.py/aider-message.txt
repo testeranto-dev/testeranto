@@ -1,4 +1,0 @@
-/add src/lib/pitono/examples/calculator_test.py
-
-Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.
-

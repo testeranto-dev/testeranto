@@ -1,9 +1,0 @@
-=== Log started at 2026-04-06T20:12:02.915Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-check-2 (runtime: node) ===
-=== Container ID: b1ea648064e9e39cb7a37483bf54296fc305e2f6ee9c474651a98985336d3d69 ===
-=== Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts ===
-=== Config Key: nodetests ===
-
-=== ALL LOGS (stdout + stderr) ===
-No calculator test found
-
-=== Log captured at 2026-04-06T20:12:04.255Z (container status: exited, exit code: 0) ===

@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the AI powered test framework for polyglot projects",
-  "version": "0.346.0",
+  "version": "0.347.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -200,7 +200,7 @@
     "Other"
   ],
   "scripts": {
-    "dev3": "yarn package:vsce && yarn dev2 && testeranto init && testeranto dev",
+    "dev3": "yarn package:vsce && yarn dev2 && testeranto init && testeranto once",
     "serve": "testeranto dev",
     "dev2": "yarn bundle && bun build ./src/index.ts --compile --outfile ./dist/testeranto && bun link",
     "dev": "yarn build:server && yarn link:server",

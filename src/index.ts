@@ -7,7 +7,7 @@ import { Server } from "./server/serverClasses/Server.ts";
 import { join } from "path";
 import fs from "fs/promises";
 
-import stakeholderTsx from "./stakeholderApp/index.tsx" with { type: "text" };
+// import stakeholderTsx from "./stakeholderAppIDK/index.tsx" with { type: "text" };
 
 const init = async () => {
 
@@ -23,10 +23,10 @@ const init = async () => {
   await fs.mkdir(reportsDir, { recursive: true });
 
   // Copy stakeholder index.tsx if it doesn't exist
-  const stakeholderIndexPath = join(reportsDir, "index.tsx");
+  // const stakeholderIndexPath = join(reportsDir, "index.tsx");
 
   // console.log(stakeholderIndexPath, stakeholderTsx);
-  await fs.writeFile(stakeholderIndexPath, stakeholderTsx);
+  // await fs.writeFile(stakeholderIndexPath, stakeholderTsx);
 
 }
 

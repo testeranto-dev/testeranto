@@ -4,7 +4,7 @@ services:
     environment:
       NODE_ENV: production
       ENV: node
-      MODE: dev
+      MODE: once
     working_dir: /workspace
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
@@ -136,7 +136,7 @@ services:
                  # Exit with the same code (no restart)
                  exit $EXIT_CODE
     environment:
-      MODE: dev
+      MODE: once
       NODE_ENV: production
       AGENT_MARKDOWN_FILE: /workspace/agents/prodirek.md
       EDITOR: vim
@@ -178,7 +178,7 @@ services:
                  # Exit with the same code (no restart)
                  exit $EXIT_CODE
     environment:
-      MODE: dev
+      MODE: once
       NODE_ENV: production
       AGENT_MARKDOWN_FILE: /workspace/agents/arko.md
       EDITOR: vim

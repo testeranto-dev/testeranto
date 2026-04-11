@@ -23,7 +23,6 @@
 /add src/lib/tiposkripto/src/TestRunner.ts
 /add src/vscode/providers/logic/FileTreeLogic.test.ts
 
-/read testeranto/reports/nodetests/src/vscode/providers/logic/filetreelogic-test-ts_bdd.log
 /read testeranto/reports/nodetests/src/vscode/providers/logic/filetreelogic-test-ts_check-0.log
 /read testeranto/reports/nodetests/src/vscode/providers/logic/filetreelogic-test-ts_check-1.log
 /read testeranto/reports/nodetests/src/vscode/providers/logic/filetreelogic-test-ts_check-2.log

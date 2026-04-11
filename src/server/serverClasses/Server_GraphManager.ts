@@ -2,12 +2,14 @@ import fs from "fs";
 import path from "path";
 import type { GraphEdgeAttributes, GraphNodeAttributes } from "../../graph/index";
 import type { ITesterantoConfig } from "../../Types";
+import { handleMarkdownFileChange } from "../graph/handleMarkdownFileChange";
 import { GraphManager } from "../graph/index";
+import { updateMarkdownFile } from "../graph/updateMarkdownFile";
 import type { IMode } from "../types";
 import { Server_GraphManagerCore } from "./Server_GraphManagerCore";
 import { generateFileTreeGraphPure } from "./utils/generateFileTreeGraphPure";
 
-import { handleMarkdownFileChange } from "../stakeholder";
+// import { handleMarkdownFileChange } from "../stakeholder";
 
 export class Server_GraphManager {
   protected graphManager: GraphManager;
@@ -180,16 +182,16 @@ export class Server_GraphManager {
 
       console.log(`[Server_GraphManager] Wrote slice for agent ${agentName} to ${sliceFilePath}`);
       console.log(`[Server_GraphManager] File size: ${content.length} bytes`);
-      
+
       // Log the structure of the slice data
       console.log(`[Server_GraphManager] Slice data type: ${sliceData.viewType || 'unknown'}`);
       console.log(`[Server_GraphManager] Agent name in slice: ${sliceData.agentName || 'not specified'}`);
-      
+
       // Log summary if available
       if (sliceData.data?.summary) {
         console.log(`[Server_GraphManager] Slice summary:`, sliceData.data.summary);
       }
-      
+
       // Check for chat messages in the new structure
       const chatMessages = sliceData.data?.chatMessages || [];
       console.log(`[Server_GraphManager] Found ${chatMessages.length} chat messages in slice for ${agentName}`);
@@ -295,9 +297,9 @@ export class Server_GraphManager {
       const configCount = sliceData.data?.configs?.length || 0;
       const entrypointCount = sliceData.data?.entrypoints?.length || 0;
       const documentationCount = sliceData.data?.documentation?.length || 0;
-      
-      const totalItems = chatMessageCount + featureCount + configCount + 
-                         entrypointCount + documentationCount;
+
+      const totalItems = chatMessageCount + featureCount + configCount +
+        entrypointCount + documentationCount;
 
       // Create agent node attributes
       const agentNodeAttributes: any = {
@@ -529,7 +531,6 @@ export class Server_GraphManager {
   }
 
   async writeMarkdownFile(filePath: string, frontmatterData: Record<string, any>, contentBody?: string): Promise<void> {
-    const { updateMarkdownFile } = await import('../stakeholder/markdown');
     await updateMarkdownFile(this.projectRoot, filePath, frontmatterData, contentBody);
   }
 

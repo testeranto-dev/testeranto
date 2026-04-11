@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T21:13:45.932Z for service nodetests-builder (runtime: node) ===
-=== Container ID: 9b51bd45e927ae5fbe0ed07c25ab42c825f70086c3ed00e64ac51050ee33316f ===
+=== Log started at 2026-04-11T21:32:08.685Z for service nodetests-builder (runtime: node) ===
+=== Container ID: cba388a90ccc62af43f6f6c519f9213c32f7c04ea49284255d59b04bf19b7ca3 ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
@@ -9,9 +9,11 @@ warning package.json: "dependencies" has dependency "typescript" with range "^5.
 warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.242.0: The engine "bun" appears to be invalid.
 $ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs '{"name":"nodetests","tests":["src/vscode/providers/logic/FileTreeLogic.test.ts"],"outputs":[]}'
+[NODE BUILDER] Created report directory: /workspace/testeranto/reports/nodetests
 [NODE BUILDER] is now bundling:  nodetests
 [NODE BUILDER] Entry points: src/vscode/providers/logic/FileTreeLogic.test.ts
 [NODE BUILDER] Running in dev mode - starting watch mode
+[node Builder] Created test logs directory: /workspace/testeranto/reports/nodetests/test-logs
 ▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
 
     package.json:222:6:
@@ -66,4 +68,4 @@ node > build ended with 0 errors
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
 
-=== Log captured at 2026-04-11T21:14:07.056Z (container status: running) ===
+=== Log captured at 2026-04-11T21:32:29.906Z (container status: running) ===

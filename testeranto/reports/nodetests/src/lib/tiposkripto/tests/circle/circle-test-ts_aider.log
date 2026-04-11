@@ -1,9 +1,0 @@
-=== Log started at 2026-04-11T17:41:09.001Z for service nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider (runtime: node) ===
-=== Container ID: 79e988b3bdb4c61eef11fa6df586f2b66d3f819ef7e30842845f56ec428e79e8 ===
-=== Test: src/lib/tiposkripto/tests/circle/Circle.test.ts ===
-=== Config Key: nodetests ===
-
-
-=== No logs captured (container may have exited without output) ===
-
-=== Log captured at 2026-04-11T17:41:34.963Z (container status: running) ===

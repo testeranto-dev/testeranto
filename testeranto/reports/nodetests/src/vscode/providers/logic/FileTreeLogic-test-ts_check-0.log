@@ -1,5 +1,5 @@
-=== Log started at 2026-04-11T21:14:19.411Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0 (runtime: node) ===
-=== Container ID: 02112a4bf0721707585b501648545502fa52e36a350bf0da44c6fcfd0b6b7911 ===
+=== Log started at 2026-04-11T21:37:08.933Z for service nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0 (runtime: node) ===
+=== Container ID: 5475c9c5178ef760884f760043db5a8c213ade6684608f518c699a90a2c456aa ===
 === Test: src/vscode/providers/logic/FileTreeLogic.test.ts ===
 === Config Key: nodetests ===
 
@@ -40,7 +40,7 @@ Common causes of this problem include:
 1. The "import" plugin is not defined in your configuration file.
 2. The "import" plugin is not defined within the same configuration object in which the "import/no-dynamic-require" rule is applied.
 
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 
-=== Log captured at 2026-04-11T21:14:20.606Z (container status: exited, exit code: 2) ===
+=== Log captured at 2026-04-11T21:37:10.162Z (container status: exited, exit code: 2) ===
