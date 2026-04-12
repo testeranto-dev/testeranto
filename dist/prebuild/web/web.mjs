@@ -424,6 +424,17 @@ async function main() {
       throw new Error(`Web config file ${webConfigPath} does not export a default object`);
     }
     console.log(`[WEB BUILDER] Web config loaded successfully:`, Object.keys(webConfigs));
+    const runtimeConfig = JSON.parse(configJson);
+    const userEsbuildConfig = runtimeConfig.esbuildConfig || {};
+    const mergedWebConfigs = {
+      ...webConfigs,
+      ...userEsbuildConfig,
+      // Handle plugins specially
+      plugins: [
+        ...webConfigs.plugins || [],
+        ...userEsbuildConfig.plugins || []
+      ]
+    };
     const setupSignalHandlers = () => {
       process.on("SIGINT", async () => {
         console.log("[WEB BUILDER] Received SIGINT - producing output artifacts");
@@ -447,7 +458,7 @@ async function main() {
     };
     setupSignalHandlers();
     const dummyProjectConfig = {};
-    await startBundling(webConfigs, dummyProjectConfig, entryPoints);
+    await startBundling(mergedWebConfigs, dummyProjectConfig, entryPoints);
     const isDevMode = process.env.MODE === "dev" || process.argv.includes("dev");
     if (isDevMode) {
       process.on("unhandledRejection", (reason, promise) => {

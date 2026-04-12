@@ -244,7 +244,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
       routeName,
       request,
       this.configs,
-      this.graphManager.getAgentSlice.bind(this.graphManager),
+      this.getAgentSlice.bind(this),
       server.startAgent ? server.startAgent.bind(server) : undefined
     );
   }

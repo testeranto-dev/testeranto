@@ -287,6 +287,21 @@ async function main() {
     
     console.log(`[WEB BUILDER] Web config loaded successfully:`, Object.keys(webConfigs));
 
+    // Get runtime configuration to check for additional esbuild config
+    const runtimeConfig = JSON.parse(configJson);
+    const userEsbuildConfig = runtimeConfig.esbuildConfig || {};
+
+    // Merge user esbuild config with web.mjs config
+    const mergedWebConfigs = {
+      ...webConfigs,
+      ...userEsbuildConfig,
+      // Handle plugins specially
+      plugins: [
+        ...(webConfigs.plugins || []),
+        ...(userEsbuildConfig.plugins || [])
+      ]
+    };
+
     // Set up signal handlers
     const setupSignalHandlers = () => {
       process.on("SIGINT", async () => {
@@ -317,7 +332,9 @@ async function main() {
 
     // Create a dummy project config since it's not used
     const dummyProjectConfig = {} as ITesterantoConfig;
-    await startBundling(webConfigs, dummyProjectConfig, entryPoints);
+    
+    // Pass merged config instead of original webConfigs
+    await startBundling(mergedWebConfigs, dummyProjectConfig, entryPoints);
 
     // In dev mode, keep the process running even if there's an error
     const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
@@ -348,23 +365,6 @@ async function main() {
       process.exit(1);
     }
   }
-
-  //   // Create a dummy project config since it's not used
-  //   const dummyProjectConfig = {} as ITesterantoConfig;
-  //   await startBundling(webConfigs, dummyProjectConfig, entryPoints);
-  // } catch (error) {
-  //   console.error(
-  //     "WEB BUILDER: Error importing config:",
-  //     webConfigPath,
-  //     error,
-  //   );
-  //   console.error(error);
-
-  //   // Try to produce output artifacts before exiting on error
-  //   await produceOutputArtifacts();
-  //   logStream.end();
-  //   process.exit(1);
-  // }
 }
 
 main();

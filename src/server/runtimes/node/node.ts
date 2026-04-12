@@ -370,6 +370,21 @@ async function main() {
   try {
     const nodeConfigs = (await import(nodeConfigPath)).default;
 
+    // Get runtime configuration to check for additional esbuild config
+    const runtimeConfig = JSON.parse(configJson);
+    const userEsbuildConfig = runtimeConfig.esbuildConfig || {};
+
+    // Merge user esbuild config with node.mjs config
+    const mergedNodeConfigs = {
+      ...nodeConfigs,
+      ...userEsbuildConfig,
+      // Handle plugins specially
+      plugins: [
+        ...(nodeConfigs.plugins || []),
+        ...(userEsbuildConfig.plugins || [])
+      ]
+    };
+
     // Set up signal handlers
     const setupSignalHandlers = () => {
       process.on("SIGINT", async () => {
@@ -405,7 +420,9 @@ async function main() {
 
     // Create a dummy project config since it's not used
     const dummyProjectConfig = {} as ITesterantoConfig;
-    await startBundling(nodeConfigs, dummyProjectConfig, entryPoints);
+    
+    // Pass merged config instead of original nodeConfigs
+    await startBundling(mergedNodeConfigs, dummyProjectConfig, entryPoints);
 
     // In dev mode, keep the process running even if there's an error
     const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');

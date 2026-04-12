@@ -1730,6 +1730,17 @@ async function startBundling(nodeConfigs, projectConfig, entryPoints2) {
 async function main() {
   try {
     const nodeConfigs = (await import(nodeConfigPath)).default;
+    const runtimeConfig = JSON.parse(configJson);
+    const userEsbuildConfig = runtimeConfig.esbuildConfig || {};
+    const mergedNodeConfigs = {
+      ...nodeConfigs,
+      ...userEsbuildConfig,
+      // Handle plugins specially
+      plugins: [
+        ...nodeConfigs.plugins || [],
+        ...userEsbuildConfig.plugins || []
+      ]
+    };
     const setupSignalHandlers = () => {
       process.on("SIGINT", async () => {
         console.log("[NODE BUILDER] Received SIGINT - producing output artifacts");
@@ -1757,7 +1768,7 @@ async function main() {
     };
     setupSignalHandlers();
     const dummyProjectConfig = {};
-    await startBundling(nodeConfigs, dummyProjectConfig, entryPoints);
+    await startBundling(mergedNodeConfigs, dummyProjectConfig, entryPoints);
     const isDevMode2 = process.env.MODE === "dev" || process.argv.includes("dev");
     if (isDevMode2) {
       process.on("unhandledRejection", (reason, promise) => {

@@ -1,4 +1,9 @@
 // the esbuild configuration for testeranto/web
 export default {
-  loaders: []
+  loaders: [],
+  external: [],
+  define: {
+    'process.env.NODE_ENV': '"test"',
+    'window.IS_TEST': 'true'
+  }
 }

@@ -1,5 +1,9 @@
 // This file provides types for mocked and non-mocked dependencies
 
 export type IDeps = {
-  fs: any
+  fs: any,
+  http: any,
+  https: any,
+  child_process: any,
+  process: any
 }
