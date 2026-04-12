@@ -1,20 +1,28 @@
+import { vscodeHttpAPI } from "../../api/api";
 import type { AllTestResults, ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
-import { Server_HTTP_Base } from "./Server_HTTP_Base";
-import { Server_HTTP_Routes } from "./Server_Http/Server_HTTP_Routes";
-import { Server_WS } from "./Server_WS";
+import { handleRoutePure } from "./Server_Http/handleRoutePure";
+import * as gitHandlers from "./Server_Http/utils/gitHandlers";
+import * as lockHandlers from "./Server_Http/utils/lockHandlers";
+import { generateTerminalScript } from "./Server_Http/utils/routeUtils";
+import * as serviceHandlers from "./Server_Http/utils/serviceHandlers";
+import { Server_HTTP_Graph } from "./Server_HTTP_Graph";
+import { Server_WS_HTTP } from "./Server_WS_HTTP";
+import { transformTestResultsUtil } from "./utils/testResultsUtils";
+import { handleAiderRoute, handleFilesRoute, handleGetViewsUtil, handleProcessRoute, handleRuntimeRoute } from "./utils/routeHandlerUtils";
+import { handleAddChatMessageUtil } from "./utils/chatMessageUtils";
+import { handleChatRouteUtil } from "./utils/chatRouteUtils";
+import { handleOpenProcessTerminalUtil } from "./utils/httpRouteUtils";
+import { handleUserAgentsRouteUtil } from "./utils/userAgentRouteUtils";
+import { handleAgentRouteUtil } from "./utils/agentRouteUtils";
 
 declare const Bun: any;
 
-export abstract class Server_HTTP extends Server_HTTP_Base {
+export abstract class Server_HTTP extends Server_HTTP_Graph {
   protected bunServer: any | null = null;
-  private routesHandler: Server_HTTP_Routes;
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
-    console.log('[Server_HTTP] Constructor called with configs:',
-      configs ? `has runtimes: ${Object.keys(configs.runtimes || {}).length}` : 'configs is null/undefined');
-    this.routesHandler = new Server_HTTP_Routes(this, configs);
   }
 
   async start(): Promise<void> {
@@ -45,7 +53,6 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
             );
           }
         } catch (error: any) {
-          console.error('[Server_HTTP] Error in fetch handler:', error);
           return new Response(`Server Error: ${error.message}`, {
             status: 500,
             headers: { "Content-Type": "text/plain" },
@@ -60,45 +67,39 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
       },
     };
 
-    if (this instanceof Server_WS) {
-      const wsThis = this as Server_WS;
-      serverOptions.websocket = {
-        open: (ws: WebSocket) => {
-          wsThis.wsClients.add(ws);
-          ws.send(
-            JSON.stringify({
-              type: 'connected',
-              message: "Connected to Process Manager WebSocket",
-              timestamp: new Date().toISOString(),
-            }),
-          );
-        },
-        message: (ws: WebSocket, message: object) => {
-          const data =
-            typeof message === "string"
-              ? JSON.parse(message)
-              : JSON.parse(message.toString());
-          if (ws && typeof ws.send === "function") {
-            wsThis.handleWebSocketMessage(ws, data);
-          }
-        },
-        close: (ws: WebSocket) => {
-          wsThis.wsClients.delete(ws);
-          wsThis.cleanupClientSubscriptions(ws);
-        },
-        error: (ws: WebSocket, error: Error) => {
-          wsThis.wsClients.delete(ws);
-          wsThis.cleanupClientSubscriptions(ws);
-        },
-      };
-    }
+    const wsThis = this as Server_WebSocket_Http;
+    serverOptions.websocket = {
+      open: (ws: WebSocket) => {
+        wsThis.wsClients.add(ws);
+        ws.send(
+          JSON.stringify({
+            type: 'connected',
+            message: "Connected to Process Manager WebSocket",
+            timestamp: new Date().toISOString(),
+          }),
+        );
+      },
+      message: (ws: WebSocket, message: object) => {
+        const data =
+          typeof message === "string"
+            ? JSON.parse(message)
+            : JSON.parse(message.toString());
+        if (ws && typeof ws.send === "function") {
+          wsThis.handleWebSocketMessage(ws, data);
+        }
+      },
+      close: (ws: WebSocket) => {
+        wsThis.wsClients.delete(ws);
+        wsThis.cleanupClientSubscriptions(ws);
+      },
+      error: (ws: WebSocket, error: Error) => {
+        wsThis.wsClients.delete(ws);
+        wsThis.cleanupClientSubscriptions(ws);
+      },
+    };
 
     if (typeof Bun !== 'undefined') {
-      console.log(`[Server_HTTP] Starting HTTP server on ${serverOptions.hostname}:${serverOptions.port}`);
       this.bunServer = Bun.serve(serverOptions);
-      console.log(`[Server_HTTP] HTTP server started on ${this.bunServer.hostname}:${this.bunServer.port}`);
-    } else {
-      console.error('Bun is not available');
     }
   }
 
@@ -115,10 +116,9 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
   ): Promise<Response | undefined> {
     const url = new URL(request.url);
 
-    console.log(`[Server_HTTP] Handling request: ${request.method} ${url.pathname}`);
 
     if (request.headers.get("upgrade") === "websocket") {
-      if (this instanceof Server_WS && server) {
+      if (this instanceof Server_WebSocket_Http && server) {
         const success = server.upgrade(request);
         if (success) {
           return undefined;
@@ -147,9 +147,8 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
       return this.handleOptions();
     }
 
-
     try {
-      const result = await this.routesHandler.handleRoute(routeName, request, url);
+      const result = await this.handleRoute(routeName, request, url);
       // Ensure we always return a Response
       if (result instanceof Response) {
         return result;
@@ -170,89 +169,199 @@ export abstract class Server_HTTP extends Server_HTTP_Base {
     }
   }
 
+  private async handleRoute(
+    routeName: string,
+    request: Request,
+    url: URL,
+  ): Promise<Response> {
+    // Route handlers
+    const routeHandlers: Record<string, () => Promise<Response> | Response> = {
+      files: () => this.handleFilesRoute(),
+      process: () => handleProcessRoute(this.graphManager),
+      aider: () => handleAiderRoute(this.graphManager),
+      runtime: () => handleRuntimeRoute(this.graphManager),
+      agents: () => this.handleAgentRoute('', request),
+      'user-agents': () => this.handleUserAgentsRoute(),
+      chat: () => this.handleChatRoute(url),
+      'lock-status': () => lockHandlers.handleLockStatusRoute(this),
+      down: () => serviceHandlers.handleDown(this),
+      up: () => serviceHandlers.handleUp(this),
+      'git/status': () => gitHandlers.handleGitStatus(),
+      'git/switch-branch': () => gitHandlers.handleGitSwitchBranch(request),
+      'git/commit': () => gitHandlers.handleGitCommit(request),
+      'git/merge': () => gitHandlers.handleGitMerge(request),
+      'git/conflicts': () => gitHandlers.handleGitConflicts(),
+      'git/resolve-conflict': () => gitHandlers.handleGitResolveConflict(request),
+      'open-process-terminal': () => this.handleOpenProcessTerminal(request),
+      'add-chat-message': () => this.handleAddChatMessage(request),
+    };
 
+    // Handle view requests
+    if (routeName === 'views' && request.method === 'GET') {
+      return this.handleGetViews(request, url);
+    }
+
+    // Handle view slice requests
+    if (routeName.startsWith('views/')) {
+      const parts = routeName.split('/');
+      if (parts.length >= 3 && parts[1] && parts[2] === 'slice') {
+        const viewKey = parts[1];
+        return this.handleViewSlice(request, url, viewKey);
+      }
+    }
+
+    for (const [key, definition] of Object.entries(vscodeHttpAPI)) {
+      const apiDef = definition as any;
+      if (apiDef.check && apiDef.check(routeName, { method: request.method })) {
+        if (key === 'getAgentSlice' || key === 'launchAgent') {
+          return this.handleAgentRoute(routeName, request);
+        } else if (key === 'getVscodeView') {
+          return this.handleVscodeViewRoute(routeName);
+        } else if (key === 'getStakeholderView') {
+          return this.handleStakeholderViewRoute(routeName);
+        } else {
+          const baseRouteName = apiDef.path.slice(3);
+          const handler = routeHandlers[baseRouteName];
+          if (handler) {
+            return await handler();
+          }
+        }
+      }
+    }
+
+    return handleRoutePure(routeName, request, url, this);
+  }
+
+  // Route handler methods
+  private handleFilesRoute(): Response {
+    return handleFilesRoute(this.graphManager);
+  }
+
+
+  private async handleAgentRoute(routeName: string, request: Request): Promise<Response> {
+    const server = this as any;
+    return handleAgentRouteUtil(
+      routeName,
+      request,
+      this.configs,
+      this.graphManager.getAgentSlice.bind(this.graphManager),
+      server.startAgent ? server.startAgent.bind(server) : undefined
+    );
+  }
+
+  private handleUserAgentsRoute(): Response {
+
+    return handleUserAgentsRouteUtil(this.configs);
+  }
+
+  private handleVscodeViewRoute(routeName: string): Response {
+    const viewName = routeName.slice(13);
+    const viewPath = this.configs.vscodeViews?.[viewName];
+    if (!viewPath) {
+      throw new Error(`View ${viewName} not found`);
+    }
+
+    return new Response(JSON.stringify({
+      viewName,
+      viewPath,
+      timestamp: new Date().toISOString()
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  private handleStakeholderViewRoute(routeName: string): Response {
+    const viewName = routeName.slice(18);
+    const viewPath = this.configs.stakeholderViews?.[viewName];
+    if (!viewPath) {
+      throw new Error(`Stakeholder view ${viewName} not found`);
+    }
+
+    const graphData = this.graphManager.getGraphManager().getGraphData();
+    return new Response(JSON.stringify({
+      viewName,
+      viewPath,
+      graphData,
+      timestamp: new Date().toISOString()
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  private handleChatRoute(url: URL): Response {
+
+    return handleChatRouteUtil();
+  }
+
+  private async handleOpenProcessTerminal(request: Request): Promise<Response> {
+
+
+    return handleOpenProcessTerminalUtil(
+      request,
+      () => (this as any).getAiderProcesses ? (this as any).getAiderProcesses() : [],
+      () => this.graphManager?.getGraphManager ? this.graphManager.getGraphManager() : null,
+      generateTerminalScript
+    );
+  }
+
+  private async handleAddChatMessage(request: Request): Promise<Response> {
+
+    return handleAddChatMessageUtil(request, this.graphManager);
+  }
+
+  private async handleViewSlice(request: Request, url: URL, viewKey: string): Promise<Response> {
+    try {
+      // Get the slice data from the graph manager
+      const sliceData = this.graphManager.getViewSlice(viewKey);
+
+      return new Response(JSON.stringify({
+        viewKey,
+        sliceData,
+        timestamp: new Date().toISOString(),
+        message: `Slice data for view ${viewKey}`
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    } catch (error: any) {
+      return new Response(JSON.stringify({
+        error: "Failed to get view slice",
+        message: error.message,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+  }
+
+  private async handleGetViews(request: Request, url: URL): Promise<Response> {
+    try {
+
+      return handleGetViewsUtil(this.configs);
+    } catch (error: any) {
+      return new Response(JSON.stringify({
+        error: "Failed to get views",
+        message: error.message,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+  }
 
   protected getCurrentTestResults(): AllTestResults {
     // Try to get test results from the server
     // This should be implemented by subclasses
     if ((this as any).getTestResults) {
       const rawResults = (this as any).getTestResults();
-
-      // According to SOUL.md: no guessing, no fallbacks
-      // We need to validate the data structure and transform it correctly
-
-      // If rawResults is already in the expected format, return it
-      if (rawResults && typeof rawResults === 'object' && !Array.isArray(rawResults)) {
-        // Filter to only include configKeys that exist in config runtimes
-        const filtered: AllTestResults = {};
-        for (const [configKey, runtimeResults] of Object.entries(rawResults)) {
-          // Only include if configKey exists in config runtimes
-          if (this.configs?.runtimes?.[configKey]) {
-            filtered[configKey] = runtimeResults as any;
-          } else {
-            console.warn(`[Server_HTTP] Skipping configKey '${configKey}' not present in config runtimes`);
-          }
-        }
-        return filtered;
-      }
-
-      // If rawResults is an array, transform it to the expected format
-      if (Array.isArray(rawResults)) {
-        console.log('[Server_HTTP] Transforming array test results to expected format');
-        console.log(`[Server_HTTP] Array length: ${rawResults.length}`);
-        const transformed: AllTestResults = {};
-        for (const item of rawResults) {
-          if (item && typeof item === 'object') {
-            // Try to extract testName from various possible fields
-            let testName = item.testName || item.name || item.file || item.filePath;
-            // If testName is still undefined, skip this item
-            if (!testName) {
-              console.warn('[Server_HTTP] Item missing testName, skipping:', item);
-              continue;
-            }
-            // Extract configKey - DO NOT use runtime field (deprecated)
-            let configKey = item.configKey;
-            // If configKey is missing, skip this item (no guessing)
-            if (!configKey) {
-              console.warn(`[Server_HTTP] Item missing configKey, skipping:`, item);
-              continue;
-            }
-            // Only include configKey that exists in config runtimes
-            if (!this.configs?.runtimes?.[configKey]) {
-              console.warn(`[Server_HTTP] Skipping item with configKey '${configKey}' not present in config runtimes`);
-              continue;
-            }
-            if (!transformed[configKey]) {
-              transformed[configKey] = {};
-            }
-            // Use testName as key
-            transformed[configKey][testName] = {
-              ...item,
-              configKey,
-              testName
-            };
-          }
-        }
-        // Check if we have any results after transformation
-        if (Object.keys(transformed).length > 0) {
-          console.log(`[Server_HTTP] Transformed array into ${Object.keys(transformed).length} configs`);
-          return transformed;
-        } else {
-          console.warn('[Server_HTTP] Transformation resulted in empty object');
-        }
-      }
-
-      // Otherwise, we need to transform from getTestResultsPure format
-      // But according to SOUL.md, we shouldn't guess
-      // For now, return empty object to avoid processing invalid data
-      console.error('[Server_HTTP] getCurrentTestResults: raw results are not in expected format');
-      console.error('[Server_HTTP] Expected: object with configKey keys matching config');
-      console.error('[Server_HTTP] Got:', typeof rawResults, Array.isArray(rawResults) ? 'array' : 'object');
-      return {};
+      return transformTestResultsUtil(rawResults, this.configs);
     }
     return {};
   }
-
 
   router(a: any): any {
     return a;

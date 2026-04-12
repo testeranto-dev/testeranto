@@ -1,7 +1,7 @@
 {
   "viewType": "agent",
   "agentName": "arko",
-  "timestamp": "2026-04-11T21:34:01.576Z",
+  "timestamp": "2026-04-12T18:26:08.877Z",
   "data": {
     "configs": [],
     "entrypoints": [],
@@ -9,14 +9,12 @@
     "agents": [
       {
         "id": "agent:prodirek",
-        "name": "prodirek",
-        "label": "Agent: prodirek",
+        "label": "prodirek",
         "role": "agent"
       },
       {
         "id": "agent:arko",
-        "name": "arko",
-        "label": "Agent: arko",
+        "label": "arko",
         "role": "agent"
       }
     ],

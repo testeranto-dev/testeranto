@@ -1,148 +1,94 @@
 {
-  "timestamp": "2026-04-11T21:37:48.362Z",
+  "timestamp": "2026-04-12T18:26:45.399Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
       "nodes": [
         {
-          "id": "agent:prodirek",
-          "type": "agent",
-          "label": "Agent: prodirek",
-          "description": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, t...",
-          "agentName": "prodirek",
-          "agentConfig": {
-            "load": [
-              "/read SOUL.md",
-              "/read testeranto/slices/agents/prodirek.json"
-            ],
-            "hasSliceFunction": true
-          },
-          "timestamp": "2026-04-11T21:34:01.483Z",
-          "metadata": {
-            "frontmatter": {
-              "title": "Agent: prodirek",
-              "type": "agent",
-              "agentType": "user-defined"
-            }
-          }
-        },
-        {
-          "id": "agent:arko",
-          "type": "agent",
-          "label": "Agent: arko",
-          "description": "Your name is \"Arko\". You are a Software Architect. Your responsibilities are: 1) You will be give a ...",
-          "agentName": "arko",
-          "agentConfig": {
-            "load": [
-              "/read SOUL.md",
-              "/read chat_slice.json"
-            ],
-            "hasSliceFunction": true
-          },
-          "timestamp": "2026-04-11T21:34:01.483Z",
-          "metadata": {
-            "frontmatter": {
-              "title": "Agent: arko",
-              "type": "agent",
-              "agentType": "user-defined"
-            }
-          }
-        },
-        {
           "id": "view:Kanban",
           "type": "view",
-          "label": "View: Kanban",
-          "description": "A view for Kanban",
-          "viewKey": "Kanban",
-          "viewPath": "src/views/defaultViews/KanbanBoardView.tsx",
-          "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
-          "sliceNodeCount": 0,
-          "sliceEdgeCount": 0,
-          "timestamp": "2026-04-11T21:34:01.575Z",
+          "label": "Kanban",
+          "description": "View: Kanban",
+          "status": "done",
+          "icon": "eye",
           "metadata": {
-            "frontmatter": {
-              "title": "View: Kanban",
-              "type": "view",
-              "viewType": "kanban"
-            }
+            "viewKey": "Kanban",
+            "viewPath": "src/views/defaultViews/KanbanBoardView.tsx",
+            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
+            "timestamp": "2026-04-12T18:26:08.806Z",
+            "lastUpdated": "2026-04-12T18:26:08.877Z"
           }
         },
         {
           "id": "view:EisenhowerMatrix",
           "type": "view",
-          "label": "View: EisenhowerMatrix",
-          "description": "A view for EisenhowerMatrix",
-          "viewKey": "EisenhowerMatrix",
-          "viewPath": "src/views/defaultViews/EisenhowerMatrixView.tsx",
-          "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
-          "sliceNodeCount": 0,
-          "sliceEdgeCount": 0,
-          "timestamp": "2026-04-11T21:34:01.576Z",
+          "label": "EisenhowerMatrix",
+          "description": "View: EisenhowerMatrix",
+          "status": "done",
+          "icon": "eye",
           "metadata": {
-            "frontmatter": {
-              "title": "View: EisenhowerMatrix",
-              "type": "view",
-              "viewType": "generic"
-            }
+            "viewKey": "EisenhowerMatrix",
+            "viewPath": "src/views/defaultViews/EisenhowerMatrixView.tsx",
+            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
+            "timestamp": "2026-04-12T18:26:08.806Z",
+            "lastUpdated": "2026-04-12T18:26:08.877Z"
           }
         },
         {
           "id": "view:Gantt",
           "type": "view",
-          "label": "View: Gantt",
-          "description": "A view for Gantt",
-          "viewKey": "Gantt",
-          "viewPath": "src/views/defaultViews/GanttView.tsx",
-          "sliceFilePath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
-          "sliceNodeCount": 0,
-          "sliceEdgeCount": 0,
-          "timestamp": "2026-04-11T21:34:01.576Z",
+          "label": "Gantt",
+          "description": "View: Gantt",
+          "status": "done",
+          "icon": "eye",
           "metadata": {
-            "frontmatter": {
-              "title": "View: Gantt",
-              "type": "view",
-              "viewType": "gantt"
-            }
+            "viewKey": "Gantt",
+            "viewPath": "src/views/defaultViews/GanttView.tsx",
+            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
+            "timestamp": "2026-04-12T18:26:08.807Z",
+            "lastUpdated": "2026-04-12T18:26:08.877Z"
           }
         },
         {
-          "id": "aider_process:agent:prodirek",
-          "type": "aider_process",
-          "label": "Aider Process: prodirek",
-          "description": "aider process for prodirek (agent)",
-          "status": "running",
-          "priority": "medium",
+          "id": "agent:prodirek",
+          "type": "agent",
+          "label": "prodirek",
+          "description": "Agent: prodirek",
+          "status": "done",
+          "icon": "user",
           "metadata": {
-            "runtime": "node",
-            "testName": "prodirek",
-            "configKey": "agent",
-            "processType": "aider",
-            "timestamp": "2026-04-11T21:34:10.615Z",
-            "actualStatus": "running",
-            "containerName": "agent-prodirek",
-            "containerId": "agent-prodirek"
+            "agentName": "prodirek",
+            "load": [
+              "/read SOUL.md",
+              "/read testeranto/slices/agents/prodirek.json"
+            ],
+            "message": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- you job is groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint 'curl -X POST http://localhost:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from Prodirek!\"}''",
+            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/agents/prodirek.json",
+            "timestamp": "2026-04-12T18:26:08.843Z",
+            "lastUpdated": "2026-04-12T18:26:08.877Z"
           }
         },
         {
-          "id": "aider_process:agent:arko",
-          "type": "aider_process",
-          "label": "Aider Process: arko",
-          "description": "aider process for arko (agent)",
-          "status": "running",
-          "priority": "medium",
+          "id": "agent:arko",
+          "type": "agent",
+          "label": "arko",
+          "description": "Agent: arko",
+          "status": "done",
+          "icon": "user",
           "metadata": {
-            "runtime": "node",
-            "testName": "arko",
-            "configKey": "agent",
-            "processType": "aider",
-            "timestamp": "2026-04-11T21:34:10.616Z",
-            "actualStatus": "running",
-            "containerName": "agent-arko",
-            "containerId": "agent-arko"
+            "agentName": "arko",
+            "load": [
+              "/read SOUL.md",
+              "/read chat_slice.json"
+            ],
+            "message": "Your name is \"Arko\". You are a Software Architect. Your responsibilities are: 1) You will be give a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the speciations and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get your started. You should limit yourself to the files given to you. Do not add any more files to your context.",
+            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/agents/arko.json",
+            "timestamp": "2026-04-12T18:26:08.843Z",
+            "lastUpdated": "2026-04-12T18:26:08.877Z"
           }
         },
         {
-          "id": "logfile:nodetests-builder.log:mnuuulrp",
+          "id": "logfile:nodetests-builder.log:mnw3hkyr",
           "type": "file",
           "label": "nodetests-builder.log",
           "description": "Log file for nodetests-builder (builder)",
@@ -156,251 +102,57 @@
             "configKey": "nodetests",
             "isLogFile": true,
             "logType": "builder",
-            "timestamp": "2026-04-11T21:36:45.492Z",
+            "timestamp": "2026-04-12T18:26:20.643Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
           }
         },
         {
-          "id": "builder_process:nodetests",
-          "type": "builder_process",
-          "label": "Builder Process: nodetests",
-          "description": "builder process for builder (nodetests)",
-          "status": "running",
-          "priority": "medium",
+          "id": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "type": "entrypoint",
+          "label": "FileTreeLogic.test.ts",
+          "description": "Test entrypoint: src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "status": "doing",
+          "icon": "file-text",
           "metadata": {
-            "runtime": "node",
-            "testName": "builder",
             "configKey": "nodetests",
-            "processType": "builder",
-            "timestamp": "2026-04-11T21:36:57.009Z",
-            "actualStatus": "running"
+            "filePath": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "runtime": "node",
+            "timestamp": "2026-04-12T18:26:42.231Z",
+            "lastUpdated": "2026-04-12T18:26:42.232Z",
+            "needsServiceStart": [],
+            "serviceStartTime": "2026-04-12T18:26:42.232Z",
+            "serviceStartAttempted": "2026-04-12T18:26:44.234Z",
+            "bddStarted": "2026-04-12T18:26:44.236Z",
+            "checksStarted": "2026-04-12T18:26:44.505Z"
           }
         },
         {
-          "id": "config:nodetests",
-          "type": "config",
-          "label": "Config: nodetests",
-          "description": "Configuration for nodetests",
-          "status": "todo",
-          "priority": "medium",
-          "metadata": {
-            "configKey": "nodetests",
-            "runtime": "node",
-            "timestamp": "2026-04-11T21:36:57.009Z"
-          }
-        },
-        {
-          "id": "logfile:FileTreeLogic-test-ts_bdd.log:mnuuuuno",
-          "type": "file",
-          "label": "FileTreeLogic-test-ts_bdd.log",
-          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-bdd (bdd)",
-          "status": "done",
-          "icon": "document",
-          "metadata": {
-            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_bdd.log",
-            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_bdd.log",
-            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-bdd",
-            "runtime": "node",
-            "configKey": "nodetests",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "isLogFile": true,
-            "logType": "bdd",
-            "timestamp": "2026-04-11T21:36:57.012Z",
-            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_bdd.log"
-          }
-        },
-        {
-          "id": "bdd_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "type": "bdd_process",
-          "label": "BDD Process: src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "description": "bdd process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
-          "status": "running",
-          "priority": "medium",
-          "metadata": {
-            "runtime": "node",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "configKey": "nodetests",
-            "processType": "bdd",
-            "timestamp": "2026-04-11T21:37:08.373Z",
-            "actualStatus": "running"
-          }
-        },
-        {
-          "id": "logfile:FileTreeLogic-test-ts_check-2.log:mnuuv3pk",
-          "type": "file",
-          "label": "FileTreeLogic-test-ts_check-2.log",
-          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-2 (check)",
-          "status": "done",
-          "icon": "document",
-          "metadata": {
-            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-2.log",
-            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-2.log",
-            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-2",
-            "runtime": "node",
-            "configKey": "nodetests",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "isLogFile": true,
-            "logType": "check",
-            "timestamp": "2026-04-11T21:37:08.744Z",
-            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-2.log"
-          }
-        },
-        {
-          "id": "logfile:FileTreeLogic-test-ts_check-0.log:mnuuv3rr",
-          "type": "file",
-          "label": "FileTreeLogic-test-ts_check-0.log",
-          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0 (check)",
-          "status": "done",
-          "icon": "document",
-          "metadata": {
-            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-0.log",
-            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-0.log",
-            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-0",
-            "runtime": "node",
-            "configKey": "nodetests",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "isLogFile": true,
-            "logType": "check",
-            "timestamp": "2026-04-11T21:37:08.823Z",
-            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-0.log"
-          }
-        },
-        {
-          "id": "logfile:FileTreeLogic-test-ts_check-1.log:mnuuv3ve",
-          "type": "file",
-          "label": "FileTreeLogic-test-ts_check-1.log",
-          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1 (check)",
-          "status": "done",
-          "icon": "document",
-          "metadata": {
-            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-1.log",
-            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-1.log",
-            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-check-1",
-            "runtime": "node",
-            "configKey": "nodetests",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "isLogFile": true,
-            "logType": "check",
-            "timestamp": "2026-04-11T21:37:08.954Z",
-            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_check-1.log"
-          }
-        },
-        {
-          "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:0",
-          "type": "check_process",
-          "label": "Check Process 0: src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "description": "check process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
-          "status": "running",
-          "priority": "medium",
-          "metadata": {
-            "runtime": "node",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "configKey": "nodetests",
-            "processType": "check",
-            "checkIndex": 0,
-            "timestamp": "2026-04-11T21:37:20.398Z",
-            "actualStatus": "running"
-          }
-        },
-        {
-          "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:1",
-          "type": "check_process",
-          "label": "Check Process 1: src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "description": "check process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
-          "status": "running",
-          "priority": "medium",
-          "metadata": {
-            "runtime": "node",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "configKey": "nodetests",
-            "processType": "check",
-            "checkIndex": 1,
-            "timestamp": "2026-04-11T21:37:20.399Z",
-            "actualStatus": "running"
-          }
-        },
-        {
-          "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:2",
-          "type": "check_process",
-          "label": "Check Process 2: src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "description": "check process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
-          "status": "running",
-          "priority": "medium",
-          "metadata": {
-            "runtime": "node",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "configKey": "nodetests",
-            "processType": "check",
-            "checkIndex": 2,
-            "timestamp": "2026-04-11T21:37:20.399Z",
-            "actualStatus": "running"
-          }
-        },
-        {
-          "id": "aider:nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider",
+          "id": "aider:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
           "type": "aider",
-          "label": "Aider: nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider",
+          "label": "Aider: src/vscode/providers/logic/FileTreeLogic.test.ts",
           "description": "Aider instance for src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "status": "done",
+          "status": "doing",
           "icon": "aider",
           "metadata": {
-            "runtime": "node",
             "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
             "configKey": "nodetests",
-            "aiderServiceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider",
-            "timestamp": "2026-04-11T21:37:20.755Z"
-          }
-        },
-        {
-          "id": "logfile:FileTreeLogic-test-ts_aider.log:mnuuvcz8",
-          "type": "file",
-          "label": "FileTreeLogic-test-ts_aider.log",
-          "description": "Log file for nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider (aider)",
-          "status": "done",
-          "icon": "document",
-          "metadata": {
-            "filePath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_aider.log",
-            "relativePath": "testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_aider.log",
-            "serviceName": "nodetests-src_vscode_providers_logic_filetreelogic-test-ts-aider",
-            "runtime": "node",
-            "configKey": "nodetests",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "isLogFile": true,
-            "logType": "aider",
-            "timestamp": "2026-04-11T21:37:20.756Z",
-            "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic-test-ts_aider.log"
-          }
-        },
-        {
-          "id": "aider_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "type": "aider_process",
-          "label": "Aider Process: src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "description": "aider process for src/vscode/providers/logic/FileTreeLogic.test.ts (nodetests)",
-          "status": "running",
-          "priority": "medium",
-          "metadata": {
-            "runtime": "node",
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "configKey": "nodetests",
-            "processType": "aider",
-            "timestamp": "2026-04-11T21:37:42.568Z",
-            "actualStatus": "running"
+            "timestamp": "2026-04-12T18:26:45.398Z"
           }
         }
       ],
       "edges": [
         {
-          "source": "config:nodetests",
-          "target": "builder_process:nodetests",
+          "source": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "target": "aider:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
           "attributes": {
-            "type": "hasBuilderProcess",
-            "timestamp": "2026-04-11T21:36:57.009Z"
+            "type": "hasAider",
+            "timestamp": "2026-04-12T18:26:45.398Z"
           }
         }
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-11T21:37:48.362Z"
+        "timestamp": "2026-04-12T18:26:45.399Z"
       }
     },
     "vizConfig": {

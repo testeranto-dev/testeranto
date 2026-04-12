@@ -1,3 +1,6 @@
+import { glob } from "fs";
+import path from "path";
+
 /**
  * Get documentation files from glob pattern
  */
@@ -9,7 +12,6 @@ export function getDocumentationFilesFromGlob(
   }
 
   try {
-    const glob = require("glob");
     const cwd = process.cwd();
 
     // Normalize glob pattern: remove leading ./ if present
@@ -25,7 +27,7 @@ export function getDocumentationFilesFromGlob(
     // Convert to relative paths
     const relativeFiles = files.map((file) => {
       // Ensure forward slashes for consistency
-      return file.split(require("path").sep).join("/");
+      return file.split(path.sep).join("/");
     });
 
     return relativeFiles;

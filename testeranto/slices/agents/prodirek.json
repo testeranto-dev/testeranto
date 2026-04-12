@@ -1,7 +1,7 @@
 {
   "viewType": "agent",
   "agentName": "prodirek",
-  "timestamp": "2026-04-11T21:34:01.576Z",
+  "timestamp": "2026-04-12T18:26:08.877Z",
   "data": {
     "features": [],
     "documentation": [],
@@ -9,15 +9,13 @@
     "agents": [
       {
         "id": "agent:prodirek",
-        "name": "prodirek",
-        "label": "Agent: prodirek",
-        "description": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, t..."
+        "label": "prodirek",
+        "description": "Agent: prodirek"
       },
       {
         "id": "agent:arko",
-        "name": "arko",
-        "label": "Agent: arko",
-        "description": "Your name is \"Arko\". You are a Software Architect. Your responsibilities are: 1) You will be give a ..."
+        "label": "arko",
+        "description": "Agent: arko"
       }
     ],
     "summary": {

@@ -1,11 +1,12 @@
 import { existsSync } from "fs";
 import path from "path";
+import fsp from "fs";
+const fs = fsp.promises;
 
 /**
  * Get test results data from reports directory
  */
 export async function getTestResultsData(): Promise<any> {
-  const fs = require("fs").promises;
 
   const resultsDir = path.join(process.cwd(), "testeranto", "reports");
   if (!existsSync(resultsDir)) {

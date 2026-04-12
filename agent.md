@@ -1,1 +1,1 @@
-/workspace/agents/prodirek.md
+/workspace/agents/arko.md

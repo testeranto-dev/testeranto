@@ -7,16 +7,16 @@ import {
   consoleLog,
   processCwd,
 } from "./Server_Docker/Server_Docker_Dependents";
+import { Server_Docker_Test } from "./Server_Docker_Test";
 import {
-  executeDockerComposeCommand,
-  spawnPromise,
-} from "./Server_Docker/utils";
-import { generateServicesPure } from "./Server_Docker/utils/generateServicesPure";
-import { getDockerComposeCommandsPure } from "./Server_Docker/utils/getDockerComposeCommandsPure";
-import { writeComposeFile } from "./Server_Docker/utils/writeComposeFile";
-import { Server_Docker_Base } from "./Server_Docker_Base";
+  executeDockerComposeCommandUtil,
+  spawnPromiseUtil,
+  generateServicesPureUtil,
+  getDockerComposeCommandsPureUtil,
+  writeComposeFileUtil
+} from "./utils/dockerCoreUtils";
 
-export abstract class Server_Docker_Compose extends Server_Docker_Base {
+export abstract class Server_Docker_Compose extends Server_Docker_Test {
   dockerComposeManager: DockerComposeManager;
 
   abstract getProcessSummary: any;
@@ -38,27 +38,26 @@ export abstract class Server_Docker_Compose extends Server_Docker_Base {
   }
 
   generateServices(): Record<string, any> {
-    return generateServicesPure(this.configs, this.mode);
+    return generateServicesPureUtil(this.configs, this.mode);
   }
 
   async setupDockerCompose() {
-    writeComposeFile(this.generateServices(), this.configs);
+    writeComposeFileUtil(this.generateServices(), this.configs);
   }
 
-  // TODO: this code is duplicated in DockerComposeManager
   public async DC_upAll(): Promise<IDockerComposeResult> {
     // Clear builder logs before starting services
     if (typeof (this as any).clearBuilderLogs === 'function') {
       await (this as any).clearBuilderLogs();
     }
 
-    const commands = getDockerComposeCommandsPure();
-    const result = await executeDockerComposeCommand(commands.up, {
+    const commands = getDockerComposeCommandsPureUtil();
+    const result = await executeDockerComposeCommandUtil(commands.up, {
       errorMessage: "docker compose up",
     });
     if (result.exitCode === 0 && result.data?.spawn) {
       try {
-        await spawnPromise(commands.up);
+        await spawnPromiseUtil(commands.up);
         return { exitCode: 0, out: "", err: "", data: null };
       } catch (error: any) {
         consoleError(`[Docker] docker compose up ❌ ${error.message}`);
@@ -81,13 +80,13 @@ export abstract class Server_Docker_Compose extends Server_Docker_Base {
   }
 
   public async DC_down(): Promise<IDockerComposeResult> {
-    const commands = getDockerComposeCommandsPure();
-    const result = await executeDockerComposeCommand(commands.down, {
+    const commands = getDockerComposeCommandsPureUtil();
+    const result = await executeDockerComposeCommandUtil(commands.down, {
       errorMessage: "docker compose down",
     });
     if (result.exitCode === 0 && result.data?.spawn) {
       try {
-        await spawnPromise(commands.down);
+        await spawnPromiseUtil(commands.down);
         return { exitCode: 0, out: "", err: "", data: null };
       } catch (error: any) {
         consoleLog(`[DC_down] Error during down: ${error.message}`);
@@ -103,8 +102,8 @@ export abstract class Server_Docker_Compose extends Server_Docker_Base {
   }
 
   public async DC_ps(): Promise<IDockerComposeResult> {
-    const commands = getDockerComposeCommandsPure();
-    return executeDockerComposeCommand(commands.ps, {
+    const commands = getDockerComposeCommandsPureUtil();
+    return executeDockerComposeCommandUtil(commands.ps, {
       useExec: true,
       execOptions: { cwd: processCwd() },
       errorMessage: "Error getting service status",
@@ -116,9 +115,9 @@ export abstract class Server_Docker_Compose extends Server_Docker_Base {
     options?: { follow?: boolean; tail?: number },
   ): Promise<IDockerComposeResult> {
     const tail = options?.tail ?? 100;
-    const commands = getDockerComposeCommandsPure();
+    const commands = getDockerComposeCommandsPureUtil();
     const command = commands.logs(serviceName, tail);
-    return executeDockerComposeCommand(command, {
+    return executeDockerComposeCommandUtil(command, {
       useExec: true,
       execOptions: { cwd: processCwd() },
       errorMessage: `Error getting logs for ${serviceName}`,
@@ -126,8 +125,8 @@ export abstract class Server_Docker_Compose extends Server_Docker_Base {
   }
 
   public async DC_configServices(): Promise<IDockerComposeResult> {
-    const commands = getDockerComposeCommandsPure();
-    return executeDockerComposeCommand(commands.config, {
+    const commands = getDockerComposeCommandsPureUtil();
+    return executeDockerComposeCommandUtil(commands.config, {
       useExec: true,
       execOptions: { cwd: processCwd() },
       errorMessage: "Error getting services from config",
@@ -140,13 +139,13 @@ export abstract class Server_Docker_Compose extends Server_Docker_Base {
       await (this as any).clearBuilderLogs();
     }
 
-    const commands = getDockerComposeCommandsPure();
-    const result = await executeDockerComposeCommand(commands.start, {
+    const commands = getDockerComposeCommandsPureUtil();
+    const result = await executeDockerComposeCommandUtil(commands.start, {
       errorMessage: "docker compose start",
     });
     if (result.exitCode === 0 && result.data?.spawn) {
       try {
-        await spawnPromise(commands.start);
+        await spawnPromiseUtil(commands.start);
         return { exitCode: 0, out: "", err: "", data: null };
       } catch (error: any) {
         consoleError(`[Docker] docker compose start ❌ ${error.message}`);
