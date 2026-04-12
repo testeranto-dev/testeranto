@@ -1,7 +1,7 @@
-import type { GraphData, GraphDataFile } from ".";
 import type Graph from "graphology";
-import type { GraphEdgeAttributes, GraphNodeAttributes } from ".";
+import type { GraphData, GraphNodeAttributes, GraphEdgeAttributes } from ".";
 import { createGraph } from "./createGraph";
+
 
 // Load data into graph
 export function dataToGraph(data: GraphData): Graph<GraphNodeAttributes, GraphEdgeAttributes> {

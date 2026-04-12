@@ -1,4 +1,4 @@
-import { type GraphData, type GraphOperation } from '../../graph/index';
+import type { GraphData, GraphOperation } from ".";
 
 // Pure function to clean up attribute nodes
 export function cleanupAttributeNodesPure(

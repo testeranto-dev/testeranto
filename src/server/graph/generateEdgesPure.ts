@@ -1,9 +1,7 @@
-import { type GraphData, type GraphOperation } from '../../graph/index';
 import path from 'path';
 import type { ITesterantoConfig } from "../../Types";
-import { createFolderNodesAndEdgesPure } from './createFolderNodesAndEdgesPure';
+import type { GraphData, GraphOperation } from '.';
 
-// Pure function to generate edges between related nodes
 export function generateEdgesPure(
   graphData: GraphData,
   config: ITesterantoConfig | undefined,

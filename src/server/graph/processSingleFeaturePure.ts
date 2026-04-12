@@ -1,10 +1,8 @@
-import {
-  type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph
-} from '../../graph/index';
 import { processFeatureUrlPure } from './processFeatureUrlPure';
 import { handleFeatureNodeOperationsPure } from './handleFeatureNodeOperationsPure';
 import { handleFeatureTestEdgePure } from './handleFeatureTestEdgePure';
 import { createFeatureFolderConnectionsPure } from './createFeatureFolderConnectionsPure';
+import type { GraphOperation, TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from '.';
 
 export async function processSingleFeaturePure(
   featureUrl: string,

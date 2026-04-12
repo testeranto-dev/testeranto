@@ -1,10 +1,7 @@
-import type { GraphData, GraphDataFile } from ".";
 import type Graph from "graphology";
-import type {
-  GraphNodeAttributes, GraphEdgeAttributes, GraphNodeType, GraphEdgeType
-} from ".";
+import type { GraphNodeAttributes, GraphEdgeAttributes, GraphData } from ".";
 
-// Convert graph to serializable data
+
 export function graphToData(graph: Graph<GraphNodeAttributes, GraphEdgeAttributes>): GraphData {
   // Check if graph is undefined
   if (!graph) {

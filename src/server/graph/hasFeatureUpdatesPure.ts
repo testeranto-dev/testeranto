@@ -1,4 +1,4 @@
-import { type GraphOperation, type TesterantoGraph, type GraphNodeAttributes } from '../../graph/index';
+import type { GraphOperation, TesterantoGraph, GraphNodeAttributes } from ".";
 
 // Pure function to check if operations contain feature updates
 export function hasFeatureUpdatesPure(
@@ -12,8 +12,8 @@ export function hasFeatureUpdatesPure(
     if (op.type === 'updateNode' && graph) {
       const existingAttributes = graph.getNodeAttributes(op.data.id);
       // Check if it's a feature node or if the update affects frontmatter
-      return existingAttributes?.type === 'feature' || 
-             op.data.metadata?.requiresMarkdownUpdate === true;
+      return existingAttributes?.type === 'feature' ||
+        op.data.metadata?.requiresMarkdownUpdate === true;
     }
     return false;
   });

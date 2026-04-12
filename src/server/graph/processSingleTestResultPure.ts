@@ -1,8 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-import {
-  type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type GraphUpdate, type TesterantoGraph
-} from '../../graph/index';
 import type { TestResult } from "../types/testResults";
 import { connectAllTestsToEntrypointPure } from './connectAllTestsToEntrypointPure';
 import { createEntrypointNodeOperationsPure } from './createEntrypointNodeOperationsPure';
@@ -11,30 +6,8 @@ import { handleSimpleTestResultPure } from './handleSimpleTestResultPure';
 import { processIndividualResultsPure } from './processIndividualResultsPure';
 import { processInputFilesForTestPure } from './processInputFilesForTestPure';
 import { processTopLevelFeaturesPure } from './processTopLevelFeaturesPure';
-
-// Helper function to load input files from bundle directory
-function loadInputFilesFromBundle(
-  configKey: string,
-  testName: string,
-  projectRoot: string
-): string[] {
-  try {
-    const bundleDir = path.join(projectRoot, 'testeranto', 'bundles', configKey);
-    const inputFilesPath = path.join(bundleDir, 'inputFiles.json');
-
-    if (fs.existsSync(inputFilesPath)) {
-      const content = fs.readFileSync(inputFilesPath, 'utf-8');
-      const allTestsInfo = JSON.parse(content);
-
-      if (allTestsInfo[testName] && allTestsInfo[testName].files) {
-        return allTestsInfo[testName].files;
-      }
-    }
-  } catch (error) {
-    console.error(`[GraphManager] Error loading input files from bundle for ${configKey}/${testName}:`, error);
-  }
-  return [];
-}
+import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes, GraphUpdate, GraphOperation } from '.';
+import { loadInputFilesFromBundle } from './loadInputFilesFromBundle';
 
 export async function processSingleTestResultPure(
   singleTestResult: TestResult,

@@ -1,6 +1,5 @@
-import {
-  type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type GraphUpdate, type TesterantoGraph
-} from '../../graph/index';
+
+import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes, GraphUpdate, GraphOperation } from ".";
 import type { TestResult } from "../types/testResults";
 import { processSingleTestResultPure } from './processSingleTestResultPure';
 

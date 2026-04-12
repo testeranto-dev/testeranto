@@ -1,8 +1,8 @@
-import { type GraphOperation } from '../../graph/index';
+
+import type { GraphOperation } from ".";
 import type { TestResult, IndividualTestResult } from "../types/testResults";
 import { createVerbNodesForIndividualResultPure } from './createVerbNodesForIndividualResultPure';
 
-// Pure function to create verb nodes from test results
 export function createVerbNodesFromTestResultsPure(
   testResult: TestResult,
   testId: string,
@@ -18,7 +18,7 @@ export function createVerbNodesFromTestResultsPure(
   // Process each individual result (each step)
   for (let i = 0; i < testResult.individualResults.length; i++) {
     const individualResult = testResult.individualResults[i];
-    
+
     // Create verb nodes for this individual result
     const verbOps = createVerbNodesForIndividualResultPure(
       individualResult,

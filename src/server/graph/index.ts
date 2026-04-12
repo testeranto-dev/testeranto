@@ -1,17 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import type { ITesterantoConfig } from "../../Types";
-import { graphToData } from '../../graph/graphToData';
-import { dataToGraph } from '../../graph/dataToGraph';
-import { createGraph } from '../../graph/createGraph';
-import {
-  type GraphData,
-  type GraphEdgeAttributes,
-  type GraphNodeAttributes,
-  type GraphOperation,
-  type GraphUpdate,
-  type TesterantoGraph,
-} from '../../graph/index';
 import { createAiderNodeGraphOperationsPure } from '../serverClasses/Server_Docker/utils/launchAiderPure';
 import type { TestResult } from "../types/testResults";
 import { cleanupAttributeNodesPure } from './cleanupAttributeNodesPure';
@@ -20,18 +9,21 @@ import { createGraphDataFilePure } from './createGraphDataFilePure';
 import { generateEdgesPure } from './generateEdgesPure';
 import { getGraphStatsPure } from './getGraphStatsPure';
 import { hasFeatureUpdatesPure } from './hasFeatureUpdatesPure';
-// import { loadGraphPure } from './loadGraphPure';
 import { processFeatureUrlPure } from './processFeatureUrlPure';
 import { updateFromTestResultsPure } from './updateFromTestResultsPure';
-import { parseMarkdownFilesPure } from './utils/markdownParseUtils';
-import { generateMarkdownContent } from './utils/markdownUtils';
+import { parseMarkdownFilesPure } from './markdownParseUtils';
+import { generateMarkdownContent } from './markdownUtils';
 import {
   getAiderSlice,
   getFilesAndFoldersSlice,
   getProcessSlice,
   getRuntimeSlice
-} from './utils/sliceUtils';
+} from './sliceUtils';
 import yaml from 'js-yaml';
+import Graph from 'graphology';
+import Attributes from 'graphology';
+import { createGraph } from './createGraph';
+import { graphToData } from './graphToData';
 
 export class GraphManager {
   private graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>;
@@ -54,7 +46,7 @@ export class GraphManager {
     // This ensures ZERO chat messages at startup
     this.graph = createGraph();
     console.log(`[GraphManager] Created fresh graph`);
-    
+
     // Save the initial empty graph
     console.log(`[GraphManager] Saving initial graph...`);
     this.saveGraph();
@@ -75,14 +67,14 @@ export class GraphManager {
         console.error('[GraphManager] Cannot save graph: graph is undefined');
         return;
       }
-      
+
       const graphData = graphToData(this.graph);
       console.log(`[GraphManager] Converting graph to data: ${graphData.nodes.length} nodes, ${graphData.edges.length} edges`);
-      
+
       const dir = path.dirname(this.graphDataPath);
       console.log(`[GraphManager] Directory path: ${dir}`);
       console.log(`[GraphManager] Full file path: ${this.graphDataPath}`);
-      
+
       if (!fs.existsSync(dir)) {
         console.log(`[GraphManager] Creating directory: ${dir}`);
         try {
@@ -101,7 +93,7 @@ export class GraphManager {
       // DO NOT try to preserve old data - always write new unified format
       const jsonContent = JSON.stringify(graphDataFile, null, 2);
       console.log(`[GraphManager] JSON content length: ${jsonContent.length} characters`);
-      
+
       try {
         fs.writeFileSync(this.graphDataPath, jsonContent, 'utf-8');
         console.log(`[GraphManager] Successfully wrote to ${this.graphDataPath}`);
@@ -118,9 +110,9 @@ export class GraphManager {
         }
         return;
       }
-      
+
       console.log(`[GraphManager] Saved graph to ${this.graphDataPath} with ${graphData.nodes.length} nodes and ${graphData.edges.length} edges`);
-      
+
       // Verify the file was written
       if (fs.existsSync(this.graphDataPath)) {
         const stats = fs.statSync(this.graphDataPath);
@@ -131,7 +123,7 @@ export class GraphManager {
       } else {
         console.error(`[GraphManager] ERROR: File was not created at ${this.graphDataPath}`);
       }
-      
+
       // Notify that graph was saved (for slice updates)
       this.emitGraphSaved();
     } catch (error) {
@@ -142,7 +134,7 @@ export class GraphManager {
       }
     }
   }
-  
+
   // Emit event when graph is saved
   private emitGraphSaved(): void {
     // This is a placeholder for event emission
@@ -158,7 +150,7 @@ export class GraphManager {
   // Apply graph updates
   public applyUpdate(update: GraphUpdate): GraphData {
     console.log(`[GraphManager] Applying update with ${update.operations.length} operations`);
-    
+
     update.operations.forEach(op => {
       try {
         switch (op.type) {
@@ -540,47 +532,201 @@ export class GraphManager {
     this.saveGraph();
   }
 
-  // // Create aider node for an entrypoint (for manual testing)
-  // public createAiderNodeForEntrypoint(entrypointId: string, aiderServiceName: string, containerId?: string): void {
-  //   const timestamp = new Date().toISOString();
-  //   const aiderNodeId = `aider:${aiderServiceName}`;
+}
 
-  //   // Create aider node
-  //   this.graph.addNode(aiderNodeId, {
-  //     id: aiderNodeId,
-  //     type: 'aider',
-  //     label: `Aider: ${aiderServiceName}`,
-  //     description: `Aider instance for ${entrypointId}`,
-  //     status: 'done',
-  //     icon: 'aider',
-  //     metadata: {
-  //       aiderServiceName,
-  //       containerId,
-  //       timestamp
-  //     }
-  //   });
+export type TesterantoGraph<N, E, G = {}> = Graph<N, E, G>;
 
-  //   // Connect entrypoint to aider node
-  //   if (this.graph.hasNode(entrypointId)) {
-  //     this.graph.addEdge(entrypointId, aiderNodeId, {
-  //       type: 'hasAider',
+// Node types in our graph
+export type GraphNodeType =
+  | 'feature'      // Markdown feature files
+  | 'entrypoint'   // Test entrypoints (files)
+  | 'test'         // Individual tests
+  | 'test_result'  // Test results
+  | 'file'         // File system nodes
+  | 'documentation' // Documentation nodes
+  | 'config'       // Configuration nodes
+  | 'attribute'    // Attribute nodes (for nodes like suite:14:content, suite:14:configKey, etc.)
+  | 'folder'       // Folder nodes for directory structure
+  | 'domain'       // Domain nodes for grouping external features by hostname
+  | 'input_file'   // Input source files for tests
+  // Verb nodes for testeranto test structure
+  | 'given'        // BDD Given nodes
+  | 'when'         // BDD When nodes
+  | 'then'         // BDD Then nodes
+  | 'describe'     // AAA Describe nodes
+  | 'it'           // AAA It nodes
+  | 'confirm'      // TDT Confirm nodes
+  | 'value'        // TDT Value nodes
+  | 'should'       // TDT Should nodes
+  | 'expected'     // TDT Expected nodes
+  // Docker process nodes
+  | 'docker_process' // Docker container processes
+  | 'bdd_process'  // BDD test process
+  | 'check_process' // Check process
+  | 'aider_process' // Aider process
+  | 'builder_process' // Builder process
+  | 'aider'        // Aider instance node
+  // Chat nodes
+  | 'chat_message' // Chat message nodes
+  | 'view'         // View nodes for different visualizations
+  | 'agent'        // Agent nodes
 
-  //       timestamp
-  //     });
-  //   }
+// Array of valid GraphNodeType values for validation
+export const graphNodeTypeValues: GraphNodeType[] = [
+  'feature',
+  'entrypoint',
+  'test',
+  'test_result',
+  'file',
+  'documentation',
+  'config',
+  'attribute',
+  'folder',
+  'domain',
+  'input_file',
+  // Verb nodes for testeranto test structure
+  'given',
+  'when',
+  'then',
+  'describe',
+  'it',
+  'confirm',
+  'value',
+  'should',
+  'expected',
+  // Docker process nodes
+  'docker_process',
+  'bdd_process',
+  'check_process',
+  'aider_process',
+  'builder_process',
+  'aider',
+  // Chat nodes
+  'chat_message',
+  // View nodes
+  'view',
+  // Agent nodes
+  'agent'
+];
 
-  //   // Connect aider to docker process if containerId exists
-  //   if (containerId) {
-  //     const dockerProcessId = `docker_process:${containerId}`;
-  //     if (this.graph.hasNode(dockerProcessId)) {
-  //       this.graph.addEdge(aiderNodeId, dockerProcessId, {
-  //         type: 'hasProcess',
+// Edge types in our graph
+export type GraphEdgeType =
+  | 'dependsUpon'  // Feature depends on another feature
+  | 'blocks'       // Feature blocks another feature
+  | 'associatedWith' // Feature associated with test/suite
+  | 'hasResult'    // Test has a result
+  | 'belongsTo'    // Test belongs to a suite
+  | 'locatedIn'    // Node located in file/directory
+  | 'parentOf'     // Parent-child relationship for tree structure
+  | 'runsOn'       // Suite/test runs on runtime
+  | 'configuredBy' // Configured by config
+  // Verb relationship edges
+  | 'hasGiven'     // Test has a Given
+  | 'hasWhen'      // Given has a When
+  | 'nextWhen'     // When leads to next When
+  | 'hasThen'      // When has a Then
+  | 'hasDescribe'  // Test has a Describe
+  | 'hasIt'        // Describe has an It
+  | 'hasConfirm'   // Test has a Confirm
+  | 'hasValue'     // Confirm has a Value
+  | 'hasShould'    // Value has a Should
+  | 'hasExpected'  // Should has an Expected
+  // Docker process relationship edges
+  | 'hasProcess'   // Entrypoint has a process
+  | 'hasBddProcess' // Entrypoint has a BDD process
+  | 'hasCheckProcess' // Entrypoint has a check process
+  | 'hasAiderProcess' // Entrypoint has an aider process
+  | 'hasBuilderProcess' // Config has a builder process
+  | 'processOf'    // Process belongs to entrypoint
+  | 'hasAider'     // Entrypoint has an aider node
+  // Resource locking edges
+  | 'locks'        // Node locks another node (for resource locking)
+  | 'lockedBy'     // Node is locked by another node
+  // View relationship edges
+  | 'hasView'      // Node has a view
+  | 'viewOf'       // Node is part of a view
+  // Agent relationship edges
+  | 'hasAgent'     // Node has an agent
+  | 'agentOf';     // Node is part of an agent's slice
 
-  //         timestamp
-  //       });
-  //     }
-  //   }
+// Base node attributes
+export interface GraphNodeAttributes extends Attributes {
+  id: string;
+  type: GraphNodeType;
+  label: string;
+  description?: string;
+  status?: 'todo' | 'doing' | 'done' | 'blocked';
+  priority?: 'low' | 'medium' | 'high' | 'critical';
+  timestamp?: string;
+  metadata?: Record<string, any>;
+  icon?: string;
 
-  //   this.saveGraph();
-  // }
+  // Add lock properties for resource locking
+  locked?: boolean;
+  lockOwner?: string; // agent/test ID that holds the lock
+  lockTimestamp?: string;
+  lockType?: 'read' | 'write' | 'exclusive';
+}
+
+// Base edge attributes
+export interface GraphEdgeAttributes extends Attributes {
+  type: GraphEdgeType;
+  // weight?: number;
+  timestamp?: string;
+  metadata?: Record<string, any>;
+  directed?: boolean; // true for directed, false for undirected (default: true)
+}
+
+// Graph data structure for serialization
+export interface GraphData {
+  nodes: GraphNodeAttributes[];
+  edges: Array<{
+    source: string;
+    target: string;
+    attributes: GraphEdgeAttributes;
+  }>;
+  metadata?: {
+    version: string;
+    timestamp: string;
+    source?: string;
+  };
+}
+
+// Graph operations
+export interface GraphOperation {
+  type: 'addNode' | 'updateNode' | 'removeNode' | 'addEdge' | 'updateEdge' | 'removeEdge';
+  data: any;
+  timestamp: string;
+}
+
+// Graph update payload
+export interface GraphUpdate {
+  operations: GraphOperation[];
+  timestamp: string;
+}
+
+// Graph data file structure for graph-data.json
+export interface GraphDataFile {
+  timestamp: string;
+  version: string;
+  data: {
+    // Unified graph containing all nodes and relationships
+    unifiedGraph: GraphData;
+    vizConfig?: {
+      projection: {
+        xAttribute: string;
+        yAttribute: string;
+        xType: 'categorical' | 'continuous' | 'ordinal' | 'temporal';
+        yType: 'categorical' | 'continuous' | 'ordinal' | 'temporal';
+        layout: 'grid' | 'force' | 'tree' | 'timeline' | 'none';
+      };
+      style: {
+        nodeSize: number;
+        nodeColor: string;
+        nodeShape: string;
+      };
+    };
+    configs?: Record<string, unknown>;
+    allTestResults?: Record<string, unknown>;
+  };
 }

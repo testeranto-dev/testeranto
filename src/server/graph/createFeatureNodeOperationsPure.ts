@@ -1,4 +1,5 @@
-import { type GraphOperation } from '../../graph/index';
+
+import type { GraphOperation } from '.';
 import { extractFeatureInfoPure } from './extractFeatureInfoPure';
 import matter from 'gray-matter'
 
@@ -14,7 +15,6 @@ export function createFeatureNodeOperationsPure(
 
   // Extract feature information using pure function
   const { featureName, featureId } = extractFeatureInfoPure(featureUrl);
-
 
   const { data, content } = matter(contentString)
 

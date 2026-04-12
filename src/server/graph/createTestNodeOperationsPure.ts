@@ -1,7 +1,5 @@
-import { type GraphOperation } from '../../graph/index';
-import path from 'path';
+import type { GraphOperation } from ".";
 
-// Pure function to create test node operations
 export function createTestNodeOperationsPure(
   sanitizedConfigKey: string,
   filePathForEntrypoint: string,

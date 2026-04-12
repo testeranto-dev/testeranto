@@ -1,4 +1,4 @@
-import { type GraphOperation } from '../../graph/index';
+import type { GraphOperation } from ".";
 
 // Pure function to create operations for connecting tests to their entrypoint
 export function connectAllTestsToEntrypointPure(

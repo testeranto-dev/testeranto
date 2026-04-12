@@ -1,4 +1,4 @@
-import { type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph } from '../../graph/index';
+import type { GraphOperation, TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from '.';
 import { extractFeatureInfoPure } from './extractFeatureInfoPure';
 
 export async function handleFeatureTestEdgePure(

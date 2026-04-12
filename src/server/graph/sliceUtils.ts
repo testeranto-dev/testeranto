@@ -1,5 +1,4 @@
-import type { GraphNodeAttributes, GraphEdgeAttributes } from '../../../graph/index';
-import type { TesterantoGraph } from '../../../graph/index';
+import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from ".";
 
 export function getFilesAndFoldersSlice(
     graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>

@@ -1,6 +1,5 @@
-import type { GraphData, GraphDataFile } from ".";
+import type { GraphData } from ".";
 
-// Type guard to check if an object is GraphData
 export function isGraphData(obj: any): obj is GraphData {
   return (
     obj &&

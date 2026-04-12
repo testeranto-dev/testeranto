@@ -1,4 +1,4 @@
-import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../graph/index";
+import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from ".";
 
 export class LockManager {
   constructor(private graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>) { }

@@ -1,4 +1,4 @@
-import { type GraphData } from '../../graph/index';
+import type { GraphData } from '.';
 import { Palette } from '../../colors';
 
 // Pure function to create graph data file structure

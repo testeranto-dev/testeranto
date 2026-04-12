@@ -1,6 +1,5 @@
-import {
-  type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph
-} from '../../graph/index';
+
+import type { GraphOperation, TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from '.';
 import { processSingleFeaturePure } from './processSingleFeaturePure';
 
 // Helper function to process features for a test

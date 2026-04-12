@@ -1,4 +1,5 @@
-import { type GraphEdgeAttributes, type GraphNodeAttributes, type GraphOperation, type TesterantoGraph } from '../../graph/index';
+
+import type { GraphEdgeAttributes, GraphNodeAttributes, GraphOperation, TesterantoGraph } from '.';
 import { createFolderNodesAndEdgesPure } from './createFolderNodesAndEdgesPure';
 import { extractFeatureInfoPure } from './extractFeatureInfoPure';
 

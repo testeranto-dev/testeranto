@@ -1,6 +1,5 @@
-import { type TesterantoGraph, type GraphNodeAttributes, type GraphEdgeAttributes } from '../../graph/index';
+import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from ".";
 
-// Pure function to get graph statistics
 export function getGraphStatsPure(
   graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>
 ): { nodes: number; edges: number; nodeTypes: Record<string, number>; edgeTypes: Record<string, number> } {

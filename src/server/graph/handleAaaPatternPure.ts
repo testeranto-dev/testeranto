@@ -1,4 +1,4 @@
-import { type GraphOperation } from '../../graph/index';
+import type { GraphOperation } from ".";
 
 export function handleAaaPatternPure(
   testJob: any,

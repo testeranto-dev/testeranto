@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-12T19:34:56.681Z",
+  "timestamp": "2026-04-12T20:42:31.484Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -15,8 +15,8 @@
             "viewKey": "Kanban",
             "viewPath": "src/views/defaultViews/KanbanBoardView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
-            "timestamp": "2026-04-12T19:34:19.672Z",
-            "lastUpdated": "2026-04-12T19:34:19.745Z"
+            "timestamp": "2026-04-12T20:41:54.056Z",
+            "lastUpdated": "2026-04-12T20:41:54.129Z"
           }
         },
         {
@@ -30,8 +30,8 @@
             "viewKey": "EisenhowerMatrix",
             "viewPath": "src/views/defaultViews/EisenhowerMatrixView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
-            "timestamp": "2026-04-12T19:34:19.673Z",
-            "lastUpdated": "2026-04-12T19:34:19.745Z"
+            "timestamp": "2026-04-12T20:41:54.057Z",
+            "lastUpdated": "2026-04-12T20:41:54.129Z"
           }
         },
         {
@@ -45,8 +45,8 @@
             "viewKey": "Gantt",
             "viewPath": "src/views/defaultViews/GanttView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
-            "timestamp": "2026-04-12T19:34:19.673Z",
-            "lastUpdated": "2026-04-12T19:34:19.745Z"
+            "timestamp": "2026-04-12T20:41:54.057Z",
+            "lastUpdated": "2026-04-12T20:41:54.129Z"
           }
         },
         {
@@ -64,8 +64,8 @@
             ],
             "message": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- you job is groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint 'curl -X POST http://localhost:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from Prodirek!\"}''",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/agents/prodirek.json",
-            "timestamp": "2026-04-12T19:34:19.712Z",
-            "lastUpdated": "2026-04-12T19:34:19.745Z"
+            "timestamp": "2026-04-12T20:41:54.095Z",
+            "lastUpdated": "2026-04-12T20:41:54.129Z"
           }
         },
         {
@@ -83,12 +83,12 @@
             ],
             "message": "Your name is \"Arko\". You are a Software Architect. Your responsibilities are: 1) You will be give a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the speciations and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get your started. You should limit yourself to the files given to you. Do not add any more files to your context.",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/agents/arko.json",
-            "timestamp": "2026-04-12T19:34:19.712Z",
-            "lastUpdated": "2026-04-12T19:34:19.745Z"
+            "timestamp": "2026-04-12T20:41:54.095Z",
+            "lastUpdated": "2026-04-12T20:41:54.130Z"
           }
         },
         {
-          "id": "logfile:nodetests-builder.log:mnw5x9u7",
+          "id": "logfile:nodetests-builder.log:mnw8c6i0",
           "type": "file",
           "label": "nodetests-builder.log",
           "description": "Log file for nodetests-builder (builder)",
@@ -102,7 +102,7 @@
             "configKey": "nodetests",
             "isLogFile": true,
             "logType": "builder",
-            "timestamp": "2026-04-12T19:34:31.951Z",
+            "timestamp": "2026-04-12T20:42:06.696Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
           }
         },
@@ -117,13 +117,13 @@
             "configKey": "nodetests",
             "filePath": "src/vscode/providers/logic/FileTreeLogic.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-12T19:34:53.573Z",
-            "lastUpdated": "2026-04-12T19:34:53.574Z",
+            "timestamp": "2026-04-12T20:42:28.264Z",
+            "lastUpdated": "2026-04-12T20:42:28.264Z",
             "needsServiceStart": [],
-            "serviceStartTime": "2026-04-12T19:34:53.574Z",
-            "serviceStartAttempted": "2026-04-12T19:34:55.576Z",
-            "bddStarted": "2026-04-12T19:34:55.578Z",
-            "checksStarted": "2026-04-12T19:34:55.820Z"
+            "serviceStartTime": "2026-04-12T20:42:28.264Z",
+            "serviceStartAttempted": "2026-04-12T20:42:30.265Z",
+            "bddStarted": "2026-04-12T20:42:30.266Z",
+            "checksStarted": "2026-04-12T20:42:30.499Z"
           }
         },
         {
@@ -136,7 +136,7 @@
           "metadata": {
             "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
             "configKey": "nodetests",
-            "timestamp": "2026-04-12T19:34:56.679Z"
+            "timestamp": "2026-04-12T20:42:31.484Z"
           }
         }
       ],
@@ -146,13 +146,13 @@
           "target": "aider:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
           "attributes": {
             "type": "hasAider",
-            "timestamp": "2026-04-12T19:34:56.680Z"
+            "timestamp": "2026-04-12T20:42:31.484Z"
           }
         }
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-12T19:34:56.681Z"
+        "timestamp": "2026-04-12T20:42:31.484Z"
       }
     },
     "vizConfig": {

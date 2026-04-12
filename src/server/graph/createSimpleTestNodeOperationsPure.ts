@@ -1,5 +1,5 @@
-import { type GraphOperation } from '../../graph/index';
 import path from 'path';
+import type { GraphOperation } from '.';
 
 // Pure function to create test node operations from simple test results
 export function createSimpleTestNodeOperationsPure(
