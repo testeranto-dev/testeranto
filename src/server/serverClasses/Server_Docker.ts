@@ -131,10 +131,23 @@ export abstract class Server_Docker extends Server_Docker_Compose {
     processId: string, 
     containerId: string, 
     serviceName: string, 
-    status: string
+    dockerEventStatus: string
   ): Promise<void> {
     try {
       const updateTimestamp = new Date().toISOString();
+      
+      // Map Docker event status to graph status
+      let graphStatus: 'running' | 'stopped';
+      
+      // Docker events that indicate container is running
+      const runningStatuses = ['start', 'restart', 'exec_start', 'exec_start:', 'running'];
+      // Check if the dockerEventStatus starts with any running indicator
+      const isRunning = runningStatuses.some(runningStatus => 
+        dockerEventStatus.startsWith(runningStatus)
+      );
+      
+      graphStatus = isRunning ? 'running' : 'stopped';
+      
       const update = {
         operations: [{
           type: 'updateNode' as const,
@@ -143,9 +156,9 @@ export abstract class Server_Docker extends Server_Docker_Compose {
             metadata: {
               containerId: containerId,
               serviceName: serviceName,
-              containerStatus: status,
+              containerStatus: dockerEventStatus,
               updatedAt: updateTimestamp,
-              status: status === 'running' ? 'running' : 'stopped'
+              status: graphStatus
             }
           },
           timestamp: updateTimestamp
@@ -153,7 +166,7 @@ export abstract class Server_Docker extends Server_Docker_Compose {
         timestamp: updateTimestamp
       };
       this.applyUpdate(update);
-      consoleLog(`[Server_Docker] Updated process node ${processId} with container ${containerId.substring(0, 12)}`);
+      consoleLog(`[Server_Docker] Updated process node ${processId} with container ${containerId.substring(0, 12)}, Docker event: ${dockerEventStatus}, Graph status: ${graphStatus}`);
       
       // Save the graph
       this.saveGraph();
@@ -880,41 +893,65 @@ export abstract class Server_Docker extends Server_Docker_Compose {
       
       const dockerEvents = spawn('docker', ['events', '--filter', 'type=container', '--format', '{{json .}}']);
       
+      let buffer = '';
+      
       dockerEvents.stdout.on('data', async (data) => {
         try {
-          const eventStr = data.toString().trim();
-          if (!eventStr) return;
+          buffer += data.toString();
           
-          const event = JSON.parse(eventStr);
-          const containerId = event.id;
-          const status = event.status;
-          const containerName = event.Actor?.Attributes?.name;
+          // Split by newlines to handle multiple events
+          const lines = buffer.split('\n');
           
-          if (containerName && containerName.startsWith('agent-')) {
-            const agentName = containerName.replace('agent-', '');
-            const processId = `aider_process:agent:${agentName}`;
+          // Keep the last incomplete line in buffer
+          buffer = lines.pop() || '';
+          
+          for (const line of lines) {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) continue;
             
-            consoleLog(`[AgentWatcher] Container ${containerName} ${status}`);
-            
-            // Update the graph with the new status
-            await this.updateProcessNodeWithContainerInfo(
-              processId,
-              containerId,
-              containerName,
-              status
-            );
+            try {
+              const event = JSON.parse(trimmedLine);
+              const containerId = event.id;
+              const status = event.status;
+              const containerName = event.Actor?.Attributes?.name;
+              
+              if (containerName && containerName.startsWith('agent-')) {
+                const agentName = containerName.replace('agent-', '');
+                const processId = `aider_process:agent:${agentName}`;
+                
+                consoleLog(`[AgentWatcher] Container ${containerName} ${status}`);
+                
+                // Update the graph with the new status
+                await this.updateProcessNodeWithContainerInfo(
+                  processId,
+                  containerId,
+                  containerName,
+                  status
+                );
+              }
+            } catch (parseError) {
+              consoleError(`[AgentWatcher] Error parsing JSON line: "${trimmedLine}"`, parseError);
+              // Continue processing other lines
+            }
           }
         } catch (error) {
-          consoleError(`[AgentWatcher] Error processing Docker event:`, error);
+          consoleError(`[AgentWatcher] Error processing Docker event data:`, error);
         }
       });
       
       dockerEvents.stderr.on('data', (data) => {
-        consoleError(`[AgentWatcher] Docker events error: ${data}`);
+        const errorMsg = data.toString().trim();
+        if (errorMsg) {
+          consoleError(`[AgentWatcher] Docker events error: ${errorMsg}`);
+        }
       });
       
       dockerEvents.on('close', (code) => {
         consoleLog(`[AgentWatcher] Docker events process exited with code ${code}`);
+      });
+      
+      dockerEvents.on('error', (error) => {
+        consoleError(`[AgentWatcher] Docker events process error:`, error);
       });
       
       // Store reference to clean up later

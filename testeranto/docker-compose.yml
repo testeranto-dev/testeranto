@@ -304,9 +304,9 @@ services:
                    touch /workspace/agent.md
                  fi
                  
-                 # Start aider and keep it running
+                 # Start aider directly without the pipe
                  echo "Starting aider for agent prodirek"
-                 cat /workspace/agent.md - | aider --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
+                 aider /workspace/agent.md --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
                  EXIT_CODE=$?
                  echo "Aider exited with code $EXIT_CODE"
                  # Exit with the same code (no restart)

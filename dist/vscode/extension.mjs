@@ -297,21 +297,19 @@ EOF`);
         return terminal;
       }
       const data = await response2.json();
-      if (data.success && data.script) {
-        terminal.sendText(`echo "\u2705 Server provided terminal script"`);
-        terminal.sendText(`echo "Executing..."`);
+      if (data.success && data.command) {
+        terminal.sendText(`echo "\u2705 Server provided terminal command"`);
+        terminal.sendText(`echo "Container: ${data.containerId || "unknown"}"`);
+        terminal.sendText(`echo "Service: ${data.serviceName || "unknown"}"`);
         terminal.sendText(`echo ""`);
-        const workspaceRoot = this.getWorkspaceRoot();
-        if (workspaceRoot) {
-          const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
-          fs.writeFileSync(scriptPath, data.script, { mode: 493 });
-          terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
-        } else {
-          const escapedScript = data.script.replace(/'/g, `'"'"'`);
-          terminal.sendText(`/bin/sh << 'EOF'
-${escapedScript}
-EOF`);
-        }
+        terminal.sendText(`echo "To detach from the container without stopping it:"`);
+        terminal.sendText(`echo "  Press Ctrl+P, Ctrl+Q"`);
+        terminal.sendText(`echo "To send Ctrl+C to the container:"`);
+        terminal.sendText(`echo "  Press Ctrl+C"`);
+        terminal.sendText(`echo ""`);
+        terminal.sendText(`echo "Running command..."`);
+        terminal.sendText(`echo ""`);
+        terminal.sendText(data.command);
       } else {
         terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
         terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);

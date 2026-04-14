@@ -146,7 +146,7 @@ export class Server_Vscode extends Server_Docker {
     label: string,
     containerId: string,
     serviceName: string
-  ): Promise<{ success: boolean; error?: string; message?: string; script?: string }> {
+  ): Promise<{ success: boolean; error?: string; message?: string; command?: string; containerId?: string; serviceName?: string }> {
     // Get the process node from the graph
     const processNode = this.getProcessNode(nodeId);
     
@@ -231,12 +231,23 @@ export class Server_Vscode extends Server_Docker {
     // Get service name from container info or use what we have
     const containerName = containerInfo.Name ? containerInfo.Name.replace(/^\//, '') : actualServiceName;
 
-    const script = this.generateUnifiedTerminalScript(actualContainerId, containerName || `process-${nodeId}`, label);
+    // Check if this is an aider process by looking at the node in the graph
+    let isAiderProcess = false;
+    const processNodeForType = this.getProcessNode(nodeId);
+    if (processNodeForType && processNodeForType.type) {
+      if (typeof processNodeForType.type === 'object' && processNodeForType.type.type === 'aider') {
+        isAiderProcess = true;
+      }
+    }
+    
+    const command = this.generateTerminalCommand(actualContainerId, containerName || `process-${nodeId}`, label, isAiderProcess);
 
     return {
       success: true,
-      message: `Terminal script generated for ${label}`,
-      script
+      message: `Terminal command generated for ${label}`,
+      command,
+      containerId: actualContainerId,
+      serviceName: containerName
     };
   }
 
@@ -276,34 +287,19 @@ export class Server_Vscode extends Server_Docker {
     return `aider-${configKey}-${testName.replace(/\//g, '-').replace(/\./g, '-')}`;
   }
 
-  private generateUnifiedTerminalScript(containerId: string, serviceName: string, label: string): string {
+  private generateTerminalCommand(containerId: string, serviceName: string, label: string, isAiderProcess: boolean): string {
     // Validate container ID
     if (!containerId || containerId === 'unknown') {
-      throw new Error(`Cannot generate terminal script with invalid container ID: ${containerId}`);
+      throw new Error(`Cannot generate terminal command with invalid container ID: ${containerId}`);
     }
     
-    // Generate a script that uses docker attach for all containers
-    // This provides a consistent interface for both interactive and non-interactive containers
-    return `#!/bin/sh
-echo "Connecting to container: ${containerId}"
-echo "Service: ${serviceName}"
-echo "Label: ${label}"
-echo ""
-echo "This terminal uses 'docker attach' to connect to the container."
-echo ""
-echo "For interactive processes (like aider):"
-echo "  - Type input directly to interact with the process"
-echo "  - Use Ctrl+P, Ctrl+Q to detach without stopping the container"
-echo "  - Use Ctrl+C to send interrupt signal"
-echo ""
-echo "For non-interactive processes:"
-echo "  - You will see the container's output"
-echo "  - Press Ctrl+C to exit"
-echo "  - Avoid typing input unless you know the process expects it"
-echo ""
-echo "Attaching to container..."
-exec docker attach ${containerId}
-`;
+    if (isAiderProcess) {
+      // For aider containers, use docker attach to connect to the running aider process
+      return `stty sane && printf '\\e[?2004l' && printf '\\e[?1l' && stty cooked && docker attach ${containerId}`;
+    } else {
+      // For non-aider containers, use docker exec -it for a shell
+      return `stty sane && printf '\\e[?2004l' && printf '\\e[?1l' && stty cooked && docker exec -it ${containerId} /bin/sh`;
+    }
   }
 
   async getProcessLogs(processId: string): Promise<string[]> {

@@ -119,14 +119,32 @@ export async function handleOpenProcessTerminalUtil(
       const containerStatus = graphContainerStatus;
       const actualContainerId = graphContainerId;
 
-      const isAgentOrAider = finalContainerName.includes('agent-') || finalContainerName.includes('aider');
+      // Get the process node from the graph to determine its type
+      let isAiderProcess = false;
+      if (graphManager) {
+        try {
+          const graphData = graphManager.getGraphData();
+          const processNode = graphData.nodes.find((n: any) => n.id === nodeId);
+          if (processNode && processNode.type) {
+            // Check the node type directly - no guessing
+            if (typeof processNode.type === 'object' && processNode.type.type === 'aider') {
+              isAiderProcess = true;
+            }
+          }
+        } catch (error) {
+          // If we can't check the graph, we can't determine the process type
+          // Don't guess - just log the error
+          console.warn(`[Server_HTTP] Error getting process type from graph:`, error);
+        }
+      }
+      
       const script = generateTerminalScript({
         type,
         nodeId,
         label,
         containerName: finalContainerName,
         containerStatus,
-        isAgentOrAider
+        isAiderProcess
       });
 
       return new Response(JSON.stringify({

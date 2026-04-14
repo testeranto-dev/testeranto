@@ -1,4 +1,3 @@
-import type { IChecks } from "../../../../lib/tiposkripto/trash/internal/BaseCheck";
 import { RUN_TIMES } from "../../../../runtimes";
 import type {
   IRunTime,
@@ -17,6 +16,7 @@ import { aiderDockerComposeFile } from "./aiderDockerComposeFile";
 import { bddTestDockerComposeFile } from "./bddTestDockerComposeFile";
 import { staticTestDockerComposeFile } from "./staticTestDockerComposeFile";
 import { consoleLog } from "../Server_Docker_Dependents";
+import type { IChecks } from "../../../../lib/tiposkripto/trash/internal/BaseCheck";
 
 export const generateServicesPure = (
   configs: ITesterantoConfig,
@@ -155,10 +155,10 @@ export const generateServicesPure = (
   // Create agent services in docker-compose.yml
   const agents = configs.agents || {};
   consoleLog(`[generateServicesPure] Creating ${Object.keys(agents).length} agent services in docker-compose.yml`);
-  
+
   for (const [agentName, agentConfig] of Object.entries(agents)) {
     const agentServiceName = `agent-${agentName}`;
-    
+
     services[agentServiceName] = {
       image: 'testeranto-aider:latest',
       container_name: agentServiceName,
@@ -180,9 +180,9 @@ export const generateServicesPure = (
            touch /workspace/agent.md
          fi
          
-         # Start aider and keep it running
+         # Start aider directly without the pipe
          echo "Starting aider for agent ${agentName}"
-         cat /workspace/agent.md - | aider --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
+         aider /workspace/agent.md --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
          EXIT_CODE=$?
          echo "Aider exited with code $EXIT_CODE"
          # Exit with the same code (no restart)

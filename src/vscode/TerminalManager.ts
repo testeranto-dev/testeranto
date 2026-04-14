@@ -328,7 +328,8 @@ export class TerminalManager {
     terminal.sendText(`echo "Connecting to server to get container information..."`);
 
     try {
-      // Call the server API to handle terminal creation
+      // Call the server API to get the terminal command
+      // Use the API endpoint definition
       const response = await fetch('http://localhost:3000/~/open-process-terminal', {
         method: 'POST',
         headers: {
@@ -357,26 +358,21 @@ export class TerminalManager {
 
       const data = await response.json();
 
-      if (data.success && data.script) {
-        // Use the script provided by the server
-        terminal.sendText(`echo "✅ Server provided terminal script"`);
-        terminal.sendText(`echo "Executing..."`);
+      if (data.success && data.command) {
+        terminal.sendText(`echo "✅ Server provided terminal command"`);
+        terminal.sendText(`echo "Container: ${data.containerId || 'unknown'}"`);
+        terminal.sendText(`echo "Service: ${data.serviceName || 'unknown'}"`);
         terminal.sendText(`echo ""`);
-
-        // The script from server already includes #!/bin/sh
-        // We need to execute it properly
-        // Write to a temporary file and execute it
-        const workspaceRoot = this.getWorkspaceRoot();
-        if (workspaceRoot) {
-          const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
-          fs.writeFileSync(scriptPath, data.script, { mode: 0o755 });
-          terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
-        } else {
-          // Fallback: use heredoc to execute the script
-          // Escape any single quotes in the script
-          const escapedScript = data.script.replace(/'/g, "'\"'\"'");
-          terminal.sendText(`/bin/sh << 'EOF'\n${escapedScript}\nEOF`);
-        }
+        terminal.sendText(`echo "To detach from the container without stopping it:"`);
+        terminal.sendText(`echo "  Press Ctrl+P, Ctrl+Q"`);
+        terminal.sendText(`echo "To send Ctrl+C to the container:"`);
+        terminal.sendText(`echo "  Press Ctrl+C"`);
+        terminal.sendText(`echo ""`);
+        terminal.sendText(`echo "Running command..."`);
+        terminal.sendText(`echo ""`);
+        
+        // Run the command directly - no temporary files, no heredocs
+        terminal.sendText(data.command);
       } else {
         terminal.sendText(`echo "⚠️ Server response indicates failure"`);
         terminal.sendText(`echo "Error: ${data.error || 'Unknown error'}"`);

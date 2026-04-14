@@ -157,6 +157,22 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     request: Request,
     url: URL,
   ): Promise<Response> {
+    // Direct route handling for open-process-terminal
+    if (routeName === 'open-process-terminal') {
+      if (request.method === 'POST') {
+        return await this.handleOpenProcessTerminal(request);
+      } else {
+        return new Response(JSON.stringify({
+          error: `Method ${request.method} not allowed for ${routeName}`,
+          message: 'Only POST method is supported',
+          timestamp: new Date().toISOString()
+        }), {
+          status: 405,
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+    }
+
     // Route handlers
     const routeHandlers: Record<string, () => Promise<Response> | Response> = {
       files: () => this.handleFilesRoute(),
@@ -358,7 +374,9 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
           return new Response(JSON.stringify({
             success: true,
             message: result.message,
-            script: result.script
+            command: result.command || result.script,
+            containerId: result.containerId,
+            serviceName: result.serviceName
           }), {
             status: 200,
             headers: { "Content-Type": "application/json" }

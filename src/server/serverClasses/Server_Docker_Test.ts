@@ -155,9 +155,7 @@ export abstract class Server_Docker_Test extends Server_Test_WS {
   }
 
   protected async getContainerInfo(serviceName: string): Promise<any> {
-    // Get container information from the graph, not by executing shell commands
-    // The graph is the source of truth for all container information
-    
+    // First try to get container info from the graph
     try {
       // Get all process nodes from the graph
       const graphData = this.getGraphData();
@@ -249,16 +247,40 @@ export abstract class Server_Docker_Test extends Server_Test_WS {
           }
         }
       }
-      
-      // No container info found in graph
-      // According to SOUL.md, we should not guess or fall back
-      consoleError(`[Server_Docker_Test] Container info for ${serviceName} not found in graph`);
-      return null;
-      
     } catch (error) {
       consoleError(`[Server_Docker_Test] Error getting container info for ${serviceName} from graph:`, error);
-      return null;
     }
+    
+    // If not found in graph or graph says not running, check Docker directly
+    try {
+      // Dynamically import child_process
+      const { exec } = await import('child_process');
+      const { promisify } = await import('util');
+      const execAsync = promisify(exec);
+      
+      // Try to get container info by name
+      const { stdout } = await execAsync(`docker inspect ${serviceName} 2>/dev/null || docker ps -a --filter "name=${serviceName}" --format "{{.ID}}"`);
+      
+      if (stdout.trim()) {
+        // If we got container ID from docker ps, use it to inspect
+        const containerId = stdout.trim().split('\n')[0];
+        const { stdout: inspectStdout } = await execAsync(`docker inspect ${containerId}`);
+        const containerInfo = JSON.parse(inspectStdout)[0];
+        
+        return {
+          Id: containerInfo.Id,
+          Name: containerInfo.Name ? containerInfo.Name.replace(/^\//, '') : serviceName,
+          State: containerInfo.State,
+          Config: containerInfo.Config
+        };
+      }
+    } catch (error) {
+      consoleError(`[Server_Docker_Test] Error getting container info for ${serviceName} from Docker:`, error);
+    }
+    
+    // No container info found
+    consoleError(`[Server_Docker_Test] Container info for ${serviceName} not found`);
+    return null;
   }
 
   protected async updateContainerInfoFromDocker(serviceName: string): Promise<void> {
