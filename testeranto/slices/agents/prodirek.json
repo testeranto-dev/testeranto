@@ -1,16 +1,45 @@
 {
   "viewType": "agent",
   "agentName": "prodirek",
-  "timestamp": "2026-04-14T20:32:16.005Z",
+  "timestamp": "2026-04-14T21:39:30.125Z",
   "data": {
     "features": [],
     "documentation": [],
-    "chatMessages": [],
+    "chatMessages": [
+      {
+        "id": "chat_message:test:1776202690809",
+        "agentName": "test",
+        "content": "Test message",
+        "timestamp": "2026-04-14T21:38:10.809Z",
+        "preview": "Test message"
+      },
+      {
+        "id": "chat_message:prodirek:1776202702944",
+        "agentName": "prodirek",
+        "content": "Test message",
+        "timestamp": "2026-04-14T21:38:22.944Z",
+        "preview": "Test message"
+      },
+      {
+        "id": "chat_message:prodirek:1776202738789",
+        "agentName": "prodirek",
+        "content": "Test message",
+        "timestamp": "2026-04-14T21:38:58.789Z",
+        "preview": "Test message"
+      },
+      {
+        "id": "chat_message:prodirek:1776202770125",
+        "agentName": "prodirek",
+        "content": "aloha",
+        "timestamp": "2026-04-14T21:39:30.125Z",
+        "preview": "aloha"
+      }
+    ],
     "agents": [],
     "summary": {
       "totalFeatures": 0,
       "totalDocumentation": 0,
-      "totalChatMessages": 0,
+      "totalChatMessages": 4,
       "totalAgents": 0
     }
   }

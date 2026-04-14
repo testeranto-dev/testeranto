@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-14T21:08:15.043Z",
+  "timestamp": "2026-04-14T21:36:33.489Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -18,9 +18,9 @@
               "/read SOUL.md",
               "/read testeranto/slices/agents/prodirek.json"
             ],
-            "message": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- you job is groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint 'curl -X POST http://localhost:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from Prodirek!\"}''"
+            "message": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- you job is groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint 'curl -X POST http://host.docker.internal:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from Prodirek!\"}'' Learn more about yourself it 'http://host.docker.internal:3000/~/agents/prodirek'"
           },
-          "timestamp": "2026-04-14T21:07:40.932Z",
+          "timestamp": "2026-04-14T21:33:52.764Z",
           "status": "todo",
           "icon": "user"
         },
@@ -35,7 +35,7 @@
             "viewKey": "Chat",
             "viewPath": "src/views/defaultViews/ChatView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
-            "timestamp": "2026-04-14T21:07:40.933Z"
+            "timestamp": "2026-04-14T21:33:52.765Z"
           }
         },
         {
@@ -54,7 +54,7 @@
               "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
             ],
             "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-            "timestamp": "2026-04-14T21:07:40.933Z"
+            "timestamp": "2026-04-14T21:33:52.765Z"
           }
         },
         {
@@ -68,7 +68,7 @@
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-14T21:07:40.933Z"
+            "timestamp": "2026-04-14T21:33:52.765Z"
           }
         },
         {
@@ -82,7 +82,7 @@
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-14T21:07:40.933Z"
+            "timestamp": "2026-04-14T21:33:52.765Z"
           }
         },
         {
@@ -96,7 +96,7 @@
             "configKey": "nodetests",
             "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-14T21:07:40.933Z"
+            "timestamp": "2026-04-14T21:33:52.765Z"
           }
         },
         {
@@ -109,7 +109,7 @@
           "description": "bdd process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.056Z",
+          "timestamp": "2026-04-14T21:33:54.832Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -133,7 +133,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-14T21:07:43.056Z"
+            "startTime": "2026-04-14T21:33:54.832Z"
           },
           "icon": "beaker"
         },
@@ -147,7 +147,7 @@
           "description": "check process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.056Z",
+          "timestamp": "2026-04-14T21:33:54.833Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -171,7 +171,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-14T21:07:43.056Z"
+            "startTime": "2026-04-14T21:33:54.833Z"
           },
           "icon": "checklist"
         },
@@ -185,7 +185,7 @@
           "description": "aider process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.056Z",
+          "timestamp": "2026-04-14T21:33:54.833Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -209,7 +209,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-14T21:07:43.056Z"
+            "startTime": "2026-04-14T21:33:54.833Z"
           },
           "icon": "comment-discussion"
         },
@@ -223,7 +223,7 @@
           "description": "bdd process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.057Z",
+          "timestamp": "2026-04-14T21:33:54.833Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -247,7 +247,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-14T21:07:43.057Z"
+            "startTime": "2026-04-14T21:33:54.833Z"
           },
           "icon": "beaker"
         },
@@ -261,7 +261,7 @@
           "description": "check process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.057Z",
+          "timestamp": "2026-04-14T21:33:54.833Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -285,7 +285,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-14T21:07:43.057Z"
+            "startTime": "2026-04-14T21:33:54.833Z"
           },
           "icon": "checklist"
         },
@@ -299,7 +299,7 @@
           "description": "aider process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.057Z",
+          "timestamp": "2026-04-14T21:33:54.834Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -323,7 +323,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-14T21:07:43.057Z"
+            "startTime": "2026-04-14T21:33:54.834Z"
           },
           "icon": "comment-discussion"
         },
@@ -337,7 +337,7 @@
           "description": "bdd process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.057Z",
+          "timestamp": "2026-04-14T21:33:54.834Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -361,7 +361,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-14T21:07:43.057Z"
+            "startTime": "2026-04-14T21:33:54.834Z"
           },
           "icon": "beaker"
         },
@@ -375,7 +375,7 @@
           "description": "check process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.057Z",
+          "timestamp": "2026-04-14T21:33:54.834Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -399,7 +399,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-14T21:07:43.057Z"
+            "startTime": "2026-04-14T21:33:54.834Z"
           },
           "icon": "checklist"
         },
@@ -413,7 +413,7 @@
           "description": "aider process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.057Z",
+          "timestamp": "2026-04-14T21:33:54.834Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -437,7 +437,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-14T21:07:43.057Z"
+            "startTime": "2026-04-14T21:33:54.834Z"
           },
           "icon": "comment-discussion"
         },
@@ -451,7 +451,7 @@
           "description": "builder process for builder (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:43.058Z",
+          "timestamp": "2026-04-14T21:33:54.834Z",
           "metadata": {
             "runtime": "node",
             "testName": "builder",
@@ -475,7 +475,7 @@
             },
             "status": "todo",
             "processType": "builder",
-            "startTime": "2026-04-14T21:07:43.058Z"
+            "startTime": "2026-04-14T21:33:54.834Z"
           },
           "icon": "gear"
         },
@@ -489,18 +489,18 @@
           "description": "aider process for prodirek (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-14T21:07:47.740Z",
+          "timestamp": "2026-04-14T21:33:58.811Z",
           "metadata": {
-            "containerId": "30597332d35a81419cb238e257b3a005adf9204ae6c7d8d14a89c3060b119c62",
+            "containerId": "1f17226b817a811e9ef4c39f9dfd44cf4e7578f97674e65e841710b53480876c",
             "serviceName": "agent-prodirek",
-            "containerStatus": "running",
-            "updatedAt": "2026-04-14T21:07:47.940Z",
-            "status": "running"
+            "containerStatus": "resize",
+            "updatedAt": "2026-04-14T21:36:33.489Z",
+            "status": "stopped"
           },
           "icon": "comment-discussion"
         },
         {
-          "id": "logfile:nodetests-builder.log:mnz450ya",
+          "id": "logfile:nodetests-builder.log:mnz52p78",
           "type": "file",
           "label": "nodetests-builder.log",
           "description": "Log file for nodetests-builder (builder)",
@@ -514,7 +514,7 @@
             "configKey": "nodetests",
             "isLogFile": true,
             "logType": "builder",
-            "timestamp": "2026-04-14T21:07:52.978Z",
+            "timestamp": "2026-04-14T21:34:04.052Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
           }
         }
@@ -525,7 +525,7 @@
           "target": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-14T21:07:40.933Z"
+            "timestamp": "2026-04-14T21:33:52.765Z"
           }
         },
         {
@@ -533,7 +533,7 @@
           "target": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-14T21:07:40.933Z"
+            "timestamp": "2026-04-14T21:33:52.765Z"
           }
         },
         {
@@ -541,7 +541,7 @@
           "target": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-14T21:07:40.933Z"
+            "timestamp": "2026-04-14T21:33:52.765Z"
           }
         },
         {
@@ -553,7 +553,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.056Z",
+            "timestamp": "2026-04-14T21:33:54.832Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -568,7 +568,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.056Z",
+            "timestamp": "2026-04-14T21:33:54.833Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -583,7 +583,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.056Z",
+            "timestamp": "2026-04-14T21:33:54.833Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -598,7 +598,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.057Z",
+            "timestamp": "2026-04-14T21:33:54.833Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -613,7 +613,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.057Z",
+            "timestamp": "2026-04-14T21:33:54.833Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -628,7 +628,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.057Z",
+            "timestamp": "2026-04-14T21:33:54.834Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -643,7 +643,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.057Z",
+            "timestamp": "2026-04-14T21:33:54.834Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -658,7 +658,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.057Z",
+            "timestamp": "2026-04-14T21:33:54.834Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -673,7 +673,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.057Z",
+            "timestamp": "2026-04-14T21:33:54.834Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -688,7 +688,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:43.058Z",
+            "timestamp": "2026-04-14T21:33:54.834Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -703,7 +703,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-14T21:07:47.740Z",
+            "timestamp": "2026-04-14T21:33:58.811Z",
             "metadata": {
               "relationship": "agent_has_process"
             }
@@ -712,7 +712,7 @@
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-14T21:08:15.043Z"
+        "timestamp": "2026-04-14T21:36:33.489Z"
       }
     },
     "vizConfig": {

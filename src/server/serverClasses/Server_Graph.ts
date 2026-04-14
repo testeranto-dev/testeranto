@@ -298,12 +298,10 @@ export class Server_Graph extends Server_Base {
   }
 
   addChatMessage(agentName: string, content: string): void {
-    addChatMessageUtil(
-      this,
-      agentName,
-      content,
-      (agentName: string) => this.updateAgentSliceFile(agentName)
-    );
+    const timestamp = new Date().toISOString();
+    const update = addChatMessageUtil(agentName, content, timestamp);
+    this.applyUpdate(update);
+    this.updateAgentSliceFile(agentName);
   }
 
   private updateAgentSliceFile(agentName: string): void {

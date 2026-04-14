@@ -2032,3 +2032,79 @@
 [2026-04-14T21:07:50.159Z] [NODE BUILDER] Metafile updated
 [2026-04-14T21:07:50.078Z] INFO: Build started for nodetests
 [2026-04-14T21:07:50.168Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T21:21:30.113Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T21:21:30.114Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T21:21:30.119Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-14T21:21:37.168Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T21:21:37.175Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T21:21:37.314Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T21:21:37.482Z] node > build ended with 0 errors
+[2026-04-14T21:21:37.484Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T21:21:37.484Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T21:21:37.484Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T21:21:37.486Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T21:21:37.486Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T21:21:37.486Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T21:21:37.486Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T21:21:37.489Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T21:21:37.491Z] [NODE BUILDER] Metafile updated
+[2026-04-14T21:21:37.351Z] INFO: Build started for nodetests
+[2026-04-14T21:21:37.482Z] LOG: node > build ended with 0 errors
+[2026-04-14T21:21:37.495Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T21:21:37.498Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T21:21:37.498Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T21:21:37.499Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T21:21:37.500Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T21:21:37.502Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T21:21:37.507Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T21:21:37.507Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T21:21:37.569Z] node > build ended with 0 errors
+[2026-04-14T21:21:37.570Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T21:21:37.570Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T21:21:37.570Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T21:21:37.570Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T21:21:37.570Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T21:21:37.571Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T21:21:37.571Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T21:21:37.573Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T21:21:37.573Z] [NODE BUILDER] Metafile updated
+[2026-04-14T21:21:37.507Z] INFO: Build started for nodetests
+[2026-04-14T21:21:37.578Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T21:33:53.306Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T21:33:53.308Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T21:33:53.326Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-14T21:34:00.977Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T21:34:00.979Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T21:34:01.104Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T21:34:01.390Z] node > build ended with 0 errors
+[2026-04-14T21:34:01.393Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T21:34:01.393Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T21:34:01.394Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T21:34:01.403Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T21:34:01.404Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T21:34:01.405Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T21:34:01.405Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T21:34:01.408Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T21:34:01.408Z] [NODE BUILDER] Metafile updated
+[2026-04-14T21:34:01.143Z] INFO: Build started for nodetests
+[2026-04-14T21:34:01.389Z] LOG: node > build ended with 0 errors
+[2026-04-14T21:34:01.412Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T21:34:01.415Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T21:34:01.415Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T21:34:01.415Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T21:34:01.415Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T21:34:01.416Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T21:34:01.418Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T21:34:01.420Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T21:34:01.482Z] node > build ended with 0 errors
+[2026-04-14T21:34:01.482Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T21:34:01.482Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T21:34:01.482Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T21:34:01.483Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T21:34:01.486Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T21:34:01.487Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T21:34:01.487Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T21:34:01.493Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T21:34:01.494Z] [NODE BUILDER] Metafile updated
+[2026-04-14T21:34:01.420Z] INFO: Build started for nodetests
+[2026-04-14T21:34:01.512Z] [NODE BUILDER] Triggered inputFiles.json update

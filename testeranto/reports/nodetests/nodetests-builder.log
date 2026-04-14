@@ -1,14 +1,14 @@
-=== Log started at 2026-04-14T21:07:53.161Z for service nodetests-builder (runtime: node) ===
-=== Container ID: e32afbad9a41763e6113613afc0e547361641ce2da9f183e8076a19357a76d88 ===
+=== Log started at 2026-04-14T21:34:04.184Z for service nodetests-builder (runtime: node) ===
+=== Container ID: 237f648c1585fdc82f80c965b4b69b6b9f95b257d6e7ffc63d9aa7da75ab0fc2 ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
 === ALL LOGS (stdout + stderr) ===
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-$ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs '{"name":"nodetests","tests":["src/lib/tiposkripto/tests/circle/Circle.test.ts","src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts","src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"],"outputs":[]}'
 warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.242.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs '{"name":"nodetests","tests":["src/lib/tiposkripto/tests/circle/Circle.test.ts","src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts","src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"],"outputs":[]}'
 [NODE BUILDER] is now bundling:  nodetests
 [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
 [NODE BUILDER] Running in dev mode - starting watch mode
@@ -78,4 +78,4 @@ node > build ended with 0 errors
 [NODE BUILDER] Metafile updated
 [NODE BUILDER] Triggered inputFiles.json update
 
-=== Log captured at 2026-04-14T21:08:14.552Z (container status: running) ===
+=== Log captured at 2026-04-14T21:34:25.306Z (container status: running) ===
