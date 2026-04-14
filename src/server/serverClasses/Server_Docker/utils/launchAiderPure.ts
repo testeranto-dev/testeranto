@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import type { IRunTime } from "../../../../Types";
 import { generateUid, getAiderServiceName } from "../Server_Docker_Constants";
 import { consoleError, consoleLog, consoleWarn, processCwd } from "../Server_Docker_Dependents";
-import type { GraphOperation } from "../../../../graph/index";
+import type { GraphOperation } from "../../../../graph";
 
 export async function launchAiderPure({
   runtime,

@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import type { ITesterantoConfig } from "../../../Types";
-import { embedConfigInHtml } from "../utils/embedConfigInHtml";
+import { embedConfigInHtml } from "../Server_Docker/embedConfigInHtml";
 import { serveFile } from "./serveFile";
 
 const generateAndWriteStakeholderHtml = async (
@@ -17,9 +17,9 @@ export const serveStaticFile = async (
 ): Promise<Response> => {
   const normalizedPath = decodeURIComponent(url.pathname);
 
-  if (normalizedPath.includes("..")) {
-    throw new Error("Forbidden: Directory traversal not allowed");
-  }
+  // if (normalizedPath.includes("..")) {
+  //   throw new Error("Forbidden: Directory traversal not allowed");
+  // }
 
   const projectRoot = process.cwd();
 

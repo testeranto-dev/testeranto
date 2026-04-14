@@ -1,5 +1,5 @@
-import type { GraphData } from "../graph";
+// import type { GraphData } from "../graph";
 
-export interface SliceFunction {
-  (graphData: GraphData): GraphData;
-}
+// export interface SliceFunction {
+//   (graphData: GraphData): GraphData;
+// }

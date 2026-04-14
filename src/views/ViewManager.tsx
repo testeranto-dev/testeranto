@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { View, ViewProps } from './View';
 
 export interface ViewConfig {
@@ -25,6 +25,8 @@ export interface ViewManagerProps {
   staticMode?: boolean;
   /** Function to send updates to the server */
   onSendUpdate?: (path: string, data: any) => Promise<void>;
+  /** WebSocket connection for real-time updates */
+  wsConnection?: WebSocket | null;
 }
 
 interface ViewManagerContextType {
@@ -32,6 +34,7 @@ interface ViewManagerContextType {
   setActiveViewId: (id: string) => void;
   views: ViewConfig[];
   staticMode: boolean;
+  wsUpdate?: { path: string; type: string };
 }
 
 const ViewManagerContext = createContext<ViewManagerContextType | undefined>(undefined);
@@ -50,8 +53,31 @@ export function ViewManager({
   children,
   staticMode = true,
   onSendUpdate,
+  wsConnection,
 }: ViewManagerProps) {
   const [activeViewId, setActiveViewId] = useState(initialViewId || views[0]?.id || '');
+  const [wsUpdate, setWsUpdate] = useState<{ path: string; type: string } | undefined>(undefined);
+
+  // Handle WebSocket messages
+  useEffect(() => {
+    if (!wsConnection || staticMode) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === 'update' && message.path) {
+          setWsUpdate({ path: message.path, type: message.type });
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+
+    wsConnection.addEventListener('message', handleMessage);
+    return () => {
+      wsConnection.removeEventListener('message', handleMessage);
+    };
+  }, [wsConnection, staticMode]);
 
   const activeView = views.find(view => view.id === activeViewId);
 
@@ -60,6 +86,7 @@ export function ViewManager({
     setActiveViewId,
     views,
     staticMode,
+    wsUpdate,
   };
 
   return (
@@ -73,6 +100,7 @@ export function ViewManager({
               component={activeView.component}
               staticMode={staticMode}
               onSendUpdate={onSendUpdate}
+              wsUpdate={wsUpdate}
             />
           ) : (
             <div>No view selected</div>

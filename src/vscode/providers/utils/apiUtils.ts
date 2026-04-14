@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-import type { VscodeHttpEndpoint } from "../../../api/api";
-import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
+import { API, type ApiEndpointDefinition } from "../../../api";
 
 export class ApiUtils {
     static getBaseUrl(): string {
@@ -17,12 +16,12 @@ export class ApiUtils {
         }
     }
 
-    static getUrl<T extends VscodeHttpEndpoint>(
+    static getUrl<T extends ApiEndpointDefinition>(
         endpointKey: T,
         params?: Record<string, string>,
         query?: Record<string, string>
     ): string {
-        const endpoint = vscodeHttpAPI[endpointKey];
+        const endpoint = API[endpointKey];
         if (!endpoint) {
             throw new Error(`Endpoint ${endpointKey} not found in vscodeHttpAPI`);
         }

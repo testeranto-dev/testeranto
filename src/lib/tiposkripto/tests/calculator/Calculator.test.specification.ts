@@ -17,7 +17,7 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
     // TDT pattern: Confirm creates a BaseConfirm instance
     Confirm["addition"]()(
       [
-        [Value.of([1, 1]), Should.beEqualTo(2222)],
+        [Value.of([1, 1]), Should.beEqualTo(22)],
         [Value.of([2, 3]), Should.beGreaterThan(4)],
       ],
       ["./Readme.md"],

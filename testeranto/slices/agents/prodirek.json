@@ -1,28 +1,17 @@
 {
   "viewType": "agent",
   "agentName": "prodirek",
-  "timestamp": "2026-04-12T20:41:54.129Z",
+  "timestamp": "2026-04-14T18:12:13.964Z",
   "data": {
     "features": [],
     "documentation": [],
     "chatMessages": [],
-    "agents": [
-      {
-        "id": "agent:prodirek",
-        "label": "prodirek",
-        "description": "Agent: prodirek"
-      },
-      {
-        "id": "agent:arko",
-        "label": "arko",
-        "description": "Agent: arko"
-      }
-    ],
+    "agents": [],
     "summary": {
       "totalFeatures": 0,
       "totalDocumentation": 0,
       "totalChatMessages": 0,
-      "totalAgents": 2
+      "totalAgents": 0
     }
   }
 }

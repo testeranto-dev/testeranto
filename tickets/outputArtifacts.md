@@ -58,4 +58,8 @@ outputs: [
 ]
 ```
 
-During shutdown, these files should be copied to `testeranto/outputs/{configKey}/` and docker images should be built from them.
+During shutdown, these entrypoints are built into deployable artifacts. From here, the user defined Dockerfile can takeover. A user should be able top integrate the new docker images into a custom docker-compose file and run their stack locally.
+
+# similarity with sidecars
+
+sidecars are secondary processes that accompany tests. They are managed much the same as output artifacts. where sidecars run along with their test, a build artifact is produced during shutdown as a final deployable artifact.

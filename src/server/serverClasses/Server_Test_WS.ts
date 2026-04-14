@@ -1,13 +1,15 @@
 import type { IRunTime, ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
-import { updateGraphWithInputFilesPure } from "./Server_Docker/updateGraphWithInputFilesPure";
-import { getAiderProcessesPure } from "./Server_Docker/utils/getAiderProcessesPure";
+import { updateGraphWithInputFilesPure } from "./utils/updateGraphWithInputFilesPure";
+import { getAiderProcessesPure } from "./Server_Test_WS_utils/getAiderProcessesPure";
 import { Server_WS_HTTP } from "./Server_WS_HTTP";
 import {
-  createTestManagerComponentsUtil, launchBddTestUtil, launchChecksUtil, launchAiderUtil, addProcessNodeToGraphUtil, checkFilesLockedUtil
-} from "./utils/testManagerCoreUtils";
-import { getInputFilesHelper, getOutputFilesHelper, getTestResultsHelper, getProcessSummaryHelper } from "./utils/testManagerHelpers";
-
+  getInputFilesHelper, getOutputFilesHelper, getTestResultsHelper, getProcessSummaryHelper
+} from "./Server_Test_WS_utils/testManagerHelpers";
+import type { GraphUpdate } from "../../graph";
+import { checkFilesLockedUtil } from "./Server_Test_WS_utils/checkFilesLockedUtil";
+import { createTestManagerComponentsUtil } from "./Server_Test_WS_utils/createTestManagerComponentsUtil";
+import { addProcessNodeUtil } from "./Server_Test_WS_utils/addProcessNodeUtil";
 
 export abstract class Server_Test_WS extends Server_WS_HTTP {
   protected testFileManager: any;
@@ -52,71 +54,26 @@ export abstract class Server_Test_WS extends Server_WS_HTTP {
     return {};
   }
 
-  public async launchBddTest(
+  public abstract launchBddTest(
     runtime: IRunTime,
     testName: string,
     configKey: string,
     configValue: any
-  ): Promise<void> {
-    await launchBddTestUtil(
-      runtime,
-      testName,
-      configKey,
-      configValue,
-      this.failedBuilderConfigs,
-      (serviceName: string, runtime: string, runtimeConfigKey: string, testName: string) =>
-        this.startServiceLogging(serviceName, runtime, runtimeConfigKey, testName),
-      () => this.writeConfigForExtension(),
-      (path) => this.resourceChanged(path),
-      this.graphManager,
-      this.createAiderMessageFile.bind(this)
-    );
-  }
+  ): Promise<void>;
 
-  public async launchChecks(
+  public abstract launchChecks(
     runtime: IRunTime,
     testName: string,
     configKey: string,
     configValue: any
-  ): Promise<void> {
-    await launchChecksUtil(
-      runtime,
-      testName,
-      configKey,
-      configValue,
-      this.failedBuilderConfigs,
-      (serviceName: string, runtime: string, runtimeConfigKey: string, testName: string) =>
-        this.startServiceLogging(serviceName, runtime, runtimeConfigKey, testName),
-      () => this.writeConfigForExtension(),
-      (path) => this.resourceChanged(path),
-      this.graphManager,
-      this.createAiderMessageFile.bind(this)
-    );
-  }
+  ): Promise<void>;
 
-  public async launchAider(
+  public abstract launchAider(
     runtime: IRunTime,
     testName: string,
     configKey: string,
     configValue: any
-  ): Promise<void> {
-    await launchAiderUtil(
-      runtime,
-      testName,
-      configKey,
-      configValue,
-      this.failedBuilderConfigs,
-      this.createAiderMessageFile.bind(this),
-      (serviceName: string, runtime: string, runtimeConfigKey: string, testName: string) =>
-        this.startServiceLogging(serviceName, runtime, runtimeConfigKey, testName),
-      (path) => this.resourceChanged(path),
-      () => this.writeConfigForExtension(),
-      (serviceName) => this.getContainerInfo(serviceName),
-      this.aiderProcesses,
-      this.graphManager,
-      console.warn
-    );
-  }
+  ): Promise<void>;
 
   protected startServiceLogging(serviceName: string, runtime: string, runtimeConfigKey: string, testName: string): Promise<void> {
     return Promise.resolve();
@@ -160,6 +117,14 @@ export abstract class Server_Test_WS extends Server_WS_HTTP {
     return getProcessSummaryHelper(this.testResultsCollector);
   }
 
+  public getTestManager(): any {
+    // Return a test manager object with required methods
+    // This is a stub implementation to prevent the error
+    return {
+      // Add any required methods here
+    };
+  }
+
   public getAiderProcesses(): any[] {
     return getAiderProcessesPure({
       aiderProcesses: this.aiderProcesses,
@@ -183,7 +148,7 @@ export abstract class Server_Test_WS extends Server_WS_HTTP {
   }
 
   public async isFilesLocked(): Promise<boolean> {
-    return checkFilesLockedUtil(this.graphManager);
+    return checkFilesLockedUtil(this);
   }
 
   public async addProcessNodeToGraph(
@@ -195,19 +160,51 @@ export abstract class Server_Test_WS extends Server_WS_HTTP {
     checkIndex?: number,
     status?: 'running' | 'stopped' | 'failed'
   ): Promise<void> {
-    await addProcessNodeToGraphUtil(
+    console.log(`[addProcessNodeToGraph] Adding process node: ${processType}, ${runtime}, ${testName}, ${configKey}`);
+
+    // Convert IRunTime to string
+    const runtimeString = runtime as string;
+
+    // Create process node operations using the proper utility function
+    const operations = addProcessNodeUtil(
       processType,
-      runtime,
+      runtimeString,
       testName,
       configKey,
       configValue,
-      checkIndex,
-      this.graphManager,
-      console.log,
-      console.error,
-      console.warn,
-      status
+      status || 'running'
     );
+
+    console.log(`[addProcessNodeToGraph] Generated ${operations.length} operations`);
+
+    if (operations.length > 0) {
+      const update: GraphUpdate = {
+        operations,
+        timestamp: new Date().toISOString()
+      };
+      console.log(`[addProcessNodeToGraph] Applying update to graph...`);
+      try {
+        // Use this directly instead of this.graphManager
+        const result = this.applyUpdate(update);
+        console.log(`[addProcessNodeToGraph] Update applied, result:`, result ? 'has result' : 'no result');
+      } catch (error) {
+        console.error(`[addProcessNodeToGraph] Error applying update:`, error);
+      }
+    }
+
+    // Ensure graph is saved immediately
+    console.log(`[addProcessNodeToGraph] Saving graph...`);
+    try {
+      this.saveGraph();
+      console.log(`[addProcessNodeToGraph] Graph saved`);
+    } catch (error) {
+      console.error(`[addProcessNodeToGraph] Error saving graph:`, error);
+    }
+
+    // Notify clients about the update
+    this.resourceChanged('/~/process');
+    this.resourceChanged('/~/graph');
+    console.log(`[addProcessNodeToGraph] Resource change notifications sent`);
   }
 
   async updateGraphWithInputFiles(

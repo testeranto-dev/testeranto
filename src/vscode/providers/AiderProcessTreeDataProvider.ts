@@ -45,12 +45,14 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
 
   private async loadGraphData(): Promise<void> {
     try {
+      console.log('[AiderProcessTreeDataProvider] Loading graph data from aider API endpoint');
+      // VSCode providers use API endpoints, not files
       const result = await AiderGraphLoader.loadGraphData();
       this.graphData = result.graphData;
       this.agents = result.agents;
     } catch (error) {
-      console.error('[AiderProcessTreeDataProvider] Error loading graph data:', error);
-      // Fallback to fetching agents and aider processes directly
+      console.error('[AiderProcessTreeDataProvider] Error loading graph data from API:', error);
+      // Fallback to fetching agents and aider processes directly from API
       await this.fetchAgentsDirectly();
       await this.fetchAiderProcessesDirectly();
     }
@@ -189,14 +191,35 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
     );
     
     // Check if we have graph data
-    if (!this.graphData || this.graphData.nodes.length === 0) {
+    if (!this.graphData) {
+      items.push(
+        new TestTreeItem(
+          'Cannot connect to server',
+          TreeItemType.Info,
+          vscode.TreeItemCollapsibleState.None,
+          { 
+            info: 'Testeranto server is not running on port 3000.',
+            startServer: true
+          },
+          {
+            command: 'testeranto.startServer',
+            title: 'Start Server',
+            arguments: []
+          },
+          new vscode.ThemeIcon('warning')
+        )
+      );
+      return items;
+    }
+    
+    if (this.graphData.nodes.length === 0) {
       items.push(
         new TestTreeItem(
           'No aider data available',
           TreeItemType.Info,
           vscode.TreeItemCollapsibleState.None,
           { 
-            info: 'The server may not be running or the /~/aider endpoint may be unavailable. ' +
+            info: 'The server returned empty graph data. ' +
                   'Try running "Testeranto: Start Server" or check if the server is running on port 3000.'
           },
           undefined,

@@ -1,12 +1,13 @@
 import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_HTTP } from "./Server_HTTP";
-import { WsManager } from "./utils/WsManager";
-import type { ChatMessage } from "./utils/wsChatUtils";
-import { handleGetChatHistoryUtil, handleSendChatMessageUtil } from "./utils/wsChatUtils";
+import { WsManager } from "./Server_WS_HTTP_utils/WsManager";
+import type { ChatMessage } from "./Server_WS_HTTP_utils/wsChatUtils";
+import { handleGetChatHistoryUtil, handleSendChatMessageUtil } from "./Server_WS_HTTP_utils/wsChatUtils";
 import {
-  broadcastToClients, handleSubscribeToChat, handleSubscribeToSlice, handleUnsubscribeFromChat, handleUnsubscribeFromSlice, notifySliceSubscribersUtil
-} from "./utils/wsMessageHandlers";
+  broadcastToClients, handleSubscribeToChat, handleSubscribeToSlice,
+  handleUnsubscribeFromChat, handleUnsubscribeFromSlice, notifySliceSubscribersUtil
+} from "./Server_WS_HTTP_utils/wsMessageHandlers";
 
 export class Server_WS_HTTP extends Server_HTTP {
   wsClients: Set<WebSocket> = new Set();

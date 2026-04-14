@@ -14,7 +14,7 @@ import {
   generateServicesPureUtil,
   getDockerComposeCommandsPureUtil,
   writeComposeFileUtil
-} from "./utils/dockerCoreUtils";
+} from "./utils/Server_Docker_Compose_Utils";
 
 export abstract class Server_Docker_Compose extends Server_Docker_Test {
   dockerComposeManager: DockerComposeManager;
@@ -52,31 +52,44 @@ export abstract class Server_Docker_Compose extends Server_Docker_Test {
     }
 
     const commands = getDockerComposeCommandsPureUtil();
-    const result = await executeDockerComposeCommandUtil(commands.up, {
-      errorMessage: "docker compose up",
-    });
-    if (result.exitCode === 0 && result.data?.spawn) {
-      try {
-        await spawnPromiseUtil(commands.up);
-        return { exitCode: 0, out: "", err: "", data: null };
-      } catch (error: any) {
-        consoleError(`[Docker] docker compose up ❌ ${error.message}`);
-        // Don't throw - return a result indicating partial failure
-        // This allows the application to continue with other operations
-        return {
-          exitCode: 1,
-          out: "",
-          err: `Error starting services: ${error.message}`,
-          data: null,
-        };
+    consoleLog(`[DC_upAll] Starting Docker Compose with command: ${commands.up}`);
+
+    try {
+      const result = await executeDockerComposeCommandUtil(commands.up, {
+        errorMessage: "docker compose up",
+      });
+
+      if (result.exitCode === 0 && result.data?.spawn) {
+        try {
+          await spawnPromiseUtil(commands.up);
+          consoleLog(`[DC_upAll] Docker Compose up command executed successfully`);
+          return { exitCode: 0, out: "", err: "", data: null };
+        } catch (error: any) {
+          consoleError(`[DC_upAll] docker compose up spawn failed: ${error.message}`);
+          return {
+            exitCode: 1,
+            out: "",
+            err: `Error starting services: ${error.message}`,
+            data: null,
+          };
+        }
+      } else if (result.exitCode !== 0) {
+        consoleError(`[DC_upAll] docker compose up command failed with exit code ${result.exitCode}: ${result.err}`);
+        return result;
       }
+
+      // If we reach here, the command may have succeeded without spawn
+      consoleLog(`[DC_upAll] Docker Compose services started`);
+      return result;
+    } catch (error: any) {
+      consoleError(`[DC_upAll] Unexpected error during DC_upAll: ${error.message}`);
+      return {
+        exitCode: 1,
+        out: "",
+        err: `Unexpected error: ${error.message}`,
+        data: null,
+      };
     }
-    // Even if the initial command failed, we can still continue
-    // Log the error but don't prevent the application from running
-    if (result.exitCode !== 0) {
-      consoleError(`[Docker] docker compose up command failed: ${result.err}`);
-    }
-    return result;
   }
 
   public async DC_down(): Promise<IDockerComposeResult> {

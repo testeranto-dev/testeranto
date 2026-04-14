@@ -2,6 +2,8 @@ import type { ITesterantoConfig } from "../src/Types";
 import { EisenhowerMatrixSlicer } from "../src/views/defaultViews/EisenhowerMatrix";
 import { GanttSlicer } from "../src/views/defaultViews/Gantt";
 import { KanbanSlicer } from "../src/views/defaultViews/KanbanBoard";
+import { ChatSlicer } from "../src/views/defaultViews/Chat";
+import { DebugGraphSlicer } from "../src/views/defaultViews/DebugGraph";
 
 export const golangciLintCommand = (files: string[]): string => {
   // Simple implementation - just run on all Go files
@@ -11,19 +13,26 @@ export const golangciLintCommand = (files: string[]): string => {
 const config: ITesterantoConfig = {
 
   views: {
-    Kanban: {
-      slicer: KanbanSlicer,
-      filePath: 'src/views/defaultViews/KanbanBoardView.tsx'
+    // Kanban: {
+    //   slicer: KanbanSlicer,
+    //   filePath: 'src/views/defaultViews/KanbanBoardView.tsx'
+    // },
+    // EisenhowerMatrix: {
+    //   slicer: EisenhowerMatrixSlicer,
+    //   filePath: 'src/views/defaultViews/EisenhowerMatrixView.tsx'
+    // },
+    // Gantt: {
+    //   slicer: GanttSlicer,
+    //   filePath: 'src/views/defaultViews/GanttView.tsx'
+    // },
+    Chat: {
+      slicer: ChatSlicer,
+      filePath: 'src/views/defaultViews/ChatView.tsx'
     },
-    EisenhowerMatrix: {
-      slicer: EisenhowerMatrixSlicer,
-      filePath: 'src/views/defaultViews/EisenhowerMatrixView.tsx'
-    },
-    Gantt: {
-      slicer: GanttSlicer,
-      filePath: 'src/views/defaultViews/GanttView.tsx'
-    },
-
+    // DebugGraph: {
+    //   slicer: DebugGraphSlicer,
+    //   filePath: 'src/views/defaultViews/DebugGraphView.tsx'
+    // },
   },
 
   agents: {
@@ -37,7 +46,7 @@ const config: ITesterantoConfig = {
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
-        
+
         // Collect minimal data for product management
         const features = allNodes
           .filter((node: any) => node.type === 'feature')
@@ -51,29 +60,35 @@ const config: ITesterantoConfig = {
               frontmatter: node.metadata.frontmatter
             } : undefined
           }));
-        
+
         const documentation = allNodes
           .filter((node: any) => node.type === 'documentation')
           .map((node: any) => ({
             id: node.id,
             label: node.label,
-            content: node.metadata?.content ? 
-              node.metadata.content.substring(0, 200) + (node.metadata.content.length > 200 ? '...' : '') : 
+            content: node.metadata?.content ?
+              node.metadata.content.substring(0, 200) + (node.metadata.content.length > 200 ? '...' : '') :
               undefined
           }));
-        
+
         const chatMessages = allNodes
-          .filter((node: any) => node.type === 'chat_message')
+          .filter((node: any) =>
+            node.type &&
+            typeof node.type === 'object' &&
+            node.type.category === 'chat' &&
+            node.type.type === 'chat_message'
+          )
           .map((node: any) => ({
             id: node.id,
-            agentName: node.agentName,
-            content: node.content,
-            timestamp: node.timestamp,
-            preview: node.content ? 
-              node.content.substring(0, 100) + (node.content.length > 100 ? '...' : '') : 
+            agentName: node.agentName || node.metadata?.agentName,
+            content: node.content || node.metadata?.content,
+            timestamp: node.timestamp || node.metadata?.timestamp,
+            preview: (node.content || node.metadata?.content) ?
+              (node.content || node.metadata?.content).substring(0, 100) +
+              ((node.content || node.metadata?.content).length > 100 ? '...' : '') :
               undefined
           }));
-        
+
         const agents = allNodes
           .filter((node: any) => node.type === 'agent')
           .map((node: any) => ({
@@ -103,76 +118,82 @@ const config: ITesterantoConfig = {
       }
     },
 
-    'arko': {
-      load: [
-        `/read SOUL.md`,
-        `/read chat_slice.json`
-      ],
-      message: `Your name is "Arko". You are a Software Architect. Your responsibilities are: 1) You will be give a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the speciations and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get your started. You should limit yourself to the files given to you. Do not add any more files to your context.`,
-      sliceFunction: (graphManager: any) => {
-        const graphData = graphManager.getGraphData();
-        const allNodes = graphData.nodes;
-        
-        // Collect minimal data for architecture
-        const configs = allNodes
-          .filter((node: any) => node.type === 'config')
-          .map((node: any) => ({
-            id: node.id,
-            label: node.label,
-            key: node.metadata?.configKey,
-            runtime: node.metadata?.runtime
-          }));
-        
-        const entrypoints = allNodes
-          .filter((node: any) => node.type === 'entrypoint')
-          .map((node: any) => ({
-            id: node.id,
-            label: node.label,
-            testName: node.metadata?.testName,
-            configKey: node.metadata?.configKey,
-            runtime: node.metadata?.runtime
-          }));
-        
-        const chatMessages = allNodes
-          .filter((node: any) => node.type === 'chat_message')
-          .map((node: any) => ({
-            id: node.id,
-            agentName: node.agentName,
-            content: node.content,
-            timestamp: node.timestamp,
-            preview: node.content ? 
-              node.content.substring(0, 100) + (node.content.length > 100 ? '...' : '') : 
-              undefined
-          }));
-        
-        const agents = allNodes
-          .filter((node: any) => node.type === 'agent')
-          .map((node: any) => ({
-            id: node.id,
-            name: node.agentName,
-            label: node.label,
-            role: 'agent'
-          }));
+    // 'arko': {
+    //   load: [
+    //     `/read SOUL.md`,
+    //     `/read chat_slice.json`
+    //   ],
+    //   message: `Your name is "Arko". You are a Software Architect. Your responsibilities are: 1) You will be give a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the speciations and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get your started. You should limit yourself to the files given to you. Do not add any more files to your context.`,
+    //   sliceFunction: (graphManager: any) => {
+    //     const graphData = graphManager.getGraphData();
+    //     const allNodes = graphData.nodes;
 
-        return {
-          viewType: 'agent',
-          agentName: 'arko',
-          timestamp: new Date().toISOString(),
-          data: {
-            configs,
-            entrypoints,
-            chatMessages,
-            agents,
-            summary: {
-              totalConfigs: configs.length,
-              totalEntrypoints: entrypoints.length,
-              totalChatMessages: chatMessages.length,
-              totalAgents: agents.length
-            }
-          }
-        };
-      }
-    },
+    //     // Collect minimal data for architecture
+    //     const configs = allNodes
+    //       .filter((node: any) => node.type === 'config')
+    //       .map((node: any) => ({
+    //         id: node.id,
+    //         label: node.label,
+    //         key: node.metadata?.configKey,
+    //         runtime: node.metadata?.runtime
+    //       }));
+
+    //     const entrypoints = allNodes
+    //       .filter((node: any) => node.type === 'entrypoint')
+    //       .map((node: any) => ({
+    //         id: node.id,
+    //         label: node.label,
+    //         testName: node.metadata?.testName,
+    //         configKey: node.metadata?.configKey,
+    //         runtime: node.metadata?.runtime
+    //       }));
+
+    //     const chatMessages = allNodes
+    //       .filter((node: any) =>
+    //         node.type &&
+    //         typeof node.type === 'object' &&
+    //         node.type.category === 'chat' &&
+    //         node.type.type === 'chat_message'
+    //       )
+    //       .map((node: any) => ({
+    //         id: node.id,
+    //         agentName: node.agentName || node.metadata?.agentName,
+    //         content: node.content || node.metadata?.content,
+    //         timestamp: node.timestamp || node.metadata?.timestamp,
+    //         preview: (node.content || node.metadata?.content) ?
+    //           (node.content || node.metadata?.content).substring(0, 100) +
+    //           ((node.content || node.metadata?.content).length > 100 ? '...' : '') :
+    //           undefined
+    //       }));
+
+    //     const agents = allNodes
+    //       .filter((node: any) => node.type === 'agent')
+    //       .map((node: any) => ({
+    //         id: node.id,
+    //         name: node.agentName,
+    //         label: node.label,
+    //         role: 'agent'
+    //       }));
+
+    //     return {
+    //       viewType: 'agent',
+    //       agentName: 'arko',
+    //       timestamp: new Date().toISOString(),
+    //       data: {
+    //         configs,
+    //         entrypoints,
+    //         chatMessages,
+    //         agents,
+    //         summary: {
+    //           totalConfigs: configs.length,
+    //           totalEntrypoints: entrypoints.length,
+    //           totalChatMessages: chatMessages.length,
+    //           totalAgents: agents.length
+    //         }
+    //       }
+    //     };
+    //   }
+    // },
     // 'juna': {
     //   markdownFile: './testeranto/agents/juna.md',
     //   sliceFunction: (graphManager: any) => {
@@ -278,13 +299,13 @@ const config: ITesterantoConfig = {
       tests: [
         // "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
         // "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-        // "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-        // "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-        // "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
         // "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-        "src/vscode/providers/logic/FileTreeLogic.test.ts"
+        // "src/vscode/providers/logic/FileTreeLogic.test.ts",
         // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-        // "src/vscode/providers/utils/testTree/debugTest.js"
+        // "src/vscode/providers/utils/testTree/debugTest.js",
         // "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       ],
       checks: [

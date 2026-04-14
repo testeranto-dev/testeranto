@@ -1,94 +1,506 @@
 {
-  "timestamp": "2026-04-12T20:42:31.484Z",
+  "timestamp": "2026-04-14T19:10:58.677Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
       "nodes": [
         {
-          "id": "view:Kanban",
-          "type": "view",
-          "label": "Kanban",
-          "description": "View: Kanban",
-          "status": "done",
-          "icon": "eye",
-          "metadata": {
-            "viewKey": "Kanban",
-            "viewPath": "src/views/defaultViews/KanbanBoardView.tsx",
-            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
-            "timestamp": "2026-04-12T20:41:54.056Z",
-            "lastUpdated": "2026-04-12T20:41:54.129Z"
-          }
-        },
-        {
-          "id": "view:EisenhowerMatrix",
-          "type": "view",
-          "label": "EisenhowerMatrix",
-          "description": "View: EisenhowerMatrix",
-          "status": "done",
-          "icon": "eye",
-          "metadata": {
-            "viewKey": "EisenhowerMatrix",
-            "viewPath": "src/views/defaultViews/EisenhowerMatrixView.tsx",
-            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
-            "timestamp": "2026-04-12T20:41:54.057Z",
-            "lastUpdated": "2026-04-12T20:41:54.129Z"
-          }
-        },
-        {
-          "id": "view:Gantt",
-          "type": "view",
-          "label": "Gantt",
-          "description": "View: Gantt",
-          "status": "done",
-          "icon": "eye",
-          "metadata": {
-            "viewKey": "Gantt",
-            "viewPath": "src/views/defaultViews/GanttView.tsx",
-            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
-            "timestamp": "2026-04-12T20:41:54.057Z",
-            "lastUpdated": "2026-04-12T20:41:54.129Z"
-          }
-        },
-        {
           "id": "agent:prodirek",
-          "type": "agent",
+          "type": {
+            "category": "agent",
+            "type": "agent"
+          },
           "label": "prodirek",
           "description": "Agent: prodirek",
-          "status": "done",
-          "icon": "user",
-          "metadata": {
-            "agentName": "prodirek",
+          "agentName": "prodirek",
+          "config": {
             "load": [
               "/read SOUL.md",
               "/read testeranto/slices/agents/prodirek.json"
             ],
-            "message": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- you job is groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint 'curl -X POST http://localhost:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from Prodirek!\"}''",
-            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/agents/prodirek.json",
-            "timestamp": "2026-04-12T20:41:54.095Z",
-            "lastUpdated": "2026-04-12T20:41:54.129Z"
-          }
+            "message": "Your name is \"Prodirek\". You are a Product Manager. Your responsibilities are: Groom and features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- you job is groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint 'curl -X POST http://localhost:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from Prodirek!\"}''"
+          },
+          "timestamp": "2026-04-14T19:10:06.450Z",
+          "status": "todo",
+          "icon": "user"
         },
         {
-          "id": "agent:arko",
-          "type": "agent",
-          "label": "arko",
-          "description": "Agent: arko",
+          "id": "view:Chat",
+          "type": "view",
+          "label": "Chat",
+          "description": "View: Chat",
           "status": "done",
-          "icon": "user",
+          "icon": "eye",
           "metadata": {
-            "agentName": "arko",
-            "load": [
-              "/read SOUL.md",
-              "/read chat_slice.json"
-            ],
-            "message": "Your name is \"Arko\". You are a Software Architect. Your responsibilities are: 1) You will be give a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the speciations and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get your started. You should limit yourself to the files given to you. Do not add any more files to your context.",
-            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/agents/arko.json",
-            "timestamp": "2026-04-12T20:41:54.095Z",
-            "lastUpdated": "2026-04-12T20:41:54.130Z"
+            "viewKey": "Chat",
+            "viewPath": "src/views/defaultViews/ChatView.tsx",
+            "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
+            "timestamp": "2026-04-14T19:10:06.450Z"
           }
         },
         {
-          "id": "logfile:nodetests-builder.log:mnw8c6i0",
+          "id": "config:nodetests",
+          "type": "config",
+          "label": "nodetests",
+          "description": "Runtime config: nodetests",
+          "status": "todo",
+          "icon": "settings-gear",
+          "metadata": {
+            "configKey": "nodetests",
+            "runtime": "node",
+            "tests": [
+              "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+              "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+              "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+            ],
+            "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+            "timestamp": "2026-04-14T19:10:06.450Z"
+          }
+        },
+        {
+          "id": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": "entrypoint",
+          "label": "Circle.test.ts",
+          "description": "Test entrypoint: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "status": "todo",
+          "icon": "file-text",
+          "metadata": {
+            "configKey": "nodetests",
+            "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "runtime": "node",
+            "timestamp": "2026-04-14T19:10:06.450Z"
+          }
+        },
+        {
+          "id": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": "entrypoint",
+          "label": "Rectangle.test.ts",
+          "description": "Test entrypoint: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "status": "todo",
+          "icon": "file-text",
+          "metadata": {
+            "configKey": "nodetests",
+            "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "runtime": "node",
+            "timestamp": "2026-04-14T19:10:06.450Z"
+          }
+        },
+        {
+          "id": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "type": "entrypoint",
+          "label": "AiderProcessTreeDataProvider.test.ts",
+          "description": "Test entrypoint: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "status": "todo",
+          "icon": "file-text",
+          "metadata": {
+            "configKey": "nodetests",
+            "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "runtime": "node",
+            "timestamp": "2026-04-14T19:10:06.450Z"
+          }
+        },
+        {
+          "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": {
+            "category": "process",
+            "type": "bdd"
+          },
+          "label": "bdd: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "bdd process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.148Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "bdd",
+            "startTime": "2026-04-14T19:10:07.148Z"
+          },
+          "icon": "beaker"
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": {
+            "category": "process",
+            "type": "check"
+          },
+          "label": "check: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.148Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "check",
+            "startTime": "2026-04-14T19:10:07.148Z"
+          },
+          "icon": "checklist"
+        },
+        {
+          "id": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "type": {
+            "category": "process",
+            "type": "aider"
+          },
+          "label": "aider: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "description": "aider process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.148Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "aider",
+            "startTime": "2026-04-14T19:10:07.148Z"
+          },
+          "icon": "comment-discussion"
+        },
+        {
+          "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": {
+            "category": "process",
+            "type": "bdd"
+          },
+          "label": "bdd: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "bdd process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.148Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "bdd",
+            "startTime": "2026-04-14T19:10:07.148Z"
+          },
+          "icon": "beaker"
+        },
+        {
+          "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": {
+            "category": "process",
+            "type": "check"
+          },
+          "label": "check: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "check process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.149Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "check",
+            "startTime": "2026-04-14T19:10:07.149Z"
+          },
+          "icon": "checklist"
+        },
+        {
+          "id": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "type": {
+            "category": "process",
+            "type": "aider"
+          },
+          "label": "aider: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "description": "aider process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.149Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "aider",
+            "startTime": "2026-04-14T19:10:07.149Z"
+          },
+          "icon": "comment-discussion"
+        },
+        {
+          "id": "bdd_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "type": {
+            "category": "process",
+            "type": "bdd"
+          },
+          "label": "bdd: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "description": "bdd process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.149Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "bdd",
+            "startTime": "2026-04-14T19:10:07.149Z"
+          },
+          "icon": "beaker"
+        },
+        {
+          "id": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "type": {
+            "category": "process",
+            "type": "check"
+          },
+          "label": "check: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "description": "check process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.149Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "check",
+            "startTime": "2026-04-14T19:10:07.149Z"
+          },
+          "icon": "checklist"
+        },
+        {
+          "id": "aider_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "type": {
+            "category": "process",
+            "type": "aider"
+          },
+          "label": "aider: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "description": "aider process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.149Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "aider",
+            "startTime": "2026-04-14T19:10:07.149Z"
+          },
+          "icon": "comment-discussion"
+        },
+        {
+          "id": "builder_process:nodetests:builder",
+          "type": {
+            "category": "process",
+            "type": "builder"
+          },
+          "label": "builder: builder",
+          "description": "builder process for builder (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:07.149Z",
+          "metadata": {
+            "runtime": "node",
+            "testName": "builder",
+            "configKey": "nodetests",
+            "configValue": {
+              "runtime": "node",
+              "tests": [
+                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+              ],
+              "checks": [
+                null,
+                null,
+                null
+              ],
+              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+              "buildOptions": "testeranto/runtimes/node/node.mjs",
+              "buildKitOptions": {},
+              "outputs": []
+            },
+            "status": "todo",
+            "processType": "builder",
+            "startTime": "2026-04-14T19:10:07.149Z"
+          },
+          "icon": "gear"
+        },
+        {
+          "id": "aider_process:agent:prodirek",
+          "type": {
+            "category": "process",
+            "type": "aider"
+          },
+          "label": "aider: prodirek",
+          "description": "aider process for prodirek (node)",
+          "status": "done",
+          "priority": "medium",
+          "timestamp": "2026-04-14T19:10:10.264Z",
+          "metadata": {
+            "containerId": "2744ef19f5f4f9c580454ff9cbde3fc3023e5aef1ae16169c846096b2748c504",
+            "serviceName": "agent-prodirek",
+            "containerStatus": "resize",
+            "updatedAt": "2026-04-14T19:10:58.677Z",
+            "status": "stopped"
+          },
+          "icon": "comment-discussion"
+        },
+        {
+          "id": "logfile:nodetests-builder.log:mnyzxqgm",
           "type": "file",
           "label": "nodetests-builder.log",
           "description": "Log file for nodetests-builder (builder)",
@@ -102,57 +514,205 @@
             "configKey": "nodetests",
             "isLogFile": true,
             "logType": "builder",
-            "timestamp": "2026-04-12T20:42:06.696Z",
+            "timestamp": "2026-04-14T19:10:14.326Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
-          }
-        },
-        {
-          "id": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "type": "entrypoint",
-          "label": "FileTreeLogic.test.ts",
-          "description": "Test entrypoint: src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "status": "doing",
-          "icon": "file-text",
-          "metadata": {
-            "configKey": "nodetests",
-            "filePath": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "runtime": "node",
-            "timestamp": "2026-04-12T20:42:28.264Z",
-            "lastUpdated": "2026-04-12T20:42:28.264Z",
-            "needsServiceStart": [],
-            "serviceStartTime": "2026-04-12T20:42:28.264Z",
-            "serviceStartAttempted": "2026-04-12T20:42:30.265Z",
-            "bddStarted": "2026-04-12T20:42:30.266Z",
-            "checksStarted": "2026-04-12T20:42:30.499Z"
-          }
-        },
-        {
-          "id": "aider:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "type": "aider",
-          "label": "Aider: src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "description": "Aider instance for src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "status": "doing",
-          "icon": "aider",
-          "metadata": {
-            "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "configKey": "nodetests",
-            "timestamp": "2026-04-12T20:42:31.484Z"
           }
         }
       ],
       "edges": [
         {
-          "source": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
-          "target": "aider:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+          "source": "config:nodetests",
+          "target": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
           "attributes": {
-            "type": "hasAider",
-            "timestamp": "2026-04-12T20:42:31.484Z"
+            "type": "configuredBy",
+            "timestamp": "2026-04-14T19:10:06.450Z"
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "attributes": {
+            "type": "configuredBy",
+            "timestamp": "2026-04-14T19:10:06.450Z"
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "attributes": {
+            "type": "configuredBy",
+            "timestamp": "2026-04-14T19:10:06.450Z"
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.148Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.148Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.148Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.148Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.149Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.149Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "bdd_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.149Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.149Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "aider_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.149Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "config:nodetests",
+          "target": "builder_process:nodetests:builder",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:07.149Z",
+            "metadata": {
+              "relationship": "config_has_process"
+            }
+          }
+        },
+        {
+          "source": "agent:prodirek",
+          "target": "aider_process:agent:prodirek",
+          "attributes": {
+            "type": {
+              "category": "ownership",
+              "type": "has",
+              "directed": true
+            },
+            "timestamp": "2026-04-14T19:10:10.264Z",
+            "metadata": {
+              "relationship": "agent_has_process"
+            }
           }
         }
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-12T20:42:31.484Z"
+        "timestamp": "2026-04-14T19:10:58.677Z"
       }
     },
     "vizConfig": {

@@ -1,18 +1,17 @@
-import { execSync } from "child_process";
-import { processCwd, consoleError } from "./Server_Docker_Dependents";
+import { consoleError } from "./Server_Docker_Dependents";
 
+// DEPRECATED: Container information should be retrieved from the graph via Server_Docker_Test.getContainerInfo()
+// This standalone function is no longer supported as it bypasses the graph.
+// Use the instance method on Server_Docker_Test instead.
 export const getContainerInfo = (serviceName: string) => {
-  try {
-
-    const cmd = `docker compose -f "${processCwd()}/testeranto/docker-compose.yml" ps ${serviceName} --format json`;
-    const output = execSync(cmd, { cwd: processCwd() }).toString();
-    const containers = JSON.parse(output);
-    if (containers && containers.length > 0) {
-      return containers[0];
-    }
-  } catch (error) {
-    consoleError(`[Server_Docker] Error getting container info for ${serviceName}:`, error as string);
-  }
-  return null;
-
+  consoleError(`[Server_Docker] ERROR: getContainerInfo standalone function is deprecated and should not be used.`);
+  consoleError(`[Server_Docker] Container information must be retrieved from the graph via Server_Docker_Test.getContainerInfo().`);
+  consoleError(`[Server_Docker] Called with serviceName: ${serviceName}`);
+  
+  // Throw an error to prevent silent failures
+  throw new Error(
+    `getContainerInfo standalone function is deprecated. ` +
+    `Container information must be retrieved from the graph. ` +
+    `Use Server_Docker_Test.getContainerInfo() instead.`
+  );
 }

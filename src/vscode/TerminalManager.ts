@@ -54,10 +54,19 @@ export class TerminalManager {
   }
 
 
+  // DEPRECATED
+  // We do not use the API in this way
+  // All data should be loaded from a json file
+  // you will receive WS updates when this file changes
   async fetchAiderProcesses(): Promise<any[]> {
     try {
       // Use the server API to get aider processes
-      const response = await fetch('http://localhost:3000/~/aider-processes');
+
+      // TODO
+      // This should be defined in the API
+      // psuedo-code:
+      // import API from "../api"
+      // const response = await fetch(API.openProcessTerminal.url())
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -111,12 +120,19 @@ export class TerminalManager {
       // Try to use the existing open-process-terminal endpoint with appropriate parameters
       // We'll construct a nodeId that indicates this is an aider terminal
       const nodeId = `aider:${runtime}:${testName}`;
+
+      // TODO
+      // This should be defined in the API
+      // psuedo-code:
+      // import API from "../api"
+      // const response = await fetch(API.openProcessTerminal.url())
+      // 
       const response = await fetch('http://localhost:3000/~/open-process-terminal', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           nodeId,
           label: `Aider: ${testName}`,
           containerId: '',
@@ -132,19 +148,19 @@ export class TerminalManager {
         } catch {
           errorData = { error: `Server error: ${response.status} ${response.statusText}` };
         }
-        
+
         terminal.sendText(`echo "❌ Server error: ${errorData.error || 'Failed to open aider terminal'}"`);
         terminal.sendText(`echo "Message: ${errorData.message || 'No details provided'}"`);
         terminal.sendText(`echo ""`);
         terminal.sendText(`echo "Aider terminals may require additional server configuration."`);
       } else {
         const data = await response.json();
-        
+
         if (data.success && data.script) {
           terminal.sendText(`echo "✅ Server provided terminal script"`);
           terminal.sendText(`echo "Executing..."`);
           terminal.sendText(`echo ""`);
-          
+
           // Execute the script directly (it's already executable)
           const workspaceRoot = this.getWorkspaceRoot();
           if (workspaceRoot) {
@@ -196,6 +212,13 @@ export class TerminalManager {
     terminal.sendText(`echo "Connecting to server..."`);
 
     try {
+
+      // TODO
+      // This should be defined in the API
+      // psuedo-code:
+      // import API from "../api"
+      // const response = await fetch(API.openProcessTerminal.url())
+      // 
       // Use the existing open-process-terminal endpoint
       const nodeId = `container:${containerName}`;
       const response = await fetch('http://localhost:3000/~/open-process-terminal', {
@@ -203,7 +226,7 @@ export class TerminalManager {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           nodeId,
           label: label || `Container: ${containerName}`,
           containerId: containerName,
@@ -219,7 +242,7 @@ export class TerminalManager {
         } catch {
           errorData = { error: `Server error: ${response.status} ${response.statusText}` };
         }
-        
+
         terminal.sendText(`echo "❌ Server error: ${errorData.error || 'Failed to open container terminal'}"`);
         terminal.sendText(`echo "Message: ${errorData.message || 'No details provided'}"`);
         terminal.sendText(`echo ""`);
@@ -227,12 +250,12 @@ export class TerminalManager {
         terminal.sendText(`echo "  docker exec -it ${containerName} /bin/sh"`);
       } else {
         const data = await response.json();
-        
+
         if (data.success && data.script) {
           terminal.sendText(`echo "✅ Server provided terminal script"`);
           terminal.sendText(`echo "Executing..."`);
           terminal.sendText(`echo ""`);
-          
+
           // Execute the script without trapping signals
           const workspaceRoot = this.getWorkspaceRoot();
           if (workspaceRoot) {
@@ -254,7 +277,7 @@ export class TerminalManager {
       terminal.sendText(`echo ""`);
       terminal.sendText(`echo "Make sure the Testeranto server is running."`);
     }
-    
+
     terminal.show();
     return terminal;
   }
@@ -275,7 +298,7 @@ export class TerminalManager {
       terminal.sendText(`echo "To restart aider process for ${testName}, please use the server API"`);
       terminal.sendText(`echo "The server manages all aider processes and graph updates"`);
       terminal.show();
-      
+
       vscode.window.showInformationMessage(`Aider processes are managed by the server. Check the Aider Processes view.`);
     } catch (error) {
       console.error('Failed to handle aider process restart:', error);
@@ -322,7 +345,7 @@ export class TerminalManager {
         } catch {
           errorData = { error: `Server error: ${response.status} ${response.statusText}` };
         }
-        
+
         terminal.sendText(`echo "❌ Server error: ${errorData.error || 'Failed to open terminal'}"`);
         terminal.sendText(`echo "Message: ${errorData.message || 'No details provided'}"`);
         terminal.sendText(`echo ""`);
@@ -333,13 +356,13 @@ export class TerminalManager {
       }
 
       const data = await response.json();
-      
+
       if (data.success && data.script) {
         // Use the script provided by the server
         terminal.sendText(`echo "✅ Server provided terminal script"`);
         terminal.sendText(`echo "Executing..."`);
         terminal.sendText(`echo ""`);
-        
+
         // The script from server already includes #!/bin/sh
         // We need to execute it properly
         // Write to a temporary file and execute it
@@ -367,7 +390,7 @@ export class TerminalManager {
       terminal.sendText(`echo "Make sure the Testeranto server is running on port 3000."`);
       terminal.sendText(`echo "Run 'testeranto dev' in your project to start the server."`);
     }
-    
+
     terminal.show();
     return terminal;
   }
@@ -380,7 +403,7 @@ export class TerminalManager {
       terminal.show();
       return terminal;
     }
-    
+
     const key = `aider:${containerName}`;
     let terminal = this.terminals.get(key);
 
@@ -405,12 +428,20 @@ export class TerminalManager {
     try {
       // Use the existing open-process-terminal endpoint
       const nodeId = `aider-container:${containerName}`;
+
+      // TODO
+      // This should be defined in the API
+      // psuedo-code:
+      // import API from "../api"
+      // const response = await fetch(API.openProcessTerminal.url())
+      // 
+
       const response = await fetch('http://localhost:3000/~/open-process-terminal', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           nodeId,
           label: label || `Aider: ${containerName}`,
           containerId: containerName,
@@ -426,7 +457,7 @@ export class TerminalManager {
         } catch {
           errorData = { error: `Server error: ${response.status} ${response.statusText}` };
         }
-        
+
         terminal.sendText(`echo "❌ Server error: ${errorData.error || 'Failed to open aider container terminal'}"`);
         terminal.sendText(`echo "Message: ${errorData.message || 'No details provided'}"`);
         terminal.sendText(`echo ""`);
@@ -435,12 +466,12 @@ export class TerminalManager {
         terminal.sendText(`echo "  (Use Ctrl+P, Ctrl+Q to detach)"`);
       } else {
         const data = await response.json();
-        
+
         if (data.success && data.script) {
           terminal.sendText(`echo "✅ Server provided terminal script"`);
           terminal.sendText(`echo "Executing..."`);
           terminal.sendText(`echo ""`);
-          
+
           // Execute the script without trapping signals
           const workspaceRoot = this.getWorkspaceRoot();
           if (workspaceRoot) {
@@ -462,7 +493,7 @@ export class TerminalManager {
       terminal.sendText(`echo ""`);
       terminal.sendText(`echo "Make sure the Testeranto server is running."`);
     }
-    
+
     terminal.show();
     return terminal;
   }

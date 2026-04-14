@@ -1,0 +1,61 @@
+{
+  "nodes": [
+    {
+      "id": "view:Chat",
+      "type": "view",
+      "label": "Chat",
+      "description": "View: Chat",
+      "status": "done",
+      "icon": "eye",
+      "metadata": {
+        "viewKey": "Chat",
+        "viewPath": "src/views/defaultViews/ChatView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
+        "timestamp": "2026-04-14T19:10:06.450Z"
+      }
+    },
+    {
+      "id": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": "entrypoint",
+      "label": "Circle.test.ts",
+      "description": "Test entrypoint: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "status": "todo",
+      "icon": "file-text",
+      "metadata": {
+        "configKey": "nodetests",
+        "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "runtime": "node",
+        "timestamp": "2026-04-14T19:10:06.450Z"
+      }
+    },
+    {
+      "id": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": "entrypoint",
+      "label": "Rectangle.test.ts",
+      "description": "Test entrypoint: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "status": "todo",
+      "icon": "file-text",
+      "metadata": {
+        "configKey": "nodetests",
+        "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "runtime": "node",
+        "timestamp": "2026-04-14T19:10:06.450Z"
+      }
+    },
+    {
+      "id": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": "entrypoint",
+      "label": "AiderProcessTreeDataProvider.test.ts",
+      "description": "Test entrypoint: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "status": "todo",
+      "icon": "file-text",
+      "metadata": {
+        "configKey": "nodetests",
+        "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "runtime": "node",
+        "timestamp": "2026-04-14T19:10:06.450Z"
+      }
+    }
+  ],
+  "edges": []
+}

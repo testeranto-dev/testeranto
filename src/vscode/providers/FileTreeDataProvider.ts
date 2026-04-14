@@ -24,11 +24,13 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
 
   private async loadGraphData(): Promise<void> {
     try {
+      console.log('[FileTreeDataProvider] Loading graph data from files API endpoint');
+      // VSCode providers use API endpoints, not files
       const graphData = await this.fetcher.fetchGraphData();
       this.logic.setGraphData(graphData);
-      console.log('[FileTreeDataProvider] Loaded graph data:', graphData?.nodes?.length, 'nodes');
+      console.log('[FileTreeDataProvider] Loaded graph data from API:', graphData?.nodes?.length, 'nodes');
     } catch (error) {
-      console.error('[FileTreeDataProvider] Failed to load graph data:', error);
+      console.error('[FileTreeDataProvider] Failed to load graph data from API:', error);
       this.logic.setGraphData(null);
     }
   }
@@ -87,14 +89,14 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
       new vscode.ThemeIcon('refresh')
     ));
 
-    // Add server status item
+    // Check if we have graph data
     if (!this.logic.hasGraphData()) {
       items.push(new TestTreeItem(
-        'Server not connected',
+        'Cannot connect to server',
         TreeItemType.Info,
         vscode.TreeItemCollapsibleState.None,
         {
-          description: 'Click to start server',
+          description: 'Testeranto server is not running on port 3000.',
           startServer: true
         },
         {
@@ -109,6 +111,16 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
 
     const graphData = this.logic.getGraphData();
     if (!graphData) {
+      items.push(new TestTreeItem(
+        'No graph data available',
+        TreeItemType.Info,
+        vscode.TreeItemCollapsibleState.None,
+        {
+          description: 'The server returned empty graph data'
+        },
+        undefined,
+        new vscode.ThemeIcon('info')
+      ));
       return items;
     }
 

@@ -44,17 +44,19 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
 
   private async loadGraphData(): Promise<void> {
     try {
-      console.log('[TestTreeDataProvider] Loading graph data from runtime slice');
+      console.log('[TestTreeDataProvider] Loading graph data from runtime slice API endpoint');
+      // VSCode providers use API endpoints, not files
       const response = await fetch(ApiUtils.getRuntimeSliceUrl());
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
       this.graphData = data;
-      console.log('[TestTreeDataProvider] Loaded graph data:', this.graphData?.nodes?.length, 'nodes');
+      console.log('[TestTreeDataProvider] Loaded graph data from API:', this.graphData?.nodes?.length, 'nodes');
     } catch (error) {
-      console.error('[TestTreeDataProvider] Failed to load graph data:', error);
+      console.error('[TestTreeDataProvider] Failed to load graph data from API:', error);
       this.graphData = null;
+      throw error;
     }
   }
 
@@ -111,24 +113,6 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
   }
 
   private getRuntimeItems(): TestTreeItem[] {
-    if (!this.graphData) return [];
-
-    // Find all config nodes (represent runtimes)
-    const configNodes = this.graphData.nodes.filter(node =>
-      node.type === 'config' || (node.metadata?.configKey && node.metadata?.runtime)
-    );
-
-    // Group by runtime
-    const runtimeMap = new Map<string, { count: number; nodes: GraphNode[] }>();
-
-    for (const node of configNodes) {
-      const runtimeKey = node.metadata?.configKey || node.metadata?.runtime || 'unknown';
-      const current = runtimeMap.get(runtimeKey) || { count: 0, nodes: [] };
-      current.count++;
-      current.nodes.push(node);
-      runtimeMap.set(runtimeKey, current);
-    }
-
     const items: TestTreeItem[] = [];
 
     // Add refresh item
@@ -147,6 +131,41 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       },
       new vscode.ThemeIcon('refresh')
     ));
+
+    if (!this.graphData) {
+      items.push(new TestTreeItem(
+        'Cannot connect to server',
+        TreeItemType.Info,
+        vscode.TreeItemCollapsibleState.None,
+        {
+          description: 'Testeranto server is not running on port 3000.',
+          startServer: true
+        },
+        {
+          command: 'testeranto.startServer',
+          title: 'Start Server',
+          arguments: []
+        },
+        new vscode.ThemeIcon('warning')
+      ));
+      return items;
+    }
+
+    // Find all config nodes (represent runtimes)
+    const configNodes = this.graphData.nodes.filter(node =>
+      node.type === 'config' || (node.metadata?.configKey && node.metadata?.runtime)
+    );
+
+    // Group by runtime
+    const runtimeMap = new Map<string, { count: number; nodes: GraphNode[] }>();
+
+    for (const node of configNodes) {
+      const runtimeKey = node.metadata?.configKey || node.metadata?.runtime || 'unknown';
+      const current = runtimeMap.get(runtimeKey) || { count: 0, nodes: [] };
+      current.count++;
+      current.nodes.push(node);
+      runtimeMap.set(runtimeKey, current);
+    }
 
     // Add runtime items
     for (const [runtimeKey, data] of runtimeMap.entries()) {

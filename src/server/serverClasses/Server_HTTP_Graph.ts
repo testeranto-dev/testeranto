@@ -1,30 +1,46 @@
 import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { Server_Graph } from "./Server_Graph";
-import { handleOptions } from "./Server_Http/handleOptions";
+import { handleOptions } from "./utils/handleOptions";
 import { serveStaticFile } from "./Server_Http/serveStaticFile";
 
 export abstract class Server_HTTP_Graph extends Server_Graph {
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode, () => this.getCurrentTestResults(), process.cwd())
+    // Pass dummy functions that don't reference `this`
+    super(configs, mode, () => ({}), process.cwd(), undefined);
+
+    // Now that super() has been called, we can safely set the callbacks
+    // TypeScript doesn't allow assigning to protected properties from outside,
+    // but we can cast to any to bypass.
+    // However, the parent class stores them as protected properties.
+    // We need to override the methods that these callbacks point to.
+    // Actually, the parent class uses these callbacks via `this.getCurrentTestResults` and `this.resourceChanged`.
+    // Since we're in the derived class, we can override the methods directly.
+    // But note: the parent class stores them as properties, not methods.
+    // Let's reassign the properties.
+    (this as any).getCurrentTestResults = this.getCurrentTestResultsImpl.bind(this);
+    (this as any).resourceChanged = this.resourceChangedImpl.bind(this);
+  }
+
+  private getCurrentTestResultsImpl(): any {
+    // Default implementation returns empty object
+    return {};
+  }
+
+  private resourceChangedImpl(path: string): void {
+    // Default implementation does nothing
+    // Subclasses can override the resourceChanged method
+    // which will be called via the callback
   }
 
   async start(): Promise<void> {
     await super.start();
-
-    // The graph is built from scratch in Server_GraphManager constructor
-    // Write slice files
-    try {
-      await this.writeViewSliceFiles();
-    } catch (error) {
-      console.error('[Server_HTTP_Base] Error writing view slice files:', error);
-    }
-
+    await this.writeViewSliceFiles();
   }
 
   async stop() {
-    this.getGraphManager().saveGraph();
+    this.saveGraph();
     await super.stop();
   }
 

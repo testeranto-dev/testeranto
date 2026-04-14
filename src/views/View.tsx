@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { getSliceFilePath, extractViewName } from './utils';
 
 export interface ViewProps<T = any> {
-  /** Path to the JSON data file */
+  /** Path to the JSON data file or view identifier */
   dataPath: string;
   /** React component to render the data */
   component: React.ComponentType<{ data: T; onUpdate?: (data: T) => void }>;
@@ -9,32 +10,45 @@ export interface ViewProps<T = any> {
   staticMode?: boolean;
   /** Function to send updates to the server (only used in dynamic mode) */
   onSendUpdate?: (path: string, data: T) => Promise<void>;
+  /** WebSocket message to trigger reloads */
+  wsUpdate?: { path: string; type: string };
 }
 
 /**
  * A View component that watches a JSON file and renders data.
+ * Views use files (JSON slices) + WebSocket notifications for updates.
+ * This is different from VSCode providers which use API endpoints.
+ * 
  * In static mode, it only reads from the file.
- * In dynamic mode, it can send updates back to the server.
+ * In dynamic mode, it can send updates back to the server and receives WebSocket updates to reload data.
  */
 export function View<T = any>({
   dataPath,
   component: Component,
   staticMode = true,
   onSendUpdate,
+  wsUpdate,
 }: ViewProps<T>) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load data from the JSON file
+  // Get the actual static file path
+  const viewName = extractViewName(dataPath);
+  const staticFilePath = getSliceFilePath(viewName);
+
+  // Load data from the static JSON file
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      // In a real implementation, this would fetch from the dataPath
-      // For now, we'll simulate with a timeout
-      const response = await fetch(dataPath);
+      // Construct absolute URL to avoid relative path issues
+      const absolutePath = staticFilePath.startsWith('/') 
+        ? `${window.location.origin}${staticFilePath}`
+        : staticFilePath;
+      console.log(`[View] Loading data from static file: ${absolutePath} (view: ${viewName})`);
+      const response = await fetch(absolutePath);
       if (!response.ok) {
-        throw new Error(`Failed to load data from ${dataPath}`);
+        throw new Error(`Failed to load data from ${absolutePath}: ${response.status} ${response.statusText}`);
       }
       const jsonData = await response.json();
       setData(jsonData);
@@ -45,23 +59,24 @@ export function View<T = any>({
     } finally {
       setLoading(false);
     }
-  }, [dataPath]);
+  }, [staticFilePath, viewName]);
 
   // Initial load
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  // Set up polling to watch for changes (in a real app, use WebSocket or File System API)
+  // Reload when WebSocket update matches our view
   useEffect(() => {
-    if (staticMode) return;
-
-    const interval = setInterval(() => {
-      loadData();
-    }, 5000); // Poll every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [staticMode, loadData]);
+    if (wsUpdate && wsUpdate.type === 'update') {
+      // Check if the update is for our view
+      const updatedViewName = extractViewName(wsUpdate.path);
+      if (updatedViewName === viewName) {
+        console.log(`[View] WebSocket update received for view: ${viewName}, reloading data`);
+        loadData();
+      }
+    }
+  }, [wsUpdate, viewName, loadData]);
 
   // Handle updates from the component
   const handleUpdate = useCallback(async (newData: T) => {
@@ -76,14 +91,15 @@ export function View<T = any>({
     }
 
     try {
+      // Send update to the server using the original dataPath
       await onSendUpdate(dataPath, newData);
-      // After successful update, reload data
-      loadData();
+      // The server will broadcast a WebSocket update which will trigger a reload
+      // So we don't need to reload here
     } catch (err) {
       console.error('Error sending update:', err);
       setError(err instanceof Error ? err.message : 'Failed to send update');
     }
-  }, [staticMode, onSendUpdate, dataPath, loadData]);
+  }, [staticMode, onSendUpdate, dataPath]);
 
   if (loading) {
     return <div>Loading view data...</div>;

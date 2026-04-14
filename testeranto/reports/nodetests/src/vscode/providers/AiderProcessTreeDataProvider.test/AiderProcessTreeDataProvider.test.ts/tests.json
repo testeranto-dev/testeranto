@@ -1,0 +1,2207 @@
+{
+  "failed": true,
+  "fails": 85,
+  "artifacts": [],
+  "features": [
+    "Test core processing of graph data",
+    "Test with mock graph data - processGraphData",
+    "Test with mock graph data - createTreeItemData",
+    "Test handling of agents",
+    "Test filtering aider processes for entrypoint",
+    "Test grouping nodes by type",
+    "Test with empty data",
+    "Test with both graph data and agents",
+    "Test filtering with non-existent entrypoint",
+    "Test tree item data creation for exited aider",
+    "Test AiderDataGrouperCore processing",
+    "Test AiderDataGrouperCore with agents",
+    "Test AiderTreeItemCreatorCore item creation",
+    "Test error handling for malformed data",
+    "Test performance with large data set",
+    "Test processing of processes with mixed statuses",
+    "Test handling of duplicate entrypoints",
+    "Test handling of processes with no status",
+    "Test handling of invalid exit codes",
+    "Test handling of special characters in labels",
+    "Test handling of very long labels",
+    "Test handling of concurrent processes",
+    "Test handling of stopped processes",
+    "Test handling of processes with missing properties",
+    "Test detection of graph cycles",
+    "Test handling of inconsistent node types",
+    "Test handling of future timestamps",
+    "Test handling of past timestamps",
+    "Test error handling for empty entrypoint",
+    "Test handling of special characters in entrypoint",
+    "Test handling of empty node list",
+    "Test error handling for non-existent node",
+    "Test data consistency validation",
+    "Test user interaction flow with tree view",
+    "Test process lifecycle management",
+    "Test filtering, sorting, grouping, and searching operations",
+    "Test configuration and data management operations",
+    "Test process control and UI interactions",
+    "Test complete workflow with state preservation",
+    "Test complex state transitions with multiple processes",
+    "Test error recovery and state restoration",
+    "Test performance with complex operations on large dataset",
+    "Test Describe-It pattern for AiderProcessTreeDataProviderCore",
+    "Test table-driven testing for addition",
+    "Test process validation performance metrics"
+  ],
+  "tests": 45,
+  "runTimeTests": 45,
+  "testJob": {
+    "name": "CombinedResults"
+  },
+  "timestamp": 1776193811242,
+  "individualResults": [
+    {
+      "index": 0,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test core processing of graph data"
+      ],
+      "error": null,
+      "stepName": "step_0",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_0",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test core processing of graph data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveItems: 1",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldHaveRefreshItem: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test with mock graph data - processGraphData"
+      ],
+      "error": null,
+      "stepName": "step_1",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_1",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test with mock graph data - processGraphData"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveItems: 5",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test with mock graph data - createTreeItemData"
+      ],
+      "error": null,
+      "stepName": "step_2",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_2",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test with mock graph data - createTreeItemData"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "createTreeItemData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldCreateValidTreeItemData: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of agents"
+      ],
+      "error": null,
+      "stepName": "step_3",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_3",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of agents"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleAgents: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering aider processes for entrypoint"
+      ],
+      "error": null,
+      "stepName": "step_4",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_4",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering aider processes for entrypoint"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterAiderProcessesForEntrypoint: entrypoint1",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldFilterCorrectly: 1",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test grouping nodes by type"
+      ],
+      "error": null,
+      "stepName": "step_5",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_5",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test grouping nodes by type"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "groupNodesByType: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldGroupNodes: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test with empty data"
+      ],
+      "error": null,
+      "stepName": "step_6",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_6",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test with empty data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveItems: 3",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test with both graph data and agents"
+      ],
+      "error": null,
+      "stepName": "step_7",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_7",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test with both graph data and agents"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveItems: 7",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldHandleAgents: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test filtering with non-existent entrypoint"
+      ],
+      "error": null,
+      "stepName": "step_8",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_8",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test filtering with non-existent entrypoint"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterAiderProcessesForEntrypoint: nonexistent",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldFilterCorrectly: 0",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test tree item data creation for exited aider"
+      ],
+      "error": null,
+      "stepName": "step_9",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_9",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test tree item data creation for exited aider"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "createTreeItemDataForNode: aider2",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveValidTreeItemDataWithExitCode: 0",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 10,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test AiderDataGrouperCore processing"
+      ],
+      "error": null,
+      "stepName": "step_10",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_10",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test AiderDataGrouperCore processing"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphDataWithGrouper: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveGrouperItems: 5",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldHaveRefreshItem: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 11,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test AiderDataGrouperCore with agents"
+      ],
+      "error": null,
+      "stepName": "step_11",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_11",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test AiderDataGrouperCore with agents"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphDataWithGrouper: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveGrouperItems: 7",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldHandleAgents: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 12,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test AiderTreeItemCreatorCore item creation"
+      ],
+      "error": null,
+      "stepName": "step_12",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_12",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test AiderTreeItemCreatorCore item creation"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "createTreeItemDataWithCreator: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveCreatorItemProperties: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 13,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "Test error handling for malformed data"
+      ],
+      "error": {
+        "message": "Should have thrown an error for malformed data: expected undefined to not equal undefined",
+        "stack": "AssertionError: Should have thrown an error for malformed data: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:797:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:1392:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_13",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_13",
+        "error": [
+          {
+            "message": "Should have thrown an error for malformed data: expected undefined to not equal undefined",
+            "showDiff": false,
+            "operator": "notStrictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: Should have thrown an error for malformed data: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:797:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:1392:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+          },
+          "AssertionError: Should have thrown an error for malformed data: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:797:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:1392:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test error handling for malformed data"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "whens": [
+          {
+            "name": "processGraphDataWithInvalidInput: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldThrowForMalformedData: ",
+            "status": false,
+            "error": "AssertionError: Should have thrown an error for malformed data: expected undefined to not equal undefined"
+          }
+        ]
+      }
+    },
+    {
+      "index": 14,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test performance with large data set"
+      ],
+      "error": null,
+      "stepName": "step_14",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_14",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test performance with large data set"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphDataWithPerformanceCheck: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleLargeDataSetWithinTimeLimit: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 15,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test processing of processes with mixed statuses"
+      ],
+      "error": null,
+      "stepName": "step_15",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_15",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test processing of processes with mixed statuses"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldProcessMixedStatusesCorrectly: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 16,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of duplicate entrypoints"
+      ],
+      "error": null,
+      "stepName": "step_16",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_16",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of duplicate entrypoints"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleDuplicateEntrypoints: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 17,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of processes with no status"
+      ],
+      "error": null,
+      "stepName": "step_17",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_17",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of processes with no status"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleProcessesWithNoStatus: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 18,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of invalid exit codes"
+      ],
+      "error": null,
+      "stepName": "step_18",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_18",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of invalid exit codes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleInvalidExitCodes: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 19,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of special characters in labels"
+      ],
+      "error": null,
+      "stepName": "step_19",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_19",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of special characters in labels"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleSpecialCharactersInLabels: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 20,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of very long labels"
+      ],
+      "error": null,
+      "stepName": "step_20",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_20",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of very long labels"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleVeryLongLabels: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 21,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of concurrent processes"
+      ],
+      "error": null,
+      "stepName": "step_21",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_21",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of concurrent processes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "handleConcurrentDataUpdates: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleConcurrentProcesses: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 22,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of stopped processes"
+      ],
+      "error": null,
+      "stepName": "step_22",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_22",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of stopped processes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleStoppedProcesses: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 23,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of processes with missing properties"
+      ],
+      "error": null,
+      "stepName": "step_23",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_23",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of processes with missing properties"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleMissingProperties: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 24,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test detection of graph cycles"
+      ],
+      "error": null,
+      "stepName": "step_24",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_24",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test detection of graph cycles"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldDetectGraphCycles: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 25,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of inconsistent node types"
+      ],
+      "error": null,
+      "stepName": "step_25",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_25",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of inconsistent node types"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleInconsistentNodeTypes: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 26,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of future timestamps"
+      ],
+      "error": null,
+      "stepName": "step_26",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_26",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of future timestamps"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleFutureTimestamps: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 27,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of past timestamps"
+      ],
+      "error": null,
+      "stepName": "step_27",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_27",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of past timestamps"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandlePastTimestamps: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 28,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "Test error handling for empty entrypoint"
+      ],
+      "error": {
+        "message": "Should have thrown an error for empty entrypoint: expected undefined to not equal undefined",
+        "stack": "AssertionError: Should have thrown an error for empty entrypoint: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:873:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:1392:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_28",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_28",
+        "error": [
+          {
+            "message": "Should have thrown an error for empty entrypoint: expected undefined to not equal undefined",
+            "showDiff": false,
+            "operator": "notStrictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: Should have thrown an error for empty entrypoint: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:873:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:1392:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+          },
+          "AssertionError: Should have thrown an error for empty entrypoint: expected undefined to not equal undefined\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:873:14)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:317:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs:1392:12)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1292:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test error handling for empty entrypoint"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "whens": [
+          {
+            "name": "filterWithEmptyEntrypoint: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldThrowForEmptyEntrypoint: ",
+            "status": false,
+            "error": "AssertionError: Should have thrown an error for empty entrypoint: expected undefined to not equal undefined"
+          }
+        ]
+      }
+    },
+    {
+      "index": 29,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of special characters in entrypoint"
+      ],
+      "error": null,
+      "stepName": "step_29",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_29",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of special characters in entrypoint"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "filterWithSpecialCharactersEntrypoint: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleSpecialCharactersInEntrypoint: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 30,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test handling of empty node list"
+      ],
+      "error": null,
+      "stepName": "step_30",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_30",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test handling of empty node list"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "groupWithEmptyNodeList: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleEmptyNodeList: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 31,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test error handling for non-existent node"
+      ],
+      "error": null,
+      "stepName": "step_31",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_31",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test error handling for non-existent node"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "createTreeItemForNonExistentNode: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldThrowForNonExistentNode: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 32,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test data consistency validation"
+      ],
+      "error": null,
+      "stepName": "step_32",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_32",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test data consistency validation"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "validateTreeItemDataConsistency: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldMaintainDataConsistency: ",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 33,
+      "failed": true,
+      "fails": 8,
+      "features": [
+        "Test user interaction flow with tree view"
+      ],
+      "error": {
+        "message": "Then.shouldNavigateToProcessDetails is not implemented",
+        "stack": "Error: Then.shouldNavigateToProcessDetails is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_33",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_33",
+        "error": [
+          {},
+          "Error: Then.shouldNavigateToProcessDetails is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test user interaction flow with tree view"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 8,
+        "whens": [
+          {
+            "name": "refreshTreeView: ",
+            "status": false,
+            "error": "Error: When.refreshTreeView is not implemented"
+          },
+          {
+            "name": "expandTreeItem: process1",
+            "status": false,
+            "error": "Error: When.expandTreeItem is not implemented"
+          },
+          {
+            "name": "selectTreeItem: process1",
+            "status": false,
+            "error": "Error: When.selectTreeItem is not implemented"
+          },
+          {
+            "name": "navigateToProcessDetails: process1",
+            "status": false,
+            "error": "Error: When.navigateToProcessDetails is not implemented"
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldRefreshTreeView: ",
+            "status": false,
+            "error": "Error: Then.shouldRefreshTreeView is not implemented"
+          },
+          {
+            "name": "shouldExpandTreeItem: process1",
+            "status": false,
+            "error": "Error: Then.shouldExpandTreeItem is not implemented"
+          },
+          {
+            "name": "shouldSelectTreeItem: process1",
+            "status": false,
+            "error": "Error: Then.shouldSelectTreeItem is not implemented"
+          },
+          {
+            "name": "shouldNavigateToProcessDetails: process1",
+            "status": false,
+            "error": "Error: Then.shouldNavigateToProcessDetails is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 34,
+      "failed": true,
+      "fails": 8,
+      "features": [
+        "Test process lifecycle management"
+      ],
+      "error": {
+        "message": "Then.shouldSimulateProcessTermination is not implemented",
+        "stack": "Error: Then.shouldSimulateProcessTermination is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_34",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_34",
+        "error": [
+          {},
+          "Error: Then.shouldSimulateProcessTermination is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test process lifecycle management"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 8,
+        "whens": [
+          {
+            "name": "addNewProcess: newProcess,running",
+            "status": false,
+            "error": "Error: When.addNewProcess is not implemented"
+          },
+          {
+            "name": "updateProcessStatus: newProcess,stopped",
+            "status": false,
+            "error": "Error: When.updateProcessStatus is not implemented"
+          },
+          {
+            "name": "updateProcessExitCode: newProcess,0",
+            "status": false,
+            "error": "Error: When.updateProcessExitCode is not implemented"
+          },
+          {
+            "name": "simulateProcessTermination: newProcess",
+            "status": false,
+            "error": "Error: When.simulateProcessTermination is not implemented"
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldAddNewProcess: newProcess",
+            "status": false,
+            "error": "Error: Then.shouldAddNewProcess is not implemented"
+          },
+          {
+            "name": "shouldUpdateProcessStatus: newProcess",
+            "status": false,
+            "error": "Error: Then.shouldUpdateProcessStatus is not implemented"
+          },
+          {
+            "name": "shouldUpdateProcessExitCode: newProcess,0",
+            "status": false,
+            "error": "Error: Then.shouldUpdateProcessExitCode is not implemented"
+          },
+          {
+            "name": "shouldSimulateProcessTermination: newProcess",
+            "status": false,
+            "error": "Error: Then.shouldSimulateProcessTermination is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 35,
+      "failed": true,
+      "fails": 10,
+      "features": [
+        "Test filtering, sorting, grouping, and searching operations"
+      ],
+      "error": {
+        "message": "Then.shouldClearFilters is not implemented",
+        "stack": "Error: Then.shouldClearFilters is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_35",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_35",
+        "error": [
+          {},
+          "Error: Then.shouldClearFilters is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test filtering, sorting, grouping, and searching operations"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 10,
+        "whens": [
+          {
+            "name": "filterByStatus: running",
+            "status": false,
+            "error": "Error: When.filterByStatus is not implemented"
+          },
+          {
+            "name": "sortByRuntime: ",
+            "status": false,
+            "error": "Error: When.sortByRuntime is not implemented"
+          },
+          {
+            "name": "groupByContainer: ",
+            "status": false,
+            "error": "Error: When.groupByContainer is not implemented"
+          },
+          {
+            "name": "searchProcesses: aider",
+            "status": false,
+            "error": "Error: When.searchProcesses is not implemented"
+          },
+          {
+            "name": "clearFilters: ",
+            "status": false,
+            "error": "Error: When.clearFilters is not implemented"
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldFilterByStatus: 2",
+            "status": false,
+            "error": "Error: Then.shouldFilterByStatus is not implemented"
+          },
+          {
+            "name": "shouldSortByRuntime: ",
+            "status": false,
+            "error": "Error: Then.shouldSortByRuntime is not implemented"
+          },
+          {
+            "name": "shouldGroupByContainer: 2",
+            "status": false,
+            "error": "Error: Then.shouldGroupByContainer is not implemented"
+          },
+          {
+            "name": "shouldSearchProcesses: 3",
+            "status": false,
+            "error": "Error: Then.shouldSearchProcesses is not implemented"
+          },
+          {
+            "name": "shouldClearFilters: ",
+            "status": false,
+            "error": "Error: Then.shouldClearFilters is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 36,
+      "failed": true,
+      "fails": 10,
+      "features": [
+        "Test configuration and data management operations"
+      ],
+      "error": {
+        "message": "Then.shouldImportTreeData is not implemented",
+        "stack": "Error: Then.shouldImportTreeData is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_36",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_36",
+        "error": [
+          {},
+          "Error: Then.shouldImportTreeData is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test configuration and data management operations"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 10,
+        "whens": [
+          {
+            "name": "toggleAutoRefresh: ",
+            "status": false,
+            "error": "Error: When.toggleAutoRefresh is not implemented"
+          },
+          {
+            "name": "setRefreshInterval: 5000",
+            "status": false,
+            "error": "Error: When.setRefreshInterval is not implemented"
+          },
+          {
+            "name": "batchUpdateProcesses: process1,process2,process3",
+            "status": false,
+            "error": "Error: When.batchUpdateProcesses is not implemented"
+          },
+          {
+            "name": "exportTreeData: ",
+            "status": false,
+            "error": "Error: When.exportTreeData is not implemented"
+          },
+          {
+            "name": "importTreeData: {\"processes\": [\"imported\"]}",
+            "status": false,
+            "error": "Error: When.importTreeData is not implemented"
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldToggleAutoRefresh: ",
+            "status": false,
+            "error": "Error: Then.shouldToggleAutoRefresh is not implemented"
+          },
+          {
+            "name": "shouldSetRefreshInterval: 5000",
+            "status": false,
+            "error": "Error: Then.shouldSetRefreshInterval is not implemented"
+          },
+          {
+            "name": "shouldBatchUpdateProcesses: 3",
+            "status": false,
+            "error": "Error: Then.shouldBatchUpdateProcesses is not implemented"
+          },
+          {
+            "name": "shouldExportTreeData: ",
+            "status": false,
+            "error": "Error: Then.shouldExportTreeData is not implemented"
+          },
+          {
+            "name": "shouldImportTreeData: 1",
+            "status": false,
+            "error": "Error: Then.shouldImportTreeData is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 37,
+      "failed": true,
+      "fails": 8,
+      "features": [
+        "Test process control and UI interactions"
+      ],
+      "error": {
+        "message": "Then.shouldCopyProcessInfo is not implemented",
+        "stack": "Error: Then.shouldCopyProcessInfo is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_37",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_37",
+        "error": [
+          {},
+          "Error: Then.shouldCopyProcessInfo is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test process control and UI interactions"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 8,
+        "whens": [
+          {
+            "name": "simulateProcessStart: stoppedProcess",
+            "status": false,
+            "error": "Error: When.simulateProcessStart is not implemented"
+          },
+          {
+            "name": "updateProcessStatus: stoppedProcess,running",
+            "status": false,
+            "error": "Error: When.updateProcessStatus is not implemented"
+          },
+          {
+            "name": "collapseTreeItem: stoppedProcess",
+            "status": false,
+            "error": "Error: When.collapseTreeItem is not implemented"
+          },
+          {
+            "name": "copyProcessInfo: stoppedProcess",
+            "status": false,
+            "error": "Error: When.copyProcessInfo is not implemented"
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldSimulateProcessStart: stoppedProcess",
+            "status": false,
+            "error": "Error: Then.shouldSimulateProcessStart is not implemented"
+          },
+          {
+            "name": "shouldUpdateProcessStatus: stoppedProcess",
+            "status": false,
+            "error": "Error: Then.shouldUpdateProcessStatus is not implemented"
+          },
+          {
+            "name": "shouldCollapseTreeItem: stoppedProcess",
+            "status": false,
+            "error": "Error: Then.shouldCollapseTreeItem is not implemented"
+          },
+          {
+            "name": "shouldCopyProcessInfo: stoppedProcess",
+            "status": false,
+            "error": "Error: Then.shouldCopyProcessInfo is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 38,
+      "failed": true,
+      "fails": 10,
+      "features": [
+        "Test complete workflow with state preservation"
+      ],
+      "error": {
+        "message": "Then.shouldMaintainTreeState is not implemented",
+        "stack": "Error: Then.shouldMaintainTreeState is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_38",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_38",
+        "error": [
+          {},
+          "Error: Then.shouldMaintainTreeState is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test complete workflow with state preservation"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 10,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "refreshTreeView: ",
+            "status": false,
+            "error": "Error: When.refreshTreeView is not implemented"
+          },
+          {
+            "name": "expandTreeItem: process1",
+            "status": false,
+            "error": "Error: When.expandTreeItem is not implemented"
+          },
+          {
+            "name": "selectTreeItem: process1",
+            "status": false,
+            "error": "Error: When.selectTreeItem is not implemented"
+          },
+          {
+            "name": "updateProcessStatus: process1,completed",
+            "status": false,
+            "error": "Error: When.updateProcessStatus is not implemented"
+          },
+          {
+            "name": "refreshTreeView: ",
+            "status": false,
+            "error": "Error: When.refreshTreeView is not implemented"
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHaveItems: 5",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldRefreshTreeView: ",
+            "status": false,
+            "error": "Error: Then.shouldRefreshTreeView is not implemented"
+          },
+          {
+            "name": "shouldExpandTreeItem: process1",
+            "status": false,
+            "error": "Error: Then.shouldExpandTreeItem is not implemented"
+          },
+          {
+            "name": "shouldSelectTreeItem: process1",
+            "status": false,
+            "error": "Error: Then.shouldSelectTreeItem is not implemented"
+          },
+          {
+            "name": "shouldUpdateProcessStatus: process1",
+            "status": false,
+            "error": "Error: Then.shouldUpdateProcessStatus is not implemented"
+          },
+          {
+            "name": "shouldMaintainTreeState: ",
+            "status": false,
+            "error": "Error: Then.shouldMaintainTreeState is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 39,
+      "failed": true,
+      "fails": 13,
+      "features": [
+        "Test complex state transitions with multiple processes"
+      ],
+      "error": {
+        "message": "Then.shouldHandleMultipleSimultaneousOperations is not implemented",
+        "stack": "Error: Then.shouldHandleMultipleSimultaneousOperations is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_39",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_39",
+        "error": [
+          {},
+          "Error: Then.shouldHandleMultipleSimultaneousOperations is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test complex state transitions with multiple processes"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 13,
+        "whens": [
+          {
+            "name": "addNewProcess: procA,running",
+            "status": false,
+            "error": "Error: When.addNewProcess is not implemented"
+          },
+          {
+            "name": "addNewProcess: procB,running",
+            "status": false,
+            "error": "Error: When.addNewProcess is not implemented"
+          },
+          {
+            "name": "removeProcess: procA",
+            "status": false,
+            "error": "Error: When.removeProcess is not implemented"
+          },
+          {
+            "name": "updateProcessStatus: procB,stopped",
+            "status": false,
+            "error": "Error: When.updateProcessStatus is not implemented"
+          },
+          {
+            "name": "filterByStatus: stopped",
+            "status": false,
+            "error": "Error: When.filterByStatus is not implemented"
+          },
+          {
+            "name": "clearFilters: ",
+            "status": false,
+            "error": "Error: When.clearFilters is not implemented"
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldAddNewProcess: procA",
+            "status": false,
+            "error": "Error: Then.shouldAddNewProcess is not implemented"
+          },
+          {
+            "name": "shouldAddNewProcess: procB",
+            "status": false,
+            "error": "Error: Then.shouldAddNewProcess is not implemented"
+          },
+          {
+            "name": "shouldRemoveProcess: ",
+            "status": false,
+            "error": "Error: Then.shouldRemoveProcess is not implemented"
+          },
+          {
+            "name": "shouldUpdateProcessStatus: procB",
+            "status": false,
+            "error": "Error: Then.shouldUpdateProcessStatus is not implemented"
+          },
+          {
+            "name": "shouldFilterByStatus: 1",
+            "status": false,
+            "error": "Error: Then.shouldFilterByStatus is not implemented"
+          },
+          {
+            "name": "shouldClearFilters: ",
+            "status": false,
+            "error": "Error: Then.shouldClearFilters is not implemented"
+          },
+          {
+            "name": "shouldHandleMultipleSimultaneousOperations: ",
+            "status": false,
+            "error": "Error: Then.shouldHandleMultipleSimultaneousOperations is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 40,
+      "failed": true,
+      "fails": 5,
+      "features": [
+        "Test error recovery and state restoration"
+      ],
+      "error": {
+        "message": "Then.shouldRecoverFromErrors is not implemented",
+        "stack": "Error: Then.shouldRecoverFromErrors is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_40",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_40",
+        "error": [
+          {},
+          "Error: Then.shouldRecoverFromErrors is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test error recovery and state restoration"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 5,
+        "whens": [
+          {
+            "name": "processGraphDataWithInvalidInput: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "refreshTreeView: ",
+            "status": false,
+            "error": "Error: When.refreshTreeView is not implemented"
+          },
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "validateTreeItemDataConsistency: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldThrowForMalformedData: ",
+            "status": false,
+            "error": "AssertionError: Should have thrown an error for malformed data: expected undefined to not equal undefined"
+          },
+          {
+            "name": "shouldRefreshTreeView: ",
+            "status": false,
+            "error": "Error: Then.shouldRefreshTreeView is not implemented"
+          },
+          {
+            "name": "shouldHaveItems: 5",
+            "status": false,
+            "error": "Error: Expected result to be an array or have items property. Got: {\"core\":{},\"consistent\":true}"
+          },
+          {
+            "name": "shouldMaintainDataConsistency: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "shouldRecoverFromErrors: ",
+            "status": false,
+            "error": "Error: Then.shouldRecoverFromErrors is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 41,
+      "failed": true,
+      "fails": 11,
+      "features": [
+        "Test performance with complex operations on large dataset"
+      ],
+      "error": {
+        "message": "Then.shouldMaintainPerformanceUnderLoad is not implemented",
+        "stack": "Error: Then.shouldMaintainPerformanceUnderLoad is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)",
+        "name": "Error"
+      },
+      "stepName": "step_41",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_41",
+        "error": [
+          {},
+          "Error: Then.shouldMaintainPerformanceUnderLoad is not implemented\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:802:25)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:312:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:216:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1071:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1112:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs:1444:24)"
+        ],
+        "failed": true,
+        "features": [
+          "Test performance with complex operations on large dataset"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 11,
+        "whens": [
+          {
+            "name": "processGraphData: ",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "sortByRuntime: ",
+            "status": false,
+            "error": "Error: When.sortByRuntime is not implemented"
+          },
+          {
+            "name": "groupByContainer: ",
+            "status": false,
+            "error": "Error: When.groupByContainer is not implemented"
+          },
+          {
+            "name": "searchProcesses: test",
+            "status": false,
+            "error": "Error: When.searchProcesses is not implemented"
+          },
+          {
+            "name": "filterByStatus: running",
+            "status": false,
+            "error": "Error: When.filterByStatus is not implemented"
+          },
+          {
+            "name": "refreshTreeView: ",
+            "status": false,
+            "error": "Error: When.refreshTreeView is not implemented"
+          }
+        ],
+        "thens": [
+          {
+            "name": "shouldHandleLargeDataSetWithinTimeLimit: ",
+            "status": false,
+            "error": "AssertionError: Processing took undefinedms, which is too slow: expected undefined to be a number or a date"
+          },
+          {
+            "name": "shouldSortByRuntime: ",
+            "status": false,
+            "error": "Error: Then.shouldSortByRuntime is not implemented"
+          },
+          {
+            "name": "shouldGroupByContainer: 3",
+            "status": false,
+            "error": "Error: Then.shouldGroupByContainer is not implemented"
+          },
+          {
+            "name": "shouldSearchProcesses: 50",
+            "status": false,
+            "error": "Error: Then.shouldSearchProcesses is not implemented"
+          },
+          {
+            "name": "shouldFilterByStatus: 25",
+            "status": false,
+            "error": "Error: Then.shouldFilterByStatus is not implemented"
+          },
+          {
+            "name": "shouldMaintainPerformanceUnderLoad: ",
+            "status": false,
+            "error": "Error: Then.shouldMaintainPerformanceUnderLoad is not implemented"
+          }
+        ]
+      }
+    },
+    {
+      "index": 42,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test Describe-It pattern for AiderProcessTreeDataProviderCore"
+      ],
+      "error": null,
+      "stepName": "step_42",
+      "stepType": "BaseDescribe",
+      "testJob": {
+        "key": "step_42",
+        "its": [
+          {
+            "name": "shouldProcessGraphData: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldCreateTreeItemData: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldHandleEdgeCases: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldMaintainPerformance: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldEnsureDataIntegrity: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "shouldHandleRealWorldScenarios: ",
+            "status": true,
+            "error": null,
+            "artifacts": []
+          }
+        ],
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test Describe-It pattern for AiderProcessTreeDataProviderCore"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0
+      }
+    },
+    {
+      "index": 43,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test table-driven testing for addition"
+      ],
+      "error": null,
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test table-driven testing for addition"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "confirms": [
+          {
+            "index": 0,
+            "input": [
+              1,
+              2
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 1,
+            "input": [
+              4,
+              5
+            ],
+            "test": "Test function"
+          },
+          {
+            "index": 2,
+            "input": [
+              0,
+              0
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 3,
+            "input": [
+              -5,
+              5
+            ],
+            "test": "equal"
+          },
+          {
+            "index": 4,
+            "input": [
+              100,
+              200
+            ],
+            "test": "Test function"
+          }
+        ]
+      }
+    },
+    {
+      "index": 44,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "Test process validation performance metrics"
+      ],
+      "error": null,
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": null,
+        "failed": false,
+        "features": [
+          "Test process validation performance metrics"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "confirms": [
+          {
+            "index": 0,
+            "input": 100,
+            "test": "Test function"
+          },
+          {
+            "index": 1,
+            "input": 500,
+            "test": "Test function"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 45,
+    "passed": -40,
+    "failed": 85,
+    "successRate": "-88.89%"
+  }
+}

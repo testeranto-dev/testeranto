@@ -34,13 +34,7 @@ export async function createLogFileNodePure(
       };
 
       graphManager.applyUpdate(update);
-      console.log(`[Server_Docker] Applied update to graph for log file node`);
-
-      // Save the graph
-      if (typeof graphManager.saveGraph === 'function') {
-        graphManager.saveGraph();
-        console.log(`[Server_Docker] Saved graph after adding log file node`);
-      }
+      // graphManager.saveGraph();
     } else {
       console.warn(`[Server_Docker] Graph manager not available for creating log file node`);
     }

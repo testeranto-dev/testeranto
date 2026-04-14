@@ -1,5 +1,5 @@
 ---
-status: doing
+status: maybe working?
 ----
 
 we need a nice way to separate our code from external packages like 'fs'. We will need to mock the filesystem for tests, so we will have 2 sets of deps- 1 for real life, another for tests. They have the same type.

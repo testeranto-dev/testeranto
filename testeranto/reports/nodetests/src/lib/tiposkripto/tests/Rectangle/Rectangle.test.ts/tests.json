@@ -1,0 +1,324 @@
+{
+  "failed": false,
+  "fails": 0,
+  "artifacts": [],
+  "features": [
+    "https://api.github.com/repos/adamwong246/testeranto/issues/888",
+    "src/lib/tiposkripto/tests/Rectangle/README.md",
+    "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+    "src/lib/tiposkripto/README.md"
+  ],
+  "tests": 7,
+  "runTimeTests": 7,
+  "testJob": {
+    "name": "CombinedResults"
+  },
+  "timestamp": 1776193811080,
+  "individualResults": [
+    {
+      "index": 0,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/888"
+      ],
+      "error": null,
+      "stepName": "step_0",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_0",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/888"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setWidth: 4",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setHeight: 19",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "getWidth: 4",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getHeight: 19",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "src/lib/tiposkripto/tests/Rectangle/README.md"
+      ],
+      "error": null,
+      "stepName": "step_1",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_1",
+        "error": null,
+        "failed": false,
+        "features": [
+          "src/lib/tiposkripto/tests/Rectangle/README.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setWidth: 4",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setHeight: 5",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "getWidth: 4",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getHeight: 5",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "area: 20",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "AreaPlusCircumference: 38",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+        "src/lib/tiposkripto/README.md"
+      ],
+      "error": null,
+      "stepName": "step_2",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_2",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+          "src/lib/tiposkripto/README.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setHeight: 4",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setWidth: 33",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "area: 132",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+        "src/lib/tiposkripto/README.md"
+      ],
+      "error": null,
+      "stepName": "step_3",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_3",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+          "src/lib/tiposkripto/README.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [],
+        "thens": [
+          {
+            "name": "getWidth: 2",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getHeight: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+      ],
+      "error": null,
+      "stepName": "step_4",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_4",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setHeight: 5",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setWidth: 5",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "area: 25",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+      ],
+      "error": null,
+      "stepName": "step_5",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_5",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setHeight: 6",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setWidth: 6",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "area: 36",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+      ],
+      "error": null,
+      "stepName": "step_6",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_6",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [],
+        "thens": [
+          {
+            "name": "getWidth: 2",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getHeight: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 7,
+    "passed": 7,
+    "failed": 0,
+    "successRate": "100%"
+  }
+}

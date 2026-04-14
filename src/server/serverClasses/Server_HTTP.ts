@@ -1,20 +1,22 @@
-import { vscodeHttpAPI } from "../../api/api";
+import { API } from "../../api";
 import type { AllTestResults, ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { handleRoutePure } from "./Server_Http/handleRoutePure";
-import * as gitHandlers from "./Server_Http/utils/gitHandlers";
-import * as lockHandlers from "./Server_Http/utils/lockHandlers";
-import { generateTerminalScript } from "./Server_Http/utils/routeUtils";
-import * as serviceHandlers from "./Server_Http/utils/serviceHandlers";
+import * as gitHandlers from "./git/gitHandlers";
+import * as lockHandlers from "./lock/lockHandlers";
+import * as serviceHandlers from "./lock/serviceHandlers";
 import { Server_HTTP_Graph } from "./Server_HTTP_Graph";
 import { Server_WS_HTTP } from "./Server_WS_HTTP";
-import { transformTestResultsUtil } from "./utils/testResultsUtils";
-import { handleAiderRoute, handleFilesRoute, handleGetViewsUtil, handleProcessRoute, handleRuntimeRoute } from "./utils/routeHandlerUtils";
-import { handleAddChatMessageUtil } from "./utils/chatMessageUtils";
-import { handleChatRouteUtil } from "./utils/chatRouteUtils";
-import { handleOpenProcessTerminalUtil } from "./utils/httpRouteUtils";
-import { handleUserAgentsRouteUtil } from "./utils/userAgentRouteUtils";
-import { handleAgentRouteUtil } from "./utils/agentRouteUtils";
+import { transformTestResultsUtil } from "./Server_Http/testResultsUtils";
+import {
+  handleAiderRoute, handleFilesRoute, handleGetViewsUtil, handleProcessRoute, handleRuntimeRoute
+} from "./Server_Http/routeHandlerUtils";
+import { getProcessesPure } from "./Server_Http/getProcessesPure";
+import { handleAddChatMessageUtil } from "./Server_Http/chatMessageUtils";
+import { handleOpenProcessTerminalUtil } from "./Server_Http/handleOpenProcessTerminalUtil";
+import { handleUserAgentsRouteUtil } from "./Server_Http/userAgentRouteUtils";
+import { handleAgentRouteUtil } from "./Server_Http/agentRouteUtils";
+import { generateTerminalScript } from "./Server_Http/generateTerminalScript";
 
 declare const Bun: any;
 
@@ -25,38 +27,30 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     super(configs, mode);
   }
 
+
   async start(): Promise<void> {
     await super.start();
 
     const port = 3000;
-
     const serverOptions: any = {
       port,
-      hostname: "0.0.0.0", // Bind to all interfaces, not just localhost
+      hostname: "0.0.0.0",
       idleTimeout: 60,
       fetch: async (request: Request, server: any) => {
-        try {
-          const response = await this.handleRequest(request, server);
+        const response = await this.handleRequest(request, server);
 
-          if (response instanceof Response) {
-            return response;
-          } else if (response === undefined || response === null) {
-            // This happens for successful WebSocket upgrades
-            return undefined;
-          } else {
-            return new Response(
-              `Server Error: handleRequest did not return a Response`,
-              {
-                status: 500,
-                headers: { "Content-Type": "text/plain" },
-              },
-            );
-          }
-        } catch (error: any) {
-          return new Response(`Server Error: ${error.message}`, {
-            status: 500,
-            headers: { "Content-Type": "text/plain" },
-          });
+        if (response instanceof Response) {
+          return response;
+        } else if (response === undefined || response === null) {
+          return undefined;
+        } else {
+          return new Response(
+            `Server Error: handleRequest did not return a Response`,
+            {
+              status: 500,
+              headers: { "Content-Type": "text/plain" },
+            },
+          );
         }
       },
       error: (error: Error) => {
@@ -67,7 +61,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
       },
     };
 
-    const wsThis = this as Server_WebSocket_Http;
+    const wsThis = this as Server_WS_HTTP;
     serverOptions.websocket = {
       open: (ws: WebSocket) => {
         wsThis.wsClients.add(ws);
@@ -105,7 +99,8 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
 
   async stop() {
     if (this.bunServer) {
-      this.bunServer.stop();
+      this.bunServer.stop(true);
+      this.bunServer = null;
     }
     await super.stop();
   }
@@ -118,7 +113,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
 
 
     if (request.headers.get("upgrade") === "websocket") {
-      if (this instanceof Server_WebSocket_Http && server) {
+      if (this instanceof Server_WS_HTTP && server) {
         const success = server.upgrade(request);
         if (success) {
           return undefined;
@@ -147,26 +142,14 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
       return this.handleOptions();
     }
 
-    try {
-      const result = await this.handleRoute(routeName, request, url);
-      // Ensure we always return a Response
-      if (result instanceof Response) {
-        return result;
-      }
-      return new Response(JSON.stringify({ error: "Invalid response" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (error: any) {
-      console.error('[Server_HTTP] Error handling route:', error);
-      return new Response(JSON.stringify({
-        error: "Internal server error",
-        message: error.message
-      }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
+    const result = await this.handleRoute(routeName, request, url);
+    if (result instanceof Response) {
+      return result;
     }
+    return new Response(JSON.stringify({ error: "Invalid response" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   private async handleRoute(
@@ -177,12 +160,19 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     // Route handlers
     const routeHandlers: Record<string, () => Promise<Response> | Response> = {
       files: () => this.handleFilesRoute(),
-      process: () => handleProcessRoute(this.graphManager),
-      aider: () => handleAiderRoute(this.graphManager),
-      runtime: () => handleRuntimeRoute(this.graphManager),
+      process: () => {
+        // For GET requests to /~/process, return actual process data
+        if (request.method === 'GET') {
+          return this.handleGetProcesses();
+        }
+        // For other methods, use the original handler
+        return handleProcessRoute(this);
+      },
+      aider: () => handleAiderRoute(this),
+      runtime: () => handleRuntimeRoute(this),
       agents: () => this.handleAgentRoute('', request),
       'user-agents': () => this.handleUserAgentsRoute(),
-      chat: () => this.handleChatRoute(url),
+      chat: () => this.handleChatRoute(request, url),
       'lock-status': () => lockHandlers.handleLockStatusRoute(this),
       down: () => serviceHandlers.handleDown(this),
       up: () => serviceHandlers.handleUp(this),
@@ -194,7 +184,18 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
       'git/resolve-conflict': () => gitHandlers.handleGitResolveConflict(request),
       'open-process-terminal': () => this.handleOpenProcessTerminal(request),
       'add-chat-message': () => this.handleAddChatMessage(request),
+      'process-logs': () => this.handleProcessLogsRoute(request),
     };
+
+    // Special handling for processes endpoint
+    if (routeName === 'processes') {
+      if (request.method === 'GET') {
+        return this.handleGetProcesses();
+      } else if (request.method === 'POST') {
+        // Forward to handleProcessRoute for POST requests
+        return handleProcessRoute(this.graphManager);
+      }
+    }
 
     // Handle view requests
     if (routeName === 'views' && request.method === 'GET') {
@@ -210,15 +211,16 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
       }
     }
 
-    for (const [key, definition] of Object.entries(vscodeHttpAPI)) {
+
+    for (const [key, definition] of Object.entries(API)) {
       const apiDef = definition as any;
       if (apiDef.check && apiDef.check(routeName, { method: request.method })) {
         if (key === 'getAgentSlice' || key === 'launchAgent') {
           return this.handleAgentRoute(routeName, request);
-        } else if (key === 'getVscodeView') {
-          return this.handleVscodeViewRoute(routeName);
-        } else if (key === 'getStakeholderView') {
-          return this.handleStakeholderViewRoute(routeName);
+        } else if (key === 'getView') {
+          return this.handleViewRoute(routeName, false);
+        } else if (key === 'getViewWithGraph') {
+          return this.handleViewRoute(routeName, true);
         } else {
           const baseRouteName = apiDef.path.slice(3);
           const handler = routeHandlers[baseRouteName];
@@ -234,7 +236,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
 
   // Route handler methods
   private handleFilesRoute(): Response {
-    return handleFilesRoute(this.graphManager);
+    return handleFilesRoute(this);
   }
 
 
@@ -254,103 +256,212 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     return handleUserAgentsRouteUtil(this.configs);
   }
 
-  private handleVscodeViewRoute(routeName: string): Response {
-    const viewName = routeName.slice(13);
-    const viewPath = this.configs.vscodeViews?.[viewName];
+  private handleViewRoute(routeName: string, withGraph: boolean = false): Response {
+    // Extract view name based on route prefix
+    let prefixLength;
+    if (withGraph) {
+      // 'views-with-graph/' is 17 characters
+      prefixLength = 17;
+    } else {
+      // 'views/' is 6 characters
+      prefixLength = 6;
+    }
+    const viewName = routeName.slice(prefixLength);
+    const viewPath = this.configs.views?.[viewName];
+
     if (!viewPath) {
       throw new Error(`View ${viewName} not found`);
     }
 
-    return new Response(JSON.stringify({
+    const responseData: any = {
       viewName,
       viewPath,
       timestamp: new Date().toISOString()
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+    };
 
-  private handleStakeholderViewRoute(routeName: string): Response {
-    const viewName = routeName.slice(18);
-    const viewPath = this.configs.stakeholderViews?.[viewName];
-    if (!viewPath) {
-      throw new Error(`Stakeholder view ${viewName} not found`);
+    if (withGraph) {
+      const graphData = this.graphManager.getGraphData();
+      responseData.graphData = graphData;
     }
 
-    const graphData = this.graphManager.getGraphManager().getGraphData();
-    return new Response(JSON.stringify({
-      viewName,
-      viewPath,
-      graphData,
-      timestamp: new Date().toISOString()
-    }), {
+    return new Response(JSON.stringify(responseData), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  private handleChatRoute(url: URL): Response {
-
-    return handleChatRouteUtil();
+  private handleChatRoute(request: Request, url: URL): Response {
+    if (request.method === 'GET') {
+      // Get chat history
+      try {
+        const graphData = this.getGraphData();
+        const chatMessages = graphData.nodes.filter((node: any) =>
+          node.type?.category === 'chat' && node.type?.type === 'chat_message'
+        );
+        return new Response(JSON.stringify({
+          messages: chatMessages,
+          timestamp: new Date().toISOString(),
+          message: "Chat history retrieved successfully"
+        }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        });
+      } catch (error: any) {
+        return new Response(JSON.stringify({
+          error: "Failed to get chat history",
+          message: error.message,
+          timestamp: new Date().toISOString()
+        }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+    } else if (request.method === 'POST') {
+      // Add chat message
+      return this.handleAddChatMessage(request);
+    } else {
+      return new Response(JSON.stringify({
+        error: "Method not allowed",
+        message: `Method ${request.method} not allowed for /~/chat`,
+        timestamp: new Date().toISOString()
+      }), {
+        status: 405,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
   }
 
   private async handleOpenProcessTerminal(request: Request): Promise<Response> {
+    // Check if the current instance has an openProcessTerminal method (from Server_Vscode)
+    if (typeof (this as any).openProcessTerminal === 'function') {
+      try {
+        const body = await request.json();
+        const { nodeId, label, containerId, serviceName } = body;
 
+        if (!nodeId) {
+          return new Response(JSON.stringify({
+            error: "Missing required parameter: nodeId"
+          }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" }
+          });
+        }
 
-    return handleOpenProcessTerminalUtil(
-      request,
-      () => (this as any).getAiderProcesses ? (this as any).getAiderProcesses() : [],
-      () => this.graphManager?.getGraphManager ? this.graphManager.getGraphManager() : null,
-      generateTerminalScript
-    );
+        const result = await (this as any).openProcessTerminal(
+          nodeId,
+          label || 'Process',
+          containerId || '',
+          serviceName || ''
+        );
+
+        if (result.success) {
+          return new Response(JSON.stringify({
+            success: true,
+            message: result.message,
+            script: result.script
+          }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          });
+        } else {
+          return new Response(JSON.stringify({
+            error: result.error || "Failed to open terminal",
+            message: result.message
+          }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" }
+          });
+        }
+      } catch (error: any) {
+        return new Response(JSON.stringify({
+          error: "Failed to process request",
+          message: error.message
+        }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+    } else {
+      // Fall back to the original implementation
+      return handleOpenProcessTerminalUtil(
+        request,
+        () => (this as any).getAiderProcesses ? (this as any).getAiderProcesses() : [],
+        () => this,
+        generateTerminalScript
+      );
+    }
   }
 
-  private async handleAddChatMessage(request: Request): Promise<Response> {
+  private async handleGetProcesses(): Promise<Response> {
+    const graphData = this.getGraphData();
+    const uniqueProcesses = getProcessesPure(graphData, () => this.getProcessSlice());
 
-    return handleAddChatMessageUtil(request, this.graphManager);
+    return new Response(JSON.stringify({
+      processes: uniqueProcesses,
+      message: "Processes retrieved successfully",
+      timestamp: new Date().toISOString(),
+      count: uniqueProcesses.length
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  private async handleViewSlice(request: Request, url: URL, viewKey: string): Promise<Response> {
-    try {
-      // Get the slice data from the graph manager
-      const sliceData = this.graphManager.getViewSlice(viewKey);
+  private async handleProcessLogsRoute(request: Request): Promise<Response> {
+    const body = await request.json();
+    const { processId } = body;
+
+    if (!processId) {
+      return new Response(JSON.stringify({
+        error: "Missing required parameter: processId"
+      }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    if (typeof (this as any).getProcessLogs === 'function') {
+      const logs = await (this as any).getProcessLogs(processId);
 
       return new Response(JSON.stringify({
-        viewKey,
-        sliceData,
-        timestamp: new Date().toISOString(),
-        message: `Slice data for view ${viewKey}`
+        success: true,
+        processId,
+        logs
       }), {
         status: 200,
         headers: { "Content-Type": "application/json" }
       });
-    } catch (error: any) {
+    } else {
       return new Response(JSON.stringify({
-        error: "Failed to get view slice",
-        message: error.message,
-        timestamp: new Date().toISOString()
+        error: "getProcessLogs method not available"
       }), {
-        status: 500,
+        status: 501,
         headers: { "Content-Type": "application/json" }
       });
     }
   }
 
-  private async handleGetViews(request: Request, url: URL): Promise<Response> {
-    try {
+  private async handleAddChatMessage(request: Request): Promise<Response> {
 
-      return handleGetViewsUtil(this.configs);
-    } catch (error: any) {
-      return new Response(JSON.stringify({
-        error: "Failed to get views",
-        message: error.message,
-        timestamp: new Date().toISOString()
-      }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" }
-      });
-    }
+    return handleAddChatMessageUtil(request, this);
+  }
+
+  private async handleViewSlice(request: Request, url: URL, viewKey: string): Promise<Response> {
+    const sliceData = this.getViewSlice(viewKey);
+
+    return new Response(JSON.stringify({
+      viewKey,
+      sliceData,
+      timestamp: new Date().toISOString(),
+      message: `Slice data for view ${viewKey}`
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+
+  private async handleGetViews(request: Request, url: URL): Promise<Response> {
+    return handleGetViewsUtil(this.configs);
   }
 
   protected getCurrentTestResults(): AllTestResults {

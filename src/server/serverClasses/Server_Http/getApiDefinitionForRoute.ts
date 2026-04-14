@@ -1,11 +1,11 @@
 
-import { vscodeHttpAPI } from "../../../api/vscodeExtensionHttp";
+import { API } from "../../../api";
 import { extractRouteNameFromPath } from "./extractRouteNameFromPath";
 
 // Helper function to get API definition for a route, optionally filtering by method
 export const getApiDefinitionForRoute = (routeName: string, method?: string): any => {
   // Check if routeName matches any API definition path
-  for (const [key, definition] of Object.entries(vscodeHttpAPI)) {
+  for (const [key, definition] of Object.entries(API)) {
     const apiDef = definition as any;
     const apiRouteName = extractRouteNameFromPath(apiDef.path);
     if (apiRouteName === routeName) {

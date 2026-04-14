@@ -1,4 +1,4 @@
-import type { ITesterantoConfig, IBaseTestConfig } from "../../Types";
+import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
 import { normalizeConfigsUtil } from "./utils/configNormalizationUtils";
 
@@ -16,7 +16,8 @@ export abstract class Server_Base {
   }
 
   async stop() {
-    process.exit()
+    // Base class does nothing - derived classes should override
+    // to perform proper cleanup
   }
 
 }

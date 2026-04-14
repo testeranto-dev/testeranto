@@ -136,28 +136,43 @@ console.warn = (...args) => {
   originalConsoleWarn.apply(console, args);
 };
 
+// Global variables for signal handlers
+let globalIsDevMode = false;
+let globalCtx: any = undefined;
+
 // Handle process exit to close log stream
 process.on('exit', () => {
   console.log('[NODE BUILDER] Process exiting');
   logStream.end();
 });
-process.on('SIGINT', async () => {
-  console.log('[NODE BUILDER] Received SIGINT - producing output artifacts');
-  await produceOutputArtifacts(projectConfigs, testName);
-  logStream.end();
-  process.exit(0);
-});
-process.on('SIGTERM', async () => {
-  console.log('[NODE BUILDER] Received SIGTERM - producing output artifacts');
+
+// Signal handler function
+async function handleShutdownSignal(signal: string) {
+  console.log(`[NODE BUILDER] Received ${signal} - producing output artifacts`);
+  
   // If we have a context in dev mode, dispose it first
-  if (isDevMode && typeof ctx !== 'undefined') {
+  if (globalIsDevMode && globalCtx !== undefined) {
     console.log('[NODE BUILDER] Disposing esbuild context');
-    await ctx.dispose();
+    try {
+      await globalCtx.dispose();
+    } catch (error) {
+      console.error('[NODE BUILDER] Error disposing context:', error);
+    }
   }
-  await produceOutputArtifacts(projectConfigs, testName);
+  
+  try {
+    await produceOutputArtifacts();
+  } catch (error) {
+    console.error('[NODE BUILDER] Error producing output artifacts:', error);
+  }
+  
   logStream.end();
   process.exit(0);
-});
+}
+
+process.on('SIGINT', () => handleShutdownSignal('SIGINT'));
+process.on('SIGTERM', () => handleShutdownSignal('SIGTERM'));
+
 process.on('uncaughtException', (error) => {
   console.error('[NODE BUILDER] Uncaught exception:', error);
   logStream.end();
@@ -269,13 +284,13 @@ async function startBundling(
   const n = nodeConfiger(nodeConfigs, testName, projectConfig, entryPoints);
 
   // Check if we're in dev mode (the server passes mode through environment)
-  const isDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
+  globalIsDevMode = process.env.MODE === 'dev' || process.argv.includes('dev');
 
-  if (isDevMode) {
+  if (globalIsDevMode) {
     console.log(`[NODE BUILDER] Running in dev mode - starting watch mode`);
 
     // Create a build context for watch mode with onEnd plugin
-    const ctx = await esbuild.context({
+    globalCtx = await esbuild.context({
       ...n,
       plugins: [
         ...(n.plugins || []),
@@ -310,7 +325,7 @@ async function startBundling(
     });
 
     // Build once initially
-    const buildResult = await ctx.rebuild();
+    const buildResult = await globalCtx.rebuild();
     if (buildResult.metafile) {
       await processMetafile(
         projectConfig,
@@ -322,21 +337,9 @@ async function startBundling(
     }
 
     // Start watching for changes
-    await ctx.watch();
+    await globalCtx.watch();
 
     console.log(`[NODE BUILDER] Watch mode active - waiting for file changes...`);
-
-    // Keep the process alive
-    process.on('SIGINT', async () => {
-      console.log("[NODE BUILDER] Shutting down...");
-      await ctx.dispose();
-      process.exit(0);
-    });
-
-    // Note: esbuild context doesn't have an 'on' method for rebuild events
-    // We'll handle rebuilds through the onEnd plugin instead
-    console.log(`[NODE BUILDER] Using onEnd plugin for rebuild detection`);
-
 
     // Keep the process alive indefinitely in dev mode
     // This is important for the container to stay running
@@ -385,38 +388,8 @@ async function main() {
       ]
     };
 
-    // Set up signal handlers
-    const setupSignalHandlers = () => {
-      process.on("SIGINT", async () => {
-        console.log("[NODE BUILDER] Received SIGINT - producing output artifacts");
-        await produceOutputArtifacts();
-        logStream.end();
-        process.exit(0);
-      });
-
-      process.on("SIGTERM", async () => {
-        console.log("[NODE BUILDER] Received SIGTERM - producing output artifacts");
-        // If we have a context in dev mode, dispose it first
-        if (isDevMode && typeof ctx !== 'undefined') {
-          console.log('[NODE BUILDER] Disposing esbuild context');
-          await ctx.dispose();
-        }
-        await produceOutputArtifacts();
-        logStream.end();
-        process.exit(0);
-      });
-
-      process.on("uncaughtException", (error) => {
-        console.error("[NODE BUILDER] Uncaught exception:", error);
-        logStream.end();
-        // Try to produce output artifacts even on uncaught exception
-        produceOutputArtifacts().finally(() => {
-          process.exit(1);
-        });
-      });
-    };
-
-    setupSignalHandlers();
+    // Signal handlers are already set up globally
+    // No need to set them up again
 
     // Create a dummy project config since it's not used
     const dummyProjectConfig = {} as ITesterantoConfig;

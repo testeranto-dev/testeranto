@@ -1,4 +1,4 @@
-Each test produces a stardard results file:
+Each test produces a standard results file:
 
 Example:
 

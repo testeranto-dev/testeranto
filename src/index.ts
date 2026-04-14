@@ -3,31 +3,18 @@ import pkg from "../package.json";
 const version = pkg.version;
 
 import readline from "readline";
-import { Server } from "./server/serverClasses/Server.ts";
+import { Server_Static } from "./server/serverClasses/Server_Static";
 import { join } from "path";
 import fs from "fs/promises";
 
-// import stakeholderTsx from "./stakeholderAppIDK/index.tsx" with { type: "text" };
-
 const init = async () => {
-
   console.log("initializing the testeranto folder");
-
   const testerantoDir = join(process.cwd(), "testeranto");
   const bundlesDir = join(testerantoDir, "bundles");
   const reportsDir = join(testerantoDir, "reports");
-
-  // Create directories (mkdir with recursive: true doesn't error if they exist)
   await fs.mkdir(testerantoDir, { recursive: true });
   await fs.mkdir(bundlesDir, { recursive: true });
   await fs.mkdir(reportsDir, { recursive: true });
-
-  // Copy stakeholder index.tsx if it doesn't exist
-  // const stakeholderIndexPath = join(reportsDir, "index.tsx");
-
-  // console.log(stakeholderIndexPath, stakeholderTsx);
-  // await fs.writeFile(stakeholderIndexPath, stakeholderTsx);
-
 }
 
 const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
@@ -52,7 +39,7 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
   }
 
   const config = (await import(process.cwd() + '/testeranto/testeranto.ts')).default;
-  const server = new Server(config, mode);
+  const server = new Server_Static(config, mode);
 
   readline.emitKeypressEvents(process.stdin);
   if (process.stdin.isTTY) process.stdin.setRawMode(true);
@@ -82,33 +69,9 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
     process.exit(1);
   });
 
-  // In once mode, we don't need to keep the process alive indefinitely
-  // The server will handle shutting down when tests are complete
+
   if (mode === 'once') {
-    // The server will exit the process when done
-    // Just keep the process alive until then
-    // We'll set up a timeout to force exit after a long time (30 minutes) just in case
-    const forceExitTimeout = setTimeout(() => {
-      console.error('Force exiting after 30 minutes');
-      process.exit(1);
-    }, 30 * 60 * 1000);
-
-    // Clear the timeout if the process exits normally
-    process.on('exit', () => {
-      clearTimeout(forceExitTimeout);
-    });
+    // In once mode, the server will handle its own lifecycle
+    // No need for timeouts or forced exits
   }
-
-  // TEMPORARY BUT DO NOT DELETE 
-  // top level unhandled promise rejections to prevent crashes
-  /////////////////////////////////////////////////////////////////////////////////
-  process.on('unhandledRejection', (reason, promise) => {
-    console.error('[Server] Unhandled Rejection at:', promise, 'reason:', reason);
-    // Don't exit the process
-  });
-  process.on('uncaughtException', (error) => {
-    console.error('[Server] Uncaught Exception:', error);
-    // Don't exit the process
-  });
-  /////////////////////////////////////////////////////////////////////////////////
 })();
