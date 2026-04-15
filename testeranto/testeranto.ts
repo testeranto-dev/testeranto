@@ -4,35 +4,43 @@ import { GanttSlicer } from "../src/views/defaultViews/Gantt";
 import { KanbanSlicer } from "../src/views/defaultViews/KanbanBoard";
 import { ChatSlicer } from "../src/views/defaultViews/Chat";
 import { DebugGraphSlicer } from "../src/views/defaultViews/DebugGraph";
+import { HomeSlicer } from "../src/views/defaultViews/Home";
 
 export const golangciLintCommand = (files: string[]): string => {
   // Simple implementation - just run on all Go files
   return "golangci-lint run ./... --timeout=5m --issues-exit-code=0";
 };
 
+
+const m = (n: string) => `You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "prodirek", "content": "Hello from ${n}!"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/${n}`
+
 const config: ITesterantoConfig = {
 
   views: {
-    // Kanban: {
-    //   slicer: KanbanSlicer,
-    //   filePath: 'src/views/defaultViews/KanbanBoardView.tsx'
-    // },
-    // EisenhowerMatrix: {
-    //   slicer: EisenhowerMatrixSlicer,
-    //   filePath: 'src/views/defaultViews/EisenhowerMatrixView.tsx'
-    // },
-    // Gantt: {
-    //   slicer: GanttSlicer,
-    //   filePath: 'src/views/defaultViews/GanttView.tsx'
-    // },
+    Home: {
+      slicer: HomeSlicer,
+      filePath: 'src/views/defaultViews/HomeView.tsx'
+    },
+    Kanban: {
+      slicer: KanbanSlicer,
+      filePath: 'src/views/defaultViews/KanbanBoardView.tsx'
+    },
+    EisenhowerMatrix: {
+      slicer: EisenhowerMatrixSlicer,
+      filePath: 'src/views/defaultViews/EisenhowerMatrixView.tsx'
+    },
+    Gantt: {
+      slicer: GanttSlicer,
+      filePath: 'src/views/defaultViews/GanttView.tsx'
+    },
     Chat: {
       slicer: ChatSlicer,
       filePath: 'src/views/defaultViews/ChatView.tsx'
     },
-    // DebugGraph: {
-    //   slicer: DebugGraphSlicer,
-    //   filePath: 'src/views/defaultViews/DebugGraphView.tsx'
-    // },
+    DebugGraph: {
+      slicer: DebugGraphSlicer,
+      filePath: 'src/views/defaultViews/DebugGraphView.tsx'
+    },
   },
 
   agents: {
@@ -41,7 +49,7 @@ const config: ITesterantoConfig = {
         `/read SOUL.md`,
         `/read testeranto/slices/agents/prodirek.json`
       ],
-      message: `Your name is "Prodirek". You are a Product Manager. Your responsibilities are: Groom and features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- you job is groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "prodirek", "content": "Hello from Prodirek!"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/prodirek`,
+      message: `Your name is "prodirek". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. ` + m,
 
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
@@ -118,154 +126,82 @@ const config: ITesterantoConfig = {
       }
     },
 
-    // 'arko': {
-    //   load: [
-    //     `/read SOUL.md`,
-    //     `/read chat_slice.json`
-    //   ],
-    //   message: `Your name is "Arko". You are a Software Architect. Your responsibilities are: 1) You will be give a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the speciations and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get your started. You should limit yourself to the files given to you. Do not add any more files to your context.`,
-    //   sliceFunction: (graphManager: any) => {
-    //     const graphData = graphManager.getGraphData();
-    //     const allNodes = graphData.nodes;
+    'arko': {
+      load: [
+        `/read SOUL.md`,
+        `/read chat_slice.json`
+      ],
+      message: `Your name is "arko". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. ` + m,
+      sliceFunction: (graphManager: any) => {
+        const graphData = graphManager.getGraphData();
+        const allNodes = graphData.nodes;
 
-    //     // Collect minimal data for architecture
-    //     const configs = allNodes
-    //       .filter((node: any) => node.type === 'config')
-    //       .map((node: any) => ({
-    //         id: node.id,
-    //         label: node.label,
-    //         key: node.metadata?.configKey,
-    //         runtime: node.metadata?.runtime
-    //       }));
+        // Collect minimal data for architecture
+        const configs = allNodes
+          .filter((node: any) => node.type === 'config')
+          .map((node: any) => ({
+            id: node.id,
+            label: node.label,
+            key: node.metadata?.configKey,
+            runtime: node.metadata?.runtime
+          }));
 
-    //     const entrypoints = allNodes
-    //       .filter((node: any) => node.type === 'entrypoint')
-    //       .map((node: any) => ({
-    //         id: node.id,
-    //         label: node.label,
-    //         testName: node.metadata?.testName,
-    //         configKey: node.metadata?.configKey,
-    //         runtime: node.metadata?.runtime
-    //       }));
+        const entrypoints = allNodes
+          .filter((node: any) => node.type === 'entrypoint')
+          .map((node: any) => ({
+            id: node.id,
+            label: node.label,
+            testName: node.metadata?.testName,
+            configKey: node.metadata?.configKey,
+            runtime: node.metadata?.runtime
+          }));
 
-    //     const chatMessages = allNodes
-    //       .filter((node: any) =>
-    //         node.type &&
-    //         typeof node.type === 'object' &&
-    //         node.type.category === 'chat' &&
-    //         node.type.type === 'chat_message'
-    //       )
-    //       .map((node: any) => ({
-    //         id: node.id,
-    //         agentName: node.agentName || node.metadata?.agentName,
-    //         content: node.content || node.metadata?.content,
-    //         timestamp: node.timestamp || node.metadata?.timestamp,
-    //         preview: (node.content || node.metadata?.content) ?
-    //           (node.content || node.metadata?.content).substring(0, 100) +
-    //           ((node.content || node.metadata?.content).length > 100 ? '...' : '') :
-    //           undefined
-    //       }));
+        const chatMessages = allNodes
+          .filter((node: any) =>
+            node.type &&
+            typeof node.type === 'object' &&
+            node.type.category === 'chat' &&
+            node.type.type === 'chat_message'
+          )
+          .map((node: any) => ({
+            id: node.id,
+            agentName: node.agentName || node.metadata?.agentName,
+            content: node.content || node.metadata?.content,
+            timestamp: node.timestamp || node.metadata?.timestamp,
+            preview: (node.content || node.metadata?.content) ?
+              (node.content || node.metadata?.content).substring(0, 100) +
+              ((node.content || node.metadata?.content).length > 100 ? '...' : '') :
+              undefined
+          }));
 
-    //     const agents = allNodes
-    //       .filter((node: any) => node.type === 'agent')
-    //       .map((node: any) => ({
-    //         id: node.id,
-    //         name: node.agentName,
-    //         label: node.label,
-    //         role: 'agent'
-    //       }));
+        const agents = allNodes
+          .filter((node: any) => node.type === 'agent')
+          .map((node: any) => ({
+            id: node.id,
+            name: node.agentName,
+            label: node.label,
+            role: 'agent'
+          }));
 
-    //     return {
-    //       viewType: 'agent',
-    //       agentName: 'arko',
-    //       timestamp: new Date().toISOString(),
-    //       data: {
-    //         configs,
-    //         entrypoints,
-    //         chatMessages,
-    //         agents,
-    //         summary: {
-    //           totalConfigs: configs.length,
-    //           totalEntrypoints: entrypoints.length,
-    //           totalChatMessages: chatMessages.length,
-    //           totalAgents: agents.length
-    //         }
-    //       }
-    //     };
-    //   }
-    // },
-    // 'juna': {
-    //   markdownFile: './testeranto/agents/juna.md',
-    //   sliceFunction: (graphManager: any) => {
-    //     const graphData = graphManager.getGraphData();
-    //     const allNodes = graphData.nodes;
-    //     const allEdges = graphData.edges;
-
-    //     const juniorNodes = allNodes.filter((node: any) =>
-    //       node.type === 'test' ||
-    //       node.type === 'file'
-    //     );
-
-    //     const juniorEdges = allEdges.filter((edge: any) =>
-    //       juniorNodes.some((n: any) => n.id === edge.source) &&
-    //       juniorNodes.some((n: any) => n.id === edge.target)
-    //     );
-
-    //     return {
-    //       nodes: juniorNodes,
-    //       edges: juniorEdges
-    //     };
-    //   }
-    // },
-
-    // 'sipestro': {
-    //   markdownFile: './testeranto/agents/sipestro.md',
-    //   sliceFunction: (graphManager: any) => {
-    //     // TODO update this
-    //     const graphData = graphManager.getGraphData();
-    //     const allNodes = graphData.nodes;
-    //     const allEdges = graphData.edges;
-
-    //     const juniorNodes = allNodes.filter((node: any) =>
-    //       node.type === 'test' ||
-    //       node.type === 'file'
-    //     );
-
-    //     const juniorEdges = allEdges.filter((edge: any) =>
-    //       juniorNodes.some((n: any) => n.id === edge.source) &&
-    //       juniorNodes.some((n: any) => n.id === edge.target)
-    //     );
-
-    //     return {
-    //       nodes: juniorNodes,
-    //       edges: juniorEdges
-    //     };
-    //   }
-    // },
-    // 'cefo': {
-    //   markdownFile: './testeranto/agents/cefo.md',
-    //   sliceFunction: (graphManager: any) => {
-    //     // TODO update this
-    //     const graphData = graphManager.getGraphData();
-    //     const allNodes = graphData.nodes;
-    //     const allEdges = graphData.edges;
-
-    //     const nodes = allNodes.filter((node: any) =>
-    //       node.type === 'test' ||
-    //       node.type === 'file'
-    //     );
-
-    //     const edges = allEdges.filter((edge: any) =>
-    //       nodes.some((n: any) => n.id === edge.source) &&
-    //       nodes.some((n: any) => n.id === edge.target)
-    //     );
-
-    //     return {
-    //       nodes: edges,
-    //       edges: edges
-    //     };
-    //   }
-    // }
+        return {
+          viewType: 'agent',
+          agentName: 'arko',
+          timestamp: new Date().toISOString(),
+          data: {
+            configs,
+            entrypoints,
+            chatMessages,
+            agents,
+            summary: {
+              totalConfigs: configs.length,
+              totalEntrypoints: entrypoints.length,
+              totalChatMessages: chatMessages.length,
+              totalAgents: agents.length
+            }
+          }
+        };
+      }
+    },
   },
 
   volumes: [
@@ -297,16 +233,16 @@ const config: ITesterantoConfig = {
     nodetests: {
       runtime: "node",
       tests: [
-        // "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-        // "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
         "src/lib/tiposkripto/tests/circle/Circle.test.ts",
         "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
         "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-        // "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-        // "src/vscode/providers/logic/FileTreeLogic.test.ts",
-        // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-        // "src/vscode/providers/utils/testTree/debugTest.js",
-        // "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+        "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        "src/vscode/providers/logic/FileTreeLogic.test.ts",
+        "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+        "src/vscode/providers/utils/testTree/debugTest.js",
+        "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       ],
       checks: [
         (x) => `yarn eslint ${x.join(" ")} `,
@@ -389,48 +325,48 @@ const config: ITesterantoConfig = {
 
 
 
-    // webtests: {
-    //   runtime: "web",
-    //   tests: [
-    //     // "src/ts/Calculator.test.web.ts",
-    //     // "src/ts/Calculator.test.web.react.ts",
-    //     // We could add a standard web test framework like Vitest here
-    //   ],
-    //   checks: [
-    //     (x) => `yarn eslint ${x.join(" ")} `,
-    //     (x) => `yarn tsc --noEmit ${x.join(" ")}`,
-    //   ],
-    //   dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
-    //   buildOptions: `testeranto/runtimes/web/web.ts`,
-    //   buildKitOptions: {
-    //     // Single-stage Dockerfile, no targetStage needed
-    //   },
-    //   outputs: [],
-    // },
+    webtests: {
+      runtime: "web",
+      tests: [
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        // We could add a standard web test framework like Vitest here
+      ],
+      checks: [
+        (x) => `yarn eslint ${x.join(" ")} `,
+        (x) => `yarn tsc --noEmit ${x.join(" ")}`,
+      ],
+      dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
+      buildOptions: `testeranto/runtimes/web/web.ts`,
+      buildKitOptions: {
+        // Single-stage Dockerfile, no targetStage needed
+      },
+      outputs: [],
+    },
 
-    // pythontests: {
-    //   runtime: "python",
-    //   tests: [
-    //     // "src/lib/pitono/examples/calculator_test.py",
-    //   ],
-    //   checks: [
-    //     // Python syntax check
-    //     (x) => `python -m py_compile ${x.join(" ")}`,
-    //     // Run the calculator test
-    //     (x) => `cd src/lib/pitono/examples && python calculator_test.py`,
-    //     // Run unittest tests (if any)
-    //     (x) =>
-    //       `python -m unittest ${x.filter((f) => f.includes("unittest.test")).join(" ")}`,
-    //   ],
-    //   dockerfile: `testeranto/runtimes/python/python.Dockerfile`,
-    //   buildOptions: `testeranto/runtimes/python/python.py`,
-    //   buildKitOptions: {
-    //     // Single-stage Dockerfile, no targetStage needed
-    //   },
-    //   outputs: [
-    //     "testeranto/reports/pythontests"
-    //   ],
-    // },
+    pythontests: {
+      runtime: "python",
+      tests: [
+        "src/lib/pitono/examples/calculator_test.py",
+      ],
+      checks: [
+        // Python syntax check
+        (x) => `python -m py_compile ${x.join(" ")}`,
+        // Run the calculator test
+        (x) => `cd src/lib/pitono/examples && python calculator_test.py`,
+        // Run unittest tests (if any)
+        (x) =>
+          `python -m unittest ${x.filter((f) => f.includes("unittest.test")).join(" ")}`,
+      ],
+      dockerfile: `testeranto/runtimes/python/python.Dockerfile`,
+      buildOptions: `testeranto/runtimes/python/python.py`,
+      buildKitOptions: {
+        // Single-stage Dockerfile, no targetStage needed
+      },
+      outputs: [
+        "testeranto/reports/pythontests"
+      ],
+    },
 
     // golangtests: {
     //   runtime: "golang",

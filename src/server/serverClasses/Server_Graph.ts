@@ -50,6 +50,7 @@ export class Server_Graph extends Server_Base {
     this.addRuntimeNodesFromConfig();
     this.generateEdges();
     this.writeViewSliceFiles();
+    this.updateAllAgentSliceFiles();
   }
 
   private initializeGraph(): string {
@@ -99,35 +100,51 @@ export class Server_Graph extends Server_Base {
   }
 
   public applyUpdate(update: GraphUpdate): GraphData {
-    return applyUpdateUtil(
+    const result = applyUpdateUtil(
       update,
       this.graph,
       () => this.serializeToMarkdown()
     );
+    // Save graph data and slice files after every update
+    this.saveGraph();
+    this.writeViewSliceFiles();
+    this.updateAllAgentSliceFiles();
+    
+    // Notify that the graph has been updated
+    this.resourceChanged('/~/graph');
+    
+    return result;
   }
 
   public async updateFromTestResults(testResults: any): Promise<GraphUpdate> {
-    return updateFromTestResultsPure(
+    const update = await updateFromTestResultsPure(
       testResults,
       this.graph,
       this.projectRoot,
       this.featureIngestor,
       this.configs
     );
+    // Apply the update to ensure view slices are regenerated
+    this.applyUpdate(update);
+    return update;
   }
 
   public cleanupAttributeNodes(): GraphUpdate {
     const timestamp = new Date().toISOString();
     const graphData = this.getGraphData();
     const operations = cleanupAttributeNodesPure(graphData, timestamp);
-    return { operations, timestamp };
+    const update = { operations, timestamp };
+    this.applyUpdate(update);
+    return update;
   }
 
   public generateEdges(): GraphUpdate {
     const timestamp = new Date().toISOString();
     const graphData = this.getGraphData();
     const operations = generateEdgesPure(graphData, this.configs, timestamp, this.projectRoot);
-    return { operations, timestamp };
+    const update = { operations, timestamp };
+    this.applyUpdate(update);
+    return update;
   }
 
   public getGraphStats(): { nodes: number; edges: number; nodeTypes: Record<string, number>; edgeTypes: Record<string, number> } {
@@ -196,7 +213,7 @@ export class Server_Graph extends Server_Base {
   }
 
   async resetGraphData(): Promise<any> {
-    await this.writeViewSliceFiles();
+    this.writeViewSliceFiles();
     const graphData = this.getGraphData();
     return {
       unifiedGraph: graphData,
@@ -204,13 +221,11 @@ export class Server_Graph extends Server_Base {
     };
   }
 
-  async writeViewSliceFiles(): Promise<void> {
-    // This method should write view slice files to disk
-    // For now, we'll implement a basic version
+  writeViewSliceFiles(): void {
     const views = this.configs.views;
     if (!views) return;
 
-    for (const [viewKey, _] of Object.entries(views)) {
+    for (const [viewKey, viewConfig] of Object.entries(views)) {
       const sliceData = this.getViewSlice(viewKey);
       const slicePath = this.getSliceFilePath(viewKey);
       const dir = path.dirname(slicePath);
@@ -220,7 +235,17 @@ export class Server_Graph extends Server_Base {
       }
       
       fs.writeFileSync(slicePath, JSON.stringify(sliceData, null, 2), 'utf-8');
+      
+      // Notify that this view slice has been updated
+      this.resourceChanged(`/~/views/${viewKey}/slice`);
     }
+    
+    // Also notify that all views have been updated
+    this.resourceChanged('/~/views');
+  }
+
+  public updateAllViewSlices(): void {
+    this.writeViewSliceFiles();
   }
 
   public getSliceFilePath(viewKey: string): string {
@@ -251,7 +276,7 @@ export class Server_Graph extends Server_Base {
   }
 
   async saveCurrentGraph(): Promise<void> {
-    await this.writeViewSliceFiles();
+    this.writeViewSliceFiles();
     this.updateAllAgentSliceFiles();
   }
 
@@ -294,6 +319,10 @@ export class Server_Graph extends Server_Base {
       fs.mkdirSync(dir, { recursive: true });
     }
     fs.writeFileSync(agentSliceFilePath, JSON.stringify(sliceData, null, 2), 'utf-8');
+    
+    // Notify about agent slice update
+    this.resourceChanged(`/~/agents/${agentName}`);
+    
     return sliceData;
   }
 
@@ -391,6 +420,9 @@ export class Server_Graph extends Server_Base {
 
     fs.writeFileSync(this.graphDataPath, JSON.stringify(graphDataFile, null, 2), 'utf-8');
     this.emitGraphSaved();
+    
+    // Notify about graph update for all clients
+    this.resourceChanged('/~/graph');
   }
 
   getViewNodes(): any[] {
@@ -403,12 +435,28 @@ export class Server_Graph extends Server_Base {
     return graphData.nodes.find((node: any) => node.id === `view:${viewKey}`);
   }
 
-  getViewSlice(viewKey: string): {
-    nodes: any[],
-    edges: any[]
-  } {
+  getViewSlice(viewKey: string): any {
     const graphData = this.getGraphData();
-    return getViewSlicePure(graphData, viewKey);
+    const viewConfig = this.configs.views?.[viewKey];
+    
+    if (!viewConfig) {
+      // Fallback to raw graph data
+      return {
+        nodes: graphData.nodes,
+        edges: graphData.edges || []
+      };
+    }
+    
+    // Use the slicer function if available
+    if (viewConfig.slicer && typeof viewConfig.slicer === 'function') {
+      return viewConfig.slicer(graphData);
+    }
+    
+    // Otherwise, fallback to raw graph data
+    return {
+      nodes: graphData.nodes,
+      edges: graphData.edges || []
+    };
   }
 
   getProcessNodes(): any[] {

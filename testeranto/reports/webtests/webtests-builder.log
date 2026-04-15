@@ -1,0 +1,94 @@
+=== Log started at 2026-04-15T01:26:04.945Z for service webtests-builder (runtime: web) ===
+=== Container ID: 71110de9259a05e86f7083ad40b0130077e3b4cfc4901efaec1c3c79b33fbc7f ===
+=== Test: N/A ===
+=== Config Key: webtests ===
+
+=== ALL LOGS (stdout + stderr) ===
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.242.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsx /workspace/testeranto/web_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/web/web.ts '{"name":"webtests","tests":["src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts","src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"],"outputs":[]}'
+[WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[WEB BUILDER] testName:  webtests
+[WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[WEB BUILDER] CWD: /workspace
+[WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[WEB BUILDER] Web config loaded successfully: [ 'loaders', 'external', 'define' ]
+[WEB BUILDER] is now bundling: webtests
+[WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[WEB BUILDER] Running in dev mode - starting watch mode
+▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
+
+    package.json:222:6:
+      222 │       "types": "./src/CoreTypes.d.ts"
+          ╵       ~~~~~~~
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:220:6:
+      220 │       "import": "./src/CoreTypes.ts",
+          ╵       ~~~~~~~~
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+
+    package.json:221:6:
+      221 │       "require": "./src/CoreTypes.ts",
+          ╵       ~~~~~~~~~
+
+▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
+
+    src/lib/tiposkripto/tests/calculator/Calculator.ts:10:21:
+      10 │       const result = eval(this.display);
+         ╵                      ~~~~
+
+  You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
+
+web > build ended with 0 errors
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER] Metafile updated
+[WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.6, port 8000, /workspace
+[WEB BUILDER] Watch mode active - waiting for file changes...
+[WEB BUILDER] Using onEnd plugin for rebuild detection
+Chrome is a separate service, not launched in builder
+▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
+
+    package.json:222:6:
+      222 │       "types": "./src/CoreTypes.d.ts"
+          ╵       ~~~~~~~
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:220:6:
+      220 │       "import": "./src/CoreTypes.ts",
+          ╵       ~~~~~~~~
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+
+    package.json:221:6:
+      221 │       "require": "./src/CoreTypes.ts",
+          ╵       ~~~~~~~~~
+
+▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
+
+    src/lib/tiposkripto/tests/calculator/Calculator.ts:10:21:
+      10 │       const result = eval(this.display);
+         ╵                      ~~~~
+
+  You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
+
+web > build ended with 0 errors
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[WEB BUILDER] Metafile updated
+[WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+
+=== Log captured at 2026-04-15T01:26:19.138Z (container status: running) ===

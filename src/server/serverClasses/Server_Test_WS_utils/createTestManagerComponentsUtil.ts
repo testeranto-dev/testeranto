@@ -1,4 +1,3 @@
-import { AiderMessageManager } from "../Server_Docker/AiderMessageManager";
 import { TestCompletionWaiter } from "../Server_Docker/TestCompletionWaiter";
 import { TestFileManager } from "../Server_Docker/TestFileManager";
 import { TestResultsCollector } from "../Server_Docker/TestResultsCollector";
@@ -15,7 +14,6 @@ export function createTestManagerComponentsUtil(
 ): {
   testFileManager: TestFileManager;
   testResultsCollector: TestResultsCollector;
-  aiderMessageManager: AiderMessageManager;
   testCompletionWaiter: TestCompletionWaiter;
   inputFiles: any;
   hashs: any;
@@ -36,16 +34,16 @@ export function createTestManagerComponentsUtil(
     testFileManager.outputFiles,
   );
 
-  const aiderMessageManager = new AiderMessageManager(
-    configs,
-    mode,
-    (configKey: string, testName: string) =>
-      testFileManager.getInputFilesForTest(configKey, testName),
-    (configKey: string, testName: string) =>
-      testFileManager.getOutputFilesForTest(configKey, testName),
-    consoleLog,
-    consoleError,
-  );
+  // const aiderMessageManager = new AiderMessageManager(
+  //   configs,
+  //   mode,
+  //   (configKey: string, testName: string) =>
+  //     testFileManager.getInputFilesForTest(configKey, testName),
+  //   (configKey: string, testName: string) =>
+  //     testFileManager.getOutputFilesForTest(configKey, testName),
+  //   consoleLog,
+  //   consoleError,
+  // );
 
   const testCompletionWaiter = new TestCompletionWaiter(
     consoleError,
@@ -56,7 +54,7 @@ export function createTestManagerComponentsUtil(
   return {
     testFileManager,
     testResultsCollector,
-    aiderMessageManager,
+    // aiderMessageManager,
     testCompletionWaiter,
     inputFiles,
     hashs,

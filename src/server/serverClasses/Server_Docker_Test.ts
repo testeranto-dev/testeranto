@@ -23,11 +23,11 @@ import { generateChecksUpdatesPure } from "./Server_Docker_Test_utils/generateCh
 import { informAiderDockerUtil } from "./Server_Docker_Test_utils/informAiderDockerUtil";
 import { getProcessLogsUtil } from "./Server_Docker_Test_utils/processLogsUtils";
 import { startServiceLoggingUtil } from "./Server_Docker_Test_utils/startServiceLoggingUtil";
-import { Server_Test_WS } from "./Server_Test_WS";
+import { Server_Aider } from "./Server_Aider";
 import { getProcessSummaryHelper } from "./Server_Test_WS_utils/testManagerHelpers";
 import { launchBddTestUtil } from "./Server_Test_WS_utils/launchBddTestUtil";
 
-export abstract class Server_Docker_Test extends Server_Test_WS {
+export abstract class Server_Docker_Test extends Server_Aider {
   protected logProcesses: Map<string, { process: any; serviceName: string }> = new Map();
   protected builderServicesManager: BuilderServicesManager;
   protected aiderImageBuilder: AiderImageBuilder;

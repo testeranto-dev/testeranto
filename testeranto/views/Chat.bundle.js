@@ -12787,9 +12787,14 @@
         loading: true,
         error: null
       });
+      __publicField(this, "ws", null);
+      __publicField(this, "reconnectAttempts", 0);
+      __publicField(this, "maxReconnectAttempts", 5);
+      __publicField(this, "reconnectTimeout", null);
     }
     componentDidMount() {
       this.loadData();
+      this.connectWebSocket();
     }
     componentDidUpdate(prevProps) {
       if (prevProps.slicePath !== this.props.slicePath) {
@@ -12799,9 +12804,113 @@
         const currentViewName = extractViewName(this.props.slicePath);
         const updatedViewName = extractViewName(this.props.wsUpdate.path);
         if (updatedViewName === currentViewName) {
-          console.log(`[BaseViewClass] WebSocket update received for view: ${currentViewName}, reloading data`);
+          console.log(`[BaseViewClass] WebSocket update received via props for view: ${currentViewName}, reloading data`);
           this.loadData();
         }
+      }
+    }
+    componentWillUnmount() {
+      this.disconnectWebSocket();
+    }
+    connectWebSocket() {
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = `${protocol}//${window.location.host}`;
+      console.log(`[BaseViewClass] Attempting to connect WebSocket for view ${extractViewName(this.props.slicePath)} to ${wsUrl}`);
+      try {
+        this.ws = new WebSocket(wsUrl);
+        this.ws.onopen = () => {
+          const viewName = extractViewName(this.props.slicePath);
+          console.log(`[BaseViewClass] WebSocket connected for view: ${viewName}`);
+          this.reconnectAttempts = 0;
+          const subscribeMessage = {
+            type: "subscribeToSlice",
+            slicePath: `/~/views/${viewName}/slice`
+          };
+          console.log(`[BaseViewClass] Sending subscribe message:`, subscribeMessage);
+          this.ws?.send(JSON.stringify(subscribeMessage));
+        };
+        this.ws.onmessage = (event) => {
+          try {
+            const message = JSON.parse(event.data);
+            this.handleWebSocketMessage(message);
+          } catch (error) {
+            console.error("[BaseViewClass] Error parsing WebSocket message:", error);
+          }
+        };
+        this.ws.onclose = (event) => {
+          console.log(`[BaseViewClass] WebSocket disconnected for view: ${extractViewName(this.props.slicePath)}`, event.code, event.reason);
+          if (event.code !== 1e3 && this.reconnectAttempts < this.maxReconnectAttempts) {
+            this.reconnectAttempts++;
+            const delay = Math.min(1e3 * Math.pow(2, this.reconnectAttempts), 3e4);
+            console.log(`[BaseViewClass] Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+            this.reconnectTimeout = setTimeout(() => {
+              this.connectWebSocket();
+            }, delay);
+          }
+        };
+        this.ws.onerror = (error) => {
+          const viewName = extractViewName(this.props.slicePath);
+          console.error(`[BaseViewClass] WebSocket error for view ${viewName}:`, error);
+          console.error(`[BaseViewClass] WebSocket readyState: ${this.ws?.readyState}`);
+        };
+      } catch (error) {
+        console.error("[BaseViewClass] Failed to create WebSocket connection:", error);
+      }
+    }
+    disconnectWebSocket() {
+      if (this.reconnectTimeout) {
+        clearTimeout(this.reconnectTimeout);
+        this.reconnectTimeout = null;
+      }
+      if (this.ws) {
+        const viewName = extractViewName(this.props.slicePath);
+        const unsubscribeMessage = {
+          type: "unsubscribeFromSlice",
+          slicePath: `/~/views/${viewName}/slice`
+        };
+        try {
+          this.ws.send(JSON.stringify(unsubscribeMessage));
+        } catch (error) {
+        }
+        this.ws.close();
+        this.ws = null;
+      }
+    }
+    handleWebSocketMessage(message) {
+      const viewName = extractViewName(this.props.slicePath);
+      console.log(`[BaseViewClass] WebSocket message received for view ${viewName}:`, {
+        type: message.type,
+        url: message.url,
+        slicePath: message.slicePath,
+        timestamp: message.timestamp
+      });
+      switch (message.type) {
+        case "resourceChanged":
+          if (message.url && message.url.includes(`/~/views/${viewName}`)) {
+            console.log(`[BaseViewClass] Resource changed for view ${viewName}, reloading data`);
+            this.loadData();
+          } else if (message.url && message.url === "/~/graph") {
+            console.log(`[BaseViewClass] Graph resource changed, reloading data for view ${viewName}`);
+            this.loadData();
+          }
+          break;
+        case "graphUpdated":
+          console.log(`[BaseViewClass] Graph updated, reloading data for view ${viewName}`);
+          this.loadData();
+          break;
+        case "subscribedToSlice":
+          if (message.slicePath === `/~/views/${viewName}/slice`) {
+            console.log(`[BaseViewClass] Successfully subscribed to slice updates for view ${viewName}`);
+          }
+          break;
+        case "unsubscribedFromSlice":
+          if (message.slicePath === `/~/views/${viewName}/slice`) {
+            console.log(`[BaseViewClass] Unsubscribed from slice updates for view ${viewName}`);
+          }
+          break;
+        default:
+          console.log(`[BaseViewClass] Unhandled message type: ${message.type}`);
+          break;
       }
     }
     async loadData() {
@@ -12816,7 +12925,8 @@
         const staticFilePath = getSliceFilePath(viewName);
         const absolutePath = staticFilePath.startsWith("/") ? `${window.location.origin}${staticFilePath}` : staticFilePath;
         console.log(`[BaseViewClass] Loading slice data from: ${absolutePath} (view: ${viewName}, original: ${slicePath})`);
-        const response = await fetch(absolutePath);
+        const cacheBuster = `?_t=${Date.now()}`;
+        const response = await fetch(absolutePath + cacheBuster);
         if (!response.ok) {
           throw new Error(`Failed to load slice data from ${absolutePath}: ${response.status} ${response.statusText}`);
         }
@@ -12852,7 +12962,11 @@
             borderRadius: "3px",
             margin: "10px",
             wordBreak: "break-all"
-          }, children: this.props.slicePath })
+          }, children: this.props.slicePath }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+            "WebSocket: ",
+            this.ws?.readyState === WebSocket.OPEN ? "Connected" : "Connecting..."
+          ] })
         ] }) });
       }
       if (error) {
@@ -12876,7 +12990,28 @@
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Slice path:" }),
             " ",
             this.props.slicePath
-          ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "WebSocket status:" }),
+            " ",
+            this.ws?.readyState === WebSocket.OPEN ? "Connected" : "Disconnected"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "button",
+            {
+              onClick: () => this.loadData(),
+              style: {
+                padding: "8px 16px",
+                backgroundColor: "#d32f2f",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                marginTop: "10px"
+              },
+              children: "Retry Load"
+            }
+          )
         ] });
       }
       if (!data) {
@@ -12894,7 +13029,23 @@
           /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
             "Slice path: ",
             this.props.slicePath
-          ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "button",
+            {
+              onClick: () => this.loadData(),
+              style: {
+                padding: "8px 16px",
+                backgroundColor: "#ff9800",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                marginTop: "10px"
+              },
+              children: "Retry Load"
+            }
+          )
         ] });
       }
       return this.renderContent();

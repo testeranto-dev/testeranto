@@ -1,61 +1,45 @@
 {
-  "nodes": [
+  "messages": [
     {
-      "id": "view:Chat",
-      "type": "view",
-      "label": "Chat",
-      "description": "View: Chat",
-      "status": "done",
-      "icon": "eye",
+      "id": "chat_message:Arko:1776216551352",
+      "content": "Hello from Arko!",
+      "agentName": "Arko",
+      "timestamp": "2026-04-15T01:29:11.352Z",
       "metadata": {
-        "viewKey": "Chat",
-        "viewPath": "src/views/defaultViews/ChatView.tsx",
-        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
-        "timestamp": "2026-04-14T21:33:52.765Z"
+        "frontmatter": {
+          "title": "Chat from Arko",
+          "type": "chat_message",
+          "agent": "Arko"
+        }
       }
     },
     {
-      "id": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "type": "entrypoint",
-      "label": "Circle.test.ts",
-      "description": "Test entrypoint: src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "status": "todo",
-      "icon": "file-text",
+      "id": "chat_message:arko:1776216582554",
+      "content": "Hello from arko!",
+      "agentName": "arko",
+      "timestamp": "2026-04-15T01:29:42.554Z",
       "metadata": {
-        "configKey": "nodetests",
-        "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-        "runtime": "node",
-        "timestamp": "2026-04-14T21:33:52.765Z"
+        "frontmatter": {
+          "title": "Chat from arko",
+          "type": "chat_message",
+          "agent": "arko"
+        }
       }
     },
     {
-      "id": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "type": "entrypoint",
-      "label": "Rectangle.test.ts",
-      "description": "Test entrypoint: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "status": "todo",
-      "icon": "file-text",
+      "id": "chat_message:prodirek:1776216653653",
+      "content": "Your message here",
+      "agentName": "prodirek",
+      "timestamp": "2026-04-15T01:30:53.653Z",
       "metadata": {
-        "configKey": "nodetests",
-        "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-        "runtime": "node",
-        "timestamp": "2026-04-14T21:33:52.765Z"
-      }
-    },
-    {
-      "id": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-      "type": "entrypoint",
-      "label": "AiderProcessTreeDataProvider.test.ts",
-      "description": "Test entrypoint: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-      "status": "todo",
-      "icon": "file-text",
-      "metadata": {
-        "configKey": "nodetests",
-        "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-        "runtime": "node",
-        "timestamp": "2026-04-14T21:33:52.765Z"
+        "frontmatter": {
+          "title": "Chat from prodirek",
+          "type": "chat_message",
+          "agent": "prodirek"
+        }
       }
     }
   ],
-  "edges": []
+  "viewType": "chat",
+  "timestamp": "2026-04-15T01:30:53.657Z"
 }

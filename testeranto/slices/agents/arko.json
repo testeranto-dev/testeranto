@@ -1,0 +1,137 @@
+{
+  "viewType": "agent",
+  "agentName": "arko",
+  "timestamp": "2026-04-15T01:30:53.659Z",
+  "data": {
+    "configs": [
+      {
+        "id": "config:nodetests",
+        "label": "nodetests",
+        "key": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "config:webtests",
+        "label": "webtests",
+        "key": "webtests",
+        "runtime": "web"
+      },
+      {
+        "id": "config:pythontests",
+        "label": "pythontests",
+        "key": "pythontests",
+        "runtime": "python"
+      }
+    ],
+    "entrypoints": [
+      {
+        "id": "entrypoint:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "label": "index.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "label": "Calculator.test.node.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "label": "Circle.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "label": "Rectangle.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "label": "AiderProcessTreeDataProvider.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        "label": "Server_GraphManagerCore.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
+        "label": "FileTreeLogic.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+        "label": "treeFilter.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/vscode/providers/utils/testTree/debugTest.js",
+        "label": "debugTest.js",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+        "label": "fileOperations.ts.",
+        "configKey": "nodetests",
+        "runtime": "node"
+      },
+      {
+        "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "label": "Calculator.test.web.ts",
+        "configKey": "webtests",
+        "runtime": "web"
+      },
+      {
+        "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        "label": "Calculator.test.web.react.ts",
+        "configKey": "webtests",
+        "runtime": "web"
+      },
+      {
+        "id": "entrypoint:src/lib/pitono/examples/calculator_test.py",
+        "label": "calculator_test.py",
+        "configKey": "pythontests",
+        "runtime": "python"
+      }
+    ],
+    "chatMessages": [
+      {
+        "id": "chat_message:Arko:1776216551352",
+        "agentName": "Arko",
+        "content": "Hello from Arko!",
+        "timestamp": "2026-04-15T01:29:11.352Z",
+        "preview": "Hello from Arko!"
+      },
+      {
+        "id": "chat_message:arko:1776216582554",
+        "agentName": "arko",
+        "content": "Hello from arko!",
+        "timestamp": "2026-04-15T01:29:42.554Z",
+        "preview": "Hello from arko!"
+      },
+      {
+        "id": "chat_message:prodirek:1776216653653",
+        "agentName": "prodirek",
+        "content": "Your message here",
+        "timestamp": "2026-04-15T01:30:53.653Z",
+        "preview": "Your message here"
+      }
+    ],
+    "agents": [],
+    "summary": {
+      "totalConfigs": 3,
+      "totalEntrypoints": 13,
+      "totalChatMessages": 3,
+      "totalAgents": 0
+    }
+  }
+}

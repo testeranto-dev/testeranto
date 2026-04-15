@@ -18,6 +18,10 @@ export class Server_WS_HTTP extends Server_HTTP {
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
     this.wsManager = new WsManager();
+    
+    // Override the resourceChanged callback to broadcast to WebSocket clients
+    // Server_HTTP_Graph sets this in its constructor, but we need to override it
+    (this as any).resourceChanged = this.resourceChanged.bind(this);
   }
 
   async start(): Promise<void> {

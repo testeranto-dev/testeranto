@@ -30,7 +30,6 @@ export type ITesterantoConfig = {
   stakeholderReactModule?: string; // Path to custom React component module
 
   agents: Record<string, {
-    // markdownFile: string;
     load: string[],
     message: string,
     sliceFunction: (graphManager: any) => { nodes: any[]; edges: any[] };

@@ -1,7 +1,6 @@
 import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { AiderImageBuilder } from "./AiderImageBuilder";
-import { AiderMessageManager } from "./AiderMessageManager";
 import { BuilderServicesManager } from "./BuilderServicesManager";
 import { TestCompletionWaiter } from "./TestCompletionWaiter";
 import { TestFileManager } from "./TestFileManager";
@@ -25,17 +24,6 @@ export function setupServerDockerPure(
     testFileManager.outputFiles,
   );
 
-  const aiderMessageManager = new AiderMessageManager(
-    configs,
-    mode,
-    (configKey: string, testName: string) =>
-      testFileManager.getInputFilesForTest(configKey, testName),
-    (configKey: string, testName: string) =>
-      testFileManager.getOutputFilesForTest(configKey, testName),
-    consoleLog,
-    consoleError,
-  );
-
   const builderServicesManager = new BuilderServicesManager(
     configs,
     mode,
@@ -57,7 +45,6 @@ export function setupServerDockerPure(
   return {
     testFileManager,
     testResultsCollector,
-    aiderMessageManager,
     builderServicesManager,
     aiderImageBuilder,
     testCompletionWaiter

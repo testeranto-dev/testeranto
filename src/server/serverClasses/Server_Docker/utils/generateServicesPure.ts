@@ -159,30 +159,49 @@ export const generateServicesPure = (
   for (const [agentName, agentConfig] of Object.entries(agents)) {
     const agentServiceName = `agent-${agentName}`;
 
+    // Get the load commands and message from agent config
+    const loadCommands = agentConfig.load || [];
+    const message = agentConfig.message || '';
+
+    // Create the instruction file content
+    // First, process load commands (they should start with /read or /add)
+    const loadCommandsContent = loadCommands
+      .filter(cmd => cmd.trim().length > 0)
+      .join('\n');
+
+    // The message is separate and should be added after load commands
+    // Add a clear separator between load commands and the message
+    // const instructionContent = loadCommandsContent + 
+    //   (loadCommandsContent ? '\n\n# --- Agent Instructions ---\n\n' : '') + 
+    //   message;
+
     services[agentServiceName] = {
       image: 'testeranto-aider:latest',
       container_name: agentServiceName,
       volumes: [
         ...(configs.volumes || []),
         `${process.cwd()}:/workspace`,
-        `${process.cwd()}/testeranto/agents:/workspace/agents:ro`,
         `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
       ],
       working_dir: '/workspace',
       command: [
         'sh', '-c',
-        `# Create symlink for agent markdown file
-         if [ -f "/workspace/agents/${agentName}.md" ]; then
-           ln -sf "/workspace/agents/${agentName}.md" /workspace/agent.md
-           echo "Created symlink to agent markdown file at /workspace/agent.md"
-         else
-           echo "Agent markdown file not found at /workspace/agents/${agentName}.md"
-           touch /workspace/agent.md
-         fi
-         
-         # Start aider directly without the pipe
-         echo "Starting aider for agent ${agentName}"
-         aider /workspace/agent.md --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
+        `# Create agent instructions file from config
+         echo "Creating agent instructions for ${agentName}"
+           
+         # Create the instruction file with content from config
+        cat > /tmp/agent_load.txt << 'EOF'
+${loadCommandsContent}
+EOF
+   
+
+         # Create the instruction file with content from config
+        cat > /tmp/agent_message.txt << 'EOF'
+${message}
+EOF
+
+         echo "Starting aider for agent ${agentName} with instructions from config"
+         aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update /tmp/agent_message.txt 2>&1
          EXIT_CODE=$?
          echo "Aider exited with code $EXIT_CODE"
          # Exit with the same code (no restart)
@@ -191,7 +210,7 @@ export const generateServicesPure = (
       environment: {
         MODE: mode,
         NODE_ENV: 'production',
-        AGENT_MARKDOWN_FILE: `/workspace/agents/${agentName}.md`,
+        AGENT_NAME: agentName,
         EDITOR: 'vim',
       },
       restart: 'no',

@@ -14,7 +14,7 @@ import { addProcessNodeUtil } from "./Server_Test_WS_utils/addProcessNodeUtil";
 export abstract class Server_Test_WS extends Server_WS_HTTP {
   protected testFileManager: any;
   protected testResultsCollector: any;
-  protected aiderMessageManager: any;
+  // aiderMessageManager is deprecated
   protected testCompletionWaiter: any;
   protected inputFiles: any;
   protected hashs: any;
@@ -39,7 +39,7 @@ export abstract class Server_Test_WS extends Server_WS_HTTP {
 
     this.testFileManager = components.testFileManager;
     this.testResultsCollector = components.testResultsCollector;
-    this.aiderMessageManager = components.aiderMessageManager;
+    // aiderMessageManager is deprecated
     this.testCompletionWaiter = components.testCompletionWaiter;
     this.inputFiles = components.inputFiles;
     this.hashs = components.hashs;
@@ -92,12 +92,8 @@ export abstract class Server_Test_WS extends Server_WS_HTTP {
     configKey: string,
     configValue: any,
   ): Promise<void> {
-    await this.aiderMessageManager.createAiderMessageFile(
-      runtime,
-      testName,
-      configKey,
-      configValue,
-    );
+    // This method is implemented in Server_Aider for aider functionality
+    throw new Error("createAiderMessageFile must be implemented by subclass");
   }
 
 

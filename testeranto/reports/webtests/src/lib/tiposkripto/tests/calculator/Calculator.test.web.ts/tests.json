@@ -1,0 +1,307 @@
+{
+  "failed": true,
+  "fails": 6,
+  "artifacts": [],
+  "features": [
+    "./Readme.md"
+  ],
+  "tests": 6,
+  "runTimeTests": 6,
+  "testJob": {
+    "name": "CombinedResults"
+  },
+  "timestamp": 1776216384217,
+  "individualResults": [
+    {
+      "index": 0,
+      "failed": true,
+      "fails": 2,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
+        "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6361:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)",
+        "name": "AssertionError"
+      },
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": [
+          {
+            "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6361:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)"
+          },
+          "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6361:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 2,
+        "confirms": [
+          {
+            "index": 0,
+            "input": [
+              1,
+              1
+            ],
+            "test": "beEqualTo: 22"
+          },
+          {
+            "index": 1,
+            "input": [
+              2,
+              3
+            ],
+            "test": "beGreaterThan: 4"
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "Describe.another simple calculator is not implemented",
+        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:950:27)\n    at BaseDescribe.describe (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:353:33)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)",
+        "name": "Error"
+      },
+      "stepName": "step_1",
+      "stepType": "BaseDescribe",
+      "testJob": {
+        "key": "step_1",
+        "its": [
+          {
+            "name": "can save 1 memory: ",
+            "error": null,
+            "artifacts": []
+          },
+          {
+            "name": "can save 2 memories: ",
+            "error": null,
+            "artifacts": []
+          }
+        ],
+        "error": [
+          "Describe.another simple calculator is not implemented",
+          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:950:27)\n    at BaseDescribe.describe (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:353:33)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": false,
+        "fails": 1
+      }
+    },
+    {
+      "index": 2,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": null,
+      "stepName": "step_2",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_2",
+        "error": null,
+        "failed": false,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "press: 5",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "press: +",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "press: 3",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "enter: ",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "result: 8",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "expected [Function] to equal 3",
+        "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)",
+        "name": "AssertionError"
+      },
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": [
+          {
+            "message": "expected [Function] to equal 3",
+            "expected": 3,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+          },
+          "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "confirms": [
+          {
+            "index": 0,
+            "input": [
+              3,
+              3
+            ],
+            "test": "beEqualTo: 3"
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "expected [Function] to equal 32",
+        "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)",
+        "name": "AssertionError"
+      },
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": [
+          {
+            "message": "expected [Function] to equal 32",
+            "expected": 32,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+          },
+          "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "confirms": [
+          {
+            "index": 0,
+            "input": [
+              3,
+              32
+            ],
+            "test": "beEqualTo: 32"
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "expected [Function] to equal 332",
+        "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)",
+        "name": "AssertionError"
+      },
+      "stepName": "confirm",
+      "stepType": "BaseConfirm",
+      "testJob": {
+        "key": "confirm",
+        "error": [
+          {
+            "message": "expected [Function] to equal 332",
+            "expected": 332,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+          },
+          "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "confirms": [
+          {
+            "index": 0,
+            "input": [
+              3,
+              332
+            ],
+            "test": "beEqualTo: 332"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 6,
+    "passed": 0,
+    "failed": 6,
+    "successRate": "0.00%"
+  }
+}

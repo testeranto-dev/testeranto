@@ -1,45 +1,38 @@
 {
   "viewType": "agent",
   "agentName": "prodirek",
-  "timestamp": "2026-04-14T21:39:30.125Z",
+  "timestamp": "2026-04-15T01:30:53.659Z",
   "data": {
     "features": [],
     "documentation": [],
     "chatMessages": [
       {
-        "id": "chat_message:test:1776202690809",
-        "agentName": "test",
-        "content": "Test message",
-        "timestamp": "2026-04-14T21:38:10.809Z",
-        "preview": "Test message"
+        "id": "chat_message:Arko:1776216551352",
+        "agentName": "Arko",
+        "content": "Hello from Arko!",
+        "timestamp": "2026-04-15T01:29:11.352Z",
+        "preview": "Hello from Arko!"
       },
       {
-        "id": "chat_message:prodirek:1776202702944",
-        "agentName": "prodirek",
-        "content": "Test message",
-        "timestamp": "2026-04-14T21:38:22.944Z",
-        "preview": "Test message"
+        "id": "chat_message:arko:1776216582554",
+        "agentName": "arko",
+        "content": "Hello from arko!",
+        "timestamp": "2026-04-15T01:29:42.554Z",
+        "preview": "Hello from arko!"
       },
       {
-        "id": "chat_message:prodirek:1776202738789",
+        "id": "chat_message:prodirek:1776216653653",
         "agentName": "prodirek",
-        "content": "Test message",
-        "timestamp": "2026-04-14T21:38:58.789Z",
-        "preview": "Test message"
-      },
-      {
-        "id": "chat_message:prodirek:1776202770125",
-        "agentName": "prodirek",
-        "content": "aloha",
-        "timestamp": "2026-04-14T21:39:30.125Z",
-        "preview": "aloha"
+        "content": "Your message here",
+        "timestamp": "2026-04-15T01:30:53.653Z",
+        "preview": "Your message here"
       }
     ],
     "agents": [],
     "summary": {
       "totalFeatures": 0,
       "totalDocumentation": 0,
-      "totalChatMessages": 4,
+      "totalChatMessages": 3,
       "totalAgents": 0
     }
   }

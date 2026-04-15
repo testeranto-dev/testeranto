@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testeranto - Gantt View</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    #root {
+      min-height: 100vh;
+    }
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 1.2rem;
+      color: #666;
+    }
+    .error {
+      padding: 40px;
+      text-align: center;
+      color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="loading">
+      <h2>Loading Gantt View...</h2>
+    </div>
+  </div>
+
+  <script>
+    // View configuration
+    const viewKey = 'Gantt';
+    const viewPath = 'src/views/defaultViews/GanttView.tsx';
+    const dataPath = '/testeranto/slices/views/' + viewKey + '.json';
+    
+    console.log('[View HTML] Setting up configuration for view:', viewKey);
+    console.log('[View HTML] Data path:', dataPath);
+    
+    window.TESTERANTO_VIEW_CONFIG = {
+      viewKey: viewKey,
+      viewPath: viewPath,
+      dataPath: dataPath,
+      apiEndpoint: '/~/api'
+    };
+
+    console.log('[View HTML] Configuration set:', window.TESTERANTO_VIEW_CONFIG);
+
+    // Load the view-specific bundle
+    const script = document.createElement('script');
+    script.src = '/testeranto/views/' + viewKey + '.bundle.js';
+    script.onload = function() {
+      console.log('[View HTML] View bundle loaded successfully');
+    };
+    script.onerror = function() {
+      console.error('[View HTML] Failed to load view bundle');
+      document.getElementById('root').innerHTML = `
+        <div class="error">
+          <h1>Error Loading View</h1>
+          <p>Failed to load ${viewKey} view bundle.</p>
+          <p>Make sure the server has generated the bundle.</p>
+          <p>View path: ${viewPath}</p>
+        </div>
+      `;
+    };
+    document.head.appendChild(script);
+    console.log('[View HTML] Script element added to head');
+  </script>
+</body>
+</html>

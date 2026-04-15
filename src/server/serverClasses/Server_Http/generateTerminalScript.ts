@@ -36,10 +36,11 @@ if docker ps -a --format "{{.Names}}" | grep -q "^${containerName}\$"; then
         # Clear any pending input
         printf '\\e[0n'
         # Don't trap any signals - let them pass through to docker
-        trap '' INT
+        # trap '' INT  # REMOVED: This was preventing Ctrl+C from reaching aider
         # Use docker attach to connect to the running aider process
         # This allows Ctrl+C to reach the process inside
-        exec docker attach ${containerName}
+        # --sig-proxy=true forwards signals to the container (default)
+        exec docker attach --sig-proxy=true ${containerName}
     else
         echo "Container exists but is stopped."
         echo "You can start it with:"
@@ -136,8 +137,8 @@ printf '\\e[?2004l'
 printf '\\e[?1l'
 # Ensure cooked mode
 stty cooked
-# Don't trap signals
-trap '' INT
+# Don't trap signals (allow Ctrl+C to work normally)
+# trap '' INT  # REMOVED: This was preventing Ctrl+C from working
 exec "/bin/sh" -i`;
     }
 }

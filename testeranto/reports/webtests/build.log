@@ -1,0 +1,497 @@
+[2026-04-14T23:27:29.318Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-14T23:27:29.319Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-14T23:27:29.319Z] [WEB BUILDER] testName:  webtests
+[2026-04-14T23:27:29.319Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-14T23:27:29.319Z] [WEB BUILDER] CWD: /workspace
+[2026-04-14T23:27:29.364Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-14T23:27:29.566Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-14T23:27:29.587Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-14T23:27:29.588Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-14T23:27:29.588Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T23:27:31.854Z] web > build ended with 0 errors
+[2026-04-14T23:27:31.952Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-14T23:27:31.979Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-14T23:27:31.987Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:27:31.990Z] [WEB BUILDER] Metafile updated
+[2026-04-14T23:27:32.003Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:27:32.045Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-14T23:27:32.052Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-14T23:27:32.058Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:27:32.186Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.12, port 8000, /workspace
+[2026-04-14T23:27:32.188Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T23:27:32.207Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-14T23:27:32.207Z] Chrome is a separate service, not launched in builder
+[2026-04-14T23:27:33.102Z] web > build ended with 0 errors
+[2026-04-14T23:27:33.104Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-14T23:27:33.104Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-14T23:27:33.123Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:27:33.150Z] [WEB BUILDER] Metafile updated
+[2026-04-14T23:27:33.193Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:35:54.561Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T23:38:36.461Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-14T23:38:36.465Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-14T23:38:36.465Z] [WEB BUILDER] testName:  webtests
+[2026-04-14T23:38:36.466Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-14T23:38:36.466Z] [WEB BUILDER] CWD: /workspace
+[2026-04-14T23:38:36.469Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-14T23:38:36.507Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-14T23:38:36.578Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-14T23:38:36.579Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-14T23:38:36.592Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T23:38:40.380Z] web > build ended with 0 errors
+[2026-04-14T23:38:40.440Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-14T23:38:40.457Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-14T23:38:40.465Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:38:40.466Z] [WEB BUILDER] Metafile updated
+[2026-04-14T23:38:40.471Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:38:40.482Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-14T23:38:40.487Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-14T23:38:40.495Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:38:40.563Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.19, port 8000, /workspace
+[2026-04-14T23:38:40.572Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T23:38:40.573Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-14T23:38:40.574Z] Chrome is a separate service, not launched in builder
+[2026-04-14T23:38:41.192Z] web > build ended with 0 errors
+[2026-04-14T23:38:41.194Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-14T23:38:41.230Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-14T23:38:41.241Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-14T23:38:41.242Z] [WEB BUILDER] Metafile updated
+[2026-04-14T23:38:41.254Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:03:43.644Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T00:03:43.648Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:03:43.664Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T00:03:43.665Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T00:03:43.670Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T00:03:43.671Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:03:43.763Z] [WEB BUILDER] Web config loaded successfully:
+[2026-04-15T00:04:02.033Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T00:04:02.039Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:04:02.039Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T00:04:02.039Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T00:04:02.039Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T00:04:02.040Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:04:02.294Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T00:04:02.344Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T00:04:02.344Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T00:04:02.345Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:04:04.908Z] web > build ended with 0 errors
+[2026-04-15T00:04:04.962Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:04:05.447Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:04:05.474Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:04:05.478Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:04:05.533Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:04:05.917Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:04:05.917Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:04:05.956Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:04:06.203Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.12, port 8000, /workspace
+[2026-04-15T00:04:06.205Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T00:04:06.209Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T00:04:06.241Z] Chrome is a separate service, not launched in builder
+[2026-04-15T00:04:07.970Z] web > build ended with 0 errors
+[2026-04-15T00:04:07.974Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:04:07.975Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:04:07.999Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:04:07.999Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:04:08.022Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:21:17.225Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:21:54.456Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T00:21:54.474Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:21:54.475Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T00:21:54.475Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T00:21:54.475Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T00:21:54.476Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:21:55.613Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T00:21:55.872Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T00:21:55.873Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T00:21:55.873Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:21:59.627Z] web > build ended with 0 errors
+[2026-04-15T00:21:59.733Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:21:59.817Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:21:59.850Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:21:59.854Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:21:59.999Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:22:00.013Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:22:00.015Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:22:00.016Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:22:00.228Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.5, port 8000, /workspace
+[2026-04-15T00:22:00.242Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T00:22:00.242Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T00:22:00.243Z] Chrome is a separate service, not launched in builder
+[2026-04-15T00:22:03.047Z] web > build ended with 0 errors
+[2026-04-15T00:22:03.103Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:22:03.148Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:22:03.156Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:22:03.156Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:22:03.176Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:36:26.264Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:37:26.660Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T00:37:26.769Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:37:26.770Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T00:37:26.774Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T00:37:26.778Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T00:37:26.796Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:37:27.302Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T00:37:27.429Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T00:37:27.444Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T00:37:27.445Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:37:30.281Z] web > build ended with 0 errors
+[2026-04-15T00:37:30.735Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:37:30.755Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:37:30.777Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:37:30.778Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:37:30.788Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:37:30.793Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:37:30.793Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:37:30.805Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:37:30.863Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.58, port 8000, /workspace
+[2026-04-15T00:37:30.885Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T00:37:30.885Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T00:37:30.885Z] Chrome is a separate service, not launched in builder
+[2026-04-15T00:37:32.073Z] web > build ended with 0 errors
+[2026-04-15T00:37:32.083Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:37:32.094Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:37:32.101Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:37:32.131Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:37:32.141Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:42:53.788Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:43:41.280Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T00:43:41.294Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:43:41.295Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T00:43:41.295Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T00:43:41.295Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T00:43:41.296Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:43:41.550Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T00:43:41.616Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T00:43:41.618Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T00:43:41.623Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:43:45.282Z] web > build ended with 0 errors
+[2026-04-15T00:43:45.318Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:43:45.394Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:43:45.420Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:43:45.420Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:43:45.475Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:43:45.527Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:43:45.557Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:43:45.568Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:43:45.741Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.52, port 8000, /workspace
+[2026-04-15T00:43:45.777Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T00:43:45.778Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T00:43:45.837Z] Chrome is a separate service, not launched in builder
+[2026-04-15T00:43:46.684Z] web > build ended with 0 errors
+[2026-04-15T00:43:46.684Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:43:46.686Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:43:46.690Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:43:46.711Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:43:46.721Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:51:51.132Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:52:51.062Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T00:52:51.095Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:52:51.096Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T00:52:51.096Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T00:52:51.096Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T00:52:51.097Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:52:51.456Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T00:52:51.473Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T00:52:51.544Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T00:52:51.547Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:52:54.711Z] web > build ended with 0 errors
+[2026-04-15T00:52:54.889Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:52:54.941Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:52:54.992Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:52:54.993Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:52:55.017Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:52:55.053Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:52:55.067Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:52:55.097Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:52:55.297Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.57, port 8000, /workspace
+[2026-04-15T00:52:55.398Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T00:52:55.444Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T00:52:55.445Z] Chrome is a separate service, not launched in builder
+[2026-04-15T00:52:57.186Z] web > build ended with 0 errors
+[2026-04-15T00:52:57.250Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:52:57.288Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:52:57.298Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:52:57.298Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:52:57.310Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:53:00.379Z] web > build ended with 0 errors
+[2026-04-15T00:53:00.479Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:53:00.790Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:53:01.042Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:53:01.520Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:53:01.550Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:56:22.441Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:56:55.512Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T00:56:55.556Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:56:55.558Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T00:56:55.559Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T00:56:55.559Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T00:56:55.559Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T00:56:56.474Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T00:56:56.566Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T00:56:56.570Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T00:56:56.572Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:57:03.143Z] web > build ended with 0 errors
+[2026-04-15T00:57:03.380Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:57:03.391Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:57:03.396Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:57:03.396Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:57:03.433Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:57:03.495Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:57:03.499Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:57:03.534Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:57:03.647Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.10, port 8000, /workspace
+[2026-04-15T00:57:03.660Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T00:57:03.660Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T00:57:03.661Z] Chrome is a separate service, not launched in builder
+[2026-04-15T00:57:05.681Z] web > build ended with 0 errors
+[2026-04-15T00:57:06.122Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T00:57:06.184Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T00:57:06.204Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T00:57:06.204Z] [WEB BUILDER] Metafile updated
+[2026-04-15T00:57:06.279Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:00:48.530Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T01:04:05.118Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T01:04:05.138Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:04:05.138Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T01:04:05.138Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T01:04:05.138Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T01:04:05.143Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:04:05.341Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T01:04:05.407Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T01:04:05.444Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T01:04:05.549Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:04:07.294Z] web > build ended with 0 errors
+[2026-04-15T01:04:07.369Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:04:07.435Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:04:07.475Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:04:07.476Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:04:07.495Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:04:07.497Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:04:07.497Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:04:07.505Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:04:07.590Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.7, port 8000, /workspace
+[2026-04-15T01:04:07.591Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T01:04:07.592Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T01:04:07.594Z] Chrome is a separate service, not launched in builder
+[2026-04-15T01:04:08.024Z] web > build ended with 0 errors
+[2026-04-15T01:04:08.026Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:04:08.035Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:04:08.039Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:04:08.041Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:04:08.043Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:08:44.063Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T01:08:44.088Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:08:44.088Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T01:08:44.088Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T01:08:44.088Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T01:08:44.089Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:08:44.222Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T01:08:44.231Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T01:08:44.232Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T01:08:44.235Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:08:44.738Z] web > build ended with 0 errors
+[2026-04-15T01:08:44.757Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:08:44.766Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:08:44.769Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:08:44.769Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:08:44.770Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:08:44.771Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:08:44.771Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:08:44.772Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:08:44.825Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.27, port 8000, /workspace
+[2026-04-15T01:08:44.826Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T01:08:44.826Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T01:08:44.827Z] Chrome is a separate service, not launched in builder
+[2026-04-15T01:08:44.974Z] web > build ended with 0 errors
+[2026-04-15T01:08:44.978Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:08:44.980Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:08:44.985Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:08:44.989Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:08:44.993Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:12:41.281Z] [WEB BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T01:12:59.692Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T01:12:59.700Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:12:59.700Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T01:12:59.700Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T01:12:59.700Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T01:12:59.701Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:12:59.912Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T01:12:59.914Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T01:12:59.914Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T01:12:59.914Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:13:01.248Z] web > build ended with 0 errors
+[2026-04-15T01:13:01.262Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:13:01.282Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:13:01.289Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:13:01.289Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:13:01.306Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:13:01.312Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:13:01.321Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:13:01.324Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:13:01.866Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.10, port 8000, /workspace
+[2026-04-15T01:13:01.868Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T01:13:01.868Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T01:13:01.868Z] Chrome is a separate service, not launched in builder
+[2026-04-15T01:13:02.768Z] web > build ended with 0 errors
+[2026-04-15T01:13:02.771Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:13:02.773Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:13:02.776Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:13:02.776Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:13:02.777Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:16:48.601Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T01:16:48.607Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:16:48.608Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T01:16:48.608Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T01:16:48.608Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T01:16:48.609Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:16:48.912Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T01:16:49.012Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T01:16:49.012Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T01:16:49.013Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:16:49.948Z] web > build ended with 0 errors
+[2026-04-15T01:16:50.003Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:16:50.038Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:16:50.039Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:16:50.040Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:16:50.043Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:16:50.084Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:16:50.088Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:16:50.120Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:16:50.193Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.43, port 8000, /workspace
+[2026-04-15T01:16:50.195Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T01:16:50.202Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T01:16:50.202Z] Chrome is a separate service, not launched in builder
+[2026-04-15T01:16:50.671Z] web > build ended with 0 errors
+[2026-04-15T01:16:50.679Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:16:50.680Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:16:50.688Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:16:50.689Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:16:50.702Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:18:27.858Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T01:18:27.933Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:18:27.933Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T01:18:27.933Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T01:18:27.933Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T01:18:27.934Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:18:28.221Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T01:18:28.271Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T01:18:28.299Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T01:18:28.311Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:18:29.389Z] web > build ended with 0 errors
+[2026-04-15T01:18:29.425Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:18:29.443Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:18:29.448Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:18:29.450Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:18:29.452Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:18:29.501Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:18:29.502Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:18:29.503Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:18:29.634Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.44, port 8000, /workspace
+[2026-04-15T01:18:29.642Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T01:18:29.645Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T01:18:29.646Z] Chrome is a separate service, not launched in builder
+[2026-04-15T01:18:30.771Z] web > build ended with 0 errors
+[2026-04-15T01:18:30.799Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:18:30.824Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:18:30.843Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:18:30.844Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:18:30.846Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:25:37.283Z] [WEB BUILDER] projectConfigPath:  /workspace/testeranto/testeranto.ts
+[2026-04-15T01:25:37.284Z] [WEB BUILDER] webConfigPath:  /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:25:37.284Z] [WEB BUILDER] testName:  webtests
+[2026-04-15T01:25:37.284Z] [WEB BUILDER] Log file: /workspace/testeranto/reports/webtests/build.log
+[2026-04-15T01:25:37.284Z] [WEB BUILDER] CWD: /workspace
+[2026-04-15T01:25:37.284Z] [WEB BUILDER] Loading web config from: /workspace/testeranto/runtimes/web/web.ts
+[2026-04-15T01:25:37.375Z] [WEB BUILDER] Web config loaded successfully:
+  [
+  "loaders",
+  "external",
+  "define"
+]
+[2026-04-15T01:25:37.382Z] [WEB BUILDER] is now bundling: webtests
+[2026-04-15T01:25:37.383Z] [WEB BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-15T01:25:37.383Z] [WEB BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:25:38.823Z] web > build ended with 0 errors
+[2026-04-15T01:25:38.844Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:25:38.889Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:25:38.906Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:25:38.906Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:25:38.908Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:25:38.914Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:25:38.914Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:25:38.916Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:25:38.968Z] [WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.6, port 8000, /workspace
+[2026-04-15T01:25:38.969Z] [WEB BUILDER] Watch mode active - waiting for file changes...
+[2026-04-15T01:25:38.969Z] [WEB BUILDER] Using onEnd plugin for rebuild detection
+[2026-04-15T01:25:38.970Z] Chrome is a separate service, not launched in builder
+[2026-04-15T01:25:39.570Z] web > build ended with 0 errors
+[2026-04-15T01:25:39.576Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
+[2026-04-15T01:25:39.576Z] [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[2026-04-15T01:25:39.583Z] [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-15T01:25:39.584Z] [WEB BUILDER] Metafile updated
+[2026-04-15T01:25:39.585Z] [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json

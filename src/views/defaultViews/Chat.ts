@@ -16,10 +16,15 @@ export type IChat = {
 
 export const ChatSlicer = (graphData: GraphData): IChat => {
   const messages: ChatMessage[] = graphData.nodes
-    .filter(node => 
-      node.type === 'chat_message' ||
-      (node.attributes?.type && node.attributes.type === 'chat_message')
-    )
+    .filter(node => {
+      // Check if node.type is an object with category 'chat' and type 'chat_message'
+      if (node.type && typeof node.type === 'object') {
+        return node.type.category === 'chat' && node.type.type === 'chat_message';
+      }
+      // For backward compatibility, also check string type
+      return node.type === 'chat_message' ||
+             (node.attributes?.type && node.attributes.type === 'chat_message');
+    })
     .map(node => ({
       id: node.id,
       content: node.content || node.label || node.id,

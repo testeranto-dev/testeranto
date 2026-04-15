@@ -1,0 +1,1539 @@
+{
+  "items": [
+    {
+      "id": "agent:prodirek",
+      "label": "prodirek",
+      "timestamp": "2026-04-15T01:25:26.528Z"
+    },
+    {
+      "id": "agent:arko",
+      "label": "arko",
+      "timestamp": "2026-04-15T01:25:26.528Z"
+    },
+    {
+      "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "timestamp": "2026-04-15T01:25:28.967Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:28.967Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "check: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "timestamp": "2026-04-15T01:25:28.968Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:28.968Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "aider: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "timestamp": "2026-04-15T01:25:28.969Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:28.969Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "timestamp": "2026-04-15T01:25:28.971Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:28.971Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "timestamp": "2026-04-15T01:25:28.972Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:28.972Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "timestamp": "2026-04-15T01:25:28.973Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:28.973Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "timestamp": "2026-04-15T01:25:28.974Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:28.974Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "check: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "timestamp": "2026-04-15T01:25:28.976Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:28.976Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "aider: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "timestamp": "2026-04-15T01:25:28.976Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:28.976Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "timestamp": "2026-04-15T01:25:28.977Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:28.977Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "check: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "timestamp": "2026-04-15T01:25:28.979Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:28.979Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "aider: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "timestamp": "2026-04-15T01:25:28.980Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:28.980Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "label": "bdd: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "timestamp": "2026-04-15T01:25:28.981Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:28.981Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "label": "check: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "timestamp": "2026-04-15T01:25:28.982Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:28.982Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "label": "aider: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "timestamp": "2026-04-15T01:25:28.984Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:28.984Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "label": "bdd: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "timestamp": "2026-04-15T01:25:28.987Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:28.987Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "label": "check: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "timestamp": "2026-04-15T01:25:28.988Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:28.988Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "label": "aider: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "timestamp": "2026-04-15T01:25:28.989Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:28.989Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "label": "bdd: src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "timestamp": "2026-04-15T01:25:28.992Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:28.992Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "label": "check: src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "timestamp": "2026-04-15T01:25:28.993Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:28.993Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "label": "aider: src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "timestamp": "2026-04-15T01:25:28.995Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:28.995Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "label": "bdd: src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "timestamp": "2026-04-15T01:25:28.998Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:28.998Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "label": "check: src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "timestamp": "2026-04-15T01:25:29.001Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:29.001Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "label": "aider: src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "timestamp": "2026-04-15T01:25:29.004Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:29.004Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "label": "bdd: src/vscode/providers/utils/testTree/debugTest.js",
+      "timestamp": "2026-04-15T01:25:29.007Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/utils/testTree/debugTest.js",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:29.007Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "label": "check: src/vscode/providers/utils/testTree/debugTest.js",
+      "timestamp": "2026-04-15T01:25:29.009Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/utils/testTree/debugTest.js",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:29.009Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "label": "aider: src/vscode/providers/utils/testTree/debugTest.js",
+      "timestamp": "2026-04-15T01:25:29.011Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/vscode/providers/utils/testTree/debugTest.js",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:29.011Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "label": "bdd: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "timestamp": "2026-04-15T01:25:29.016Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:29.016Z"
+      }
+    },
+    {
+      "id": "check_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "label": "check: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "timestamp": "2026-04-15T01:25:29.017Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:29.017Z"
+      }
+    },
+    {
+      "id": "aider_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "label": "aider: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "timestamp": "2026-04-15T01:25:29.019Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:29.019Z"
+      }
+    },
+    {
+      "id": "builder_process:nodetests:builder",
+      "label": "builder: builder",
+      "timestamp": "2026-04-15T01:25:29.020Z",
+      "metadata": {
+        "runtime": "node",
+        "testName": "builder",
+        "configKey": "nodetests",
+        "configValue": {
+          "runtime": "node",
+          "tests": [
+            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+            "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+            "src/vscode/providers/logic/FileTreeLogic.test.ts",
+            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+            "src/vscode/providers/utils/testTree/debugTest.js",
+            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
+          "buildOptions": "testeranto/runtimes/node/node.mjs",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "builder",
+        "startTime": "2026-04-15T01:25:29.020Z"
+      }
+    },
+    {
+      "id": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "timestamp": "2026-04-15T01:25:29.021Z",
+      "metadata": {
+        "runtime": "web",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "configKey": "webtests",
+        "configValue": {
+          "runtime": "web",
+          "tests": [
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+          ],
+          "checks": [
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
+          "buildOptions": "testeranto/runtimes/web/web.ts",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:29.021Z"
+      }
+    },
+    {
+      "id": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "timestamp": "2026-04-15T01:25:29.022Z",
+      "metadata": {
+        "runtime": "web",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "configKey": "webtests",
+        "configValue": {
+          "runtime": "web",
+          "tests": [
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+          ],
+          "checks": [
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
+          "buildOptions": "testeranto/runtimes/web/web.ts",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:29.022Z"
+      }
+    },
+    {
+      "id": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "timestamp": "2026-04-15T01:25:29.023Z",
+      "metadata": {
+        "runtime": "web",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "configKey": "webtests",
+        "configValue": {
+          "runtime": "web",
+          "tests": [
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+          ],
+          "checks": [
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
+          "buildOptions": "testeranto/runtimes/web/web.ts",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:29.023Z"
+      }
+    },
+    {
+      "id": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "timestamp": "2026-04-15T01:25:29.024Z",
+      "metadata": {
+        "runtime": "web",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        "configKey": "webtests",
+        "configValue": {
+          "runtime": "web",
+          "tests": [
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+          ],
+          "checks": [
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
+          "buildOptions": "testeranto/runtimes/web/web.ts",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:29.024Z"
+      }
+    },
+    {
+      "id": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "timestamp": "2026-04-15T01:25:29.025Z",
+      "metadata": {
+        "runtime": "web",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        "configKey": "webtests",
+        "configValue": {
+          "runtime": "web",
+          "tests": [
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+          ],
+          "checks": [
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
+          "buildOptions": "testeranto/runtimes/web/web.ts",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:29.025Z"
+      }
+    },
+    {
+      "id": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "timestamp": "2026-04-15T01:25:29.027Z",
+      "metadata": {
+        "runtime": "web",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        "configKey": "webtests",
+        "configValue": {
+          "runtime": "web",
+          "tests": [
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+          ],
+          "checks": [
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
+          "buildOptions": "testeranto/runtimes/web/web.ts",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:29.027Z"
+      }
+    },
+    {
+      "id": "builder_process:webtests:builder",
+      "label": "builder: builder",
+      "timestamp": "2026-04-15T01:25:29.028Z",
+      "metadata": {
+        "runtime": "web",
+        "testName": "builder",
+        "configKey": "webtests",
+        "configValue": {
+          "runtime": "web",
+          "tests": [
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+          ],
+          "checks": [
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
+          "buildOptions": "testeranto/runtimes/web/web.ts",
+          "buildKitOptions": {},
+          "outputs": []
+        },
+        "status": "todo",
+        "processType": "builder",
+        "startTime": "2026-04-15T01:25:29.028Z"
+      }
+    },
+    {
+      "id": "bdd_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "label": "bdd: src/lib/pitono/examples/calculator_test.py",
+      "timestamp": "2026-04-15T01:25:29.029Z",
+      "metadata": {
+        "runtime": "python",
+        "testName": "src/lib/pitono/examples/calculator_test.py",
+        "configKey": "pythontests",
+        "configValue": {
+          "runtime": "python",
+          "tests": [
+            "src/lib/pitono/examples/calculator_test.py"
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
+          "buildOptions": "testeranto/runtimes/python/python.py",
+          "buildKitOptions": {},
+          "outputs": [
+            "testeranto/reports/pythontests"
+          ]
+        },
+        "status": "todo",
+        "processType": "bdd",
+        "startTime": "2026-04-15T01:25:29.029Z"
+      }
+    },
+    {
+      "id": "check_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "label": "check: src/lib/pitono/examples/calculator_test.py",
+      "timestamp": "2026-04-15T01:25:29.030Z",
+      "metadata": {
+        "runtime": "python",
+        "testName": "src/lib/pitono/examples/calculator_test.py",
+        "configKey": "pythontests",
+        "configValue": {
+          "runtime": "python",
+          "tests": [
+            "src/lib/pitono/examples/calculator_test.py"
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
+          "buildOptions": "testeranto/runtimes/python/python.py",
+          "buildKitOptions": {},
+          "outputs": [
+            "testeranto/reports/pythontests"
+          ]
+        },
+        "status": "todo",
+        "processType": "check",
+        "startTime": "2026-04-15T01:25:29.030Z"
+      }
+    },
+    {
+      "id": "aider_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "label": "aider: src/lib/pitono/examples/calculator_test.py",
+      "timestamp": "2026-04-15T01:25:29.031Z",
+      "metadata": {
+        "runtime": "python",
+        "testName": "src/lib/pitono/examples/calculator_test.py",
+        "configKey": "pythontests",
+        "configValue": {
+          "runtime": "python",
+          "tests": [
+            "src/lib/pitono/examples/calculator_test.py"
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
+          "buildOptions": "testeranto/runtimes/python/python.py",
+          "buildKitOptions": {},
+          "outputs": [
+            "testeranto/reports/pythontests"
+          ]
+        },
+        "status": "todo",
+        "processType": "aider",
+        "startTime": "2026-04-15T01:25:29.031Z"
+      }
+    },
+    {
+      "id": "builder_process:pythontests:builder",
+      "label": "builder: builder",
+      "timestamp": "2026-04-15T01:25:29.032Z",
+      "metadata": {
+        "runtime": "python",
+        "testName": "builder",
+        "configKey": "pythontests",
+        "configValue": {
+          "runtime": "python",
+          "tests": [
+            "src/lib/pitono/examples/calculator_test.py"
+          ],
+          "checks": [
+            null,
+            null,
+            null
+          ],
+          "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
+          "buildOptions": "testeranto/runtimes/python/python.py",
+          "buildKitOptions": {},
+          "outputs": [
+            "testeranto/reports/pythontests"
+          ]
+        },
+        "status": "todo",
+        "processType": "builder",
+        "startTime": "2026-04-15T01:25:29.032Z"
+      }
+    },
+    {
+      "id": "aider_process:agent:prodirek",
+      "label": "aider: prodirek",
+      "timestamp": "2026-04-15T01:25:50.350Z",
+      "metadata": {
+        "containerId": "6da0d5f24b0ea1e15885a3ed5359ffc39ff808f7f5cc8ab8071a233dc6728766",
+        "serviceName": "agent-prodirek",
+        "containerStatus": "resize",
+        "updatedAt": "2026-04-15T01:30:20.703Z",
+        "status": "stopped"
+      }
+    },
+    {
+      "id": "aider_process:agent:arko",
+      "label": "aider: arko",
+      "timestamp": "2026-04-15T01:25:50.354Z",
+      "metadata": {
+        "containerId": "cbfe6b560058f2cd3acedadd992ef98e05a5c303ec0814eccdcff885eb0d7687",
+        "serviceName": "agent-arko",
+        "containerStatus": "resize",
+        "updatedAt": "2026-04-15T01:30:19.198Z",
+        "status": "stopped"
+      }
+    },
+    {
+      "id": "chat_message:Arko:1776216551352",
+      "label": "Chat from Arko",
+      "timestamp": "2026-04-15T01:29:11.352Z",
+      "metadata": {
+        "frontmatter": {
+          "title": "Chat from Arko",
+          "type": "chat_message",
+          "agent": "Arko"
+        }
+      }
+    },
+    {
+      "id": "chat_message:arko:1776216582554",
+      "label": "Chat from arko",
+      "timestamp": "2026-04-15T01:29:42.554Z",
+      "metadata": {
+        "frontmatter": {
+          "title": "Chat from arko",
+          "type": "chat_message",
+          "agent": "arko"
+        }
+      }
+    },
+    {
+      "id": "chat_message:prodirek:1776216653653",
+      "label": "Chat from prodirek",
+      "timestamp": "2026-04-15T01:30:53.653Z",
+      "metadata": {
+        "frontmatter": {
+          "title": "Chat from prodirek",
+          "type": "chat_message",
+          "agent": "prodirek"
+        }
+      }
+    }
+  ],
+  "viewType": "gantt",
+  "timestamp": "2026-04-15T01:30:53.656Z"
+}

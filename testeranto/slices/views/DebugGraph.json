@@ -1,0 +1,2116 @@
+{
+  "nodes": [
+    {
+      "id": "agent:prodirek",
+      "label": "prodirek",
+      "type": {
+        "category": "agent",
+        "type": "agent"
+      },
+      "x": 173.65875455157916,
+      "y": 314.0893684455196,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "agent:arko",
+      "label": "arko",
+      "type": {
+        "category": "agent",
+        "type": "agent"
+      },
+      "x": 234.04762702479866,
+      "y": 91.0475444936593,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "view:Home",
+      "label": "Home",
+      "type": "view",
+      "x": 85.89915054342453,
+      "y": 5.039089675365305,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "view:Kanban",
+      "label": "Kanban",
+      "type": "view",
+      "x": 16.534865778036156,
+      "y": 220.58426947646578,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "view:EisenhowerMatrix",
+      "label": "EisenhowerMatrix",
+      "type": "view",
+      "x": 772.8244530655327,
+      "y": 28.74681198560576,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "view:Gantt",
+      "label": "Gantt",
+      "type": "view",
+      "x": 206.6774771649426,
+      "y": 392.4109772634583,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "view:Chat",
+      "label": "Chat",
+      "type": "view",
+      "x": 554.6870429167925,
+      "y": 49.63280449564711,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "view:DebugGraph",
+      "label": "DebugGraph",
+      "type": "view",
+      "x": 775.3518134552972,
+      "y": 550.7012152686715,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:nodetests",
+      "label": "nodetests",
+      "type": "config",
+      "x": 792.7738359926803,
+      "y": 586.1731230494375,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "index.ts",
+      "type": "entrypoint",
+      "x": 640.8716562701669,
+      "y": 52.29136177032893,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "Calculator.test.node.ts",
+      "type": "entrypoint",
+      "x": 135.6031429995465,
+      "y": 94.82697607066848,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "Circle.test.ts",
+      "type": "entrypoint",
+      "x": 778.2299656813491,
+      "y": 365.85911076446365,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "Rectangle.test.ts",
+      "type": "entrypoint",
+      "x": 175.62827812983147,
+      "y": 261.8281231973517,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "label": "AiderProcessTreeDataProvider.test.ts",
+      "type": "entrypoint",
+      "x": 200.40509250182464,
+      "y": 190.30129894382804,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "label": "Server_GraphManagerCore.test.ts",
+      "type": "entrypoint",
+      "x": 570.733644092167,
+      "y": 236.04653436959765,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "label": "FileTreeLogic.test.ts",
+      "type": "entrypoint",
+      "x": 546.2354880218652,
+      "y": 560.4344158229544,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "label": "treeFilter.test.ts",
+      "type": "entrypoint",
+      "x": 714.7224705965273,
+      "y": 597.5322447892162,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/vscode/providers/utils/testTree/debugTest.js",
+      "label": "debugTest.js",
+      "type": "entrypoint",
+      "x": 644.3584363917728,
+      "y": 18.78151164931412,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "label": "fileOperations.ts.",
+      "type": "entrypoint",
+      "x": 337.2208918819452,
+      "y": 577.2266106395998,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:webtests",
+      "label": "webtests",
+      "type": "config",
+      "x": 111.80725324425431,
+      "y": 517.4697437024238,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "Calculator.test.web.ts",
+      "type": "entrypoint",
+      "x": 554.9164191161193,
+      "y": 117.05799207306251,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "Calculator.test.web.react.ts",
+      "type": "entrypoint",
+      "x": 688.8108688851743,
+      "y": 50.17246601642626,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:pythontests",
+      "label": "pythontests",
+      "type": "config",
+      "x": 644.2151225096109,
+      "y": 385.5703205908633,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "entrypoint:src/lib/pitono/examples/calculator_test.py",
+      "label": "calculator_test.py",
+      "type": "entrypoint",
+      "x": 508.04768122350043,
+      "y": 248.9949030730592,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 661.0916510825175,
+      "y": 359.19244926846244,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 501.0024591513137,
+      "y": 515.1234880928508,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 577.2931985787385,
+      "y": 49.847203462806355,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 227.5583616829664,
+      "y": 163.92615103922336,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 91.36134635903481,
+      "y": 385.55428196293315,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 539.4618357021064,
+      "y": 350.165423610652,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 406.618081092218,
+      "y": 268.21422005988586,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 283.61573306146585,
+      "y": 291.36653876260334,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/vscode/providers/utils/testTree/debugTest.js:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 499.1333726693159,
+      "y": 411.4020681549919,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 650.936728519321,
+      "y": 501.31904477656013,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 373.68833895437143,
+      "y": 233.38006406931666,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 752.2664763374489,
+      "y": 466.581795433134,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:pythontests:src/lib/pitono/examples/calculator_test.py:0",
+      "label": "Test suite",
+      "type": "test",
+      "x": 454.54949883730336,
+      "y": 291.4903107407083,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 793.7154304619089,
+      "y": 357.3218032438106,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "check: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 84.28732130370653,
+      "y": 555.8335676627762,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "aider: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 364.0197746665798,
+      "y": 34.042722147795224,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 669.7104821804116,
+      "y": 323.09251805249846,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 199.0707366647011,
+      "y": 539.3227191426407,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 503.6703445831869,
+      "y": 507.22594127409235,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 436.24053315300887,
+      "y": 557.9692364154836,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "check: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 580.8380377492974,
+      "y": 204.44728986825038,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "aider: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 686.7881958219582,
+      "y": 451.54620662377357,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 151.53418890707488,
+      "y": 546.7836961651551,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "check: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 482.55630963791225,
+      "y": 485.4645340939704,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "aider: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 475.677793855862,
+      "y": 369.248778589607,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "label": "bdd: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 276.93689309555253,
+      "y": 225.59161917655257,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "label": "check: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 161.69566478217874,
+      "y": 3.437952905907582,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "label": "aider: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 687.8776710112955,
+      "y": 482.7089790963973,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "label": "bdd: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 484.9794056436574,
+      "y": 232.52601265273626,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "label": "check: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 706.2852431042458,
+      "y": 132.03608898632052,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "label": "aider: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 635.6937040816165,
+      "y": 529.7724140195958,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "label": "bdd: src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 403.03397140392684,
+      "y": 261.35529210553244,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "label": "check: src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 336.4463680048808,
+      "y": 35.46197940248621,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "label": "aider: src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 416.4886736186975,
+      "y": 28.614328324992066,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "label": "bdd: src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 237.9124835539269,
+      "y": 326.94877551901544,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "label": "check: src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 165.0347719292605,
+      "y": 509.6760151557973,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "label": "aider: src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 506.7797479055513,
+      "y": 266.3027285255034,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "label": "bdd: src/vscode/providers/utils/testTree/debugTest.js",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 98.15985996609973,
+      "y": 406.2889665127783,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "label": "check: src/vscode/providers/utils/testTree/debugTest.js",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 226.4130596617431,
+      "y": 44.09442197761355,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "label": "aider: src/vscode/providers/utils/testTree/debugTest.js",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 653.568182040118,
+      "y": 251.89573221645193,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "label": "bdd: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 551.3935510819247,
+      "y": 561.4953478530091,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "label": "check: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 543.746979616341,
+      "y": 116.85872699738673,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "label": "aider: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 254.73213554535903,
+      "y": 420.8272920492275,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:nodetests:builder",
+      "label": "builder: builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 350.5318282902616,
+      "y": 525.1834660553614,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 46.849534067869044,
+      "y": 6.186935587794529,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 781.4707447721748,
+      "y": 205.87263359918256,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 752.8151729243573,
+      "y": 335.76070773858845,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 605.4651008767439,
+      "y": 85.86266726867247,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 94.01390967255638,
+      "y": 530.6892453887065,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 774.4798670942137,
+      "y": 439.5386422401665,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:webtests:builder",
+      "label": "builder: builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 625.8304619802118,
+      "y": 246.57754273543947,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "label": "bdd: src/lib/pitono/examples/calculator_test.py",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 531.0439058466957,
+      "y": 95.29308631528683,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "label": "check: src/lib/pitono/examples/calculator_test.py",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 237.90710198619155,
+      "y": 63.378969612956794,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "label": "aider: src/lib/pitono/examples/calculator_test.py",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 408.5699537844575,
+      "y": 72.54224325972392,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:pythontests:builder",
+      "label": "builder: builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 101.14249523529591,
+      "y": 564.9749251514215,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:agent:prodirek",
+      "label": "aider: prodirek",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 17.951393627610734,
+      "y": 56.27350815897465,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "aider_process:agent:arko",
+      "label": "aider: arko",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 63.82369213861905,
+      "y": 248.99198342227305,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "logfile:nodetests-builder.log:mnzdd1vd",
+      "label": "nodetests-builder.log",
+      "type": "file",
+      "x": 172.53507973520738,
+      "y": 151.336114671754,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "logfile:webtests-builder.log:mnzdd2e2",
+      "label": "webtests-builder.log",
+      "type": "file",
+      "x": 477.06563125794463,
+      "y": 51.09329577726454,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "logfile:pythontests-builder.log:mnzdd7zs",
+      "label": "pythontests-builder.log",
+      "type": "file",
+      "x": 666.9271263742163,
+      "y": 22.783929560584948,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "logfile:chrome-service.log:mnzddqzh",
+      "label": "chrome-service.log",
+      "type": "file",
+      "x": 284.5535513502393,
+      "y": 557.2097560759215,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "chat_message:Arko:1776216551352",
+      "label": "Chat from Arko",
+      "type": {
+        "category": "chat",
+        "type": "chat_message"
+      },
+      "x": 660.1601940865162,
+      "y": 518.9179277048165,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "chat_message:arko:1776216582554",
+      "label": "Chat from arko",
+      "type": {
+        "category": "chat",
+        "type": "chat_message"
+      },
+      "x": 12.763732192476418,
+      "y": 412.0058238297258,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "chat_message:prodirek:1776216653653",
+      "label": "Chat from prodirek",
+      "type": {
+        "category": "chat",
+        "type": "chat_message"
+      },
+      "x": 91.87659616718271,
+      "y": 319.5865399160035,
+      "size": 5,
+      "color": "#4a90e2"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/vscode/providers/utils/testTree/debugTest.js",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "entrypoint:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "entrypoint:src/lib/pitono/examples/calculator_test.py",
+      "type": "configuredBy",
+      "attributes": {
+        "type": "configuredBy",
+        "timestamp": "2026-04-15T01:25:26.531Z"
+      }
+    },
+    {
+      "source": "entrypoint:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "target": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "target": "test:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "target": "test:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "target": "test:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/vscode/providers/utils/testTree/debugTest.js",
+      "target": "test:nodetests:src/vscode/providers/utils/testTree/debugTest.js:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "target": "test:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "entrypoint:src/lib/pitono/examples/calculator_test.py",
+      "target": "test:pythontests:src/lib/pitono/examples/calculator_test.py:0",
+      "type": "belongsTo",
+      "attributes": {
+        "type": "belongsTo"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.967Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.968Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.969Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.971Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.972Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.973Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.974Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.976Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.976Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.977Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.979Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.980Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.981Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.982Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.984Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.987Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.988Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.989Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.992Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.993Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.995Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:28.998Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.001Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.004Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.007Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.009Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.011Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.016Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "check_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.017Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "aider_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.019Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "builder_process:nodetests:builder",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.020Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.021Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.022Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.023Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.024Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.025Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.027Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "builder_process:webtests:builder",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.028Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "bdd_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.029Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "check_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.030Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "aider_process:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.031Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "builder_process:pythontests:builder",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:29.032Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "agent:prodirek",
+      "target": "aider_process:agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:50.350Z",
+        "metadata": {
+          "relationship": "agent_has_process"
+        }
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "aider_process:agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:25:50.354Z",
+        "metadata": {
+          "relationship": "agent_has_process"
+        }
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "chat_message:arko:1776216582554",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:29:42.554Z"
+      }
+    },
+    {
+      "source": "chat_message:arko:1776216582554",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "belongsTo",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "belongsTo",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:29:42.554Z"
+      }
+    },
+    {
+      "source": "agent:prodirek",
+      "target": "chat_message:prodirek:1776216653653",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:30:53.653Z"
+      }
+    },
+    {
+      "source": "chat_message:prodirek:1776216653653",
+      "target": "agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "belongsTo",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "belongsTo",
+          "directed": true
+        },
+        "timestamp": "2026-04-15T01:30:53.653Z"
+      }
+    }
+  ],
+  "viewType": "debug",
+  "timestamp": "2026-04-15T01:30:53.657Z"
+}

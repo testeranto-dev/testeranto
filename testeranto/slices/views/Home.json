@@ -1,0 +1,110 @@
+{
+  "views": [
+    {
+      "id": "view:Home",
+      "label": "Home",
+      "description": "View: Home",
+      "type": "view",
+      "metadata": {
+        "viewKey": "Home",
+        "viewPath": "src/views/defaultViews/HomeView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Home.json",
+        "timestamp": "2026-04-15T01:25:26.530Z"
+      }
+    },
+    {
+      "id": "view:Kanban",
+      "label": "Kanban",
+      "description": "View: Kanban",
+      "type": "view",
+      "metadata": {
+        "viewKey": "Kanban",
+        "viewPath": "src/views/defaultViews/KanbanBoardView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
+        "timestamp": "2026-04-15T01:25:26.530Z"
+      }
+    },
+    {
+      "id": "view:EisenhowerMatrix",
+      "label": "EisenhowerMatrix",
+      "description": "View: EisenhowerMatrix",
+      "type": "view",
+      "metadata": {
+        "viewKey": "EisenhowerMatrix",
+        "viewPath": "src/views/defaultViews/EisenhowerMatrixView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
+        "timestamp": "2026-04-15T01:25:26.530Z"
+      }
+    },
+    {
+      "id": "view:Gantt",
+      "label": "Gantt",
+      "description": "View: Gantt",
+      "type": "view",
+      "metadata": {
+        "viewKey": "Gantt",
+        "viewPath": "src/views/defaultViews/GanttView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
+        "timestamp": "2026-04-15T01:25:26.530Z"
+      }
+    },
+    {
+      "id": "view:Chat",
+      "label": "Chat",
+      "description": "View: Chat",
+      "type": "view",
+      "metadata": {
+        "viewKey": "Chat",
+        "viewPath": "src/views/defaultViews/ChatView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
+        "timestamp": "2026-04-15T01:25:26.530Z"
+      }
+    },
+    {
+      "id": "view:DebugGraph",
+      "label": "DebugGraph",
+      "description": "View: DebugGraph",
+      "type": "view",
+      "metadata": {
+        "viewKey": "DebugGraph",
+        "viewPath": "src/views/defaultViews/DebugGraphView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/DebugGraph.json",
+        "timestamp": "2026-04-15T01:25:26.530Z"
+      }
+    }
+  ],
+  "viewType": "home",
+  "timestamp": "2026-04-15T01:30:53.655Z",
+  "defaultViews": [
+    {
+      "id": "kanban",
+      "label": "Kanban",
+      "description": "Kanban board for task management"
+    },
+    {
+      "id": "eisenhower-matrix",
+      "label": "Eisenhower Matrix",
+      "description": "Priority matrix for task categorization"
+    },
+    {
+      "id": "gantt",
+      "label": "Gantt",
+      "description": "Timeline view for project scheduling"
+    },
+    {
+      "id": "chat",
+      "label": "Chat",
+      "description": "Chat message viewer"
+    },
+    {
+      "id": "debug-graph",
+      "label": "Debug Graph",
+      "description": "Interactive graph visualization using Sigma.js"
+    },
+    {
+      "id": "home",
+      "label": "Home",
+      "description": "Home page with links to all views"
+    }
+  ]
+}

@@ -2108,3 +2108,2195 @@
 [2026-04-14T21:34:01.494Z] [NODE BUILDER] Metafile updated
 [2026-04-14T21:34:01.420Z] INFO: Build started for nodetests
 [2026-04-14T21:34:01.512Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:04:48.896Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:04:48.900Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:04:49.006Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:04:49.268Z] node > build ended with 0 errors
+[2026-04-14T22:04:49.270Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:04:49.271Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:04:49.271Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:04:49.274Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:04:49.274Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:04:49.274Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:04:49.274Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:04:49.281Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:04:49.282Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:04:49.287Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:04:49.288Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:04:49.288Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:04:49.289Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:04:49.289Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:04:49.303Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:04:49.055Z] INFO: Build started for nodetests
+[2026-04-14T22:04:49.268Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:04:49.305Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:04:49.305Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:04:49.388Z] node > build ended with 0 errors
+[2026-04-14T22:04:49.389Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:04:49.389Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:04:49.391Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:04:49.392Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:04:49.393Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:04:49.394Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:04:49.394Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:04:49.395Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:04:49.395Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:04:49.305Z] INFO: Build started for nodetests
+[2026-04-14T22:04:49.403Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:09:18.658Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T22:09:18.659Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T22:09:18.700Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-14T22:09:25.173Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:09:25.176Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:09:25.303Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:09:25.513Z] node > build ended with 0 errors
+[2026-04-14T22:09:25.526Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:09:25.526Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:09:25.526Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:09:25.530Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:09:25.531Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:09:25.532Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:09:25.532Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:09:25.536Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:09:25.546Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:09:25.549Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:09:25.335Z] INFO: Build started for nodetests
+[2026-04-14T22:09:25.513Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:09:25.555Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:09:25.556Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:09:25.557Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:09:25.559Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:09:25.562Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:09:25.568Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:09:25.568Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:09:25.624Z] node > build ended with 0 errors
+[2026-04-14T22:09:25.625Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:09:25.625Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:09:25.625Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:09:25.625Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:09:25.625Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:09:25.626Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:09:25.626Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:09:25.629Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:09:25.630Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:09:25.632Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:09:25.568Z] INFO: Build started for nodetests
+[2026-04-14T22:10:38.006Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T22:10:38.007Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T22:10:38.018Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-14T22:10:44.127Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:10:44.128Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:10:44.215Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:10:44.305Z] node > build ended with 0 errors
+[2026-04-14T22:10:44.307Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:10:44.307Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:10:44.307Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:10:44.344Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:10:44.347Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:10:44.351Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:10:44.351Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:10:44.352Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:10:44.352Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:10:44.230Z] INFO: Build started for nodetests
+[2026-04-14T22:10:44.305Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:10:44.356Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:10:44.361Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:10:44.363Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:10:44.364Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:10:44.364Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:10:44.365Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:10:44.366Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:10:44.366Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:10:44.402Z] node > build ended with 0 errors
+[2026-04-14T22:10:44.402Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:10:44.402Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:10:44.403Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:10:44.403Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:10:44.403Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:10:44.403Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:10:44.403Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:10:44.404Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:10:44.404Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:10:44.366Z] INFO: Build started for nodetests
+[2026-04-14T22:10:44.405Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:12:41.432Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T22:12:41.433Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T22:12:41.451Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-14T22:12:47.081Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:12:47.083Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:12:47.175Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:12:47.379Z] node > build ended with 0 errors
+[2026-04-14T22:12:47.384Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:12:47.384Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:12:47.384Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:12:47.389Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:12:47.390Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:12:47.390Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:12:47.390Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:12:47.392Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:12:47.394Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:12:47.243Z] INFO: Build started for nodetests
+[2026-04-14T22:12:47.378Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:12:47.399Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:12:47.409Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:12:47.412Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:12:47.414Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:12:47.414Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:12:47.417Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:12:47.419Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:12:47.420Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:12:47.482Z] node > build ended with 0 errors
+[2026-04-14T22:12:47.483Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:12:47.483Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:12:47.484Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:12:47.506Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:12:47.511Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:12:47.520Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:12:47.520Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:12:47.534Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:12:47.534Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:12:47.419Z] INFO: Build started for nodetests
+[2026-04-14T22:12:47.567Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:28:37.314Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T22:28:37.315Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T22:28:42.578Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:28:42.581Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:28:42.673Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:28:42.879Z] node > build ended with 0 errors
+[2026-04-14T22:28:42.880Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:28:42.880Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:28:42.880Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:28:42.882Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:28:42.882Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:28:42.883Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:28:42.883Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:28:42.884Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:28:42.885Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:28:42.703Z] INFO: Build started for nodetests
+[2026-04-14T22:28:42.879Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:28:42.891Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:28:42.893Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:28:42.893Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:28:42.893Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:28:42.893Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:28:42.895Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:28:42.896Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:28:42.896Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:28:42.948Z] node > build ended with 0 errors
+[2026-04-14T22:28:42.948Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:28:42.948Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:28:42.949Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:28:42.949Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:28:42.949Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:28:42.949Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:28:42.949Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:28:42.950Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:28:42.950Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:28:42.897Z] INFO: Build started for nodetests
+[2026-04-14T22:28:42.952Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:35:05.971Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T22:35:05.972Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T22:35:11.717Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:35:11.718Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:35:11.813Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:35:11.992Z] node > build ended with 0 errors
+[2026-04-14T22:35:11.994Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:35:11.995Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:35:11.995Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:35:11.998Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:35:11.998Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:35:11.998Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:35:11.998Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:35:12.000Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:35:12.000Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:35:11.853Z] INFO: Build started for nodetests
+[2026-04-14T22:35:11.992Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:35:12.003Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:35:12.006Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:35:12.006Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:35:12.007Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:35:12.007Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:35:12.008Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:35:12.010Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:35:12.010Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:35:12.062Z] node > build ended with 0 errors
+[2026-04-14T22:35:12.063Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:35:12.063Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:35:12.063Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:35:12.063Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:35:12.064Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:35:12.064Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:35:12.064Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:35:12.066Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:35:12.067Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:35:12.070Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:35:12.010Z] INFO: Build started for nodetests
+[2026-04-14T22:40:00.744Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:40:00.745Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:40:00.877Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:40:01.133Z] node > build ended with 0 errors
+[2026-04-14T22:40:01.145Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:40:01.145Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:40:01.145Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:40:01.147Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:40:01.151Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:40:01.152Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:40:01.152Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:40:01.155Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:40:01.155Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:40:00.906Z] INFO: Build started for nodetests
+[2026-04-14T22:40:01.133Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:40:01.163Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:40:01.173Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:40:01.174Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:40:01.176Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:40:01.176Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:40:01.179Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:40:01.190Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:40:01.191Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:40:01.260Z] node > build ended with 0 errors
+[2026-04-14T22:40:01.262Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:40:01.262Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:40:01.263Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:40:01.266Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:40:01.268Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:40:01.272Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:40:01.273Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:40:01.275Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:40:01.276Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:40:01.190Z] INFO: Build started for nodetests
+[2026-04-14T22:40:01.280Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:50:45.347Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T22:50:45.348Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T22:50:52.398Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:50:52.399Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:50:52.512Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:50:52.693Z] node > build ended with 0 errors
+[2026-04-14T22:50:52.694Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:50:52.694Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:50:52.694Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:50:52.695Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:50:52.695Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:50:52.695Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:50:52.695Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:50:52.698Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:50:52.699Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:50:52.544Z] INFO: Build started for nodetests
+[2026-04-14T22:50:52.693Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:50:52.705Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:50:52.714Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:50:52.714Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:50:52.715Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:50:52.715Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:50:52.717Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:50:52.717Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:50:52.717Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:50:52.802Z] node > build ended with 0 errors
+[2026-04-14T22:50:52.803Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:50:52.803Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:50:52.803Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:50:52.803Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:50:52.804Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:50:52.804Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:50:52.804Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:50:52.808Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:50:52.808Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:50:52.811Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:50:52.717Z] INFO: Build started for nodetests
+[2026-04-14T22:53:32.461Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:53:32.467Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:53:32.604Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:53:32.741Z] node > build ended with 0 errors
+[2026-04-14T22:53:32.741Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:53:32.741Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:53:32.742Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:53:32.743Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:53:32.743Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:53:32.743Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:53:32.743Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:53:32.744Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:53:32.745Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:53:32.746Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:53:32.749Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:53:32.750Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:53:32.752Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:53:32.752Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:53:32.753Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:53:32.651Z] INFO: Build started for nodetests
+[2026-04-14T22:53:32.741Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:53:32.755Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:53:32.755Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:53:32.801Z] node > build ended with 0 errors
+[2026-04-14T22:53:32.801Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:53:32.802Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:53:32.802Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:53:32.802Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:53:32.802Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:53:32.803Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:53:32.803Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:53:32.805Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:53:32.805Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:53:32.755Z] INFO: Build started for nodetests
+[2026-04-14T22:53:32.814Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:59:09.971Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T22:59:09.972Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T22:59:10.066Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T22:59:10.212Z] node > build ended with 0 errors
+[2026-04-14T22:59:10.218Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:59:10.218Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:59:10.219Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:59:10.258Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:59:10.271Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:59:10.277Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:59:10.277Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:59:10.279Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:59:10.279Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:59:10.098Z] INFO: Build started for nodetests
+[2026-04-14T22:59:10.212Z] LOG: node > build ended with 0 errors
+[2026-04-14T22:59:10.281Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T22:59:10.284Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:59:10.285Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:59:10.285Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:59:10.285Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:59:10.286Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:59:10.287Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T22:59:10.287Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T22:59:10.327Z] node > build ended with 0 errors
+[2026-04-14T22:59:10.328Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T22:59:10.328Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T22:59:10.329Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T22:59:10.331Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T22:59:10.332Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T22:59:10.333Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T22:59:10.333Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T22:59:10.334Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T22:59:10.334Z] [NODE BUILDER] Metafile updated
+[2026-04-14T22:59:10.287Z] INFO: Build started for nodetests
+[2026-04-14T22:59:10.336Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T23:07:30.380Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T23:07:30.381Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T23:07:30.500Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T23:07:30.724Z] node > build ended with 0 errors
+[2026-04-14T23:07:30.726Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T23:07:30.727Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T23:07:30.727Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T23:07:30.732Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T23:07:30.733Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T23:07:30.734Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T23:07:30.734Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T23:07:30.736Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T23:07:30.736Z] [NODE BUILDER] Metafile updated
+[2026-04-14T23:07:30.579Z] INFO: Build started for nodetests
+[2026-04-14T23:07:30.724Z] LOG: node > build ended with 0 errors
+[2026-04-14T23:07:30.738Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T23:07:30.739Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T23:07:30.739Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T23:07:30.739Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T23:07:30.739Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T23:07:30.740Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T23:07:30.742Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T23:07:30.742Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T23:07:30.804Z] node > build ended with 0 errors
+[2026-04-14T23:07:30.804Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T23:07:30.805Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T23:07:30.805Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T23:07:30.805Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T23:07:30.806Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T23:07:30.806Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T23:07:30.806Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T23:07:30.807Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T23:07:30.807Z] [NODE BUILDER] Metafile updated
+[2026-04-14T23:07:30.812Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T23:07:30.742Z] INFO: Build started for nodetests
+[2026-04-14T23:17:01.673Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T23:17:01.677Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts
+[2026-04-14T23:17:01.781Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T23:17:01.943Z] node > build ended with 0 errors
+[2026-04-14T23:17:01.946Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T23:17:01.946Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T23:17:01.946Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T23:17:01.954Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T23:17:01.954Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T23:17:01.956Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T23:17:01.957Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T23:17:01.961Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T23:17:01.962Z] [NODE BUILDER] Metafile updated
+[2026-04-14T23:17:01.812Z] INFO: Build started for nodetests
+[2026-04-14T23:17:01.943Z] LOG: node > build ended with 0 errors
+[2026-04-14T23:17:01.967Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T23:17:01.970Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T23:17:01.971Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T23:17:01.972Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T23:17:01.972Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T23:17:01.974Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T23:17:01.975Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-14T23:17:01.975Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-14T23:17:02.024Z] node > build ended with 0 errors
+[2026-04-14T23:17:02.025Z] [node Builder] Created build log for src/lib/tiposkripto/tests/circle/Circle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Circle.test.build.log
+[2026-04-14T23:17:02.025Z] [node Builder] Created build log for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts at /workspace/testeranto/reports/nodetests/test-logs/Rectangle.test.build.log
+[2026-04-14T23:17:02.026Z] [node Builder] Created build log for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts at /workspace/testeranto/reports/nodetests/test-logs/AiderProcessTreeDataProvider.test.build.log
+[2026-04-14T23:17:02.027Z] [node Builder] Processed src/lib/tiposkripto/tests/circle/Circle.test.ts: 24 files, hash: 23b31a70b2d885dd201a47ca341247a2
+[2026-04-14T23:17:02.028Z] [node Builder] Processed src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts: 24 files, hash: 32991d638beb76b5ae934013ea962780
+[2026-04-14T23:17:02.028Z] [node Builder] Processed src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts: 24 files, hash: dd27cb08591417d0f20f632e9dcf703c
+[2026-04-14T23:17:02.028Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/nodetests/chunk-RS2RGIKF.mjs
+[2026-04-14T23:17:02.031Z] [node Builder] Wrote inputFiles.json for 3 tests to testeranto/bundles/nodetests/inputFiles.json
+[2026-04-14T23:17:02.032Z] [NODE BUILDER] Metafile updated
+[2026-04-14T23:17:01.975Z] INFO: Build started for nodetests
+[2026-04-14T23:17:02.040Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-14T23:27:31.901Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T23:27:31.902Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-14T23:27:32.670Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T23:27:34.883Z] node > build ended with 5 errors
+[2026-04-14T23:27:33.380Z] INFO: Build started for nodetests
+[2026-04-14T23:27:34.882Z] LOG: node > build ended with 5 errors
+[2026-04-14T23:27:34.901Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-14T23:27:34.915Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-14T23:38:24.281Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-14T23:38:24.440Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-14T23:38:26.108Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-14T23:38:28.536Z] node > build ended with 5 errors
+[2026-04-14T23:38:28.612Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-14T23:38:28.615Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-14T23:38:26.378Z] INFO: Build started for nodetests
+[2026-04-14T23:38:28.536Z] LOG: node > build ended with 5 errors
+[2026-04-14T23:59:44.094Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-14T23:59:44.101Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-14T23:59:44.116Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-15T00:03:40.987Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T00:03:41.026Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T00:03:42.382Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:04:11.088Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T00:04:11.090Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T00:04:12.303Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:04:14.033Z] node > build ended with 5 errors
+[2026-04-15T00:04:14.154Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T00:04:12.628Z] INFO: Build started for nodetests
+[2026-04-15T00:04:14.032Z] LOG: node > build ended with 5 errors
+[2026-04-15T00:04:14.199Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T00:21:17.280Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:21:17.293Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-15T00:21:17.308Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-15T00:22:08.517Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T00:22:08.518Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T00:22:09.329Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:22:10.312Z] node > build ended with 5 errors
+[2026-04-15T00:22:09.695Z] INFO: Build started for nodetests
+[2026-04-15T00:22:10.312Z] LOG: node > build ended with 5 errors
+[2026-04-15T00:22:10.433Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T00:22:10.506Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T00:36:26.291Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:36:26.295Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-15T00:37:32.279Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T00:37:32.315Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T00:37:33.559Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:37:36.432Z] node > build ended with 5 errors
+[2026-04-15T00:37:36.618Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T00:37:36.699Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T00:37:34.941Z] INFO: Build started for nodetests
+[2026-04-15T00:37:36.432Z] LOG: node > build ended with 5 errors
+[2026-04-15T00:42:53.918Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:42:53.923Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-15T00:42:53.939Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-15T00:43:38.953Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T00:43:38.977Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T00:43:41.175Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:43:42.747Z] node > build ended with 5 errors
+[2026-04-15T00:43:42.779Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T00:43:42.900Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T00:43:41.643Z] INFO: Build started for nodetests
+[2026-04-15T00:43:42.747Z] LOG: node > build ended with 5 errors
+[2026-04-15T00:51:51.093Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:51:51.098Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-15T00:51:51.106Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-15T00:52:58.316Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T00:52:58.577Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T00:52:59.650Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:53:02.231Z] node > build ended with 5 errors
+[2026-04-15T00:53:02.262Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T00:53:02.287Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T00:53:00.193Z] INFO: Build started for nodetests
+[2026-04-15T00:53:02.231Z] LOG: node > build ended with 5 errors
+[2026-04-15T00:56:22.474Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T00:56:22.478Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-15T00:57:09.123Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T00:57:09.209Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T00:57:11.227Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T00:57:14.114Z] node > build ended with 5 errors
+[2026-04-15T00:57:14.262Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T00:57:11.632Z] INFO: Build started for nodetests
+[2026-04-15T00:57:14.114Z] LOG: node > build ended with 5 errors
+[2026-04-15T00:57:14.367Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T01:04:10.001Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T01:04:10.002Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T01:04:10.410Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:04:11.232Z] node > build ended with 5 errors
+[2026-04-15T01:04:11.263Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T01:04:10.628Z] INFO: Build started for nodetests
+[2026-04-15T01:04:11.232Z] LOG: node > build ended with 5 errors
+[2026-04-15T01:04:11.286Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T01:08:35.735Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T01:08:35.738Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T01:08:36.607Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:08:38.540Z] node > build ended with 5 errors
+[2026-04-15T01:08:36.947Z] INFO: Build started for nodetests
+[2026-04-15T01:08:38.540Z] LOG: node > build ended with 5 errors
+[2026-04-15T01:08:38.651Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T01:08:38.703Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T01:12:41.288Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T01:12:41.289Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-15T01:13:02.688Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T01:13:02.690Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T01:13:03.307Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:13:04.575Z] node > build ended with 5 errors
+[2026-04-15T01:13:04.608Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T01:13:04.630Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T01:13:03.640Z] INFO: Build started for nodetests
+[2026-04-15T01:13:04.575Z] LOG: node > build ended with 5 errors
+[2026-04-15T01:16:42.115Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T01:16:42.148Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T01:16:43.239Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:16:44.985Z] node > build ended with 5 errors
+[2026-04-15T01:16:45.069Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T01:16:43.679Z] INFO: Build started for nodetests
+[2026-04-15T01:16:44.985Z] LOG: node > build ended with 5 errors
+[2026-04-15T01:16:45.102Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T01:18:19.877Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T01:18:19.879Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T01:18:20.818Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:18:21.555Z] node > build ended with 5 errors
+[2026-04-15T01:18:21.607Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T01:18:21.629Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T01:18:20.926Z] INFO: Build started for nodetests
+[2026-04-15T01:18:21.555Z] LOG: node > build ended with 5 errors
+[2026-04-15T01:25:39.390Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T01:25:39.396Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T01:25:39.793Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T01:25:40.583Z] node > build ended with 5 errors
+[2026-04-15T01:25:40.648Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T01:25:40.654Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T01:25:40.095Z] INFO: Build started for nodetests
+[2026-04-15T01:25:40.583Z] LOG: node > build ended with 5 errors

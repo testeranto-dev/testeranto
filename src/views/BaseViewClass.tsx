@@ -21,23 +21,168 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
     loading: true,
     error: null as string | null,
   };
+  
+  private ws: WebSocket | null = null;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
+  private reconnectTimeout: NodeJS.Timeout | null = null;
 
   componentDidMount() {
     this.loadData();
+    this.connectWebSocket();
   }
 
   componentDidUpdate(prevProps: BaseViewProps<T>) {
     if (prevProps.slicePath !== this.props.slicePath) {
       this.loadData();
     }
-    // Reload when WebSocket update matches our view
+    // Also handle prop-based WebSocket updates for backward compatibility
     if (this.props.wsUpdate && this.props.wsUpdate.type === 'update') {
       const currentViewName = extractViewName(this.props.slicePath);
       const updatedViewName = extractViewName(this.props.wsUpdate.path);
       if (updatedViewName === currentViewName) {
-        console.log(`[BaseViewClass] WebSocket update received for view: ${currentViewName}, reloading data`);
+        console.log(`[BaseViewClass] WebSocket update received via props for view: ${currentViewName}, reloading data`);
         this.loadData();
       }
+    }
+  }
+
+  componentWillUnmount() {
+    this.disconnectWebSocket();
+  }
+
+  connectWebSocket() {
+    // Determine WebSocket URL based on current location
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}`;
+    
+    console.log(`[BaseViewClass] Attempting to connect WebSocket for view ${extractViewName(this.props.slicePath)} to ${wsUrl}`);
+    
+    try {
+      this.ws = new WebSocket(wsUrl);
+      
+      this.ws.onopen = () => {
+        const viewName = extractViewName(this.props.slicePath);
+        console.log(`[BaseViewClass] WebSocket connected for view: ${viewName}`);
+        this.reconnectAttempts = 0;
+        
+        // Subscribe to slice updates for this view
+        const subscribeMessage = {
+          type: 'subscribeToSlice',
+          slicePath: `/~/views/${viewName}/slice`
+        };
+        console.log(`[BaseViewClass] Sending subscribe message:`, subscribeMessage);
+        this.ws?.send(JSON.stringify(subscribeMessage));
+      };
+      
+      this.ws.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          this.handleWebSocketMessage(message);
+        } catch (error) {
+          console.error('[BaseViewClass] Error parsing WebSocket message:', error);
+        }
+      };
+      
+      this.ws.onclose = (event) => {
+        console.log(`[BaseViewClass] WebSocket disconnected for view: ${extractViewName(this.props.slicePath)}`, event.code, event.reason);
+        
+        // Attempt to reconnect if not a normal closure
+        if (event.code !== 1000 && this.reconnectAttempts < this.maxReconnectAttempts) {
+          this.reconnectAttempts++;
+          const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
+          
+          console.log(`[BaseViewClass] Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+          
+          this.reconnectTimeout = setTimeout(() => {
+            this.connectWebSocket();
+          }, delay);
+        }
+      };
+      
+      this.ws.onerror = (error) => {
+        const viewName = extractViewName(this.props.slicePath);
+        console.error(`[BaseViewClass] WebSocket error for view ${viewName}:`, error);
+        console.error(`[BaseViewClass] WebSocket readyState: ${this.ws?.readyState}`);
+      };
+      
+    } catch (error) {
+      console.error('[BaseViewClass] Failed to create WebSocket connection:', error);
+    }
+  }
+
+  disconnectWebSocket() {
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+    
+    if (this.ws) {
+      // Unsubscribe before closing
+      const viewName = extractViewName(this.props.slicePath);
+      const unsubscribeMessage = {
+        type: 'unsubscribeFromSlice',
+        slicePath: `/~/views/${viewName}/slice`
+      };
+      
+      try {
+        this.ws.send(JSON.stringify(unsubscribeMessage));
+      } catch (error) {
+        // Ignore errors during unsubscribe
+      }
+      
+      this.ws.close();
+      this.ws = null;
+    }
+  }
+
+  handleWebSocketMessage(message: any) {
+    const viewName = extractViewName(this.props.slicePath);
+    
+    // Log all WebSocket messages for debugging
+    console.log(`[BaseViewClass] WebSocket message received for view ${viewName}:`, {
+      type: message.type,
+      url: message.url,
+      slicePath: message.slicePath,
+      timestamp: message.timestamp
+    });
+    
+    // Handle different message types
+    switch (message.type) {
+      case 'resourceChanged':
+        // Check if this resource change affects our view
+        if (message.url && message.url.includes(`/~/views/${viewName}`)) {
+          console.log(`[BaseViewClass] Resource changed for view ${viewName}, reloading data`);
+          this.loadData();
+        } else if (message.url && message.url === '/~/graph') {
+          // Graph updates should trigger view reloads
+          console.log(`[BaseViewClass] Graph resource changed, reloading data for view ${viewName}`);
+          this.loadData();
+        }
+        break;
+        
+      case 'graphUpdated':
+        // Graph updates often mean view slices need refreshing
+        console.log(`[BaseViewClass] Graph updated, reloading data for view ${viewName}`);
+        this.loadData();
+        break;
+        
+      case 'subscribedToSlice':
+        if (message.slicePath === `/~/views/${viewName}/slice`) {
+          console.log(`[BaseViewClass] Successfully subscribed to slice updates for view ${viewName}`);
+        }
+        break;
+        
+      case 'unsubscribedFromSlice':
+        if (message.slicePath === `/~/views/${viewName}/slice`) {
+          console.log(`[BaseViewClass] Unsubscribed from slice updates for view ${viewName}`);
+        }
+        break;
+        
+      default:
+        // Log unhandled message types for debugging
+        console.log(`[BaseViewClass] Unhandled message type: ${message.type}`);
+        break;
     }
   }
 
@@ -61,7 +206,10 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
         : staticFilePath;
 
       console.log(`[BaseViewClass] Loading slice data from: ${absolutePath} (view: ${viewName}, original: ${slicePath})`);
-      const response = await fetch(absolutePath);
+      
+      // Add cache busting to ensure fresh data
+      const cacheBuster = `?_t=${Date.now()}`;
+      const response = await fetch(absolutePath + cacheBuster);
 
       if (!response.ok) {
         throw new Error(`Failed to load slice data from ${absolutePath}: ${response.status} ${response.statusText}`);
@@ -109,6 +257,7 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
             }}>
               {this.props.slicePath}
             </p>
+            <p>WebSocket: {this.ws?.readyState === WebSocket.OPEN ? 'Connected' : 'Connecting...'}</p>
           </div>
         </div>
       );
@@ -129,6 +278,21 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
           <h3>Error loading view</h3>
           <p><strong>Error message:</strong> {error}</p>
           <p><strong>Slice path:</strong> {this.props.slicePath}</p>
+          <p><strong>WebSocket status:</strong> {this.ws?.readyState === WebSocket.OPEN ? 'Connected' : 'Disconnected'}</p>
+          <button 
+            onClick={() => this.loadData()}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#d32f2f',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginTop: '10px'
+            }}
+          >
+            Retry Load
+          </button>
         </div>
       );
     }
@@ -147,6 +311,20 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
           <h3>No data available</h3>
           <p>Slice data is empty or could not be parsed.</p>
           <p>Slice path: {this.props.slicePath}</p>
+          <button 
+            onClick={() => this.loadData()}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#ff9800',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginTop: '10px'
+            }}
+          >
+            Retry Load
+          </button>
         </div>
       );
     }

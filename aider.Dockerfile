@@ -1,5 +1,5 @@
-# FROM python:3.11-slim
-FROM paulgauthier/aider-full
+FROM python:3.11-slim
+# FROM paulgauthier/aider-full
 WORKDIR /workspace
 
 RUN apt-get update && apt-get install -y --no-install-recommends \

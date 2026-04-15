@@ -28,12 +28,25 @@ export class Server_Lock extends Server_Vscode {
       // For read locks, multiple readers are allowed
       if (lockType === 'read' && attrs.lockType === 'read') {
         // Allow multiple read locks
-        this.graph.mergeNodeAttributes(nodeId, {
-          locked: true,
-          lockOwner: ownerId,
-          lockTimestamp: new Date().toISOString(),
-          lockType: 'read'
-        });
+        const timestamp = new Date().toISOString();
+        const update = {
+          operations: [{
+            type: 'updateNode' as const,
+            data: {
+              id: nodeId,
+              metadata: {
+                ...attrs.metadata,
+                locked: true,
+                lockOwner: ownerId,
+                lockTimestamp: timestamp,
+                lockType: 'read'
+              }
+            },
+            timestamp
+          }],
+          timestamp
+        };
+        this.applyUpdate(update);
         return true;
       }
       // For write/exclusive locks, node must be unlocked
@@ -41,13 +54,25 @@ export class Server_Lock extends Server_Vscode {
     }
 
     // Acquire the lock
-    this.graph.mergeNodeAttributes(nodeId, {
-      locked: true,
-      lockOwner: ownerId,
-      lockTimestamp: new Date().toISOString(),
-      lockType
-    });
-
+    const timestamp = new Date().toISOString();
+    const update = {
+      operations: [{
+        type: 'updateNode' as const,
+        data: {
+          id: nodeId,
+          metadata: {
+            ...attrs.metadata,
+            locked: true,
+            lockOwner: ownerId,
+            lockTimestamp: timestamp,
+            lockType
+          }
+        },
+        timestamp
+      }],
+      timestamp
+    };
+    this.applyUpdate(update);
     return true;
   }
 
@@ -70,13 +95,25 @@ export class Server_Lock extends Server_Vscode {
     }
 
     // Release the lock
-    this.graph.mergeNodeAttributes(nodeId, {
-      locked: false,
-      lockOwner: undefined,
-      lockTimestamp: undefined,
-      lockType: undefined
-    });
-
+    const timestamp = new Date().toISOString();
+    const update = {
+      operations: [{
+        type: 'updateNode' as const,
+        data: {
+          id: nodeId,
+          metadata: {
+            ...attrs.metadata,
+            locked: false,
+            lockOwner: undefined,
+            lockTimestamp: undefined,
+            lockType: undefined
+          }
+        },
+        timestamp
+      }],
+      timestamp
+    };
+    this.applyUpdate(update);
     return true;
   }
 
@@ -113,19 +150,34 @@ export class Server_Lock extends Server_Vscode {
    */
   releaseAllLocks(ownerId: string): number {
     let releasedCount = 0;
+    const timestamp = new Date().toISOString();
+    const operations: any[] = [];
 
     this.graph.forEachNode((nodeId) => {
       const attrs = this.graph.getNodeAttributes(nodeId);
       if (attrs.locked && attrs.lockOwner === ownerId) {
-        this.graph.mergeNodeAttributes(nodeId, {
-          locked: false,
-          lockOwner: undefined,
-          lockTimestamp: undefined,
-          lockType: undefined
+        operations.push({
+          type: 'updateNode' as const,
+          data: {
+            id: nodeId,
+            metadata: {
+              ...attrs.metadata,
+              locked: false,
+              lockOwner: undefined,
+              lockTimestamp: undefined,
+              lockType: undefined
+            }
+          },
+          timestamp
         });
         releasedCount++;
       }
     });
+
+    if (operations.length > 0) {
+      const update = { operations, timestamp };
+      this.applyUpdate(update);
+    }
 
     return releasedCount;
   }
@@ -137,6 +189,8 @@ export class Server_Lock extends Server_Vscode {
    */
   lockAllFiles(ownerId: string = 'system:restart'): number {
     let lockedCount = 0;
+    const timestamp = new Date().toISOString();
+    const operations: any[] = [];
 
     this.graph.forEachNode((nodeId) => {
       const attrs = this.graph.getNodeAttributes(nodeId);
@@ -144,16 +198,29 @@ export class Server_Lock extends Server_Vscode {
       if (attrs.type === 'file' || attrs.type === 'input_file' ||
         attrs.type === 'entrypoint' || attrs.type === 'test') {
         if (!attrs.locked) {
-          this.graph.mergeNodeAttributes(nodeId, {
-            locked: true,
-            lockOwner: ownerId,
-            lockTimestamp: new Date().toISOString(),
-            lockType: 'exclusive'
+          operations.push({
+            type: 'updateNode' as const,
+            data: {
+              id: nodeId,
+              metadata: {
+                ...attrs.metadata,
+                locked: true,
+                lockOwner: ownerId,
+                lockTimestamp: timestamp,
+                lockType: 'exclusive'
+              }
+            },
+            timestamp
           });
           lockedCount++;
         }
       }
     });
+
+    if (operations.length > 0) {
+      const update = { operations, timestamp };
+      this.applyUpdate(update);
+    }
 
     return lockedCount;
   }
@@ -164,6 +231,8 @@ export class Server_Lock extends Server_Vscode {
    */
   unlockAllFiles(): number {
     let unlockedCount = 0;
+    const timestamp = new Date().toISOString();
+    const operations: any[] = [];
 
     this.graph.forEachNode((nodeId) => {
       const attrs = this.graph.getNodeAttributes(nodeId);
@@ -171,16 +240,29 @@ export class Server_Lock extends Server_Vscode {
       if (attrs.type === 'file' || attrs.type === 'input_file' ||
         attrs.type === 'entrypoint' || attrs.type === 'test') {
         if (attrs.locked) {
-          this.graph.mergeNodeAttributes(nodeId, {
-            locked: false,
-            lockOwner: undefined,
-            lockTimestamp: undefined,
-            lockType: undefined
+          operations.push({
+            type: 'updateNode' as const,
+            data: {
+              id: nodeId,
+              metadata: {
+                ...attrs.metadata,
+                locked: false,
+                lockOwner: undefined,
+                lockTimestamp: undefined,
+                lockType: undefined
+              }
+            },
+            timestamp
           });
           unlockedCount++;
         }
       }
     });
+
+    if (operations.length > 0) {
+      const update = { operations, timestamp };
+      this.applyUpdate(update);
+    }
 
     return unlockedCount;
   }

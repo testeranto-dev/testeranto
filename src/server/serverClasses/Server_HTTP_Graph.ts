@@ -36,7 +36,8 @@ export abstract class Server_HTTP_Graph extends Server_Graph {
 
   async start(): Promise<void> {
     await super.start();
-    await this.writeViewSliceFiles();
+    this.writeViewSliceFiles();
+    this.saveGraph();
   }
 
   async stop() {
