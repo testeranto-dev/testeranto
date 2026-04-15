@@ -54,6 +54,11 @@ export abstract class Server_Docker_Test extends Server_Aider {
   async start(): Promise<void> {
     await super.start();
     // getReportDirPure();
+    
+    // Initialize file watching for input files
+    if (this.mode === "dev") {
+      await this.initializeFileWatching();
+    }
   }
 
   public async stop(): Promise<void> {
@@ -562,6 +567,99 @@ export abstract class Server_Docker_Test extends Server_Aider {
       };
       this.applyUpdate(failureUpdate);
       throw error;
+    }
+  }
+
+  /**
+   * Watch input files for a test and relaunch services when they change
+   */
+  async watchInputFileForTest(
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+    configValue: any
+  ): Promise<void> {
+    const fs = await import('fs');
+    const path = await import('path');
+    const { getInputFilePath } = await import('./Server_Docker/Server_Docker_Constants');
+    
+    try {
+      const inputFilePath = getInputFilePath(runtime, configKey);
+      
+      if (!fs.existsSync(inputFilePath)) {
+        consoleLog(`[watchInputFileForTest] Input file doesn't exist yet: ${inputFilePath}`);
+        return;
+      }
+
+      // Store the current hash to detect changes
+      let currentHash = '';
+      const updateHash = () => {
+        try {
+          const content = fs.readFileSync(inputFilePath, 'utf-8');
+          const allTestsInfo = JSON.parse(content);
+          if (allTestsInfo[testName]) {
+            currentHash = allTestsInfo[testName].hash || '';
+          }
+        } catch (error) {
+          consoleError(`[watchInputFileForTest] Error reading input file:`, error);
+        }
+      };
+
+      // Initial hash
+      updateHash();
+
+      // Watch for changes
+      fs.watchFile(inputFilePath, async (curr, prev) => {
+        consoleLog(`[watchInputFileForTest] Input file changed: ${inputFilePath}`);
+        
+        try {
+          const content = fs.readFileSync(inputFilePath, 'utf-8');
+          const allTestsInfo = JSON.parse(content);
+          
+          if (allTestsInfo[testName]) {
+            const testInfo = allTestsInfo[testName];
+            const newHash = testInfo.hash || '';
+            
+            if (newHash !== currentHash) {
+              consoleLog(`[watchInputFileForTest] Hash changed for ${testName}, relaunching services`);
+              currentHash = newHash;
+              
+              // Relaunch BDD test
+              await this.launchBddTest(runtime, testName, configKey, configValue);
+              
+              // Relaunch checks
+              await this.launchChecks(runtime, testName, configKey, configValue);
+              
+              // Relaunch aider
+              await this.launchAider(runtime, testName, configKey, configValue);
+              
+              consoleLog(`[watchInputFileForTest] Services relaunched for ${testName}`);
+            }
+          }
+        } catch (error) {
+          consoleError(`[watchInputFileForTest] Error processing input file change:`, error);
+        }
+      });
+      
+      consoleLog(`[watchInputFileForTest] Now watching input file for ${testName}: ${inputFilePath}`);
+    } catch (error) {
+      consoleError(`[watchInputFileForTest] Failed to set up file watching for ${testName}:`, error);
+    }
+  }
+
+  /**
+   * Initialize file watching for all tests
+   */
+  async initializeFileWatching(): Promise<void> {
+    consoleLog('[initializeFileWatching] Setting up file watching for all tests');
+    
+    for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+      const runtime = configValue.runtime as IRunTime;
+      const tests = configValue.tests || [];
+      
+      for (const testName of tests) {
+        await this.watchInputFileForTest(runtime, testName, configKey, configValue);
+      }
     }
   }
 

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-15T01:59:41.601Z for service webtests-builder (runtime: web) ===
-=== Container ID: f51dd4639860e8b972db9720242374b50210aa8526ec8914fc8758fe9dfb45c3 ===
+=== Log started at 2026-04-15T03:06:12.268Z for service webtests-builder (runtime: web) ===
+=== Container ID: 475f72fd2c727a35c9763c90b7d2036a36eaf6a883c1ab95c6da91f4eb71b41a ===
 === Test: N/A ===
 === Config Key: webtests ===
 
@@ -47,14 +47,14 @@ $ /workspace/node_modules/.bin/tsx /workspace/testeranto/web_runtime.ts /workspa
 
 web > build ended with 0 errors
 [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: b2cdad9007d1f994145593171effda55
 [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
 [WEB BUILDER] Metafile updated
 [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
 [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: b2cdad9007d1f994145593171effda55
 [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
-[WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.49, port 8000, /workspace
+[WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.51, port 8000, /workspace
 [WEB BUILDER] Watch mode active - waiting for file changes...
 [WEB BUILDER] Using onEnd plugin for rebuild detection
 Chrome is a separate service, not launched in builder
@@ -86,9 +86,9 @@ Chrome is a separate service, not launched in builder
 
 web > build ended with 0 errors
 [web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 02023e08953e8a2be2ebb0912d83ad22
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 44e384b3c726000b565814e319e754b6
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: b2cdad9007d1f994145593171effda55
 [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
 [WEB BUILDER] Metafile updated
 [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
 
-=== Log captured at 2026-04-15T02:00:06.018Z (container status: running) ===
+=== Log captured at 2026-04-15T03:06:37.495Z (container status: running) ===

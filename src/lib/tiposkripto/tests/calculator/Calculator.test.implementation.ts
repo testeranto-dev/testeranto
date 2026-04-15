@@ -11,9 +11,7 @@ export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
   // TDT style /////////////////////////
   confirms: {
     addition: () => {
-      return () => {
-        return (a: number, b: number) => a + b;
-      };
+      return (a: number, b: number) => a + b;
     },
   },
 
@@ -60,7 +58,7 @@ export const implementation: ITestImplementation<ICalculatorNode, O, M> = {
 
   // AAA style /////////////////////////
   describes: {
-    "a simple calculator": (input: typeof Calculator) => new input(),
+    "another simple calculator": (input: typeof Calculator) => new input(),
   },
 
   its: {

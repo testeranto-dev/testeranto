@@ -23,11 +23,11 @@ class TesterantoComponent extends React.Component {
 }
 
 export const adapter: ITestAdapter<ICalculatorWeb> = {
-  beforeAll: async (reactElement, tr, artifactory): Promise<any> => {
-    console.log("[React adapter] beforeAll");
+  prepareAll: async (reactElement, tr, artifactory): Promise<any> => {
+    console.log("[React adapter] prepareAll");
     
     // Start screencast for the entire test suite
-    if (artifactory) {
+    if (artifactory && artifactory.openScreencast) {
       await artifactory.openScreencast(`test_suite_recording`);
     }
     
@@ -41,10 +41,8 @@ export const adapter: ITestAdapter<ICalculatorWeb> = {
     }
     console.log("[React adapter] htmlElement:", htmlElement);
 
-    const testhtmlElement = document.createElement("div");
-    testhtmlElement.innerText ="hello adapter"
-    // Store the reactElement for use in beforeEach
-    // Don't create domRoot here - it will be created in beforeEach when needed
+    // Store the reactElement for use in prepareEach
+    // Don't create domRoot here - it will be created in prepareEach when needed
     return { htmlElement, reactElement };
   },
   beforeEach: async (subject, initializer, testResource, initialValues, artifactory) => {
@@ -153,10 +151,9 @@ export const adapter: ITestAdapter<ICalculatorWeb> = {
     await thenCB(store, testResource, artifactory);
     return store;
   },
-  afterEach: async (store, key, artifactory) => {
-    console.log("[React adapter] afterEach called with store:", store);
+  cleanupEach: async (store, key, artifactory) => {
+    console.log("[React adapter] cleanupEach called with store:", store);
     
-    // This is stupid and wrong.
     // Wait for the calculator UI to be visible
     // Check for the display element
     await new Promise(resolve => {
@@ -179,20 +176,22 @@ export const adapter: ITestAdapter<ICalculatorWeb> = {
     // Additional wait for any animations
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    artifactory.screenshot(`niceShotAfterEach`);
+    if (artifactory && artifactory.screenshot) {
+      artifactory.screenshot(`niceShotCleanupEach`);
+    }
     
     // Unmount the React component to ensure clean state for next test
     if (store?.domRoot) {
       store.domRoot.unmount();
       console.log("[React adapter] Unmounted React component after test");
-      // Remove domRoot from store so beforeEach creates a new one
+      // Remove domRoot from store so prepareEach creates a new one
       delete store.domRoot;
     }
     
     return store;
   },
-  afterAll: async (store, artifactory) => {
-    console.log("[React adapter] afterAll called");
+  cleanupAll: async (store, artifactory) => {
+    console.log("[React adapter] cleanupAll called");
     
     // Unmount React component
     if (store?.domRoot) {
@@ -205,18 +204,24 @@ export const adapter: ITestAdapter<ICalculatorWeb> = {
       console.log("[React adapter] Removed root element");
     }
     if (artifactory) {
-      artifactory.writeFileSync("asd", "qwer");
+      if (artifactory.writeFileSync) {
+        artifactory.writeFileSync("asd", "qwer");
+      }
       // Wait a bit before taking final screenshot
       await new Promise(resolve => setTimeout(resolve, 500));
       // Add timestamp to make screenshot filename unique
-      artifactory.screenshot(`niceShotAfterAll`);
+      if (artifactory.screenshot) {
+        artifactory.screenshot(`niceShotCleanupAll`);
+      }
       // Stop screencast for the entire test suite
-      await artifactory.closeScreencast(`test_suite_recording`);
+      if (artifactory.closeScreencast) {
+        await artifactory.closeScreencast(`test_suite_recording`);
+      }
     }
     return store;
   },
-  assertThis: (actual: string) => {
-    console.log("[React adapter] assertThis called with actual:", actual);
+  assert: (actual: string) => {
+    console.log("[React adapter] assert called with actual:", actual);
     return actual;
   },
 };

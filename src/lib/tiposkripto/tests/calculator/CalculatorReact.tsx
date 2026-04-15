@@ -30,12 +30,12 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
 
   const handleButtonClick = (button: string) => {
     const newCalc = new Calculator();
-    
+
     // Copy current calculator state
     // We need to recreate the calculator with current display
     // This is a limitation of the Calculator class design
     const currentDisplay = calculator.getDisplay();
-    
+
     // Create a new calculator and press all the current display characters
     // This is not ideal but works for the demo
     // A better Calculator class would have a way to set state
@@ -44,12 +44,12 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
         newCalc.press(char);
       });
     }
-    
+
     // Press the new button
     newCalc.press(button);
-    
+
     setCalculator(newCalc);
-    
+
     // Add to history
     setHistory(prev => [...prev, `${currentDisplay} → ${button} → ${newCalc.getDisplay()}`]);
   };
@@ -57,17 +57,17 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
   const handleEnter = () => {
     const newCalc = new Calculator();
     const currentDisplay = calculator.getDisplay();
-    
+
     // Copy current state
     if (currentDisplay) {
       currentDisplay.split('').forEach(char => {
         newCalc.press(char);
       });
     }
-    
+
     // Press enter
     newCalc.enter();
-    
+
     setCalculator(newCalc);
     setHistory(prev => [...prev, `ENTER: ${currentDisplay} → ${newCalc.getDisplay()}`]);
   };
@@ -75,14 +75,14 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
   const handleMemory = (operation: 'MS' | 'MR' | 'MC' | 'M+') => {
     const newCalc = new Calculator();
     const currentDisplay = calculator.getDisplay();
-    
+
     // Copy current state
     if (currentDisplay) {
       currentDisplay.split('').forEach(char => {
         newCalc.press(char);
       });
     }
-    
+
     // Perform memory operation
     switch (operation) {
       case 'MS':
@@ -98,7 +98,7 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
         newCalc.memoryAdd();
         break;
     }
-    
+
     setCalculator(newCalc);
     setHistory(prev => [...prev, `${operation}: ${currentDisplay} → ${newCalc.getDisplay()}`]);
   };
@@ -124,14 +124,14 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
 
   return (
     <div style={styles.container}>
-      <h2>React Calculator</h2>
-      
+      <h2>React Calculator!!</h2>
+
       <div style={styles.calculator}>
         {/* Display */}
         <div style={styles.display}>
           <div style={styles.displayValue}>{display || '0'}</div>
         </div>
-        
+
         {/* Memory buttons */}
         <div style={styles.memorySection}>
           <div style={styles.memoryLabel}>Memory:</div>
@@ -147,7 +147,7 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
             ))}
           </div>
         </div>
-        
+
         {/* Main buttons */}
         <div style={styles.buttonGrid}>
           {buttonRows.map((row, rowIndex) => (
@@ -188,7 +188,7 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
             </div>
           ))}
         </div>
-        
+
         {/* History */}
         <div style={styles.historySection}>
           <h4>Operation History:</h4>
@@ -213,7 +213,7 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
           )}
         </div>
       </div>
-      
+
       {/* Calculator state info */}
       <div style={styles.infoSection}>
         <h4>Calculator State:</h4>

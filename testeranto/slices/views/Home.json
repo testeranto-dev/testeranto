@@ -9,7 +9,7 @@
         "viewKey": "Home",
         "viewPath": "src/views/defaultViews/HomeView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Home.json",
-        "timestamp": "2026-04-15T01:59:07.090Z"
+        "timestamp": "2026-04-15T03:05:29.545Z"
       }
     },
     {
@@ -21,7 +21,7 @@
         "viewKey": "Kanban",
         "viewPath": "src/views/defaultViews/KanbanBoardView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
-        "timestamp": "2026-04-15T01:59:07.090Z"
+        "timestamp": "2026-04-15T03:05:29.545Z"
       }
     },
     {
@@ -33,7 +33,7 @@
         "viewKey": "EisenhowerMatrix",
         "viewPath": "src/views/defaultViews/EisenhowerMatrixView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
-        "timestamp": "2026-04-15T01:59:07.090Z"
+        "timestamp": "2026-04-15T03:05:29.545Z"
       }
     },
     {
@@ -45,7 +45,7 @@
         "viewKey": "Gantt",
         "viewPath": "src/views/defaultViews/GanttView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
-        "timestamp": "2026-04-15T01:59:07.090Z"
+        "timestamp": "2026-04-15T03:05:29.545Z"
       }
     },
     {
@@ -57,7 +57,7 @@
         "viewKey": "Chat",
         "viewPath": "src/views/defaultViews/ChatView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
-        "timestamp": "2026-04-15T01:59:07.090Z"
+        "timestamp": "2026-04-15T03:05:29.545Z"
       }
     },
     {
@@ -69,12 +69,12 @@
         "viewKey": "DebugGraph",
         "viewPath": "src/views/defaultViews/DebugGraphView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/DebugGraph.json",
-        "timestamp": "2026-04-15T01:59:07.090Z"
+        "timestamp": "2026-04-15T03:05:29.545Z"
       }
     }
   ],
   "viewType": "home",
-  "timestamp": "2026-04-15T02:06:51.943Z",
+  "timestamp": "2026-04-15T03:07:06.900Z",
   "defaultViews": [
     {
       "id": "kanban",

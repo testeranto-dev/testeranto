@@ -1271,6 +1271,7 @@ services:
                 cat > /tmp/agent_load.txt << 'EOF'
         /read SOUL.md
         /read testeranto/slices/agents/prodirek.json
+        /read testeranto/agents/prodirek.md
         EOF
            
 
@@ -1317,7 +1318,8 @@ services:
                  # Create the instruction file with content from config
                 cat > /tmp/agent_load.txt << 'EOF'
         /read SOUL.md
-        /read testeranto/slices/agents/prodirek.json
+        /read testeranto/slices/agents/arko.json
+        /read testeranto/agents/arko.md
         EOF
            
 
