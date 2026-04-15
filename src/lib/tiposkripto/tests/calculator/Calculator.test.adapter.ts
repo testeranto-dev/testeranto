@@ -15,17 +15,8 @@ export const adapter: ITestAdapter<ICalculatorNode> = {
     artifactory,
   ) => {
     console.log("[adapter] beforeEach called with subject:", subject);
-    // Call initializer with appropriate arguments
-    let calculator;
-    if (initializer.length === 0) {
-      calculator = initializer();
-    } else if (initializer.length === 1) {
-      // Try subject first (for implementations like (input: typeof Calculator) => new input())
-      calculator = initializer(subject);
-    } else {
-      // Default: call with no arguments
-      calculator = initializer();
-    }
+    // Trust the type contract: initializer is a function that returns the store
+    const calculator = initializer(subject);
     console.log("[adapter] beforeEach created calculator:", calculator);
     return calculator;
   },

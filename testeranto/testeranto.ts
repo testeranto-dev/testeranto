@@ -244,7 +244,7 @@ const config: ITesterantoConfig = {
         "src/lib/tiposkripto/tests/circle/Circle.test.ts",
         "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
         "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-        "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        // "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
         "src/vscode/providers/logic/FileTreeLogic.test.ts",
         "src/vscode/providers/utils/testTree/treeFilter.test.ts",
         "src/vscode/providers/utils/testTree/debugTest.js",

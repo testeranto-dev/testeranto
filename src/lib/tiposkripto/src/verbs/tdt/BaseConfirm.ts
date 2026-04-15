@@ -148,49 +148,14 @@ export class BaseConfirm<I extends TestTypeParams_any> {
               input = value;
             }
 
-            // should is a function that expects the actual result
-            if (typeof should === 'function') {
-              // Compute actual result using confirmCB
-              // For TDT, confirmCB might be:
-              // 1. A function that returns the test function: () => (a, b) => a + b
-              // 2. The test function itself: (a, b) => a + b
-              let testFn;
-              if (typeof this.confirmCB === 'function') {
-                // Try to get the test function
-                const potentialTestFn = this.confirmCB();
-                if (typeof potentialTestFn === 'function') {
-                  testFn = potentialTestFn;
-                } else {
-                  // this.confirmCB is the test function itself
-                  testFn = this.confirmCB;
-                }
-              } else {
-                testFn = this.confirmCB;
-              }
-
-              // Now call the test function with input
-              const actualResult = Array.isArray(input)
-                ? testFn(...input)
-                : testFn(input);
-              // Call should with the actual result
-              const passed = should(actualResult);
-              tester(passed);
-            } else if (should && typeof should.processRow === 'function') {
-              // should is a BaseShould instance
-              // Compute actual result using confirmCB
-              const actualResult = Array.isArray(input)
-                ? this.confirmCB(...input)
-                : this.confirmCB(input);
-              const passed = await should.processRow(
-                actualResult,
-                testResourceConfiguration,
-                artifactory,
-              );
-              tester(passed);
-            } else {
-              // No validation performed
-              tester(true);
-            }
+            // Trust the type contract: should is a function that expects the actual result
+            // confirmCB is the test function
+            const actualResult = Array.isArray(input)
+              ? this.confirmCB(...input)
+              : this.confirmCB(input);
+            // Call should with the actual result
+            const passed = should(actualResult);
+            tester(passed);
           }
         } catch (e: any) {
           CommonUtils.handleTestError(e, this);

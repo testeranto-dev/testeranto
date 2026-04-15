@@ -14,17 +14,8 @@ export const adapter: ITestAdapter<ICircleNode> = {
     artifactory,
   ) => {
     console.log("[Circle adapter] beforeEach called with subject:", subject);
-    // Call initializer with appropriate arguments
-    let circle;
-    if (initializer.length === 0) {
-      circle = initializer();
-    } else if (initializer.length === 1) {
-      // Try subject first (for implementations like (input: typeof Circle) => new input())
-      circle = initializer(subject);
-    } else {
-      // Default: call with no arguments
-      circle = initializer();
-    }
+    // Trust the type contract: initializer is a function that returns the store
+    const circle = initializer(subject);
     console.log("[Circle adapter] beforeEach created circle:", circle);
     return circle;
   },

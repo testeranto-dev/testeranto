@@ -124,7 +124,7 @@ const CalculatorUI: React.FC<CalculatorUIProps> = ({ initialValue = '' }) => {
 
   return (
     <div style={styles.container}>
-      <h2>React Calculator!!</h2>
+      <h2>React Calculator</h2>
 
       <div style={styles.calculator}>
         {/* Display */}

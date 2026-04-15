@@ -1,6 +1,6 @@
 {
   "failed": true,
-  "fails": 11,
+  "fails": 3,
   "artifacts": [],
   "features": [
     "./Readme.md"
@@ -10,60 +10,43 @@
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1776218386140,
+  "timestamp": 1776263200474,
   "individualResults": [
     {
       "index": 0,
-      "failed": true,
-      "fails": 2,
+      "failed": false,
+      "fails": 0,
       "features": [
         "./Readme.md"
       ],
-      "error": {
-        "message": "Confirm.addition is not implemented",
-        "stack": "Error: Confirm.addition is not implemented\n    at BaseConfirm.confirmCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22455:27)\n    at BaseConfirm.confirm (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21996:91)\n    at BaseConfirm.run (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22021:17)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22641:34)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)\n    at new BaseTiposkripto (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23290:18)\n    at new WebTiposkripto (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23439:5)\n    at tiposkripto (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23596:15)\n    at blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:28461:41",
-        "name": "Error"
-      },
+      "error": null,
       "stepName": "confirm",
-      "stepType": "Unknown",
+      "stepType": "BaseConfirm",
       "testJob": {
         "key": "confirm",
-        "error": [
-          {},
-          "Error: Confirm.addition is not implemented\n    at BaseConfirm.confirmCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22455:27)\n    at BaseConfirm.confirm (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21996:91)\n    at BaseConfirm.run (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22021:17)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22641:34)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)\n    at new BaseTiposkripto (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23290:18)\n    at new WebTiposkripto (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23439:5)\n    at tiposkripto (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23596:15)\n    at blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:28461:41"
-        ],
-        "failed": true,
+        "error": null,
+        "failed": false,
         "features": [
           "./Readme.md"
         ],
         "artifacts": [],
         "status": true,
-        "fails": 2,
+        "fails": 0,
         "confirms": [
           {
             "index": 0,
-            "input": {
-              "key": "",
-              "failed": false,
-              "artifacts": [],
-              "fails": 0,
-              "error": null,
-              "store": null,
-              "testResourceConfiguration": null
-            },
-            "test": "beEqualTo: 22"
+            "input": [
+              1,
+              1
+            ],
+            "test": "beEqualTo: 222"
           },
           {
             "index": 1,
-            "input": {
-              "key": "",
-              "failed": false,
-              "artifacts": [],
-              "fails": 0,
-              "error": null,
-              "store": null,
-              "testResourceConfiguration": null
-            },
+            "input": [
+              2,
+              3
+            ],
             "test": "beGreaterThan: 4"
           }
         ]
@@ -72,14 +55,14 @@
     {
       "index": 1,
       "failed": true,
-      "fails": 1,
+      "fails": 2,
       "features": [
         "./Readme.md"
       ],
       "error": {
-        "message": "Describe.another simple calculator is not implemented",
-        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22400:27)\n    at BaseDescribe.describe (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21803:33)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22601:32)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)",
-        "name": "Error"
+        "message": "Cannot read properties of undefined (reading 'querySelectorAll')",
+        "stack": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:28439:37)\n    at BaseIt.test (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21864:34)\n    at BaseDescribe.describe (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21818:36)\n    at async stepRunner (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22694:30)\n    at async TestRunner.runAllTests (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:23029:25)",
+        "name": "TypeError"
       },
       "stepName": "step_1",
       "stepType": "BaseDescribe",
@@ -88,39 +71,41 @@
         "its": [
           {
             "name": "can save 1 memory: ",
-            "error": null,
+            "status": false,
+            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\nTypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:28425:37)\n    at BaseIt.test (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21864:34)\n    at BaseDescribe.describe (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21818:36)\n    at async stepRunner (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22694:30)\n    at async TestRunner.runAllTests (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:23029:25)",
             "artifacts": []
           },
           {
             "name": "can save 2 memories: ",
-            "error": null,
+            "status": false,
+            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\nTypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:28439:37)\n    at BaseIt.test (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21864:34)\n    at BaseDescribe.describe (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21818:36)\n    at async stepRunner (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22694:30)\n    at async TestRunner.runAllTests (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:23029:25)",
             "artifacts": []
           }
         ],
         "error": [
-          "Describe.another simple calculator is not implemented",
-          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22400:27)\n    at BaseDescribe.describe (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21803:33)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22601:32)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)"
+          "Cannot read properties of undefined (reading 'querySelectorAll')",
+          "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:28439:37)\n    at BaseIt.test (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21864:34)\n    at BaseDescribe.describe (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21818:36)\n    at async stepRunner (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22694:30)\n    at async TestRunner.runAllTests (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:23029:25)"
         ],
         "failed": true,
         "features": [
           "./Readme.md"
         ],
         "artifacts": [],
-        "status": false,
-        "fails": 1
+        "status": true,
+        "fails": 2
       }
     },
     {
       "index": 2,
       "failed": true,
-      "fails": 5,
+      "fails": 1,
       "features": [
         "./Readme.md"
       ],
       "error": {
-        "message": "Cannot read properties of undefined (reading 'querySelectorAll')",
-        "stack": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseThen.thenCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:28380:38)\n    at async blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21753:31\n    at async BaseThen.test (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21748:17)\n    at async BaseGiven.give (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21656:23)\n    at async stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22653:23)\n    at async Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:30)\n    at async TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:25)",
-        "name": "TypeError"
+        "message": "Target container is not a DOM element.",
+        "stack": "Error: Target container is not a DOM element.\n    at exports.createRoot (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21367:17)\n    at Object.prepareEach (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:24027:43)\n    at BaseGiven.givenThat (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22808:44)\n    at BaseGiven.give (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21611:31)\n    at stepRunner (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22653:34)\n    at Object.receiveTestResourceConfig (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22694:36)\n    at TestRunner.runAllTests (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:23029:43)",
+        "name": "Error"
       },
       "stepName": "step_2",
       "stepType": "Unknown",
@@ -128,85 +113,68 @@
         "key": "step_2",
         "error": [
           {},
-          "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseThen.thenCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:28380:38)\n    at async blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21753:31\n    at async BaseThen.test (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21748:17)\n    at async BaseGiven.give (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21656:23)\n    at async stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22653:23)\n    at async Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:30)\n    at async TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:25)"
+          "Error: Target container is not a DOM element.\n    at exports.createRoot (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21367:17)\n    at Object.prepareEach (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:24027:43)\n    at BaseGiven.givenThat (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22808:44)\n    at BaseGiven.give (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:21611:31)\n    at stepRunner (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22653:34)\n    at Object.receiveTestResourceConfig (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:22694:36)\n    at TestRunner.runAllTests (blob:null/4f3e48db-2545-4ed0-99d1-8dae76d3958e:23029:43)"
         ],
         "failed": true,
         "features": [
           "./Readme.md"
         ],
         "artifacts": [],
-        "status": true,
-        "fails": 5,
+        "status": false,
+        "fails": 1,
         "whens": [
           {
             "name": "press: 5",
-            "status": false,
-            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')"
+            "error": null
           },
           {
             "name": "press: +",
-            "status": false,
-            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')"
+            "error": null
           },
           {
             "name": "press: 3",
-            "status": false,
-            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')"
+            "error": null
           },
           {
             "name": "enter: ",
-            "status": false,
-            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')"
+            "error": null
           }
         ],
         "thens": [
           {
             "name": "result: 8",
-            "status": false,
-            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')"
+            "error": null
           }
         ]
       }
     },
     {
       "index": 3,
-      "failed": true,
-      "fails": 1,
+      "failed": false,
+      "fails": 0,
       "features": [
         "./Readme.md"
       ],
-      "error": {
-        "message": "Confirm.addition is not implemented",
-        "stack": "Error: Confirm.addition is not implemented\n    at BaseConfirm.confirmCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22455:27)\n    at BaseConfirm.confirm (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21996:91)\n    at BaseConfirm.run (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22021:17)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22641:34)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)",
-        "name": "Error"
-      },
+      "error": null,
       "stepName": "confirm",
-      "stepType": "Unknown",
+      "stepType": "BaseConfirm",
       "testJob": {
         "key": "confirm",
-        "error": [
-          {},
-          "Error: Confirm.addition is not implemented\n    at BaseConfirm.confirmCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22455:27)\n    at BaseConfirm.confirm (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21996:91)\n    at BaseConfirm.run (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22021:17)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22641:34)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)"
-        ],
-        "failed": true,
+        "error": null,
+        "failed": false,
         "features": [
           "./Readme.md"
         ],
         "artifacts": [],
         "status": true,
-        "fails": 1,
+        "fails": 0,
         "confirms": [
           {
             "index": 0,
-            "input": {
-              "key": "",
-              "failed": false,
-              "artifacts": [],
-              "fails": 0,
-              "error": null,
-              "store": null,
-              "testResourceConfiguration": null
-            },
+            "input": [
+              3,
+              3
+            ],
             "test": "beEqualTo: 3"
           }
         ]
@@ -214,43 +182,31 @@
     },
     {
       "index": 4,
-      "failed": true,
-      "fails": 1,
+      "failed": false,
+      "fails": 0,
       "features": [
         "./Readme.md"
       ],
-      "error": {
-        "message": "Confirm.addition is not implemented",
-        "stack": "Error: Confirm.addition is not implemented\n    at BaseConfirm.confirmCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22455:27)\n    at BaseConfirm.confirm (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21996:91)\n    at BaseConfirm.run (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22021:17)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22641:34)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)",
-        "name": "Error"
-      },
+      "error": null,
       "stepName": "confirm",
-      "stepType": "Unknown",
+      "stepType": "BaseConfirm",
       "testJob": {
         "key": "confirm",
-        "error": [
-          {},
-          "Error: Confirm.addition is not implemented\n    at BaseConfirm.confirmCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22455:27)\n    at BaseConfirm.confirm (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21996:91)\n    at BaseConfirm.run (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22021:17)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22641:34)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)"
-        ],
-        "failed": true,
+        "error": null,
+        "failed": false,
         "features": [
           "./Readme.md"
         ],
         "artifacts": [],
         "status": true,
-        "fails": 1,
+        "fails": 0,
         "confirms": [
           {
             "index": 0,
-            "input": {
-              "key": "",
-              "failed": false,
-              "artifacts": [],
-              "fails": 0,
-              "error": null,
-              "store": null,
-              "testResourceConfiguration": null
-            },
+            "input": [
+              3,
+              32
+            ],
             "test": "beEqualTo: 32"
           }
         ]
@@ -258,43 +214,31 @@
     },
     {
       "index": 5,
-      "failed": true,
-      "fails": 1,
+      "failed": false,
+      "fails": 0,
       "features": [
         "./Readme.md"
       ],
-      "error": {
-        "message": "Confirm.addition is not implemented",
-        "stack": "Error: Confirm.addition is not implemented\n    at BaseConfirm.confirmCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22455:27)\n    at BaseConfirm.confirm (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21996:91)\n    at BaseConfirm.run (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22021:17)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22641:34)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)",
-        "name": "Error"
-      },
+      "error": null,
       "stepName": "confirm",
-      "stepType": "Unknown",
+      "stepType": "BaseConfirm",
       "testJob": {
         "key": "confirm",
-        "error": [
-          {},
-          "Error: Confirm.addition is not implemented\n    at BaseConfirm.confirmCB (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22455:27)\n    at BaseConfirm.confirm (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:21996:91)\n    at BaseConfirm.run (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22021:17)\n    at stepRunner (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22641:34)\n    at Object.receiveTestResourceConfig (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:22694:36)\n    at TestRunner.runAllTests (blob:null/1692f77f-7b3d-405c-9aae-a3872fc42d6d:23029:43)"
-        ],
-        "failed": true,
+        "error": null,
+        "failed": false,
         "features": [
           "./Readme.md"
         ],
         "artifacts": [],
         "status": true,
-        "fails": 1,
+        "fails": 0,
         "confirms": [
           {
             "index": 0,
-            "input": {
-              "key": "",
-              "failed": false,
-              "artifacts": [],
-              "fails": 0,
-              "error": null,
-              "store": null,
-              "testResourceConfiguration": null
-            },
+            "input": [
+              3,
+              332
+            ],
             "test": "beEqualTo: 332"
           }
         ]
@@ -303,8 +247,8 @@
   ],
   "summary": {
     "totalTests": 6,
-    "passed": -5,
-    "failed": 11,
-    "successRate": "-83.33%"
+    "passed": 3,
+    "failed": 3,
+    "successRate": "50.00%"
   }
 }

@@ -147,12 +147,8 @@ export class ClassyImplementations<I extends Ibdd_in_any> {
     if (testImplementation.confirms) {
       Object.entries(testImplementation.confirms).forEach(([key, val]) => {
         classyConfirms[key] = (testCases: any[][], features: string[]) => {
-          let actualConfirmCB;
-          if (typeof val === 'function') {
-            actualConfirmCB = val();
-          } else {
-            actualConfirmCB = val;
-          }
+          // Trust the type contract: val is a function that returns the confirmCB
+          const actualConfirmCB = val();
           return new BaseConfirm<I>(
             features,
             testCases,
@@ -226,50 +222,24 @@ export class ClassyImplementations<I extends Ibdd_in_any> {
     testImplementation: any
   ): Record<string, any> {
     const classyDescribes: Record<string, any> = {};
-    if (testImplementation.describes && typeof testImplementation.describes === 'object') {
+    if (testImplementation.describes) {
       Object.entries(testImplementation.describes).forEach(([key, desc]) => {
         classyDescribes[key] = (initialValues: any) => {
           return (
             its: any[],
             features: string[],
           ) => {
-            try {
-              let actualDescribeCB;
-              if (typeof desc === 'function') {
-                actualDescribeCB = desc(initialValues);
-              } else {
-                actualDescribeCB = desc;
-              }
-
-              if (typeof actualDescribeCB !== 'function') {
-                console.warn(`Describe implementation for "${key}" is not a function, got:`, typeof actualDescribeCB);
-                // If it's not a function, wrap it in a function that returns it
-                const nonFunctionValue = actualDescribeCB;
-                actualDescribeCB = (subject: any, initialValues: any) => nonFunctionValue;
-              }
-
-              return new BaseDescribe<I>(
-                features,
-                its,
-                actualDescribeCB,
-                initialValues,
-              );
-            } catch (error) {
-              console.error(`Error creating Describe for "${key}":`, error);
-              return new BaseDescribe<I>(
-                features,
-                its,
-                () => {
-                  throw new Error(`Describe implementation for "${key}" failed: ${error.message}`);
-                },
-                initialValues,
-              );
-            }
+            // Trust the type contract: desc is a function that returns the describeCB
+            const actualDescribeCB = desc(initialValues);
+            return new BaseDescribe<I>(
+              features,
+              its,
+              actualDescribeCB,
+              initialValues,
+            );
           };
         };
       });
-    } else {
-      console.warn('testImplementation.describes is not defined or not an object');
     }
     return classyDescribes;
   }

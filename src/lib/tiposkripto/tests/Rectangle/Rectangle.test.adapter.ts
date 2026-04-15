@@ -13,7 +13,7 @@ export type I = Ibdd_in<
 
 export const RectangleTesterantoBaseAdapter: ITestAdapter<I> = {
   prepareEach: async (subject, i) => {
-    return i();
+    return i(subject);
   },
   execute: async function (s, whenCB, tr, artifactory) {
     // whenCB should be a function that takes the rectangle

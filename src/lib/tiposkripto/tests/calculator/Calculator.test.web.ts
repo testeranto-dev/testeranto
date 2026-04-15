@@ -4,9 +4,8 @@ import { Calculator } from "./Calculator.js";
 import { adapter } from "./Calculator.test.adapter.js";
 import { implementation } from "./Calculator.test.implementation.js";
 import { specification } from "./Calculator.test.specification.js";
-import { ICalculatorNode, O, M } from "./Calculator.test.types.js";
 
-export default Tiposkripto<ICalculatorNode, O, M>(
+export default Tiposkripto(
   Calculator,
   specification,
   implementation,

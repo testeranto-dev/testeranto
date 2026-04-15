@@ -1,39 +1,12 @@
-import type {
-  ConfirmSpecification,
-  DescribeSpecification,
-  GivenSpecification,
-  ItSpecification,
-  Modify,
-  ShouldSpecification,
-  TestConfirmImplementation,
-  TestConfirmShape,
-  TestDescribeImplementation,
-  TestDescribeShape,
-  TestExpectedImplementation,
-  TestGivenImplementation,
-  TestGivenShape,
-  TestItImplementation,
-  TestItShape,
-  TestShouldImplementation,
-  TestShouldShape,
-  TestSuiteImplementation,
-  TestSuiteShape,
-  TestThenImplementation,
-  TestThenShape,
-  TestValueImplementation,
-  TestValueShape,
-  TestWhenImplementation,
-  TestWhenShape,
-  ThenSpecification,
-  ValueSpecification,
-  WhenSpecification
-} from "./../../../Types";
 import { ITestResourceConfiguration } from "./types";
-import { BaseSuite } from "./verbs/BaseSuite";
-import { BaseGiven } from "./verbs/bdd/BaseGiven";
 
 export type IArtifactory = {
   writeFileSync: (a: string, b: string) => any;
+};
+
+export type IWebArtifactory = {
+  writeFileSync: (a: string, b: string) => any;
+  screenshot: (a: string) => any;
 };
 
 // export type SuiteSpecification<
@@ -46,19 +19,19 @@ export type IArtifactory = {
 //   };
 
 // Universal test adapter with methodology-agnostic terminology
-export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
+export type IUniversalTestAdapter<I extends TestTypeParams_any, J = "web" | "node"> = {
   // Lifecycle hooks
   prepareAll: (
     input: I["iinput"],
     testResource: ITestResourceConfiguration,
-    artifactory?: IArtifactory,
+    artifactory: IArtifactory,
   ) => Promise<I["isubject"]>;
   prepareEach: (
     subject: I["isubject"],
     initializer: (c?: any) => I["check"],
     testResource: ITestResourceConfiguration,
     initialValues: any,
-    artifactory?: IArtifactory,
+    artifactory: IArtifactory,
   ) => Promise<I["istore"]>;
 
   // Execution
@@ -66,7 +39,7 @@ export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
     store: I["istore"],
     actionCB: I["check"],
     testResource: ITestResourceConfiguration,
-    artifactory?: IArtifactory,
+    artifactory: IArtifactory,
   ) => Promise<I["istore"]>;
 
   // Verification
@@ -74,14 +47,14 @@ export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
     store: I["istore"],
     checkCB: I["check"],
     testResource: ITestResourceConfiguration,
-    artifactory?: IArtifactory,
+    artifactory: IArtifactory,
   ) => Promise<I["iselection"]>;
 
   // Cleanup
   cleanupEach: (
     store: I["istore"],
     key: string,
-    artifactory?: IArtifactory,
+    artifactory: IArtifactory,
   ) => Promise<unknown>;
   cleanupAll: (store: I["istore"], artifactory: IArtifactory) => any;
 
@@ -90,8 +63,8 @@ export type IUniversalTestAdapter<I extends TestTypeParams_any> = {
 };
 
 // Test adapter type - uses universal method names
-export type ITestAdapter<I extends TestTypeParams_any> =
-  IUniversalTestAdapter<I>;
+export type ITestAdapter<I extends TestTypeParams_any, J = "web" | "node"> =
+  IUniversalTestAdapter<I, J>;
 
 export type ITestSpecification<
   I extends Ibdd_in_any,

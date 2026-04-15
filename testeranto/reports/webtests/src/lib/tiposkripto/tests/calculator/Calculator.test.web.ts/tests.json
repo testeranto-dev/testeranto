@@ -10,7 +10,7 @@
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1776222372830,
+  "timestamp": 1776263180782,
   "individualResults": [
     {
       "index": 0,
@@ -20,8 +20,8 @@
         "./Readme.md"
       ],
       "error": {
-        "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
-        "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6361:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)",
+        "message": "[object Object]undefined should be greater than 4: expected '[object Object]undefined' to be a number or a date",
+        "stack": "AssertionError: [object Object]undefined should be greater than 4: expected '[object Object]undefined' to be a number or a date\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6352:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -30,12 +30,12 @@
         "key": "confirm",
         "error": [
           {
-            "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
+            "message": "[object Object]undefined should be greater than 4: expected '[object Object]undefined' to be a number or a date",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6361:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)"
+            "stack": "AssertionError: [object Object]undefined should be greater than 4: expected '[object Object]undefined' to be a number or a date\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6352:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)"
           },
-          "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6361:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)"
+          "AssertionError: [object Object]undefined should be greater than 4: expected '[object Object]undefined' to be a number or a date\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6352:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)"
         ],
         "failed": true,
         "features": [
@@ -51,7 +51,7 @@
               1,
               1
             ],
-            "test": "beEqualTo: 22"
+            "test": "beEqualTo: 222"
           },
           {
             "index": 1,
@@ -72,8 +72,8 @@
         "./Readme.md"
       ],
       "error": {
-        "message": "Describe.another simple calculator is not implemented",
-        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:950:27)\n    at BaseDescribe.describe (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:353:33)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)",
+        "message": "Describe implementation for \"another simple calculator\" failed: input is not a constructor",
+        "stack": "Error: Describe implementation for \"another simple calculator\" failed: input is not a constructor\n    at BaseDescribe.describeCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1540:25)\n    at BaseDescribe.describe (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:353:33)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)",
         "name": "Error"
       },
       "stepName": "step_1",
@@ -93,8 +93,8 @@
           }
         ],
         "error": [
-          "Describe.another simple calculator is not implemented",
-          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:950:27)\n    at BaseDescribe.describe (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:353:33)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)"
+          "Describe implementation for \"another simple calculator\" failed: input is not a constructor",
+          "Error: Describe implementation for \"another simple calculator\" failed: input is not a constructor\n    at BaseDescribe.describeCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1540:25)\n    at BaseDescribe.describe (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:353:33)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)"
         ],
         "failed": true,
         "features": [
@@ -164,8 +164,8 @@
         "./Readme.md"
       ],
       "error": {
-        "message": "expected [Function] to equal 3",
-        "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)",
+        "message": "expected '[object Object]undefined' to equal 3",
+        "stack": "AssertionError: expected '[object Object]undefined' to equal 3\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -174,15 +174,16 @@
         "key": "confirm",
         "error": [
           {
-            "message": "expected [Function] to equal 3",
+            "message": "expected '[object Object]undefined' to equal 3",
+            "actual": "[object Object]undefined",
             "expected": 3,
             "showDiff": true,
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)"
+            "stack": "AssertionError: expected '[object Object]undefined' to equal 3\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)"
           },
-          "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)"
+          "AssertionError: expected '[object Object]undefined' to equal 3\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)"
         ],
         "failed": true,
         "features": [
@@ -211,8 +212,8 @@
         "./Readme.md"
       ],
       "error": {
-        "message": "expected [Function] to equal 32",
-        "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)",
+        "message": "expected '[object Object]undefined' to equal 32",
+        "stack": "AssertionError: expected '[object Object]undefined' to equal 32\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -221,15 +222,16 @@
         "key": "confirm",
         "error": [
           {
-            "message": "expected [Function] to equal 32",
+            "message": "expected '[object Object]undefined' to equal 32",
+            "actual": "[object Object]undefined",
             "expected": 32,
             "showDiff": true,
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)"
+            "stack": "AssertionError: expected '[object Object]undefined' to equal 32\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)"
           },
-          "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)"
+          "AssertionError: expected '[object Object]undefined' to equal 32\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)"
         ],
         "failed": true,
         "features": [
@@ -258,8 +260,8 @@
         "./Readme.md"
       ],
       "error": {
-        "message": "expected [Function] to equal 332",
-        "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)",
+        "message": "expected '[object Object]undefined' to equal 332",
+        "stack": "AssertionError: expected '[object Object]undefined' to equal 332\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -268,15 +270,16 @@
         "key": "confirm",
         "error": [
           {
-            "message": "expected [Function] to equal 332",
+            "message": "expected '[object Object]undefined' to equal 332",
+            "actual": "[object Object]undefined",
             "expected": 332,
             "showDiff": true,
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)"
+            "stack": "AssertionError: expected '[object Object]undefined' to equal 332\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)"
           },
-          "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:6356:23)\n    at BaseShould.processRow (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:745:36)\n    at BaseConfirm.confirm (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:547:44)\n    at BaseConfirm.run (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:571:17)\n    at stepRunner (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1244:36)\n    at TestRunner.runAllTests (blob:null/c7212a7a-2970-40c6-b033-2245aaa25bb8:1579:43)"
+          "AssertionError: expected '[object Object]undefined' to equal 332\n    at BaseShould.shouldCB (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:6347:23)\n    at BaseShould.processRow (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:745:36)\n    at BaseConfirm.confirm (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:547:44)\n    at BaseConfirm.run (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:571:17)\n    at stepRunner (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1244:36)\n    at TestRunner.runAllTests (blob:null/ece78648-6538-4777-a7db-0824c9649bf7:1579:43)"
         ],
         "failed": true,
         "features": [

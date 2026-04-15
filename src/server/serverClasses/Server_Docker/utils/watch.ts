@@ -150,8 +150,13 @@ export const watchInputFilePure = async (
   }
 
   if (mode === "dev") {
+    consoleLog(`[Server_Docker] Setting up file watch for ${inputFilePath} for test ${testsName}`);
+    consoleLog(`[Server_Docker] Config key: ${configKey}, Runtime: ${runtime}`);
+    
     watchFile(inputFilePath, async (curr, prev) => {
       consoleLog(`[Server_Docker] File ${inputFilePath} changed`);
+      consoleLog(`[Server_Docker] Previous modified time: ${prev.mtime}, Current modified time: ${curr.mtime}`);
+      consoleLog(`[Server_Docker] Previous size: ${prev.size}, Current size: ${curr.size}`);
 
       if (!existsSync(inputFilePath)) {
         consoleWarn(`${inputFilePath} does not exist yet.`);
@@ -159,63 +164,87 @@ export const watchInputFilePure = async (
       }
 
       const fileContent = readFileSync(inputFilePath, "utf-8");
-      const allTestsInfo = JSON.parse(fileContent);
-      if (allTestsInfo[testsName]) {
-        const testInfo = allTestsInfo[testsName];
-        const newHash = testInfo.hash || "";
-        const oldHash = newHashs[configKey]?.[testsName] || "";
+      consoleLog(`[Server_Docker] Successfully read input file ${inputFilePath}, content length: ${fileContent.length} characters`);
+      
+      try {
+        const allTestsInfo = JSON.parse(fileContent);
+        consoleLog(`[Server_Docker] Parsed input file JSON, contains ${Object.keys(allTestsInfo).length} test entries`);
+        
+        if (allTestsInfo[testsName]) {
+          const testInfo = allTestsInfo[testsName];
+          const newHash = testInfo.hash || "";
+          const oldHash = newHashs[configKey]?.[testsName] || "";
 
-        const updatedInputFiles = { ...newInputFiles };
-        const updatedHashs = { ...newHashs };
+          const updatedInputFiles = { ...newInputFiles };
+          const updatedHashs = { ...newHashs };
 
-        if (!updatedInputFiles[configKey]) {
-          updatedInputFiles[configKey] = {};
-        }
-        if (!updatedHashs[configKey]) {
-          updatedHashs[configKey] = {};
-        }
-
-        updatedInputFiles[configKey][testsName] = testInfo.files || [];
-        updatedHashs[configKey][testsName] = newHash;
-
-        setState(updatedInputFiles, updatedHashs);
-        // In unified approach, we broadcast graph updates instead
-        // TODO This should be defined in API 
-        resourceChanged('/~/graph');
-
-        consoleLog(`[Server_Docker] Input files changed for ${testsName}, hash changed: ${newHash !== oldHash}`);
-
-        if (newHash !== oldHash) {
-          for (const [ck, configValue] of Object.entries(configs.runtimes)) {
-            if (
-              configValue.runtime === runtime &&
-              configValue.tests.includes(testsName)
-            ) {
-              launchBddTest(runtime, testsName, ck, configValue);
-              launchChecks(runtime, testsName, ck, configValue);
-              informAider(runtime, testsName, ck, configValue, testInfo.files);
-
-              // Update graph with input files using unified approach
-              if (updateGraphWithInputFiles && testInfo.files) {
-                try {
-                  await updateGraphWithInputFiles(runtime, testsName, ck, testInfo.files);
-                  // Broadcast graph update
-                  // TODO This should be defined in API 
-                  resourceChanged('/~/graph');
-                } catch (error) {
-                  consoleWarn(`[Server_Docker] Failed to update graph with input files: ${error}`);
-                }
-              }
-              break;
-            }
+          if (!updatedInputFiles[configKey]) {
+            updatedInputFiles[configKey] = {};
           }
+          if (!updatedHashs[configKey]) {
+            updatedHashs[configKey] = {};
+          }
+
+          updatedInputFiles[configKey][testsName] = testInfo.files || [];
+          updatedHashs[configKey][testsName] = newHash;
+
+          consoleLog(`[Server_Docker] Test "${testsName}" has ${testInfo.files?.length || 0} input files, hash: ${newHash}`);
+          consoleLog(`[Server_Docker] Old hash: "${oldHash}", New hash: "${newHash}", Changed: ${newHash !== oldHash}`);
+
+          setState(updatedInputFiles, updatedHashs);
+          // In unified approach, we broadcast graph updates instead
+          // TODO This should be defined in API 
+          resourceChanged('/~/graph');
+
+          consoleLog(`[Server_Docker] Input files changed for ${testsName}, hash changed: ${newHash !== oldHash}`);
+
+          if (newHash !== oldHash) {
+            consoleLog(`[Server_Docker] Hash changed for ${testsName}, relaunching services...`);
+            for (const [ck, configValue] of Object.entries(configs.runtimes)) {
+              if (
+                configValue.runtime === runtime &&
+                configValue.tests.includes(testsName)
+              ) {
+                consoleLog(`[Server_Docker] Relaunching BDD test for ${testsName} with config ${ck}`);
+                launchBddTest(runtime, testsName, ck, configValue);
+                consoleLog(`[Server_Docker] Relaunching checks for ${testsName} with config ${ck}`);
+                launchChecks(runtime, testsName, ck, configValue);
+                consoleLog(`[Server_Docker] Informing aider for ${testsName} with config ${ck}`);
+                informAider(runtime, testsName, ck, configValue, testInfo.files);
+
+                // Update graph with input files using unified approach
+                if (updateGraphWithInputFiles && testInfo.files) {
+                  try {
+                    consoleLog(`[Server_Docker] Updating graph with ${testInfo.files.length} input files for ${testsName}`);
+                    await updateGraphWithInputFiles(runtime, testsName, ck, testInfo.files);
+                    // Broadcast graph update
+                    // TODO This should be defined in API 
+                    resourceChanged('/~/graph');
+                    consoleLog(`[Server_Docker] Graph updated with input files for ${testsName}`);
+                  } catch (error) {
+                    consoleWarn(`[Server_Docker] Failed to update graph with input files: ${error}`);
+                  }
+                }
+                break;
+              }
+            }
+          } else {
+            consoleLog(`[Server_Docker] Hash unchanged for ${testsName}, no services relaunched`);
+          }
+        } else {
+          consoleWarn(`[Server_Docker] Test "${testsName}" not found in input file ${inputFilePath}`);
         }
+      } catch (error: any) {
+        consoleError(`[Server_Docker] Error parsing input file ${inputFilePath}: ${error.message}`);
       }
     });
   } else {
     loadInputFileOnce(runtime, testsName, configKey);
   }
 
+  consoleLog(`[Server_Docker] File watch successfully set up for ${inputFilePath}`);
+  consoleLog(`[Server_Docker] Initial state for ${testsName}: ${newInputFiles[configKey]?.[testsName]?.length || 0} files, hash: ${newHashs[configKey]?.[testsName] || 'none'}`);
+  
   return { inputFiles: newInputFiles, hashs: newHashs };
 };
 

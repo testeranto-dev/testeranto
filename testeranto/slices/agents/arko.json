@@ -1,7 +1,7 @@
 {
   "viewType": "agent",
   "agentName": "arko",
-  "timestamp": "2026-04-15T03:07:06.901Z",
+  "timestamp": "2026-04-15T14:27:10.407Z",
   "data": {
     "configs": [
       {
@@ -55,12 +55,6 @@
         "runtime": "node"
       },
       {
-        "id": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-        "label": "Server_GraphManagerCore.test.ts",
-        "configKey": "nodetests",
-        "runtime": "node"
-      },
-      {
         "id": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
         "label": "FileTreeLogic.test.ts",
         "configKey": "nodetests",
@@ -107,7 +101,7 @@
     "agents": [],
     "summary": {
       "totalConfigs": 3,
-      "totalEntrypoints": 13,
+      "totalEntrypoints": 12,
       "totalChatMessages": 0,
       "totalAgents": 0
     }

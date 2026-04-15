@@ -7,8 +7,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 267.55794226135237,
-      "y": 33.792372036963926,
+      "x": 425.99439778056814,
+      "y": 239.3123117748657,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -19,8 +19,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 478.78116538182474,
-      "y": 582.8648312496057,
+      "x": 701.9709591375182,
+      "y": 70.2982907860087,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -28,8 +28,8 @@
       "id": "view:Home",
       "label": "Home",
       "type": "view",
-      "x": 781.9592391353375,
-      "y": 577.2668488505853,
+      "x": 195.91614668519756,
+      "y": 433.69409045495735,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -37,8 +37,8 @@
       "id": "view:Kanban",
       "label": "Kanban",
       "type": "view",
-      "x": 13.886123618370139,
-      "y": 324.272747592406,
+      "x": 170.09427535083432,
+      "y": 83.02110591488679,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -46,8 +46,8 @@
       "id": "view:EisenhowerMatrix",
       "label": "EisenhowerMatrix",
       "type": "view",
-      "x": 64.60985545007753,
-      "y": 84.70303476975162,
+      "x": 542.1618410890158,
+      "y": 362.1946393297774,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -55,8 +55,8 @@
       "id": "view:Gantt",
       "label": "Gantt",
       "type": "view",
-      "x": 296.9473265366583,
-      "y": 588.1341577249194,
+      "x": 710.2886736543202,
+      "y": 147.71789641954328,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -64,8 +64,8 @@
       "id": "view:Chat",
       "label": "Chat",
       "type": "view",
-      "x": 193.95564336316005,
-      "y": 458.1035753118086,
+      "x": 626.1701098323667,
+      "y": 251.89818639828422,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -73,8 +73,8 @@
       "id": "view:DebugGraph",
       "label": "DebugGraph",
       "type": "view",
-      "x": 182.72715312945456,
-      "y": 83.8812200197677,
+      "x": 56.303636189502186,
+      "y": 296.472953614384,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -82,8 +82,8 @@
       "id": "config:nodetests",
       "label": "nodetests",
       "type": "config",
-      "x": 77.17284423217743,
-      "y": 321.8234406413401,
+      "x": 782.3054743734675,
+      "y": 60.6840696396246,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -91,8 +91,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "label": "index.ts",
       "type": "entrypoint",
-      "x": 287.07283558770155,
-      "y": 152.35087851336425,
+      "x": 492.84044127961533,
+      "y": 100.6878722194199,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -100,8 +100,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "label": "Calculator.test.node.ts",
       "type": "entrypoint",
-      "x": 430.2405916553804,
-      "y": 343.74105895438794,
+      "x": 109.40822663436167,
+      "y": 164.58044608729415,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -109,8 +109,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "label": "Circle.test.ts",
       "type": "entrypoint",
-      "x": 463.1832847694636,
-      "y": 130.4104021206566,
+      "x": 587.3177511936951,
+      "y": 84.87319626793943,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -118,8 +118,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "label": "Rectangle.test.ts",
       "type": "entrypoint",
-      "x": 294.73918683891577,
-      "y": 488.45418920642356,
+      "x": 169.23567656993876,
+      "y": 170.5982624437108,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -127,17 +127,8 @@
       "id": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "label": "AiderProcessTreeDataProvider.test.ts",
       "type": "entrypoint",
-      "x": 55.89118806557387,
-      "y": 466.30062467672917,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "label": "Server_GraphManagerCore.test.ts",
-      "type": "entrypoint",
-      "x": 137.73369260300905,
-      "y": 394.123716634755,
+      "x": 215.80837076269148,
+      "y": 46.07728127444697,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -145,8 +136,8 @@
       "id": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
       "label": "FileTreeLogic.test.ts",
       "type": "entrypoint",
-      "x": 667.9672149724377,
-      "y": 71.30673408796785,
+      "x": 366.1995611162479,
+      "y": 182.30099477412017,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -154,8 +145,8 @@
       "id": "entrypoint:src/vscode/providers/utils/testTree/treeFilter.test.ts",
       "label": "treeFilter.test.ts",
       "type": "entrypoint",
-      "x": 105.57627987545759,
-      "y": 208.03299092588782,
+      "x": 402.30673754304956,
+      "y": 332.8107355204439,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -163,8 +154,8 @@
       "id": "entrypoint:src/vscode/providers/utils/testTree/debugTest.js",
       "label": "debugTest.js",
       "type": "entrypoint",
-      "x": 595.5549893064689,
-      "y": 229.20688142425382,
+      "x": 148.22742897909615,
+      "y": 263.0545375735903,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -172,8 +163,8 @@
       "id": "entrypoint:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       "label": "fileOperations.ts.",
       "type": "entrypoint",
-      "x": 155.06101930909617,
-      "y": 281.968645127776,
+      "x": 408.5547840045636,
+      "y": 36.59858878588713,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -181,8 +172,8 @@
       "id": "config:webtests",
       "label": "webtests",
       "type": "config",
-      "x": 558.2662547600801,
-      "y": 350.88437447968084,
+      "x": 720.0457216650159,
+      "y": 250.748645918732,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -190,8 +181,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
       "label": "Calculator.test.web.ts",
       "type": "entrypoint",
-      "x": 35.514564607421576,
-      "y": 202.9067314703759,
+      "x": 712.0767976576868,
+      "y": 297.5654871985885,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -199,8 +190,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
       "label": "Calculator.test.web.react.ts",
       "type": "entrypoint",
-      "x": 424.32296953930086,
-      "y": 241.48973488218408,
+      "x": 157.6202028954146,
+      "y": 450.80240488336716,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -208,8 +199,8 @@
       "id": "config:pythontests",
       "label": "pythontests",
       "type": "config",
-      "x": 747.3653762106143,
-      "y": 121.53807760964344,
+      "x": 352.9128535067822,
+      "y": 85.9188594266062,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -217,8 +208,8 @@
       "id": "entrypoint:src/lib/pitono/examples/calculator_test.py",
       "label": "calculator_test.py",
       "type": "entrypoint",
-      "x": 132.52343651898437,
-      "y": 266.8752625700867,
+      "x": 143.74710893814157,
+      "y": 491.35737684225984,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -226,8 +217,8 @@
       "id": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 187.45047813890903,
-      "y": 391.9597593869855,
+      "x": 647.0086837758495,
+      "y": 350.76673030822656,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -235,8 +226,8 @@
       "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 567.264315808876,
-      "y": 415.6028795359865,
+      "x": 494.04967230461017,
+      "y": 227.204817259395,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -244,8 +235,8 @@
       "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 723.0786426765683,
-      "y": 363.23487547827006,
+      "x": 371.5560584059614,
+      "y": 342.64418070743847,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -253,8 +244,8 @@
       "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 623.1670299257705,
-      "y": 472.1812178955255,
+      "x": 163.43075066584908,
+      "y": 402.8081956232839,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -262,17 +253,8 @@
       "id": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 687.5600892330026,
-      "y": 534.3675498168064,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "test:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:0",
-      "label": "Test suite",
-      "type": "test",
-      "x": 90.98289910518167,
-      "y": 376.06445095469604,
+      "x": 272.65882526839056,
+      "y": 254.93250638326217,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -280,8 +262,8 @@
       "id": "test:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 728.9525424842594,
-      "y": 228.86610120237688,
+      "x": 69.24776515938795,
+      "y": 551.0830374646863,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -289,8 +271,8 @@
       "id": "test:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 651.513219311122,
-      "y": 251.53900822478167,
+      "x": 623.1512082872422,
+      "y": 80.9462660188526,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -298,8 +280,8 @@
       "id": "test:nodetests:src/vscode/providers/utils/testTree/debugTest.js:0",
       "label": "Test suite",
       "type": "test",
-      "x": 275.92638559898813,
-      "y": 386.1981936189885,
+      "x": 272.80269330304725,
+      "y": 13.786544108410581,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -307,8 +289,8 @@
       "id": "test:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.:0",
       "label": "Test suite",
       "type": "test",
-      "x": 158.85539219141575,
-      "y": 344.9512801753315,
+      "x": 103.61581367499451,
+      "y": 4.308750902110936,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -316,8 +298,8 @@
       "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 708.6872369395378,
-      "y": 531.4548452194603,
+      "x": 251.2899723282902,
+      "y": 587.6180911161055,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -325,8 +307,8 @@
       "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 175.03412005818717,
-      "y": 364.4649503152207,
+      "x": 297.6496610926539,
+      "y": 469.4716840099699,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -334,8 +316,8 @@
       "id": "test:pythontests:src/lib/pitono/examples/calculator_test.py:0",
       "label": "Test suite",
       "type": "test",
-      "x": 80.92009009921321,
-      "y": 386.2319762677445,
+      "x": 353.61636269592145,
+      "y": 475.235396403516,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -346,8 +328,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 741.6946673108381,
-      "y": 524.1581205674003,
+      "x": 528.7050730187345,
+      "y": 164.09958011250114,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -358,8 +340,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 545.4976454495566,
-      "y": 310.8251782540397,
+      "x": 96.77740648172505,
+      "y": 105.86336758999346,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -370,8 +352,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 376.1483404180887,
-      "y": 70.12416786846083,
+      "x": 520.183403227181,
+      "y": 371.4824679573733,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -382,8 +364,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 743.8438163715135,
-      "y": 456.47841365082735,
+      "x": 326.7797956152293,
+      "y": 130.28473077506112,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -394,8 +376,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 447.31111733160606,
-      "y": 81.5830591120295,
+      "x": 246.63325045048845,
+      "y": 397.1968460511156,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -406,8 +388,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 477.11775313383197,
-      "y": 330.4079733262051,
+      "x": 338.0721621459292,
+      "y": 90.81460626262252,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -418,8 +400,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 557.9487298821234,
-      "y": 298.13547354732333,
+      "x": 166.5894314923225,
+      "y": 284.3316707490623,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -430,8 +412,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 254.25026025143654,
-      "y": 467.9041968891073,
+      "x": 381.11647798567833,
+      "y": 78.67636691055012,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -442,8 +424,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 702.102492102213,
-      "y": 544.7840424234145,
+      "x": 398.9903312738352,
+      "y": 24.536070346064044,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -454,8 +436,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 205.18859969044084,
-      "y": 183.37601907490168,
+      "x": 322.83293770114756,
+      "y": 138.85021408331684,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -466,8 +448,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 9.56899187828153,
-      "y": 82.30224173831617,
+      "x": 523.7442478625593,
+      "y": 278.44297176731743,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -478,8 +460,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 575.659454467997,
-      "y": 200.30349213715525,
+      "x": 412.8223605073815,
+      "y": 112.43744694493046,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -490,8 +472,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 797.7060725806413,
-      "y": 523.2656797945024,
+      "x": 284.9469744605972,
+      "y": 445.86276337397265,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -502,8 +484,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 159.57829927319008,
-      "y": 527.9290728432488,
+      "x": 262.83053180062643,
+      "y": 457.5056926954819,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -514,44 +496,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 744.4472944507108,
-      "y": 230.65391978320812,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "label": "bdd: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 430.26641942297175,
-      "y": 412.89047613669885,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "label": "check: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 477.50623078283985,
-      "y": 121.24885329579278,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "label": "aider: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "type": {
-        "category": "process",
-        "type": "aider"
-      },
-      "x": 274.9224671517641,
-      "y": 226.86222106107886,
+      "x": 50.47236329761997,
+      "y": 285.8073035454063,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -562,8 +508,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 9.529032595792142,
-      "y": 534.6592662093226,
+      "x": 255.59172608868437,
+      "y": 349.7629853348155,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -574,8 +520,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 783.8583509233968,
-      "y": 412.7611602751807,
+      "x": 607.8474713185274,
+      "y": 130.4560944794356,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -586,8 +532,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 444.106255785207,
-      "y": 129.11359233576056,
+      "x": 309.95360503812697,
+      "y": 344.24031039532986,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -598,8 +544,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 432.4243697401198,
-      "y": 326.37091053028576,
+      "x": 49.731925858196924,
+      "y": 68.06115693430192,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -610,8 +556,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 729.1031028348292,
-      "y": 342.3335341212241,
+      "x": 59.73677697183648,
+      "y": 238.7142318002781,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -622,8 +568,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 317.4279043517027,
-      "y": 359.31392811739954,
+      "x": 663.1763340028826,
+      "y": 309.28114308190123,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -634,8 +580,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 457.67487080039774,
-      "y": 238.69095214436737,
+      "x": 648.02213352027,
+      "y": 81.19855173866985,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -646,8 +592,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 554.1496131641516,
-      "y": 92.26917553464857,
+      "x": 593.7610651710918,
+      "y": 360.5780890016091,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -658,8 +604,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 681.9508877223163,
-      "y": 171.42735204317103,
+      "x": 711.0146768774981,
+      "y": 132.73525591985577,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -670,8 +616,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 615.2357148739957,
-      "y": 346.50427079154315,
+      "x": 466.0027635369444,
+      "y": 441.83861399812855,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -682,8 +628,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 587.1225953513989,
-      "y": 471.89553746743167,
+      "x": 431.0204873764113,
+      "y": 66.25212178055122,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -694,8 +640,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 545.395317287479,
-      "y": 269.8334969115889,
+      "x": 68.92783451811182,
+      "y": 257.8423580244952,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -706,8 +652,8 @@
         "category": "process",
         "type": "builder"
       },
-      "x": 288.60322901650875,
-      "y": 299.88349806251216,
+      "x": 794.5047157533672,
+      "y": 67.2798580488754,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -718,8 +664,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 739.8483180149842,
-      "y": 223.78021148294556,
+      "x": 87.95130270278557,
+      "y": 201.61124239715593,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -730,8 +676,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 639.9059029334244,
-      "y": 128.37151598979608,
+      "x": 373.7947470417656,
+      "y": 440.6294666886739,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -742,8 +688,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 206.2912092342465,
-      "y": 103.30406357189239,
+      "x": 221.57222882069317,
+      "y": 54.632791384719084,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -754,8 +700,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 412.99110405896397,
-      "y": 507.8731644431086,
+      "x": 423.56528317430235,
+      "y": 423.8294402933436,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -766,8 +712,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 778.7010000225154,
-      "y": 380.1618417070327,
+      "x": 33.46557058684887,
+      "y": 259.1279766521782,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -778,8 +724,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 667.576324985369,
-      "y": 584.0914223530281,
+      "x": 253.51032219643184,
+      "y": 469.2491645668093,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -790,8 +736,8 @@
         "category": "process",
         "type": "builder"
       },
-      "x": 3.589223314908274,
-      "y": 598.6217689928789,
+      "x": 91.61944324398519,
+      "y": 167.52225245633045,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -802,8 +748,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 198.30183974309764,
-      "y": 195.21403245072463,
+      "x": 498.2421266920928,
+      "y": 151.24703339421222,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -814,8 +760,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 464.58366363263616,
-      "y": 153.29795039296727,
+      "x": 607.5005726770007,
+      "y": 121.98392454166547,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -826,8 +772,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 310.06174046982676,
-      "y": 266.9429373645461,
+      "x": 624.8009062577631,
+      "y": 125.0723156486992,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -838,8 +784,8 @@
         "category": "process",
         "type": "builder"
       },
-      "x": 48.02229794120283,
-      "y": 509.65475045414007,
+      "x": 622.6527292258938,
+      "y": 174.69686798014794,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -850,8 +796,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 201.9979280667143,
-      "y": 302.3501033870048,
+      "x": 468.8299420536277,
+      "y": 223.09323746130644,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -862,44 +808,44 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 330.3667947412258,
-      "y": 28.29871532923718,
+      "x": 22.619123741292135,
+      "y": 38.26808888197195,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "logfile:nodetests-builder.log:mnzgxt02",
+      "id": "logfile:nodetests-builder.log:mo058evw",
       "label": "nodetests-builder.log",
       "type": "file",
-      "x": 439.93314189603655,
-      "y": 95.1524733860786,
+      "x": 163.5314782397808,
+      "y": 322.3389167239991,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "logfile:webtests-builder.log:mnzgxtmz",
+      "id": "logfile:webtests-builder.log:mo058fl4",
       "label": "webtests-builder.log",
       "type": "file",
-      "x": 559.9887109535449,
-      "y": 326.4080375007518,
+      "x": 84.94419541234413,
+      "y": 73.2561138919112,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "logfile:pythontests-builder.log:mnzgxyys",
+      "id": "logfile:pythontests-builder.log:mo058ks5",
       "label": "pythontests-builder.log",
       "type": "file",
-      "x": 459.18849290695476,
-      "y": 535.5064295212991,
+      "x": 254.06602842501184,
+      "y": 205.1406355710589,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "logfile:chrome-service.log:mnzgyim7",
+      "id": "logfile:chrome-service.log:mo0592y6",
       "label": "chrome-service.log",
       "type": "file",
-      "x": 142.6507915669619,
-      "y": 445.4132720995044,
+      "x": 341.318836150451,
+      "y": 595.7658313264643,
       "size": 5,
       "color": "#4a90e2"
     }
@@ -911,7 +857,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -920,7 +866,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -929,7 +875,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -938,7 +884,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -947,16 +893,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
-      }
-    },
-    {
-      "source": "config:nodetests",
-      "target": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "type": "configuredBy",
-      "attributes": {
-        "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -965,7 +902,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -974,7 +911,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -983,7 +920,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -992,7 +929,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -1001,7 +938,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -1010,7 +947,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -1019,7 +956,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T03:05:29.545Z"
+        "timestamp": "2026-04-15T14:25:39.110Z"
       }
     },
     {
@@ -1057,14 +994,6 @@
     {
       "source": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "target": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:0",
-      "type": "belongsTo",
-      "attributes": {
-        "type": "belongsTo"
-      }
-    },
-    {
-      "source": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "target": "test:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:0",
       "type": "belongsTo",
       "attributes": {
         "type": "belongsTo"
@@ -1140,7 +1069,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.961Z",
+        "timestamp": "2026-04-15T14:25:43.279Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1160,7 +1089,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.963Z",
+        "timestamp": "2026-04-15T14:25:43.281Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1180,7 +1109,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.964Z",
+        "timestamp": "2026-04-15T14:25:43.285Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1200,7 +1129,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.965Z",
+        "timestamp": "2026-04-15T14:25:43.286Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1220,7 +1149,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.966Z",
+        "timestamp": "2026-04-15T14:25:43.287Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1240,7 +1169,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.968Z",
+        "timestamp": "2026-04-15T14:25:43.288Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1260,7 +1189,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.969Z",
+        "timestamp": "2026-04-15T14:25:43.288Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1280,7 +1209,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.970Z",
+        "timestamp": "2026-04-15T14:25:43.289Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1300,7 +1229,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.970Z",
+        "timestamp": "2026-04-15T14:25:43.290Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1320,7 +1249,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.971Z",
+        "timestamp": "2026-04-15T14:25:43.291Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1340,7 +1269,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.972Z",
+        "timestamp": "2026-04-15T14:25:43.291Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1360,7 +1289,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.973Z",
+        "timestamp": "2026-04-15T14:25:43.292Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1380,7 +1309,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.974Z",
+        "timestamp": "2026-04-15T14:25:43.293Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1400,7 +1329,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.975Z",
+        "timestamp": "2026-04-15T14:25:43.294Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1420,67 +1349,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.976Z",
-        "metadata": {
-          "relationship": "config_has_process"
-        }
-      }
-    },
-    {
-      "source": "config:nodetests",
-      "target": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "type": {
-        "category": "ownership",
-        "type": "has",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "ownership",
-          "type": "has",
-          "directed": true
-        },
-        "timestamp": "2026-04-15T03:05:31.977Z",
-        "metadata": {
-          "relationship": "config_has_process"
-        }
-      }
-    },
-    {
-      "source": "config:nodetests",
-      "target": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "type": {
-        "category": "ownership",
-        "type": "has",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "ownership",
-          "type": "has",
-          "directed": true
-        },
-        "timestamp": "2026-04-15T03:05:31.977Z",
-        "metadata": {
-          "relationship": "config_has_process"
-        }
-      }
-    },
-    {
-      "source": "config:nodetests",
-      "target": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "type": {
-        "category": "ownership",
-        "type": "has",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "ownership",
-          "type": "has",
-          "directed": true
-        },
-        "timestamp": "2026-04-15T03:05:31.978Z",
+        "timestamp": "2026-04-15T14:25:43.295Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1500,7 +1369,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.979Z",
+        "timestamp": "2026-04-15T14:25:43.296Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1520,7 +1389,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.980Z",
+        "timestamp": "2026-04-15T14:25:43.297Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1540,7 +1409,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.981Z",
+        "timestamp": "2026-04-15T14:25:43.298Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1560,7 +1429,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.982Z",
+        "timestamp": "2026-04-15T14:25:43.299Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1580,7 +1449,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.983Z",
+        "timestamp": "2026-04-15T14:25:43.300Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1600,7 +1469,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.985Z",
+        "timestamp": "2026-04-15T14:25:43.301Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1620,7 +1489,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.986Z",
+        "timestamp": "2026-04-15T14:25:43.302Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1640,7 +1509,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.986Z",
+        "timestamp": "2026-04-15T14:25:43.303Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1660,7 +1529,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.987Z",
+        "timestamp": "2026-04-15T14:25:43.304Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1680,7 +1549,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.988Z",
+        "timestamp": "2026-04-15T14:25:43.305Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1700,7 +1569,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.989Z",
+        "timestamp": "2026-04-15T14:25:43.306Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1720,7 +1589,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.990Z",
+        "timestamp": "2026-04-15T14:25:43.311Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1740,7 +1609,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.992Z",
+        "timestamp": "2026-04-15T14:25:43.313Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1760,7 +1629,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.993Z",
+        "timestamp": "2026-04-15T14:25:43.314Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1780,7 +1649,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.994Z",
+        "timestamp": "2026-04-15T14:25:43.315Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1800,7 +1669,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.995Z",
+        "timestamp": "2026-04-15T14:25:43.316Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1820,7 +1689,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.996Z",
+        "timestamp": "2026-04-15T14:25:43.317Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1840,7 +1709,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.997Z",
+        "timestamp": "2026-04-15T14:25:43.318Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1860,7 +1729,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:31.999Z",
+        "timestamp": "2026-04-15T14:25:43.325Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1880,7 +1749,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:32.000Z",
+        "timestamp": "2026-04-15T14:25:43.326Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1900,7 +1769,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:32.001Z",
+        "timestamp": "2026-04-15T14:25:43.327Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1920,7 +1789,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:32.002Z",
+        "timestamp": "2026-04-15T14:25:43.328Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1940,7 +1809,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:32.003Z",
+        "timestamp": "2026-04-15T14:25:43.329Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1960,7 +1829,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:32.005Z",
+        "timestamp": "2026-04-15T14:25:43.331Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1980,7 +1849,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:55.699Z",
+        "timestamp": "2026-04-15T14:26:01.647Z",
         "metadata": {
           "relationship": "agent_has_process"
         }
@@ -2000,7 +1869,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T03:05:55.707Z",
+        "timestamp": "2026-04-15T14:26:01.649Z",
         "metadata": {
           "relationship": "agent_has_process"
         }
@@ -2008,5 +1877,5 @@
     }
   ],
   "viewType": "debug",
-  "timestamp": "2026-04-15T03:07:06.901Z"
+  "timestamp": "2026-04-15T14:27:10.406Z"
 }

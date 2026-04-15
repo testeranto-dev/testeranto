@@ -1,7 +1,6 @@
 import { assert } from "chai";
-
-import { ITestImplementation } from "testeranto.tiposkripto/CoreTypes";
-import { ICalculatorWebReact, O, M } from "./Calculator.test.types.js";
+import type { ITestImplementation } from "../../src/CoreTypes";
+import type { ICalculatorWebReact, O, M } from "./Calculator.test.types";
 
 export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
   suites: {
@@ -174,10 +173,10 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
     displayIs: (expected: string) => async (store: any, testResource: any, artifactory: any) => {
       console.log(`[Test Implementation] displayIs: checking if display equals "${expected}"`);
       const { htmlElement } = store;
-      
+
       // Wait a bit more to ensure React has updated
       await new Promise(resolve => setTimeout(resolve, 200));
-      
+
       // Try multiple selectors to find the display
       let display = null;
       const selectors = [
@@ -187,7 +186,7 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
         '#root > div > div',
         'div'
       ];
-      
+
       for (const selector of selectors) {
         const elements = htmlElement.querySelectorAll(selector);
         for (const el of elements) {
@@ -204,7 +203,7 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
         }
         if (display) break;
       }
-      
+
       if (!display) {
         console.error('[Test Implementation] Display element not found');
         // Log all divs for debugging
@@ -215,12 +214,12 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
         });
         throw new Error('Display element not found');
       }
-      
+
       const displayText = display.textContent || display.innerText;
       console.log(`[Test Implementation] Found display text: "${displayText}"`);
       assert.equal(displayText.trim(), expected);
       console.log(`[Test Implementation] Assertion passed: display equals "${expected}"`);
-      
+
       // Take a screenshot for this test
       if (artifactory) {
         console.log(`[Test Implementation] Taking screenshot for displayIs_${expected.replace(/[^a-zA-Z0-9]/g, '_')}`);
@@ -231,10 +230,10 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
       // Alias for displayIs
       console.log(`[Test Implementation] result: checking if result equals "${expected}"`);
       const { htmlElement } = store;
-      
+
       // Wait a bit more to ensure React has updated
       await new Promise(resolve => setTimeout(resolve, 200));
-      
+
       // Try multiple selectors to find the display
       let display = null;
       const selectors = [
@@ -244,7 +243,7 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
         '#root > div > div',
         'div'
       ];
-      
+
       for (const selector of selectors) {
         const elements = htmlElement.querySelectorAll(selector);
         for (const el of elements) {
@@ -260,17 +259,17 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
         }
         if (display) break;
       }
-      
+
       if (!display) {
         console.error('[Test Implementation] Display element not found');
         throw new Error('Display element not found');
       }
-      
+
       const displayText = display.textContent || display.innerText;
       console.log(`[Test Implementation] Found display text: "${displayText}"`);
       assert.equal(displayText.trim(), expected);
       console.log(`[Test Implementation] Assertion passed: result equals "${expected}"`);
-      
+
       // Take a screenshot for this test
       if (artifactory) {
         console.log(`[Test Implementation] Taking screenshot for result_${expected.replace(/[^a-zA-Z0-9]/g, '_')}`);
@@ -302,7 +301,7 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
         // For React tests, we can't directly access calculator methods
         // So we'll simulate clicking memory buttons
         const { htmlElement } = store;
-        
+
         // Click MS button
         const buttons = htmlElement.querySelectorAll('button');
         for (const btn of buttons) {
@@ -311,7 +310,7 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
             break;
           }
         }
-        
+
         await new Promise(resolve => setTimeout(resolve, 300));
         return store;
       };
@@ -319,7 +318,7 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
     "can save 2 memories": () => {
       return async (store: any, testResource: any, artifactory: any) => {
         const { htmlElement } = store;
-        
+
         // Click MS button twice
         const buttons = htmlElement.querySelectorAll('button');
         for (const btn of buttons) {
@@ -328,9 +327,9 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
             break;
           }
         }
-        
+
         await new Promise(resolve => setTimeout(resolve, 100));
-        
+
         // Click M+ button
         for (const btn of buttons) {
           if (btn.textContent === 'M+') {
@@ -338,7 +337,7 @@ export const implementation: ITestImplementation<ICalculatorWebReact, O, M> = {
             break;
           }
         }
-        
+
         await new Promise(resolve => setTimeout(resolve, 300));
         return store;
       };

@@ -56,9 +56,12 @@ export const initializeTestsPure = async (
       }
 
       if (mode === "dev") {
+        consoleLog(`[initializeTestsPure] Setting up file watching for test ${testName} with runtime ${runtime}`);
         await watchInputFile(runtime, testName);
+        consoleLog(`[initializeTestsPure] Watching output files for test ${testName} with config ${configKey}`);
         watchOutputFile(runtime, testName, configKey);
       } else {
+        consoleLog(`[initializeTestsPure] Loading input file once for test ${testName} with runtime ${runtime}`);
         loadInputFileOnce(runtime, testName, configKey);
       }
 

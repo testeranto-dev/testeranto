@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-15T03:07:06.901Z",
+  "timestamp": "2026-04-15T14:27:10.407Z",
   "version": "1.0",
   "data": {
     "unifiedGraph": {
@@ -22,7 +22,7 @@
             "message": "Your name is \"prodirek\". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from prodirek!\"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/prodirek"
           },
           "message": "Your name is \"prodirek\". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from prodirek!\"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/prodirek",
-          "timestamp": "2026-04-15T03:05:29.542Z",
+          "timestamp": "2026-04-15T14:25:39.105Z",
           "status": "todo",
           "icon": "user"
         },
@@ -44,7 +44,7 @@
             "message": "Your name is \"arko\". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from arko!\"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/arko"
           },
           "message": "Your name is \"arko\". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from arko!\"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/arko",
-          "timestamp": "2026-04-15T03:05:29.542Z",
+          "timestamp": "2026-04-15T14:25:39.105Z",
           "status": "todo",
           "icon": "user"
         },
@@ -59,7 +59,7 @@
             "viewKey": "Home",
             "viewPath": "src/views/defaultViews/HomeView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Home.json",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.109Z"
           }
         },
         {
@@ -73,7 +73,7 @@
             "viewKey": "Kanban",
             "viewPath": "src/views/defaultViews/KanbanBoardView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.109Z"
           }
         },
         {
@@ -87,7 +87,7 @@
             "viewKey": "EisenhowerMatrix",
             "viewPath": "src/views/defaultViews/EisenhowerMatrixView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.109Z"
           }
         },
         {
@@ -101,7 +101,7 @@
             "viewKey": "Gantt",
             "viewPath": "src/views/defaultViews/GanttView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.109Z"
           }
         },
         {
@@ -115,7 +115,7 @@
             "viewKey": "Chat",
             "viewPath": "src/views/defaultViews/ChatView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.109Z"
           }
         },
         {
@@ -129,7 +129,7 @@
             "viewKey": "DebugGraph",
             "viewPath": "src/views/defaultViews/DebugGraphView.tsx",
             "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/DebugGraph.json",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.109Z"
           }
         },
         {
@@ -148,14 +148,13 @@
               "src/lib/tiposkripto/tests/circle/Circle.test.ts",
               "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
               "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-              "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
               "src/vscode/providers/logic/FileTreeLogic.test.ts",
               "src/vscode/providers/utils/testTree/treeFilter.test.ts",
               "src/vscode/providers/utils/testTree/debugTest.js",
               "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
             ],
             "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -169,7 +168,7 @@
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -183,7 +182,7 @@
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -197,7 +196,7 @@
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -211,7 +210,7 @@
             "configKey": "nodetests",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -225,21 +224,7 @@
             "configKey": "nodetests",
             "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
-          }
-        },
-        {
-          "id": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "type": "entrypoint",
-          "label": "Server_GraphManagerCore.test.ts",
-          "description": "Test entrypoint: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "status": "todo",
-          "icon": "file-text",
-          "metadata": {
-            "configKey": "nodetests",
-            "filePath": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-            "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -253,7 +238,7 @@
             "configKey": "nodetests",
             "filePath": "src/vscode/providers/logic/FileTreeLogic.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -267,7 +252,7 @@
             "configKey": "nodetests",
             "filePath": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -281,7 +266,7 @@
             "configKey": "nodetests",
             "filePath": "src/vscode/providers/utils/testTree/debugTest.js",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -295,7 +280,7 @@
             "configKey": "nodetests",
             "filePath": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
             "runtime": "node",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -313,7 +298,7 @@
               "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
             ],
             "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -327,7 +312,7 @@
             "configKey": "webtests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
             "runtime": "web",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -341,7 +326,7 @@
             "configKey": "webtests",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
             "runtime": "web",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -358,7 +343,7 @@
               "src/lib/pitono/examples/calculator_test.py"
             ],
             "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -372,7 +357,7 @@
             "configKey": "pythontests",
             "filePath": "src/lib/pitono/examples/calculator_test.py",
             "runtime": "python",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -387,7 +372,7 @@
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
             "filePath": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -402,7 +387,7 @@
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -417,7 +402,7 @@
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -432,7 +417,7 @@
             "configKey": "nodetests",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
             "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -447,22 +432,7 @@
             "configKey": "nodetests",
             "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
             "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
-          }
-        },
-        {
-          "id": "test:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:0",
-          "type": "test",
-          "label": "Test suite",
-          "description": "Test suite: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "status": "todo",
-          "priority": "medium",
-          "icon": "test",
-          "metadata": {
-            "configKey": "nodetests",
-            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-            "filePath": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -477,7 +447,7 @@
             "configKey": "nodetests",
             "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
             "filePath": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -492,7 +462,7 @@
             "configKey": "nodetests",
             "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
             "filePath": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -507,7 +477,7 @@
             "configKey": "nodetests",
             "testName": "src/vscode/providers/utils/testTree/debugTest.js",
             "filePath": "src/vscode/providers/utils/testTree/debugTest.js",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -522,7 +492,7 @@
             "configKey": "nodetests",
             "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
             "filePath": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -537,7 +507,7 @@
             "configKey": "webtests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -552,7 +522,7 @@
             "configKey": "webtests",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
             "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -567,7 +537,7 @@
             "configKey": "pythontests",
             "testName": "src/lib/pitono/examples/calculator_test.py",
             "filePath": "src/lib/pitono/examples/calculator_test.py",
-            "timestamp": "2026-04-15T03:05:29.546Z"
+            "timestamp": "2026-04-15T14:25:39.111Z"
           }
         },
         {
@@ -580,7 +550,7 @@
           "description": "bdd process for src/lib/tiposkripto/tests/abstractBase.test/index.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.961Z",
+          "timestamp": "2026-04-15T14:25:43.279Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -593,7 +563,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -611,7 +580,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.961Z"
+            "startTime": "2026-04-15T14:25:43.279Z"
           },
           "icon": "beaker"
         },
@@ -625,7 +594,7 @@
           "description": "check process for src/lib/tiposkripto/tests/abstractBase.test/index.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.963Z",
+          "timestamp": "2026-04-15T14:25:43.281Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -638,7 +607,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -656,7 +624,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.963Z"
+            "startTime": "2026-04-15T14:25:43.281Z"
           },
           "icon": "checklist"
         },
@@ -670,7 +638,7 @@
           "description": "aider process for src/lib/tiposkripto/tests/abstractBase.test/index.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.964Z",
+          "timestamp": "2026-04-15T14:25:43.285Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -683,7 +651,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -701,7 +668,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.964Z"
+            "startTime": "2026-04-15T14:25:43.285Z"
           },
           "icon": "comment-discussion"
         },
@@ -715,7 +682,7 @@
           "description": "bdd process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.965Z",
+          "timestamp": "2026-04-15T14:25:43.286Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -728,7 +695,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -746,7 +712,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.965Z"
+            "startTime": "2026-04-15T14:25:43.286Z"
           },
           "icon": "beaker"
         },
@@ -760,7 +726,7 @@
           "description": "check process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.966Z",
+          "timestamp": "2026-04-15T14:25:43.287Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -773,7 +739,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -791,7 +756,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.966Z"
+            "startTime": "2026-04-15T14:25:43.287Z"
           },
           "icon": "checklist"
         },
@@ -805,7 +770,7 @@
           "description": "aider process for src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.968Z",
+          "timestamp": "2026-04-15T14:25:43.288Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -818,7 +783,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -836,7 +800,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.968Z"
+            "startTime": "2026-04-15T14:25:43.288Z"
           },
           "icon": "comment-discussion"
         },
@@ -850,7 +814,7 @@
           "description": "bdd process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.969Z",
+          "timestamp": "2026-04-15T14:25:43.288Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -863,7 +827,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -881,7 +844,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.969Z"
+            "startTime": "2026-04-15T14:25:43.288Z"
           },
           "icon": "beaker"
         },
@@ -895,7 +858,7 @@
           "description": "check process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.970Z",
+          "timestamp": "2026-04-15T14:25:43.289Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -908,7 +871,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -926,7 +888,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.970Z"
+            "startTime": "2026-04-15T14:25:43.289Z"
           },
           "icon": "checklist"
         },
@@ -940,7 +902,7 @@
           "description": "aider process for src/lib/tiposkripto/tests/circle/Circle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.970Z",
+          "timestamp": "2026-04-15T14:25:43.290Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -953,7 +915,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -971,7 +932,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.970Z"
+            "startTime": "2026-04-15T14:25:43.290Z"
           },
           "icon": "comment-discussion"
         },
@@ -985,7 +946,7 @@
           "description": "bdd process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.971Z",
+          "timestamp": "2026-04-15T14:25:43.291Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -998,7 +959,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1016,7 +976,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.971Z"
+            "startTime": "2026-04-15T14:25:43.291Z"
           },
           "icon": "beaker"
         },
@@ -1030,7 +990,7 @@
           "description": "check process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.972Z",
+          "timestamp": "2026-04-15T14:25:43.291Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -1043,7 +1003,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1061,7 +1020,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.972Z"
+            "startTime": "2026-04-15T14:25:43.291Z"
           },
           "icon": "checklist"
         },
@@ -1075,7 +1034,7 @@
           "description": "aider process for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.973Z",
+          "timestamp": "2026-04-15T14:25:43.292Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -1088,7 +1047,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1106,7 +1064,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.973Z"
+            "startTime": "2026-04-15T14:25:43.292Z"
           },
           "icon": "comment-discussion"
         },
@@ -1120,7 +1078,7 @@
           "description": "bdd process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.974Z",
+          "timestamp": "2026-04-15T14:25:43.293Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -1133,7 +1091,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1151,7 +1108,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.974Z"
+            "startTime": "2026-04-15T14:25:43.293Z"
           },
           "icon": "beaker"
         },
@@ -1165,7 +1122,7 @@
           "description": "check process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.975Z",
+          "timestamp": "2026-04-15T14:25:43.294Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -1178,7 +1135,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1196,7 +1152,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.975Z"
+            "startTime": "2026-04-15T14:25:43.294Z"
           },
           "icon": "checklist"
         },
@@ -1210,7 +1166,7 @@
           "description": "aider process for src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.976Z",
+          "timestamp": "2026-04-15T14:25:43.295Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -1223,7 +1179,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1241,142 +1196,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.976Z"
-          },
-          "icon": "comment-discussion"
-        },
-        {
-          "id": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "type": {
-            "category": "process",
-            "type": "bdd"
-          },
-          "label": "bdd: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "description": "bdd process for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts (node)",
-          "status": "done",
-          "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.977Z",
-          "metadata": {
-            "runtime": "node",
-            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-            "configKey": "nodetests",
-            "configValue": {
-              "runtime": "node",
-              "tests": [
-                "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-                "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-                "src/vscode/providers/logic/FileTreeLogic.test.ts",
-                "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-                "src/vscode/providers/utils/testTree/debugTest.js",
-                "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-              ],
-              "checks": [
-                null,
-                null,
-                null
-              ],
-              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-              "buildOptions": "testeranto/runtimes/node/node.mjs",
-              "buildKitOptions": {},
-              "outputs": []
-            },
-            "status": "todo",
-            "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.977Z"
-          },
-          "icon": "beaker"
-        },
-        {
-          "id": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "type": {
-            "category": "process",
-            "type": "check"
-          },
-          "label": "check: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "description": "check process for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts (node)",
-          "status": "done",
-          "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.977Z",
-          "metadata": {
-            "runtime": "node",
-            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-            "configKey": "nodetests",
-            "configValue": {
-              "runtime": "node",
-              "tests": [
-                "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-                "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-                "src/vscode/providers/logic/FileTreeLogic.test.ts",
-                "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-                "src/vscode/providers/utils/testTree/debugTest.js",
-                "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-              ],
-              "checks": [
-                null,
-                null,
-                null
-              ],
-              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-              "buildOptions": "testeranto/runtimes/node/node.mjs",
-              "buildKitOptions": {},
-              "outputs": []
-            },
-            "status": "todo",
-            "processType": "check",
-            "startTime": "2026-04-15T03:05:31.977Z"
-          },
-          "icon": "checklist"
-        },
-        {
-          "id": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "type": {
-            "category": "process",
-            "type": "aider"
-          },
-          "label": "aider: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "description": "aider process for src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts (node)",
-          "status": "done",
-          "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.978Z",
-          "metadata": {
-            "runtime": "node",
-            "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-            "configKey": "nodetests",
-            "configValue": {
-              "runtime": "node",
-              "tests": [
-                "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-                "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-                "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-                "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-                "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-                "src/vscode/providers/logic/FileTreeLogic.test.ts",
-                "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-                "src/vscode/providers/utils/testTree/debugTest.js",
-                "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-              ],
-              "checks": [
-                null,
-                null,
-                null
-              ],
-              "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-              "buildOptions": "testeranto/runtimes/node/node.mjs",
-              "buildKitOptions": {},
-              "outputs": []
-            },
-            "status": "todo",
-            "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.978Z"
+            "startTime": "2026-04-15T14:25:43.295Z"
           },
           "icon": "comment-discussion"
         },
@@ -1390,7 +1210,7 @@
           "description": "bdd process for src/vscode/providers/logic/FileTreeLogic.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.979Z",
+          "timestamp": "2026-04-15T14:25:43.296Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
@@ -1403,7 +1223,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1421,7 +1240,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.979Z"
+            "startTime": "2026-04-15T14:25:43.296Z"
           },
           "icon": "beaker"
         },
@@ -1435,7 +1254,7 @@
           "description": "check process for src/vscode/providers/logic/FileTreeLogic.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.980Z",
+          "timestamp": "2026-04-15T14:25:43.297Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
@@ -1448,7 +1267,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1466,7 +1284,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.980Z"
+            "startTime": "2026-04-15T14:25:43.297Z"
           },
           "icon": "checklist"
         },
@@ -1480,7 +1298,7 @@
           "description": "aider process for src/vscode/providers/logic/FileTreeLogic.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.981Z",
+          "timestamp": "2026-04-15T14:25:43.298Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
@@ -1493,7 +1311,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1511,7 +1328,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.981Z"
+            "startTime": "2026-04-15T14:25:43.298Z"
           },
           "icon": "comment-discussion"
         },
@@ -1525,7 +1342,7 @@
           "description": "bdd process for src/vscode/providers/utils/testTree/treeFilter.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.982Z",
+          "timestamp": "2026-04-15T14:25:43.299Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
@@ -1538,7 +1355,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1556,7 +1372,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.982Z"
+            "startTime": "2026-04-15T14:25:43.299Z"
           },
           "icon": "beaker"
         },
@@ -1570,7 +1386,7 @@
           "description": "check process for src/vscode/providers/utils/testTree/treeFilter.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.983Z",
+          "timestamp": "2026-04-15T14:25:43.300Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
@@ -1583,7 +1399,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1601,7 +1416,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.983Z"
+            "startTime": "2026-04-15T14:25:43.300Z"
           },
           "icon": "checklist"
         },
@@ -1615,7 +1430,7 @@
           "description": "aider process for src/vscode/providers/utils/testTree/treeFilter.test.ts (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.985Z",
+          "timestamp": "2026-04-15T14:25:43.301Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
@@ -1628,7 +1443,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1646,7 +1460,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.985Z"
+            "startTime": "2026-04-15T14:25:43.301Z"
           },
           "icon": "comment-discussion"
         },
@@ -1660,7 +1474,7 @@
           "description": "bdd process for src/vscode/providers/utils/testTree/debugTest.js (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.986Z",
+          "timestamp": "2026-04-15T14:25:43.302Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1673,7 +1487,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1691,7 +1504,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.986Z"
+            "startTime": "2026-04-15T14:25:43.302Z"
           },
           "icon": "beaker"
         },
@@ -1705,7 +1518,7 @@
           "description": "check process for src/vscode/providers/utils/testTree/debugTest.js (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.986Z",
+          "timestamp": "2026-04-15T14:25:43.303Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1718,7 +1531,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1736,7 +1548,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.986Z"
+            "startTime": "2026-04-15T14:25:43.303Z"
           },
           "icon": "checklist"
         },
@@ -1750,7 +1562,7 @@
           "description": "aider process for src/vscode/providers/utils/testTree/debugTest.js (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.987Z",
+          "timestamp": "2026-04-15T14:25:43.304Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1763,7 +1575,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1781,7 +1592,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.987Z"
+            "startTime": "2026-04-15T14:25:43.304Z"
           },
           "icon": "comment-discussion"
         },
@@ -1795,7 +1606,7 @@
           "description": "bdd process for src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts. (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.988Z",
+          "timestamp": "2026-04-15T14:25:43.305Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
@@ -1808,7 +1619,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1826,7 +1636,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.988Z"
+            "startTime": "2026-04-15T14:25:43.305Z"
           },
           "icon": "beaker"
         },
@@ -1840,7 +1650,7 @@
           "description": "check process for src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts. (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.989Z",
+          "timestamp": "2026-04-15T14:25:43.306Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
@@ -1853,7 +1663,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1871,7 +1680,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.989Z"
+            "startTime": "2026-04-15T14:25:43.306Z"
           },
           "icon": "checklist"
         },
@@ -1885,7 +1694,7 @@
           "description": "aider process for src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts. (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.990Z",
+          "timestamp": "2026-04-15T14:25:43.311Z",
           "metadata": {
             "runtime": "node",
             "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
@@ -1898,7 +1707,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1916,7 +1724,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.990Z"
+            "startTime": "2026-04-15T14:25:43.311Z"
           },
           "icon": "comment-discussion"
         },
@@ -1930,7 +1738,7 @@
           "description": "builder process for builder (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.992Z",
+          "timestamp": "2026-04-15T14:25:43.313Z",
           "metadata": {
             "runtime": "node",
             "testName": "builder",
@@ -1943,7 +1751,6 @@
                 "src/lib/tiposkripto/tests/circle/Circle.test.ts",
                 "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
                 "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-                "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
                 "src/vscode/providers/logic/FileTreeLogic.test.ts",
                 "src/vscode/providers/utils/testTree/treeFilter.test.ts",
                 "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1961,7 +1768,7 @@
             },
             "status": "todo",
             "processType": "builder",
-            "startTime": "2026-04-15T03:05:31.992Z"
+            "startTime": "2026-04-15T14:25:43.313Z"
           },
           "icon": "gear"
         },
@@ -1975,7 +1782,7 @@
           "description": "bdd process for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts (web)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.993Z",
+          "timestamp": "2026-04-15T14:25:43.314Z",
           "metadata": {
             "runtime": "web",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
@@ -1997,7 +1804,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.993Z"
+            "startTime": "2026-04-15T14:25:43.314Z"
           },
           "icon": "beaker"
         },
@@ -2011,7 +1818,7 @@
           "description": "check process for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts (web)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.994Z",
+          "timestamp": "2026-04-15T14:25:43.315Z",
           "metadata": {
             "runtime": "web",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
@@ -2033,7 +1840,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.994Z"
+            "startTime": "2026-04-15T14:25:43.315Z"
           },
           "icon": "checklist"
         },
@@ -2047,7 +1854,7 @@
           "description": "aider process for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts (web)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.995Z",
+          "timestamp": "2026-04-15T14:25:43.316Z",
           "metadata": {
             "runtime": "web",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
@@ -2069,7 +1876,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.995Z"
+            "startTime": "2026-04-15T14:25:43.316Z"
           },
           "icon": "comment-discussion"
         },
@@ -2083,7 +1890,7 @@
           "description": "bdd process for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts (web)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.996Z",
+          "timestamp": "2026-04-15T14:25:43.317Z",
           "metadata": {
             "runtime": "web",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
@@ -2105,7 +1912,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:31.996Z"
+            "startTime": "2026-04-15T14:25:43.317Z"
           },
           "icon": "beaker"
         },
@@ -2119,7 +1926,7 @@
           "description": "check process for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts (web)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.997Z",
+          "timestamp": "2026-04-15T14:25:43.318Z",
           "metadata": {
             "runtime": "web",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
@@ -2141,7 +1948,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:31.997Z"
+            "startTime": "2026-04-15T14:25:43.318Z"
           },
           "icon": "checklist"
         },
@@ -2155,7 +1962,7 @@
           "description": "aider process for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts (web)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:31.999Z",
+          "timestamp": "2026-04-15T14:25:43.325Z",
           "metadata": {
             "runtime": "web",
             "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
@@ -2177,7 +1984,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:31.999Z"
+            "startTime": "2026-04-15T14:25:43.325Z"
           },
           "icon": "comment-discussion"
         },
@@ -2191,7 +1998,7 @@
           "description": "builder process for builder (web)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:32.000Z",
+          "timestamp": "2026-04-15T14:25:43.326Z",
           "metadata": {
             "runtime": "web",
             "testName": "builder",
@@ -2213,7 +2020,7 @@
             },
             "status": "todo",
             "processType": "builder",
-            "startTime": "2026-04-15T03:05:32.000Z"
+            "startTime": "2026-04-15T14:25:43.326Z"
           },
           "icon": "gear"
         },
@@ -2227,7 +2034,7 @@
           "description": "bdd process for src/lib/pitono/examples/calculator_test.py (python)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:32.001Z",
+          "timestamp": "2026-04-15T14:25:43.327Z",
           "metadata": {
             "runtime": "python",
             "testName": "src/lib/pitono/examples/calculator_test.py",
@@ -2251,7 +2058,7 @@
             },
             "status": "todo",
             "processType": "bdd",
-            "startTime": "2026-04-15T03:05:32.001Z"
+            "startTime": "2026-04-15T14:25:43.327Z"
           },
           "icon": "beaker"
         },
@@ -2265,7 +2072,7 @@
           "description": "check process for src/lib/pitono/examples/calculator_test.py (python)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:32.002Z",
+          "timestamp": "2026-04-15T14:25:43.328Z",
           "metadata": {
             "runtime": "python",
             "testName": "src/lib/pitono/examples/calculator_test.py",
@@ -2289,7 +2096,7 @@
             },
             "status": "todo",
             "processType": "check",
-            "startTime": "2026-04-15T03:05:32.002Z"
+            "startTime": "2026-04-15T14:25:43.328Z"
           },
           "icon": "checklist"
         },
@@ -2303,7 +2110,7 @@
           "description": "aider process for src/lib/pitono/examples/calculator_test.py (python)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:32.003Z",
+          "timestamp": "2026-04-15T14:25:43.329Z",
           "metadata": {
             "runtime": "python",
             "testName": "src/lib/pitono/examples/calculator_test.py",
@@ -2327,7 +2134,7 @@
             },
             "status": "todo",
             "processType": "aider",
-            "startTime": "2026-04-15T03:05:32.003Z"
+            "startTime": "2026-04-15T14:25:43.329Z"
           },
           "icon": "comment-discussion"
         },
@@ -2341,7 +2148,7 @@
           "description": "builder process for builder (python)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:32.005Z",
+          "timestamp": "2026-04-15T14:25:43.331Z",
           "metadata": {
             "runtime": "python",
             "testName": "builder",
@@ -2365,7 +2172,7 @@
             },
             "status": "todo",
             "processType": "builder",
-            "startTime": "2026-04-15T03:05:32.005Z"
+            "startTime": "2026-04-15T14:25:43.331Z"
           },
           "icon": "gear"
         },
@@ -2379,12 +2186,12 @@
           "description": "aider process for prodirek (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:55.699Z",
+          "timestamp": "2026-04-15T14:26:01.647Z",
           "metadata": {
-            "containerId": "d9ca8a4e3f2d22d0f468b27ccd5ecc1610ef3bf2819e77344f83a7e580098547",
+            "containerId": "0c6d1aa52168bde5949e8d99831e42d306b373af5745d7a214b4267864f75374",
             "serviceName": "agent-prodirek",
             "containerStatus": "running",
-            "updatedAt": "2026-04-15T03:05:56.639Z",
+            "updatedAt": "2026-04-15T14:26:02.211Z",
             "status": "running"
           },
           "icon": "comment-discussion"
@@ -2399,18 +2206,18 @@
           "description": "aider process for arko (node)",
           "status": "done",
           "priority": "medium",
-          "timestamp": "2026-04-15T03:05:55.707Z",
+          "timestamp": "2026-04-15T14:26:01.649Z",
           "metadata": {
-            "containerId": "cc4062eeb9aa5506e758b56610599e5391753d9d7903b245808b58ee35583e7b",
+            "containerId": "864cea8d4c0784d8eeef637a46867b5845f5ee4b66645c8cdc402b1df3148598",
             "serviceName": "agent-arko",
             "containerStatus": "running",
-            "updatedAt": "2026-04-15T03:05:56.703Z",
+            "updatedAt": "2026-04-15T14:26:02.265Z",
             "status": "running"
           },
           "icon": "comment-discussion"
         },
         {
-          "id": "logfile:nodetests-builder.log:mnzgxt02",
+          "id": "logfile:nodetests-builder.log:mo058evw",
           "type": "file",
           "label": "nodetests-builder.log",
           "description": "Log file for nodetests-builder (builder)",
@@ -2424,12 +2231,12 @@
             "configKey": "nodetests",
             "isLogFile": true,
             "logType": "builder",
-            "timestamp": "2026-04-15T03:06:11.090Z",
+            "timestamp": "2026-04-15T14:26:16.795Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/nodetests/nodetests-builder.log"
           }
         },
         {
-          "id": "logfile:webtests-builder.log:mnzgxtmz",
+          "id": "logfile:webtests-builder.log:mo058fl4",
           "type": "file",
           "label": "webtests-builder.log",
           "description": "Log file for webtests-builder (builder)",
@@ -2443,12 +2250,12 @@
             "configKey": "webtests",
             "isLogFile": true,
             "logType": "builder",
-            "timestamp": "2026-04-15T03:06:11.915Z",
+            "timestamp": "2026-04-15T14:26:17.704Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/webtests-builder.log"
           }
         },
         {
-          "id": "logfile:pythontests-builder.log:mnzgxyys",
+          "id": "logfile:pythontests-builder.log:mo058ks5",
           "type": "file",
           "label": "pythontests-builder.log",
           "description": "Log file for pythontests-builder (builder)",
@@ -2462,12 +2269,12 @@
             "configKey": "pythontests",
             "isLogFile": true,
             "logType": "builder",
-            "timestamp": "2026-04-15T03:06:18.820Z",
+            "timestamp": "2026-04-15T14:26:24.437Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/pythontests/pythontests-builder.log"
           }
         },
         {
-          "id": "logfile:chrome-service.log:mnzgyim7",
+          "id": "logfile:chrome-service.log:mo0592y6",
           "type": "file",
           "label": "chrome-service.log",
           "description": "Log file for chrome-service (unknown)",
@@ -2481,7 +2288,7 @@
             "configKey": "webtests",
             "isLogFile": true,
             "logType": "unknown",
-            "timestamp": "2026-04-15T03:06:44.287Z",
+            "timestamp": "2026-04-15T14:26:47.982Z",
             "originalPath": "/Users/adam/Code/testeranto/testeranto/reports/webtests/chrome-service.log"
           }
         }
@@ -2492,7 +2299,7 @@
           "target": "entrypoint:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2500,7 +2307,7 @@
           "target": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2508,7 +2315,7 @@
           "target": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2516,7 +2323,7 @@
           "target": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2524,15 +2331,7 @@
           "target": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
-          }
-        },
-        {
-          "source": "config:nodetests",
-          "target": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "attributes": {
-            "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2540,7 +2339,7 @@
           "target": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2548,7 +2347,7 @@
           "target": "entrypoint:src/vscode/providers/utils/testTree/treeFilter.test.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2556,7 +2355,7 @@
           "target": "entrypoint:src/vscode/providers/utils/testTree/debugTest.js",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2564,7 +2363,7 @@
           "target": "entrypoint:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2572,7 +2371,7 @@
           "target": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2580,7 +2379,7 @@
           "target": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2588,7 +2387,7 @@
           "target": "entrypoint:src/lib/pitono/examples/calculator_test.py",
           "attributes": {
             "type": "configuredBy",
-            "timestamp": "2026-04-15T03:05:29.545Z"
+            "timestamp": "2026-04-15T14:25:39.110Z"
           }
         },
         {
@@ -2622,13 +2421,6 @@
         {
           "source": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
           "target": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:0",
-          "attributes": {
-            "type": "belongsTo"
-          }
-        },
-        {
-          "source": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "target": "test:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:0",
           "attributes": {
             "type": "belongsTo"
           }
@@ -2691,7 +2483,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.961Z",
+            "timestamp": "2026-04-15T14:25:43.279Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2706,7 +2498,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.963Z",
+            "timestamp": "2026-04-15T14:25:43.281Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2721,7 +2513,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.964Z",
+            "timestamp": "2026-04-15T14:25:43.285Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2736,7 +2528,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.965Z",
+            "timestamp": "2026-04-15T14:25:43.286Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2751,7 +2543,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.966Z",
+            "timestamp": "2026-04-15T14:25:43.287Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2766,7 +2558,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.968Z",
+            "timestamp": "2026-04-15T14:25:43.288Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2781,7 +2573,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.969Z",
+            "timestamp": "2026-04-15T14:25:43.288Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2796,7 +2588,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.970Z",
+            "timestamp": "2026-04-15T14:25:43.289Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2811,7 +2603,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.970Z",
+            "timestamp": "2026-04-15T14:25:43.290Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2826,7 +2618,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.971Z",
+            "timestamp": "2026-04-15T14:25:43.291Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2841,7 +2633,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.972Z",
+            "timestamp": "2026-04-15T14:25:43.291Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2856,7 +2648,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.973Z",
+            "timestamp": "2026-04-15T14:25:43.292Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2871,7 +2663,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.974Z",
+            "timestamp": "2026-04-15T14:25:43.293Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2886,7 +2678,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.975Z",
+            "timestamp": "2026-04-15T14:25:43.294Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2901,52 +2693,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.976Z",
-            "metadata": {
-              "relationship": "config_has_process"
-            }
-          }
-        },
-        {
-          "source": "config:nodetests",
-          "target": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "attributes": {
-            "type": {
-              "category": "ownership",
-              "type": "has",
-              "directed": true
-            },
-            "timestamp": "2026-04-15T03:05:31.977Z",
-            "metadata": {
-              "relationship": "config_has_process"
-            }
-          }
-        },
-        {
-          "source": "config:nodetests",
-          "target": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "attributes": {
-            "type": {
-              "category": "ownership",
-              "type": "has",
-              "directed": true
-            },
-            "timestamp": "2026-04-15T03:05:31.977Z",
-            "metadata": {
-              "relationship": "config_has_process"
-            }
-          }
-        },
-        {
-          "source": "config:nodetests",
-          "target": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-          "attributes": {
-            "type": {
-              "category": "ownership",
-              "type": "has",
-              "directed": true
-            },
-            "timestamp": "2026-04-15T03:05:31.978Z",
+            "timestamp": "2026-04-15T14:25:43.295Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2961,7 +2708,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.979Z",
+            "timestamp": "2026-04-15T14:25:43.296Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2976,7 +2723,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.980Z",
+            "timestamp": "2026-04-15T14:25:43.297Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -2991,7 +2738,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.981Z",
+            "timestamp": "2026-04-15T14:25:43.298Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3006,7 +2753,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.982Z",
+            "timestamp": "2026-04-15T14:25:43.299Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3021,7 +2768,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.983Z",
+            "timestamp": "2026-04-15T14:25:43.300Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3036,7 +2783,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.985Z",
+            "timestamp": "2026-04-15T14:25:43.301Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3051,7 +2798,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.986Z",
+            "timestamp": "2026-04-15T14:25:43.302Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3066,7 +2813,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.986Z",
+            "timestamp": "2026-04-15T14:25:43.303Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3081,7 +2828,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.987Z",
+            "timestamp": "2026-04-15T14:25:43.304Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3096,7 +2843,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.988Z",
+            "timestamp": "2026-04-15T14:25:43.305Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3111,7 +2858,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.989Z",
+            "timestamp": "2026-04-15T14:25:43.306Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3126,7 +2873,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.990Z",
+            "timestamp": "2026-04-15T14:25:43.311Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3141,7 +2888,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.992Z",
+            "timestamp": "2026-04-15T14:25:43.313Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3156,7 +2903,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.993Z",
+            "timestamp": "2026-04-15T14:25:43.314Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3171,7 +2918,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.994Z",
+            "timestamp": "2026-04-15T14:25:43.315Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3186,7 +2933,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.995Z",
+            "timestamp": "2026-04-15T14:25:43.316Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3201,7 +2948,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.996Z",
+            "timestamp": "2026-04-15T14:25:43.317Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3216,7 +2963,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.997Z",
+            "timestamp": "2026-04-15T14:25:43.318Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3231,7 +2978,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:31.999Z",
+            "timestamp": "2026-04-15T14:25:43.325Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3246,7 +2993,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:32.000Z",
+            "timestamp": "2026-04-15T14:25:43.326Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3261,7 +3008,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:32.001Z",
+            "timestamp": "2026-04-15T14:25:43.327Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3276,7 +3023,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:32.002Z",
+            "timestamp": "2026-04-15T14:25:43.328Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3291,7 +3038,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:32.003Z",
+            "timestamp": "2026-04-15T14:25:43.329Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3306,7 +3053,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:32.005Z",
+            "timestamp": "2026-04-15T14:25:43.331Z",
             "metadata": {
               "relationship": "config_has_process"
             }
@@ -3321,7 +3068,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:55.699Z",
+            "timestamp": "2026-04-15T14:26:01.647Z",
             "metadata": {
               "relationship": "agent_has_process"
             }
@@ -3336,7 +3083,7 @@
               "type": "has",
               "directed": true
             },
-            "timestamp": "2026-04-15T03:05:55.707Z",
+            "timestamp": "2026-04-15T14:26:01.649Z",
             "metadata": {
               "relationship": "agent_has_process"
             }
@@ -3345,7 +3092,7 @@
       ],
       "metadata": {
         "version": "1.0",
-        "timestamp": "2026-04-15T03:07:06.901Z"
+        "timestamp": "2026-04-15T14:27:10.407Z"
       }
     },
     "vizConfig": {

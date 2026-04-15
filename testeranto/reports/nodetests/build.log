@@ -5046,3 +5046,600 @@
   ]
 }
 [2026-04-15T03:05:49.000Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T12:40:17.707Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T12:40:17.713Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-15T12:40:44.778Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T12:40:44.791Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T12:40:45.379Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T12:40:46.188Z] node > build ended with 5 errors
+[2026-04-15T12:40:46.197Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T12:40:46.204Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T12:40:45.502Z] INFO: Build started for nodetests
+[2026-04-15T12:40:46.188Z] LOG: node > build ended with 5 errors
+[2026-04-15T12:58:40.665Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T12:59:09.898Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T12:59:09.901Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T12:59:10.301Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T12:59:11.632Z] node > build ended with 5 errors
+[2026-04-15T12:59:11.713Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T12:59:10.555Z] INFO: Build started for nodetests
+[2026-04-15T12:59:11.632Z] LOG: node > build ended with 5 errors
+[2026-04-15T12:59:11.739Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T14:01:39.364Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T14:01:39.376Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-15T14:01:39.394Z] [NODE BUILDER] Producing output artifacts for config nodetests
+[2026-04-15T14:02:13.771Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T14:02:13.777Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T14:02:14.532Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T14:02:16.974Z] node > build ended with 5 errors
+[2026-04-15T14:02:17.063Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T14:02:15.619Z] INFO: Build started for nodetests
+[2026-04-15T14:02:16.974Z] LOG: node > build ended with 5 errors
+[2026-04-15T14:02:17.081Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T14:05:45.166Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-15T14:06:11.415Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T14:06:11.417Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T14:06:12.958Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T14:06:15.680Z] node > build ended with 5 errors
+[2026-04-15T14:06:15.847Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 40,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
+        "length": 28,
+        "line": 2,
+        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    },
+    {
+      "id": "",
+      "location": {
+        "column": 7,
+        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
+        "length": 28,
+        "line": 8,
+        "lineText": "} from \"../Server_GraphManagerCore\";",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Could not resolve \"../Server_GraphManagerCore\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T14:06:15.862Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-15T14:06:13.898Z] INFO: Build started for nodetests
+[2026-04-15T14:06:15.680Z] LOG: node > build ended with 5 errors
+[2026-04-15T14:26:06.969Z] [NODE BUILDER] is now bundling:  nodetests
+[2026-04-15T14:26:07.011Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
+[2026-04-15T14:26:07.914Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-15T14:26:09.198Z] node > build ended with 3 errors
+[2026-04-15T14:26:08.388Z] INFO: Build started for nodetests
+[2026-04-15T14:26:09.198Z] LOG: node > build ended with 3 errors
+[2026-04-15T14:26:09.262Z] ERROR: NODE BUILDER: Error: {
+  "errors": [
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/treeFilter.test.ts\" cannot be marked as external"
+    },
+    {
+      "id": "",
+      "location": null,
+      "notes": [],
+      "pluginName": "",
+      "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    },
+    {
+      "id": "direct-eval",
+      "location": {
+        "column": 21,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 4,
+        "line": 10,
+        "lineText": "      const result = eval(this.display);",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": null,
+          "text": "You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval"
+        }
+      ],
+      "pluginName": "",
+      "text": "Using direct eval with a bundler is not recommended and may cause problems"
+    }
+  ]
+}
+[2026-04-15T14:26:09.265Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode

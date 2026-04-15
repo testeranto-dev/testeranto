@@ -47,4 +47,6 @@ The graph should be the source of truth. Keep it up to date, and use it, rather 
 
 Never use require (we use ESM). Only use dynamic imports when directed. 99% of imports belong at the top of the file 
 
+Write very simple documentation, Do not use emojis or excessive formatting. Focus on writing non-redundant and very succinct notes. Do not add anything more than what is requested. 
+
 Always check that your work aligns with SOUL.md!!!

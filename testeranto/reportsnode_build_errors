@@ -20,36 +20,6 @@
       "notes": [],
       "pluginName": "",
       "text": "The entry point \"src/vscode/providers/utils/testTree/debugTest.js\" cannot be marked as external"
-    },
-    {
-      "id": "",
-      "location": {
-        "column": 40,
-        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.adapter.ts",
-        "length": 28,
-        "line": 2,
-        "lineText": "import { Server_GraphManagerCore } from \"../Server_GraphManagerCore\";",
-        "namespace": "",
-        "suggestion": ""
-      },
-      "notes": [],
-      "pluginName": "",
-      "text": "Could not resolve \"../Server_GraphManagerCore\""
-    },
-    {
-      "id": "",
-      "location": {
-        "column": 7,
-        "file": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts",
-        "length": 28,
-        "line": 8,
-        "lineText": "} from \"../Server_GraphManagerCore\";",
-        "namespace": "",
-        "suggestion": ""
-      },
-      "notes": [],
-      "pluginName": "",
-      "text": "Could not resolve \"../Server_GraphManagerCore\""
     }
   ],
   "warnings": [
