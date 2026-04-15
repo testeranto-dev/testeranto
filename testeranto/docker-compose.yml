@@ -27,6 +27,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/abstractBase.test/index.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/abstractBase.test/index.ts/"}'
     networks:
@@ -42,6 +43,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -64,6 +66,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -81,6 +84,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -98,6 +102,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -115,6 +120,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/"}'
     networks:
@@ -130,6 +136,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -152,6 +159,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -169,6 +177,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -186,6 +195,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -203,6 +213,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/"}'
     networks:
@@ -218,6 +229,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -240,6 +252,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -257,6 +270,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -274,6 +288,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -291,6 +306,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/"}'
     networks:
@@ -306,6 +322,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -328,6 +345,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -345,6 +363,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -362,6 +381,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -379,6 +399,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts/"}'
     networks:
@@ -394,6 +415,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -416,6 +438,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -433,6 +456,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -450,6 +474,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -467,6 +492,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts/"}'
     networks:
@@ -482,6 +508,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -504,6 +531,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -521,6 +549,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -538,6 +567,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -555,6 +585,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/vscode/providers/logic/FileTreeLogic.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/vscode/providers/logic/FileTreeLogic.test.ts/"}'
     networks:
@@ -570,6 +601,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -592,6 +624,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -609,6 +642,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -626,6 +660,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -643,6 +678,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/vscode/providers/utils/testTree/treeFilter.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/vscode/providers/utils/testTree/treeFilter.test.ts/"}'
     networks:
@@ -658,6 +694,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -680,6 +717,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -697,6 +735,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -714,6 +753,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -731,6 +771,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/vscode/providers/utils/testTree/debugTest.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/vscode/providers/utils/testTree/debugTest.ts/"}'
     networks:
@@ -746,6 +787,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -768,6 +810,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -785,6 +828,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -802,6 +846,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -819,6 +864,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx testeranto/bundles/nodetests/src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.ts/"}'
     networks:
@@ -834,6 +880,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -856,6 +903,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -873,6 +921,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -890,6 +939,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: echo 'No calculator test found'
     networks:
@@ -907,6 +957,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx /workspace/testeranto/web_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/web/web.ts '{"name":"webtests","tests":["src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts","src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"],"outputs":[]}'
     networks:
@@ -928,6 +979,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.mjs '{"ports":[1111],"fs":"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts/"}'
     networks:
@@ -943,6 +995,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -965,6 +1018,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -982,6 +1036,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -1000,6 +1055,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: yarn tsx /workspace/testeranto/web_hoist.ts testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs '{"ports":[1111],"fs":"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts/"}'
     networks:
@@ -1015,6 +1071,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -1037,6 +1094,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn eslint  '
     networks:
@@ -1054,6 +1112,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'yarn tsc --noEmit '
     networks:
@@ -1070,6 +1129,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: python /workspace/testeranto/python_runtime.py /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/python/python.py  '{"name":"pythontests","tests":["src/lib/pitono/examples/calculator_test.py"],"outputs":["testeranto/reports/pythontests"]}'
     networks:
@@ -1088,6 +1148,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: python testeranto/bundles/pythontests/src/lib/pitono/examples/calculator_test.py '{"ports":[1111],"fs":"testeranto/reports/pythontests/src/lib/pitono/examples/calculator_test.py/"}'
     networks:
@@ -1103,6 +1164,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
       - /Users/adam/Code/testeranto:/workspace
@@ -1125,6 +1187,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'python -m py_compile '
     networks:
@@ -1142,6 +1205,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: cd src/lib/pitono/examples && python calculator_test.py
     networks:
@@ -1159,6 +1223,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto/testeranto:/workspace/testeranto
     command: 'python -m unittest '
     networks:
@@ -1191,6 +1256,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto:/workspace
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
     working_dir: /workspace
@@ -1210,11 +1276,11 @@ services:
 
                  # Create the instruction file with content from config
                 cat > /tmp/agent_message.txt << 'EOF'
-        Your name is "Prodirek". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. (n) => `You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "prodirek", "content": "Hello from ${n}!"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/${n}`
+        Your name is "prodirek". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "prodirek", "content": "Hello from prodirek!"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/prodirek
         EOF
 
                  echo "Starting aider for agent prodirek with instructions from config"
-                 aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update /tmp/agent_message.txt 2>&1
+                 aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
                  EXIT_CODE=$?
                  echo "Aider exited with code $EXIT_CODE"
                  # Exit with the same code (no restart)
@@ -1237,6 +1303,7 @@ services:
     volumes:
       - /Users/adam/Code/testeranto/src:/workspace/src
       - /Users/adam/Code/testeranto/test:/workspace/test
+      - /Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md
       - /Users/adam/Code/testeranto:/workspace
       - /Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml
     working_dir: /workspace
@@ -1250,17 +1317,17 @@ services:
                  # Create the instruction file with content from config
                 cat > /tmp/agent_load.txt << 'EOF'
         /read SOUL.md
-        /read chat_slice.json
+        /read testeranto/slices/agents/prodirek.json
         EOF
            
 
                  # Create the instruction file with content from config
                 cat > /tmp/agent_message.txt << 'EOF'
-        Your name is "Arko". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. (n) => `You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "prodirek", "content": "Hello from ${n}!"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/${n}`
+        Your name is "arko". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "prodirek", "content": "Hello from arko!"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/arko
         EOF
 
                  echo "Starting aider for agent arko with instructions from config"
-                 aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update /tmp/agent_message.txt 2>&1
+                 aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
                  EXIT_CODE=$?
                  echo "Aider exited with code $EXIT_CODE"
                  # Exit with the same code (no restart)

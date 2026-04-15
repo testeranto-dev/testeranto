@@ -47,9 +47,10 @@ const config: ITesterantoConfig = {
     'prodirek': {
       load: [
         `/read SOUL.md`,
-        `/read testeranto/slices/agents/prodirek.json`
+        `/read testeranto/slices/agents/prodirek.json`,
+        `/read testeranto/agents/prodirek.md`
       ],
-      message: `Your name is "prodirek". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. ` + m,
+      message: `Your name is "prodirek". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. ` + m('prodirek'),
 
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
@@ -103,7 +104,8 @@ const config: ITesterantoConfig = {
             id: node.id,
             name: node.agentName,
             label: node.label,
-            description: node.description
+            description: node.description,
+            message: node.message // Add the message field
           }));
 
         return {
@@ -129,9 +131,11 @@ const config: ITesterantoConfig = {
     'arko': {
       load: [
         `/read SOUL.md`,
-        `/read chat_slice.json`
+        `/read testeranto/slices/agents/arko.json`,
+        `/read testeranto/agents/arko.md`
       ],
-      message: `Your name is "arko". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. ` + m,
+      message: `Your name is "arko". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. ` + m('arko'),
+
       sliceFunction: (graphManager: any) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
@@ -180,7 +184,8 @@ const config: ITesterantoConfig = {
             id: node.id,
             name: node.agentName,
             label: node.label,
-            role: 'agent'
+            role: 'agent',
+            message: node.message // Add the message field
           }));
 
         return {
@@ -207,6 +212,7 @@ const config: ITesterantoConfig = {
   volumes: [
     `${process.cwd()}/src:/workspace/src`,
     `${process.cwd()}/test:/workspace/test`,
+    `${process.cwd()}/SOUL.md:/workspace/SOUL.md`,
     // Note: node_modules is NOT mounted to avoid platform incompatibility
   ],
 

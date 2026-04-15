@@ -22,6 +22,7 @@ export function addAgentNodesPure(
         description: `Agent: ${agentName}`,
         agentName: agentName,
         config: agentConfig,
+        message: agentConfig.message, // Add the message field
         timestamp: timestamp,
         status: 'todo',
         icon: 'user'

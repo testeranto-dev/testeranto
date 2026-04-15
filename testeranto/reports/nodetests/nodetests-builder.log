@@ -1,14 +1,14 @@
-=== Log started at 2026-04-15T01:26:04.257Z for service nodetests-builder (runtime: node) ===
-=== Container ID: dcff91ea8bfe7da8c36c34ab2382b11f1eb130d6dff6d75e3758801eeabf20eb ===
+=== Log started at 2026-04-15T01:59:40.751Z for service nodetests-builder (runtime: node) ===
+=== Container ID: f2c4ce9e01c4d4f9a758c07edc662cdd5fd0bac491eb60f4b27c8628c698058a ===
 === Test: N/A ===
 === Config Key: nodetests ===
 
 === ALL LOGS (stdout + stderr) ===
 yarn run v1.22.22
 warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
-$ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs '{"name":"nodetests","tests":["src/lib/tiposkripto/tests/abstractBase.test/index.ts","src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts","src/lib/tiposkripto/tests/circle/Circle.test.ts","src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts","src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts","src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts","src/vscode/providers/logic/FileTreeLogic.test.ts","src/vscode/providers/utils/testTree/treeFilter.test.ts","src/vscode/providers/utils/testTree/debugTest.js","src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."],"outputs":[]}'
 warning testeranto@0.242.0: The engine "vscode" appears to be invalid.
 warning testeranto@0.242.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs '{"name":"nodetests","tests":["src/lib/tiposkripto/tests/abstractBase.test/index.ts","src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts","src/lib/tiposkripto/tests/circle/Circle.test.ts","src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts","src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts","src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts","src/vscode/providers/logic/FileTreeLogic.test.ts","src/vscode/providers/utils/testTree/treeFilter.test.ts","src/vscode/providers/utils/testTree/debugTest.js","src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."],"outputs":[]}'
 [NODE BUILDER] is now bundling:  nodetests
 [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/abstractBase.test/index.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts, src/lib/tiposkripto/tests/circle/Circle.test.ts, src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts, src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts, src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts, src/vscode/providers/logic/FileTreeLogic.test.ts, src/vscode/providers/utils/testTree/treeFilter.test.ts, src/vscode/providers/utils/testTree/debugTest.js, src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.
 [NODE BUILDER] Running in dev mode - starting watch mode
@@ -42,12 +42,6 @@ warning testeranto@0.242.0: The engine "bun" appears to be invalid.
       2 │ import { Server_GraphManagerCore } from "../Server_GraphManagerCore";
         ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-✘ [ERROR] Could not resolve "../Server_GraphManagerCore"
-
-    src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts:8:7:
-      8 │ } from "../Server_GraphManagerCore";
-        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 ▲ [WARNING] Using direct eval with a bundler is not recommended and may cause problems [direct-eval]
 
     src/lib/tiposkripto/tests/calculator/Calculator.ts:10:21:
@@ -55,6 +49,12 @@ warning testeranto@0.242.0: The engine "bun" appears to be invalid.
          ╵                      ~~~~
 
   You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
+
+✘ [ERROR] Could not resolve "../Server_GraphManagerCore"
+
+    src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.implementation.ts:8:7:
+      8 │ } from "../Server_GraphManagerCore";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 node > build ended with 5 errors
 NODE BUILDER: Error: Error: Build failed with 5 errors:
@@ -72,4 +72,4 @@ src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.tes
 }
 [NODE BUILDER] Error occurred but keeping process alive in dev mode
 
-=== Log captured at 2026-04-15T01:26:29.760Z (container status: running) ===
+=== Log captured at 2026-04-15T02:00:04.599Z (container status: running) ===

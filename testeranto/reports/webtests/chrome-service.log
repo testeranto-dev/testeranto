@@ -1,11 +1,11 @@
-=== Log started at 2026-04-15T01:26:36.627Z for service chrome-service (runtime: web) ===
-=== Container ID: 65d64bd315c521b9c8cf8987a979083a512e05cc99fa273628a510115b390300 ===
+=== Log started at 2026-04-15T02:00:12.828Z for service chrome-service (runtime: web) ===
+=== Container ID: c0cceb06f503537b6777f56d83ab7ee3c5109952f5fc67e5618e3211663c1fca ===
 === Test: N/A ===
 === Config Key: webtests ===
 
 === ALL LOGS (stdout + stderr) ===
-2026-04-15T01:25:36.990Z browserless:server Using configuration: 
-2026-04-15T01:25:36.997Z browserless:server {
+2026-04-15T01:59:22.429Z browserless:server Using configuration: 
+2026-04-15T01:59:22.431Z browserless:server {
   CONNECTION_TIMEOUT: 60000,
   MAX_CONCURRENT_SESSIONS: 1,
   QUEUE_LENGTH: 10,
@@ -56,35 +56,35 @@
   PROXY_URL: undefined,
   MAX_PAYLOAD_SIZE: '5mb'
 }
-2026-04-15T01:25:37.003Z browserless:server 
+2026-04-15T01:59:22.432Z browserless:server 
 
 Running on port 3000
 	Localhost	 ws:localhost:3000
-	Local network	 ws:172.18.0.3:3000
-2026-04-15T01:25:37.005Z browserless:server 
+	Local network	 ws:172.18.0.11:3000
+2026-04-15T01:59:22.432Z browserless:server 
 Get started at	 https://www.browserless.io/docs/start
 Get a license at	 https://www.browserless.io/sign-up?type=commercial
 Get support at	 https://www.browserless.io/contact
 
 Happy coding!
 
-2026-04-15T01:25:37.049Z browserless:system Starting chrome swarm: 1 chrome instances starting
-2026-04-15T01:25:37.085Z browserless:chrome-helper Launching Chrome with args: {
+2026-04-15T01:59:22.477Z browserless:system Starting chrome swarm: 1 chrome instances starting
+2026-04-15T01:59:22.487Z browserless:chrome-helper Launching Chrome with args: {
   "args": [
     "--no-sandbox",
     "--enable-logging",
     "--v1=1",
     "--disable-dev-shm-usage",
     "--no-first-run",
-    "--remote-debugging-port=35353",
-    "--user-data-dir=/tmp/browserless-data-dir-DFaQXk"
+    "--remote-debugging-port=37959",
+    "--user-data-dir=/tmp/browserless-data-dir-bzxyb5"
   ],
   "blockAds": true,
   "headless": "new",
   "ignoreDefaultArgs": false,
   "ignoreHTTPSErrors": false,
   "pauseOnConnect": false,
-  "userDataDir": "/tmp/browserless-data-dir-DFaQXk",
+  "userDataDir": "/tmp/browserless-data-dir-bzxyb5",
   "playwright": false,
   "stealth": false,
   "meta": null,
@@ -93,14 +93,14 @@ Happy coding!
   "handleSIGTERM": false,
   "handleSIGHUP": false
 }
-2026-04-15T01:25:41.349Z browserless:chrome-helper Chrome PID: 21
-2026-04-15T01:25:41.354Z browserless:chrome-helper Finding prior pages
-2026-04-15T01:25:41.544Z browserless:chrome-helper Found 1 pages
-2026-04-15T01:25:41.548Z browserless:chrome-helper Setting up page Unknown
-2026-04-15T01:25:41.548Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
-2026-04-15T01:25:41.557Z browserless:system Chrome launched 4501ms
-2026-04-15T01:25:41.761Z browserless:chrome-helper Setting up file:// protocol request rejection
-2026-04-15T01:25:41.761Z browserless:chrome-helper Setting up page for ad-blocking
+2026-04-15T01:59:32.731Z browserless:chrome-helper Chrome PID: 21
+2026-04-15T01:59:32.738Z browserless:chrome-helper Finding prior pages
+2026-04-15T01:59:33.409Z browserless:chrome-helper Found 1 pages
+2026-04-15T01:59:33.410Z browserless:chrome-helper Setting up page Unknown
+2026-04-15T01:59:33.410Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
+2026-04-15T01:59:33.410Z browserless:system Chrome launched 10931ms
+2026-04-15T01:59:33.734Z browserless:chrome-helper Setting up file:// protocol request rejection
+2026-04-15T01:59:33.734Z browserless:chrome-helper Setting up page for ad-blocking
 [1m[43m[30m
   Puppeteer old Headless deprecation warning:[0m[33m
     In the near future `headless: true` will default to the new Headless mode
@@ -109,50 +109,50 @@ Happy coding!
     Consider opting in early by passing `headless: "new"` to `puppeteer.launch()`
     If you encounter any bugs, please report them to https://github.com/puppeteer/puppeteer/issues/new/choose.[0m
 
-2026-04-15T01:26:01.136Z browserless:job DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: /: Inbound WebSocket request.
-2026-04-15T01:26:01.224Z browserless:hardware Checking overload status: CPU 11% Memory 31%
-2026-04-15T01:26:01.226Z browserless:job DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: Adding new job to queue.
-2026-04-15T01:26:01.227Z browserless:server Starting new job
-2026-04-15T01:26:01.227Z browserless:system Waiting pre-booted chrome instance
-2026-04-15T01:26:01.228Z browserless:job DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: Getting browser.
-2026-04-15T01:26:01.228Z browserless:system Got chrome instance
-2026-04-15T01:26:01.228Z browserless:job DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: Starting session.
-2026-04-15T01:26:01.228Z browserless:job DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: Proxying request to /devtools/browser route: ws://127.0.0.1:35353/devtools/browser/8395bd65-0bf6-4ffd-aa49-a7675dba853b.
-2026-04-15T01:26:01.303Z browserless:job 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: /: Inbound WebSocket request.
-2026-04-15T01:26:01.308Z browserless:hardware Checking overload status: CPU 11% Memory 31%
-2026-04-15T01:26:01.309Z browserless:job 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: Adding new job to queue.
-2026-04-15T01:26:01.309Z browserless:server undefined: Recording queued stat.
-2026-04-15T01:26:01.845Z browserless:chrome-helper Setting up page Unknown
-2026-04-15T01:26:01.849Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
-2026-04-15T01:26:01.911Z browserless:chrome-helper Setting up file:// protocol request rejection
-2026-04-15T01:26:01.912Z browserless:chrome-helper Setting up page for ad-blocking
-2026-04-15T01:26:21.616Z browserless:server DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: Recording successful stat and cleaning up.
-2026-04-15T01:26:21.617Z browserless:job DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: Cleaning up job
-2026-04-15T01:26:21.617Z browserless:job DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: Browser not needed, closing
-2026-04-15T01:26:21.617Z browserless:chrome-helper Shutting down browser with close command
-2026-04-15T01:26:21.617Z browserless:system Adding back Chrome swarm
-2026-04-15T01:26:21.618Z browserless:job DQGUJPME8N8FUCQHDLYJMBQGZXV6VGZA: Browser cleanup complete.
-2026-04-15T01:26:21.618Z browserless:server Starting new job
-2026-04-15T01:26:21.618Z browserless:system Waiting pre-booted chrome instance
-2026-04-15T01:26:21.618Z browserless:job 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: Getting browser.
-2026-04-15T01:26:21.618Z browserless:chrome-helper Sending SIGKILL signal to browser process 21
-2026-04-15T01:26:21.628Z browserless:chrome-helper Removing temp data-dir /tmp/browserless-data-dir-DFaQXk
-2026-04-15T01:26:21.632Z browserless:chrome-helper Launching Chrome with args: {
+2026-04-15T01:59:41.082Z browserless:job EP0AR4P84SCV9W419Z6NDPMCDL93WU63: /: Inbound WebSocket request.
+2026-04-15T01:59:41.230Z browserless:hardware Checking overload status: CPU 9% Memory 34%
+2026-04-15T01:59:41.234Z browserless:job EP0AR4P84SCV9W419Z6NDPMCDL93WU63: Adding new job to queue.
+2026-04-15T01:59:41.235Z browserless:server Starting new job
+2026-04-15T01:59:41.239Z browserless:system Waiting pre-booted chrome instance
+2026-04-15T01:59:41.240Z browserless:job EP0AR4P84SCV9W419Z6NDPMCDL93WU63: Getting browser.
+2026-04-15T01:59:41.245Z browserless:system Got chrome instance
+2026-04-15T01:59:41.290Z browserless:job EP0AR4P84SCV9W419Z6NDPMCDL93WU63: Starting session.
+2026-04-15T01:59:41.290Z browserless:job EP0AR4P84SCV9W419Z6NDPMCDL93WU63: Proxying request to /devtools/browser route: ws://127.0.0.1:37959/devtools/browser/6fb3bcff-a189-4500-8253-4aae23a11e40.
+2026-04-15T01:59:43.062Z browserless:chrome-helper Setting up page Unknown
+2026-04-15T01:59:43.062Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
+2026-04-15T01:59:43.082Z browserless:chrome-helper Setting up file:// protocol request rejection
+2026-04-15T01:59:43.082Z browserless:chrome-helper Setting up page for ad-blocking
+2026-04-15T01:59:43.889Z browserless:job Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: /: Inbound WebSocket request.
+2026-04-15T01:59:43.912Z browserless:hardware Checking overload status: CPU 70% Memory 30%
+2026-04-15T01:59:43.913Z browserless:job Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: Adding new job to queue.
+2026-04-15T01:59:43.913Z browserless:server undefined: Recording queued stat.
+2026-04-15T02:00:03.079Z browserless:server EP0AR4P84SCV9W419Z6NDPMCDL93WU63: Recording successful stat and cleaning up.
+2026-04-15T02:00:03.080Z browserless:job EP0AR4P84SCV9W419Z6NDPMCDL93WU63: Cleaning up job
+2026-04-15T02:00:03.080Z browserless:job EP0AR4P84SCV9W419Z6NDPMCDL93WU63: Browser not needed, closing
+2026-04-15T02:00:03.080Z browserless:chrome-helper Shutting down browser with close command
+2026-04-15T02:00:03.080Z browserless:system Adding back Chrome swarm
+2026-04-15T02:00:03.081Z browserless:job EP0AR4P84SCV9W419Z6NDPMCDL93WU63: Browser cleanup complete.
+2026-04-15T02:00:03.081Z browserless:server Starting new job
+2026-04-15T02:00:03.081Z browserless:system Waiting pre-booted chrome instance
+2026-04-15T02:00:03.081Z browserless:job Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: Getting browser.
+2026-04-15T02:00:03.081Z browserless:chrome-helper Sending SIGKILL signal to browser process 21
+2026-04-15T02:00:03.086Z browserless:chrome-helper Removing temp data-dir /tmp/browserless-data-dir-bzxyb5
+2026-04-15T02:00:03.093Z browserless:chrome-helper Launching Chrome with args: {
   "args": [
     "--no-sandbox",
     "--enable-logging",
     "--v1=1",
     "--disable-dev-shm-usage",
     "--no-first-run",
-    "--remote-debugging-port=36443",
-    "--user-data-dir=/tmp/browserless-data-dir-I2FSH4"
+    "--remote-debugging-port=45031",
+    "--user-data-dir=/tmp/browserless-data-dir-V2hljk"
   ],
   "blockAds": true,
   "headless": "new",
   "ignoreDefaultArgs": false,
   "ignoreHTTPSErrors": false,
   "pauseOnConnect": false,
-  "userDataDir": "/tmp/browserless-data-dir-I2FSH4",
+  "userDataDir": "/tmp/browserless-data-dir-V2hljk",
   "playwright": false,
   "stealth": false,
   "meta": null,
@@ -161,49 +161,49 @@ Happy coding!
   "handleSIGTERM": false,
   "handleSIGHUP": false
 }
-2026-04-15T01:26:21.734Z browserless:chrome-helper Garbage collecting and removing listeners
-2026-04-15T01:26:21.736Z browserless:chrome-helper Browser process 8395bd65-0bf6-4ffd-aa49-a7675dba853b has closed, cleaning up.
-2026-04-15T01:26:21.751Z browserless:chrome-helper Temp dir /tmp/browserless-data-dir-DFaQXk removed successfully
-2026-04-15T01:26:22.017Z browserless:chrome-helper Chrome PID: 161
-2026-04-15T01:26:22.018Z browserless:chrome-helper Finding prior pages
-2026-04-15T01:26:22.042Z browserless:chrome-helper Found 1 pages
-2026-04-15T01:26:22.043Z browserless:chrome-helper Setting up page Unknown
-2026-04-15T01:26:22.043Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
-2026-04-15T01:26:22.043Z browserless:system Chrome launched 426ms
-2026-04-15T01:26:22.043Z browserless:system Got chrome instance
-2026-04-15T01:26:22.043Z browserless:job 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: Starting session.
-2026-04-15T01:26:22.043Z browserless:job 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: Proxying request to /devtools/browser route: ws://127.0.0.1:36443/devtools/browser/a4196b49-3512-4017-8521-d1e732b8f27a.
-2026-04-15T01:26:22.055Z browserless:chrome-helper Setting up file:// protocol request rejection
-2026-04-15T01:26:22.055Z browserless:chrome-helper Setting up page for ad-blocking
-2026-04-15T01:26:22.116Z browserless:chrome-helper Setting up page Unknown
-2026-04-15T01:26:22.116Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
-2026-04-15T01:26:22.119Z browserless:chrome-helper Setting up file:// protocol request rejection
-2026-04-15T01:26:22.119Z browserless:chrome-helper Setting up page for ad-blocking
-2026-04-15T01:26:41.290Z browserless:server 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: Recording successful stat and cleaning up.
-2026-04-15T01:26:41.290Z browserless:job 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: Cleaning up job
-2026-04-15T01:26:41.290Z browserless:job 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: Browser not needed, closing
-2026-04-15T01:26:41.291Z browserless:chrome-helper Shutting down browser with close command
-2026-04-15T01:26:41.291Z browserless:system Adding back Chrome swarm
-2026-04-15T01:26:41.291Z browserless:job 5PRJW7F8HKPMS5PNSUR7DP0L8VHUVOBX: Browser cleanup complete.
-2026-04-15T01:26:41.292Z browserless:server Current workload complete.
-2026-04-15T01:26:41.292Z browserless:chrome-helper Sending SIGKILL signal to browser process 161
-2026-04-15T01:26:41.298Z browserless:chrome-helper Removing temp data-dir /tmp/browserless-data-dir-I2FSH4
-2026-04-15T01:26:41.301Z browserless:chrome-helper Launching Chrome with args: {
+2026-04-15T02:00:03.159Z browserless:chrome-helper Garbage collecting and removing listeners
+2026-04-15T02:00:03.160Z browserless:chrome-helper Browser process 6fb3bcff-a189-4500-8253-4aae23a11e40 has closed, cleaning up.
+2026-04-15T02:00:03.268Z browserless:chrome-helper Temp dir /tmp/browserless-data-dir-bzxyb5 removed successfully
+2026-04-15T02:00:03.393Z browserless:chrome-helper Chrome PID: 165
+2026-04-15T02:00:03.395Z browserless:chrome-helper Finding prior pages
+2026-04-15T02:00:03.425Z browserless:chrome-helper Found 1 pages
+2026-04-15T02:00:03.426Z browserless:chrome-helper Setting up page Unknown
+2026-04-15T02:00:03.426Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
+2026-04-15T02:00:03.426Z browserless:system Chrome launched 346ms
+2026-04-15T02:00:03.426Z browserless:system Got chrome instance
+2026-04-15T02:00:03.426Z browserless:job Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: Starting session.
+2026-04-15T02:00:03.426Z browserless:job Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: Proxying request to /devtools/browser route: ws://127.0.0.1:45031/devtools/browser/f9124966-710c-4378-ab02-f24deacf0377.
+2026-04-15T02:00:03.427Z browserless:chrome-helper Setting up file:// protocol request rejection
+2026-04-15T02:00:03.427Z browserless:chrome-helper Setting up page for ad-blocking
+2026-04-15T02:00:03.480Z browserless:chrome-helper Setting up page Unknown
+2026-04-15T02:00:03.480Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
+2026-04-15T02:00:03.481Z browserless:chrome-helper Setting up file:// protocol request rejection
+2026-04-15T02:00:03.481Z browserless:chrome-helper Setting up page for ad-blocking
+2026-04-15T02:00:22.604Z browserless:server Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: Recording successful stat and cleaning up.
+2026-04-15T02:00:22.604Z browserless:job Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: Cleaning up job
+2026-04-15T02:00:22.604Z browserless:job Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: Browser not needed, closing
+2026-04-15T02:00:22.604Z browserless:chrome-helper Shutting down browser with close command
+2026-04-15T02:00:22.604Z browserless:system Adding back Chrome swarm
+2026-04-15T02:00:22.605Z browserless:job Z0N2SKI4G3KD6WDKGCV3GA7YVN994TLU: Browser cleanup complete.
+2026-04-15T02:00:22.605Z browserless:server Current workload complete.
+2026-04-15T02:00:22.605Z browserless:chrome-helper Sending SIGKILL signal to browser process 165
+2026-04-15T02:00:22.613Z browserless:chrome-helper Removing temp data-dir /tmp/browserless-data-dir-V2hljk
+2026-04-15T02:00:22.614Z browserless:chrome-helper Launching Chrome with args: {
   "args": [
     "--no-sandbox",
     "--enable-logging",
     "--v1=1",
     "--disable-dev-shm-usage",
     "--no-first-run",
-    "--remote-debugging-port=38895",
-    "--user-data-dir=/tmp/browserless-data-dir-bLSrs8"
+    "--remote-debugging-port=43111",
+    "--user-data-dir=/tmp/browserless-data-dir-NJWNlj"
   ],
   "blockAds": true,
   "headless": "new",
   "ignoreDefaultArgs": false,
   "ignoreHTTPSErrors": false,
   "pauseOnConnect": false,
-  "userDataDir": "/tmp/browserless-data-dir-bLSrs8",
+  "userDataDir": "/tmp/browserless-data-dir-NJWNlj",
   "playwright": false,
   "stealth": false,
   "meta": null,
@@ -212,16 +212,16 @@ Happy coding!
   "handleSIGTERM": false,
   "handleSIGHUP": false
 }
-2026-04-15T01:26:41.351Z browserless:chrome-helper Browser process a4196b49-3512-4017-8521-d1e732b8f27a has closed, cleaning up.
-2026-04-15T01:26:41.351Z browserless:chrome-helper Garbage collecting and removing listeners
-2026-04-15T01:26:41.459Z browserless:chrome-helper Temp dir /tmp/browserless-data-dir-I2FSH4 removed successfully
-2026-04-15T01:26:41.515Z browserless:chrome-helper Chrome PID: 257
-2026-04-15T01:26:41.515Z browserless:chrome-helper Finding prior pages
-2026-04-15T01:26:41.521Z browserless:chrome-helper Found 1 pages
-2026-04-15T01:26:41.521Z browserless:chrome-helper Setting up page Unknown
-2026-04-15T01:26:41.521Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
-2026-04-15T01:26:41.521Z browserless:system Chrome launched 230ms
-2026-04-15T01:26:41.522Z browserless:chrome-helper Setting up file:// protocol request rejection
-2026-04-15T01:26:41.522Z browserless:chrome-helper Setting up page for ad-blocking
+2026-04-15T02:00:22.651Z browserless:chrome-helper Garbage collecting and removing listeners
+2026-04-15T02:00:22.651Z browserless:chrome-helper Browser process f9124966-710c-4378-ab02-f24deacf0377 has closed, cleaning up.
+2026-04-15T02:00:22.782Z browserless:chrome-helper Temp dir /tmp/browserless-data-dir-V2hljk removed successfully
+2026-04-15T02:00:22.842Z browserless:chrome-helper Chrome PID: 259
+2026-04-15T02:00:22.842Z browserless:chrome-helper Finding prior pages
+2026-04-15T02:00:22.849Z browserless:chrome-helper Found 1 pages
+2026-04-15T02:00:22.849Z browserless:chrome-helper Setting up page Unknown
+2026-04-15T02:00:22.850Z browserless:chrome-helper Injecting download dir "/usr/src/app/workspace"
+2026-04-15T02:00:22.850Z browserless:system Chrome launched 246ms
+2026-04-15T02:00:22.850Z browserless:chrome-helper Setting up file:// protocol request rejection
+2026-04-15T02:00:22.850Z browserless:chrome-helper Setting up page for ad-blocking
 
-=== Log captured at 2026-04-15T01:26:57.723Z (container status: running) ===
+=== Log captured at 2026-04-15T02:00:33.740Z (container status: running) ===

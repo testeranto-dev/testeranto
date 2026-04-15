@@ -10,7 +10,7 @@
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1776216384217,
+  "timestamp": 1776218405543,
   "individualResults": [
     {
       "index": 0,
@@ -21,7 +21,7 @@
       ],
       "error": {
         "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
-        "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6361:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)",
+        "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6361:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -33,9 +33,9 @@
             "message": "(a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6361:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)"
+            "stack": "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6361:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)"
           },
-          "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6361:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)"
+          "AssertionError: (a, b) => a + b should be greater than 4: expected (a, b) => a + b to be a number or a date\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6361:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)"
         ],
         "failed": true,
         "features": [
@@ -73,7 +73,7 @@
       ],
       "error": {
         "message": "Describe.another simple calculator is not implemented",
-        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:950:27)\n    at BaseDescribe.describe (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:353:33)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)",
+        "stack": "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:950:27)\n    at BaseDescribe.describe (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:353:33)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)",
         "name": "Error"
       },
       "stepName": "step_1",
@@ -94,7 +94,7 @@
         ],
         "error": [
           "Describe.another simple calculator is not implemented",
-          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:950:27)\n    at BaseDescribe.describe (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:353:33)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+          "Error: Describe.another simple calculator is not implemented\n    at BaseDescribe.describeCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:950:27)\n    at BaseDescribe.describe (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:353:33)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1151:32)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)"
         ],
         "failed": true,
         "features": [
@@ -165,7 +165,7 @@
       ],
       "error": {
         "message": "expected [Function] to equal 3",
-        "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)",
+        "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -180,9 +180,9 @@
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+            "stack": "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)"
           },
-          "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+          "AssertionError: expected [Function] to equal 3\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)"
         ],
         "failed": true,
         "features": [
@@ -212,7 +212,7 @@
       ],
       "error": {
         "message": "expected [Function] to equal 32",
-        "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)",
+        "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -227,9 +227,9 @@
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+            "stack": "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)"
           },
-          "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+          "AssertionError: expected [Function] to equal 32\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)"
         ],
         "failed": true,
         "features": [
@@ -259,7 +259,7 @@
       ],
       "error": {
         "message": "expected [Function] to equal 332",
-        "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)",
+        "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)",
         "name": "AssertionError"
       },
       "stepName": "confirm",
@@ -274,9 +274,9 @@
             "operator": "strictEqual",
             "name": "AssertionError",
             "ok": false,
-            "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+            "stack": "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)"
           },
-          "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:6356:23)\n    at BaseShould.processRow (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:745:36)\n    at BaseConfirm.confirm (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:547:44)\n    at BaseConfirm.run (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:571:17)\n    at stepRunner (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1244:36)\n    at TestRunner.runAllTests (blob:null/475aa937-c235-4d8e-93a6-f4b119ae517f:1579:43)"
+          "AssertionError: expected [Function] to equal 332\n    at BaseShould.shouldCB (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:6356:23)\n    at BaseShould.processRow (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:745:36)\n    at BaseConfirm.confirm (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:547:44)\n    at BaseConfirm.run (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:571:17)\n    at stepRunner (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1161:34)\n    at Object.receiveTestResourceConfig (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1244:36)\n    at TestRunner.runAllTests (blob:null/31d9a49d-34bf-4b1f-89cd-243a7fa364a9:1579:43)"
         ],
         "failed": true,
         "features": [

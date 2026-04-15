@@ -3,17 +3,17 @@
     {
       "id": "agent:prodirek",
       "label": "prodirek",
-      "timestamp": "2026-04-15T01:25:26.528Z"
+      "timestamp": "2026-04-15T01:59:07.088Z"
     },
     {
       "id": "agent:arko",
       "label": "arko",
-      "timestamp": "2026-04-15T01:25:26.528Z"
+      "timestamp": "2026-04-15T01:59:07.088Z"
     },
     {
       "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "label": "bdd: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-      "timestamp": "2026-04-15T01:25:28.967Z",
+      "timestamp": "2026-04-15T01:59:09.359Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -44,13 +44,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:28.967Z"
+        "startTime": "2026-04-15T01:59:09.359Z"
       }
     },
     {
       "id": "check_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "label": "check: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-      "timestamp": "2026-04-15T01:25:28.968Z",
+      "timestamp": "2026-04-15T01:59:09.363Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -81,13 +81,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:28.968Z"
+        "startTime": "2026-04-15T01:59:09.363Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "label": "aider: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-      "timestamp": "2026-04-15T01:25:28.969Z",
+      "timestamp": "2026-04-15T01:59:09.364Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -118,13 +118,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:28.969Z"
+        "startTime": "2026-04-15T01:59:09.364Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "timestamp": "2026-04-15T01:25:28.971Z",
+      "timestamp": "2026-04-15T01:59:09.365Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -155,13 +155,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:28.971Z"
+        "startTime": "2026-04-15T01:59:09.365Z"
       }
     },
     {
       "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "timestamp": "2026-04-15T01:25:28.972Z",
+      "timestamp": "2026-04-15T01:59:09.366Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -192,13 +192,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:28.972Z"
+        "startTime": "2026-04-15T01:59:09.366Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "timestamp": "2026-04-15T01:25:28.973Z",
+      "timestamp": "2026-04-15T01:59:09.367Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -229,13 +229,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:28.973Z"
+        "startTime": "2026-04-15T01:59:09.367Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "label": "bdd: src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "timestamp": "2026-04-15T01:25:28.974Z",
+      "timestamp": "2026-04-15T01:59:09.368Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -266,13 +266,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:28.974Z"
+        "startTime": "2026-04-15T01:59:09.368Z"
       }
     },
     {
       "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "label": "check: src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "timestamp": "2026-04-15T01:25:28.976Z",
+      "timestamp": "2026-04-15T01:59:09.369Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -303,13 +303,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:28.976Z"
+        "startTime": "2026-04-15T01:59:09.369Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "label": "aider: src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "timestamp": "2026-04-15T01:25:28.976Z",
+      "timestamp": "2026-04-15T01:59:09.371Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -340,13 +340,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:28.976Z"
+        "startTime": "2026-04-15T01:59:09.371Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "label": "bdd: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "timestamp": "2026-04-15T01:25:28.977Z",
+      "timestamp": "2026-04-15T01:59:09.372Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -377,13 +377,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:28.977Z"
+        "startTime": "2026-04-15T01:59:09.372Z"
       }
     },
     {
       "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "label": "check: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "timestamp": "2026-04-15T01:25:28.979Z",
+      "timestamp": "2026-04-15T01:59:09.373Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -414,13 +414,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:28.979Z"
+        "startTime": "2026-04-15T01:59:09.373Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "label": "aider: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "timestamp": "2026-04-15T01:25:28.980Z",
+      "timestamp": "2026-04-15T01:59:09.374Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -451,13 +451,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:28.980Z"
+        "startTime": "2026-04-15T01:59:09.374Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "label": "bdd: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-      "timestamp": "2026-04-15T01:25:28.981Z",
+      "timestamp": "2026-04-15T01:59:09.376Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -488,13 +488,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:28.981Z"
+        "startTime": "2026-04-15T01:59:09.376Z"
       }
     },
     {
       "id": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "label": "check: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-      "timestamp": "2026-04-15T01:25:28.982Z",
+      "timestamp": "2026-04-15T01:59:09.378Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -525,13 +525,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:28.982Z"
+        "startTime": "2026-04-15T01:59:09.378Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "label": "aider: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-      "timestamp": "2026-04-15T01:25:28.984Z",
+      "timestamp": "2026-04-15T01:59:09.381Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -562,13 +562,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:28.984Z"
+        "startTime": "2026-04-15T01:59:09.381Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
       "label": "bdd: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "timestamp": "2026-04-15T01:25:28.987Z",
+      "timestamp": "2026-04-15T01:59:09.382Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
@@ -599,13 +599,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:28.987Z"
+        "startTime": "2026-04-15T01:59:09.382Z"
       }
     },
     {
       "id": "check_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
       "label": "check: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "timestamp": "2026-04-15T01:25:28.988Z",
+      "timestamp": "2026-04-15T01:59:09.383Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
@@ -636,13 +636,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:28.988Z"
+        "startTime": "2026-04-15T01:59:09.383Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
       "label": "aider: src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-      "timestamp": "2026-04-15T01:25:28.989Z",
+      "timestamp": "2026-04-15T01:59:09.383Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
@@ -673,13 +673,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:28.989Z"
+        "startTime": "2026-04-15T01:59:09.383Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
       "label": "bdd: src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "timestamp": "2026-04-15T01:25:28.992Z",
+      "timestamp": "2026-04-15T01:59:09.384Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
@@ -710,13 +710,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:28.992Z"
+        "startTime": "2026-04-15T01:59:09.384Z"
       }
     },
     {
       "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
       "label": "check: src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "timestamp": "2026-04-15T01:25:28.993Z",
+      "timestamp": "2026-04-15T01:59:09.385Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
@@ -747,13 +747,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:28.993Z"
+        "startTime": "2026-04-15T01:59:09.385Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
       "label": "aider: src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "timestamp": "2026-04-15T01:25:28.995Z",
+      "timestamp": "2026-04-15T01:59:09.386Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
@@ -784,13 +784,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:28.995Z"
+        "startTime": "2026-04-15T01:59:09.386Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
       "label": "bdd: src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "timestamp": "2026-04-15T01:25:28.998Z",
+      "timestamp": "2026-04-15T01:59:09.387Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
@@ -821,13 +821,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:28.998Z"
+        "startTime": "2026-04-15T01:59:09.387Z"
       }
     },
     {
       "id": "check_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
       "label": "check: src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "timestamp": "2026-04-15T01:25:29.001Z",
+      "timestamp": "2026-04-15T01:59:09.388Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
@@ -858,13 +858,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:29.001Z"
+        "startTime": "2026-04-15T01:59:09.388Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
       "label": "aider: src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "timestamp": "2026-04-15T01:25:29.004Z",
+      "timestamp": "2026-04-15T01:59:09.388Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
@@ -895,13 +895,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:29.004Z"
+        "startTime": "2026-04-15T01:59:09.388Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
       "label": "bdd: src/vscode/providers/utils/testTree/debugTest.js",
-      "timestamp": "2026-04-15T01:25:29.007Z",
+      "timestamp": "2026-04-15T01:59:09.389Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/utils/testTree/debugTest.js",
@@ -932,13 +932,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:29.007Z"
+        "startTime": "2026-04-15T01:59:09.389Z"
       }
     },
     {
       "id": "check_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
       "label": "check: src/vscode/providers/utils/testTree/debugTest.js",
-      "timestamp": "2026-04-15T01:25:29.009Z",
+      "timestamp": "2026-04-15T01:59:09.390Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/utils/testTree/debugTest.js",
@@ -969,13 +969,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:29.009Z"
+        "startTime": "2026-04-15T01:59:09.390Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
       "label": "aider: src/vscode/providers/utils/testTree/debugTest.js",
-      "timestamp": "2026-04-15T01:25:29.011Z",
+      "timestamp": "2026-04-15T01:59:09.391Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/utils/testTree/debugTest.js",
@@ -1006,13 +1006,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:29.011Z"
+        "startTime": "2026-04-15T01:59:09.391Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       "label": "bdd: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "timestamp": "2026-04-15T01:25:29.016Z",
+      "timestamp": "2026-04-15T01:59:09.392Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
@@ -1043,13 +1043,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:29.016Z"
+        "startTime": "2026-04-15T01:59:09.392Z"
       }
     },
     {
       "id": "check_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       "label": "check: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "timestamp": "2026-04-15T01:25:29.017Z",
+      "timestamp": "2026-04-15T01:59:09.393Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
@@ -1080,13 +1080,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:29.017Z"
+        "startTime": "2026-04-15T01:59:09.393Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       "label": "aider: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "timestamp": "2026-04-15T01:25:29.019Z",
+      "timestamp": "2026-04-15T01:59:09.394Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
@@ -1117,13 +1117,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:29.019Z"
+        "startTime": "2026-04-15T01:59:09.394Z"
       }
     },
     {
       "id": "builder_process:nodetests:builder",
       "label": "builder: builder",
-      "timestamp": "2026-04-15T01:25:29.020Z",
+      "timestamp": "2026-04-15T01:59:09.396Z",
       "metadata": {
         "runtime": "node",
         "testName": "builder",
@@ -1154,13 +1154,13 @@
         },
         "status": "todo",
         "processType": "builder",
-        "startTime": "2026-04-15T01:25:29.020Z"
+        "startTime": "2026-04-15T01:59:09.396Z"
       }
     },
     {
       "id": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
       "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "timestamp": "2026-04-15T01:25:29.021Z",
+      "timestamp": "2026-04-15T01:59:09.397Z",
       "metadata": {
         "runtime": "web",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
@@ -1182,13 +1182,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:29.021Z"
+        "startTime": "2026-04-15T01:59:09.397Z"
       }
     },
     {
       "id": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
       "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "timestamp": "2026-04-15T01:25:29.022Z",
+      "timestamp": "2026-04-15T01:59:09.398Z",
       "metadata": {
         "runtime": "web",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
@@ -1210,13 +1210,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:29.022Z"
+        "startTime": "2026-04-15T01:59:09.398Z"
       }
     },
     {
       "id": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
       "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "timestamp": "2026-04-15T01:25:29.023Z",
+      "timestamp": "2026-04-15T01:59:09.399Z",
       "metadata": {
         "runtime": "web",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
@@ -1238,13 +1238,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:29.023Z"
+        "startTime": "2026-04-15T01:59:09.399Z"
       }
     },
     {
       "id": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
       "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "timestamp": "2026-04-15T01:25:29.024Z",
+      "timestamp": "2026-04-15T01:59:09.400Z",
       "metadata": {
         "runtime": "web",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
@@ -1266,13 +1266,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:29.024Z"
+        "startTime": "2026-04-15T01:59:09.400Z"
       }
     },
     {
       "id": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
       "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "timestamp": "2026-04-15T01:25:29.025Z",
+      "timestamp": "2026-04-15T01:59:09.401Z",
       "metadata": {
         "runtime": "web",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
@@ -1294,13 +1294,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:29.025Z"
+        "startTime": "2026-04-15T01:59:09.401Z"
       }
     },
     {
       "id": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
       "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "timestamp": "2026-04-15T01:25:29.027Z",
+      "timestamp": "2026-04-15T01:59:09.402Z",
       "metadata": {
         "runtime": "web",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
@@ -1322,13 +1322,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:29.027Z"
+        "startTime": "2026-04-15T01:59:09.402Z"
       }
     },
     {
       "id": "builder_process:webtests:builder",
       "label": "builder: builder",
-      "timestamp": "2026-04-15T01:25:29.028Z",
+      "timestamp": "2026-04-15T01:59:09.403Z",
       "metadata": {
         "runtime": "web",
         "testName": "builder",
@@ -1350,13 +1350,13 @@
         },
         "status": "todo",
         "processType": "builder",
-        "startTime": "2026-04-15T01:25:29.028Z"
+        "startTime": "2026-04-15T01:59:09.403Z"
       }
     },
     {
       "id": "bdd_process:pythontests:src/lib/pitono/examples/calculator_test.py",
       "label": "bdd: src/lib/pitono/examples/calculator_test.py",
-      "timestamp": "2026-04-15T01:25:29.029Z",
+      "timestamp": "2026-04-15T01:59:09.404Z",
       "metadata": {
         "runtime": "python",
         "testName": "src/lib/pitono/examples/calculator_test.py",
@@ -1380,13 +1380,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T01:25:29.029Z"
+        "startTime": "2026-04-15T01:59:09.404Z"
       }
     },
     {
       "id": "check_process:pythontests:src/lib/pitono/examples/calculator_test.py",
       "label": "check: src/lib/pitono/examples/calculator_test.py",
-      "timestamp": "2026-04-15T01:25:29.030Z",
+      "timestamp": "2026-04-15T01:59:09.405Z",
       "metadata": {
         "runtime": "python",
         "testName": "src/lib/pitono/examples/calculator_test.py",
@@ -1410,13 +1410,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T01:25:29.030Z"
+        "startTime": "2026-04-15T01:59:09.405Z"
       }
     },
     {
       "id": "aider_process:pythontests:src/lib/pitono/examples/calculator_test.py",
       "label": "aider: src/lib/pitono/examples/calculator_test.py",
-      "timestamp": "2026-04-15T01:25:29.031Z",
+      "timestamp": "2026-04-15T01:59:09.406Z",
       "metadata": {
         "runtime": "python",
         "testName": "src/lib/pitono/examples/calculator_test.py",
@@ -1440,13 +1440,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T01:25:29.031Z"
+        "startTime": "2026-04-15T01:59:09.406Z"
       }
     },
     {
       "id": "builder_process:pythontests:builder",
       "label": "builder: builder",
-      "timestamp": "2026-04-15T01:25:29.032Z",
+      "timestamp": "2026-04-15T01:59:09.407Z",
       "metadata": {
         "runtime": "python",
         "testName": "builder",
@@ -1470,70 +1470,34 @@
         },
         "status": "todo",
         "processType": "builder",
-        "startTime": "2026-04-15T01:25:29.032Z"
+        "startTime": "2026-04-15T01:59:09.407Z"
       }
     },
     {
       "id": "aider_process:agent:prodirek",
       "label": "aider: prodirek",
-      "timestamp": "2026-04-15T01:25:50.350Z",
+      "timestamp": "2026-04-15T01:59:26.019Z",
       "metadata": {
-        "containerId": "6da0d5f24b0ea1e15885a3ed5359ffc39ff808f7f5cc8ab8071a233dc6728766",
+        "containerId": "c88c9716f2e63f5a9d9e87236530cd2c2047855b651eb21f4427de92566be871",
         "serviceName": "agent-prodirek",
         "containerStatus": "resize",
-        "updatedAt": "2026-04-15T01:30:20.703Z",
+        "updatedAt": "2026-04-15T02:06:51.920Z",
         "status": "stopped"
       }
     },
     {
       "id": "aider_process:agent:arko",
       "label": "aider: arko",
-      "timestamp": "2026-04-15T01:25:50.354Z",
+      "timestamp": "2026-04-15T01:59:26.026Z",
       "metadata": {
-        "containerId": "cbfe6b560058f2cd3acedadd992ef98e05a5c303ec0814eccdcff885eb0d7687",
+        "containerId": "1b92bf7eb58386ce50c8e4b949d620961866d95264c67fdf996eecd72291b11d",
         "serviceName": "agent-arko",
         "containerStatus": "resize",
-        "updatedAt": "2026-04-15T01:30:19.198Z",
+        "updatedAt": "2026-04-15T02:06:51.941Z",
         "status": "stopped"
-      }
-    },
-    {
-      "id": "chat_message:Arko:1776216551352",
-      "label": "Chat from Arko",
-      "timestamp": "2026-04-15T01:29:11.352Z",
-      "metadata": {
-        "frontmatter": {
-          "title": "Chat from Arko",
-          "type": "chat_message",
-          "agent": "Arko"
-        }
-      }
-    },
-    {
-      "id": "chat_message:arko:1776216582554",
-      "label": "Chat from arko",
-      "timestamp": "2026-04-15T01:29:42.554Z",
-      "metadata": {
-        "frontmatter": {
-          "title": "Chat from arko",
-          "type": "chat_message",
-          "agent": "arko"
-        }
-      }
-    },
-    {
-      "id": "chat_message:prodirek:1776216653653",
-      "label": "Chat from prodirek",
-      "timestamp": "2026-04-15T01:30:53.653Z",
-      "metadata": {
-        "frontmatter": {
-          "title": "Chat from prodirek",
-          "type": "chat_message",
-          "agent": "prodirek"
-        }
       }
     }
   ],
   "viewType": "gantt",
-  "timestamp": "2026-04-15T01:30:53.656Z"
+  "timestamp": "2026-04-15T02:06:51.943Z"
 }

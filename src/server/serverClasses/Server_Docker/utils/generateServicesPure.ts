@@ -201,7 +201,7 @@ ${message}
 EOF
 
          echo "Starting aider for agent ${agentName} with instructions from config"
-         aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update /tmp/agent_message.txt 2>&1
+         aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
          EXIT_CODE=$?
          echo "Aider exited with code $EXIT_CODE"
          # Exit with the same code (no restart)

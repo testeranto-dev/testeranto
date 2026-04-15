@@ -1,45 +1,5 @@
 {
-  "messages": [
-    {
-      "id": "chat_message:Arko:1776216551352",
-      "content": "Hello from Arko!",
-      "agentName": "Arko",
-      "timestamp": "2026-04-15T01:29:11.352Z",
-      "metadata": {
-        "frontmatter": {
-          "title": "Chat from Arko",
-          "type": "chat_message",
-          "agent": "Arko"
-        }
-      }
-    },
-    {
-      "id": "chat_message:arko:1776216582554",
-      "content": "Hello from arko!",
-      "agentName": "arko",
-      "timestamp": "2026-04-15T01:29:42.554Z",
-      "metadata": {
-        "frontmatter": {
-          "title": "Chat from arko",
-          "type": "chat_message",
-          "agent": "arko"
-        }
-      }
-    },
-    {
-      "id": "chat_message:prodirek:1776216653653",
-      "content": "Your message here",
-      "agentName": "prodirek",
-      "timestamp": "2026-04-15T01:30:53.653Z",
-      "metadata": {
-        "frontmatter": {
-          "title": "Chat from prodirek",
-          "type": "chat_message",
-          "agent": "prodirek"
-        }
-      }
-    }
-  ],
+  "messages": [],
   "viewType": "chat",
-  "timestamp": "2026-04-15T01:30:53.657Z"
+  "timestamp": "2026-04-15T02:06:51.944Z"
 }

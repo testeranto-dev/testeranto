@@ -1,7 +1,7 @@
 {
   "viewType": "agent",
   "agentName": "arko",
-  "timestamp": "2026-04-15T01:30:53.659Z",
+  "timestamp": "2026-04-15T02:06:51.945Z",
   "data": {
     "configs": [
       {
@@ -103,34 +103,12 @@
         "runtime": "python"
       }
     ],
-    "chatMessages": [
-      {
-        "id": "chat_message:Arko:1776216551352",
-        "agentName": "Arko",
-        "content": "Hello from Arko!",
-        "timestamp": "2026-04-15T01:29:11.352Z",
-        "preview": "Hello from Arko!"
-      },
-      {
-        "id": "chat_message:arko:1776216582554",
-        "agentName": "arko",
-        "content": "Hello from arko!",
-        "timestamp": "2026-04-15T01:29:42.554Z",
-        "preview": "Hello from arko!"
-      },
-      {
-        "id": "chat_message:prodirek:1776216653653",
-        "agentName": "prodirek",
-        "content": "Your message here",
-        "timestamp": "2026-04-15T01:30:53.653Z",
-        "preview": "Your message here"
-      }
-    ],
+    "chatMessages": [],
     "agents": [],
     "summary": {
       "totalConfigs": 3,
       "totalEntrypoints": 13,
-      "totalChatMessages": 3,
+      "totalChatMessages": 0,
       "totalAgents": 0
     }
   }

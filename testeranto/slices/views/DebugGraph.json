@@ -7,8 +7,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 173.65875455157916,
-      "y": 314.0893684455196,
+      "x": 67.50509702199778,
+      "y": 317.16346669166563,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -19,8 +19,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 234.04762702479866,
-      "y": 91.0475444936593,
+      "x": 550.6822124295792,
+      "y": 299.9046625185865,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -28,8 +28,8 @@
       "id": "view:Home",
       "label": "Home",
       "type": "view",
-      "x": 85.89915054342453,
-      "y": 5.039089675365305,
+      "x": 241.96185276087752,
+      "y": 77.97042051681005,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -37,8 +37,8 @@
       "id": "view:Kanban",
       "label": "Kanban",
       "type": "view",
-      "x": 16.534865778036156,
-      "y": 220.58426947646578,
+      "x": 530.3334341552777,
+      "y": 130.44180174119612,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -46,8 +46,8 @@
       "id": "view:EisenhowerMatrix",
       "label": "EisenhowerMatrix",
       "type": "view",
-      "x": 772.8244530655327,
-      "y": 28.74681198560576,
+      "x": 403.8873295310439,
+      "y": 426.70443676182543,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -55,8 +55,8 @@
       "id": "view:Gantt",
       "label": "Gantt",
       "type": "view",
-      "x": 206.6774771649426,
-      "y": 392.4109772634583,
+      "x": 48.25151681189617,
+      "y": 476.8211608955764,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -64,8 +64,8 @@
       "id": "view:Chat",
       "label": "Chat",
       "type": "view",
-      "x": 554.6870429167925,
-      "y": 49.63280449564711,
+      "x": 448.54035829339375,
+      "y": 461.4447956122382,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -73,8 +73,8 @@
       "id": "view:DebugGraph",
       "label": "DebugGraph",
       "type": "view",
-      "x": 775.3518134552972,
-      "y": 550.7012152686715,
+      "x": 496.7072952358996,
+      "y": 309.9094973792952,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -82,8 +82,8 @@
       "id": "config:nodetests",
       "label": "nodetests",
       "type": "config",
-      "x": 792.7738359926803,
-      "y": 586.1731230494375,
+      "x": 298.0189217723834,
+      "y": 27.742365756334507,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -91,8 +91,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "label": "index.ts",
       "type": "entrypoint",
-      "x": 640.8716562701669,
-      "y": 52.29136177032893,
+      "x": 551.7726082041269,
+      "y": 522.176671726369,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -100,8 +100,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "label": "Calculator.test.node.ts",
       "type": "entrypoint",
-      "x": 135.6031429995465,
-      "y": 94.82697607066848,
+      "x": 228.085937841895,
+      "y": 234.4976188977246,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -109,8 +109,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "label": "Circle.test.ts",
       "type": "entrypoint",
-      "x": 778.2299656813491,
-      "y": 365.85911076446365,
+      "x": 401.90923917636667,
+      "y": 502.0432226353957,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -118,8 +118,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "label": "Rectangle.test.ts",
       "type": "entrypoint",
-      "x": 175.62827812983147,
-      "y": 261.8281231973517,
+      "x": 503.74898793223207,
+      "y": 484.56665065639095,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -127,8 +127,8 @@
       "id": "entrypoint:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "label": "AiderProcessTreeDataProvider.test.ts",
       "type": "entrypoint",
-      "x": 200.40509250182464,
-      "y": 190.30129894382804,
+      "x": 182.3394157062391,
+      "y": 437.76079231761355,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -136,8 +136,8 @@
       "id": "entrypoint:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
       "label": "Server_GraphManagerCore.test.ts",
       "type": "entrypoint",
-      "x": 570.733644092167,
-      "y": 236.04653436959765,
+      "x": 288.75144909615955,
+      "y": 94.78660746431345,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -145,8 +145,8 @@
       "id": "entrypoint:src/vscode/providers/logic/FileTreeLogic.test.ts",
       "label": "FileTreeLogic.test.ts",
       "type": "entrypoint",
-      "x": 546.2354880218652,
-      "y": 560.4344158229544,
+      "x": 338.3226087701805,
+      "y": 178.658704135271,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -154,8 +154,8 @@
       "id": "entrypoint:src/vscode/providers/utils/testTree/treeFilter.test.ts",
       "label": "treeFilter.test.ts",
       "type": "entrypoint",
-      "x": 714.7224705965273,
-      "y": 597.5322447892162,
+      "x": 447.81515563040404,
+      "y": 310.6628169486563,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -163,8 +163,8 @@
       "id": "entrypoint:src/vscode/providers/utils/testTree/debugTest.js",
       "label": "debugTest.js",
       "type": "entrypoint",
-      "x": 644.3584363917728,
-      "y": 18.78151164931412,
+      "x": 559.8570615026188,
+      "y": 63.25753906081133,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -172,8 +172,8 @@
       "id": "entrypoint:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       "label": "fileOperations.ts.",
       "type": "entrypoint",
-      "x": 337.2208918819452,
-      "y": 577.2266106395998,
+      "x": 145.89298294825906,
+      "y": 343.30267618893583,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -181,8 +181,8 @@
       "id": "config:webtests",
       "label": "webtests",
       "type": "config",
-      "x": 111.80725324425431,
-      "y": 517.4697437024238,
+      "x": 165.53727824738448,
+      "y": 108.48838771526891,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -190,8 +190,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
       "label": "Calculator.test.web.ts",
       "type": "entrypoint",
-      "x": 554.9164191161193,
-      "y": 117.05799207306251,
+      "x": 112.31732274136155,
+      "y": 190.13290080658544,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -199,8 +199,8 @@
       "id": "entrypoint:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
       "label": "Calculator.test.web.react.ts",
       "type": "entrypoint",
-      "x": 688.8108688851743,
-      "y": 50.17246601642626,
+      "x": 459.0587405755602,
+      "y": 527.3081006779032,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -208,8 +208,8 @@
       "id": "config:pythontests",
       "label": "pythontests",
       "type": "config",
-      "x": 644.2151225096109,
-      "y": 385.5703205908633,
+      "x": 421.1649978749334,
+      "y": 45.164617203014416,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -217,8 +217,8 @@
       "id": "entrypoint:src/lib/pitono/examples/calculator_test.py",
       "label": "calculator_test.py",
       "type": "entrypoint",
-      "x": 508.04768122350043,
-      "y": 248.9949030730592,
+      "x": 505.85876237131646,
+      "y": 418.9373185802928,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -226,8 +226,8 @@
       "id": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 661.0916510825175,
-      "y": 359.19244926846244,
+      "x": 489.40031852889297,
+      "y": 432.7286200145641,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -235,8 +235,8 @@
       "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 501.0024591513137,
-      "y": 515.1234880928508,
+      "x": 313.28638864175895,
+      "y": 169.78956523199577,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -244,8 +244,8 @@
       "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 577.2931985787385,
-      "y": 49.847203462806355,
+      "x": 422.2119244883282,
+      "y": 101.44361505453567,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -253,8 +253,8 @@
       "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 227.5583616829664,
-      "y": 163.92615103922336,
+      "x": 446.3927587496907,
+      "y": 557.8301828927732,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -262,8 +262,8 @@
       "id": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 91.36134635903481,
-      "y": 385.55428196293315,
+      "x": 681.2302415689528,
+      "y": 117.16995181589598,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -271,8 +271,8 @@
       "id": "test:nodetests:src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 539.4618357021064,
-      "y": 350.165423610652,
+      "x": 123.0005887447783,
+      "y": 368.21861472147884,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -280,8 +280,8 @@
       "id": "test:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 406.618081092218,
-      "y": 268.21422005988586,
+      "x": 40.203476741717914,
+      "y": 414.75358271558457,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -289,8 +289,8 @@
       "id": "test:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 283.61573306146585,
-      "y": 291.36653876260334,
+      "x": 521.9129057441411,
+      "y": 195.88183257387374,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -298,8 +298,8 @@
       "id": "test:nodetests:src/vscode/providers/utils/testTree/debugTest.js:0",
       "label": "Test suite",
       "type": "test",
-      "x": 499.1333726693159,
-      "y": 411.4020681549919,
+      "x": 258.614680654724,
+      "y": 309.81673502795815,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -307,8 +307,8 @@
       "id": "test:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.:0",
       "label": "Test suite",
       "type": "test",
-      "x": 650.936728519321,
-      "y": 501.31904477656013,
+      "x": 580.1762427977751,
+      "y": 224.75670718308177,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -316,8 +316,8 @@
       "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 373.68833895437143,
-      "y": 233.38006406931666,
+      "x": 452.87340704870786,
+      "y": 314.7319650227424,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -325,8 +325,8 @@
       "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts:0",
       "label": "Test suite",
       "type": "test",
-      "x": 752.2664763374489,
-      "y": 466.581795433134,
+      "x": 68.71474874209822,
+      "y": 533.3793373361225,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -334,8 +334,8 @@
       "id": "test:pythontests:src/lib/pitono/examples/calculator_test.py:0",
       "label": "Test suite",
       "type": "test",
-      "x": 454.54949883730336,
-      "y": 291.4903107407083,
+      "x": 129.8335453285384,
+      "y": 530.0846965365356,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -346,8 +346,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 793.7154304619089,
-      "y": 357.3218032438106,
+      "x": 99.41132293634993,
+      "y": 24.391343743302542,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -358,8 +358,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 84.28732130370653,
-      "y": 555.8335676627762,
+      "x": 510.4424725754118,
+      "y": 111.16633165301238,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -370,8 +370,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 364.0197746665798,
-      "y": 34.042722147795224,
+      "x": 631.8980351853812,
+      "y": 340.3751852559568,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -382,8 +382,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 669.7104821804116,
-      "y": 323.09251805249846,
+      "x": 712.6588608800458,
+      "y": 194.07453179894026,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -394,8 +394,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 199.0707366647011,
-      "y": 539.3227191426407,
+      "x": 420.9459081943943,
+      "y": 346.5970238213622,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -406,8 +406,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 503.6703445831869,
-      "y": 507.22594127409235,
+      "x": 264.8856134449595,
+      "y": 228.71884096487912,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -418,8 +418,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 436.24053315300887,
-      "y": 557.9692364154836,
+      "x": 62.865797207408924,
+      "y": 256.51118826078283,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -430,8 +430,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 580.8380377492974,
-      "y": 204.44728986825038,
+      "x": 507.0256619190257,
+      "y": 367.80932834888023,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -442,8 +442,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 686.7881958219582,
-      "y": 451.54620662377357,
+      "x": 264.321774922149,
+      "y": 205.52117069813377,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -454,8 +454,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 151.53418890707488,
-      "y": 546.7836961651551,
+      "x": 148.778251246247,
+      "y": 64.53149621386609,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -466,8 +466,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 482.55630963791225,
-      "y": 485.4645340939704,
+      "x": 714.3945968059944,
+      "y": 294.24006385955374,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -478,8 +478,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 475.677793855862,
-      "y": 369.248778589607,
+      "x": 257.14927355846476,
+      "y": 50.48964684862569,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -490,8 +490,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 276.93689309555253,
-      "y": 225.59161917655257,
+      "x": 260.44499455455775,
+      "y": 586.371144008802,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -502,8 +502,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 161.69566478217874,
-      "y": 3.437952905907582,
+      "x": 286.13527343983156,
+      "y": 93.25778508779001,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -514,8 +514,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 687.8776710112955,
-      "y": 482.7089790963973,
+      "x": 586.4940362488023,
+      "y": 439.2861722890847,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -526,8 +526,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 484.9794056436574,
-      "y": 232.52601265273626,
+      "x": 609.7953694258907,
+      "y": 69.81424982233008,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -538,8 +538,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 706.2852431042458,
-      "y": 132.03608898632052,
+      "x": 143.41103444934743,
+      "y": 50.25384967955932,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -550,8 +550,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 635.6937040816165,
-      "y": 529.7724140195958,
+      "x": 480.89821841360435,
+      "y": 161.12694875226836,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -562,8 +562,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 403.03397140392684,
-      "y": 261.35529210553244,
+      "x": 683.838535353829,
+      "y": 365.2052448190345,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -574,8 +574,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 336.4463680048808,
-      "y": 35.46197940248621,
+      "x": 2.2520575869544146,
+      "y": 2.9715282419435995,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -586,8 +586,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 416.4886736186975,
-      "y": 28.614328324992066,
+      "x": 382.69646359354726,
+      "y": 343.39982733393316,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -598,8 +598,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 237.9124835539269,
-      "y": 326.94877551901544,
+      "x": 271.2738037771533,
+      "y": 500.5272824020795,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -610,8 +610,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 165.0347719292605,
-      "y": 509.6760151557973,
+      "x": 397.81156697417697,
+      "y": 39.24771647161855,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -622,8 +622,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 506.7797479055513,
-      "y": 266.3027285255034,
+      "x": 770.2066648423287,
+      "y": 106.36565932440512,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -634,8 +634,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 98.15985996609973,
-      "y": 406.2889665127783,
+      "x": 367.7308579653447,
+      "y": 290.0873971837037,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -646,8 +646,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 226.4130596617431,
-      "y": 44.09442197761355,
+      "x": 443.31373602968364,
+      "y": 256.3164710228741,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -658,8 +658,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 653.568182040118,
-      "y": 251.89573221645193,
+      "x": 248.48519048968055,
+      "y": 530.9224324530206,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -670,8 +670,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 551.3935510819247,
-      "y": 561.4953478530091,
+      "x": 595.4702675984531,
+      "y": 131.01181373584808,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -682,8 +682,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 543.746979616341,
-      "y": 116.85872699738673,
+      "x": 436.2029780817243,
+      "y": 187.59337804966597,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -694,8 +694,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 254.73213554535903,
-      "y": 420.8272920492275,
+      "x": 26.01046507927265,
+      "y": 128.79070207917673,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -706,8 +706,8 @@
         "category": "process",
         "type": "builder"
       },
-      "x": 350.5318282902616,
-      "y": 525.1834660553614,
+      "x": 540.6240767986842,
+      "y": 35.23522480497665,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -718,8 +718,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 46.849534067869044,
-      "y": 6.186935587794529,
+      "x": 146.8639215784612,
+      "y": 131.4957852577259,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -730,8 +730,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 781.4707447721748,
-      "y": 205.87263359918256,
+      "x": 605.2886249785024,
+      "y": 426.2010310892901,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -742,8 +742,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 752.8151729243573,
-      "y": 335.76070773858845,
+      "x": 160.1499156362798,
+      "y": 477.20396412050366,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -754,8 +754,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 605.4651008767439,
-      "y": 85.86266726867247,
+      "x": 787.9738659337092,
+      "y": 97.5874353906016,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -766,8 +766,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 94.01390967255638,
-      "y": 530.6892453887065,
+      "x": 772.1229041144824,
+      "y": 376.45092371712855,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -778,8 +778,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 774.4798670942137,
-      "y": 439.5386422401665,
+      "x": 745.5171457461499,
+      "y": 546.7203808433436,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -790,8 +790,8 @@
         "category": "process",
         "type": "builder"
       },
-      "x": 625.8304619802118,
-      "y": 246.57754273543947,
+      "x": 66.0119679357738,
+      "y": 597.4174567246356,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -802,8 +802,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 531.0439058466957,
-      "y": 95.29308631528683,
+      "x": 210.20034171514084,
+      "y": 484.7552422561692,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -814,8 +814,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 237.90710198619155,
-      "y": 63.378969612956794,
+      "x": 180.69776060909345,
+      "y": 547.2112446610779,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -826,8 +826,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 408.5699537844575,
-      "y": 72.54224325972392,
+      "x": 115.38886459540727,
+      "y": 349.8009288934921,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -838,8 +838,8 @@
         "category": "process",
         "type": "builder"
       },
-      "x": 101.14249523529591,
-      "y": 564.9749251514215,
+      "x": 304.4361981869539,
+      "y": 215.35649321178852,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -850,8 +850,8 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 17.951393627610734,
-      "y": 56.27350815897465,
+      "x": 714.1188789234742,
+      "y": 318.4581284804003,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -862,80 +862,44 @@
         "category": "process",
         "type": "aider"
       },
-      "x": 63.82369213861905,
-      "y": 248.99198342227305,
+      "x": 368.65189415472616,
+      "y": 164.65871534325993,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "logfile:nodetests-builder.log:mnzdd1vd",
+      "id": "logfile:nodetests-builder.log:mnzek9sg",
       "label": "nodetests-builder.log",
       "type": "file",
-      "x": 172.53507973520738,
-      "y": 151.336114671754,
+      "x": 64.2715652618751,
+      "y": 296.37382459102037,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "logfile:webtests-builder.log:mnzdd2e2",
+      "id": "logfile:webtests-builder.log:mnzekadr",
       "label": "webtests-builder.log",
       "type": "file",
-      "x": 477.06563125794463,
-      "y": 51.09329577726454,
+      "x": 160.78425028742345,
+      "y": 499.9132707828268,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "logfile:pythontests-builder.log:mnzdd7zs",
+      "id": "logfile:pythontests-builder.log:mnzekfu6",
       "label": "pythontests-builder.log",
       "type": "file",
-      "x": 666.9271263742163,
-      "y": 22.783929560584948,
+      "x": 652.5984731792399,
+      "y": 504.48003067107896,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "logfile:chrome-service.log:mnzddqzh",
+      "id": "logfile:chrome-service.log:mnzekyov",
       "label": "chrome-service.log",
       "type": "file",
-      "x": 284.5535513502393,
-      "y": 557.2097560759215,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "chat_message:Arko:1776216551352",
-      "label": "Chat from Arko",
-      "type": {
-        "category": "chat",
-        "type": "chat_message"
-      },
-      "x": 660.1601940865162,
-      "y": 518.9179277048165,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "chat_message:arko:1776216582554",
-      "label": "Chat from arko",
-      "type": {
-        "category": "chat",
-        "type": "chat_message"
-      },
-      "x": 12.763732192476418,
-      "y": 412.0058238297258,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "chat_message:prodirek:1776216653653",
-      "label": "Chat from prodirek",
-      "type": {
-        "category": "chat",
-        "type": "chat_message"
-      },
-      "x": 91.87659616718271,
-      "y": 319.5865399160035,
+      "x": 783.7846200810905,
+      "y": 60.20148987695417,
       "size": 5,
       "color": "#4a90e2"
     }
@@ -947,7 +911,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -956,7 +920,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -965,7 +929,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -974,7 +938,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -983,7 +947,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -992,7 +956,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -1001,7 +965,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -1010,7 +974,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -1019,7 +983,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -1028,7 +992,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -1037,7 +1001,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -1046,7 +1010,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -1055,7 +1019,7 @@
       "type": "configuredBy",
       "attributes": {
         "type": "configuredBy",
-        "timestamp": "2026-04-15T01:25:26.531Z"
+        "timestamp": "2026-04-15T01:59:07.091Z"
       }
     },
     {
@@ -1176,7 +1140,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.967Z",
+        "timestamp": "2026-04-15T01:59:09.359Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1196,7 +1160,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.968Z",
+        "timestamp": "2026-04-15T01:59:09.363Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1216,7 +1180,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.969Z",
+        "timestamp": "2026-04-15T01:59:09.364Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1236,7 +1200,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.971Z",
+        "timestamp": "2026-04-15T01:59:09.365Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1256,7 +1220,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.972Z",
+        "timestamp": "2026-04-15T01:59:09.366Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1276,7 +1240,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.973Z",
+        "timestamp": "2026-04-15T01:59:09.367Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1296,7 +1260,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.974Z",
+        "timestamp": "2026-04-15T01:59:09.368Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1316,7 +1280,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.976Z",
+        "timestamp": "2026-04-15T01:59:09.369Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1336,7 +1300,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.976Z",
+        "timestamp": "2026-04-15T01:59:09.371Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1356,7 +1320,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.977Z",
+        "timestamp": "2026-04-15T01:59:09.372Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1376,7 +1340,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.979Z",
+        "timestamp": "2026-04-15T01:59:09.373Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1396,7 +1360,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.980Z",
+        "timestamp": "2026-04-15T01:59:09.374Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1416,7 +1380,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.981Z",
+        "timestamp": "2026-04-15T01:59:09.376Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1436,7 +1400,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.982Z",
+        "timestamp": "2026-04-15T01:59:09.378Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1456,7 +1420,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.984Z",
+        "timestamp": "2026-04-15T01:59:09.381Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1476,7 +1440,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.987Z",
+        "timestamp": "2026-04-15T01:59:09.382Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1496,7 +1460,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.988Z",
+        "timestamp": "2026-04-15T01:59:09.383Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1516,7 +1480,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.989Z",
+        "timestamp": "2026-04-15T01:59:09.383Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1536,7 +1500,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.992Z",
+        "timestamp": "2026-04-15T01:59:09.384Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1556,7 +1520,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.993Z",
+        "timestamp": "2026-04-15T01:59:09.385Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1576,7 +1540,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.995Z",
+        "timestamp": "2026-04-15T01:59:09.386Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1596,7 +1560,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:28.998Z",
+        "timestamp": "2026-04-15T01:59:09.387Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1616,7 +1580,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.001Z",
+        "timestamp": "2026-04-15T01:59:09.388Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1636,7 +1600,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.004Z",
+        "timestamp": "2026-04-15T01:59:09.388Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1656,7 +1620,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.007Z",
+        "timestamp": "2026-04-15T01:59:09.389Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1676,7 +1640,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.009Z",
+        "timestamp": "2026-04-15T01:59:09.390Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1696,7 +1660,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.011Z",
+        "timestamp": "2026-04-15T01:59:09.391Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1716,7 +1680,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.016Z",
+        "timestamp": "2026-04-15T01:59:09.392Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1736,7 +1700,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.017Z",
+        "timestamp": "2026-04-15T01:59:09.393Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1756,7 +1720,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.019Z",
+        "timestamp": "2026-04-15T01:59:09.394Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1776,7 +1740,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.020Z",
+        "timestamp": "2026-04-15T01:59:09.396Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1796,7 +1760,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.021Z",
+        "timestamp": "2026-04-15T01:59:09.397Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1816,7 +1780,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.022Z",
+        "timestamp": "2026-04-15T01:59:09.398Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1836,7 +1800,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.023Z",
+        "timestamp": "2026-04-15T01:59:09.399Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1856,7 +1820,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.024Z",
+        "timestamp": "2026-04-15T01:59:09.400Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1876,7 +1840,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.025Z",
+        "timestamp": "2026-04-15T01:59:09.401Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1896,7 +1860,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.027Z",
+        "timestamp": "2026-04-15T01:59:09.402Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1916,7 +1880,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.028Z",
+        "timestamp": "2026-04-15T01:59:09.403Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1936,7 +1900,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.029Z",
+        "timestamp": "2026-04-15T01:59:09.404Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1956,7 +1920,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.030Z",
+        "timestamp": "2026-04-15T01:59:09.405Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1976,7 +1940,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.031Z",
+        "timestamp": "2026-04-15T01:59:09.406Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1996,7 +1960,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:29.032Z",
+        "timestamp": "2026-04-15T01:59:09.407Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -2016,7 +1980,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:50.350Z",
+        "timestamp": "2026-04-15T01:59:26.019Z",
         "metadata": {
           "relationship": "agent_has_process"
         }
@@ -2036,81 +2000,13 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-15T01:25:50.354Z",
+        "timestamp": "2026-04-15T01:59:26.026Z",
         "metadata": {
           "relationship": "agent_has_process"
         }
       }
-    },
-    {
-      "source": "agent:arko",
-      "target": "chat_message:arko:1776216582554",
-      "type": {
-        "category": "ownership",
-        "type": "has",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "ownership",
-          "type": "has",
-          "directed": true
-        },
-        "timestamp": "2026-04-15T01:29:42.554Z"
-      }
-    },
-    {
-      "source": "chat_message:arko:1776216582554",
-      "target": "agent:arko",
-      "type": {
-        "category": "ownership",
-        "type": "belongsTo",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "ownership",
-          "type": "belongsTo",
-          "directed": true
-        },
-        "timestamp": "2026-04-15T01:29:42.554Z"
-      }
-    },
-    {
-      "source": "agent:prodirek",
-      "target": "chat_message:prodirek:1776216653653",
-      "type": {
-        "category": "ownership",
-        "type": "has",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "ownership",
-          "type": "has",
-          "directed": true
-        },
-        "timestamp": "2026-04-15T01:30:53.653Z"
-      }
-    },
-    {
-      "source": "chat_message:prodirek:1776216653653",
-      "target": "agent:prodirek",
-      "type": {
-        "category": "ownership",
-        "type": "belongsTo",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "ownership",
-          "type": "belongsTo",
-          "directed": true
-        },
-        "timestamp": "2026-04-15T01:30:53.653Z"
-      }
     }
   ],
   "viewType": "debug",
-  "timestamp": "2026-04-15T01:30:53.657Z"
+  "timestamp": "2026-04-15T02:06:51.944Z"
 }
