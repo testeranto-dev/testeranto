@@ -3,17 +3,17 @@
     {
       "id": "agent:prodirek",
       "label": "prodirek",
-      "timestamp": "2026-04-15T14:25:39.105Z"
+      "timestamp": "2026-04-16T01:12:55.354Z"
     },
     {
       "id": "agent:arko",
       "label": "arko",
-      "timestamp": "2026-04-15T14:25:39.105Z"
+      "timestamp": "2026-04-16T01:12:55.354Z"
     },
     {
       "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "label": "bdd: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-      "timestamp": "2026-04-15T14:25:43.279Z",
+      "timestamp": "2026-04-16T01:19:41.864Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -25,17 +25,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -43,13 +35,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.279Z"
+        "startTime": "2026-04-16T01:19:41.864Z"
       }
     },
     {
       "id": "check_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "label": "check: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-      "timestamp": "2026-04-15T14:25:43.281Z",
+      "timestamp": "2026-04-16T01:19:41.868Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -61,17 +53,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -79,13 +63,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T14:25:43.281Z"
+        "startTime": "2026-04-16T01:19:41.868Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "label": "aider: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-      "timestamp": "2026-04-15T14:25:43.285Z",
+      "timestamp": "2026-04-16T01:19:41.871Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
@@ -97,17 +81,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -115,13 +91,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.285Z"
+        "startTime": "2026-04-16T01:19:41.871Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "timestamp": "2026-04-15T14:25:43.286Z",
+      "timestamp": "2026-04-16T01:19:41.874Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -133,17 +109,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -151,13 +119,53 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.286Z"
+        "startTime": "2026-04-16T01:19:41.874Z",
+        "finishedAt": "2026-04-16T01:19:48.824Z",
+        "testResults": {
+          "failed": true,
+          "fails": 1,
+          "artifacts": [],
+          "features": [],
+          "tests": 1,
+          "runTimeTests": 1,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302386984,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [],
+              "error": {
+                "message": "input is not a constructor",
+                "stack": "TypeError: input is not a constructor\n    at another simple calculator (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:195:49)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1357:38\n    at CalculatorNodeTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:110:56)\n    at CalculatorNodeTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CalculatorNodeTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:318:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:321:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+                "name": "TypeError"
+              },
+              "stepName": "Step_0",
+              "stepType": "SpecificationError",
+              "testJob": {
+                "name": "Specification_Error",
+                "type": "Error",
+                "error": "Test specification failed: input is not a constructor"
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 1,
+            "passed": 0,
+            "failed": 1,
+            "successRate": "0.00%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.824Z"
       }
     },
     {
       "id": "check_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "timestamp": "2026-04-15T14:25:43.287Z",
+      "timestamp": "2026-04-16T01:19:41.876Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -169,17 +177,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -187,13 +187,53 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T14:25:43.287Z"
+        "startTime": "2026-04-16T01:19:41.876Z",
+        "finishedAt": "2026-04-16T01:19:48.824Z",
+        "testResults": {
+          "failed": true,
+          "fails": 1,
+          "artifacts": [],
+          "features": [],
+          "tests": 1,
+          "runTimeTests": 1,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302386984,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [],
+              "error": {
+                "message": "input is not a constructor",
+                "stack": "TypeError: input is not a constructor\n    at another simple calculator (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:195:49)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1357:38\n    at CalculatorNodeTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:110:56)\n    at CalculatorNodeTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CalculatorNodeTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:318:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:321:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+                "name": "TypeError"
+              },
+              "stepName": "Step_0",
+              "stepType": "SpecificationError",
+              "testJob": {
+                "name": "Specification_Error",
+                "type": "Error",
+                "error": "Test specification failed: input is not a constructor"
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 1,
+            "passed": 0,
+            "failed": 1,
+            "successRate": "0.00%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.824Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "timestamp": "2026-04-15T14:25:43.288Z",
+      "timestamp": "2026-04-16T01:19:41.878Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
@@ -205,17 +245,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -223,13 +255,53 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.288Z"
+        "startTime": "2026-04-16T01:19:41.878Z",
+        "finishedAt": "2026-04-16T01:19:48.824Z",
+        "testResults": {
+          "failed": true,
+          "fails": 1,
+          "artifacts": [],
+          "features": [],
+          "tests": 1,
+          "runTimeTests": 1,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302386984,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [],
+              "error": {
+                "message": "input is not a constructor",
+                "stack": "TypeError: input is not a constructor\n    at another simple calculator (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:195:49)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1357:38\n    at CalculatorNodeTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:110:56)\n    at CalculatorNodeTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CalculatorNodeTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:318:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:321:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+                "name": "TypeError"
+              },
+              "stepName": "Step_0",
+              "stepType": "SpecificationError",
+              "testJob": {
+                "name": "Specification_Error",
+                "type": "Error",
+                "error": "Test specification failed: input is not a constructor"
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 1,
+            "passed": 0,
+            "failed": 1,
+            "successRate": "0.00%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.824Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "label": "bdd: src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "timestamp": "2026-04-15T14:25:43.288Z",
+      "timestamp": "2026-04-16T01:19:41.880Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -241,17 +313,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -259,13 +323,53 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.288Z"
+        "startTime": "2026-04-16T01:19:41.880Z",
+        "finishedAt": "2026-04-16T01:19:48.873Z",
+        "testResults": {
+          "failed": true,
+          "fails": 1,
+          "artifacts": [],
+          "features": [],
+          "tests": 1,
+          "runTimeTests": 1,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302386948,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [],
+              "error": {
+                "message": "Confirm.circumferenceCalculation(...) is not a function",
+                "stack": "TypeError: Confirm.circumferenceCalculation(...) is not a function\n    at CircleTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:34:42)\n    at CircleTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CircleTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:261:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:264:27\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+                "name": "TypeError"
+              },
+              "stepName": "Step_0",
+              "stepType": "SpecificationError",
+              "testJob": {
+                "name": "Specification_Error",
+                "type": "Error",
+                "error": "Test specification failed: Confirm.circumferenceCalculation(...) is not a function"
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 1,
+            "passed": 0,
+            "failed": 1,
+            "successRate": "0.00%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.873Z"
       }
     },
     {
       "id": "check_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "label": "check: src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "timestamp": "2026-04-15T14:25:43.289Z",
+      "timestamp": "2026-04-16T01:19:41.882Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -277,17 +381,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -295,13 +391,53 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T14:25:43.289Z"
+        "startTime": "2026-04-16T01:19:41.882Z",
+        "finishedAt": "2026-04-16T01:19:48.873Z",
+        "testResults": {
+          "failed": true,
+          "fails": 1,
+          "artifacts": [],
+          "features": [],
+          "tests": 1,
+          "runTimeTests": 1,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302386948,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [],
+              "error": {
+                "message": "Confirm.circumferenceCalculation(...) is not a function",
+                "stack": "TypeError: Confirm.circumferenceCalculation(...) is not a function\n    at CircleTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:34:42)\n    at CircleTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CircleTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:261:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:264:27\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+                "name": "TypeError"
+              },
+              "stepName": "Step_0",
+              "stepType": "SpecificationError",
+              "testJob": {
+                "name": "Specification_Error",
+                "type": "Error",
+                "error": "Test specification failed: Confirm.circumferenceCalculation(...) is not a function"
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 1,
+            "passed": 0,
+            "failed": 1,
+            "successRate": "0.00%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.873Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "label": "aider: src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "timestamp": "2026-04-15T14:25:43.290Z",
+      "timestamp": "2026-04-16T01:19:41.884Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
@@ -313,17 +449,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -331,13 +459,53 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.290Z"
+        "startTime": "2026-04-16T01:19:41.884Z",
+        "finishedAt": "2026-04-16T01:19:48.873Z",
+        "testResults": {
+          "failed": true,
+          "fails": 1,
+          "artifacts": [],
+          "features": [],
+          "tests": 1,
+          "runTimeTests": 1,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302386948,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [],
+              "error": {
+                "message": "Confirm.circumferenceCalculation(...) is not a function",
+                "stack": "TypeError: Confirm.circumferenceCalculation(...) is not a function\n    at CircleTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:34:42)\n    at CircleTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CircleTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:261:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:264:27\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+                "name": "TypeError"
+              },
+              "stepName": "Step_0",
+              "stepType": "SpecificationError",
+              "testJob": {
+                "name": "Specification_Error",
+                "type": "Error",
+                "error": "Test specification failed: Confirm.circumferenceCalculation(...) is not a function"
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 1,
+            "passed": 0,
+            "failed": 1,
+            "successRate": "0.00%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.873Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "label": "bdd: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "timestamp": "2026-04-15T14:25:43.291Z",
+      "timestamp": "2026-04-16T01:19:41.886Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -349,17 +517,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -367,13 +527,371 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.291Z"
+        "startTime": "2026-04-16T01:19:41.886Z",
+        "finishedAt": "2026-04-16T01:19:48.904Z",
+        "testResults": {
+          "failed": true,
+          "fails": 5,
+          "artifacts": [],
+          "features": [
+            "https://api.github.com/repos/adamwong246/testeranto/issues/88",
+            "src/lib/tiposkripto/tests/Rectangle/README.md",
+            "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+            "src/lib/tiposkripto/README.md"
+          ],
+          "tests": 7,
+          "runTimeTests": 7,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302387283,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+              ],
+              "error": {
+                "message": "expected 19 to equal 1259",
+                "stack": "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+                "name": "AssertionError"
+              },
+              "stepName": "step_0",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_0",
+                "error": [
+                  {
+                    "message": "expected 19 to equal 1259",
+                    "actual": 19,
+                    "expected": 1259,
+                    "showDiff": true,
+                    "operator": "strictEqual",
+                    "name": "AssertionError",
+                    "ok": false,
+                    "stack": "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                  },
+                  "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                ],
+                "failed": true,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 1,
+                "whens": [
+                  {
+                    "name": "setWidth: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setHeight: 19",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "getWidth: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 1259",
+                    "status": false,
+                    "error": "AssertionError: expected 19 to equal 1259"
+                  }
+                ]
+              }
+            },
+            {
+              "index": 1,
+              "failed": true,
+              "fails": 4,
+              "features": [
+                "src/lib/tiposkripto/tests/Rectangle/README.md"
+              ],
+              "error": {
+                "message": "expected 1218 to equal 328",
+                "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+                "name": "AssertionError"
+              },
+              "stepName": "step_1",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_1",
+                "error": [
+                  {
+                    "message": "expected 1218 to equal 328",
+                    "actual": 1218,
+                    "expected": 328,
+                    "showDiff": true,
+                    "operator": "strictEqual",
+                    "name": "AssertionError",
+                    "ok": false,
+                    "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                  },
+                  "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                ],
+                "failed": true,
+                "features": [
+                  "src/lib/tiposkripto/tests/Rectangle/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 4,
+                "whens": [
+                  {
+                    "name": "setWidth: 24",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setHeight: 45",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "getWidth: 4",
+                    "status": false,
+                    "error": "AssertionError: expected 24 to equal 4"
+                  },
+                  {
+                    "name": "getHeight: 5",
+                    "status": false,
+                    "error": "AssertionError: expected 45 to equal 5"
+                  },
+                  {
+                    "name": "area: 20",
+                    "status": false,
+                    "error": "AssertionError: expected 1080 to equal 20"
+                  },
+                  {
+                    "name": "AreaPlusCircumference: 328",
+                    "status": false,
+                    "error": "AssertionError: expected 1218 to equal 328"
+                  }
+                ]
+              }
+            },
+            {
+              "index": 2,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                "src/lib/tiposkripto/README.md"
+              ],
+              "error": null,
+              "stepName": "step_2",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_2",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 33",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 132",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 3,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                "src/lib/tiposkripto/README.md"
+              ],
+              "error": null,
+              "stepName": "step_3",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_3",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [],
+                "thens": [
+                  {
+                    "name": "getWidth: 2",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 2",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 4,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_4",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_4",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 5",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 5",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 25",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 5,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_5",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_5",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 6",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 6",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 36",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 6,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_6",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_6",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [],
+                "thens": [
+                  {
+                    "name": "getWidth: 2",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 2",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 7,
+            "passed": 2,
+            "failed": 5,
+            "successRate": "28.57%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.904Z"
       }
     },
     {
       "id": "check_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "label": "check: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "timestamp": "2026-04-15T14:25:43.291Z",
+      "timestamp": "2026-04-16T01:19:41.887Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -385,17 +903,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -403,13 +913,371 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T14:25:43.291Z"
+        "startTime": "2026-04-16T01:19:41.887Z",
+        "finishedAt": "2026-04-16T01:19:48.904Z",
+        "testResults": {
+          "failed": true,
+          "fails": 5,
+          "artifacts": [],
+          "features": [
+            "https://api.github.com/repos/adamwong246/testeranto/issues/88",
+            "src/lib/tiposkripto/tests/Rectangle/README.md",
+            "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+            "src/lib/tiposkripto/README.md"
+          ],
+          "tests": 7,
+          "runTimeTests": 7,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302387283,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+              ],
+              "error": {
+                "message": "expected 19 to equal 1259",
+                "stack": "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+                "name": "AssertionError"
+              },
+              "stepName": "step_0",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_0",
+                "error": [
+                  {
+                    "message": "expected 19 to equal 1259",
+                    "actual": 19,
+                    "expected": 1259,
+                    "showDiff": true,
+                    "operator": "strictEqual",
+                    "name": "AssertionError",
+                    "ok": false,
+                    "stack": "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                  },
+                  "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                ],
+                "failed": true,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 1,
+                "whens": [
+                  {
+                    "name": "setWidth: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setHeight: 19",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "getWidth: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 1259",
+                    "status": false,
+                    "error": "AssertionError: expected 19 to equal 1259"
+                  }
+                ]
+              }
+            },
+            {
+              "index": 1,
+              "failed": true,
+              "fails": 4,
+              "features": [
+                "src/lib/tiposkripto/tests/Rectangle/README.md"
+              ],
+              "error": {
+                "message": "expected 1218 to equal 328",
+                "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+                "name": "AssertionError"
+              },
+              "stepName": "step_1",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_1",
+                "error": [
+                  {
+                    "message": "expected 1218 to equal 328",
+                    "actual": 1218,
+                    "expected": 328,
+                    "showDiff": true,
+                    "operator": "strictEqual",
+                    "name": "AssertionError",
+                    "ok": false,
+                    "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                  },
+                  "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                ],
+                "failed": true,
+                "features": [
+                  "src/lib/tiposkripto/tests/Rectangle/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 4,
+                "whens": [
+                  {
+                    "name": "setWidth: 24",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setHeight: 45",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "getWidth: 4",
+                    "status": false,
+                    "error": "AssertionError: expected 24 to equal 4"
+                  },
+                  {
+                    "name": "getHeight: 5",
+                    "status": false,
+                    "error": "AssertionError: expected 45 to equal 5"
+                  },
+                  {
+                    "name": "area: 20",
+                    "status": false,
+                    "error": "AssertionError: expected 1080 to equal 20"
+                  },
+                  {
+                    "name": "AreaPlusCircumference: 328",
+                    "status": false,
+                    "error": "AssertionError: expected 1218 to equal 328"
+                  }
+                ]
+              }
+            },
+            {
+              "index": 2,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                "src/lib/tiposkripto/README.md"
+              ],
+              "error": null,
+              "stepName": "step_2",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_2",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 33",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 132",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 3,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                "src/lib/tiposkripto/README.md"
+              ],
+              "error": null,
+              "stepName": "step_3",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_3",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [],
+                "thens": [
+                  {
+                    "name": "getWidth: 2",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 2",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 4,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_4",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_4",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 5",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 5",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 25",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 5,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_5",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_5",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 6",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 6",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 36",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 6,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_6",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_6",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [],
+                "thens": [
+                  {
+                    "name": "getWidth: 2",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 2",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 7,
+            "passed": 2,
+            "failed": 5,
+            "successRate": "28.57%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.904Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "label": "aider: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "timestamp": "2026-04-15T14:25:43.292Z",
+      "timestamp": "2026-04-16T01:19:41.889Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
@@ -421,17 +1289,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -439,13 +1299,371 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.292Z"
+        "startTime": "2026-04-16T01:19:41.889Z",
+        "finishedAt": "2026-04-16T01:19:48.904Z",
+        "testResults": {
+          "failed": true,
+          "fails": 5,
+          "artifacts": [],
+          "features": [
+            "https://api.github.com/repos/adamwong246/testeranto/issues/88",
+            "src/lib/tiposkripto/tests/Rectangle/README.md",
+            "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+            "src/lib/tiposkripto/README.md"
+          ],
+          "tests": 7,
+          "runTimeTests": 7,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1776302387283,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+              ],
+              "error": {
+                "message": "expected 19 to equal 1259",
+                "stack": "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+                "name": "AssertionError"
+              },
+              "stepName": "step_0",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_0",
+                "error": [
+                  {
+                    "message": "expected 19 to equal 1259",
+                    "actual": 19,
+                    "expected": 1259,
+                    "showDiff": true,
+                    "operator": "strictEqual",
+                    "name": "AssertionError",
+                    "ok": false,
+                    "stack": "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                  },
+                  "AssertionError: expected 19 to equal 1259\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                ],
+                "failed": true,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 1,
+                "whens": [
+                  {
+                    "name": "setWidth: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setHeight: 19",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "getWidth: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 1259",
+                    "status": false,
+                    "error": "AssertionError: expected 19 to equal 1259"
+                  }
+                ]
+              }
+            },
+            {
+              "index": 1,
+              "failed": true,
+              "fails": 4,
+              "features": [
+                "src/lib/tiposkripto/tests/Rectangle/README.md"
+              ],
+              "error": {
+                "message": "expected 1218 to equal 328",
+                "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+                "name": "AssertionError"
+              },
+              "stepName": "step_1",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_1",
+                "error": [
+                  {
+                    "message": "expected 1218 to equal 328",
+                    "actual": 1218,
+                    "expected": 328,
+                    "showDiff": true,
+                    "operator": "strictEqual",
+                    "name": "AssertionError",
+                    "ok": false,
+                    "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                  },
+                  "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                ],
+                "failed": true,
+                "features": [
+                  "src/lib/tiposkripto/tests/Rectangle/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 4,
+                "whens": [
+                  {
+                    "name": "setWidth: 24",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setHeight: 45",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "getWidth: 4",
+                    "status": false,
+                    "error": "AssertionError: expected 24 to equal 4"
+                  },
+                  {
+                    "name": "getHeight: 5",
+                    "status": false,
+                    "error": "AssertionError: expected 45 to equal 5"
+                  },
+                  {
+                    "name": "area: 20",
+                    "status": false,
+                    "error": "AssertionError: expected 1080 to equal 20"
+                  },
+                  {
+                    "name": "AreaPlusCircumference: 328",
+                    "status": false,
+                    "error": "AssertionError: expected 1218 to equal 328"
+                  }
+                ]
+              }
+            },
+            {
+              "index": 2,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                "src/lib/tiposkripto/README.md"
+              ],
+              "error": null,
+              "stepName": "step_2",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_2",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 33",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 132",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 3,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                "src/lib/tiposkripto/README.md"
+              ],
+              "error": null,
+              "stepName": "step_3",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_3",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [],
+                "thens": [
+                  {
+                    "name": "getWidth: 2",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 2",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 4,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_4",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_4",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 5",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 5",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 25",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 5,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_5",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_5",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 6",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 6",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 36",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 6,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_6",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_6",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [],
+                "thens": [
+                  {
+                    "name": "getWidth: 2",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 2",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 7,
+            "passed": 2,
+            "failed": 5,
+            "successRate": "28.57%"
+          }
+        },
+        "updatedAt": "2026-04-16T01:19:48.904Z"
       }
     },
     {
       "id": "bdd_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "label": "bdd: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-      "timestamp": "2026-04-15T14:25:43.293Z",
+      "timestamp": "2026-04-16T01:19:41.891Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -457,17 +1675,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -475,13 +1685,13 @@
         },
         "status": "todo",
         "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.293Z"
+        "startTime": "2026-04-16T01:19:41.891Z"
       }
     },
     {
       "id": "check_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "label": "check: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-      "timestamp": "2026-04-15T14:25:43.294Z",
+      "timestamp": "2026-04-16T01:19:41.892Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -493,17 +1703,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -511,13 +1713,13 @@
         },
         "status": "todo",
         "processType": "check",
-        "startTime": "2026-04-15T14:25:43.294Z"
+        "startTime": "2026-04-16T01:19:41.892Z"
       }
     },
     {
       "id": "aider_process:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
       "label": "aider: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-      "timestamp": "2026-04-15T14:25:43.295Z",
+      "timestamp": "2026-04-16T01:19:41.894Z",
       "metadata": {
         "runtime": "node",
         "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
@@ -529,17 +1731,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -547,445 +1741,13 @@
         },
         "status": "todo",
         "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.295Z"
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "label": "bdd: src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "timestamp": "2026-04-15T14:25:43.296Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.296Z"
-      }
-    },
-    {
-      "id": "check_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "label": "check: src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "timestamp": "2026-04-15T14:25:43.297Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "check",
-        "startTime": "2026-04-15T14:25:43.297Z"
-      }
-    },
-    {
-      "id": "aider_process:nodetests:src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "label": "aider: src/vscode/providers/logic/FileTreeLogic.test.ts",
-      "timestamp": "2026-04-15T14:25:43.298Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/logic/FileTreeLogic.test.ts",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.298Z"
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "label": "bdd: src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "timestamp": "2026-04-15T14:25:43.299Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.299Z"
-      }
-    },
-    {
-      "id": "check_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "label": "check: src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "timestamp": "2026-04-15T14:25:43.300Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "check",
-        "startTime": "2026-04-15T14:25:43.300Z"
-      }
-    },
-    {
-      "id": "aider_process:nodetests:src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "label": "aider: src/vscode/providers/utils/testTree/treeFilter.test.ts",
-      "timestamp": "2026-04-15T14:25:43.301Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.301Z"
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
-      "label": "bdd: src/vscode/providers/utils/testTree/debugTest.js",
-      "timestamp": "2026-04-15T14:25:43.302Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/utils/testTree/debugTest.js",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.302Z"
-      }
-    },
-    {
-      "id": "check_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
-      "label": "check: src/vscode/providers/utils/testTree/debugTest.js",
-      "timestamp": "2026-04-15T14:25:43.303Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/utils/testTree/debugTest.js",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "check",
-        "startTime": "2026-04-15T14:25:43.303Z"
-      }
-    },
-    {
-      "id": "aider_process:nodetests:src/vscode/providers/utils/testTree/debugTest.js",
-      "label": "aider: src/vscode/providers/utils/testTree/debugTest.js",
-      "timestamp": "2026-04-15T14:25:43.304Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/vscode/providers/utils/testTree/debugTest.js",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.304Z"
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "label": "bdd: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "timestamp": "2026-04-15T14:25:43.305Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.305Z"
-      }
-    },
-    {
-      "id": "check_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "label": "check: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "timestamp": "2026-04-15T14:25:43.306Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "check",
-        "startTime": "2026-04-15T14:25:43.306Z"
-      }
-    },
-    {
-      "id": "aider_process:nodetests:src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "label": "aider: src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-      "timestamp": "2026-04-15T14:25:43.311Z",
-      "metadata": {
-        "runtime": "node",
-        "testName": "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
-        "configKey": "nodetests",
-        "configValue": {
-          "runtime": "node",
-          "tests": [
-            "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-            "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-            "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
-          "buildOptions": "testeranto/runtimes/node/node.mjs",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.311Z"
+        "startTime": "2026-04-16T01:19:41.894Z"
       }
     },
     {
       "id": "builder_process:nodetests:builder",
       "label": "builder: builder",
-      "timestamp": "2026-04-15T14:25:43.313Z",
+      "timestamp": "2026-04-16T01:19:41.895Z",
       "metadata": {
         "runtime": "node",
         "testName": "builder",
@@ -997,17 +1759,9 @@
             "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
             "src/lib/tiposkripto/tests/circle/Circle.test.ts",
             "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
-            "src/vscode/providers/logic/FileTreeLogic.test.ts",
-            "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-            "src/vscode/providers/utils/testTree/debugTest.js",
-            "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts."
+            "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
           ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
+          "checks": [],
           "dockerfile": "testeranto/runtimes/node/node.Dockerfile",
           "buildOptions": "testeranto/runtimes/node/node.mjs",
           "buildKitOptions": {},
@@ -1015,350 +1769,34 @@
         },
         "status": "todo",
         "processType": "builder",
-        "startTime": "2026-04-15T14:25:43.313Z"
-      }
-    },
-    {
-      "id": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "timestamp": "2026-04-15T14:25:43.314Z",
-      "metadata": {
-        "runtime": "web",
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-        "configKey": "webtests",
-        "configValue": {
-          "runtime": "web",
-          "tests": [
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
-          ],
-          "checks": [
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
-          "buildOptions": "testeranto/runtimes/web/web.ts",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.314Z"
-      }
-    },
-    {
-      "id": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "timestamp": "2026-04-15T14:25:43.315Z",
-      "metadata": {
-        "runtime": "web",
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-        "configKey": "webtests",
-        "configValue": {
-          "runtime": "web",
-          "tests": [
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
-          ],
-          "checks": [
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
-          "buildOptions": "testeranto/runtimes/web/web.ts",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "check",
-        "startTime": "2026-04-15T14:25:43.315Z"
-      }
-    },
-    {
-      "id": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-      "timestamp": "2026-04-15T14:25:43.316Z",
-      "metadata": {
-        "runtime": "web",
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-        "configKey": "webtests",
-        "configValue": {
-          "runtime": "web",
-          "tests": [
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
-          ],
-          "checks": [
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
-          "buildOptions": "testeranto/runtimes/web/web.ts",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.316Z"
-      }
-    },
-    {
-      "id": "bdd_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "label": "bdd: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "timestamp": "2026-04-15T14:25:43.317Z",
-      "metadata": {
-        "runtime": "web",
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-        "configKey": "webtests",
-        "configValue": {
-          "runtime": "web",
-          "tests": [
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
-          ],
-          "checks": [
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
-          "buildOptions": "testeranto/runtimes/web/web.ts",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.317Z"
-      }
-    },
-    {
-      "id": "check_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "label": "check: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "timestamp": "2026-04-15T14:25:43.318Z",
-      "metadata": {
-        "runtime": "web",
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-        "configKey": "webtests",
-        "configValue": {
-          "runtime": "web",
-          "tests": [
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
-          ],
-          "checks": [
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
-          "buildOptions": "testeranto/runtimes/web/web.ts",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "check",
-        "startTime": "2026-04-15T14:25:43.318Z"
-      }
-    },
-    {
-      "id": "aider_process:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "label": "aider: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-      "timestamp": "2026-04-15T14:25:43.325Z",
-      "metadata": {
-        "runtime": "web",
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-        "configKey": "webtests",
-        "configValue": {
-          "runtime": "web",
-          "tests": [
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
-          ],
-          "checks": [
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
-          "buildOptions": "testeranto/runtimes/web/web.ts",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.325Z"
-      }
-    },
-    {
-      "id": "builder_process:webtests:builder",
-      "label": "builder: builder",
-      "timestamp": "2026-04-15T14:25:43.326Z",
-      "metadata": {
-        "runtime": "web",
-        "testName": "builder",
-        "configKey": "webtests",
-        "configValue": {
-          "runtime": "web",
-          "tests": [
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-            "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
-          ],
-          "checks": [
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/web/web.Dockerfile",
-          "buildOptions": "testeranto/runtimes/web/web.ts",
-          "buildKitOptions": {},
-          "outputs": []
-        },
-        "status": "todo",
-        "processType": "builder",
-        "startTime": "2026-04-15T14:25:43.326Z"
-      }
-    },
-    {
-      "id": "bdd_process:pythontests:src/lib/pitono/examples/calculator_test.py",
-      "label": "bdd: src/lib/pitono/examples/calculator_test.py",
-      "timestamp": "2026-04-15T14:25:43.327Z",
-      "metadata": {
-        "runtime": "python",
-        "testName": "src/lib/pitono/examples/calculator_test.py",
-        "configKey": "pythontests",
-        "configValue": {
-          "runtime": "python",
-          "tests": [
-            "src/lib/pitono/examples/calculator_test.py"
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
-          "buildOptions": "testeranto/runtimes/python/python.py",
-          "buildKitOptions": {},
-          "outputs": [
-            "testeranto/reports/pythontests"
-          ]
-        },
-        "status": "todo",
-        "processType": "bdd",
-        "startTime": "2026-04-15T14:25:43.327Z"
-      }
-    },
-    {
-      "id": "check_process:pythontests:src/lib/pitono/examples/calculator_test.py",
-      "label": "check: src/lib/pitono/examples/calculator_test.py",
-      "timestamp": "2026-04-15T14:25:43.328Z",
-      "metadata": {
-        "runtime": "python",
-        "testName": "src/lib/pitono/examples/calculator_test.py",
-        "configKey": "pythontests",
-        "configValue": {
-          "runtime": "python",
-          "tests": [
-            "src/lib/pitono/examples/calculator_test.py"
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
-          "buildOptions": "testeranto/runtimes/python/python.py",
-          "buildKitOptions": {},
-          "outputs": [
-            "testeranto/reports/pythontests"
-          ]
-        },
-        "status": "todo",
-        "processType": "check",
-        "startTime": "2026-04-15T14:25:43.328Z"
-      }
-    },
-    {
-      "id": "aider_process:pythontests:src/lib/pitono/examples/calculator_test.py",
-      "label": "aider: src/lib/pitono/examples/calculator_test.py",
-      "timestamp": "2026-04-15T14:25:43.329Z",
-      "metadata": {
-        "runtime": "python",
-        "testName": "src/lib/pitono/examples/calculator_test.py",
-        "configKey": "pythontests",
-        "configValue": {
-          "runtime": "python",
-          "tests": [
-            "src/lib/pitono/examples/calculator_test.py"
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
-          "buildOptions": "testeranto/runtimes/python/python.py",
-          "buildKitOptions": {},
-          "outputs": [
-            "testeranto/reports/pythontests"
-          ]
-        },
-        "status": "todo",
-        "processType": "aider",
-        "startTime": "2026-04-15T14:25:43.329Z"
-      }
-    },
-    {
-      "id": "builder_process:pythontests:builder",
-      "label": "builder: builder",
-      "timestamp": "2026-04-15T14:25:43.331Z",
-      "metadata": {
-        "runtime": "python",
-        "testName": "builder",
-        "configKey": "pythontests",
-        "configValue": {
-          "runtime": "python",
-          "tests": [
-            "src/lib/pitono/examples/calculator_test.py"
-          ],
-          "checks": [
-            null,
-            null,
-            null
-          ],
-          "dockerfile": "testeranto/runtimes/python/python.Dockerfile",
-          "buildOptions": "testeranto/runtimes/python/python.py",
-          "buildKitOptions": {},
-          "outputs": [
-            "testeranto/reports/pythontests"
-          ]
-        },
-        "status": "todo",
-        "processType": "builder",
-        "startTime": "2026-04-15T14:25:43.331Z"
+        "startTime": "2026-04-16T01:19:41.895Z"
       }
     },
     {
       "id": "aider_process:agent:prodirek",
       "label": "aider: prodirek",
-      "timestamp": "2026-04-15T14:26:01.647Z",
+      "timestamp": "2026-04-16T01:19:45.521Z",
       "metadata": {
-        "containerId": "0c6d1aa52168bde5949e8d99831e42d306b373af5745d7a214b4267864f75374",
+        "containerId": "f1e3dc61539b6ec995cc267a6084f92f2ea59532443606fad4f761ee4e29016e",
         "serviceName": "agent-prodirek",
         "containerStatus": "running",
-        "updatedAt": "2026-04-15T14:26:02.211Z",
+        "updatedAt": "2026-04-16T01:19:45.964Z",
         "status": "running"
       }
     },
     {
       "id": "aider_process:agent:arko",
       "label": "aider: arko",
-      "timestamp": "2026-04-15T14:26:01.649Z",
+      "timestamp": "2026-04-16T01:19:45.531Z",
       "metadata": {
-        "containerId": "864cea8d4c0784d8eeef637a46867b5845f5ee4b66645c8cdc402b1df3148598",
+        "containerId": "e7ec173b361e9b78877eb54def1e9026d4a133933c2d38de3ad1ce09604f00bb",
         "serviceName": "agent-arko",
         "containerStatus": "running",
-        "updatedAt": "2026-04-15T14:26:02.265Z",
+        "updatedAt": "2026-04-16T01:19:46.040Z",
         "status": "running"
       }
     }
   ],
   "viewType": "gantt",
-  "timestamp": "2026-04-15T14:27:10.406Z"
+  "timestamp": "2026-04-16T01:19:54.340Z"
 }

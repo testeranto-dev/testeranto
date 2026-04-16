@@ -37,6 +37,12 @@ export abstract class Server_Docker_Compose extends Server_Docker_Test {
     );
   }
 
+
+  async start(): Promise<void> {
+    console.log("mark1")
+    await super.start();
+  }
+
   generateServices(): Record<string, any> {
     return generateServicesPureUtil(this.configs, this.mode);
   }

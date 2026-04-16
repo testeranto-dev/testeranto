@@ -39,16 +39,16 @@ export const RectangleTesterantoBaseTestSpecification: ITestSpecification<
   return [
     Given.Default(undefined)(
       [When.setWidth(4), When.setHeight(19)],
-      [Then.getWidth(4), Then.getHeight(19)],
-      ["https://api.github.com/repos/adamwong246/testeranto/issues/888"],
+      [Then.getWidth(4), Then.getHeight(1529)],
+      ["https://api.github.com/repos/adamwong246/testeranto/issues/88"],
     ),
     Given.Default(undefined)(
-      [When.setWidth(4), When.setHeight(5)],
+      [When.setWidth(24), When.setHeight(45)],
       [
         Then.getWidth(4),
         Then.getHeight(5),
         Then.area(20),
-        Then.AreaPlusCircumference(38),
+        Then.AreaPlusCircumference(328),
       ],
       [
         "src/lib/tiposkripto/tests/Rectangle/README.md"

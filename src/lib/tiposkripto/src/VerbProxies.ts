@@ -213,12 +213,17 @@ export class VerbProxies<I extends Ibdd_in_any> {
 
   Confirm(): Record<string, any> {
     const overrides = this.confirmsOverrides || {};
+    console.log('Confirm overrides:', Object.keys(overrides));
     return new Proxy(overrides, {
       get(target, prop) {
         if (typeof prop === 'string') {
+          console.log(`Confirm.${prop} accessed`);
           if (prop in target) {
-            return target[prop];
+            const val = target[prop];
+            console.log(`Confirm.${prop} found:`, typeof val);
+            return val;
           } else {
+            console.log(`Confirm.${prop} not found`);
             return (testCases: any[][], features: string[]) => {
               console.error(`Confirm.${prop} is not defined in test implementation`);
               return new (class extends BaseConfirm<I> {

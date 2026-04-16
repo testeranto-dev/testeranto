@@ -145,10 +145,14 @@ export class ClassyImplementations<I extends Ibdd_in_any> {
   ): Record<string, any> {
     const classyConfirms: Record<string, any> = {};
     if (testImplementation.confirms) {
+      console.log('Creating confirms:', Object.keys(testImplementation.confirms));
       Object.entries(testImplementation.confirms).forEach(([key, val]) => {
+        console.log(`Creating confirm for key: ${key}`);
         classyConfirms[key] = (testCases: any[][], features: string[]) => {
+          console.log(`Confirm.${key} called with testCases:`, testCases);
           // Trust the type contract: val is a function that returns the confirmCB
           const actualConfirmCB = val();
+          console.log(`Confirm.${key} actualConfirmCB:`, typeof actualConfirmCB);
           return new BaseConfirm<I>(
             features,
             testCases,
@@ -157,6 +161,8 @@ export class ClassyImplementations<I extends Ibdd_in_any> {
           );
         };
       });
+    } else {
+      console.log('No confirms in testImplementation');
     }
     return classyConfirms;
   }

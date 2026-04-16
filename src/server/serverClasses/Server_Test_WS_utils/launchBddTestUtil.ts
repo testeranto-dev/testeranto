@@ -123,8 +123,8 @@ export async function launchBddTestUtil(
     throw error;
   }
 
-  // Start service logging
-  await startServiceLogging(`${configKey}-bdd`, runtime as string, configKey, testName);
+  // Start service logging with the actual service name
+  await startServiceLogging(serviceName, runtime as string, configKey, testName);
 
   // Write config for extension
   writeConfigForExtension();

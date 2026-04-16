@@ -7,31 +7,29 @@ import { serveStaticFile } from "./Server_Http/serveStaticFile";
 export abstract class Server_HTTP_Graph extends Server_Graph {
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
-    // Pass dummy functions that don't reference `this`
+    // We need to pass a proper resourceChanged callback to the parent
+    // But we can't reference `this` before super()
+    // So we'll pass a dummy function first, then override it
     super(configs, mode, () => ({}), process.cwd(), undefined);
-
-    // Now that super() has been called, we can safely set the callbacks
-    // TypeScript doesn't allow assigning to protected properties from outside,
-    // but we can cast to any to bypass.
-    // However, the parent class stores them as protected properties.
-    // We need to override the methods that these callbacks point to.
-    // Actually, the parent class uses these callbacks via `this.getCurrentTestResults` and `this.resourceChanged`.
-    // Since we're in the derived class, we can override the methods directly.
-    // But note: the parent class stores them as properties, not methods.
-    // Let's reassign the properties.
+    
+    // Now we need to set up the resourceChanged callback properly
+    // The parent class (Server_Graph) stores it as _resourceChangedCallback
+    // We need to set it to call our resourceChanged method
+    (this as any)._resourceChangedCallback = (path: string) => {
+      // This will be called by Server_Graph.resourceChanged()
+      // We need to ensure it triggers WebSocket notifications
+      // Since Server_HTTP_Graph extends Server_HTTP which extends Server_WS_HTTP,
+      // we can call this.resourceChanged() which will handle WebSocket
+      this.resourceChanged(path);
+    };
+    
+    // Also set up getCurrentTestResults
     (this as any).getCurrentTestResults = this.getCurrentTestResultsImpl.bind(this);
-    (this as any).resourceChanged = this.resourceChangedImpl.bind(this);
   }
 
   private getCurrentTestResultsImpl(): any {
     // Default implementation returns empty object
     return {};
-  }
-
-  private resourceChangedImpl(path: string): void {
-    // Default implementation does nothing
-    // Subclasses can override the resourceChanged method
-    // which will be called via the callback
   }
 
   async start(): Promise<void> {

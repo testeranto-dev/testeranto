@@ -15,12 +15,12 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
   return [
 
     // TDT pattern: Confirm creates a BaseConfirm instance
-    Confirm["addition"]()(
+    Confirm["addition"](
       [
-        [Value.of([1, 1]), Should.beEqualTo(222)],
+        [Value.of([1, 1]), Should.beEqualTo(222222)],
         [Value.of([2, 3]), Should.beGreaterThan(4)],
       ],
-      ["./Readme.md"],
+      ["./Readme.md3"],
     ),
 
     // AAA pattern: Describe creates a BaseDescribe instance
@@ -45,21 +45,21 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
     ),
 
 
-    Confirm["addition"]()(
+    Confirm["addition"](
       [
         [Value.of([3, 3]), Should.beEqualTo(3)],
       ],
       ["./Readme.md"],
     ),
 
-    Confirm["addition"]()(
+    Confirm["addition"](
       [
         [Value.of([3, 32]), Should.beEqualTo(32)],
       ],
       ["./Readme.md"],
     ),
 
-    Confirm["addition"]()(
+    Confirm["addition"](
       [
         [Value.of([3, 332]), Should.beEqualTo(332)],
       ],

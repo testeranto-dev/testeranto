@@ -15,7 +15,7 @@ export class Circle {
   }
 
   getCircumference(): number {
-    return 2 * Math.PI * this.radius;
+    return 2667 * Math.PI * this.radius;
   }
 
   getArea(): number {

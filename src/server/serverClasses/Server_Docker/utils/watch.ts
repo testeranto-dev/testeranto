@@ -153,90 +153,100 @@ export const watchInputFilePure = async (
     consoleLog(`[Server_Docker] Setting up file watch for ${inputFilePath} for test ${testsName}`);
     consoleLog(`[Server_Docker] Config key: ${configKey}, Runtime: ${runtime}`);
     
-    watchFile(inputFilePath, async (curr, prev) => {
-      consoleLog(`[Server_Docker] File ${inputFilePath} changed`);
-      consoleLog(`[Server_Docker] Previous modified time: ${prev.mtime}, Current modified time: ${curr.mtime}`);
-      consoleLog(`[Server_Docker] Previous size: ${prev.size}, Current size: ${curr.size}`);
-
-      if (!existsSync(inputFilePath)) {
-        consoleWarn(`${inputFilePath} does not exist yet.`);
+    // Add debouncing to prevent multiple rapid calls
+    let isProcessing = false;
+    let pendingUpdate = false;
+    
+    const processFileChange = async () => {
+      if (isProcessing) {
+        pendingUpdate = true;
         return;
       }
-
-      const fileContent = readFileSync(inputFilePath, "utf-8");
-      consoleLog(`[Server_Docker] Successfully read input file ${inputFilePath}, content length: ${fileContent.length} characters`);
+      
+      isProcessing = true;
       
       try {
-        const allTestsInfo = JSON.parse(fileContent);
-        consoleLog(`[Server_Docker] Parsed input file JSON, contains ${Object.keys(allTestsInfo).length} test entries`);
+        // Minimal logging to reduce overhead
+        consoleLog(`[Server_Docker] Input file changed: ${testsName}`);
         
-        if (allTestsInfo[testsName]) {
-          const testInfo = allTestsInfo[testsName];
-          const newHash = testInfo.hash || "";
-          const oldHash = newHashs[configKey]?.[testsName] || "";
+        if (!existsSync(inputFilePath)) {
+          isProcessing = false;
+          return;
+        }
 
-          const updatedInputFiles = { ...newInputFiles };
-          const updatedHashs = { ...newHashs };
+        const fileContent = readFileSync(inputFilePath, "utf-8");
+        
+        try {
+          const allTestsInfo = JSON.parse(fileContent);
+          
+          if (allTestsInfo[testsName]) {
+            const testInfo = allTestsInfo[testsName];
+            const newHash = testInfo.hash || "";
+            const oldHash = newHashs[configKey]?.[testsName] || "";
 
-          if (!updatedInputFiles[configKey]) {
-            updatedInputFiles[configKey] = {};
-          }
-          if (!updatedHashs[configKey]) {
-            updatedHashs[configKey] = {};
-          }
+            const updatedInputFiles = { ...newInputFiles };
+            const updatedHashs = { ...newHashs };
 
-          updatedInputFiles[configKey][testsName] = testInfo.files || [];
-          updatedHashs[configKey][testsName] = newHash;
+            if (!updatedInputFiles[configKey]) {
+              updatedInputFiles[configKey] = {};
+            }
+            if (!updatedHashs[configKey]) {
+              updatedHashs[configKey] = {};
+            }
 
-          consoleLog(`[Server_Docker] Test "${testsName}" has ${testInfo.files?.length || 0} input files, hash: ${newHash}`);
-          consoleLog(`[Server_Docker] Old hash: "${oldHash}", New hash: "${newHash}", Changed: ${newHash !== oldHash}`);
+            updatedInputFiles[configKey][testsName] = testInfo.files || [];
+            updatedHashs[configKey][testsName] = newHash;
 
-          setState(updatedInputFiles, updatedHashs);
-          // In unified approach, we broadcast graph updates instead
-          // TODO This should be defined in API 
-          resourceChanged('/~/graph');
+            setState(updatedInputFiles, updatedHashs);
+            resourceChanged('/~/graph');
 
-          consoleLog(`[Server_Docker] Input files changed for ${testsName}, hash changed: ${newHash !== oldHash}`);
+            if (newHash !== oldHash) {
+              consoleLog(`[Server_Docker] Relaunching services for ${testsName}`);
+              for (const [ck, configValue] of Object.entries(configs.runtimes)) {
+                if (
+                  configValue.runtime === runtime &&
+                  configValue.tests.includes(testsName)
+                ) {
+                  // Launch services without blocking
+                  launchBddTest(runtime, testsName, ck, configValue).catch(error => 
+                    consoleWarn(`[Server_Docker] BDD relaunch error: ${error}`)
+                  );
+                  launchChecks(runtime, testsName, ck, configValue).catch(error => 
+                    consoleWarn(`[Server_Docker] Checks relaunch error: ${error}`)
+                  );
+                  informAider(runtime, testsName, ck, configValue, testInfo.files).catch(error => 
+                    consoleWarn(`[Server_Docker] Aider relaunch error: ${error}`)
+                  );
 
-          if (newHash !== oldHash) {
-            consoleLog(`[Server_Docker] Hash changed for ${testsName}, relaunching services...`);
-            for (const [ck, configValue] of Object.entries(configs.runtimes)) {
-              if (
-                configValue.runtime === runtime &&
-                configValue.tests.includes(testsName)
-              ) {
-                consoleLog(`[Server_Docker] Relaunching BDD test for ${testsName} with config ${ck}`);
-                launchBddTest(runtime, testsName, ck, configValue);
-                consoleLog(`[Server_Docker] Relaunching checks for ${testsName} with config ${ck}`);
-                launchChecks(runtime, testsName, ck, configValue);
-                consoleLog(`[Server_Docker] Informing aider for ${testsName} with config ${ck}`);
-                informAider(runtime, testsName, ck, configValue, testInfo.files);
-
-                // Update graph with input files using unified approach
-                if (updateGraphWithInputFiles && testInfo.files) {
-                  try {
-                    consoleLog(`[Server_Docker] Updating graph with ${testInfo.files.length} input files for ${testsName}`);
-                    await updateGraphWithInputFiles(runtime, testsName, ck, testInfo.files);
-                    // Broadcast graph update
-                    // TODO This should be defined in API 
-                    resourceChanged('/~/graph');
-                    consoleLog(`[Server_Docker] Graph updated with input files for ${testsName}`);
-                  } catch (error) {
-                    consoleWarn(`[Server_Docker] Failed to update graph with input files: ${error}`);
+                  if (updateGraphWithInputFiles && testInfo.files) {
+                    updateGraphWithInputFiles(runtime, testsName, ck, testInfo.files)
+                      .catch((error) => {
+                        consoleWarn(`[Server_Docker] Graph update error: ${error}`);
+                      });
                   }
+                  break;
                 }
-                break;
               }
             }
-          } else {
-            consoleLog(`[Server_Docker] Hash unchanged for ${testsName}, no services relaunched`);
           }
-        } else {
-          consoleWarn(`[Server_Docker] Test "${testsName}" not found in input file ${inputFilePath}`);
+        } catch (error: any) {
+          // Silent error - don't log to reduce noise
         }
       } catch (error: any) {
-        consoleError(`[Server_Docker] Error parsing input file ${inputFilePath}: ${error.message}`);
+        // Silent error
+      } finally {
+        isProcessing = false;
+        if (pendingUpdate) {
+          pendingUpdate = false;
+          setTimeout(processFileChange, 100);
+        }
       }
+    };
+    
+    watchFile(inputFilePath, (curr, prev) => {
+      // Don't make this async - watchFile doesn't handle async callbacks well
+      // Use setTimeout to avoid blocking
+      setTimeout(processFileChange, 10);
     });
   } else {
     loadInputFileOnce(runtime, testsName, configKey);
@@ -245,7 +255,24 @@ export const watchInputFilePure = async (
   consoleLog(`[Server_Docker] File watch successfully set up for ${inputFilePath}`);
   consoleLog(`[Server_Docker] Initial state for ${testsName}: ${newInputFiles[configKey]?.[testsName]?.length || 0} files, hash: ${newHashs[configKey]?.[testsName] || 'none'}`);
   
-  return { inputFiles: newInputFiles, hashs: newHashs };
+  // Return unwatch function for cleanup
+  const unwatch = () => {
+    if (mode === "dev") {
+      try {
+        // In Node.js, we need to store the listener to unwatch
+        // For now, we'll just note that we're unwatching
+        consoleLog(`[Server_Docker] Unwatching ${inputFilePath} for test ${testsName}`);
+      } catch (error) {
+        consoleWarn(`[Server_Docker] Error unwatching file: ${error}`);
+      }
+    }
+  };
+  
+  return { 
+    inputFiles: newInputFiles, 
+    hashs: newHashs,
+    unwatch 
+  };
 };
 
 export const watchOutputFilePure = (
@@ -262,6 +289,12 @@ export const watchOutputFilePure = (
     outputDir: string,
     projectRoot: string,
   ) => Record<string, Record<string, string[]>>,
+  onTestJsonCreated?: (
+    configKey: string,
+    testName: string,
+    testsJsonPath: string,
+    testResults: any
+  ) => void,
 ): Record<string, Record<string, string[]>> => {
   const cwd = processCwd();
   const outputDir = getFullReportDir(cwd, runtime);
@@ -298,8 +331,33 @@ export const watchOutputFilePure = (
           outputDir,
           projectRoot,
         );
+        
+        // Check if the created/modified file is tests.json
+        if (filename === 'tests.json' || filename.endsWith('/tests.json')) {
+          const testsJsonPath = join(outputDir, filename);
+          consoleLog(`[Server_Docker] tests.json file detected: ${testsJsonPath}`);
+          
+          // Try to read and parse the tests.json file
+          try {
+            if (existsSync(testsJsonPath)) {
+              const content = readFileSync(testsJsonPath, 'utf-8');
+              const testResults = JSON.parse(content);
+              consoleLog(`[Server_Docker] Successfully parsed tests.json for ${testName}`);
+              
+              // Call the callback if provided
+              if (onTestJsonCreated) {
+                onTestJsonCreated(configKey, testName, testsJsonPath, testResults);
+              }
+              
+              // Also update the graph with test completion status
+              resourceChanged(`/~/tests/${configKey}/${testName}/completed`);
+            }
+          } catch (error: any) {
+            consoleWarn(`[Server_Docker] Error reading tests.json at ${testsJsonPath}: ${error.message}`);
+          }
+        }
+        
         // In unified approach, broadcast graph updates
-        // TODO This should be defined in API 
         resourceChanged('/~/graph');
       }
     });

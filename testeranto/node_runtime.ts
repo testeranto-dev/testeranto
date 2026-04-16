@@ -473,11 +473,23 @@ async function computeFilesHash(files) {
   }
   return hash.digest("hex");
 }
+function isLocalSourceFile(filePath, workspaceRoot = "/workspace") {
+  const normalizedPath = path.normalize(filePath);
+  if (normalizedPath.includes("node_modules")) {
+    return false;
+  }
+  const absolutePath = path.isAbsolute(normalizedPath) ? normalizedPath : path.resolve(process.cwd(), normalizedPath);
+  if (!absolutePath.startsWith(workspaceRoot)) {
+    return false;
+  }
+  return true;
+}
 async function processMetafile(config, metafile, runtime, configKey) {
   if (!metafile || !metafile.outputs) {
     return;
   }
   const allTestsInfo = {};
+  const workspaceRoot = "/workspace";
   for (const [outputFile, outputInfo] of Object.entries(metafile.outputs)) {
     let collectFileDependencies2 = function(filePath) {
       if (collectedFiles.has(filePath)) {
@@ -508,8 +520,7 @@ async function processMetafile(config, metafile, runtime, configKey) {
     }
     const allInputFiles = Array.from(collectedFiles).map(
       (filePath) => path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath)
-    );
-    const workspaceRoot = "/workspace";
+    ).filter((filePath) => isLocalSourceFile(filePath, workspaceRoot));
     const relativeFiles = allInputFiles.map((file) => {
       const absolutePath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file);
       if (absolutePath.startsWith(workspaceRoot)) {
@@ -522,7 +533,7 @@ async function processMetafile(config, metafile, runtime, configKey) {
       hash,
       files: relativeFiles
     };
-    console.log(`[${runtime} Builder] Processed ${entryPoint}: ${relativeFiles.length} files, hash: ${hash}`);
+    console.log(`[${runtime} Builder] Processed ${entryPoint}: ${relativeFiles.length} local files (filtered), hash: ${hash}`);
   }
   const bundlesDir = `testeranto/bundles/${configKey}`;
   if (!fs.existsSync(bundlesDir)) {

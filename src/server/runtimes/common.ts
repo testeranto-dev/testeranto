@@ -31,7 +31,7 @@ export async function computeFilesHash(files: string[]): Promise<string> {
   return hash.digest('hex');
 }
 
-// Extract input files from metafile recursively
+// Extract input files from metafile recursively, filtering out external dependencies
 export function extractInputFilesFromMetafile(metafile: any): string[] {
   const files: Set<string> = new Set();
 
@@ -72,10 +72,41 @@ export function extractInputFilesFromMetafile(metafile: any): string[] {
     collectDependencies(filePath);
   }
 
-  // Convert to absolute paths
-  return Array.from(files).map(filePath =>
-    path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath)
-  );
+  // Convert to absolute paths and filter out external dependencies
+  return Array.from(files)
+    .map(filePath =>
+      path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath)
+    )
+    .filter(filePath => {
+      // Filter out node_modules and files outside workspace
+      const normalizedPath = path.normalize(filePath);
+      if (normalizedPath.includes('node_modules')) {
+        return false;
+      }
+      // Check if within workspace (default /workspace)
+      const workspaceRoot = '/workspace';
+      return filePath.startsWith(workspaceRoot);
+    });
+}
+
+// Helper to check if a file is local source code (not external dependency)
+function isLocalSourceFile(filePath: string, workspaceRoot: string = '/workspace'): boolean {
+  const normalizedPath = path.normalize(filePath);
+  
+  // Exclude node_modules
+  if (normalizedPath.includes('node_modules')) {
+    return false;
+  }
+  
+  // Exclude files outside the workspace
+  const absolutePath = path.isAbsolute(normalizedPath) ? normalizedPath : path.resolve(process.cwd(), normalizedPath);
+  if (!absolutePath.startsWith(workspaceRoot)) {
+    return false;
+  }
+  
+  // Include only source files (could add more specific patterns if needed)
+  // For now, include all files within workspace that aren't in node_modules
+  return true;
 }
 
 export async function processMetafile(
@@ -89,6 +120,7 @@ export async function processMetafile(
   }
 
   const allTestsInfo: Record<string, { hash: string; files: string[] }> = {};
+  const workspaceRoot = '/workspace';
 
   for (const [outputFile, outputInfo] of Object.entries(metafile.outputs)) {
     const outputInfoTyped = outputInfo as any;
@@ -100,15 +132,6 @@ export async function processMetafile(
     }
 
     const entryPoint = outputInfoTyped.entryPoint;
-
-    // Only process test files (files ending with .test.ts, .test.js, .spec.ts, .spec.js)
-    // Also support additional extensions like .test.web.ts, .spec.node.js, etc.
-    // Exclude library files like src/lib/tiposkripto/Web.ts and src/lib/tiposkripto/Node.ts
-    // const isTestFile = /\.(test|spec)\.[^.]+\.(ts|js)$/.test(entryPoint) || /\.(test|spec)\.(ts|js)$/.test(entryPoint) || entryPoint.includes('.test.') || entryPoint.includes('.spec.');
-    // if (!isTestFile) {
-    //   console.log(`[${runtime} Builder] Skipping non-test entryPoint: ${entryPoint}`);
-    //   continue;
-    // }
 
     const outputInputs = outputInfoTyped.inputs || {};
 
@@ -135,20 +158,21 @@ export async function processMetafile(
       collectFileDependencies(inputFile);
     }
 
-    // Convert to absolute paths
-    const allInputFiles = Array.from(collectedFiles).map(filePath =>
-      path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath)
-    );
+    // Convert to absolute paths and filter local source files
+    const allInputFiles = Array.from(collectedFiles)
+      .map(filePath =>
+        path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath)
+      )
+      .filter(filePath => isLocalSourceFile(filePath, workspaceRoot));
 
     // Convert to relative paths from workspace root
-    const workspaceRoot = '/workspace';
     const relativeFiles = allInputFiles.map(file => {
       const absolutePath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file);
       // Make path relative to workspace root
       if (absolutePath.startsWith(workspaceRoot)) {
         return absolutePath.slice(workspaceRoot.length);
       }
-      // If not under workspace, use relative path from current directory
+      // This shouldn't happen since we filtered above, but handle just in case
       return path.relative(process.cwd(), absolutePath);
     }).filter(Boolean);
 
@@ -158,7 +182,7 @@ export async function processMetafile(
       files: relativeFiles
     };
 
-    console.log(`[${runtime} Builder] Processed ${entryPoint}: ${relativeFiles.length} files, hash: ${hash}`);
+    console.log(`[${runtime} Builder] Processed ${entryPoint}: ${relativeFiles.length} local files (filtered), hash: ${hash}`);
   }
 
   // Ensure the bundles directory exists

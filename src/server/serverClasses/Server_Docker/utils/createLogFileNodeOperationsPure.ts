@@ -1,5 +1,5 @@
-import { type GraphOperation } from '../../../../graph/index';
 import path from 'path';
+import type { GraphOperation } from '../../../../graph';
 
 // Pure function to create log file node operations
 export function createLogFileNodeOperationsPure(

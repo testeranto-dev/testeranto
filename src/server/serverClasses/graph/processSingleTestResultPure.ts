@@ -20,7 +20,13 @@ export async function processSingleTestResultPure(
   const operations: GraphOperation[] = [];
   const actualTimestamp = timestamp || new Date().toISOString();
 
-  const resultStr = JSON.stringify(singleTestResult);
+  console.log(`[processSingleTestResultPure] Starting to process test result:`, {
+    configKey: singleTestResult.configKey,
+    testName: singleTestResult.testName,
+    hasIndividualResults: singleTestResult.individualResults?.length || 0,
+    hasFeatures: singleTestResult.features?.length || 0,
+    failed: singleTestResult.failed
+  });
 
   const configKey = singleTestResult.configKey;
   const testName = singleTestResult.testName;
@@ -33,10 +39,13 @@ export async function processSingleTestResultPure(
     };
   }
 
-  const sanitizedConfigKey = configKey.replace(/[^a-zA-Z0-9:_\-.]/g, '_');
+  const sanitizedConfigKey = configKey.replace(/[^a-zA-Z00-9:_\-.]/g, '_');
+  console.log(`[processSingleTestResultPure] Sanitized config key: ${sanitizedConfigKey}`);
+  
   // Load input files from bundle if not present in test results
   let inputFiles = singleTestResult.inputFiles;
   if (!inputFiles || !Array.isArray(inputFiles)) {
+    console.log(`[processSingleTestResultPure] No input files in test result, loading from bundle`);
     inputFiles = loadInputFilesFromBundle(configKey, testName, projectRoot);
     if (inputFiles.length > 0) {
       console.log(`[processSingleTestResultPure] Augmented test result with ${inputFiles.length} input files from bundle`);
@@ -45,7 +54,11 @@ export async function processSingleTestResultPure(
         ...singleTestResult,
         inputFiles
       };
+    } else {
+      console.log(`[processSingleTestResultPure] No input files found in bundle either`);
     }
+  } else {
+    console.log(`[processSingleTestResultPure] Test result already has ${inputFiles.length} input files`);
   }
 
   const entrypointResult = createEntrypointNodeOperationsPure(
@@ -56,10 +69,17 @@ export async function processSingleTestResultPure(
     actualTimestamp
   );
 
+  console.log(`[processSingleTestResultPure] Entrypoint result:`, {
+    entrypointId: entrypointResult.entrypointId,
+    filePathForEntrypoint: entrypointResult.filePathForEntrypoint,
+    operationsCount: entrypointResult.operations.length
+  });
+
   const { entrypointId, filePathForEntrypoint, operations: entrypointOps } = entrypointResult;
 
   if (entrypointId) {
     const existingEntrypointNode = graph.hasNode(entrypointId);
+    console.log(`[processSingleTestResultPure] Entrypoint node ${entrypointId} exists: ${existingEntrypointNode}`);
 
     for (const op of entrypointOps) {
       if (op.type === 'addNode' && existingEntrypointNode) {
@@ -68,8 +88,10 @@ export async function processSingleTestResultPure(
           data: op.data,
           timestamp: op.timestamp
         });
+        console.log(`[processSingleTestResultPure] Converting addNode to updateNode for existing entrypoint`);
       } else {
         operations.push(op);
+        console.log(`[processSingleTestResultPure] Adding operation: ${op.type} for ${op.data?.id || 'unknown'}`);
       }
     }
 
@@ -103,6 +125,7 @@ export async function processSingleTestResultPure(
     }
   }
 
+  console.log(`[processSingleTestResultPure] Processing individual results...`);
   await processIndividualResultsPure(
     singleTestResult,
     sanitizedConfigKey,
@@ -114,7 +137,9 @@ export async function processSingleTestResultPure(
     operations,
     actualTimestamp
   );
+  console.log(`[processSingleTestResultPure] After processing individual results, operations count: ${operations.length}`);
 
+  console.log(`[processSingleTestResultPure] Processing top-level features...`);
   await processTopLevelFeaturesPure(
     singleTestResult,
     sanitizedConfigKey,
@@ -125,8 +150,10 @@ export async function processSingleTestResultPure(
     operations,
     actualTimestamp
   );
+  console.log(`[processSingleTestResultPure] After processing top-level features, operations count: ${operations.length}`);
 
   // Process input files (now they should be available)
+  console.log(`[processSingleTestResultPure] Processing input files (count: ${inputFiles?.length || 0})...`);
   if (inputFiles && Array.isArray(inputFiles) && inputFiles.length > 0) {
     if (entrypointId) {
       await processInputFilesForTestPure(
@@ -137,6 +164,7 @@ export async function processSingleTestResultPure(
         projectRoot,
         actualTimestamp
       );
+      console.log(`[processSingleTestResultPure] Processed ${inputFiles.length} input files`);
     } else {
       console.log(`[processSingleTestResultPure] No entrypointId, skipping input files processing`);
     }
@@ -144,6 +172,7 @@ export async function processSingleTestResultPure(
     console.log(`[processSingleTestResultPure] No input files found for test ${singleTestResult.testName}`);
   }
 
+  console.log(`[processSingleTestResultPure] Handling simple test result...`);
   await handleSimpleTestResultPure(
     singleTestResult,
     sanitizedConfigKey,
@@ -153,15 +182,23 @@ export async function processSingleTestResultPure(
     operations,
     actualTimestamp
   );
+  console.log(`[processSingleTestResultPure] After handling simple test result, operations count: ${operations.length}`);
 
+  console.log(`[processSingleTestResultPure] Finding all test nodes...`);
   const allTestNodes = graph.nodes().filter(nodeId => {
     const attrs = graph.getNodeAttributes(nodeId);
-    return attrs.type === 'test' &&
+    const isTest = attrs.type === 'test' &&
       attrs.metadata?.configKey === sanitizedConfigKey &&
       attrs.metadata?.testName === filePathForEntrypoint;
+    if (isTest) {
+      console.log(`[processSingleTestResultPure] Found test node: ${nodeId}`);
+    }
+    return isTest;
   });
+  console.log(`[processSingleTestResultPure] Found ${allTestNodes.length} test nodes`);
 
   if (entrypointId) {
+    console.log(`[processSingleTestResultPure] Connecting ${allTestNodes.length} test nodes to entrypoint ${entrypointId}`);
     const connectionOps = connectAllTestsToEntrypointPure(
       entrypointId,
       allTestNodes,
@@ -173,11 +210,17 @@ export async function processSingleTestResultPure(
         const edgeExists = graph.hasEdge(op.data.source, op.data.target);
         if (!edgeExists) {
           operations.push(op);
+          console.log(`[processSingleTestResultPure] Adding edge from ${op.data.source} to ${op.data.target}`);
+        } else {
+          console.log(`[processSingleTestResultPure] Edge already exists from ${op.data.source} to ${op.data.target}`);
         }
       }
     }
   }
 
+  console.log(`[processSingleTestResultPure] Completed processing. Total operations: ${operations.length}`);
+  console.log(`[processSingleTestResultPure] Operation types:`, operations.map(op => op.type));
+  
   return {
     operations,
     timestamp: actualTimestamp

@@ -1,5 +1,5 @@
-=== Log started at 2026-04-15T14:26:18.028Z for service webtests-builder (runtime: web) ===
-=== Container ID: 12bc287acb87573ba3755878697fbdcd6684f9b7f3047cb17e79619b1c22c6c7 ===
+=== Log started at 2026-04-15T18:38:37.190Z for service webtests-builder (runtime: web) ===
+=== Container ID: dd78609412fce7761483534fba1ae757894f18f9aea8ad7edcc3ec7293b8e195 ===
 === Test: N/A ===
 === Config Key: webtests ===
 
@@ -46,15 +46,15 @@ $ /workspace/node_modules/.bin/tsx /workspace/testeranto/web_runtime.ts /workspa
   You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
 
 web > build ended with 0 errors
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 80b290d5cf8fe31ddac4d9c50e8838e8
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 17885f7cd10be1b333fb58083729f661
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: c441891678c8e56fa7f8f9cb01417323
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 7 local files (filtered), hash: 6f2ec0083e92f6ecdbac2e25a81562d7
 [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
 [WEB BUILDER] Metafile updated
 [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 80b290d5cf8fe31ddac4d9c50e8838e8
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 17885f7cd10be1b333fb58083729f661
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: c441891678c8e56fa7f8f9cb01417323
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 7 local files (filtered), hash: 6f2ec0083e92f6ecdbac2e25a81562d7
 [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
-[WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.35, port 8000, /workspace
+[WEB BUILDER]: esbuild server listening on 127.0.0.1,172.18.0.48, port 8000, /workspace
 [WEB BUILDER] Watch mode active - waiting for file changes...
 [WEB BUILDER] Using onEnd plugin for rebuild detection
 Chrome is a separate service, not launched in builder
@@ -85,10 +85,10 @@ Chrome is a separate service, not launched in builder
   You can read more about direct eval and bundling here: https://esbuild.github.io/link/direct-eval
 
 web > build ended with 0 errors
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 7 files, hash: 80b290d5cf8fe31ddac4d9c50e8838e8
-[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 16 files, hash: 17885f7cd10be1b333fb58083729f661
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: c441891678c8e56fa7f8f9cb01417323
+[web Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 7 local files (filtered), hash: 6f2ec0083e92f6ecdbac2e25a81562d7
 [web Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
 [WEB BUILDER] Metafile updated
 [WEB BUILDER] Triggered inputFiles.json update at testeranto/bundles/webtests/inputFiles.json
 
-=== Log captured at 2026-04-15T14:26:41.434Z (container status: running) ===
+=== Log captured at 2026-04-15T18:39:00.062Z (container status: running) ===

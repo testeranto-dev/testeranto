@@ -12894,6 +12894,12 @@
             this.loadData();
           }
           break;
+        case "sliceUpdated":
+          if (message.slicePath === `/~/views/${viewName}/slice`) {
+            console.log(`[BaseViewClass] Slice updated for view ${viewName}, reloading data`);
+            this.loadData();
+          }
+          break;
         case "graphUpdated":
           console.log(`[BaseViewClass] Graph updated, reloading data for view ${viewName}`);
           this.loadData();

@@ -43,6 +43,10 @@ export class Server_WS_HTTP extends Server_HTTP {
   }
 
   resourceChanged(url: string) {
+    // First, call the parent implementation to ensure any callbacks are called
+    // This is important for the callback chain from Server_Graph
+    super.resourceChanged(url);
+    
     const message = {
       type: 'resourceChanged',
       url: url,
@@ -53,8 +57,16 @@ export class Server_WS_HTTP extends Server_HTTP {
     // Broadcast to all clients
     this.broadcast(message);
 
-    // Also notify slice subscribers
-    this.notifySliceSubscribers(url, message);
+    // Also notify slice subscribers with a more specific message
+    // Check if this is a slice URL that clients might be subscribed to
+    if (url.startsWith('/~/views/') && url.endsWith('/slice')) {
+      this.notifySliceSubscribers(url, {
+        type: 'sliceUpdated',
+        slicePath: url,
+        timestamp: new Date().toISOString(),
+        message: `Slice at ${url} has been updated`
+      });
+    }
 
     // Also broadcast graphUpdated for compatibility with existing code
     if (url.startsWith('/~/')) {

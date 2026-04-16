@@ -1,0 +1,21 @@
+=== Log started at 2026-04-16T01:19:40.587Z for service nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd (runtime: node) ===
+=== Container ID: d25af8a8b52c ===
+=== Test: src_lib_tiposkripto_tests_rectangle_rectangle-test-ts ===
+=== Config Key: nodetests ===
+
+=== ALL LOGS (stdout + stderr) ===
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "typescript" with range "^5.9.3" that collides with a dependency in "devDependencies" of the same name with version "^5.8.2"
+warning testeranto@0.239.0: The engine "vscode" appears to be invalid.
+warning testeranto@0.239.0: The engine "bun" appears to be invalid.
+$ /workspace/node_modules/.bin/tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs '{"ports":[1111],"fs":"testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/"}'
+HELLO RECTANGLE
+No confirms in testImplementation
+Confirm overrides: []
+testResourceConfiguration {
+  ports: [ 1111 ],
+  fs: 'testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/'
+}
+Done in 1.51s.
+
+=== Log captured at 2026-04-16T01:19:41.185Z (container status: exited, exit code: 0) ===

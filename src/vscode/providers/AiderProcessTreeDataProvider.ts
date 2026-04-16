@@ -2,9 +2,7 @@ import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
-import { AiderGraphLoader } from './utils/AiderGraphLoader';
-import { AiderTreeItemCreator } from './utils/AiderTreeItemCreator';
-import { AiderDataGrouper } from './utils/AiderDataGrouper';
+import { getApiUrl, getApiPath, wsApi, GetAiderResponse } from '../../api';
 
 interface GraphNode {
   id: string;
@@ -46,32 +44,31 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
   private async loadGraphData(): Promise<void> {
     try {
       console.log('[AiderProcessTreeDataProvider] Loading graph data from aider API endpoint');
-      // VSCode providers use API endpoints, not files
-      const result = await AiderGraphLoader.loadGraphData();
-      this.graphData = result.graphData;
-      this.agents = result.agents;
+      // Fetch data directly from the API
+      await this.fetchAiderProcessesDirectly();
     } catch (error) {
       console.error('[AiderProcessTreeDataProvider] Error loading graph data from API:', error);
-      // Fallback to fetching agents and aider processes directly from API
-      await this.fetchAgentsDirectly();
-      await this.fetchAiderProcessesDirectly();
+      // Clear data to show error state
+      this.graphData = null;
+      this.agents = [];
+      // Show error in console for debugging
+      console.error(`[AiderProcessTreeDataProvider] Error details: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(`[AiderProcessTreeDataProvider] Make sure server is running on http://localhost:3000`);
     }
   }
 
-  private async fetchAgentsDirectly(): Promise<void> {
-    // Agents are included in the aider slice, so we don't need to fetch them separately
-    // This method is kept for compatibility but does nothing
-    this.agents = [];
-  }
 
   private async fetchAiderProcessesDirectly(): Promise<void> {
-    // Only use the /~/aider endpoint which works with GET
+    // Use the API endpoint for aider
     try {
-      const response = await fetch('http://localhost:3000/~/aider', {
+      const aiderUrl = getApiUrl('getAider');
+      const response = await fetch(aiderUrl, {
         method: 'GET'
       });
       if (response.ok) {
-        const data = await response.json();
+        const data: GetAiderResponse = await response.json();
+        console.log('[AiderProcessTreeDataProvider] Raw aider data:', JSON.stringify(data, null, 2));
+        
         // The aider slice contains both agent nodes and aider process nodes
         // We need to filter for aider_process type nodes
         this.graphData = this.graphData || { nodes: [], edges: [] };
@@ -87,16 +84,15 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
           node.type === 'agent'
         ) || [];
         
-        // Add aider process nodes to graphData
+        // Clear existing data and add new nodes
+        this.graphData.nodes = [];
         aiderProcessNodes.forEach((node: any) => {
-          if (!existingIds.has(node.id)) {
-            this.graphData!.nodes.push({
-              id: node.id,
-              type: node.type,
-              label: node.label,
-              metadata: node.metadata
-            });
-          }
+          this.graphData!.nodes.push({
+            id: node.id,
+            type: node.type,
+            label: node.label,
+            metadata: node.metadata
+          });
         });
         
         // Store agents for grouping/filtering
@@ -105,13 +101,18 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
           ...node.metadata
         }));
         
-        console.log(`[AiderProcessTreeDataProvider] Successfully fetched ${aiderProcessNodes.length} aider processes and ${agentNodes.length} agents from /~/aider`);
+        console.log(`[AiderProcessTreeDataProvider] Successfully fetched ${aiderProcessNodes.length} aider processes and ${agentNodes.length} agents from ${aiderUrl}`);
+        
+        // If no aider processes found, check if we should try aider-processes endpoint
+        if (aiderProcessNodes.length === 0) {
+          console.log('[AiderProcessTreeDataProvider] No aider processes found in /~/aider endpoint');
+        }
         return;
       } else {
-        console.warn(`[AiderProcessTreeDataProvider] Failed to fetch from /~/aider:`, response.status);
+        console.warn(`[AiderProcessTreeDataProvider] Failed to fetch from ${aiderUrl}:`, response.status);
       }
     } catch (error) {
-      console.error(`[AiderProcessTreeDataProvider] Error fetching from /~/aider:`, error);
+      console.error(`[AiderProcessTreeDataProvider] Error fetching from getAider API:`, error);
     }
   }
 
@@ -122,25 +123,14 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
     this.agents = [];
     this._onDidChangeTreeData.fire();
     
-    // Load data with timeout
-    const loadPromise = this.loadGraphData();
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Loading timeout after 10 seconds')), 10000);
-    });
-    
-    Promise.race([loadPromise, timeoutPromise])
+    // Load data directly
+    this.loadGraphData()
       .then(() => {
         this._onDidChangeTreeData.fire();
       })
       .catch(error => {
         console.error('[AiderProcessTreeDataProvider] Error in refresh:', error);
-        // Try direct fetching as fallback
-        return Promise.allSettled([
-          this.fetchAgentsDirectly(),
-          this.fetchAiderProcessesDirectly()
-        ]).then(() => {
-          this._onDidChangeTreeData.fire();
-        });
+        this._onDidChangeTreeData.fire();
       });
   }
 
@@ -372,21 +362,26 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
     return items;
   }
 
-  private getAiderProcessesForEntrypoint(entrypointId: string): TestTreeItem[] {
-    if (!this.graphData) return [];
-    return AiderDataGrouper.getAiderProcessesForEntrypoint(this.graphData, entrypointId);
-  }
-
-  private createAiderProcessItem(node: GraphNode, entrypointNode?: GraphNode): TestTreeItem {
-    return AiderTreeItemCreator.createAiderProcessItem(node, entrypointNode);
-  }
 
   protected handleWebSocketMessage(message: any): void {
     super.handleWebSocketMessage(message);
     console.log(`[AiderProcessTreeDataProvider] Received message type: ${message.type}, url: ${message.url}`);
 
     if (message.type === 'resourceChanged') {
-      if (message.url === '/~/aider' || message.url === '/~/agents' || message.url === '/~/graph') {
+      // Check if the URL matches any of our API endpoints
+      const aiderPath = getApiPath('getAider');
+      const userAgentsPath = getApiPath('getUserAgents');
+      // Check for agent-related URLs (both /~/agents and /~/user-agents)
+      // Note: /~/agents requires a parameter, but WebSocket messages might use the base path
+      const isAgentRelated = message.url && (
+        message.url === userAgentsPath ||
+        message.url.startsWith('/~/agents/') ||
+        message.url === '/~/agents'
+      );
+      
+      if (message.url === aiderPath || 
+          isAgentRelated || 
+          message.url === '/~/graph') {
         console.log('[AiderProcessTreeDataProvider] Relevant update, refreshing');
         this.refresh();
       }
@@ -398,8 +393,9 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
 
   protected subscribeToGraphUpdates(): void {
     super.subscribeToGraphUpdates();
-    this.subscribeToSlice('/aider');
-    this.subscribeToSlice('/agents');
-    this.subscribeToSlice('/graph');
+    // Subscribe to slices using API slice names
+    this.subscribeToSlice(wsApi.slices.aider);
+    this.subscribeToSlice(wsApi.slices.agents);
+    this.subscribeToSlice(wsApi.slices.graph);
   }
 }

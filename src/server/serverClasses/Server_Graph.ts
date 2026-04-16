@@ -3,11 +3,9 @@ import path from 'path';
 import type { GraphData, GraphEdgeAttributes, GraphNodeAttributes, GraphUpdate, TesterantoGraph } from "../../graph";
 import type { ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
-import { addAgentNodesPure } from "./graph/addAgentNodesPure";
-import { addViewNodesPure } from "./graph/addViewNodesPure";
-import { addRuntimeNodesPure } from "./graph/addRuntimeNodesPure";
-import { saveGraphPure } from "./graph/saveGraphPure";
-import { getViewSlicePure } from "./graph/getViewSlicePure";
+import { addAgentNodesFromConfigUtil } from "./graph/addAgentNodesFromConfigUtil";
+import { addViewNodesFromConfigUtil } from "./graph/addViewNodesFromConfigUtil";
+import { addRuntimeNodesFromConfigUtil } from "./graph/addRuntimeNodesFromConfigUtil";
 import { addChatMessageUtil } from "./graph/addChatMessageUtil";
 import { cleanupAttributeNodesPure } from "./graph/cleanupAttributeNodesPure";
 import { createGraph } from './graph/createGraph';
@@ -20,12 +18,13 @@ import { graphToData } from "./graph/graphToData";
 import { getAiderSlice, getFilesAndFoldersSlice, getProcessSlice, getRuntimeSlice } from "./graph/sliceUtils";
 import { updateFromTestResultsPure } from "./graph/updateFromTestResultsPure";
 import { Server_Base } from "./Server_Base";
+import { writeViewSliceFilesUtil, getSliceFilePathUtil } from "./graph/writeViewSliceFilesUtil";
+import { saveGraphUtil } from "./graph/saveGraphUtil";
 
 export class Server_Graph extends Server_Base {
   protected graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>;
   protected graphDataPath: string;
   protected projectRoot: string;
-  protected resourceChanged: (path: string) => void;
   protected featureIngestor?: (url: string) => Promise<{ data: string; filepath: string }>;
 
   constructor(
@@ -33,24 +32,33 @@ export class Server_Graph extends Server_Base {
     protected mode: IMode,
     protected getCurrentTestResults: () => any,
     projectRoot?: string,
-    resourceChanged?: (path: string) => void
+    resourceChangedCallback?: (path: string) => void
   ) {
     super(configs, mode);
 
     this.projectRoot = projectRoot || process.cwd();
-    this.resourceChanged = resourceChanged || ((path: string) => { });
+    this._resourceChangedCallback = resourceChangedCallback || ((path: string) => { });
     this.featureIngestor = configs.featureIngestor;
 
     this.graph = createGraph();
+
     this.graphDataPath = this.initializeGraph();
 
-    // Initialize graph with configs
     this.addAgentNodesFromConfig();
     this.addViewNodesFromConfig();
     this.addRuntimeNodesFromConfig();
     this.generateEdges();
     this.writeViewSliceFiles();
     this.updateAllAgentSliceFiles();
+  }
+
+  // Add a private property to store the callback
+  private _resourceChangedCallback: (path: string) => void;
+
+  // Make resourceChanged a method that calls the callback
+  // Child classes can override this method
+  resourceChanged(path: string): void {
+    this._resourceChangedCallback(path);
   }
 
   private initializeGraph(): string {
@@ -105,14 +113,20 @@ export class Server_Graph extends Server_Base {
       this.graph,
       () => this.serializeToMarkdown()
     );
-    // Save graph data and slice files after every update
+
     this.saveGraph();
     this.writeViewSliceFiles();
     this.updateAllAgentSliceFiles();
-    
-    // Notify that the graph has been updated
+
     this.resourceChanged('/~/graph');
-    
+
+    const views = this.configs.views;
+    if (views) {
+      for (const viewKey of Object.keys(views)) {
+        this.resourceChanged(`/~/views/${viewKey}/slice`);
+      }
+    }
+
     return result;
   }
 
@@ -126,7 +140,24 @@ export class Server_Graph extends Server_Base {
     );
     // Apply the update to ensure view slices are regenerated
     this.applyUpdate(update);
+
+    // Also process features directly from test results
+    // This ensures features are added even if the pure function doesn't handle them
+    await this.processFeaturesDirectly(testResults);
+
     return update;
+  }
+
+  private async processFeaturesDirectly(testResults: any): Promise<void> {
+    const { processFeaturesDirectlyUtil } = await import('./graph/processFeaturesDirectlyUtil');
+    await processFeaturesDirectlyUtil(
+      testResults,
+      this.graph,
+      this.projectRoot,
+      (update) => this.applyUpdate(update),
+      this.featureIngestor,
+      this.configs
+    );
   }
 
   public cleanupAttributeNodes(): GraphUpdate {
@@ -192,7 +223,7 @@ export class Server_Graph extends Server_Base {
   }): Promise<void> {
     const timestamp = new Date().toISOString();
     const aiderProcessId = `aider_process:${params.configKey}:${params.testName}`;
-    
+
     const update: GraphUpdate = {
       operations: [{
         type: 'updateNode',
@@ -208,7 +239,7 @@ export class Server_Graph extends Server_Base {
       }],
       timestamp
     };
-    
+
     this.applyUpdate(update);
   }
 
@@ -222,26 +253,12 @@ export class Server_Graph extends Server_Base {
   }
 
   writeViewSliceFiles(): void {
-    const views = this.configs.views;
-    if (!views) return;
-
-    for (const [viewKey, viewConfig] of Object.entries(views)) {
-      const sliceData = this.getViewSlice(viewKey);
-      const slicePath = this.getSliceFilePath(viewKey);
-      const dir = path.dirname(slicePath);
-      
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
-      
-      fs.writeFileSync(slicePath, JSON.stringify(sliceData, null, 2), 'utf-8');
-      
-      // Notify that this view slice has been updated
-      this.resourceChanged(`/~/views/${viewKey}/slice`);
-    }
-    
-    // Also notify that all views have been updated
-    this.resourceChanged('/~/views');
+    writeViewSliceFilesUtil(
+      this.configs,
+      this.projectRoot,
+      (viewKey: string) => this.getViewSlice(viewKey),
+      (path: string) => this.resourceChanged(path)
+    );
   }
 
   public updateAllViewSlices(): void {
@@ -249,7 +266,7 @@ export class Server_Graph extends Server_Base {
   }
 
   public getSliceFilePath(viewKey: string): string {
-    return `${this.projectRoot}/testeranto/slices/views/${viewKey}.json`;
+    return getSliceFilePathUtil(viewKey, this.projectRoot);
   }
 
   public getAgentSliceFilePath(agentName: string): string {
@@ -285,20 +302,12 @@ export class Server_Graph extends Server_Base {
     // For now, we'll implement a basic version
     const content = `---\n${JSON.stringify(frontmatterData, null, 2)}\n---\n\n${contentBody || ''}`;
     const dir = path.dirname(filePath);
-    
+
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
+
     fs.writeFileSync(filePath, content, 'utf-8');
-  }
-
-  getGraphManager(): any {
-    return this;
-  }
-
-  get graphManager(): Server_Graph {
-    return this;
   }
 
   getAgentSlice(agentName: string): any {
@@ -319,10 +328,10 @@ export class Server_Graph extends Server_Base {
       fs.mkdirSync(dir, { recursive: true });
     }
     fs.writeFileSync(agentSliceFilePath, JSON.stringify(sliceData, null, 2), 'utf-8');
-    
+
     // Notify about agent slice update
     this.resourceChanged(`/~/agents/${agentName}`);
-    
+
     return sliceData;
   }
 
@@ -348,8 +357,8 @@ export class Server_Graph extends Server_Base {
 
   public addAgentNodesFromConfig(): void {
     const timestamp = new Date().toISOString();
-    const operations = addAgentNodesPure(this.configs, timestamp);
-    
+    const operations = addAgentNodesFromConfigUtil(this.configs, timestamp);
+
     if (operations.length > 0) {
       const update = { operations, timestamp };
       this.applyUpdate(update);
@@ -358,8 +367,8 @@ export class Server_Graph extends Server_Base {
 
   private addViewNodesFromConfig(): void {
     const timestamp = new Date().toISOString();
-    const operations = addViewNodesPure(this.configs, this.projectRoot, timestamp);
-    
+    const operations = addViewNodesFromConfigUtil(this.configs, this.projectRoot, timestamp);
+
     if (operations.length > 0) {
       const update = { operations, timestamp };
       this.applyUpdate(update);
@@ -368,8 +377,8 @@ export class Server_Graph extends Server_Base {
 
   private addRuntimeNodesFromConfig(): void {
     const timestamp = new Date().toISOString();
-    const operations = addRuntimeNodesPure(this.configs, timestamp);
-    
+    const operations = addRuntimeNodesFromConfigUtil(this.configs, timestamp);
+
     if (operations.length > 0) {
       const update = { operations, timestamp };
       this.applyUpdate(update);
@@ -378,51 +387,13 @@ export class Server_Graph extends Server_Base {
 
   private saveGraphUtil(configs?: any): void {
     const graphData = this.getGraphData();
-    const result = saveGraphPure(graphData, this.graphDataPath, configs);
-    
-    if (!result.success) {
-      // According to SOUL.md, we should propagate errors, not catch and log them
-      // But we need to handle file system operations
-      // For now, we'll throw the error
-      throw new Error(`Failed to save graph: ${result.error}`);
-    }
-    
-    // Write to file system
-    const timestamp = new Date().toISOString();
-    const version = '1.0';
-    const graphDataFile = {
-      timestamp,
-      version,
-      data: {
-        unifiedGraph: graphData,
-        vizConfig: {
-          projection: {
-            xAttribute: 'status',
-            yAttribute: 'priority',
-            xType: 'categorical' as const,
-            yType: 'continuous' as const,
-            layout: 'grid' as const
-          },
-          style: {
-            nodeSize: 10,
-            nodeColor: '#882255',
-            nodeShape: 'circle' as const
-          }
-        },
-        configs: configs || {}
-      }
-    };
-
-    const dir = path.dirname(this.graphDataPath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-
-    fs.writeFileSync(this.graphDataPath, JSON.stringify(graphDataFile, null, 2), 'utf-8');
+    saveGraphUtil(
+      graphData,
+      this.graphDataPath,
+      configs,
+      (path: string) => this.resourceChanged(path)
+    );
     this.emitGraphSaved();
-    
-    // Notify about graph update for all clients
-    this.resourceChanged('/~/graph');
   }
 
   getViewNodes(): any[] {
@@ -438,7 +409,7 @@ export class Server_Graph extends Server_Base {
   getViewSlice(viewKey: string): any {
     const graphData = this.getGraphData();
     const viewConfig = this.configs.views?.[viewKey];
-    
+
     if (!viewConfig) {
       // Fallback to raw graph data
       return {
@@ -446,12 +417,12 @@ export class Server_Graph extends Server_Base {
         edges: graphData.edges || []
       };
     }
-    
+
     // Use the slicer function if available
     if (viewConfig.slicer && typeof viewConfig.slicer === 'function') {
       return viewConfig.slicer(graphData);
     }
-    
+
     // Otherwise, fallback to raw graph data
     return {
       nodes: graphData.nodes,

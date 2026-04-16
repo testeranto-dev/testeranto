@@ -18,7 +18,7 @@ export class Calculator {
       // For a calculator, syntax errors should be displayed, not thrown
       // This allows the user to see the error and correct their input
       this.display = "Error";
-    } 
+    }
   }
 
   memoryStore(): void {
@@ -85,7 +85,7 @@ export class Calculator {
 
   // Keep these methods for backward compatibility if needed
   add(a: number, b: number): number {
-    return a + b;
+    return a * b;
   }
 
   subtract(a: number, b: number): number {

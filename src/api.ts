@@ -1,3 +1,28 @@
+export type IFileRouteResponse = {
+  nodes?: Array<{
+    id: string;
+    type: 'file' | 'folder';
+    label: string;
+    description?: string;
+    status?: 'todo' | 'doing' | 'done' | 'blocked';
+    priority?: 'low' | 'medium' | 'high' | 'critical';
+    timestamp?: string;
+    metadata?: Record<string, any>;
+    icon?: string;
+  }>;
+  edges?: Array<{
+    source: string;
+    target: string;
+    attributes: {
+      type: string;
+      timestamp?: string;
+      metadata?: Record<string, any>;
+      directed?: boolean;
+    };
+  }>;
+  tree: any;
+  timestamp: string;
+}
 
 export const wsApi = {
   // WebSocket broadcasts from server to clients
@@ -64,6 +89,18 @@ export const wsApi = {
     data: {} as { slicePath: string; message: string }
   },
 
+  // WebSocket slice names (for subscription)
+  slices: {
+    files: '/files' as const,
+    process: '/process' as const,
+    aider: '/aider' as const,
+    runtime: '/runtime' as const,
+    agents: '/agents' as const,
+    graph: '/graph' as const,
+    views: '/views' as const,
+    chat: '/chat' as const,
+  },
+
   error: {
     type: 'error' as const,
     description: 'Error message',
@@ -121,6 +158,14 @@ export const API: {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS';
   }
 } = {
+
+  // TODO 
+  // spawnAgent: {
+  //   agent: string,
+  //   loadfile: string,
+  //   message: string
+  // },
+
   getConfigs: {
     method: 'GET',
     path: '/~/configs',
@@ -206,13 +251,15 @@ export const API: {
 
   getAgents: {
     method: 'GET',
-    path: '/~/agents',
-    description: 'Get all agents',
-    params: {},
+    path: '/~/agents/:agentName',
+    description: 'Get a specific agent by name',
+    params: {
+      agentName: ''
+    },
     query: {},
     response: {} as any,
     check: (routeName: string, request: { method: string }) => {
-      return routeName === 'agents' && request.method === 'GET'
+      return routeName.startsWith('agents/') && request.method === 'GET'
     }
   },
 
@@ -228,6 +275,17 @@ export const API: {
     }
   },
 
+  getAllAgents: {
+    method: 'GET',
+    path: '/~/agents',
+    description: 'Get all agents',
+    params: {},
+    query: {},
+    response: {} as GetAgentsResponse,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'agents' && request.method === 'GET'
+    }
+  },
   getAgentSlice: {
     method: 'GET',
     path: '/~/agents/:agentName',
@@ -248,7 +306,7 @@ export const API: {
     description: 'Get files and folders slice',
     params: {},
     query: {},
-    response: {} as any,
+    response: {} as GetFilesResponse,
     check: (routeName: string, request: { method: string }) => {
       return routeName === 'files' && request.method === 'GET'
     }
@@ -260,7 +318,7 @@ export const API: {
     description: 'Get processes slice',
     params: {},
     query: {},
-    response: {} as any,
+    response: {} as GetProcessResponse,
     check: (routeName: string, request: { method: string }) => {
       return routeName === 'process' && request.method === 'GET'
     }
@@ -272,7 +330,7 @@ export const API: {
     description: 'Get aider slice',
     params: {},
     query: {},
-    response: {} as any,
+    response: {} as GetAiderResponse,
     check: (routeName: string, request: { method: string }) => {
       return routeName === 'aider' && request.method === 'GET'
     }
@@ -284,7 +342,7 @@ export const API: {
     description: 'Get runtime slice',
     params: {},
     query: {},
-    response: {} as any,
+    response: {} as GetRuntimeResponse,
     check: (routeName: string, request: { method: string }) => {
       return routeName === 'runtime' && request.method === 'GET'
     }
@@ -533,6 +591,92 @@ export type ApiResponse<T> = {
   timestamp: string;
 } & T;
 
+// Define response types for each endpoint
+export interface GetFilesResponse {
+  nodes: Array<{
+    id: string;
+    type: 'file' | 'folder';
+    label: string;
+    description?: string;
+    status?: 'todo' | 'doing' | 'done' | 'blocked';
+    priority?: 'low' | 'medium' | 'high' | 'critical';
+    timestamp?: string;
+    metadata?: Record<string, any>;
+    icon?: string;
+  }>;
+  edges: Array<{
+    source: string;
+    target: string;
+    attributes: {
+      type: string;
+      timestamp?: string;
+      metadata?: Record<string, any>;
+      directed?: boolean;
+    };
+  }>;
+  tree?: any;
+  timestamp?: string;
+}
+
+export interface GetAiderResponse {
+  nodes: Array<{
+    id: string;
+    type: string;
+    label: string;
+    metadata?: Record<string, any>;
+  }>;
+  edges?: Array<{
+    source: string;
+    target: string;
+    attributes: {
+      type: string;
+    };
+  }>;
+}
+
+export interface GetAgentsResponse {
+  agents: Array<{
+    name?: string;
+    key?: string;
+    config?: {
+      message?: string;
+      load?: string[];
+    };
+  }>;
+}
+
+export interface GetProcessResponse {
+  nodes: Array<{
+    id: string;
+    type: string;
+    label: string;
+    metadata?: Record<string, any>;
+  }>;
+  edges?: Array<{
+    source: string;
+    target: string;
+    attributes: {
+      type: string;
+    };
+  }>;
+}
+
+export interface GetRuntimeResponse {
+  nodes: Array<{
+    id: string;
+    type: string;
+    label: string;
+    metadata?: Record<string, any>;
+  }>;
+  edges?: Array<{
+    source: string;
+    target: string;
+    attributes: {
+      type: string;
+    };
+  }>;
+}
+
 
 
 // Add lock-related types
@@ -579,6 +723,51 @@ export interface GraphDataResponse {
 
 // Note: WebSocket API is defined separately in wsApi
 // HTTP API is defined in API object above
+
+// Utility function to get API URL
+export function getApiUrl<K extends keyof typeof API>(endpoint: K, params?: Record<string, string>): string {
+  const apiDef = API[endpoint];
+  let path = apiDef.path;
+
+  // Replace path parameters
+  if (params) {
+    for (const [key, value] of Object.entries(params)) {
+      path = path.replace(`:${key}`, encodeURIComponent(value));
+    }
+  }
+
+  // For VSCode extension, we need to construct the full URL
+  // Since the server runs on localhost:3000
+  const baseUrl = 'http://localhost:3000';
+  return `${baseUrl}${path}`;
+}
+
+// Utility function to get just the API path
+export function getApiPath<K extends keyof typeof API>(endpoint: K, params?: Record<string, string>): string {
+  const apiDef = API[endpoint];
+  let path = apiDef.path;
+
+  // Replace path parameters
+  if (params) {
+    for (const [key, value] of Object.entries(params)) {
+      path = path.replace(`:${key}`, encodeURIComponent(value));
+    }
+  }
+
+  return path;
+}
+
+// Utility to check if an endpoint matches a route
+export function matchApiRoute(routeName: string, method: string): keyof typeof API | null {
+  for (const [key, endpoint] of Object.entries(API)) {
+    // Remove leading /~/
+    const endpointPath = endpoint.path.replace('/~/', '');
+    if (endpointPath === routeName && endpoint.method === method) {
+      return key as keyof typeof API;
+    }
+  }
+  return null;
+}
 
 // export const matchRoutes = (routeName: string, f) => {
 //   return routeName === API.getFiles.path.slice(3) && request.method === API.getFiles.method

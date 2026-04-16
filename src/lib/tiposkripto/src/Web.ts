@@ -21,21 +21,13 @@ declare global {
   }
 }
 
-const config = isBrowser ? (globalThis as any).window?.testResourceConfig : {};
-
-export class WebTiposkripto<
+export abstract class WebTiposkripto<
   I extends TestTypeParams_any,
   O extends TestSpecShape_any,
   M,
 > extends BaseTiposkripto<I, O, M> {
-  constructor(
-    input: I["iinput"],
-    testSpecification: ITestSpecification<I, O>,
-    testImplementation: ITestImplementation<I, O, M>,
-    testResourceRequirement: ITTestResourceRequest,
-    testAdapter: Partial<ITestAdapter<I>>,
-  ) {
-    let testResourceConfig = config;
+  constructor(testSpecification: ITestSpecification<I, O>) {
+    let testResourceConfig = {};
     if (isBrowser) {
       const win = (globalThis as any).window;
       if (win) {
@@ -104,15 +96,8 @@ export class WebTiposkripto<
       JSON.stringify(testResourceConfig),
     );
 
-    super(
-      "web",
-      input,
-      testSpecification,
-      testImplementation as any,
-      testResourceRequirement,
-      testAdapter,
-      testResourceConfig,
-    );
+    super(testSpecification, testResourceConfig);
+    this.initialize();
 
     console.log(
       "[WebTiposkripto] testResourceConfiguration.fs:",
@@ -345,39 +330,4 @@ export class WebTiposkripto<
   }
 }
 
-const tiposkripto = async <
-  I extends TestTypeParams_any,
-  O extends TestSpecShape_any,
-  M,
->(
-  input: I["iinput"],
-  testSpecification: ITestSpecification<I, O>,
-  testImplementation: ITestImplementation<I, O, M>,
-  testAdapter: Partial<ITestAdapter<I>>,
-  testResourceRequirement: ITTestResourceRequest = defaultTestResourceRequirement,
-): Promise<BaseTiposkripto<I, O, M>> => {
-  try {
-    const t = new WebTiposkripto<I, O, M>(
-      input,
-      testSpecification,
-      testImplementation,
-      testResourceRequirement,
-      testAdapter,
-    );
-
-    return t;
-  } catch (e) {
-    console.error(e);
-    // Dispatch an error event
-    if (isBrowser) {
-      const win = (globalThis as any).window;
-      if (win) {
-        const errorEvent = new CustomEvent("test-error", { detail: e });
-        win.dispatchEvent(errorEvent);
-      }
-    }
-    throw e;
-  }
-};
-
-export default tiposkripto;
+export default WebTiposkripto;

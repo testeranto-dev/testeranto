@@ -1,0 +1,61 @@
+{
+  "errors": [
+    {
+      "id": "",
+      "location": {
+        "column": 14,
+        "file": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "length": 1,
+        "line": 88,
+        "lineText": "    return a  b;",
+        "namespace": "",
+        "suggestion": ";"
+      },
+      "notes": [],
+      "pluginName": "",
+      "text": "Expected \";\" but found \"b\""
+    }
+  ],
+  "warnings": [
+    {
+      "id": "package.json",
+      "location": {
+        "column": 6,
+        "file": "package.json",
+        "length": 7,
+        "line": 222,
+        "lineText": "      \"types\": \"./src/CoreTypes.d.ts\"",
+        "namespace": "",
+        "suggestion": ""
+      },
+      "notes": [
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 8,
+            "line": 220,
+            "lineText": "      \"import\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"import\" condition comes earlier and will be used for all \"import\" statements:"
+        },
+        {
+          "location": {
+            "column": 6,
+            "file": "package.json",
+            "length": 9,
+            "line": 221,
+            "lineText": "      \"require\": \"./src/CoreTypes.ts\",",
+            "namespace": "",
+            "suggestion": ""
+          },
+          "text": "The \"require\" condition comes earlier and will be used for all \"require\" calls:"
+        }
+      ],
+      "pluginName": "",
+      "text": "The condition \"types\" here will never be used as it comes after both \"import\" and \"require\""
+    }
+  ]
+}

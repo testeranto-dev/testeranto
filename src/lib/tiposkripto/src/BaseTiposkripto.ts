@@ -26,9 +26,9 @@ export default abstract class BaseTiposkripto<
   thenOverrides: Record<string, any>;
   whenOverrides: Record<string, any>;
   testResourceConfiguration: ITestResourceConfiguration;
-  describeOverrides: Record<string, any>;
-  itOverrides: Record<string, any>;
-  confirmOverrides: Record<string, any>;
+  describesOverrides: Record<string, any>;
+  itsOverrides: Record<string, any>;
+  confirmsOverrides: Record<string, any>;
   valuesOverrides: Record<string, any>;
   shouldsOverrides: Record<string, any>;
   expectedsOverrides: Record<string, any>;
@@ -36,6 +36,21 @@ export default abstract class BaseTiposkripto<
   private testJobCreator: TestJobCreator<I>;
 
   abstract writeFileSync(filename: string, payload: string): void;
+  
+  // Abstract methods to be implemented by subclasses
+  abstract input(): I["iinput"];
+  abstract implementation(): ITestImplementation<I, O, M> & {
+    givens?: Record<string, any>;
+    whens?: Record<string, any>;
+    thens?: Record<string, any>;
+    describes?: Record<string, any>;
+    its?: Record<string, any>;
+    confirms?: Record<string, any>;
+    values?: Record<string, any>;
+    shoulds?: Record<string, any>;
+  };
+  abstract adapter(): Partial<ITestAdapter<I>>;
+  abstract testResourceRequirement(): ITTestResourceRequest;
 
   // Create an artifactory that tracks context
   createArtifactory(
@@ -93,39 +108,51 @@ export default abstract class BaseTiposkripto<
   }
 
   constructor(
-    webOrNode: "web" | "node",
-    input: I["iinput"],
     testSpecification: ITestSpecification<I, O>,
-    testImplementation: ITestImplementation<I, O, M> & {
-      givens?: Record<string, any>;
-      whens?: Record<string, any>;
-      thens?: Record<string, any>;
-      describes?: Record<string, any>;
-      its?: Record<string, any>;
-      confirms?: Record<string, any>;
-      values?: Record<string, any>;
-      shoulds?: Record<string, any>;
-    },
-    testResourceRequirement: ITTestResourceRequest = defaultTestResourceRequirement,
-    testAdapter: Partial<ITestAdapter<I>> = {},
     testResourceConfiguration: ITestResourceConfiguration,
   ) {
     this.testResourceConfiguration = testResourceConfiguration;
+    this.testSpecification = testSpecification;
 
-    const fullAdapter = DefaultAdapter<I>(testAdapter);
+    // Initialize with default values that will be set in initialize()
+    this.givenOverrides = {};
+    this.whenOverrides = {};
+    this.thenOverrides = {};
+    this.describesOverrides = {};
+    this.itsOverrides = {};
+    this.confirmsOverrides = {};
+    this.valuesOverrides = {};
+    this.shouldsOverrides = {};
+    this.expectedsOverrides = {};
+    this.suitesOverrides = {};
+    this.specs = [];
+    this.testJobs = [];
+    
+    // Initialize test job creator early
+    this.testJobCreator = new TestJobCreator<I>(
+      this.createArtifactory.bind(this),
+      0 // totalTests will be set later
+    );
+  }
+
+  // Method to initialize the test (to be called after constructor)
+  protected initialize() {
+    const implementation = this.implementation();
+    const adapter = this.adapter();
+    const fullAdapter = DefaultAdapter<I>(adapter);
     const instance = this;
 
     // Initialize overrides using ClassyImplementations
     const classySuites = {};
-    const classyGivens = ClassyImplementations.createClassyGivens(testImplementation, fullAdapter, instance);
-    const classyWhens = ClassyImplementations.createClassyWhens(testImplementation, fullAdapter);
-    const classyThens = ClassyImplementations.createClassyThens(testImplementation, fullAdapter);
-    const classyConfirms = ClassyImplementations.createClassyConfirms(testImplementation);
-    const classyValues = ClassyImplementations.createClassyValues(testImplementation);
-    const classyShoulds = ClassyImplementations.createClassyShoulds(testImplementation);
-    const classyExpecteds = ClassyImplementations.createClassyExpecteds(testImplementation);
-    const classyDescribes = ClassyImplementations.createClassyDescribes(testImplementation);
-    const classyIts = ClassyImplementations.createClassyIts(testImplementation);
+    const classyGivens = ClassyImplementations.createClassyGivens(implementation, fullAdapter, instance);
+    const classyWhens = ClassyImplementations.createClassyWhens(implementation, fullAdapter);
+    const classyThens = ClassyImplementations.createClassyThens(implementation, fullAdapter);
+    const classyConfirms = ClassyImplementations.createClassyConfirms(implementation);
+    const classyValues = ClassyImplementations.createClassyValues(implementation);
+    const classyShoulds = ClassyImplementations.createClassyShoulds(implementation);
+    const classyExpecteds = ClassyImplementations.createClassyExpecteds(implementation);
+    const classyDescribes = ClassyImplementations.createClassyDescribes(implementation);
+    const classyIts = ClassyImplementations.createClassyIts(implementation);
 
     this.suitesOverrides = classySuites;
     this.givenOverrides = classyGivens;
@@ -137,10 +164,8 @@ export default abstract class BaseTiposkripto<
     this.describesOverrides = classyDescribes;
     this.itsOverrides = classyIts;
     this.confirmsOverrides = classyConfirms;
-    this.testResourceRequirement = testResourceRequirement;
-    this.testSpecification = testSpecification;
 
-    // Initialize helpers
+    // Create VerbProxies after overrides are set
     this.verbProxies = new VerbProxies<I>(
       this.givenOverrides,
       this.whenOverrides,
@@ -153,17 +178,11 @@ export default abstract class BaseTiposkripto<
       this.expectedsOverrides
     );
 
-    // Initialize test job creator early
-    this.testJobCreator = new TestJobCreator<I>(
-      this.createArtifactory.bind(this),
-      0 // totalTests will be set later
-    );
-
     let topLevelVerbs: any[] = [];
     let specError: Error | null = null;
 
     try {
-      topLevelVerbs = testSpecification(
+      topLevelVerbs = this.testSpecification(
         this.verbProxies.Given() as any,
         this.verbProxies.When() as any,
         this.verbProxies.Then() as any,
@@ -201,7 +220,7 @@ export default abstract class BaseTiposkripto<
     for (let index = 0; index < this.specs.length; index++) {
       const step = this.specs[index];
       try {
-        const testJob = this.testJobCreator.createTestJobForStep(step, index, input);
+        const testJob = this.testJobCreator.createTestJobForStep(step, index, this.input());
         this.testJobs.push(testJob);
       } catch (stepError) {
         console.error(`Error creating test job for step ${index}:`, stepError);
@@ -247,9 +266,9 @@ export default abstract class BaseTiposkripto<
 
     // Run tests using TestRunner
     if (this.testJobs.length > 0) {
-      TestRunner.runAllTests(this.testJobs, this.totalTests, testResourceConfiguration, this.writeFileSync.bind(this));
+      TestRunner.runAllTests(this.testJobs, this.totalTests, this.testResourceConfiguration, this.writeFileSync.bind(this));
     } else {
-      TestRunner.writeEmptyResults(testResourceConfiguration, this.writeFileSync.bind(this));
+      TestRunner.writeEmptyResults(this.testResourceConfiguration, this.writeFileSync.bind(this));
     }
   }
 

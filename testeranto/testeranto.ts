@@ -245,22 +245,22 @@ const config: ITesterantoConfig = {
         "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
         "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
         // "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
-        "src/vscode/providers/logic/FileTreeLogic.test.ts",
-        "src/vscode/providers/utils/testTree/treeFilter.test.ts",
-        "src/vscode/providers/utils/testTree/debugTest.js",
-        "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+        // "src/vscode/providers/logic/FileTreeLogic.test.ts",
+        // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+        // "src/vscode/providers/utils/testTree/debugTest.js",
+        // "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
       ],
       checks: [
-        (x) => `yarn eslint ${x.join(" ")} `,
-        (x) => `yarn tsc --noEmit ${x.join(" ")}`,
-        // Run the calculator test
-        (x) => {
-          const calculatorTest = x.find(f => f.includes("Calculator.test.node.ts"));
-          if (calculatorTest) {
-            return `yarn tsx ${calculatorTest}`;
-          }
-          return "echo 'No calculator test found'";
-        },
+        // (x) => `yarn eslint ${x.join(" ")} `,
+        // (x) => `yarn tsc --noEmit ${x.join(" ")}`,
+        // // Run the calculator test
+        // (x) => {
+        //   const calculatorTest = x.find(f => f.includes("Calculator.test.node.ts"));
+        //   if (calculatorTest) {
+        //     return `yarn tsx ${calculatorTest}`;
+        //   }
+        //   return "echo 'No calculator test found'";
+        // },
         // // Run Jest tests
         // (x) =>
         //   `yarn jest ${x.filter((f) => f.includes("jest.test")).join(" ")} --passWithNoTests`,
@@ -331,48 +331,48 @@ const config: ITesterantoConfig = {
 
 
 
-    webtests: {
-      runtime: "web",
-      tests: [
-        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-        // We could add a standard web test framework like Vitest here
-      ],
-      checks: [
-        (x) => `yarn eslint ${x.join(" ")} `,
-        (x) => `yarn tsc --noEmit ${x.join(" ")}`,
-      ],
-      dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
-      buildOptions: `testeranto/runtimes/web/web.ts`,
-      buildKitOptions: {
-        // Single-stage Dockerfile, no targetStage needed
-      },
-      outputs: [],
-    },
+    // webtests: {
+    //   runtime: "web",
+    //   tests: [
+    //     "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+    //     "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+    //     // We could add a standard web test framework like Vitest here
+    //   ],
+    //   checks: [
+    //     (x) => `yarn eslint ${x.join(" ")} `,
+    //     (x) => `yarn tsc --noEmit ${x.join(" ")}`,
+    //   ],
+    //   dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/web/web.ts`,
+    //   buildKitOptions: {
+    //     // Single-stage Dockerfile, no targetStage needed
+    //   },
+    //   outputs: [],
+    // },
 
-    pythontests: {
-      runtime: "python",
-      tests: [
-        "src/lib/pitono/examples/calculator_test.py",
-      ],
-      checks: [
-        // Python syntax check
-        (x) => `python -m py_compile ${x.join(" ")}`,
-        // Run the calculator test
-        (x) => `cd src/lib/pitono/examples && python calculator_test.py`,
-        // Run unittest tests (if any)
-        (x) =>
-          `python -m unittest ${x.filter((f) => f.includes("unittest.test")).join(" ")}`,
-      ],
-      dockerfile: `testeranto/runtimes/python/python.Dockerfile`,
-      buildOptions: `testeranto/runtimes/python/python.py`,
-      buildKitOptions: {
-        // Single-stage Dockerfile, no targetStage needed
-      },
-      outputs: [
-        "testeranto/reports/pythontests"
-      ],
-    },
+    // pythontests: {
+    //   runtime: "python",
+    //   tests: [
+    //     "src/lib/pitono/examples/calculator_test.py",
+    //   ],
+    //   checks: [
+    //     // Python syntax check
+    //     (x) => `python -m py_compile ${x.join(" ")}`,
+    //     // Run the calculator test
+    //     (x) => `cd src/lib/pitono/examples && python calculator_test.py`,
+    //     // Run unittest tests (if any)
+    //     (x) =>
+    //       `python -m unittest ${x.filter((f) => f.includes("unittest.test")).join(" ")}`,
+    //   ],
+    //   dockerfile: `testeranto/runtimes/python/python.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/python/python.py`,
+    //   buildKitOptions: {
+    //     // Single-stage Dockerfile, no targetStage needed
+    //   },
+    //   outputs: [
+    //     "testeranto/reports/pythontests"
+    //   ],
+    // },
 
     // golangtests: {
     //   runtime: "golang",

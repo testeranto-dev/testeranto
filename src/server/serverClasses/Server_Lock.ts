@@ -188,41 +188,10 @@ export class Server_Lock extends Server_Vscode {
    * @returns Number of files locked
    */
   lockAllFiles(ownerId: string = 'system:restart'): number {
-    let lockedCount = 0;
-    const timestamp = new Date().toISOString();
-    const operations: any[] = [];
-
-    this.graph.forEachNode((nodeId) => {
-      const attrs = this.graph.getNodeAttributes(nodeId);
-      // Lock file nodes (file, input_file, entrypoint, test)
-      if (attrs.type === 'file' || attrs.type === 'input_file' ||
-        attrs.type === 'entrypoint' || attrs.type === 'test') {
-        if (!attrs.locked) {
-          operations.push({
-            type: 'updateNode' as const,
-            data: {
-              id: nodeId,
-              metadata: {
-                ...attrs.metadata,
-                locked: true,
-                lockOwner: ownerId,
-                lockTimestamp: timestamp,
-                lockType: 'exclusive'
-              }
-            },
-            timestamp
-          });
-          lockedCount++;
-        }
-      }
-    });
-
-    if (operations.length > 0) {
-      const update = { operations, timestamp };
-      this.applyUpdate(update);
-    }
-
-    return lockedCount;
+    // Don't actually lock files to prevent interference with file operations
+    // This was causing the server to hang when tests run multiple times
+    console.log(`[Server_Lock] Skipping file locking to prevent server hangs`);
+    return 0;
   }
 
   /**
@@ -272,17 +241,9 @@ export class Server_Lock extends Server_Vscode {
    * @returns boolean indicating if any file is locked
    */
   hasLockedFiles(): boolean {
-    let hasLocked = false;
+    // Always return false to prevent locking from interfering with file operations
+    // The locking mechanism was causing issues with file watching
     return false;
-    // this.graph.forEachNode((nodeId) => {
-    //   const attrs = this.graph.getNodeAttributes(nodeId);
-    //   if (attrs.locked && (attrs.type === 'file' || attrs.type === 'input_file' || 
-    //       attrs.type === 'entrypoint' || attrs.type === 'test')) {
-    //     hasLocked = true;
-    //   }
-    // });
-
-    // return hasLocked;
   }
 
   /**

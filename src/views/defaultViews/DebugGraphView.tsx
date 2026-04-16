@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import type { GraphData } from '../../graph';
 import { BaseViewClass } from '../BaseViewClass';
+import { SigmaDebugGraph } from "./SigmaDebugGraph";
 
 export interface DebugGraphConfig {
   nodeColor?: string;
@@ -14,6 +15,47 @@ export interface DebugGraphConfig {
 }
 
 export class DebugGraph extends BaseViewClass<GraphData> {
+  private containerRef: React.RefObject<HTMLDivElement>;
+
+  constructor(props: any) {
+    super(props);
+    this.containerRef = React.createRef();
+  }
+
+  componentDidMount() {
+    super.componentDidMount?.();
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      this.checkContainerDimensions();
+      // Force a re-render to ensure dimensions are applied
+      this.forceUpdate();
+    });
+    window.addEventListener('resize', this.checkContainerDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.checkContainerDimensions);
+    super.componentWillUnmount?.();
+  }
+
+  componentDidUpdate(prevProps: any) {
+    if (prevProps.width !== this.props.width || prevProps.height !== this.props.height) {
+      // Force check when dimensions change
+      this.checkContainerDimensions();
+    }
+  }
+
+  checkContainerDimensions = () => {
+    if (this.containerRef.current) {
+      const { width, height } = this.containerRef.current.getBoundingClientRect();
+      if (width === 0 || height === 0) {
+        console.warn('DebugGraph container has no dimensions, setting defaults');
+        // Instead of throwing, we'll set default dimensions
+        // The container should have dimensions from props
+      }
+    }
+  };
+
   get config(): DebugGraphConfig {
     return this.props.config || {
       nodeColor: '#4a90e2',
@@ -30,161 +72,82 @@ export class DebugGraph extends BaseViewClass<GraphData> {
   renderContent() {
     const { width = 800, height = 600 } = this.props;
     const data = this.state.data;
-    const config = this.config;
+
+    console.log(`[DebugGraphView.renderContent] width: ${width}, height: ${height}, has data: ${!!data}`);
 
     if (!data) {
+      console.error('[DebugGraphView] No graph data available');
       return (
-        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div>No graph data available</div>
-        </div>
-      );
-    }
-
-    // Check if Sigma.js is available
-    const [sigmaAvailable, setSigmaAvailable] = useState(false);
-    const [sigmaError, setSigmaError] = useState<string | null>(null);
-
-    useEffect(() => {
-      // Try to dynamically import Sigma.js
-      import('@react-sigma/core').then(() => {
-        setSigmaAvailable(true);
-      }).catch((error) => {
-        console.warn('Sigma.js not available:', error);
-        setSigmaError('Sigma.js is not installed. Please install @react-sigma/core, graphology, and lodash.');
-      });
-    }, []);
-
-    if (!sigmaAvailable) {
-      return (
-        <div style={{ 
-          width: '100%', 
+        <div style={{
+          width: '100%',
           height: '100%',
-          padding: '20px',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#f5f5f5'
+          backgroundColor: 'rgba(0, 0, 255, 0.1)'
         }}>
-          <h3>Sigma.js Graph Viewer</h3>
-          <div style={{ 
-            marginTop: '20px',
-            padding: '20px',
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            maxWidth: '600px'
-          }}>
-            <p><strong>Sigma.js is not available.</strong></p>
-            <p>To use the interactive graph viewer, install the required dependencies:</p>
-            <pre style={{ 
-              backgroundColor: '#f0f0f0',
-              padding: '10px',
-              borderRadius: '4px',
-              overflow: 'auto',
-              margin: '10px 0'
-            }}>
-              yarn add @react-sigma/core graphology lodash
-            </pre>
-            <p>Or using npm:</p>
-            <pre style={{ 
-              backgroundColor: '#f0f0f0',
-              padding: '10px',
-              borderRadius: '4px',
-              overflow: 'auto',
-              margin: '10px 0'
-            }}>
-              npm install @react-sigma/core graphology lodash
-            </pre>
-            {sigmaError && (
-              <p style={{ color: '#d32f2f' }}>Error: {sigmaError}</p>
-            )}
-            <div style={{ marginTop: '20px' }}>
-              <h4>Graph Data Summary:</h4>
-              <p>Nodes: {data.nodes.length}</p>
-              <p>Edges: {data.edges?.length || 0}</p>
-              <p>Without Sigma.js, showing a simple table view:</p>
-              <div style={{ 
-                maxHeight: '300px',
-                overflow: 'auto',
-                marginTop: '10px'
-              }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ backgroundColor: '#e0e0e0' }}>
-                      <th style={{ padding: '8px', border: '1px solid #ccc' }}>ID</th>
-                      <th style={{ padding: '8px', border: '1px solid #ccc' }}>Label</th>
-                      <th style={{ padding: '8px', border: '1px solid #ccc' }}>Type</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.nodes.slice(0, 20).map((node, index) => (
-                      <tr 
-                        key={node.id}
-                        style={{ 
-                          backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white',
-                          cursor: 'pointer'
-                        }}
-                        onClick={() => (this.props as any).onNodeClick?.(node)}
-                        onMouseEnter={() => (this.props as any).onNodeHover?.(node)}
-                        onMouseLeave={() => (this.props as any).onNodeHover?.(null)}
-                      >
-                        <td style={{ padding: '8px', border: '1px solid #ccc', fontFamily: 'monospace' }}>
-                          {node.id}
-                        </td>
-                        <td style={{ padding: '8px', border: '1px solid #ccc' }}>
-                          {node.label || 'N/A'}
-                        </td>
-                        <td style={{ padding: '8px', border: '1px solid #ccc' }}>
-                          {typeof node.type === 'object' ? 
-                            `${node.type.category}/${node.type.type}` : 
-                            String(node.type)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {data.nodes.length > 20 && (
-                  <p style={{ marginTop: '10px', fontStyle: 'italic' }}>
-                    Showing first 20 of {data.nodes.length} nodes
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
+          <div>Loading graph data...</div>
         </div>
       );
     }
 
-    // Dynamically import Sigma.js components when available
-    const SigmaComponent = React.lazy(() => 
-      import('./SigmaDebugGraph').then(module => ({ default: module.SigmaDebugGraph }))
-    );
+    const config = this.config;
+
+    // Ensure we have valid dimensions
+    const actualWidth = Math.max(width > 0 ? width : 800, 400);
+    const actualHeight = Math.max(height > 0 ? height : 600, 400);
+
+    console.log(`[DebugGraphView] Actual dimensions: ${actualWidth}x${actualHeight}`);
+
+    // Check if data has nodes
+    if (!data.nodes || !Array.isArray(data.nodes) || data.nodes.length === 0) {
+      return (
+        <div style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(0, 0, 255, 0.1)'
+        }}>
+          <div>No graph nodes available</div>
+        </div>
+      );
+    }
 
     return (
-      <div style={{ 
-        width: '100%', 
-        height: '100%',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        overflow: 'hidden'
-      }}>
+      <div
+        ref={this.containerRef}
+        style={{
+          width: `${actualWidth}px`,
+          height: `${actualHeight}px`,
+          border: '3px solid blue', // Debug border
+          borderRadius: '4px',
+          overflow: 'hidden',
+          minWidth: '400px',
+          minHeight: '400px',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: 'rgba(0, 0, 255, 0.1)' // Semi-transparent blue background
+        }}
+      >
         <React.Suspense fallback={
-          <div style={{ 
-            width: '100%', 
-            height: '100%', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center' 
+          <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}>
             <div>Loading Sigma.js graph viewer...</div>
           </div>
         }>
-          <SigmaComponent 
+          <SigmaDebugGraph
             data={data}
             config={config}
-            width={width}
-            height={height}
+            width={actualWidth}
+            height={actualHeight}
             onNodeClick={(this.props as any).onNodeClick}
             onNodeHover={(this.props as any).onNodeHover}
           />
@@ -194,7 +157,6 @@ export class DebugGraph extends BaseViewClass<GraphData> {
   }
 }
 
-// Wrapper component for backward compatibility
 export const DebugGraphView: React.FC<{ slicePath: string; width?: number; height?: number }> = ({
   slicePath,
   width = 800,
@@ -209,5 +171,4 @@ export const DebugGraphView: React.FC<{ slicePath: string; width?: number; heigh
   );
 };
 
-// Default export for the view
 export default DebugGraphView;

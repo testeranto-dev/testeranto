@@ -59,7 +59,20 @@ export const startServiceLoggingPure = async (
     baseName = serviceName;
   }
 
-  const logFilePath = `${cwd}/testeranto/reports/${runtimeConfigKey}/${baseName}.log`;
+  // Ensure the directory exists
+  const logDir = `${cwd}/testeranto/reports/${runtimeConfigKey}`;
+  try {
+    const fs = await import('fs');
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+      consoleLog(`[startServiceLoggingPure] Created log directory: ${logDir}`);
+    }
+  } catch (error) {
+    consoleWarn(`[startServiceLoggingPure] Error creating log directory:`, error);
+  }
+  
+  const logFilePath = `${logDir}/${baseName}.log`;
+  consoleLog(`[startServiceLoggingPure] Log file path: ${logFilePath}`);
 
   // Call the callback if provided to notify about log file creation
   if (onLogFileCreated) {
@@ -74,10 +87,32 @@ export const startServiceLoggingPure = async (
     dockerContainerId = execSyncWrapper(containerIdCmd, { cwd: cwd }).trim();
     if (!dockerContainerId) {
       // Container doesn't exist yet, wait for it
-      for (let i = 0; i < 10; i++) { // Reduced from 30 to 10 seconds
+      consoleLog(`[startServiceLoggingPure] Waiting for container to appear...`);
+      for (let i = 0; i < 30; i++) { // Wait up to 30 seconds
         await new Promise(resolve => setTimeout(resolve, 1000));
         dockerContainerId = execSyncWrapper(containerIdCmd, { cwd: cwd }).trim();
-        if (dockerContainerId) break;
+        if (dockerContainerId) {
+          consoleLog(`[startServiceLoggingPure] Container found after ${i + 1} seconds: ${dockerContainerId}`);
+          break;
+        }
+      }
+      
+      // If still not found, check if container exists but is exited
+      if (!dockerContainerId) {
+        consoleLog(`[startServiceLoggingPure] Checking for exited containers with name ${serviceName}...`);
+        try {
+          const allContainersCmd = `docker ps -a --filter "name=${serviceName}" --format "{{.ID}}"`;
+          const allContainerIds = execSyncWrapper(allContainersCmd, { cwd: cwd }).trim();
+          if (allContainerIds) {
+            const containerIds = allContainerIds.split('\n').filter(id => id.trim());
+            if (containerIds.length > 0) {
+              dockerContainerId = containerIds[0];
+              consoleLog(`[startServiceLoggingPure] Found exited container: ${dockerContainerId}`);
+            }
+          }
+        } catch (error) {
+          consoleWarn(`[startServiceLoggingPure] Error checking for exited containers:`, error);
+        }
       }
     }
 
@@ -112,34 +147,53 @@ export const startServiceLoggingPure = async (
     consoleWarn(`[startServiceLoggingPure] Failed to create log file: ${error}`);
   }
 
-  // Wait for container to exit (with timeout) and ensure all output is flushed
-  let status = 'running';
+  // Check container status immediately
+  let status = 'unknown';
   let exitCode = null;
-
-  for (let i = 0; i < 20; i++) { // Wait up to 20 seconds (reduced from 30)
-    try {
-      const statusCmd = `docker inspect --format='{{.State.Status}}' ${dockerContainerId}`;
-      status = execSyncWrapper(statusCmd, { cwd: cwd }).trim();
-
-      // Also get exit code if container has exited
-      if (status === 'exited' || status === 'dead') {
-        try {
-          const exitCodeCmd = `docker inspect --format='{{.State.ExitCode}}' ${dockerContainerId}`;
-          exitCode = parseInt(execSyncWrapper(exitCodeCmd, { cwd: cwd }).trim());
-          // Wait a bit more to ensure all logs are flushed to Docker daemon
-          await new Promise(resolve => setTimeout(resolve, 100)); // Reduced from 200
-          break;
-        } catch (exitError) {
-          // Continue with status check
-        }
+  
+  try {
+    const statusCmd = `docker inspect --format='{{.State.Status}}' ${dockerContainerId}`;
+    status = execSyncWrapper(statusCmd, { cwd: cwd }).trim();
+    
+    if (status === 'exited' || status === 'dead') {
+      try {
+        const exitCodeCmd = `docker inspect --format='{{.State.ExitCode}}' ${dockerContainerId}`;
+        exitCode = parseInt(execSyncWrapper(exitCodeCmd, { cwd: cwd }).trim());
+      } catch (exitError) {
+        // Ignore exit code error
       }
-    } catch (error: any) {
-      // Container might have been removed
-      consoleWarn(`[startServiceLoggingPure] Error checking container status:`, error);
-      break;
     }
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  } catch (error: any) {
+    consoleWarn(`[startServiceLoggingPure] Error checking container status:`, error);
   }
+  
+  // If container is running, wait a bit for it to potentially exit
+  if (status === 'running') {
+    consoleLog(`[startServiceLoggingPure] Container ${dockerContainerId} is running, waiting up to 30 seconds for it to exit...`);
+    for (let i = 0; i < 30; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      try {
+        const currentStatusCmd = `docker inspect --format='{{.State.Status}}' ${dockerContainerId}`;
+        const currentStatus = execSyncWrapper(currentStatusCmd, { cwd: cwd }).trim();
+        if (currentStatus === 'exited' || currentStatus === 'dead') {
+          status = currentStatus;
+          try {
+            const exitCodeCmd = `docker inspect --format='{{.State.ExitCode}}' ${dockerContainerId}`;
+            exitCode = parseInt(execSyncWrapper(exitCodeCmd, { cwd: cwd }).trim());
+          } catch (exitError) {
+            // Ignore
+          }
+          break;
+        }
+      } catch (error) {
+        // Container might have been removed
+        break;
+      }
+    }
+  }
+  
+  // Always capture logs, even if container has exited
+  consoleLog(`[startServiceLoggingPure] Capturing logs for container ${dockerContainerId} (status: ${status})`);
 
   // Additional wait for builder services which might have buffered output
   if (serviceName.includes('builder') || serviceName.includes('build')) {
@@ -147,6 +201,13 @@ export const startServiceLoggingPure = async (
     await new Promise(resolve => setTimeout(resolve, 200)); // Reduced from 500
   }
 
+  // Add a small delay to ensure Docker has flushed logs to its daemon
+  // This is especially important for quickly exiting containers
+  if (status === 'exited' || status === 'dead') {
+    consoleLog(`[startServiceLoggingPure] Container has exited, waiting 500ms for log flush...`);
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+  
   // Capture logs - always capture both stdout and stderr
   try {
     // First, try to get all logs (both stdout and stderr) without time filtering
@@ -155,6 +216,7 @@ export const startServiceLoggingPure = async (
     try {
       const allLogsCmd = `docker logs ${dockerContainerId} 2>&1`;
       allLogs = execSyncWrapper(allLogsCmd, { cwd: cwd });
+      consoleLog(`[startServiceLoggingPure] Captured ${allLogs.length} bytes of logs`);
     } catch (allLogsError: any) {
       consoleWarn(`[startServiceLoggingPure] Error capturing all logs for ${serviceName}:`, allLogsError);
     }

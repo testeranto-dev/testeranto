@@ -75,7 +75,7 @@ export function applyUpdateUtil(
           break;
       }
     } catch (error) {
-      console.warn(`[applyUpdateUtil] Error applying operation ${op.type}:`, error);
+      // console.warn(`[applyUpdateUtil] Error applying operation ${op.type}:`, error);
     }
   });
 

@@ -1,11 +1,11 @@
 return [
   Suite.Default("Testing the treeFilter()", {
     tdtAdditionTable: Confirm["addition"](
-      [],
       [
         [Value.of([1, 1]), Should.beEqualTo(2)],
         [Value.of([2, 3]), Should.beGreaterThan(4)],
       ],
+      [],
     ),
   })
 ];

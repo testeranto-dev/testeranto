@@ -50,12 +50,54 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
       
       // The API returns { processes: [], message: string, timestamp: string, count: number }
       if (data && Array.isArray(data.processes)) {
-        // Use the processes directly as nodes
+        // Process each node to ensure proper status and type information
+        const processedNodes = data.processes.map((node: any) => {
+          // Ensure node has proper metadata for status
+          const metadata = node.metadata || {};
+          
+          // Determine if this is an aider process
+          let isAider = false;
+          if (node.type) {
+            if (typeof node.type === 'object') {
+              isAider = node.type.type === 'aider';
+            } else if (typeof node.type === 'string') {
+              isAider = node.type.includes('aider');
+            }
+          }
+          
+          // Determine status from metadata
+          let status = metadata.status || 'unknown';
+          const isActive = metadata.isActive || false;
+          const containerId = metadata.containerId;
+          
+          // If we have container info, check if it's running
+          if (containerId && status === 'unknown') {
+            // If containerId exists but we don't have status, assume it might be running
+            // The actual status should come from the server's process data
+            status = isActive ? 'running' : 'stopped';
+          }
+          
+          // Update node with processed information
+          return {
+            ...node,
+            metadata: {
+              ...metadata,
+              status,
+              isAider,
+              // Ensure we have the process type
+              processType: isAider ? 'aider' : 
+                         (node.type && typeof node.type === 'object' ? node.type.type : 
+                         (typeof node.type === 'string' ? node.type.replace('_process', '') : 'unknown'))
+            }
+          };
+        });
+        
+        // Use the processed nodes
         this.graphData = {
-          nodes: data.processes,
+          nodes: processedNodes,
           edges: []
         };
-        console.log('[DockerProcessTreeDataProvider] Loaded', data.processes.length, 'processes from API');
+        console.log('[DockerProcessTreeDataProvider] Loaded', processedNodes.length, 'processes from API');
       } else {
         console.warn('[DockerProcessTreeDataProvider] API response does not contain processes array:', data);
         this.graphData = { nodes: [], edges: [] };
@@ -253,10 +295,14 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
 
   private createProcessItem(node: GraphNode): TestTreeItem {
     const metadata = node.metadata || {};
-    const state = metadata.state || metadata.status || 'unknown';
+    
+    // Get status with priority: metadata.status, metadata.state, default 'unknown'
+    const status = metadata.status || metadata.state || 'unknown';
     const exitCode = metadata.exitCode;
     const isActive = metadata.isActive || false;
     const containerId = metadata.containerId || 'unknown';
+    const isAider = metadata.isAider || false;
+    const processType = metadata.processType || 'unknown';
 
     // Try to extract service name from node ID if not in metadata
     let serviceName = metadata.serviceName || metadata.containerName || metadata.name || 'unknown';
@@ -272,33 +318,25 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
         const testName = parts[2];
 
         // Extract process type from processTypePart
-        const processType = processTypePart.replace('_process', '');
+        const extractedProcessType = processTypePart.replace('_process', '');
         
         // Construct a reasonable service name
         // Special handling for agent processes (matching Server_Vscode.getAiderServiceName)
-        if (processType === 'aider' && configKey === 'agent') {
+        if (extractedProcessType === 'aider' && configKey === 'agent') {
           // Agent containers are named like 'agent-prodirek'
           serviceName = `agent-${testName}`;
-        } else if (processType === 'check') {
+        } else if (extractedProcessType === 'check') {
           serviceName = `check-${configKey}-${testName.replace(/\//g, '-').replace(/\./g, '-')}`;
-        } else if (processType === 'bdd') {
+        } else if (extractedProcessType === 'bdd') {
           serviceName = `bdd-${configKey}-${testName.replace(/\//g, '-').replace(/\./g, '-')}`;
-        } else if (processType === 'aider') {
+        } else if (extractedProcessType === 'aider') {
           serviceName = `aider-${configKey}-${testName.replace(/\//g, '-').replace(/\./g, '-')}`;
-        } else if (processType === 'builder') {
+        } else if (extractedProcessType === 'builder') {
           serviceName = `builder-${configKey}`;
         } else {
-          serviceName = `${processType}-${configKey}-${testName.replace(/\//g, '-').replace(/\./g, '-')}`;
+          serviceName = `${extractedProcessType}-${configKey}-${testName.replace(/\//g, '-').replace(/\./g, '-')}`;
         }
       }
-    }
-
-    // Determine process type for display
-    let processTypeDisplay = 'unknown';
-    if (node.type && typeof node.type === 'object') {
-      processTypeDisplay = node.type.type || 'unknown';
-    } else if (typeof node.type === 'string') {
-      processTypeDisplay = node.type.replace('_process', '');
     }
 
     // Determine label
@@ -308,34 +346,78 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
       label = parts[parts.length - 1] || node.id;
     }
 
-    // Determine description
-    let description = `${state}`;
+    // Determine description with clear status information
+    let description = '';
+    if (isAider) {
+      description += '🤖 ';
+    }
+    
+    // Add status with appropriate emoji
+    switch (status.toLowerCase()) {
+      case 'running':
+        description += '▶️ Running';
+        break;
+      case 'stopped':
+        description += '⏹️ Stopped';
+        break;
+      case 'exited':
+        if (exitCode === 0) {
+          description += '✅ Exited';
+        } else {
+          description += '❌ Exited';
+        }
+        break;
+      case 'failed':
+        description += '❌ Failed';
+        break;
+      case 'todo':
+        description += '📝 Todo';
+        break;
+      default:
+        description += `❓ ${status}`;
+    }
+    
+    // Add exit code if available
     if (exitCode !== undefined) {
       description += ` (exit: ${exitCode})`;
     }
-    if (!isActive) {
+    
+    // Add process type
+    description += ` • ${processType}`;
+    
+    // Add active/inactive indicator
+    if (!isActive && status !== 'stopped' && status !== 'exited') {
       description += ' • inactive';
     }
-    if (processTypeDisplay === 'aider') {
-      description += ' • aider';
-    }
 
-    // Determine icon
+    // Determine icon based on status and process type
     let icon: vscode.ThemeIcon;
-    if (processTypeDisplay === 'aider') {
-      icon = new vscode.ThemeIcon('comment-discussion', new vscode.ThemeColor('testing.iconPassed'));
-    } else if (state === 'running' && isActive) {
-      icon = new vscode.ThemeIcon('play-circle', new vscode.ThemeColor('testing.iconPassed'));
-    } else if (state === 'exited') {
-      if (exitCode === 0) {
-        icon = new vscode.ThemeIcon('check', new vscode.ThemeColor('testing.iconPassed'));
+    if (isAider) {
+      // Aider processes get special icon
+      if (status === 'running') {
+        icon = new vscode.ThemeIcon('comment-discussion', new vscode.ThemeColor('testing.iconPassed'));
+      } else if (status === 'stopped' || status === 'exited') {
+        icon = new vscode.ThemeIcon('comment', new vscode.ThemeColor('testing.iconUnset'));
       } else {
-        icon = new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'));
+        icon = new vscode.ThemeIcon('comment', new vscode.ThemeColor('testing.iconUnset'));
       }
-    } else if (state === 'stopped') {
-      icon = new vscode.ThemeIcon('circle-slash', new vscode.ThemeColor('testing.iconUnset'));
     } else {
-      icon = new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'));
+      // Non-aider processes
+      if (status === 'running') {
+        icon = new vscode.ThemeIcon('play-circle', new vscode.ThemeColor('testing.iconPassed'));
+      } else if (status === 'exited') {
+        if (exitCode === 0) {
+          icon = new vscode.ThemeIcon('check', new vscode.ThemeColor('testing.iconPassed'));
+        } else {
+          icon = new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'));
+        }
+      } else if (status === 'stopped') {
+        icon = new vscode.ThemeIcon('circle-slash', new vscode.ThemeColor('testing.iconUnset'));
+      } else if (status === 'failed') {
+        icon = new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'));
+      } else {
+        icon = new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'));
+      }
     }
 
     const item = new TestTreeItem(
@@ -344,16 +426,17 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
       vscode.TreeItemCollapsibleState.None,
       {
         description,
-        status: state,
+        status,
         exitCode,
         containerId,
         serviceName,
-        processType: processTypeDisplay,
+        processType,
         isActive,
         nodeId: node.id,
         // Add aider-specific fields
         agentName: metadata.agentName,
-        isAgentAider: metadata.isAgentAider
+        isAgentAider: metadata.isAgentAider,
+        isAider
       },
       {
         command: 'testeranto.openProcessTerminal',
@@ -363,35 +446,50 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
       icon
     );
 
-    // Build tooltip
-    let tooltip = `Type: ${processTypeDisplay}\n`;
+    // Build comprehensive tooltip
+    let tooltip = `Process: ${label}\n`;
+    tooltip += `Type: ${processType}${isAider ? ' (Aider)' : ''}\n`;
     tooltip += `ID: ${node.id}\n`;
-    tooltip += `Container: ${containerId}\n`;
-    tooltip += `State: ${state}\n`;
+    tooltip += `Status: ${status}\n`;
     tooltip += `Active: ${isActive ? 'Yes' : 'No'}\n`;
-    tooltip += `Service: ${serviceName}\n`;
-    if (processTypeDisplay === 'aider') {
+    
+    if (containerId && containerId !== 'unknown') {
+      tooltip += `Container: ${containerId}\n`;
+    }
+    
+    if (serviceName && serviceName !== 'unknown') {
+      tooltip += `Service: ${serviceName}\n`;
+    }
+    
+    if (isAider) {
+      tooltip += `Aider Process: Yes\n`;
       if (metadata.agentName) {
         tooltip += `Agent: ${metadata.agentName}\n`;
       }
-      if (metadata.isAgentAider) {
-        tooltip += `Agent Aider: Yes\n`;
-      }
     }
+    
     if (exitCode !== undefined) {
       tooltip += `Exit Code: ${exitCode}\n`;
     }
+    
     if (metadata.image) {
       tooltip += `Image: ${metadata.image}\n`;
     }
+    
     if (metadata.command) {
       tooltip += `Command: ${metadata.command}\n`;
     }
+    
     if (metadata.startedAt) {
       tooltip += `Started: ${metadata.startedAt}\n`;
     }
+    
     if (metadata.finishedAt) {
       tooltip += `Finished: ${metadata.finishedAt}\n`;
+    }
+    
+    if (metadata.updatedAt) {
+      tooltip += `Last Updated: ${metadata.updatedAt}\n`;
     }
 
     // Check if connected to an entrypoint
@@ -434,23 +532,37 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
     super.handleWebSocketMessage(message);
     console.log(`[DockerProcessTreeDataProvider] Received message type: ${message.type}, url: ${message.url}`);
 
+    // Handle various message types that indicate process data has changed
     if (message.type === 'resourceChanged') {
       if (message.url === '/~/process' || message.url === '/~/graph') {
-        console.log('[DockerProcessTreeDataProvider] Relevant update, refreshing');
+        console.log('[DockerProcessTreeDataProvider] Process data changed, refreshing from API');
+        // Refresh immediately
         this.refresh();
       }
     } else if (message.type === 'graphUpdated') {
-      console.log('[DockerProcessTreeDataProvider] Graph updated, refreshing');
+      console.log('[DockerProcessTreeDataProvider] Graph updated, refreshing from API');
       this.refresh();
+    } else if (message.type === 'processUpdated') {
+      console.log('[DockerProcessTreeDataProvider] Process updated, refreshing from API');
+      this.refresh();
+    } else if (message.type === 'containerStatusChanged') {
+      console.log('[DockerProcessTreeDataProvider] Container status changed, refreshing from API');
+      this.refresh();
+    } else if (message.type === 'connected') {
+      console.log('[DockerProcessTreeDataProvider] WebSocket connected, refreshing data');
+      // Refresh when first connected
+      setTimeout(() => this.refresh(), 1000);
     }
   }
 
   protected subscribeToGraphUpdates(): void {
     super.subscribeToGraphUpdates();
     // Subscribe to process updates via WebSocket
-    // The server sends resourceChanged messages for /~/processes
-    this.subscribeToSlice('/processes');
+    // The server sends resourceChanged messages for /~/process
+    this.subscribeToSlice('/process');
     // Also subscribe to graph for general updates
     this.subscribeToSlice('/graph');
+    // Subscribe to container status changes
+    this.subscribeToSlice('/container-status');
   }
 }

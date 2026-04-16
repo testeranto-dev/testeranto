@@ -1,5 +1,6 @@
 import type { IRunTime, ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
+import { Server_Aider } from "./Server_Aider";
 import { AiderImageBuilder } from "./Server_Docker/AiderImageBuilder";
 import { BuilderServicesManager } from "./Server_Docker/BuilderServicesManager";
 import { clearStoredLogs } from "./Server_Docker/clearStoredLogs";
@@ -10,6 +11,7 @@ import {
   consoleError,
   consoleLog,
   consoleWarn,
+  execSyncWrapper,
   processCwd,
 } from "./Server_Docker/Server_Docker_Dependents";
 import { makeReportDirectory, spawnPromise } from "./Server_Docker/utils";
@@ -18,20 +20,26 @@ import { waitForBundlesPure } from "./Server_Docker/utils/waitForBundlesPure";
 import { writeConfigForExtensionOnStop } from "./Server_Docker/utils/writeConfigForExtensionOnStop";
 import { writeConfigForExtensionPure } from "./Server_Docker/utils/writeConfigForExtensionPure";
 import { generateAiderUpdatesPure } from "./Server_Docker_Test_utils/generateAiderUpdatesPure";
-import { generateBddTestUpdatesPure } from "./Server_Docker_Test_utils/generateBddTestUpdatesPure";
 import { generateChecksUpdatesPure } from "./Server_Docker_Test_utils/generateChecksUpdatesPure";
+import { getContainerInfoUtil } from "./Server_Docker_Test_utils/getContainerInfoUtil";
+import { handleTestCompletedPure } from "./Server_Docker_Test_utils/handleTestCompletedUtil";
 import { informAiderDockerUtil } from "./Server_Docker_Test_utils/informAiderDockerUtil";
 import { getProcessLogsUtil } from "./Server_Docker_Test_utils/processLogsUtils";
 import { startServiceLoggingUtil } from "./Server_Docker_Test_utils/startServiceLoggingUtil";
-import { Server_Aider } from "./Server_Aider";
-import { getProcessSummaryHelper } from "./Server_Test_WS_utils/testManagerHelpers";
+import { launchChecksPure } from "./Server_Docker_Test_utils/launchChecksPure";
 import { launchBddTestUtil } from "./Server_Test_WS_utils/launchBddTestUtil";
+import { getProcessSummaryHelper } from "./Server_Test_WS_utils/testManagerHelpers";
+import { checkExistingTestResultsUtil } from "./utils/checkExistingTestResultsUtil";
+import { processFeaturesFromTestResultsUtil } from "./utils/processFeaturesFromTestResultsUtil";
+import { updateContainerInfoFromDockerUtil } from "./utils/updateContainerInfoFromDockerUtil";
 
 export abstract class Server_Docker_Test extends Server_Aider {
   protected logProcesses: Map<string, { process: any; serviceName: string }> = new Map();
   protected builderServicesManager: BuilderServicesManager;
   protected aiderImageBuilder: AiderImageBuilder;
   protected failedBuilderConfigs: Set<string> = new Set();
+  protected fileWatchers: Map<string, () => void> = new Map();
+  protected testLaunchLocks: Map<string, boolean> = new Map();
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
@@ -52,13 +60,94 @@ export abstract class Server_Docker_Test extends Server_Aider {
   }
 
   async start(): Promise<void> {
-    await super.start();
-    // getReportDirPure();
-    
-    // Initialize file watching for input files
+    console.log("mark2")
+
+    await this.checkExistingTestResults();
+
     if (this.mode === "dev") {
       await this.initializeFileWatching();
     }
+
+    await super.start();
+    
+    // Start logging for all running services
+    await this.startLoggingForAllServices();
+  }
+
+  private async startLoggingForAllServices(): Promise<void> {
+    consoleLog(`[Server_Docker_Test] Starting logging for all running services`);
+    
+    try {
+      // Get all services from docker-compose.yml
+      const allServicesCmd = `docker compose -f "testeranto/docker-compose.yml" config --services`;
+      const allServicesOutput = execSyncWrapper(allServicesCmd, { cwd: processCwd() }).trim();
+      const allServices = allServicesOutput.split('\n').map(s => s.trim());
+      
+      for (const serviceName of allServices) {
+        // Skip builder services (already handled)
+        if (serviceName.includes('builder')) {
+          continue;
+        }
+        
+        // Try to determine configKey from service name
+        // Service names are like: nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd
+        // Config key is usually the first part before the first dash
+        let configKey = 'nodetests'; // Default
+        const firstDashIndex = serviceName.indexOf('-');
+        if (firstDashIndex > 0) {
+          configKey = serviceName.substring(0, firstDashIndex);
+        }
+        
+        // Determine runtime based on config
+        let runtime = 'node';
+        const runtimeConfig = this.configs.runtimes[configKey];
+        if (runtimeConfig) {
+          runtime = runtimeConfig.runtime;
+        }
+        
+        // For test name, we can try to extract it, but it's not critical for logging
+        // The log file will use the service name if testName is undefined
+        let testName: string | undefined = undefined;
+        
+        // Try to extract test name for BDD, check, and aider services
+        if (serviceName.includes('-bdd') || serviceName.includes('-aider') || serviceName.includes('-check-')) {
+          // Remove suffix to get base name
+          let baseName = serviceName;
+          if (serviceName.includes('-bdd')) {
+            baseName = serviceName.replace('-bdd', '');
+          } else if (serviceName.includes('-aider')) {
+            baseName = serviceName.replace('-aider', '');
+          } else if (serviceName.includes('-check-')) {
+            // For check services, remove -check-\d+
+            baseName = serviceName.replace(/-check-\d+$/, '');
+          }
+          
+          // Remove configKey prefix
+          if (baseName.startsWith(configKey + '-')) {
+            baseName = baseName.substring(configKey.length + 1);
+          }
+          
+          // Convert dashes back to slashes where appropriate
+          // This is tricky because some dashes are part of the original path
+          // For now, we'll use the modified name
+          testName = baseName;
+        }
+        
+        consoleLog(`[Server_Docker_Test] Starting logging for service: ${serviceName}, config: ${configKey}, test: ${testName || 'undefined'}`);
+        await this.startServiceLogging(serviceName, runtime, configKey, testName);
+      }
+    } catch (error) {
+      consoleError(`[Server_Docker_Test] Error starting logging for all services:`, error);
+    }
+  }
+
+  private async checkExistingTestResults(): Promise<void> {
+    await checkExistingTestResultsUtil(
+      this.configs,
+      processCwd,
+      this.handleTestCompleted.bind(this),
+      consoleWarn
+    );
   }
 
   public async stop(): Promise<void> {
@@ -66,14 +155,49 @@ export abstract class Server_Docker_Test extends Server_Aider {
     this.logProcesses.clear();
     this.failedBuilderConfigs.clear();
 
+    // Stop all unified watchers
+    this.stopAllFileWatchers();
+
     // Notify about graph changes
     this.resourceChanged("/~/graph");
-    
+
     // Write extension config
     writeConfigForExtensionOnStop();
-    
+
     // Call parent stop to ensure proper cleanup chain
     await super.stop();
+  }
+
+  /**
+   * Stop all active file watchers
+   */
+  private stopAllFileWatchers(): void {
+    consoleLog(`[stopAllFileWatchers] Stopping ${this.unifiedWatchers.size} unified watchers`);
+    
+    // Stop all unified watchers
+    for (const [configKey, watcher] of this.unifiedWatchers.entries()) {
+      try {
+        watcher.stop();
+        consoleLog(`[stopAllFileWatchers] Stopped unified watcher for config ${configKey}`);
+      } catch (error) {
+        consoleError(`[stopAllFileWatchers] Error stopping unified watcher for ${configKey}:`, error);
+      }
+    }
+    this.unifiedWatchers.clear();
+    
+    // Also clear the old fileWatchers map for compatibility
+    consoleLog(`[stopAllFileWatchers] Also clearing ${this.fileWatchers.size} legacy file watchers`);
+    const watchersToStop = Array.from(this.fileWatchers.entries());
+    this.fileWatchers.clear();
+
+    for (const [key, unwatch] of watchersToStop) {
+      try {
+        unwatch();
+        consoleLog(`[stopAllFileWatchers] Stopped legacy watcher: ${key}`);
+      } catch (error) {
+        consoleError(`[stopAllFileWatchers] Error stopping legacy watcher ${key}:`, error);
+      }
+    }
   }
 
   protected writeConfigForExtension(): void {
@@ -127,6 +251,28 @@ export abstract class Server_Docker_Test extends Server_Aider {
     runtimeConfigKey: string,
     testName: string,
   ) => {
+    consoleLog(`[Server_Docker_Test.startServiceLogging] Called for service: ${serviceName}, runtime: ${runtime}, config: ${runtimeConfigKey}, test: ${testName}`);
+    
+    // Log all Docker services to see what's available
+    try {
+      const allServicesCmd = `docker compose -f "testeranto/docker-compose.yml" config --services`;
+      const allServices = execSyncWrapper(allServicesCmd, { cwd: processCwd() }).trim();
+      consoleLog(`[Server_Docker_Test.startServiceLogging] All available services: ${allServices}`);
+      
+      // Check if our service is in the list
+      const servicesList = allServices.split('\n').map(s => s.trim());
+      if (!servicesList.includes(serviceName)) {
+        consoleWarn(`[Server_Docker_Test.startServiceLogging] Service ${serviceName} not found in docker-compose.yml!`);
+        // Try to find a matching service
+        const matchingServices = servicesList.filter(s => s.includes(serviceName) || serviceName.includes(s));
+        if (matchingServices.length > 0) {
+          consoleWarn(`[Server_Docker_Test.startServiceLogging] Found similar services: ${matchingServices.join(', ')}`);
+        }
+      }
+    } catch (error) {
+      consoleWarn(`[Server_Docker_Test.startServiceLogging] Could not list services:`, error);
+    }
+    
     await startServiceLoggingUtil(
       serviceName,
       runtime,
@@ -134,9 +280,19 @@ export abstract class Server_Docker_Test extends Server_Aider {
       testName,
       this.clearStoredLogs.bind(this),
       startServiceLoggingPure,
-      createLogFileNodePure,
+      (logFilePath: string, serviceName: string, runtime: string, runtimeConfigKey: string, testName: string) => {
+        consoleLog(`[Server_Docker_Test.startServiceLogging] Log file created: ${logFilePath}`);
+        // Call createLogFileNodePure with the server instance (this)
+        createLogFileNodePure(
+          logFilePath,
+          serviceName,
+          runtime,
+          runtimeConfigKey,
+          testName,
+          this // This is the server instance
+        );
+      },
       processCwd,
-      this, // Use this instead of this.graphManager
       this.writeConfigForExtension.bind(this)
     );
   };
@@ -160,209 +316,21 @@ export abstract class Server_Docker_Test extends Server_Aider {
   }
 
   protected async getContainerInfo(serviceName: string): Promise<any> {
-    // First try to get container info from the graph
-    try {
-      // Get all process nodes from the graph
-      const graphData = this.getGraphData();
-      const processNodes = graphData.nodes.filter((node: any) => {
-        // Check if node is a process node
-        if (node.type && typeof node.type === 'object') {
-          return node.type.category === 'process';
-        }
-        // For backward compatibility
-        return node.type === 'docker_process' ||
-               node.type === 'bdd_process' ||
-               node.type === 'check_process' ||
-               node.type === 'builder_process' ||
-               node.type === 'aider_process';
-      });
-      
-      // Find the process node with matching service name
-      for (const node of processNodes) {
-        const metadata = node.metadata || {};
-        if (metadata.serviceName === serviceName || metadata.containerName === serviceName) {
-          // Return the container info from the graph
-          return {
-            Id: metadata.containerId || null,
-            Name: metadata.containerName || serviceName,
-            State: {
-              Running: metadata.status === 'running' || metadata.status === 'done',
-              Status: metadata.status || 'unknown'
-            },
-            // Include all metadata for compatibility
-            ...metadata
-          };
-        }
-      }
-      
-      // Also check by container ID if serviceName might be a container ID
-      for (const node of processNodes) {
-        const metadata = node.metadata || {};
-        if (metadata.containerId === serviceName) {
-          return {
-            Id: metadata.containerId,
-            Name: metadata.containerName || serviceName,
-            State: {
-              Running: metadata.status === 'running' || metadata.status === 'done',
-              Status: metadata.status || 'unknown'
-            },
-            ...metadata
-          };
-        }
-      }
-      
-      // For agent containers, check if serviceName matches agent-{agentName} pattern
-      if (serviceName.startsWith('agent-')) {
-        const agentName = serviceName.replace('agent-', '');
-        const agentProcessId = `aider_process:agent:${agentName}`;
-        
-        // Look for the agent process node
-        for (const node of processNodes) {
-          if (node.id === agentProcessId) {
-            const metadata = node.metadata || {};
-            if (metadata.containerId) {
-              return {
-                Id: metadata.containerId,
-                Name: metadata.serviceName || serviceName,
-                State: {
-                  Running: metadata.status === 'running' || metadata.containerStatus === 'running',
-                  Status: metadata.status || metadata.containerStatus || 'unknown'
-                },
-                ...metadata
-              };
-            }
-          }
-        }
-        
-        // Also check if any process node has this serviceName in metadata
-        for (const node of processNodes) {
-          const metadata = node.metadata || {};
-          if (metadata.serviceName === serviceName) {
-            if (metadata.containerId) {
-              return {
-                Id: metadata.containerId,
-                Name: metadata.serviceName || serviceName,
-                State: {
-                  Running: metadata.status === 'running' || metadata.containerStatus === 'running',
-                  Status: metadata.status || metadata.containerStatus || 'unknown'
-                },
-                ...metadata
-              };
-            }
-          }
-        }
-      }
-    } catch (error) {
-      consoleError(`[Server_Docker_Test] Error getting container info for ${serviceName} from graph:`, error);
-    }
-    
-    // If not found in graph or graph says not running, check Docker directly
-    try {
-      // Dynamically import child_process
-      const { exec } = await import('child_process');
-      const { promisify } = await import('util');
-      const execAsync = promisify(exec);
-      
-      // Try to get container info by name
-      const { stdout } = await execAsync(`docker inspect ${serviceName} 2>/dev/null || docker ps -a --filter "name=${serviceName}" --format "{{.ID}}"`);
-      
-      if (stdout.trim()) {
-        // If we got container ID from docker ps, use it to inspect
-        const containerId = stdout.trim().split('\n')[0];
-        const { stdout: inspectStdout } = await execAsync(`docker inspect ${containerId}`);
-        const containerInfo = JSON.parse(inspectStdout)[0];
-        
-        return {
-          Id: containerInfo.Id,
-          Name: containerInfo.Name ? containerInfo.Name.replace(/^\//, '') : serviceName,
-          State: containerInfo.State,
-          Config: containerInfo.Config
-        };
-      }
-    } catch (error) {
-      consoleError(`[Server_Docker_Test] Error getting container info for ${serviceName} from Docker:`, error);
-    }
-    
-    // No container info found
-    consoleError(`[Server_Docker_Test] Container info for ${serviceName} not found`);
-    return null;
+    return getContainerInfoUtil(
+      serviceName,
+      this.getGraphData.bind(this),
+      consoleError
+    );
   }
 
   protected async updateContainerInfoFromDocker(serviceName: string): Promise<void> {
-    // This is an "update from below" - get container info from Docker and update the graph
-    // This should be called when services start, not from getContainerInfo
-    
-    try {
-      // Dynamically import child_process
-      const { exec } = await import('child_process');
-      const { promisify } = await import('util');
-      const execAsync = promisify(exec);
-      
-      // Get container ID for this service
-      const { stdout } = await execAsync(`docker ps --filter "name=${serviceName}" --format "{{.ID}}"`);
-      const containerId = stdout.trim();
-      
-      if (!containerId) {
-        consoleError(`[Server_Docker_Test] No container found for service ${serviceName}`);
-        return;
-      }
-      
-      // Get more container info
-      const { stdout: inspectStdout } = await execAsync(`docker inspect ${containerId}`);
-      const containerInfo = JSON.parse(inspectStdout)[0];
-      
-      // Find the process node for this service
-      const graphData = this.getGraphData();
-      const processNodes = graphData.nodes.filter((node: any) => {
-        if (node.type && typeof node.type === 'object') {
-          return node.type.category === 'process';
-        }
-        return node.type === 'docker_process' ||
-               node.type === 'bdd_process' ||
-               node.type === 'check_process' ||
-               node.type === 'builder_process' ||
-               node.type === 'aider_process';
-      });
-      
-      for (const node of processNodes) {
-        const metadata = node.metadata || {};
-        if (metadata.serviceName === serviceName) {
-          // Update the process node with container information
-          const updateTimestamp = new Date().toISOString();
-          const containerUpdate = {
-            operations: [{
-              type: 'updateNode' as const,
-              data: {
-                id: node.id,
-                metadata: {
-                  ...metadata,
-                  containerId: containerId,
-                  containerName: containerInfo.Name ? containerInfo.Name.replace(/^\//, '') : serviceName,
-                  containerInfo: {
-                    Id: containerId,
-                    Name: containerInfo.Name ? containerInfo.Name.replace(/^\//, '') : serviceName,
-                    State: containerInfo.State,
-                    Config: containerInfo.Config
-                  },
-                  updatedAt: updateTimestamp,
-                  status: 'running'
-                }
-              },
-              timestamp: updateTimestamp
-            }],
-            timestamp: updateTimestamp
-          };
-          this.applyUpdate(containerUpdate);
-          consoleLog(`[Server_Docker_Test] Updated process node ${node.id} with container info from Docker`);
-          return;
-        }
-      }
-      
-      consoleError(`[Server_Docker_Test] No process node found for service ${serviceName} in graph`);
-      
-    } catch (error) {
-      consoleError(`[Server_Docker_Test] Error updating container info for ${serviceName} from Docker:`, error);
-    }
+    await updateContainerInfoFromDockerUtil(
+      serviceName,
+      this.getGraphData.bind(this),
+      this.applyUpdate.bind(this),
+      consoleLog,
+      consoleError
+    );
   }
 
   protected async waitForBundles(): Promise<Set<string>> {
@@ -390,25 +358,39 @@ export abstract class Server_Docker_Test extends Server_Aider {
     configKey: string,
     configValue: any,
   ) {
-    await launchBddTestUtil(
-      runtime,
-      testName,
-      configKey,
-      configValue,
-      this.failedBuilderConfigs,
-      this.startServiceLogging,
-      this.writeConfigForExtension.bind(this),
-      this.resourceChanged.bind(this),
-      this.addProcessNodeToGraph.bind(this),
-      this.applyUpdate.bind(this),
-      this.getBddServiceName.bind(this),
-      this.startDockerService.bind(this),
-      this.getContainerInfo.bind(this),
-      consoleLog,
-      consoleError,
-      this.graphManager,
-      this.createAiderMessageFile?.bind(this)
-    );
+    const lockKey = `bdd:${configKey}:${testName}`;
+    if (this.testLaunchLocks.get(lockKey)) {
+      consoleLog(`[launchBddTest] Skipping ${testName} - already launching`);
+      return;
+    }
+
+    this.testLaunchLocks.set(lockKey, true);
+    try {
+      await launchBddTestUtil(
+        runtime,
+        testName,
+        configKey,
+        configValue,
+        this.failedBuilderConfigs,
+        this.startServiceLogging,
+        this.writeConfigForExtension.bind(this),
+        this.resourceChanged.bind(this),
+        this.addProcessNodeToGraph.bind(this),
+        this.applyUpdate.bind(this),
+        this.getBddServiceName.bind(this),
+        this.startDockerService.bind(this),
+        this.getContainerInfo.bind(this),
+        consoleLog,
+        consoleError,
+        this.graphManager,
+        this.createAiderMessageFile?.bind(this)
+      );
+    } finally {
+      // Clear the lock after a delay to prevent immediate relaunch
+      setTimeout(() => {
+        this.testLaunchLocks.delete(lockKey);
+      }, 5000);
+    }
   }
 
   async launchChecks(
@@ -417,50 +399,92 @@ export abstract class Server_Docker_Test extends Server_Aider {
     configKey: string,
     configValue: any,
   ) {
-    // Add process node to graph first
-    await this.addProcessNodeToGraph(
-      'check',
-      runtime,
-      testName,
-      configKey,
-      configValue,
-      undefined,
-      'running'
-    );
-
-    // Generate updates and service names using pure function
-    const { updates, serviceNames } = generateChecksUpdatesPure(
-      testName,
-      configKey,
-      this.getBaseServiceName.bind(this),
-      consoleLog
-    );
-
-    // Apply updates to graph
-    for (const update of updates) {
-      this.applyUpdate(update);
+    const lockKey = `checks:${configKey}:${testName}`;
+    if (this.testLaunchLocks.get(lockKey)) {
+      consoleLog(`[launchChecks] Skipping ${testName} - already launching`);
+      return;
     }
 
-    // Start the Docker services (side effects)
-    for (const serviceName of serviceNames) {
+    this.testLaunchLocks.set(lockKey, true);
+    try {
+      await launchChecksPure(
+        runtime,
+        testName,
+        configKey,
+        configValue,
+        this.addProcessNodeToGraph.bind(this),
+        this.getBaseServiceName.bind(this),
+        generateChecksUpdatesPure,
+        consoleLog,
+        consoleError,
+        this.applyUpdate.bind(this),
+        this.startDockerService.bind(this),
+        this.getContainerInfo.bind(this),
+        this.getProcessNode.bind(this),
+        this.startServiceLogging.bind(this)
+      );
+    } finally {
+      setTimeout(() => {
+        this.testLaunchLocks.delete(lockKey);
+      }, 5000);
+    }
+  }
+
+  async launchAider(
+    runtime: IRunTime,
+    testName: string,
+    configKey: string,
+    configValue: any,
+  ) {
+    const lockKey = `aider:${configKey}:${testName}`;
+    if (this.testLaunchLocks.get(lockKey)) {
+      consoleLog(`[launchAider] Skipping ${testName} - already launching`);
+      return;
+    }
+
+    this.testLaunchLocks.set(lockKey, true);
+    try {
+      // Add process node to graph first
+      await this.addProcessNodeToGraph(
+        'aider',
+        runtime,
+        testName,
+        configKey,
+        configValue,
+        undefined,
+        'running'
+      );
+
+      // Generate updates and service name using pure function
+      const { updates, serviceName } = generateAiderUpdatesPure(
+        testName,
+        configKey,
+        this.getAiderServiceName.bind(this),
+        consoleLog
+      );
+
+      // Apply updates to graph
+      for (const update of updates) {
+        this.applyUpdate(update);
+      }
+
+      // Start the Docker service (side effect)
       try {
         await this.startDockerService(serviceName);
-        
+
         // Get container info after starting
         const containerInfo = await this.getContainerInfo(serviceName);
         const containerId = containerInfo?.Id;
-        
+
         if (containerId) {
           // Update the process node with container information
-          // For checks, we need to find the right process node
-          // Since there could be multiple checks, we'll update based on serviceName
-          const checkProcessId = `check_process:${configKey}:${testName}`;
+          const aiderProcessId = `aider_process:${configKey}:${testName}`;
           const updateTimestamp = new Date().toISOString();
           const containerUpdate = {
             operations: [{
               type: 'updateNode' as const,
               data: {
-                id: checkProcessId,
+                id: aiderProcessId,
                 metadata: {
                   containerId: containerId,
                   serviceName: serviceName,
@@ -473,193 +497,201 @@ export abstract class Server_Docker_Test extends Server_Aider {
             timestamp: updateTimestamp
           };
           this.applyUpdate(containerUpdate);
-          consoleLog(`[launchChecks] Updated check process ${checkProcessId} with container ${containerId}`);
+          consoleLog(`[launchAider] Updated aider process ${aiderProcessId} with container ${containerId}`);
         }
       } catch (error) {
-        consoleError(`[launchChecks] Failed to start service ${serviceName}:`, error);
-        // Update process node status to failed
-        // For simplicity, we'll just log the error
-      }
-    }
-  }
+        consoleError(`[launchAider] Failed to start service ${serviceName}:`, error);
 
-  async launchAider(
-    runtime: IRunTime,
-    testName: string,
-    configKey: string,
-    configValue: any,
-  ) {
-    // Add process node to graph first
-    await this.addProcessNodeToGraph(
-      'aider',
-      runtime,
-      testName,
-      configKey,
-      configValue,
-      undefined,
-      'running'
-    );
-
-    // Generate updates and service name using pure function
-    const { updates, serviceName } = generateAiderUpdatesPure(
-      testName,
-      configKey,
-      this.getAiderServiceName.bind(this),
-      consoleLog
-    );
-
-    // Apply updates to graph
-    for (const update of updates) {
-      this.applyUpdate(update);
-    }
-
-    // Start the Docker service (side effect)
-    try {
-      await this.startDockerService(serviceName);
-      
-      // Get container info after starting
-      const containerInfo = await this.getContainerInfo(serviceName);
-      const containerId = containerInfo?.Id;
-      
-      if (containerId) {
-        // Update the process node with container information
+        // Update aider_process node status to failed
         const aiderProcessId = `aider_process:${configKey}:${testName}`;
-        const updateTimestamp = new Date().toISOString();
-        const containerUpdate = {
+        const failureTimestamp = new Date().toISOString();
+        const failureUpdate = {
           operations: [{
             type: 'updateNode' as const,
             data: {
               id: aiderProcessId,
+              status: 'failed',
               metadata: {
-                containerId: containerId,
-                serviceName: serviceName,
-                containerInfo: containerInfo,
-                updatedAt: updateTimestamp
+                error: error instanceof Error ? error.message : String(error),
+                finishedAt: failureTimestamp
               }
             },
-            timestamp: updateTimestamp
+            timestamp: failureTimestamp
           }],
-          timestamp: updateTimestamp
-        };
-        this.applyUpdate(containerUpdate);
-        consoleLog(`[launchAider] Updated aider process ${aiderProcessId} with container ${containerId}`);
-      }
-    } catch (error) {
-      consoleError(`[launchAider] Failed to start service ${serviceName}:`, error);
-      
-      // Update aider_process node status to failed
-      const aiderProcessId = `aider_process:${configKey}:${testName}`;
-      const failureTimestamp = new Date().toISOString();
-      const failureUpdate = {
-        operations: [{
-          type: 'updateNode' as const,
-          data: {
-            id: aiderProcessId,
-            status: 'failed',
-            metadata: {
-              error: error instanceof Error ? error.message : String(error),
-              finishedAt: failureTimestamp
-            }
-          },
           timestamp: failureTimestamp
-        }],
-        timestamp: failureTimestamp
-      };
-      this.applyUpdate(failureUpdate);
-      throw error;
-    }
-  }
-
-  /**
-   * Watch input files for a test and relaunch services when they change
-   */
-  async watchInputFileForTest(
-    runtime: IRunTime,
-    testName: string,
-    configKey: string,
-    configValue: any
-  ): Promise<void> {
-    const fs = await import('fs');
-    const path = await import('path');
-    const { getInputFilePath } = await import('./Server_Docker/Server_Docker_Constants');
-    
-    try {
-      const inputFilePath = getInputFilePath(runtime, configKey);
-      
-      if (!fs.existsSync(inputFilePath)) {
-        consoleLog(`[watchInputFileForTest] Input file doesn't exist yet: ${inputFilePath}`);
-        return;
+        };
+        this.applyUpdate(failureUpdate);
+        throw error;
       }
-
-      // Store the current hash to detect changes
-      let currentHash = '';
-      const updateHash = () => {
-        try {
-          const content = fs.readFileSync(inputFilePath, 'utf-8');
-          const allTestsInfo = JSON.parse(content);
-          if (allTestsInfo[testName]) {
-            currentHash = allTestsInfo[testName].hash || '';
-          }
-        } catch (error) {
-          consoleError(`[watchInputFileForTest] Error reading input file:`, error);
-        }
-      };
-
-      // Initial hash
-      updateHash();
-
-      // Watch for changes
-      fs.watchFile(inputFilePath, async (curr, prev) => {
-        consoleLog(`[watchInputFileForTest] Input file changed: ${inputFilePath}`);
-        
-        try {
-          const content = fs.readFileSync(inputFilePath, 'utf-8');
-          const allTestsInfo = JSON.parse(content);
-          
-          if (allTestsInfo[testName]) {
-            const testInfo = allTestsInfo[testName];
-            const newHash = testInfo.hash || '';
-            
-            if (newHash !== currentHash) {
-              consoleLog(`[watchInputFileForTest] Hash changed for ${testName}, relaunching services`);
-              currentHash = newHash;
-              
-              // Relaunch BDD test
-              await this.launchBddTest(runtime, testName, configKey, configValue);
-              
-              // Relaunch checks
-              await this.launchChecks(runtime, testName, configKey, configValue);
-              
-              // Relaunch aider
-              await this.launchAider(runtime, testName, configKey, configValue);
-              
-              consoleLog(`[watchInputFileForTest] Services relaunched for ${testName}`);
-            }
-          }
-        } catch (error) {
-          consoleError(`[watchInputFileForTest] Error processing input file change:`, error);
-        }
-      });
-      
-      consoleLog(`[watchInputFileForTest] Now watching input file for ${testName}: ${inputFilePath}`);
-    } catch (error) {
-      consoleError(`[watchInputFileForTest] Failed to set up file watching for ${testName}:`, error);
+    } finally {
+      setTimeout(() => {
+        this.testLaunchLocks.delete(lockKey);
+      }, 5000);
     }
   }
+
+
+  private unifiedWatchers: Map<string, any> = new Map();
 
   /**
    * Initialize file watching for all tests
    */
   async initializeFileWatching(): Promise<void> {
-    consoleLog('[initializeFileWatching] Setting up file watching for all tests');
-    
+    consoleLog('[initializeFileWatching] Setting up unified file watching for all tests');
+
+    // Create a unified watcher for each config
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
-      const runtime = configValue.runtime as IRunTime;
-      const tests = configValue.tests || [];
-      
-      for (const testName of tests) {
-        await this.watchInputFileForTest(runtime, testName, configKey, configValue);
+      // Remove existing watcher if any
+      const existingWatcher = this.unifiedWatchers.get(configKey);
+      if (existingWatcher) {
+        try {
+          existingWatcher.stop();
+          consoleLog(`[initializeFileWatching] Stopped existing watcher for config ${configKey}`);
+        } catch (error) {
+          consoleError(`[initializeFileWatching] Error stopping existing watcher:`, error);
+        }
+        this.unifiedWatchers.delete(configKey);
       }
+
+      // Import and create new unified watcher
+      const { UnifiedFileWatcher } = await import('./Server_Docker_Test_utils/unifiedFileWatcher/index');
+      
+      const watcher = new UnifiedFileWatcher({
+        configKey,
+        configValue,
+        processCwd,
+        consoleLog,
+        consoleError,
+        launchBddTest: this.launchBddTest.bind(this),
+        launchChecks: this.launchChecks.bind(this),
+        launchAider: this.launchAider.bind(this),
+        onTestCompleted: async (configKey, testName, testResults, testsJsonPath) => {
+          await this.handleTestCompleted(configKey, testName, testResults, testsJsonPath);
+        }
+      });
+      
+      await watcher.start();
+      this.unifiedWatchers.set(configKey, watcher);
+      consoleLog(`[initializeFileWatching] Started unified watcher for config ${configKey}`);
+    }
+  }
+
+  /**
+   * Watch inputFiles.json for a config and relaunch tests when hashes change
+   */
+  async watchInputFilesForConfig(
+    configKey: string,
+    configValue: any
+  ): Promise<void> {
+    // This method is now handled by the unified watcher
+    consoleLog(`[watchInputFilesForConfig] Unified watcher handles ${configKey}`);
+  }
+
+  private async handleTestCompleted(
+    configKey: string,
+    testName: string,
+    testResults: any,
+    testsJsonPath: string
+  ): Promise<void> {
+    // Use the pure function with explicit dependencies
+    await handleTestCompletedPure(
+      configKey,
+      testName,
+      testResults,
+      this.configs,
+      this.updateProcessNodeStatus.bind(this),
+      this.getGraphData.bind(this),
+      this.updateEntrypointNode.bind(this),
+      this.processFeaturesFromTestResults.bind(this),
+      this.updateFromTestResults.bind(this),
+      this.resourceChanged.bind(this)
+    );
+  }
+
+  protected async processFeaturesFromTestResults(
+    configKey: string,
+    testName: string,
+    testResults: any,
+    timestamp: string
+  ): Promise<void> {
+    await processFeaturesFromTestResultsUtil(
+      configKey,
+      testName,
+      testResults,
+      timestamp,
+      this.featureIngestor,
+      this.getProcessNode.bind(this),
+      this.applyUpdate.bind(this),
+      consoleWarn,
+      consoleError
+    );
+  }
+
+  protected updateEntrypointNode(
+    entrypointId: string,
+    status: 'done' | 'failed',
+    testResults: any,
+    timestamp: string
+  ): void {
+    const update = {
+      operations: [{
+        type: 'updateNode' as const,
+        data: {
+          id: entrypointId,
+          status: status,
+          metadata: {
+            ...this.getProcessNode(entrypointId)?.metadata || {},
+            finishedAt: timestamp,
+            testResults: testResults,
+            updatedAt: timestamp
+          }
+        },
+        timestamp
+      }],
+      timestamp
+    };
+
+    try {
+      this.applyUpdate(update);
+    } catch (error) {
+      consoleError(`[Server_Docker_Test] Error updating entrypoint node ${entrypointId}:`, error);
+    }
+  }
+
+  protected updateProcessNodeStatus(
+    processId: string,
+    status: 'running' | 'done' | 'failed',
+    testResults: any,
+    timestamp: string
+  ): void {
+    const processNode = this.getProcessNode(processId);
+    if (!processNode) {
+      consoleWarn(`[Server_Docker_Test] Process node ${processId} not found`);
+      return;
+    }
+
+    const update = {
+      operations: [{
+        type: 'updateNode' as const,
+        data: {
+          id: processId,
+          status: status,
+          metadata: {
+            ...processNode.metadata || {},
+            finishedAt: timestamp,
+            testResults: testResults,
+            updatedAt: timestamp
+          }
+        },
+        timestamp
+      }],
+      timestamp
+    };
+
+    try {
+      this.applyUpdate(update);
+    } catch (error) {
+      consoleError(`[Server_Docker_Test] Error updating process node ${processId}:`, error);
     }
   }
 

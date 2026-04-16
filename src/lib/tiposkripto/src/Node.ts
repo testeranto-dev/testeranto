@@ -13,31 +13,24 @@ import {
   ITestAdapter,
 } from "./CoreTypes.js";
 
-console.log(`[NodeTiposkripto] ${process.argv}`);
-
-const config = JSON.parse(process.argv[2]);
-
-export class NodeTiposkripto<
+export abstract class NodeTiposkripto<
   I extends TestTypeParams_any,
   O extends TestSpecShape_any,
   M,
 > extends BaseTiposkripto<I, O, M> {
-  constructor(
-    input: I["iinput"],
-    testSpecification: ITestSpecification<I, O>,
-    testImplementation: ITestImplementation<I, O, M>,
-    testAdapter: Partial<ITestAdapter<I>>,
-    testResourceRequirement: ITTestResourceRequest = defaultTestResourceRequirement,
-  ) {
-    super(
-      "node",
-      input,
-      testSpecification,
-      testImplementation as any,
-      testResourceRequirement,
-      testAdapter,
-      config,
-    );
+  constructor(testSpecification: ITestSpecification<I, O>) {
+    // For Node runtime, we need to get config from process.argv
+    let config = {};
+    if (process.argv.length > 2) {
+      try {
+        config = JSON.parse(process.argv[2]);
+      } catch (e) {
+        console.error(`[NodeTiposkripto] Failed to parse config from argv:`, e);
+      }
+    }
+    
+    super(testSpecification, config);
+    this.initialize();
   }
 
   writeFileSync(filename: string, payload: string) {
@@ -53,31 +46,4 @@ export class NodeTiposkripto<
   // These methods are only for web runtime to capture visual artifacts in browser environments
 }
 
-const tiposkripto = async <
-  I extends TestTypeParams_any,
-  O extends TestSpecShape_any,
-  M,
->(
-  input: I["iinput"],
-  testSpecification: ITestSpecification<I, O>,
-  testImplementation: ITestImplementation<I, O, M>,
-  testAdapter: Partial<ITestAdapter<I>>,
-  testResourceRequirement: ITTestResourceRequest = defaultTestResourceRequirement,
-): Promise<BaseTiposkripto<I, O, M>> => {
-  try {
-    const t = new NodeTiposkripto<I, O, M>(
-      input,
-      testSpecification,
-      testImplementation,
-      testAdapter,
-      testResourceRequirement,
-    );
-    return t;
-  } catch (e) {
-    console.error(`[Node] Error creating Tiposkripto:`, e);
-    console.error((e as Error).stack);
-    process.exit(-1);
-  }
-};
-
-export default tiposkripto;
+export default NodeTiposkripto;

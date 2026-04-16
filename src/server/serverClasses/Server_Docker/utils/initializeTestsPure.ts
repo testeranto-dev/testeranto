@@ -31,6 +31,12 @@ export const initializeTestsPure = async (
   makeReportDirectory: (testName: string, configKey: string) => string,
   existsSync: (path: string) => boolean,
   mkdirSync: (path: string, options?: { recursive: boolean }) => void,
+  onTestCompleted?: (
+    configKey: string,
+    testName: string,
+    testResults: any,
+    testsJsonPath: string
+  ) => void,
 ): Promise<{
   inputFiles: Record<string, Record<string, string[]>>;
 }> => {
@@ -59,7 +65,14 @@ export const initializeTestsPure = async (
         consoleLog(`[initializeTestsPure] Setting up file watching for test ${testName} with runtime ${runtime}`);
         await watchInputFile(runtime, testName);
         consoleLog(`[initializeTestsPure] Watching output files for test ${testName} with config ${configKey}`);
-        watchOutputFile(runtime, testName, configKey);
+        // Pass a callback to handle tests.json creation
+        watchOutputFile(runtime, testName, configKey, (configKey, testName, testsJsonPath, testResults) => {
+          consoleLog(`[initializeTestsPure] Test ${testName} completed with results at ${testsJsonPath}`);
+          // Call the onTestCompleted callback if provided
+          if (onTestCompleted) {
+            onTestCompleted(configKey, testName, testResults, testsJsonPath);
+          }
+        });
       } else {
         consoleLog(`[initializeTestsPure] Loading input file once for test ${testName} with runtime ${runtime}`);
         loadInputFileOnce(runtime, testName, configKey);

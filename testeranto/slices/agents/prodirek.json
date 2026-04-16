@@ -1,14 +1,54 @@
 {
   "viewType": "agent",
   "agentName": "prodirek",
-  "timestamp": "2026-04-15T14:27:10.407Z",
+  "timestamp": "2026-04-16T01:19:54.341Z",
   "data": {
-    "features": [],
+    "features": [
+      {
+        "id": "feature:88",
+        "label": "88",
+        "status": "todo",
+        "description": "Feature: 88",
+        "metadata": {
+          "frontmatter": {
+            "status": "todo",
+            "title": "88",
+            "description": "Feature: 88"
+          }
+        }
+      },
+      {
+        "id": "feature:README.md",
+        "label": "README.md",
+        "status": "todo",
+        "description": "Feature: README.md",
+        "metadata": {
+          "frontmatter": {
+            "status": "todo",
+            "title": "README.md",
+            "description": "Feature: README.md"
+          }
+        }
+      },
+      {
+        "id": "feature:8",
+        "label": "8",
+        "status": "todo",
+        "description": "Feature: 8",
+        "metadata": {
+          "frontmatter": {
+            "status": "todo",
+            "title": "8",
+            "description": "Feature: 8"
+          }
+        }
+      }
+    ],
     "documentation": [],
     "chatMessages": [],
     "agents": [],
     "summary": {
-      "totalFeatures": 0,
+      "totalFeatures": 3,
       "totalDocumentation": 0,
       "totalChatMessages": 0,
       "totalAgents": 0

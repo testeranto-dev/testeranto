@@ -1,22 +1,20 @@
 import { API } from "../../api";
 import type { AllTestResults, ITesterantoConfig } from "../../Types";
 import type { IMode } from "../types";
-import { handleRoutePure } from "./Server_Http/handleRoutePure";
-import * as gitHandlers from "./git/gitHandlers";
-import * as lockHandlers from "./lock/lockHandlers";
-import * as serviceHandlers from "./lock/serviceHandlers";
+import type { Server_Graph } from "./Server_Graph";
+import { handleAgentRouteUtil } from "./Server_Http/agentRouteUtils";
+import { handleAddChatMessageUtil } from "./Server_Http/chatMessageUtils";
+import { generateTerminalScript } from "./Server_Http/generateTerminalScript";
+import { handleGetViewsUtil } from "./Server_Http/handleGetViewsUtil.ts";
+import { handleOpenProcessTerminalUtil } from "./Server_Http/handleOpenProcessTerminalUtil";
+import { transformTestResultsUtil } from "./Server_Http/testResultsUtils";
+import { handleUserAgentsRouteUtil } from "./Server_Http/userAgentRouteUtils";
 import { Server_HTTP_Graph } from "./Server_HTTP_Graph";
 import { Server_WS_HTTP } from "./Server_WS_HTTP";
-import { transformTestResultsUtil } from "./Server_Http/testResultsUtils";
-import {
-  handleAiderRoute, handleFilesRoute, handleGetViewsUtil, handleProcessRoute, handleRuntimeRoute
-} from "./Server_Http/routeHandlerUtils";
-import { getProcessesPure } from "./Server_Http/getProcessesPure";
-import { handleAddChatMessageUtil } from "./Server_Http/chatMessageUtils";
-import { handleOpenProcessTerminalUtil } from "./Server_Http/handleOpenProcessTerminalUtil";
-import { handleUserAgentsRouteUtil } from "./Server_Http/userAgentRouteUtils";
-import { handleAgentRouteUtil } from "./Server_Http/agentRouteUtils";
-import { generateTerminalScript } from "./Server_Http/generateTerminalScript";
+import { handleGetProcessesUtil } from "./Server_Http/handleGetProcessesUtil";
+import { getRouteHandlers } from "./Server_Http/utilities/getRouteHandlers";
+import { handleProcessRoute } from "./Server_Http/handleProcessRoute.ts";
+import { handleFilesRoute } from "./Server_Http/handleFilesRoute.ts";
 
 declare const Bun: any;
 
@@ -61,7 +59,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
       },
     };
 
-    const wsThis = this as Server_WS_HTTP;
+    const wsThis = this as unknown as Server_WS_HTTP;
     serverOptions.websocket = {
       open: (ws: WebSocket) => {
         wsThis.wsClients.add(ws);
@@ -157,106 +155,31 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     request: Request,
     url: URL,
   ): Promise<Response> {
-    // Direct route handling for open-process-terminal
-    if (routeName === 'open-process-terminal') {
-      if (request.method === 'POST') {
-        return await this.handleOpenProcessTerminal(request);
-      } else {
-        return new Response(JSON.stringify({
-          error: `Method ${request.method} not allowed for ${routeName}`,
-          message: 'Only POST method is supported',
-          timestamp: new Date().toISOString()
-        }), {
-          status: 405,
-          headers: { "Content-Type": "application/json" }
-        });
-      }
-    }
-
-    // Route handlers
-    const routeHandlers: Record<string, () => Promise<Response> | Response> = {
-      files: () => this.handleFilesRoute(),
-      process: () => {
-        // For GET requests to /~/process, return actual process data
-        if (request.method === 'GET') {
-          return this.handleGetProcesses();
-        }
-        // For other methods, use the original handler
-        return handleProcessRoute(this);
-      },
-      aider: () => handleAiderRoute(this),
-      runtime: () => handleRuntimeRoute(this),
-      agents: () => this.handleAgentRoute('', request),
-      'user-agents': () => this.handleUserAgentsRoute(),
-      chat: () => this.handleChatRoute(request, url),
-      'lock-status': () => lockHandlers.handleLockStatusRoute(this),
-      down: () => serviceHandlers.handleDown(this),
-      up: () => serviceHandlers.handleUp(this),
-      'git/status': () => gitHandlers.handleGitStatus(),
-      'git/switch-branch': () => gitHandlers.handleGitSwitchBranch(request),
-      'git/commit': () => gitHandlers.handleGitCommit(request),
-      'git/merge': () => gitHandlers.handleGitMerge(request),
-      'git/conflicts': () => gitHandlers.handleGitConflicts(),
-      'git/resolve-conflict': () => gitHandlers.handleGitResolveConflict(request),
-      'open-process-terminal': () => this.handleOpenProcessTerminal(request),
-      'add-chat-message': () => this.handleAddChatMessage(request),
-      'process-logs': () => this.handleProcessLogsRoute(request),
+    const { handleRouteUtil } = await import("./Server_Http/utilities/handleRouteUtil");
+    const deps = {
+      handleOpenProcessTerminal: this.handleOpenProcessTerminal.bind(this),
+      handleGetProcesses: this.handleGetProcesses.bind(this),
+      graphManager: this.graphManager,
+      handleAgentRoute: this.handleAgentRoute.bind(this),
+      handleViewRoute: this.handleViewRoute.bind(this),
+      handleFilesRoute: this.handleFilesRoute.bind(this),
+      handleUserAgentsRoute: this.handleUserAgentsRoute.bind(this),
+      handleChatRoute: this.handleChatRoute.bind(this),
+      handleAddChatMessage: this.handleAddChatMessage.bind(this),
+      handleProcessLogsRoute: this.handleProcessLogsRoute.bind(this),
+      handleGetViews: this.handleGetViews.bind(this),
+      handleViewSlice: this.handleViewSlice.bind(this),
     };
-
-    // Special handling for processes endpoint
-    if (routeName === 'processes') {
-      if (request.method === 'GET') {
-        return this.handleGetProcesses();
-      } else if (request.method === 'POST') {
-        // Forward to handleProcessRoute for POST requests
-        return handleProcessRoute(this.graphManager);
-      }
-    }
-
-    // Handle view requests
-    if (routeName === 'views' && request.method === 'GET') {
-      return this.handleGetViews(request, url);
-    }
-
-    // Handle view slice requests
-    if (routeName.startsWith('views/')) {
-      const parts = routeName.split('/');
-      if (parts.length >= 3 && parts[1] && parts[2] === 'slice') {
-        const viewKey = parts[1];
-        return this.handleViewSlice(request, url, viewKey);
-      }
-    }
-
-
-    for (const [key, definition] of Object.entries(API)) {
-      const apiDef = definition as any;
-      if (apiDef.check && apiDef.check(routeName, { method: request.method })) {
-        if (key === 'getAgentSlice' || key === 'launchAgent') {
-          return this.handleAgentRoute(routeName, request);
-        } else if (key === 'getView') {
-          return this.handleViewRoute(routeName, false);
-        } else if (key === 'getViewWithGraph') {
-          return this.handleViewRoute(routeName, true);
-        } else {
-          const baseRouteName = apiDef.path.slice(3);
-          const handler = routeHandlers[baseRouteName];
-          if (handler) {
-            return await handler();
-          }
-        }
-      }
-    }
-
-    return handleRoutePure(routeName, request, url, this);
+    return handleRouteUtil(routeName, request, url, deps);
   }
 
   // Route handler methods
-  private handleFilesRoute(): Response {
-    return handleFilesRoute(this);
+  protected handleFilesRoute(): Response {
+    return handleFilesRoute(this as unknown as Server_Graph);
   }
 
 
-  private async handleAgentRoute(routeName: string, request: Request): Promise<Response> {
+  protected async handleAgentRoute(routeName: string, request: Request): Promise<Response> {
     const server = this as any;
     return handleAgentRouteUtil(
       routeName,
@@ -267,12 +190,12 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     );
   }
 
-  private handleUserAgentsRoute(): Response {
+  protected handleUserAgentsRoute(): Response {
 
     return handleUserAgentsRouteUtil(this.configs);
   }
 
-  private handleViewRoute(routeName: string, withGraph: boolean = false): Response {
+  protected handleViewRoute(routeName: string, withGraph: boolean = false): Response {
     // Extract view name based on route prefix
     let prefixLength;
     if (withGraph) {
@@ -296,7 +219,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     };
 
     if (withGraph) {
-      const graphData = this.graphManager.getGraphData();
+      const graphData = this.getGraphData();
       responseData.graphData = graphData;
     }
 
@@ -306,7 +229,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     });
   }
 
-  private handleChatRoute(request: Request, url: URL): Response {
+  protected handleChatRoute(request: Request, url: URL): Response {
     if (request.method === 'GET') {
       // Get chat history
       try {
@@ -333,7 +256,6 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
         });
       }
     } else if (request.method === 'POST') {
-      // Add chat message
       return this.handleAddChatMessage(request);
     } else {
       return new Response(JSON.stringify({
@@ -347,7 +269,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     }
   }
 
-  private async handleOpenProcessTerminal(request: Request): Promise<Response> {
+  protected async handleOpenProcessTerminal(request: Request): Promise<Response> {
     // Check if the current instance has an openProcessTerminal method (from Server_Vscode)
     if (typeof (this as any).openProcessTerminal === 'function') {
       try {
@@ -410,22 +332,11 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     }
   }
 
-  private async handleGetProcesses(): Promise<Response> {
-    const graphData = this.getGraphData();
-    const uniqueProcesses = getProcessesPure(graphData, () => this.getProcessSlice());
-
-    return new Response(JSON.stringify({
-      processes: uniqueProcesses,
-      message: "Processes retrieved successfully",
-      timestamp: new Date().toISOString(),
-      count: uniqueProcesses.length
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+  protected async handleGetProcesses(): Promise<Response> {
+    return await handleGetProcessesUtil.call(this);
   }
 
-  private async handleProcessLogsRoute(request: Request): Promise<Response> {
+  protected async handleProcessLogsRoute(request: Request): Promise<Response> {
     const body = await request.json();
     const { processId } = body;
 
@@ -459,12 +370,11 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     }
   }
 
-  private async handleAddChatMessage(request: Request): Promise<Response> {
-
+  protected async handleAddChatMessage(request: Request): Promise<Response> {
     return handleAddChatMessageUtil(request, this);
   }
 
-  private async handleViewSlice(request: Request, url: URL, viewKey: string): Promise<Response> {
+  protected async handleViewSlice(request: Request, url: URL, viewKey: string): Promise<Response> {
     const sliceData = this.getViewSlice(viewKey);
 
     return new Response(JSON.stringify({
@@ -478,7 +388,7 @@ export abstract class Server_HTTP extends Server_HTTP_Graph {
     });
   }
 
-  private async handleGetViews(request: Request, url: URL): Promise<Response> {
+  protected async handleGetViews(request: Request, url: URL): Promise<Response> {
     return handleGetViewsUtil(this.configs);
   }
 

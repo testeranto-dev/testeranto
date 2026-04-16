@@ -161,6 +161,14 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
         }
         break;
         
+      case 'sliceUpdated':
+        // Direct slice update notification
+        if (message.slicePath === `/~/views/${viewName}/slice`) {
+          console.log(`[BaseViewClass] Slice updated for view ${viewName}, reloading data`);
+          this.loadData();
+        }
+        break;
+        
       case 'graphUpdated':
         // Graph updates often mean view slices need refreshing
         console.log(`[BaseViewClass] Graph updated, reloading data for view ${viewName}`);

@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
+import { getApiUrl } from '../../api';
 
 export class AgentTreeDataProvider extends BaseTreeDataProvider {
     private agents: any[] = [];
@@ -211,11 +212,12 @@ export class AgentTreeDataProvider extends BaseTreeDataProvider {
     }
 
     private async loadAgents(): Promise<void> {
-        console.log('[AgentTreeDataProvider] Loading agents from /~/agents endpoint');
+        console.log('[AgentTreeDataProvider] Loading agents from API endpoint');
         
         // According to SOUL.md: no guessing, no fallbacks
-        // Try GET first (as per API definition)
-        const response = await fetch('http://localhost:3000/~/agents', {
+        // Use the correct API endpoint for agents
+        const agentsUrl = getApiUrl('getAllAgents');
+        const response = await fetch(agentsUrl, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -229,12 +231,20 @@ export class AgentTreeDataProvider extends BaseTreeDataProvider {
         const data = await response.json();
         console.log('[AgentTreeDataProvider] Response:', data);
         
-        if (data && data.agents) {
+        // The response might be in a different format
+        // Check if it has agents property or if it's the array directly
+        if (data && Array.isArray(data)) {
+            this.agents = data;
+            console.log(`[AgentTreeDataProvider] Loaded ${this.agents.length} agents:`, 
+                this.agents.map(a => a.name || a.key || 'unnamed').join(', '));
+        } else if (data && data.agents && Array.isArray(data.agents)) {
             this.agents = data.agents;
             console.log(`[AgentTreeDataProvider] Loaded ${this.agents.length} agents:`, 
-                this.agents.map(a => a.name || a.key).join(', '));
+                this.agents.map(a => a.name || a.key || 'unnamed').join(', '));
         } else {
-            throw new Error('Invalid response format: missing agents array');
+            // If no agents are configured, that's valid - just show empty
+            this.agents = [];
+            console.log('[AgentTreeDataProvider] No agents configured or empty response');
         }
     }
 
