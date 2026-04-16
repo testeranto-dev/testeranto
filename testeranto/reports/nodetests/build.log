@@ -5643,3 +5643,4 @@
   ]
 }
 [2026-04-15T14:26:09.265Z] ERROR: [NODE BUILDER] Error occurred but keeping process alive in dev mode
+[2026-04-16T11:57:39.219Z] INFO: Build started for nodetests
