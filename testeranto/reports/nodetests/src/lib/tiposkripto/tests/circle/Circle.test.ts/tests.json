@@ -8,7 +8,7 @@
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1776972069568,
+  "timestamp": 1776980361041,
   "individualResults": [
     {
       "index": 0,
@@ -17,7 +17,7 @@
       "features": [],
       "error": {
         "message": "Confirm.circumferenceCalculation(...) is not a function",
-        "stack": "TypeError: Confirm.circumferenceCalculation(...) is not a function\n    at CircleTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:34:42)\n    at CircleTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CircleTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:261:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:264:27\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+        "stack": "TypeError: Confirm.circumferenceCalculation(...) is not a function\n    at CircleTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:34:42)\n    at CircleTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CircleTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:262:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:265:27\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
         "name": "TypeError"
       },
       "stepName": "Step_0",

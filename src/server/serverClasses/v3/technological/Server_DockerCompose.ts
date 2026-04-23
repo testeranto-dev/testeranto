@@ -69,6 +69,18 @@ export class Server_DockerCompose extends Server_Api {
     console.log(`[Business] ${message}`);
   }
 
+  // Override startDockerProcess to actually start the Docker service for the test
+  protected async startDockerProcess(
+    runtime: string,
+    testName: string,
+    configKey: string,
+    configValue: any,
+  ): Promise<void> {
+    const serviceName = this.generateServiceName(configKey, testName, 'bdd');
+    this.logBusinessMessage(`startDockerProcess: starting service ${serviceName} for test ${testName}`);
+    await this.dockerComposeUp([serviceName]);
+  }
+
   // Graph operations are now handled by the inherited graph methods
 
   // V2 Server_Docker.start() business logic: setup Docker Compose, bring down then up
@@ -139,7 +151,7 @@ export class Server_DockerCompose extends Server_Api {
   }
 
   // Generate service name similar to V2
-  private generateServiceName(configKey: string, testName: string, type: string): string {
+  protected generateServiceName(configKey: string, testName: string, type: string): string {
     return generateServiceName(configKey, testName, type);
   }
 

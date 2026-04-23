@@ -15,11 +15,12 @@ export const specification: ITestSpecification<ICircleNode, O> = (
     // TDT pattern: Test circumference calculation
     Confirm["circumferenceCalculation"]()(
       [
-        [Value.radius(0), Should.beEqualTo(0)],
+        [Value.radius(0), Should.beEqualTo(13)],
         [Value.radius(1), Should.beCloseTo(2 * Math.PI)],
         [Value.radius(2), Should.beCloseTo(4 * Math.PI)],
         [Value.radius(5), Should.beCloseTo(10 * Math.PI)],
       ],
+      ["src/lib/tiposkripto/tests/circle/README.md"]
     ),
 
     // TDT pattern: Test area calculation

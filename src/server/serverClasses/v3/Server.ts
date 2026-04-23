@@ -1,7 +1,7 @@
 import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { Server_Polyglot } from "./business/Server_Polyglot";
-import { Server_Runtime } from "./business/Server_Runtime";
+import { Server_Files } from "./business/Server_Files";
 
 /**
  * Server V3 - Abstract Logical Core (Position 0)
@@ -12,7 +12,7 @@ import { Server_Runtime } from "./business/Server_Runtime";
  * 
  * This class orchestrates the business workflows and maintains the core state.
  */
-export abstract class Server extends Server_Runtime {
+export abstract class Server extends Server_Files {
   protected isRunning: boolean = false;
   protected startedAt: Date | null = null;
   protected businessState: Map<string, any> = new Map();
@@ -114,6 +114,8 @@ export abstract class Server extends Server_Runtime {
 
   protected async setupComponents(): Promise<void> {
     await this.setupGraph();
+    // Start file watching after graph is initialized
+    await this.startFileWatching();
     await this.setupViews();
     await this.setupLogs();
     await this.setupLocks();
@@ -612,6 +614,28 @@ export abstract class Server extends Server_Runtime {
         }
       );
     }
+  }
+
+  // ========== Abstract method implementations ==========
+
+  protected async launchBddTest(
+    runtime: string,
+    testName: string,
+    configKey: string,
+    configValue: any,
+  ): Promise<void> {
+    this.logBusinessMessage(`launchBddTest called: ${runtime}/${testName}/${configKey}`);
+    // TODO: implement actual BDD test launch (e.g., start Docker service)
+  }
+
+  protected async launchChecks(
+    runtime: string,
+    testName: string,
+    configKey: string,
+    configValue: any,
+  ): Promise<void> {
+    this.logBusinessMessage(`launchChecks called: ${runtime}/${testName}/${configKey}`);
+    // TODO: implement actual checks launch (e.g., start Docker service)
   }
 
   // ========== Utility Methods ==========
