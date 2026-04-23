@@ -84,23 +84,6 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
   private getDockerProcessItems(): TestTreeItem[] {
     const items: TestTreeItem[] = [];
 
-    // Add refresh item
-    items.push(new TestTreeItem(
-      'Refresh',
-      TreeItemType.Info,
-      vscode.TreeItemCollapsibleState.None,
-      {
-        description: 'Reload process data',
-        refresh: true
-      },
-      {
-        command: 'testeranto.refreshDockerProcesses',
-        title: 'Refresh',
-        arguments: []
-      },
-      new vscode.ThemeIcon('refresh')
-    ));
-
     if (this.processes.length === 0) {
       items.push(new TestTreeItem(
         'No docker processes found',
@@ -117,38 +100,9 @@ export class DockerProcessTreeDataProvider extends BaseTreeDataProvider {
 
     console.log(`[DockerProcessTreeDataProvider] Processing ${this.processes.length} processes`);
 
-    // Group processes by type
-    const processGroups = new Map<string, ProcessNode[]>();
+    // Return a flat list of process items, similar to 'docker ps'
     for (const proc of this.processes) {
-      const metadata = proc.metadata || {};
-      const processType = metadata.processType || 'unknown';
-      if (!processGroups.has(processType)) {
-        processGroups.set(processType, []);
-      }
-      processGroups.get(processType)!.push(proc);
-    }
-
-    // Create groups
-    for (const [groupType, groupProcesses] of processGroups.entries()) {
-      const groupLabel = `${groupType.charAt(0).toUpperCase() + groupType.slice(1)} Processes`;
-      const groupDescription = `${groupProcesses.length} process(es)`;
-
-      const groupItem = new TestTreeItem(
-        groupLabel,
-        TreeItemType.Info,
-        vscode.TreeItemCollapsibleState.Collapsed,
-        {
-          description: groupDescription,
-          count: groupProcesses.length,
-          groupType
-        },
-        undefined,
-        new vscode.ThemeIcon('server')
-      );
-
-      // Store children processes
-      groupItem.children = groupProcesses.map(proc => this.createProcessItem(proc));
-      items.push(groupItem);
+      items.push(this.createProcessItem(proc));
     }
 
     return items;

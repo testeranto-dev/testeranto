@@ -291,25 +291,23 @@ export abstract class Server extends Server_Runtime {
     throw new Error("cleanupDockerProcesses must be implemented by subclass");
   }
 
-  // ========== Graph Methods (stubs for API handlers) ==========
+  // ========== Graph Methods (delegate to Server_Graph) ==========
 
   protected queryNodes(filter: (node: any) => boolean): any[] {
-    this.logBusinessMessage('[Server] queryNodes stub');
-    return [];
+    // Delegate to the graph's queryNodes method
+    return super.queryNodes(filter);
   }
 
   protected addNode(node: any): string {
-    this.logBusinessMessage(`[Server] addNode stub: ${JSON.stringify(node)}`);
-    return `node-${Date.now()}`;
+    // Delegate to the graph's addNode method
+    return super.addNode(node);
   }
 
   protected updateAllAgentSliceFiles(): void {
-    this.logBusinessMessage('[Server] updateAllAgentSliceFiles stub');
+    // Delegate to the graph's updateAllAgentSliceFiles method
+    super.updateAllAgentSliceFiles();
   }
 
-  protected broadcastApiMessage(type: string, data: any): void {
-    this.logBusinessMessage(`[Server] broadcastApiMessage stub: ${type}`);
-  }
 
 
   // ========== Server_Static Abstract Method Implementations ==========
@@ -347,11 +345,45 @@ export abstract class Server extends Server_Runtime {
   }
 
   protected async handleProcessRoute(request: Request): Promise<Response> {
+    const processNodes = this.queryNodes((node: any) => {
+      // Accept nodes whose type is an object with category === 'process'
+      // OR a string that includes 'process'
+      // OR nodes that have a metadata.processType field
+      if (node.type?.category === 'process') return true;
+      if (typeof node.type === 'string' && node.type.toLowerCase().includes('process')) return true;
+      if (node.metadata?.processType) return true;
+      return false;
+    });
+
+    const processes = processNodes.map((node: any) => ({
+      id: node.id,
+      type: typeof node.type === 'string' ? node.type : (node.type?.type || 'process'),
+      label: node.label || node.id,
+      metadata: {
+        ...(node.metadata || {}),
+        status: node.status || node.metadata?.status || 'unknown',
+        containerId: node.metadata?.containerId || node.containerId,
+        serviceName: node.metadata?.serviceName || node.serviceName,
+        processType: node.metadata?.processType || node.type?.type || 'unknown',
+        isActive: node.metadata?.isActive ?? node.isActive ?? false,
+        exitCode: node.metadata?.exitCode ?? node.exitCode,
+        isAider: node.metadata?.isAider ?? node.isAider ?? false,
+        agentName: node.metadata?.agentName || node.agentName,
+        isAgentAider: node.metadata?.isAgentAider ?? node.isAgentAider ?? false,
+        image: node.metadata?.image || node.image,
+        command: node.metadata?.command || node.command,
+        startedAt: node.metadata?.startedAt || node.startedAt,
+        finishedAt: node.metadata?.finishedAt || node.finishedAt,
+        updatedAt: node.metadata?.updatedAt || node.updatedAt,
+      },
+    }));
+
     return new Response(
       JSON.stringify({
-        nodes: [],
-        edges: [],
-        timestamp: new Date().toISOString()
+        processes,
+        message: `Found ${processes.length} process(es)`,
+        timestamp: new Date().toISOString(),
+        count: processes.length,
       }),
       {
         status: 200,
@@ -361,10 +393,18 @@ export abstract class Server extends Server_Runtime {
   }
 
   protected async handleAiderRoute(request: Request): Promise<Response> {
+    const aiderNodes = this.queryNodes((node: any) =>
+      node.type?.category === 'process' && node.type?.type === 'aider'
+    );
+
+    const aiderEdges = this.queryEdges((edge: any) =>
+      aiderNodes.some(n => n.id === edge.source || n.id === edge.target)
+    );
+
     return new Response(
       JSON.stringify({
-        nodes: [],
-        edges: [],
+        nodes: aiderNodes,
+        edges: aiderEdges,
         timestamp: new Date().toISOString()
       }),
       {
@@ -375,10 +415,18 @@ export abstract class Server extends Server_Runtime {
   }
 
   protected async handleRuntimeRoute(request: Request): Promise<Response> {
+    const runtimeNodes = this.queryNodes((node: any) =>
+      node.type?.category === 'resource' && node.type?.type === 'runtime'
+    );
+
+    const runtimeEdges = this.queryEdges((edge: any) =>
+      runtimeNodes.some(n => n.id === edge.source || n.id === edge.target)
+    );
+
     return new Response(
       JSON.stringify({
-        nodes: [],
-        edges: [],
+        nodes: runtimeNodes,
+        edges: runtimeEdges,
         timestamp: new Date().toISOString()
       }),
       {

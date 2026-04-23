@@ -1,0 +1,17 @@
+{
+  "viewType": "agent",
+  "agentName": "arko",
+  "timestamp": "2026-04-23T19:21:06.560Z",
+  "data": {
+    "configs": [],
+    "entrypoints": [],
+    "chatMessages": [],
+    "agents": [],
+    "summary": {
+      "totalConfigs": 0,
+      "totalEntrypoints": 0,
+      "totalChatMessages": 0,
+      "totalAgents": 0
+    }
+  }
+}

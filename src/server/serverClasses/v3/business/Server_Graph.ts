@@ -112,6 +112,12 @@ export abstract class Server_Graph extends Server_Base {
       }
     };
 
+    this.logBusinessMessage(`[saveGraph] nodes count: ${graphData.nodes.length}`);
+    if (graphData.nodes.length > 0) {
+      this.logBusinessMessage(`[saveGraph] first few node ids: ${graphData.nodes.slice(0, 5).map(n => n.id).join(', ')}`);
+    }
+    this.logBusinessMessage(`[saveGraph] edges count: ${graphData.edges.length}`);
+
     // Implementation would save to file
     // For now, just log
     this.logBusinessMessage(`Graph saved with ${graphData.nodes.length} nodes and
@@ -119,6 +125,7 @@ ${graphData.edges.length} edges`);
 
     // Call resource changed callback
     if (this.resourceChangedCallback) {
+      this.logBusinessMessage(`[saveGraph] calling resourceChangedCallback`);
       this.resourceChangedCallback('/~/graph');
     }
   }
@@ -215,45 +222,76 @@ ${graphData.edges.length} edges`);
     updateAllAgentSliceFilesPure(graphData, this.projectRoot, this.configs);
   }
 
+  // Public method to apply a graph update (called by Docker events watcher)
+  applyUpdate(update: { operations: GraphOperation[]; timestamp: string }): void {
+    this.logBusinessMessage(`[applyUpdate] applying ${update.operations.length} operations from update at ${update.timestamp}`);
+    this.applyOperations(update.operations);
+  }
+
+  // Public method to apply a graph update (called by Docker events watcher)
+  applyUpdate(update: { operations: GraphOperation[]; timestamp: string }): void {
+    this.logBusinessMessage(`[applyUpdate] applying ${update.operations.length} operations from update at ${update.timestamp}`);
+    this.applyOperations(update.operations);
+  }
+
   // Helper to apply graph operations to the internal graph structure
   private applyOperations(operations: GraphOperation[]): void {
+    this.logBusinessMessage(`[applyOperations] applying ${operations.length} operations`);
     for (const op of operations) {
+      this.logBusinessMessage(`[applyOperations] operation: type=${op.type}, id=${op.data?.id || op.data?.source || '?'}`);
       switch (op.type) {
         case 'addNode':
+          this.logBusinessMessage(`[applyOperations] adding node: ${op.data.id}`);
           this.graph.nodes.push(op.data);
+          this.logBusinessMessage(`[applyOperations] node added, total nodes: ${this.graph.nodes.length}`);
           break;
         case 'addEdge':
+          this.logBusinessMessage(`[applyOperations] adding edge: ${op.data.source} -> ${op.data.target}`);
           this.graph.edges.push({
             source: op.data.source,
             target: op.data.target,
             attributes: op.data.attributes
           });
+          this.logBusinessMessage(`[applyOperations] edge added, total edges: ${this.graph.edges.length}`);
           break;
         case 'updateNode':
           {
             const idx = this.graph.nodes.findIndex(n => n.id === op.data.id);
             if (idx !== -1) {
+              this.logBusinessMessage(`[applyOperations] updating node: ${op.data.id} at index ${idx}`);
               this.graph.nodes[idx] = { ...this.graph.nodes[idx], ...op.data };
+              this.logBusinessMessage(`[applyOperations] node updated`);
+            } else {
+              this.logBusinessMessage(`[applyOperations] node not found for update: ${op.data.id}`);
             }
           }
           break;
         case 'removeNode':
+          this.logBusinessMessage(`[applyOperations] removing node: ${op.data.id}`);
+          const beforeCount = this.graph.nodes.length;
           this.graph.nodes = this.graph.nodes.filter(n => n.id !== op.data.id);
           this.graph.edges = this.graph.edges.filter(e => e.source !== op.data.id &&
             e.target !== op.data.id);
+          this.logBusinessMessage(`[applyOperations] node removed, nodes: ${beforeCount} -> ${this.graph.nodes.length}`);
           break;
         case 'updateEdge':
           {
             const idx = this.graph.edges.findIndex(e => e.source === op.data.source &&
               e.target === op.data.target);
             if (idx !== -1) {
+              this.logBusinessMessage(`[applyOperations] updating edge: ${op.data.source} -> ${op.data.target} at index ${idx}`);
               this.graph.edges[idx] = { ...this.graph.edges[idx], ...op.data };
+              this.logBusinessMessage(`[applyOperations] edge updated`);
+            } else {
+              this.logBusinessMessage(`[applyOperations] edge not found for update: ${op.data.source} -> ${op.data.target}`);
             }
           }
           break;
         case 'removeEdge':
+          this.logBusinessMessage(`[applyOperations] removing edge: ${op.data.source} -> ${op.data.target}`);
           this.graph.edges = this.graph.edges.filter(e => !(e.source === op.data.source &&
             e.target === op.data.target));
+          this.logBusinessMessage(`[applyOperations] edge removed`);
           break;
       }
     }

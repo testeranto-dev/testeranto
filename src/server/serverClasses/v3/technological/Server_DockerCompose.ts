@@ -13,6 +13,7 @@ import { generateCheckService } from "./utils/generateCheckService";
 import { generateServiceName } from "./utils/generateServiceName";
 import { generateYaml } from "./utils/generateYaml";
 import { yamlValueToString } from './utils/yamlValueToString';
+import { addProcessNodeToGraphV3Pure } from "../utils/graph/addProcessNodeToGraphV3Pure";
 
 const execAsync = promisify(exec);
 
@@ -68,34 +69,7 @@ export class Server_DockerCompose extends Server_Api {
     console.log(`[Business] ${message}`);
   }
 
-  // Implement graph methods that may be called
-  protected addNode(node: any): string {
-    // This is a stub implementation
-    // In reality, this would be provided by Server_Graph
-    const nodeId = `node-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    console.log(`[Server_DockerCompose] addNode stub: ${nodeId}`, node);
-    return nodeId;
-  }
-
-  protected getProcessNode(nodeId: string): any {
-    // Stub implementation
-    console.log(`[Server_DockerCompose] getProcessNode stub: ${nodeId}`);
-    return null;
-  }
-
-  protected determineIfAiderProcess(processNode: any): boolean {
-    // Stub implementation
-    return processNode?.metadata?.processType === 'aider';
-  }
-
-  protected generateTerminalCommand(containerId: string, containerName: string, label: string, isAiderProcess: boolean): string {
-    // Stub implementation
-    if (isAiderProcess) {
-      return `docker exec -it ${containerId} aider`;
-    } else {
-      return `docker exec -it ${containerId} /bin/bash`;
-    }
-  }
+  // Graph operations are now handled by the inherited graph methods
 
   // V2 Server_Docker.start() business logic: setup Docker Compose, bring down then up
   async setupDockerCompose(): Promise<void> {
@@ -345,13 +319,14 @@ export class Server_DockerCompose extends Server_Api {
     this.logBusinessMessage("Bringing down existing Docker services...");
     await this.dockerComposeDown();
 
-    // 3. Start all services
+    // 3. Start Docker events watcher BEFORE bringing services up
+    // This ensures we capture start/create events for all containers
+    this.logBusinessMessage("Starting Docker events watcher before bringing services up...");
+    this.dockerEventsCleanup = await this.startDockerEventsWatcher();
+
+    // 4. Start all services (events watcher will capture their start events)
     this.logBusinessMessage("Starting all Docker services...");
     await this.dockerComposeUp();
-
-    // 4. Start Docker events watcher (graph updates happen via events stream)
-    // Store the cleanup function for later
-    this.dockerEventsCleanup = await this.startDockerEventsWatcher();
 
     this.logBusinessMessage("Docker services started");
   }
@@ -407,7 +382,6 @@ export class Server_DockerCompose extends Server_Api {
   async startDockerEventsWatcher(callback?: (event: any) => void): Promise<() => void> {
     this.logBusinessMessage("Starting Docker events watcher...");
 
-    // Default callback updates the graph based on Docker events
     const eventCallback = callback || ((event) => {
       this.handleDockerEvent(event);
     });
@@ -415,23 +389,10 @@ export class Server_DockerCompose extends Server_Api {
     // Check if Docker is available first
     try {
       await execAsync('docker version', { timeout: 5000 });
+      this.logBusinessMessage("Docker version check succeeded");
     } catch {
       this.logBusinessMessage("Docker not available, skipping events watcher");
-      // Return a no-op cleanup function
-      return () => {
-        this.logBusinessMessage("Docker events watcher not started");
-      };
-    }
-
-    // Try to run docker events once to see if it works
-    try {
-      await execAsync('docker events --format "{{json .}}" --since 1s', { timeout: 2000 });
-    } catch {
-      // If it fails, don't start the watcher
-      this.logBusinessMessage("Docker events command failed, skipping watcher");
-      return () => {
-        this.logBusinessMessage("Docker events watcher not started due to initial failure");
-      };
+      return () => {};
     }
 
     const dockerEvents = spawn('docker', ['events', '--format', '{{json .}}']);
@@ -441,35 +402,41 @@ export class Server_DockerCompose extends Server_Api {
     dockerEvents.stdout.on('data', (data) => {
       if (!isRunning) return;
 
-      const lines = data.toString().trim().split('\n');
+      const raw = data.toString();
+      this.logBusinessMessage(`[DockerEventsWatcher] raw data received: ${raw.substring(0, 200)}`);
+
+      const lines = raw.trim().split('\n');
       for (const line of lines) {
         if (line.trim()) {
           try {
             const event = JSON.parse(line);
+            this.logBusinessMessage(`[DockerEventsWatcher] parsed event: type=${event.Type}, action=${event.Action || event.status}, id=${(event.id || event.Actor?.ID || '?').substring(0, 12)}`);
             eventCallback(event);
-          } catch {
-            // Ignore parse errors - don't log them
+          } catch (parseError: any) {
+            this.logBusinessMessage(`[DockerEventsWatcher] failed to parse line: ${line.substring(0, 100)} error=${parseError.message}`);
           }
         }
       }
     });
 
     dockerEvents.stderr.on('data', (data) => {
-      if (!isRunning) return;
-      // Don't log stderr - just ignore it
+      const stderr = data.toString();
+      if (stderr.trim()) {
+        this.logBusinessMessage(`[DockerEventsWatcher] stderr: ${stderr.substring(0, 200)}`);
+      }
     });
 
-    dockerEvents.on('error', () => {
-      if (!isRunning) return;
-      // Don't log errors - just stop processing
+    dockerEvents.on('error', (err) => {
+      this.logBusinessMessage(`[DockerEventsWatcher] spawn error: ${err.message}`);
       isRunning = false;
     });
 
-    dockerEvents.on('close', () => {
+    dockerEvents.on('close', (code) => {
+      this.logBusinessMessage(`[DockerEventsWatcher] process closed with code ${code}`);
       isRunning = false;
     });
 
-    this.logBusinessMessage("Docker events watcher started (streaming mode)");
+    this.logBusinessMessage("Docker events watcher started");
 
     return () => {
       if (isRunning) {
@@ -480,16 +447,29 @@ export class Server_DockerCompose extends Server_Api {
     };
   }
 
+  // Graph operations are handled by the inherited methods from Server_Graph
+  // applyUpdate and saveGraph are available through the inheritance chain
+
   // Handle a Docker event and update the graph accordingly
   private handleDockerEvent(event: any): void {
+    this.logBusinessMessage(`[handleDockerEvent] received event: Type=${event.Type}, Action=${event.Action || event.status}, id=${(event.id || event.Actor?.ID || '?').substring(0, 12)}`);
+
     // Only process container events
-    if (event.Type !== 'container') return;
+    if (event.Type !== 'container') {
+      this.logBusinessMessage(`[handleDockerEvent] skipping non-container event (Type=${event.Type})`);
+      return;
+    }
 
     const containerId = event.id || event.Actor?.ID;
-    if (!containerId) return;
+    if (!containerId) {
+      this.logBusinessMessage(`[handleDockerEvent] no containerId found in event`);
+      return;
+    }
 
     const action = event.Action || event.status;
     const serviceName = event.Actor?.Attributes?.['com.docker.compose.service'] || containerId;
+
+    this.logBusinessMessage(`[handleDockerEvent] processing: action=${action}, containerId=${containerId.substring(0, 12)}, serviceName=${serviceName}`);
 
     // Determine the process type from the service name
     let processType: 'bdd' | 'check' | 'aider' | 'builder' | 'agent' | 'unknown' = 'unknown';
@@ -498,6 +478,8 @@ export class Server_DockerCompose extends Server_Api {
     else if (serviceName.includes('-aider')) processType = 'aider';
     else if (serviceName.startsWith('agent-')) processType = 'agent';
     else if (serviceName.includes('-builder')) processType = 'builder';
+
+    this.logBusinessMessage(`[handleDockerEvent] determined processType=${processType}`);
 
     // Extract configKey and testName from service name
     let configKey = '';
@@ -511,78 +493,125 @@ export class Server_DockerCompose extends Server_Api {
       testName = serviceName.substring(configKey.length + 1);
     }
 
-    // Determine the node ID based on container ID
+    this.logBusinessMessage(`[handleDockerEvent] configKey=${configKey}, testName=${testName}`);
+
     const nodeId = `docker-${containerId}`;
 
-    // Handle different actions
     switch (action) {
       case 'start':
       case 'create':
-        // Add a new process node to the graph
-        this.addNode({
-          id: nodeId,
-          type: 'process',
-          label: serviceName,
-          metadata: {
+        {
+          this.logBusinessMessage(`[handleDockerEvent] creating process node for ${serviceName}`);
+          const operations = addProcessNodeToGraphV3Pure(
             containerId,
             serviceName,
             processType,
             configKey,
             testName,
-            status: 'running',
-            isActive: true
-          }
-        });
-        this.logBusinessMessage(`Added process node for container ${containerId} (${serviceName})`);
-        // Broadcast the update
-        this.broadcastProcessStatusChanged(nodeId, 'running', {
-          containerId,
-          serviceName,
-          processType,
-          configKey,
-          testName
-        });
-        this.broadcastContainerStatusChanged(containerId, 'running', serviceName);
-        this.broadcastGraphUpdated();
+            'running',
+          );
+          this.logBusinessMessage(`[handleDockerEvent] generated ${operations.length} operations`);
+          const timestamp = new Date().toISOString();
+          const update = { operations, timestamp };
+          this.logBusinessMessage(`[handleDockerEvent] calling applyUpdate`);
+          this.applyUpdate(update);
+          this.logBusinessMessage(`[handleDockerEvent] applyUpdate completed`);
+          console.log(`[DockerEvent] ${action} ${serviceName} (${containerId}) -> added process node`);
+          this.broadcastProcessStatusChanged(nodeId, 'running', {
+            containerId,
+            serviceName,
+            processType,
+            configKey,
+            testName,
+          });
+          this.broadcastContainerStatusChanged(containerId, 'running', serviceName);
+          this.broadcastGraphUpdated();
+          this.logBusinessMessage(`[handleDockerEvent] calling saveGraph`);
+          this.saveGraph();
+          this.logBusinessMessage(`[handleDockerEvent] saveGraph completed`);
+        }
         break;
 
       case 'die':
       case 'stop':
       case 'kill':
-        // Update the process node status to stopped
-        this.updateNode(nodeId, {
-          metadata: {
-            status: 'stopped',
-            isActive: false
-          }
-        });
-        this.logBusinessMessage(`Updated process node for container ${containerId} to stopped`);
-        // Broadcast the update
-        this.broadcastProcessStatusChanged(nodeId, 'stopped', {
-          containerId,
-          serviceName,
-          processType
-        });
-        this.broadcastContainerStatusChanged(containerId, 'stopped', serviceName);
-        this.broadcastGraphUpdated();
+        {
+          this.logBusinessMessage(`[handleDockerEvent] updating process node for ${serviceName} to stopped`);
+          const operations = addProcessNodeToGraphV3Pure(
+            containerId,
+            serviceName,
+            processType,
+            configKey,
+            testName,
+            'stopped',
+          );
+          const updateOps = operations.map((op) => {
+            if (op.type === 'addNode') {
+              return {
+                type: 'updateNode' as const,
+                data: {
+                  id: op.data.id,
+                  status: 'done',
+                  metadata: {
+                    ...op.data.metadata,
+                    status: 'stopped',
+                    isActive: false,
+                  },
+                },
+                timestamp: op.timestamp,
+              };
+            }
+            return op;
+          });
+          this.logBusinessMessage(`[handleDockerEvent] generated ${updateOps.length} update operations`);
+          const timestamp = new Date().toISOString();
+          const update = { operations: updateOps, timestamp };
+          this.logBusinessMessage(`[handleDockerEvent] calling applyUpdate`);
+          this.applyUpdate(update);
+          this.logBusinessMessage(`[handleDockerEvent] applyUpdate completed`);
+          console.log(`[DockerEvent] ${action} ${serviceName} (${containerId}) -> updated process node to stopped`);
+          this.broadcastProcessStatusChanged(nodeId, 'stopped', {
+            containerId,
+            serviceName,
+            processType,
+          });
+          this.broadcastContainerStatusChanged(containerId, 'stopped', serviceName);
+          this.broadcastGraphUpdated();
+          this.logBusinessMessage(`[handleDockerEvent] calling saveGraph`);
+          this.saveGraph();
+          this.logBusinessMessage(`[handleDockerEvent] saveGraph completed`);
+        }
         break;
 
       case 'destroy':
-        // Remove the process node from the graph
-        this.removeNode(nodeId);
-        this.logBusinessMessage(`Removed process node for container ${containerId}`);
-        // Broadcast the update
-        this.broadcastProcessStatusChanged(nodeId, 'destroyed', {
-          containerId,
-          serviceName
-        });
-        this.broadcastContainerStatusChanged(containerId, 'destroyed', serviceName);
-        this.broadcastGraphUpdated();
+        {
+          this.logBusinessMessage(`[handleDockerEvent] removing process node for ${serviceName}`);
+          const timestamp = new Date().toISOString();
+          const update = {
+            operations: [
+              { type: 'removeNode', data: { id: nodeId }, timestamp },
+            ],
+            timestamp,
+          };
+          this.logBusinessMessage(`[handleDockerEvent] calling applyUpdate`);
+          this.applyUpdate(update);
+          this.logBusinessMessage(`[handleDockerEvent] applyUpdate completed`);
+          console.log(`[DockerEvent] ${action} ${serviceName} (${containerId}) -> removed process node`);
+          this.broadcastProcessStatusChanged(nodeId, 'destroyed', {
+            containerId,
+            serviceName,
+          });
+          this.broadcastContainerStatusChanged(containerId, 'destroyed', serviceName);
+          this.broadcastGraphUpdated();
+          this.logBusinessMessage(`[handleDockerEvent] calling saveGraph`);
+          this.saveGraph();
+          this.logBusinessMessage(`[handleDockerEvent] saveGraph completed`);
+        }
         break;
 
       default:
-        // For other events, just log
-        this.logBusinessMessage(`Unhandled Docker event: ${action} for container ${containerId}`);
+        this.logBusinessMessage(`[handleDockerEvent] unhandled action ${action} for ${serviceName} (${containerId}) -> no graph modification`);
+        console.log(`[DockerEvent] ${action} ${serviceName} (${containerId}) -> no graph modification`);
     }
   }
 }
