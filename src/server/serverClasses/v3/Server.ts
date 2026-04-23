@@ -58,6 +58,12 @@ export abstract class Server extends Server_Runtime {
     await this.generateViewSlices();
     await this.generateViewHtmlFiles();
 
+    // Setup API routes before starting HTTP server
+    await this.setupApi();
+
+    // Setup API routes before starting HTTP server
+    await this.setupApi();
+
     // Start HTTP server before workflows
     await this.startHttpServer(3000);
 
@@ -219,6 +225,11 @@ export abstract class Server extends Server_Runtime {
     // This will be implemented by Server_HTTP
     this.logBusinessMessage("Stopping HTTP server...");
   }
+
+  // ========== API Setup Methods ==========
+  // These are implemented by Server_Api
+
+  protected abstract setupApi(): Promise<void>;
 
   // ========== Docker Service Methods ==========
   // These can be overridden by subclasses

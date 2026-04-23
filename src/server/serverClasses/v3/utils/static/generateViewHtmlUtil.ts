@@ -7,14 +7,20 @@ export const generateViewHtmlUtil = (viewKey: string, viewPath: string): string 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Testeranto - ${viewKey} View</title>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
+      overflow: hidden;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
       background-color: #f5f5f5;
     }
     #root {
-      min-height: 100vh;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
     }
     .loading {
       display: flex;
@@ -28,6 +34,15 @@ export const generateViewHtmlUtil = (viewKey: string, viewPath: string): string 
       padding: 40px;
       text-align: center;
       color: #d32f2f;
+    }
+    /* Ensure sigma container fills available space */
+    .sigma-container,
+    .sigma-scene,
+    .sigma-mouse,
+    .sigma-wrapper,
+    div[class*="sigma"] {
+      width: 100% !important;
+      height: 100% !important;
     }
   </style>
 </head>

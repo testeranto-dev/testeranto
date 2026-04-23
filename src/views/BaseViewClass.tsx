@@ -208,16 +208,16 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
       const viewName = extractViewName(slicePath);
       const staticFilePath = getSliceFilePath(viewName);
 
-      // Construct absolute URL to avoid relative path issues
-      const absolutePath = staticFilePath.startsWith('/') 
-        ? `${window.location.origin}${staticFilePath}`
-        : staticFilePath;
+      // Use the static file path directly (relative URL)
+      const dataUrl = staticFilePath.startsWith('/') 
+        ? staticFilePath
+        : `/${staticFilePath}`;
 
-      console.log(`[BaseViewClass] Loading slice data from: ${absolutePath} (view: ${viewName}, original: ${slicePath})`);
+      console.log(`[BaseViewClass] Loading slice data from: ${dataUrl} (view: ${viewName}, original: ${slicePath})`);
       
       // Add cache busting to ensure fresh data
       const cacheBuster = `?_t=${Date.now()}`;
-      const response = await fetch(absolutePath + cacheBuster);
+      const response = await fetch(dataUrl + cacheBuster);
 
       if (!response.ok) {
         throw new Error(`Failed to load slice data from ${absolutePath}: ${response.status} ${response.statusText}`);

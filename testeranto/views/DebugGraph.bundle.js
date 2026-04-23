@@ -770,7 +770,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React5 = require_react();
+      var React4 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -810,7 +810,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React5.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if ("font" === as) return "";
         if ("string" === typeof input)
@@ -946,7 +946,7 @@
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler();
-      var React5 = require_react();
+      var React4 = require_react();
       var ReactDOM2 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
@@ -1137,7 +1137,7 @@
         return null;
       }
       var isArrayImpl = Array.isArray;
-      var ReactSharedInternals = React5.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var ReactDOMSharedInternals = ReactDOM2.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var sharedNotPendingObject = {
         pending: false,
@@ -12583,7 +12583,7 @@
           0 === i2 && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_1840 = React5.version;
+      var isomorphicReactPackageVersion$jscomp$inline_1840 = React4.version;
       if ("19.2.4" !== isomorphicReactPackageVersion$jscomp$inline_1840)
         throw Error(
           formatProdErrorMessage(
@@ -13129,11 +13129,11 @@
   });
 
   // testeranto/views/DebugGraph.wrapper.tsx
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/views/defaultViews/DebugGraphView.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
 
   // src/views/BaseViewClass.tsx
   var import_react = __toESM(require_react(), 1);
@@ -13307,10 +13307,10 @@
         this.setState({ loading: true, error: null });
         const viewName = extractViewName(slicePath);
         const staticFilePath = getSliceFilePath(viewName);
-        const absolutePath = staticFilePath.startsWith("/") ? `${window.location.origin}${staticFilePath}` : staticFilePath;
-        console.log(`[BaseViewClass] Loading slice data from: ${absolutePath} (view: ${viewName}, original: ${slicePath})`);
+        const dataUrl = staticFilePath.startsWith("/") ? staticFilePath : `/${staticFilePath}`;
+        console.log(`[BaseViewClass] Loading slice data from: ${dataUrl} (view: ${viewName}, original: ${slicePath})`);
         const cacheBuster = `?_t=${Date.now()}`;
-        const response = await fetch(absolutePath + cacheBuster);
+        const response = await fetch(dataUrl + cacheBuster);
         if (!response.ok) {
           throw new Error(`Failed to load slice data from ${absolutePath}: ${response.status} ${response.statusText}`);
         }
@@ -13435,9 +13435,6 @@
       return this.renderContent();
     }
   };
-
-  // src/views/defaultViews/SigmaDebugGraph.tsx
-  var import_react3 = __toESM(require_react(), 1);
 
   // node_modules/@react-sigma/core/lib/react-sigma_core.esm.min.js
   var e = __toESM(require_react(), 1);
@@ -22385,43 +22382,37 @@ void main() {
     return import_react2.default.createElement("div", Object.assign({}, w2, { ref: v2 }), import_react2.default.createElement("div", { className: "sigma-container", ref: p2 }), C2);
   }));
 
-  // src/views/defaultViews/SigmaDebugGraph.tsx
+  // src/views/defaultViews/DebugGraphView.tsx
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
   var SigmaGraph = (props) => {
-    const { data, config, onNodeClick, onNodeHover, width, height } = props;
+    const { data, config, onNodeClick, onNodeHover, onEdgeClick, onEdgeHover, hoveredNode, hoveredEdge, width, height } = props;
     const sigma = v();
     const registerEvents = y();
     const setSettings = p();
     const loadGraph = C();
-    (0, import_react3.useEffect)(() => {
+    import_react3.default.useEffect(() => {
       if (!sigma) {
-        console.log("[SigmaDebugGraph] Sigma not available yet");
         return;
       }
       if (!data || !data.nodes || !Array.isArray(data.nodes) || data.nodes.length === 0) {
-        console.error("[SigmaDebugGraph] No valid data provided");
         return;
       }
-      console.log(`[SigmaDebugGraph] Processing ${data.nodes.length} nodes`);
       const graph = new DirectedGraph();
       data.nodes.forEach((node, index) => {
-        try {
-          const nodeId = node.id || `node-${index}`;
-          if (graph.hasNode(nodeId)) {
-            console.warn(`[SigmaDebugGraph] Node ${nodeId} already exists, skipping`);
-            return;
-          }
-          graph.addNode(nodeId, {
-            // Don't include label
-            size: config.nodeSize || 8,
-            color: config.nodeColor || "#4a90e2",
-            x: Math.random() * 100,
-            y: Math.random() * 100,
-            type: "circle"
-          });
-        } catch (error) {
-          console.error(`[SigmaDebugGraph] Error adding node ${index}:`, error);
+        const nodeId = node.id || `node-${index}`;
+        if (graph.hasNode(nodeId)) {
+          return;
         }
+        graph.addNode(nodeId, {
+          size: config.nodeSize || 8,
+          color: config.nodeColor || "#4a90e2",
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          originalColor: config.nodeColor || "#4a90e2",
+          originalSize: config.nodeSize || 8,
+          label: node.label || nodeId,
+          nodeData: node
+        });
       });
       if (data.edges && Array.isArray(data.edges)) {
         data.edges.forEach((edge, index) => {
@@ -22430,7 +22421,10 @@ void main() {
               graph.addEdge(edge.source, edge.target, {
                 size: config.edgeSize || 1,
                 color: config.edgeColor || "#999",
-                type: "line"
+                type: "line",
+                originalColor: config.edgeColor || "#999",
+                originalSize: config.edgeSize || 1,
+                edgeData: edge
               });
             } catch (error) {
               console.warn(`[SigmaDebugGraph] Could not add edge ${index}:`, error);
@@ -22438,37 +22432,64 @@ void main() {
           }
         });
       }
-      console.log(`[SigmaDebugGraph] Loading graph with ${graph.nodes().length} nodes`);
       loadGraph(graph);
       setSettings({
         nodeReducer: (node, data2) => {
+          const isHovered = hoveredNode === node;
+          const isConnected = isHovered || (hoveredNode ? graph.areNeighbors(hoveredNode, node) : false);
+          const isEdgeHovered = hoveredEdge !== null;
+          const dimmed = hoveredNode !== null && !isHovered && !isConnected || hoveredEdge !== null && !isEdgeHovered;
           return {
             ...data2,
-            // Don't include label at all to prevent label rendering
-            // Remove label property entirely
-            ...data2.label ? {} : {}
+            size: isHovered ? (data2.originalSize || 8) * 2 : data2.originalSize || 8,
+            color: isHovered ? "#ff6600" : dimmed ? "#cccccc" : data2.originalColor || "#4a90e2",
+            label: data2.label || node,
+            zIndex: isHovered ? 10 : dimmed ? 0 : 1
           };
         },
         edgeReducer: (edge, data2) => {
+          const isHovered = hoveredEdge === edge;
+          const isConnectedToHoveredNode = hoveredNode !== null && (graph.source(edge) === hoveredNode || graph.target(edge) === hoveredNode);
+          const dimmed = hoveredNode !== null && !isConnectedToHoveredNode || hoveredEdge !== null && !isHovered;
           return {
             ...data2,
-            color: config.edgeColor || "#999",
-            size: config.edgeSize || 1,
-            type: "line"
+            size: isHovered ? (data2.originalSize || 1) * 3 : isConnectedToHoveredNode ? (data2.originalSize || 1) * 1.5 : data2.originalSize || 1,
+            color: isHovered ? "#ff6600" : isConnectedToHoveredNode ? "#ff9900" : dimmed ? "#dddddd" : data2.originalColor || "#999",
+            zIndex: isHovered ? 10 : isConnectedToHoveredNode ? 5 : dimmed ? 0 : 1
           };
         },
-        // Completely disable all label rendering
-        renderLabels: false,
-        defaultDrawEdgeLabel: false,
-        defaultDrawNodeLabel: false,
+        renderLabels: true,
+        defaultDrawEdgeLabel: () => {
+        },
+        defaultDrawNodeLabel: (node, context, settings) => {
+          const label = node.label || node.id || "";
+          if (!label) return;
+          context.font = `${settings.labelSize || 12}px ${settings.labelFont || "sans-serif"}`;
+          context.fillStyle = settings.labelColor || "#333";
+          context.textAlign = "center";
+          context.textBaseline = "middle";
+          context.fillText(label, node.x, node.y + (node.size || 8) + 4);
+        },
         enableHovering: false,
-        zIndex: true
+        zIndex: true,
+        labelRenderedSizeThreshold: 0,
+        labelDensity: 0.07,
+        labelFont: "sans-serif",
+        labelSize: config.labelSize || 12,
+        labelColor: config.labelColor || "#333",
+        labelThreshold: config.labelThreshold || 5
       });
       registerEvents({
         clickNode: (event) => {
           const node = graph.getNodeAttributes(event.node);
           if (onNodeClick) {
             onNodeClick({ id: event.node, ...node });
+          }
+        },
+        clickEdge: (event) => {
+          const edge = graph.getEdgeAttributes(event.edge);
+          if (onEdgeClick) {
+            onEdgeClick({ id: event.edge, ...edge });
           }
         },
         enterNode: (event) => {
@@ -22481,28 +22502,32 @@ void main() {
           if (onNodeHover) {
             onNodeHover(null);
           }
+        },
+        enterEdge: (event) => {
+          if (onEdgeHover) {
+            const edge = graph.getEdgeAttributes(event.edge);
+            onEdgeHover({ id: event.edge, ...edge });
+          }
+        },
+        leaveEdge: () => {
+          if (onEdgeHover) {
+            onEdgeHover(null);
+          }
         }
       });
       const container = sigma.getContainer();
       const timer = setTimeout(() => {
-        console.log(`[SigmaDebugGraph] Refreshing camera, sigma available:`, !!sigma);
         if (sigma && sigma.getCamera()) {
-          console.log(`[SigmaDebugGraph] Resetting camera`);
           sigma.getCamera().animatedReset({ duration: 500 });
-          sigma.refresh();
           sigma.refresh();
         }
         if (container) {
-          console.log(`[SigmaDebugGraph] Container client dimensions:`, container.clientWidth, container.clientHeight);
-          console.log(`[SigmaDebugGraph] Container offset dimensions:`, container.offsetWidth, container.offsetHeight);
           if (container.clientWidth === 0 || container.clientHeight === 0) {
-            console.warn("[SigmaDebugGraph] Container still has zero dimensions, forcing resize");
             window.dispatchEvent(new Event("resize"));
           }
         }
       }, 100);
       const resizeObserver = new ResizeObserver(() => {
-        console.log("[SigmaDebugGraph] Container resized");
         if (sigma && sigma.getCamera()) {
           sigma.refresh();
         }
@@ -22514,133 +22539,32 @@ void main() {
         clearTimeout(timer);
         resizeObserver.disconnect();
       };
-    }, [data, config, loadGraph, setSettings, registerEvents, sigma, onNodeClick, onNodeHover, width, height]);
+    }, [data, config, loadGraph, setSettings, registerEvents, sigma, onNodeClick, onNodeHover, onEdgeClick, onEdgeHover, hoveredNode, hoveredEdge, width, height]);
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_jsx_runtime2.Fragment, {});
   };
-  var SigmaDebugGraph = (props) => {
-    const { width, height, data } = props;
-    const config = props.config || {};
-    const actualWidth = Math.max(width || 800, 400);
-    const actualHeight = Math.max(height || 600, 400);
-    console.log(`[SigmaDebugGraph] Container dimensions: ${actualWidth}x${actualHeight}`);
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
-      width: `${actualWidth}px`,
-      height: `${actualHeight}px`,
-      minWidth: "400px",
-      minHeight: "400px",
-      position: "relative",
-      border: "3px solid red",
-      // Debug border
-      backgroundColor: "rgba(255, 0, 0, 0.1)"
-      // Semi-transparent red background
-    }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-        S,
-        {
-          style: {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%"
-          },
-          settings: {
-            // Completely disable all label rendering
-            renderLabels: false,
-            // Disable all label-related features
-            defaultDrawEdgeLabel: false,
-            defaultDrawNodeLabel: false,
-            // Disable hover labels
-            enableHovering: false,
-            // Basic Sigma.js settings
-            zIndex: true,
-            defaultNodeColor: config.nodeColor || "#4a90e2",
-            defaultEdgeColor: config.edgeColor || "#999",
-            defaultNodeSize: config.nodeSize || 5,
-            defaultEdgeSize: config.edgeSize || 1,
-            allowInvalidContainer: true,
-            autoResize: true,
-            // Camera settings
-            camera: {
-              ratio: 1,
-              angle: 0,
-              x: 0.5,
-              y: 0.5
-            }
-          },
-          graph: null,
-          initialSettings: {
-            autoResize: true,
-            allowInvalidContainer: false,
-            // Ensure all label rendering is disabled
-            renderLabels: false,
-            defaultDrawEdgeLabel: false,
-            defaultDrawNodeLabel: false,
-            enableHovering: false
-          },
-          children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SigmaGraph, { ...props, width: actualWidth, height: actualHeight })
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
-        position: "absolute",
-        top: 10,
-        left: 10,
-        backgroundColor: "rgba(255, 255, 255, 0.95)",
-        padding: "10px",
-        borderRadius: "5px",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-        zIndex: 1e4,
-        fontSize: "12px",
-        border: "1px solid #ccc"
-      }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Debug Graph View (Sigma.js)" }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-          "Nodes: ",
-          data?.nodes?.length || 0
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-          "Edges: ",
-          data?.edges?.length || 0
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { children: "Click and drag to pan" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { children: "Scroll to zoom" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { children: "Click nodes for details" })
-      ] })
-    ] });
-  };
-
-  // src/views/defaultViews/DebugGraphView.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var DebugGraph = class extends BaseViewClass {
     constructor(props) {
       super(props);
-      __publicField(this, "containerRef");
-      __publicField(this, "checkContainerDimensions", () => {
-        if (this.containerRef.current) {
-          const { width, height } = this.containerRef.current.getBoundingClientRect();
-          if (width === 0 || height === 0) {
-            console.warn("DebugGraph container has no dimensions, setting defaults");
-          }
-        }
+      __publicField(this, "selectedElement", null);
+      __publicField(this, "hoveredNode", null);
+      __publicField(this, "hoveredEdge", null);
+      __publicField(this, "handleNodeClick", (node) => {
+        this.selectedElement = { type: "node", id: node.id, data: node };
+        this.setState({ selectedElement: this.selectedElement });
       });
-      this.containerRef = import_react4.default.createRef();
-    }
-    componentDidMount() {
-      super.componentDidMount?.();
-      requestAnimationFrame(() => {
-        this.checkContainerDimensions();
-        this.forceUpdate();
+      __publicField(this, "handleEdgeClick", (edge) => {
+        this.selectedElement = { type: "edge", id: edge.id, data: edge };
+        this.setState({ selectedElement: this.selectedElement });
       });
-      window.addEventListener("resize", this.checkContainerDimensions);
-    }
-    componentWillUnmount() {
-      window.removeEventListener("resize", this.checkContainerDimensions);
-      super.componentWillUnmount?.();
-    }
-    componentDidUpdate(prevProps) {
-      if (prevProps.width !== this.props.width || prevProps.height !== this.props.height) {
-        this.checkContainerDimensions();
-      }
+      __publicField(this, "handleNodeHover", (node) => {
+        this.hoveredNode = node ? node.id : null;
+        this.setState({ hoveredNode: this.hoveredNode });
+      });
+      __publicField(this, "handleEdgeHover", (edge) => {
+        this.hoveredEdge = edge ? edge.id : null;
+        this.setState({ hoveredEdge: this.hoveredEdge });
+      });
+      this.state = { ...this.state, selectedElement: null, hoveredNode: null, hoveredEdge: null };
     }
     get config() {
       return this.props.config || {
@@ -22654,73 +22578,292 @@ void main() {
         labelThreshold: 5
       };
     }
+    renderDetailsPanel() {
+      const selected = this.state.selectedElement;
+      if (!selected) {
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
+          padding: "12px",
+          backgroundColor: "#f0f0f0",
+          borderTop: "1px solid #ccc",
+          fontSize: "13px",
+          color: "#666",
+          minHeight: "60px"
+        }, children: "Click a node or edge to see its details here." });
+      }
+      const data = selected.data;
+      const entries = Object.entries(data).filter(([key]) => key !== "nodeData" && key !== "edgeData" && key !== "originalColor" && key !== "originalSize");
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+        padding: "12px",
+        backgroundColor: "#f0f0f0",
+        borderTop: "1px solid #ccc",
+        fontSize: "13px",
+        maxHeight: "200px",
+        overflowY: "auto"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontWeight: "bold", marginBottom: "8px", color: "#333" }, children: [
+          selected.type === "node" ? "Node" : "Edge",
+          ": ",
+          selected.id
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("table", { style: { width: "100%", borderCollapse: "collapse" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("tbody", { children: entries.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("tr", { style: { borderBottom: "1px solid #ddd" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("td", { style: { padding: "4px 8px", fontWeight: 600, color: "#555", width: "120px", verticalAlign: "top" }, children: key }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("td", { style: { padding: "4px 8px", color: "#333", wordBreak: "break-all" }, children: typeof value === "object" ? JSON.stringify(value, null, 2) : String(value) })
+        ] }, key)) }) })
+      ] });
+    }
+    renderSidePanel() {
+      const data = this.state.data;
+      if (!data) return null;
+      const nodes = data.nodes || [];
+      const edges = data.edges || [];
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+        width: "300px",
+        minWidth: "300px",
+        borderLeft: "1px solid #ccc",
+        backgroundColor: "#fafafa",
+        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
+        fontSize: "12px"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+          padding: "8px",
+          borderBottom: "1px solid #ccc",
+          backgroundColor: "#e0e0e0",
+          fontWeight: "bold"
+        }, children: [
+          "Nodes (",
+          nodes.length,
+          ")"
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { flex: 1, overflowY: "auto", padding: "4px" }, children: nodes.map((node, idx) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+          "div",
+          {
+            style: {
+              padding: "4px 6px",
+              margin: "2px 0",
+              backgroundColor: "#fff",
+              border: "1px solid #ddd",
+              borderRadius: "3px",
+              cursor: "pointer",
+              fontSize: "11px"
+            },
+            onClick: () => {
+              this.handleNodeClick({ id: node.id, ...node });
+            },
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { fontWeight: 600, color: "#333" }, children: node.label || node.id || `node-${idx}` }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { color: "#666", fontSize: "10px" }, children: [
+                "id: ",
+                node.id,
+                node.type && typeof node.type === "object" && node.type.category ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                  " | type: ",
+                  node.type.category,
+                  "/",
+                  node.type.type
+                ] }) : node.type ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                  " | type: ",
+                  typeof node.type === "string" ? node.type : JSON.stringify(node.type)
+                ] }) : null
+              ] })
+            ]
+          },
+          node.id || idx
+        )) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+          padding: "8px",
+          borderTop: "1px solid #ccc",
+          borderBottom: "1px solid #ccc",
+          backgroundColor: "#e0e0e0",
+          fontWeight: "bold"
+        }, children: [
+          "Edges (",
+          edges.length,
+          ")"
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { flex: 1, overflowY: "auto", padding: "4px" }, children: edges.map((edge, idx) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+          "div",
+          {
+            style: {
+              padding: "4px 6px",
+              margin: "2px 0",
+              backgroundColor: "#fff",
+              border: "1px solid #ddd",
+              borderRadius: "3px",
+              cursor: "pointer",
+              fontSize: "11px"
+            },
+            onClick: () => {
+              this.handleEdgeClick({ id: `edge-${idx}`, ...edge });
+            },
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontWeight: 600, color: "#333" }, children: [
+                edge.source,
+                " \u2192 ",
+                edge.target
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { color: "#666", fontSize: "10px" }, children: edge.attributes?.type && typeof edge.attributes.type === "object" && edge.attributes.type.category ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                "type: ",
+                edge.attributes.type.category,
+                "/",
+                edge.attributes.type.type
+              ] }) : edge.attributes?.type ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                "type: ",
+                typeof edge.attributes.type === "string" ? edge.attributes.type : JSON.stringify(edge.attributes.type)
+              ] }) : null })
+            ]
+          },
+          idx
+        )) })
+      ] });
+    }
     renderContent() {
       const { width = 800, height = 600 } = this.props;
       const data = this.state.data;
       console.log(`[DebugGraphView.renderContent] width: ${width}, height: ${height}, has data: ${!!data}`);
       if (!data) {
         console.error("[DebugGraphView] No graph data available");
-        return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
           width: "100%",
           height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "rgba(0, 0, 255, 0.1)"
-        }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { children: "Loading graph data..." }) });
+        }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { children: "Loading graph data..." }) });
       }
       const config = this.config;
       const actualWidth = Math.max(width > 0 ? width : 800, 400);
       const actualHeight = Math.max(height > 0 ? height : 600, 400);
       console.log(`[DebugGraphView] Actual dimensions: ${actualWidth}x${actualHeight}`);
       if (!data.nodes || !Array.isArray(data.nodes) || data.nodes.length === 0) {
-        return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
           width: "100%",
           height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "rgba(0, 0, 255, 0.1)"
-        }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { children: "No graph nodes available" }) });
+        }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { children: "No graph nodes available" }) });
       }
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-        "div",
-        {
-          ref: this.containerRef,
-          style: {
-            width: `${actualWidth}px`,
-            height: `${actualHeight}px`,
-            border: "3px solid blue",
-            // Debug border
-            borderRadius: "4px",
-            overflow: "hidden",
-            minWidth: "400px",
-            minHeight: "400px",
-            position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            backgroundColor: "rgba(0, 0, 255, 0.1)"
-            // Semi-transparent blue background
-          },
-          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_react4.default.Suspense, { fallback: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: {
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { children: "Loading Sigma.js graph viewer..." }) }), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-            SigmaDebugGraph,
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+        width: `${actualWidth}px`,
+        minWidth: "400px",
+        position: "relative",
+        display: "flex",
+        flexDirection: "row"
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
+          flex: 1,
+          display: "flex",
+          flexDirection: "column"
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "div",
             {
-              data,
-              config,
-              width: actualWidth,
-              height: actualHeight,
-              onNodeClick: this.props.onNodeClick,
-              onNodeHover: this.props.onNodeHover
+              style: {
+                height: `${actualHeight}px`,
+                overflow: "hidden",
+                minHeight: "400px",
+                position: "relative"
+              },
+              children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react3.default.Suspense, { fallback: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { children: "Loading Sigma.js graph viewer..." }) }), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                S,
+                {
+                  style: {
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%"
+                  },
+                  settings: {
+                    renderLabels: true,
+                    defaultDrawEdgeLabel: () => {
+                    },
+                    defaultDrawNodeLabel: (node, context, settings) => {
+                      const label = node.label || node.id || "";
+                      if (!label) return;
+                      context.font = `${settings.labelSize || 12}px ${settings.labelFont || "sans-serif"}`;
+                      context.fillStyle = settings.labelColor || "#333";
+                      context.textAlign = "center";
+                      context.textBaseline = "middle";
+                      context.fillText(label, node.x, node.y + (node.size || 8) + 4);
+                    },
+                    enableHovering: false,
+                    zIndex: true,
+                    defaultNodeColor: config.nodeColor || "#4a90e2",
+                    defaultEdgeColor: config.edgeColor || "#999",
+                    defaultNodeSize: config.nodeSize || 5,
+                    defaultEdgeSize: config.edgeSize || 1,
+                    allowInvalidContainer: true,
+                    autoResize: true,
+                    camera: {
+                      ratio: 1,
+                      angle: 0,
+                      x: 0.5,
+                      y: 0.5
+                    },
+                    labelRenderedSizeThreshold: 0,
+                    labelDensity: 0.07,
+                    labelFont: "sans-serif",
+                    labelSize: config.labelSize || 12,
+                    labelColor: config.labelColor || "#333",
+                    labelThreshold: config.labelThreshold || 5
+                  },
+                  graph: null,
+                  initialSettings: {
+                    autoResize: true,
+                    allowInvalidContainer: false,
+                    renderLabels: true,
+                    defaultDrawEdgeLabel: () => {
+                    },
+                    defaultDrawNodeLabel: (node, context, settings) => {
+                      const label = node.label || node.id || "";
+                      if (!label) return;
+                      context.font = `${settings.labelSize || 12}px ${settings.labelFont || "sans-serif"}`;
+                      context.fillStyle = settings.labelColor || "#333";
+                      context.textAlign = "center";
+                      context.textBaseline = "middle";
+                      context.fillText(label, node.x, node.y + (node.size || 8) + 4);
+                    },
+                    enableHovering: false,
+                    labelRenderedSizeThreshold: 0,
+                    labelDensity: 0.07,
+                    labelFont: "sans-serif",
+                    labelSize: config.labelSize || 12,
+                    labelColor: config.labelColor || "#333",
+                    labelThreshold: config.labelThreshold || 5
+                  },
+                  children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                    SigmaGraph,
+                    {
+                      data,
+                      config,
+                      width: actualWidth,
+                      height: actualHeight,
+                      onNodeClick: this.handleNodeClick,
+                      onNodeHover: this.handleNodeHover,
+                      onEdgeClick: this.handleEdgeClick,
+                      onEdgeHover: this.handleEdgeHover,
+                      hoveredNode: this.state.hoveredNode,
+                      hoveredEdge: this.state.hoveredEdge
+                    }
+                  )
+                }
+              ) })
             }
-          ) })
-        }
-      );
+          ),
+          this.renderDetailsPanel()
+        ] }),
+        this.renderSidePanel()
+      ] });
     }
   };
   var DebugGraphView = ({
@@ -22728,7 +22871,7 @@ void main() {
     width = 800,
     height = 600
   }) => {
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
       DebugGraph,
       {
         slicePath,
@@ -22744,7 +22887,7 @@ void main() {
   if (rootElement) {
     const root = import_client.default.createRoot(rootElement);
     root.render(
-      import_react5.default.createElement(DebugGraphView_default, {
+      import_react4.default.createElement(DebugGraphView_default, {
         slicePath: "/~/views/DebugGraph/slice"
       })
     );

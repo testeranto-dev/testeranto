@@ -562,6 +562,37 @@ export class Server_WS_HTTP extends Server_HTTP {
     this.logBusinessMessage("Server stop event broadcasted");
   }
 
+  // Broadcast process status changes to WebSocket clients
+  async broadcastProcessStatusChanged(processId: string, status: string, metadata?: Record<string, any>): Promise<void> {
+    this.logBusinessMessage(`Broadcasting process status change: ${processId} -> ${status}`);
+    this.broadcast({
+      type: 'processUpdated',
+      processId,
+      status,
+      metadata,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  async broadcastContainerStatusChanged(containerId: string, status: string, serviceName?: string): Promise<void> {
+    this.logBusinessMessage(`Broadcasting container status change: ${containerId} -> ${status}`);
+    this.broadcast({
+      type: 'containerStatusChanged',
+      containerId,
+      status,
+      serviceName,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  async broadcastGraphUpdated(): Promise<void> {
+    this.logBusinessMessage("Broadcasting graph update");
+    this.broadcast({
+      type: 'graphUpdated',
+      timestamp: new Date().toISOString()
+    });
+  }
+
   // State synchronization methods
   async startStateSync(): Promise<void> {
     this.logBusinessMessage("Starting state synchronization...");

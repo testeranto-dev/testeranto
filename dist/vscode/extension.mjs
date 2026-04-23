@@ -1883,17 +1883,18 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
 // src/vscode/providers/DockerProcessTreeDataProvider.ts
 import * as vscode9 from "vscode";
 var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
-  graphData = null;
+  processes = [];
+  processMap = /* @__PURE__ */ new Map();
   constructor() {
     super();
     console.log("[DockerProcessTreeDataProvider] Constructor called");
     setTimeout(() => {
-      this.loadGraphData().then(() => {
+      this.loadProcesses().then(() => {
         this._onDidChangeTreeData.fire();
       });
     }, 100);
   }
-  async loadGraphData() {
+  async loadProcesses() {
     try {
       console.log("[DockerProcessTreeDataProvider] Loading process data from /~/process API endpoint");
       const response2 = await fetch("http://localhost:3000/~/process");
@@ -1902,49 +1903,23 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
       }
       const data = await response2.json();
       if (data && Array.isArray(data.processes)) {
-        const processedNodes = data.processes.map((node) => {
-          const metadata = node.metadata || {};
-          let isAider = false;
-          if (node.type) {
-            if (typeof node.type === "object") {
-              isAider = node.type.type === "aider";
-            } else if (typeof node.type === "string") {
-              isAider = node.type.includes("aider");
-            }
-          }
-          let status = metadata.status || "unknown";
-          const isActive = metadata.isActive || false;
-          const containerId = metadata.containerId;
-          if (containerId && status === "unknown") {
-            status = isActive ? "running" : "stopped";
-          }
-          return {
-            ...node,
-            metadata: {
-              ...metadata,
-              status,
-              isAider,
-              // Ensure we have the process type
-              processType: isAider ? "aider" : node.type && typeof node.type === "object" ? node.type.type : typeof node.type === "string" ? node.type.replace("_process", "") : "unknown"
-            }
-          };
-        });
-        this.graphData = {
-          nodes: processedNodes,
-          edges: []
-        };
-        console.log("[DockerProcessTreeDataProvider] Loaded", processedNodes.length, "processes from API");
+        this.processes = data.processes;
+        this.processMap.clear();
+        for (const proc of data.processes) {
+          this.processMap.set(proc.id, proc);
+        }
+        console.log("[DockerProcessTreeDataProvider] Loaded", data.processes.length, "processes from API");
       } else {
         console.warn("[DockerProcessTreeDataProvider] API response does not contain processes array:", data);
-        this.graphData = { nodes: [], edges: [] };
+        this.processes = [];
       }
     } catch (error) {
       console.error("[DockerProcessTreeDataProvider] Failed to load process data from API:", error);
-      this.graphData = { nodes: [], edges: [] };
+      this.processes = [];
     }
   }
   refresh() {
-    this.loadGraphData().then(() => {
+    this.loadProcesses().then(() => {
       this._onDidChangeTreeData.fire();
     }).catch((error) => {
       console.error("[DockerProcessTreeDataProvider] Error in refresh:", error);
@@ -1955,9 +1930,6 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
     return element;
   }
   async getChildren(element) {
-    if (!this.graphData) {
-      await this.loadGraphData();
-    }
     if (!element) {
       return this.getDockerProcessItems();
     }
@@ -1973,7 +1945,7 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
       3 /* Info */,
       vscode9.TreeItemCollapsibleState.None,
       {
-        description: "Reload graph data",
+        description: "Reload process data",
         refresh: true
       },
       {
@@ -1983,142 +1955,59 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
       },
       new vscode9.ThemeIcon("refresh")
     ));
-    if (!this.graphData) {
-      items.push(new TestTreeItem(
-        "Cannot connect to server",
-        3 /* Info */,
-        vscode9.TreeItemCollapsibleState.None,
-        {
-          description: "Testeranto server is not running on port 3000.",
-          startServer: true
-        },
-        {
-          command: "testeranto.startServer",
-          title: "Start Server",
-          arguments: []
-        },
-        new vscode9.ThemeIcon("warning")
-      ));
-      return items;
-    }
-    console.log(`[DockerProcessTreeDataProvider] Processing graph with ${this.graphData.nodes.length} nodes, ${this.graphData.edges.length} edges`);
-    const dockerProcessNodes = this.graphData.nodes.filter((node) => {
-      if (node.type && typeof node.type === "object") {
-        return node.type.category === "process";
-      }
-      return node.type === "docker_process" || node.type === "bdd_process" || node.type === "check_process" || node.type === "builder_process" || node.type === "aider_process";
-    });
-    console.log(`[DockerProcessTreeDataProvider] Found ${dockerProcessNodes.length} docker process nodes`);
-    if (dockerProcessNodes.length === 0) {
+    if (this.processes.length === 0) {
       items.push(new TestTreeItem(
         "No docker processes found",
         3 /* Info */,
         vscode9.TreeItemCollapsibleState.None,
         {
-          description: "No docker processes in graph"
+          description: "No docker processes available"
         },
         void 0,
         new vscode9.ThemeIcon("info")
       ));
       return items;
     }
+    console.log(`[DockerProcessTreeDataProvider] Processing ${this.processes.length} processes`);
     const processGroups = /* @__PURE__ */ new Map();
-    for (const processNode of dockerProcessNodes) {
-      const incomingEdges = this.graphData.edges.filter(
-        (edge) => edge.target === processNode.id
-      );
-      let parentNode = null;
-      let groupType = "unknown";
-      for (const edge of incomingEdges) {
-        const sourceNode = this.graphData.nodes.find((n) => n.id === edge.source);
-        if (sourceNode) {
-          if (sourceNode.type === "config") {
-            parentNode = sourceNode;
-            groupType = "config";
-            break;
-          } else if (sourceNode.type === "entrypoint") {
-            parentNode = sourceNode;
-            groupType = "entrypoint";
-            break;
-          }
-        }
+    for (const proc of this.processes) {
+      const metadata = proc.metadata || {};
+      const processType = metadata.processType || "unknown";
+      if (!processGroups.has(processType)) {
+        processGroups.set(processType, []);
       }
-      const groupKey = parentNode ? parentNode.id : "ungrouped";
-      if (!processGroups.has(groupKey)) {
-        processGroups.set(groupKey, {
-          parentNode,
-          processes: [],
-          type: groupType
-        });
-      }
-      processGroups.get(groupKey).processes.push(processNode);
+      processGroups.get(processType).push(proc);
     }
-    for (const [groupKey, group] of processGroups.entries()) {
-      let groupLabel = "Ungrouped Processes";
-      let groupDescription = `${group.processes.length} process(es)`;
-      if (group.parentNode) {
-        if (group.type === "config") {
-          groupLabel = `Config: ${group.parentNode.label || group.parentNode.id}`;
-          groupDescription = `${group.processes.length} builder process(es)`;
-        } else if (group.type === "entrypoint") {
-          groupLabel = `Entrypoint: ${group.parentNode.label || group.parentNode.id}`;
-          groupDescription = `${group.processes.length} test process(es)`;
-        }
-      }
+    for (const [groupType, groupProcesses] of processGroups.entries()) {
+      const groupLabel = `${groupType.charAt(0).toUpperCase() + groupType.slice(1)} Processes`;
+      const groupDescription = `${groupProcesses.length} process(es)`;
       const groupItem = new TestTreeItem(
         groupLabel,
         3 /* Info */,
         vscode9.TreeItemCollapsibleState.Collapsed,
         {
           description: groupDescription,
-          count: group.processes.length,
-          groupKey,
-          groupType: group.type
+          count: groupProcesses.length,
+          groupType
         },
         void 0,
-        group.type === "config" ? new vscode9.ThemeIcon("settings-gear") : group.type === "entrypoint" ? new vscode9.ThemeIcon("file-text") : new vscode9.ThemeIcon("server")
+        new vscode9.ThemeIcon("server")
       );
-      groupItem.children = group.processes.map((node) => this.createProcessItem(node));
+      groupItem.children = groupProcesses.map((proc) => this.createProcessItem(proc));
       items.push(groupItem);
     }
     return items;
   }
   createProcessItem(node) {
     const metadata = node.metadata || {};
-    const status = metadata.status || metadata.state || "unknown";
+    const status = metadata.status || "unknown";
     const exitCode = metadata.exitCode;
     const isActive = metadata.isActive || false;
     const containerId = metadata.containerId || "unknown";
     const isAider = metadata.isAider || false;
     const processType = metadata.processType || "unknown";
-    let serviceName = metadata.serviceName || metadata.containerName || metadata.name || "unknown";
-    if (serviceName === "unknown" && node.id) {
-      const parts = node.id.split(":");
-      if (parts.length >= 3) {
-        const processTypePart = parts[0];
-        const configKey = parts[1];
-        const testName = parts[2];
-        const extractedProcessType = processTypePart.replace("_process", "");
-        if (extractedProcessType === "aider" && configKey === "agent") {
-          serviceName = `agent-${testName}`;
-        } else if (extractedProcessType === "check") {
-          serviceName = `check-${configKey}-${testName.replace(/\//g, "-").replace(/\./g, "-")}`;
-        } else if (extractedProcessType === "bdd") {
-          serviceName = `bdd-${configKey}-${testName.replace(/\//g, "-").replace(/\./g, "-")}`;
-        } else if (extractedProcessType === "aider") {
-          serviceName = `aider-${configKey}-${testName.replace(/\//g, "-").replace(/\./g, "-")}`;
-        } else if (extractedProcessType === "builder") {
-          serviceName = `builder-${configKey}`;
-        } else {
-          serviceName = `${extractedProcessType}-${configKey}-${testName.replace(/\//g, "-").replace(/\./g, "-")}`;
-        }
-      }
-    }
-    let label = node.label || serviceName;
-    if (label === "unknown" && node.id) {
-      const parts = node.id.split(":");
-      label = parts[parts.length - 1] || node.id;
-    }
+    const serviceName = metadata.serviceName || metadata.containerName || metadata.name || "unknown";
+    const label = node.label || serviceName;
     let description = "";
     if (isAider) {
       description += "\u{1F916} ";
@@ -2140,9 +2029,6 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
       case "failed":
         description += "\u274C Failed";
         break;
-      case "todo":
-        description += "\u{1F4DD} Todo";
-        break;
       default:
         description += `\u2753 ${status}`;
     }
@@ -2150,15 +2036,10 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
       description += ` (exit: ${exitCode})`;
     }
     description += ` \u2022 ${processType}`;
-    if (!isActive && status !== "stopped" && status !== "exited") {
-      description += " \u2022 inactive";
-    }
     let icon;
     if (isAider) {
       if (status === "running") {
         icon = new vscode9.ThemeIcon("comment-discussion", new vscode9.ThemeColor("testing.iconPassed"));
-      } else if (status === "stopped" || status === "exited") {
-        icon = new vscode9.ThemeIcon("comment", new vscode9.ThemeColor("testing.iconUnset"));
       } else {
         icon = new vscode9.ThemeIcon("comment", new vscode9.ThemeColor("testing.iconUnset"));
       }
@@ -2192,7 +2073,6 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
         processType,
         isActive,
         nodeId: node.id,
-        // Add aider-specific fields
         agentName: metadata.agentName,
         isAgentAider: metadata.isAgentAider,
         isAider
@@ -2254,38 +2134,12 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
       tooltip += `Last Updated: ${metadata.updatedAt}
 `;
     }
-    if (this.graphData) {
-      const connectedEdges = this.graphData.edges.filter(
-        (edge) => edge.target === node.id && edge.attributes && edge.attributes.type && (edge.attributes.type === "hasProcess" || typeof edge.attributes.type === "object" && edge.attributes.type.type === "has")
-      );
-      for (const edge of connectedEdges) {
-        const sourceNode = this.graphData.nodes.find((n) => n.id === edge.source);
-        if (sourceNode) {
-          let sourceType = "unknown";
-          if (sourceNode.type && typeof sourceNode.type === "object") {
-            sourceType = sourceNode.type.type || "unknown";
-          } else if (typeof sourceNode.type === "string") {
-            sourceType = sourceNode.type;
-          }
-          if (sourceType === "entrypoint") {
-            tooltip += `
-Connected to entrypoint: ${sourceNode.label || sourceNode.id}`;
-          } else if (sourceType === "config") {
-            tooltip += `
-Connected to config: ${sourceNode.label || sourceNode.id}`;
-          } else if (sourceType === "agent") {
-            tooltip += `
-Connected to agent: ${sourceNode.label || sourceNode.id}`;
-          }
-        }
-      }
-    }
     item.tooltip = tooltip;
     return item;
   }
   handleWebSocketMessage(message) {
     super.handleWebSocketMessage(message);
-    console.log(`[DockerProcessTreeDataProvider] Received message type: ${message.type}, url: ${message.url}`);
+    console.log(`[DockerProcessTreeDataProvider] Received message type: ${message.type}`);
     if (message.type === "resourceChanged") {
       if (message.url === "/~/process" || message.url === "/~/graph") {
         console.log("[DockerProcessTreeDataProvider] Process data changed, refreshing from API");

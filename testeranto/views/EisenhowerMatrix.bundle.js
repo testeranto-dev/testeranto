@@ -13678,10 +13678,10 @@
         this.setState({ loading: true, error: null });
         const viewName = extractViewName(slicePath);
         const staticFilePath = getSliceFilePath(viewName);
-        const absolutePath = staticFilePath.startsWith("/") ? `${window.location.origin}${staticFilePath}` : staticFilePath;
-        console.log(`[BaseViewClass] Loading slice data from: ${absolutePath} (view: ${viewName}, original: ${slicePath})`);
+        const dataUrl = staticFilePath.startsWith("/") ? staticFilePath : `/${staticFilePath}`;
+        console.log(`[BaseViewClass] Loading slice data from: ${dataUrl} (view: ${viewName}, original: ${slicePath})`);
         const cacheBuster = `?_t=${Date.now()}`;
-        const response = await fetch(absolutePath + cacheBuster);
+        const response = await fetch(dataUrl + cacheBuster);
         if (!response.ok) {
           throw new Error(`Failed to load slice data from ${absolutePath}: ${response.status} ${response.statusText}`);
         }

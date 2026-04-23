@@ -48,6 +48,14 @@ export class Server_HTTP extends Server_STDIO {
 
   // Setup Hono app with static file serving
   private setupHonoApp(): void {
+    // Handle /~/ API routes first (before static file serving)
+    this.app.all('/~/', (c) => {
+      return this.handleHonoRequest(c.req);
+    });
+    this.app.all('/~/*', (c) => {
+      return this.handleHonoRequest(c.req);
+    });
+
     // Serve static files from testeranto/views directory
     this.app.use('/testeranto/views/*', serveStatic({ 
       root: './',
@@ -57,7 +65,7 @@ export class Server_HTTP extends Server_STDIO {
       }
     }));
 
-    // Serve other static files from root
+    // Serve other static files from root (excluding /~/ routes)
     this.app.use('/*', serveStatic({ 
       root: './',
       onNotFound: (path, c) => {
@@ -66,7 +74,7 @@ export class Server_HTTP extends Server_STDIO {
       }
     }));
 
-    // Handle all requests through Hono
+    // Handle all other requests through Hono
     this.app.all('*', (c) => {
       return this.handleHonoRequest(c.req);
     });
