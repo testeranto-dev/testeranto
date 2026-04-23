@@ -1,6 +1,7 @@
 import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { Server_Polyglot } from "./business/Server_Polyglot";
+import { Server_Runtime } from "./business/Server_Runtime";
 
 /**
  * Server V3 - Abstract Logical Core (Position 0)
@@ -11,7 +12,7 @@ import { Server_Polyglot } from "./business/Server_Polyglot";
  * 
  * This class orchestrates the business workflows and maintains the core state.
  */
-export abstract class Server extends Server_Polyglot {
+export abstract class Server extends Server_Runtime {
   protected isRunning: boolean = false;
   protected startedAt: Date | null = null;
   protected businessState: Map<string, any> = new Map();
@@ -56,10 +57,10 @@ export abstract class Server extends Server_Polyglot {
     await this.setupComponents();
     await this.generateViewSlices();
     await this.generateViewHtmlFiles();
-    
+
     // Start HTTP server before workflows
     await this.startHttpServer(3000);
-    
+
     await this.startPolyglotWorkflows();
     await this.startWorkflows();
 
@@ -280,28 +281,28 @@ export abstract class Server extends Server_Polyglot {
   }
 
   // ========== Graph Methods (stubs for API handlers) ==========
-  
+
   protected queryNodes(filter: (node: any) => boolean): any[] {
     this.logBusinessMessage('[Server] queryNodes stub');
     return [];
   }
-  
+
   protected addNode(node: any): string {
     this.logBusinessMessage(`[Server] addNode stub: ${JSON.stringify(node)}`);
     return `node-${Date.now()}`;
   }
-  
+
   protected updateAllAgentSliceFiles(): void {
     this.logBusinessMessage('[Server] updateAllAgentSliceFiles stub');
   }
-  
+
   protected broadcastApiMessage(type: string, data: any): void {
     this.logBusinessMessage(`[Server] broadcastApiMessage stub: ${type}`);
   }
-  
+
 
   // ========== Server_Static Abstract Method Implementations ==========
-  
+
   protected async generateViewSliceUtil(viewKey: string, viewConfig: any): Promise<void> {
     const { generateViewSliceUtil } = await import("./utils/static/generateViewSliceUtil");
     await generateViewSliceUtil(viewKey, viewConfig);
@@ -318,7 +319,7 @@ export abstract class Server extends Server_Polyglot {
   }
 
   // ========== API Route Handlers (for Server_Api) ==========
-  
+
   protected async handleFilesRoute(request: Request): Promise<Response> {
     return new Response(
       JSON.stringify({

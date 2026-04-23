@@ -22,10 +22,10 @@ export class Server_WS_HTTP extends Server_HTTP {
 
   async startHttpServer(port: number, hostname?: string): Promise<void> {
     this.logBusinessMessage(`Starting HTTP server with WebSocket support using Hono with Bun.serve()...`);
-    
+
     this.port = port;
     this.hostname = hostname || '0.0.0.0';
-    
+
     // Create the Bun HTTP server with WebSocket support
     this.httpServer = Bun.serve({
       port: this.port,
@@ -40,7 +40,7 @@ export class Server_WS_HTTP extends Server_HTTP {
           }
           return new Response("WebSocket upgrade failed", { status: 400 });
         }
-        
+
         // Handle regular HTTP requests through Hono
         return await this.app.fetch(request);
       },
@@ -59,7 +59,7 @@ export class Server_WS_HTTP extends Server_HTTP {
         },
       },
     });
-    
+
     this.logBusinessMessage(`HTTP server with WebSocket support started at ${this.httpServer.url}`);
   }
 
@@ -78,11 +78,11 @@ export class Server_WS_HTTP extends Server_HTTP {
       ip: 'unknown',
       connectedAt: new Date()
     };
-    
+
     this.wsClients.set(clientId, client);
-    
+
     this.logBusinessMessage(`WebSocket client connected: ${clientId}`);
-    
+
     // Send welcome message
     this.sendToClient(clientId, {
       type: 'connected',
@@ -100,16 +100,16 @@ export class Server_WS_HTTP extends Server_HTTP {
         break;
       }
     }
-    
+
     if (!clientId) {
       return;
     }
-    
+
     const client = this.wsClients.get(clientId);
     if (!client) {
       return;
     }
-    
+
     try {
       let parsed;
       if (typeof message === 'string') {
@@ -122,7 +122,7 @@ export class Server_WS_HTTP extends Server_HTTP {
       } else {
         throw new Error(`Unsupported message type: ${typeof message}`);
       }
-      
+
       // Handle the parsed message directly
       if (!parsed || typeof parsed !== 'object') {
         return;
@@ -164,20 +164,20 @@ export class Server_WS_HTTP extends Server_HTTP {
     }
   }
 
-  private handleWebSocketDisconnectV2(ws: any): void {
-    // Find client by WebSocket object
-    let clientId: string | null = null;
-    for (const [id, client] of this.wsClients.entries()) {
-      if (client.ws === ws) {
-        clientId = id;
-        break;
-      }
-    }
-    
-    if (clientId) {
-      this.handleWebSocketDisconnectV2(clientId);
-    }
-  }
+  // private handleWebSocketDisconnectV2(ws: any): void {
+  //   // Find client by WebSocket object
+  //   let clientId: string | null = null;
+  //   for (const [id, client] of this.wsClients.entries()) {
+  //     if (client.ws === ws) {
+  //       clientId = id;
+  //       break;
+  //     }
+  //   }
+
+  //   if (clientId) {
+  //     this.handleWebSocketDisconnectV2(clientId);
+  //   }
+  // }
 
 
 
@@ -185,10 +185,10 @@ export class Server_WS_HTTP extends Server_HTTP {
     const client = this.wsClients.get(clientId);
     if (client) {
       this.logBusinessMessage(`WebSocket client disconnected: ${clientId}`);
-      
+
       // V2 business logic: cleanup client subscriptions
       this.cleanupClientSubscriptionsV2(clientId);
-      
+
       // Remove from all channels
       for (const [channel, clients] of this.channels.entries()) {
         clients.delete(clientId);
@@ -196,9 +196,9 @@ export class Server_WS_HTTP extends Server_HTTP {
           this.channels.delete(channel);
         }
       }
-      
+
       this.wsClients.delete(clientId);
-      
+
       // Notify other clients
       this.broadcastToChannel('system', {
         type: 'clientDisconnected',
@@ -252,11 +252,11 @@ export class Server_WS_HTTP extends Server_HTTP {
       }
       this.wsClients.clear();
       this.channels.clear();
-      
+
       this.wsServer.close();
       this.wsServer = null;
     }
-    
+
     if (this.httpServer) {
       await stopHttpServer(this.httpServer);
       this.httpServer = null;
@@ -272,7 +272,7 @@ export class Server_WS_HTTP extends Server_HTTP {
     try {
       const content = await this.readFile(filePath);
       const ext = filePath.split('.').pop()?.toLowerCase();
-      
+
       let contentType = 'text/plain';
       if (ext === 'html') contentType = 'text/html';
       else if (ext === 'css') contentType = 'text/css';
@@ -280,7 +280,7 @@ export class Server_WS_HTTP extends Server_HTTP {
       else if (ext === 'json') contentType = 'application/json';
       else if (ext === 'png') contentType = 'image/png';
       else if (ext === 'jpg' || ext === 'jpeg') contentType = 'image/jpeg';
-      
+
       return new Response(content, {
         status: 200,
         headers: { 'Content-Type': contentType }
@@ -310,7 +310,7 @@ export class Server_WS_HTTP extends Server_HTTP {
         }
       );
     };
-    
+
     // Add to the Map for actual routing (inherited from Server_HTTP)
     super.addRoute(method, path, bunHandler);
   }
@@ -318,7 +318,7 @@ export class Server_WS_HTTP extends Server_HTTP {
   removeRoute(method: string, path: string): void {
     // Remove from the Map for actual routing (inherited from Server_HTTP)
     super.removeRoute(method, path);
-    
+
     // Note: Route configuration tracking is handled by Server_ApiSpec
     // Server_Api will handle array tracking if needed
   }
@@ -331,25 +331,25 @@ export class Server_WS_HTTP extends Server_HTTP {
   private handleWebSocketConnection(ws: WebSocket, request: any): void {
     const client = createWebSocketClient(ws, request);
     this.wsClients.set(client.id, client);
-    
+
     console.log(`[Server_WS_HTTP] Client connected: ${client.id} from ${client.ip}`);
-    
+
     // Setup message handler
     ws.on('message', (data) => {
       this.handleWebSocketMessage(client, data);
     });
-    
+
     // Setup close handler
     ws.on('close', () => {
       this.handleWebSocketDisconnect(client.id);
     });
-    
+
     // Setup error handler
     ws.on('error', (error) => {
       console.error(`[Server_WS_HTTP] WebSocket error for client ${client.id}:`, error);
       this.handleWebSocketDisconnect(client.id);
     });
-    
+
     // Send welcome message
     sendToClient(client, {
       type: 'welcome',
@@ -362,7 +362,7 @@ export class Server_WS_HTTP extends Server_HTTP {
   private handleWebSocketMessage(client: WebSocketClient, data: WebSocket.RawData): void {
     try {
       const message = JSON.parse(data.toString());
-      
+
       if (!message.type) {
         sendToClient(client, {
           type: 'error',
@@ -371,7 +371,7 @@ export class Server_WS_HTTP extends Server_HTTP {
         });
         return;
       }
-      
+
       // Handle different message types
       switch (message.type) {
         case 'ping':
@@ -418,7 +418,7 @@ export class Server_WS_HTTP extends Server_HTTP {
     const client = this.wsClients.get(clientId);
     if (client) {
       console.log(`[Server_WS_HTTP] Client disconnected: ${clientId}`);
-      
+
       // Remove from all channels
       for (const [channel, clients] of this.channels.entries()) {
         clients.delete(clientId);
@@ -426,9 +426,9 @@ export class Server_WS_HTTP extends Server_HTTP {
           this.channels.delete(channel);
         }
       }
-      
+
       this.wsClients.delete(clientId);
-      
+
       // Notify other clients
       this.broadcastToChannel('system', {
         type: 'clientDisconnected',
@@ -482,7 +482,7 @@ export class Server_WS_HTTP extends Server_HTTP {
   broadcastToChannel(channel: string, message: any): void {
     const channelClients = this.channels.get(channel);
     if (!channelClients) return;
-    
+
     const data = JSON.stringify(message);
     for (const clientId of channelClients) {
       const client = this.wsClients.get(clientId);

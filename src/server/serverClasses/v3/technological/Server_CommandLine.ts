@@ -1,8 +1,10 @@
-import { Server_Runtime } from "./Server_Runtime";
+import { Server_Runtime } from "../business/Server_Runtime";
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
+import { Server } from "../Server";
+import { Server_FS } from "./Server_FS";
 
 const execAsync = promisify(exec);
 
@@ -14,7 +16,7 @@ const execAsync = promisify(exec);
  * Provides: Command line operations
  * To be mocked in: Tests
  */
-export class Server_CommandLine extends Server_Runtime {
+export class Server_CommandLine extends Server_FS {
   private processes: Map<string, any> = new Map();
 
   constructor(configs: ITesterantoConfig, mode: IMode) {

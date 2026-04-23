@@ -1,12 +1,13 @@
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
-import { Server_FS } from "./Server_FS";
+import { Server_FS } from "../technological/Server_FS";
 import { executeRuntimeBuild } from "../utils/runtime/buildUtils";
 import { generateRuntimeDockerCompose } from "../utils/runtime/dockerComposeUtils";
 import { getRuntimeDockerfilePath, getRuntimeVolumes } from "../utils/runtime/pathUtils";
 import { validateRuntimeConfiguration } from "../utils/runtime/validationUtils";
+import { Server_Polyglot } from "./Server_Polyglot";
 
-export class Server_Runtime extends Server_FS {
+export class Server_Runtime extends Server_Polyglot {
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);
   }

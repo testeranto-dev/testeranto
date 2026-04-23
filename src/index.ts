@@ -6,6 +6,7 @@ import readline from "readline";
 import { join } from "path";
 import fs from "fs/promises";
 import { Server_DockerCompose } from "./server/serverClasses/v3/technological/Server_DockerCompose";
+import { Server_Testeranto } from "./server/serverClasses/v3/technological/Server_Testeranto";
 
 const init = async () => {
   console.log("initializing the testeranto folder");
@@ -41,7 +42,7 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
   console.log(`Press 'q' to initiate a graceful shutdown. Press 'CTRL + c' to quit forcefully.`);
 
   const config = (await import(process.cwd() + '/testeranto/testeranto.ts')).default;
-  const server = new Server_DockerCompose(config, mode);
+  const server = new Server_Testeranto(config, mode);
 
   readline.emitKeypressEvents(process.stdin);
   if (process.stdin.isTTY) process.stdin.setRawMode(true);
