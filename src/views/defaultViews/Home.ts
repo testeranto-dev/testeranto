@@ -10,57 +10,30 @@ export type IHome = {
   }>;
   viewType: 'home';
   timestamp: string;
-  // Include default views as fallback
-  defaultViews: Array<{
-    id: string;
-    label: string;
-    description?: string;
-  }>;
 }
 
 export const HomeSlicer = (graphData: GraphData): IHome => {
-  // Extract view nodes from graph
-  const graphViews = graphData.nodes
+  // Extract view nodes from graph using the new GraphNodeType structure
+  const views = graphData.nodes
     .filter(node => {
-      // Check if node.type is an object with category 'view' and type 'view'
+      // node.type is an object with category and type
       if (node.type && typeof node.type === 'object') {
         return node.type.category === 'view' && node.type.type === 'view';
       }
-      // For backward compatibility, also check string type
-      return node.type === 'view' ||
-             (node.attributes?.type && node.attributes.type === 'view');
+      return false;
     })
     .map(node => ({
       id: node.id,
       label: node.label || node.id,
-      description: node.description || node.attributes?.description,
+      description: node.description,
       type: 'view',
-      metadata: node.metadata || node.attributes
+      metadata: node.metadata
     }));
-
-  // Default views as fallback
-  const defaultViews = [
-    { id: 'kanban', label: 'Kanban', description: 'Kanban board for task management' },
-    { id: 'eisenhower-matrix', label: 'Eisenhower Matrix', description: 'Priority matrix for task categorization' },
-    { id: 'gantt', label: 'Gantt', description: 'Timeline view for project scheduling' },
-    { id: 'chat', label: 'Chat', description: 'Chat message viewer' },
-    { id: 'debug-graph', label: 'Debug Graph', description: 'Interactive graph visualization using Sigma.js' },
-    { id: 'home', label: 'Home', description: 'Home page with links to all views' }
-  ];
-
-  // Combine graph views and default views
-  // Use graph views if available, otherwise use default views
-  const views = graphViews.length > 0 ? graphViews : defaultViews.map(view => ({
-    ...view,
-    type: 'view',
-    metadata: { isDefault: true }
-  }));
 
   return {
     views,
     viewType: 'home',
-    timestamp: new Date().toISOString(),
-    defaultViews
+    timestamp: new Date().toISOString()
   };
 }
 

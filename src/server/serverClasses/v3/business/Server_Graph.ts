@@ -1,11 +1,19 @@
-import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../graph";
+import type {
+  TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes, GraphData,
+  GraphOperation
+} from "../../../../graph";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { Server_Base } from "../ServerBase";
+import { addAgentNodesPure } from "../utils/graph/addAgentNodesPure";
+import { addViewNodesPure } from "../utils/graph/addViewNodesPure";
+import { addRuntimeNodesPure } from "../utils/graph/addRuntimeNodesPure";
+import { generateEdgesPure } from "../utils/graph/generateEdgesPure";
+import { updateAllAgentSliceFilesPure } from "../utils/graph/updateAllAgentSliceFilesPure";
 
 /**
  * Server_Graph - Business Layer (-5)
- * 
+ *
  * Extends: (Base of business layer)
  * Extended by: Server_VSCode (-4)
  * Provides: Graph management business logic
@@ -55,9 +63,9 @@ export abstract class Server_Graph extends Server_Base {
 
   // Setup method called by Server.ts
   async setupGraph(): Promise<void> {
-    this.logBusinessMessage("Setting up graph component (V2 business logic)...");
+    this.logBusinessMessage("Setting up graph component (V3 business logic)...");
 
-    // V2 Server_Graph constructor business logic:
+    // V3 Server_Graph constructor business logic:
     // 1. Initialize graph
     this.logBusinessMessage("Initializing graph...");
     this.graph = this.createGraph();
@@ -88,44 +96,58 @@ export abstract class Server_Graph extends Server_Base {
     this.logBusinessMessage("Graph component setup complete");
   }
 
-  // V2 Server_Graph business logic: save graph with proper structure
+  // V3 Server_Graph business logic: save graph with proper structure
   async saveGraph(): Promise<void> {
-    this.logBusinessMessage(`Saving graph to ${this.graphDataPath} (V2 business logic)...`);
-    
-    // Create graph data structure similar to V2
-    const graphData = {
+    this.logBusinessMessage(`Saving graph to ${this.graphDataPath} (V3 business logic)...`);
+
+    // Create graph data structure similar to V3
+    const graphData: GraphData = {
       nodes: this.graph.nodes,
       edges: this.graph.edges,
       metadata: {
         ...this.graph.metadata,
         version: '1.0',
         timestamp: new Date().toISOString(),
-        configs: this.configs,
-        mode: this.mode
+        source: 'Server_Graph'
       }
     };
-    
+
     // Implementation would save to file
     // For now, just log
-    this.logBusinessMessage(`Graph saved with ${graphData.nodes.length} nodes and ${graphData.edges.length} edges`);
-    
+    this.logBusinessMessage(`Graph saved with ${graphData.nodes.length} nodes and
+${graphData.edges.length} edges`);
+
     // Call resource changed callback
     if (this.resourceChangedCallback) {
       this.resourceChangedCallback('/~/graph');
     }
   }
 
-  // V2 Server_Graph business logic: write view slice files
+  // V3 Server_Graph business logic: write view slice files
   protected writeViewSliceFiles(): void {
-    this.logBusinessMessage("Writing view slice files (V2 business logic)...");
-    
+    this.logBusinessMessage("Writing view slice files (V3 business logic)...");
+
     if (this.configs.views) {
+      const graphData: GraphData = {
+        nodes: this.graph.nodes,
+        edges: this.graph.edges,
+        metadata: {
+          version: '1.0',
+          timestamp: new Date().toISOString()
+        }
+      };
+
       for (const [viewKey, viewConfig] of Object.entries(this.configs.views)) {
         this.logBusinessMessage(`Writing slice for view: ${viewKey}`);
-        // Implementation would write slice file for each view
+        // Use the utility function to write the slice file with graph data
+        import("../utils/static/generateViewSliceUtil").then(({ generateViewSliceUtil }) => {
+          generateViewSliceUtil(viewKey, viewConfig, graphData).catch((err: any) => {
+            this.logBusinessError(`Failed to write slice for view ${viewKey}:`, err);
+          });
+        });
       }
     }
-    
+
     this.logBusinessMessage("View slice files written");
   }
 
@@ -143,30 +165,98 @@ export abstract class Server_Graph extends Server_Base {
     this.logBusinessMessage("Graph component notified of server stop");
   }
 
-  // These methods should be implemented by concrete subclasses
+  // These methods are now implemented using V3 pure functions
   protected addAgentNodesFromConfig(): void {
-    this.logBusinessMessage("Adding agent nodes from configuration");
-    // Implementation would add agent nodes to graph
+    this.logBusinessMessage("Adding agent nodes from configuration (V3)");
+    const timestamp = new Date().toISOString();
+    const operations = addAgentNodesPure(this.configs, timestamp);
+    this.applyOperations(operations);
   }
 
   protected addViewNodesFromConfig(): void {
-    this.logBusinessMessage("Adding view nodes from configuration");
-    // Implementation would add view nodes to graph
+    this.logBusinessMessage("Adding view nodes from configuration (V3)");
+    const timestamp = new Date().toISOString();
+    const operations = addViewNodesPure(this.configs, this.projectRoot, timestamp);
+    this.applyOperations(operations);
   }
 
   protected addRuntimeNodesFromConfig(): void {
-    this.logBusinessMessage("Adding runtime nodes from configuration");
-    // Implementation would add runtime nodes to graph
+    this.logBusinessMessage("Adding runtime nodes from configuration (V3)");
+    const timestamp = new Date().toISOString();
+    const operations = addRuntimeNodesPure(this.configs, timestamp);
+    this.applyOperations(operations);
   }
 
   protected generateEdges(): void {
-    this.logBusinessMessage("Generating graph edges");
-    // Implementation would generate edges between nodes
+    this.logBusinessMessage("Generating graph edges (V3)");
+    const timestamp = new Date().toISOString();
+    const graphData: GraphData = {
+      nodes: this.graph.nodes,
+      edges: this.graph.edges,
+      metadata: {
+        version: '1.0',
+        timestamp
+      }
+    };
+    const operations = generateEdgesPure(graphData, this.configs, timestamp);
+    this.applyOperations(operations);
   }
 
   protected updateAllAgentSliceFiles(): void {
-    this.logBusinessMessage("Updating all agent slice files");
-    // Implementation would update agent slice files
+    this.logBusinessMessage("Updating all agent slice files (V3)");
+    const graphData: GraphData = {
+      nodes: this.graph.nodes,
+      edges: this.graph.edges,
+      metadata: {
+        version: '1.0',
+        timestamp: new Date().toISOString()
+      }
+    };
+    updateAllAgentSliceFilesPure(graphData, this.projectRoot, this.configs);
+  }
+
+  // Helper to apply graph operations to the internal graph structure
+  private applyOperations(operations: GraphOperation[]): void {
+    for (const op of operations) {
+      switch (op.type) {
+        case 'addNode':
+          this.graph.nodes.push(op.data);
+          break;
+        case 'addEdge':
+          this.graph.edges.push({
+            source: op.data.source,
+            target: op.data.target,
+            attributes: op.data.attributes
+          });
+          break;
+        case 'updateNode':
+          {
+            const idx = this.graph.nodes.findIndex(n => n.id === op.data.id);
+            if (idx !== -1) {
+              this.graph.nodes[idx] = { ...this.graph.nodes[idx], ...op.data };
+            }
+          }
+          break;
+        case 'removeNode':
+          this.graph.nodes = this.graph.nodes.filter(n => n.id !== op.data.id);
+          this.graph.edges = this.graph.edges.filter(e => e.source !== op.data.id &&
+            e.target !== op.data.id);
+          break;
+        case 'updateEdge':
+          {
+            const idx = this.graph.edges.findIndex(e => e.source === op.data.source &&
+              e.target === op.data.target);
+            if (idx !== -1) {
+              this.graph.edges[idx] = { ...this.graph.edges[idx], ...op.data };
+            }
+          }
+          break;
+        case 'removeEdge':
+          this.graph.edges = this.graph.edges.filter(e => !(e.source === op.data.source &&
+            e.target === op.data.target));
+          break;
+      }
+    }
   }
 
   // Public graph operations
@@ -188,7 +278,8 @@ export abstract class Server_Graph extends Server_Base {
   removeNode(nodeId: string): void {
     this.logBusinessMessage(`removeNode ${nodeId}`);
     this.graph.nodes = this.graph.nodes.filter(n => n.id !== nodeId);
-    this.graph.edges = this.graph.edges.filter(e => e.source !== nodeId && e.target !== nodeId);
+    this.graph.edges = this.graph.edges.filter(e => e.source !== nodeId && e.target !==
+      nodeId);
   }
 
   getNode(nodeId: string): any {
@@ -240,7 +331,8 @@ export abstract class Server_Graph extends Server_Base {
     return processNode?.type?.includes('aider') || false;
   }
 
-  protected generateTerminalCommand(containerId: string, containerName: string, label: string, isAiderProcess: boolean): string {
+  protected generateTerminalCommand(containerId: string, containerName: string, label:
+    string, isAiderProcess: boolean): string {
     if (isAiderProcess) {
       return `docker exec -it ${containerId} aider`;
     } else {

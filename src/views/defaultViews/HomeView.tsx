@@ -183,9 +183,6 @@ export class Home extends BaseViewClass<IHome> {
     }
 
     const views = data.views || [];
-    const defaultViews = data.defaultViews || [];
-    const hasGraphViews = views.some((view: any) => !view.metadata?.isDefault);
-    const isUsingDefaultViews = !hasGraphViews && config.showDefaultViews;
 
     // Calculate grid layout
     const columns = Math.max(1, Math.min(config.columns, Math.floor(width / (config.cardWidth + 30))));
@@ -218,27 +215,11 @@ export class Home extends BaseViewClass<IHome> {
             <h1 style={{ margin: 0, color: '#333', fontSize: '36px' }}>Available Views</h1>
             <div style={{ fontSize: '16px', color: '#666', marginTop: '10px' }}>
               {views.length} view{views.length !== 1 ? 's' : ''} available
-              {isUsingDefaultViews && ' (using default views)'}
-              {hasGraphViews && ' (from graph)'}
             </div>
-            {isUsingDefaultViews && (
-              <div style={{ 
-                marginTop: '10px',
-                padding: '10px',
-                backgroundColor: '#e3f2fd',
-                borderRadius: '8px',
-                border: '1px solid #bbdefb'
-              }}>
-                <p style={{ margin: 0, color: '#1565c0' }}>
-                  <strong>Note:</strong> No view nodes were found in the graph. Showing default views instead.
-                  View nodes will appear here when they are added to the graph with type 'view'.
-                </p>
-              </div>
-            )}
           </div>
           <div style={gridStyle}>
             {views.map((view: any, index: number) => 
-              this.renderViewCard(view, index, view.metadata?.isDefault || false)
+              this.renderViewCard(view, index, false)
             )}
           </div>
           {views.length === 0 && (

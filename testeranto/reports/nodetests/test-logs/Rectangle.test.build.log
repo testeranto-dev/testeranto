@@ -1,7 +1,7 @@
-[2026-04-23T16:24:39.326Z] Build log for test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+[2026-04-23T17:09:04.648Z] Build log for test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
 Output: testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs
 Entry point: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
 
-[2026-04-23T16:24:39.312Z] INFO: Build started for nodetests
+[2026-04-23T17:09:04.634Z] INFO: Build started for nodetests
 
-[2026-04-23T16:24:39.326Z] Build completed for: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+[2026-04-23T17:09:04.648Z] Build completed for: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts

@@ -13200,9 +13200,6 @@
         ] }) });
       }
       const views = data.views || [];
-      const defaultViews = data.defaultViews || [];
-      const hasGraphViews = views.some((view) => !view.metadata?.isDefault);
-      const isUsingDefaultViews = !hasGraphViews && config.showDefaultViews;
       const columns = Math.max(1, Math.min(config.columns, Math.floor(width / (config.cardWidth + 30))));
       const gridStyle = {
         display: "grid",
@@ -13232,23 +13229,11 @@
             views.length,
             " view",
             views.length !== 1 ? "s" : "",
-            " available",
-            isUsingDefaultViews && " (using default views)",
-            hasGraphViews && " (from graph)"
-          ] }),
-          isUsingDefaultViews && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: {
-            marginTop: "10px",
-            padding: "10px",
-            backgroundColor: "#e3f2fd",
-            borderRadius: "8px",
-            border: "1px solid #bbdefb"
-          }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { style: { margin: 0, color: "#1565c0" }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Note:" }),
-            " No view nodes were found in the graph. Showing default views instead. View nodes will appear here when they are added to the graph with type 'view'."
-          ] }) })
+            " available"
+          ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: gridStyle, children: views.map(
-          (view, index) => this.renderViewCard(view, index, view.metadata?.isDefault || false)
+          (view, index) => this.renderViewCard(view, index, false)
         ) }),
         views.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: {
           textAlign: "center",
