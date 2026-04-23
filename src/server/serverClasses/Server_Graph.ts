@@ -66,7 +66,7 @@ export class Server_Graph extends Server_Base {
     return graphDataPath;
   }
 
-  public saveGraph(): void {
+  public async saveGraph() {
     this.saveGraphUtil();
   }
 

@@ -1,12 +1,12 @@
 {
   "src/lib/tiposkripto/tests/abstractBase.test/index.ts": {
-    "hash": "003aa4604923953e2df1b46bc30f61de",
+    "hash": "c3b70a5aa933f98db0bba708dbddc9d2",
     "files": [
       "/src/lib/tiposkripto/tests/abstractBase.test/index.ts"
     ]
   },
   "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
-    "hash": "af3960c52ad007d9cac426e63720911d",
+    "hash": "ed61545b71c5f03a03e41bcf5b2ceff2",
     "files": [
       "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
@@ -32,7 +32,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/circle/Circle.test.ts": {
-    "hash": "d611c7f1fe468deb2dc0b382c6dc2e70",
+    "hash": "f49263e48a480c3a6e3c8b57737c545c",
     "files": [
       "/src/lib/tiposkripto/tests/circle/Circle.ts",
       "/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
@@ -58,7 +58,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts": {
-    "hash": "31731d6bb5836d3ab81481a8a5170a9e",
+    "hash": "b1fbdde227dded43ed258b1f4a44d0a3",
     "files": [
       "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
       "/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
@@ -84,7 +84,7 @@
     ]
   },
   "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts": {
-    "hash": "26a598bdaae05a6482fc1257d9481fe7",
+    "hash": "44e21cabac59072513921dc62a44259c",
     "files": [
       "/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
       "/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",

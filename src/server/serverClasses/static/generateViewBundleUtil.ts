@@ -7,7 +7,7 @@ export const generateViewBundleUtil = async (
   viewPath: string,
   createErrorBundleFn: (bundlePath: string, viewKey: string, errorMessage: string) => void
 ): Promise<void> => {
-  const viewsDir = path.join(process.cwd(), "testeranto", "views");
+  const viewsDir = path.join(process.cwd(), "src", "views");
   const bundlePath = path.join(viewsDir, `${viewKey}.bundle.js`);
   const absoluteViewPath = path.join(process.cwd(), viewPath);
 
@@ -27,30 +27,30 @@ export const generateViewBundleUtil = async (
   const componentName = viewKey.charAt(0).toUpperCase() + viewKey.slice(1) + 'View';
 
   const wrapperPath = path.join(viewsDir, `${viewKey}.wrapper.tsx`);
-  
+
   // Calculate the import path relative to the wrapper
   // The wrapper is in testeranto/views/, viewPath is relative to project root
   // We need to go from wrapper to view file
   const projectRoot = process.cwd();
   const wrapperDir = path.dirname(wrapperPath);
   const viewFileDir = path.dirname(absoluteViewPath);
-  
+
   // Get relative path from wrapper to view file directory
   const relativeDir = path.relative(wrapperDir, viewFileDir);
-  
+
   // Get filename without extension
   const viewFileName = path.basename(absoluteViewPath, '.tsx');
-  
+
   // Construct import path
   let importPath = path.join(relativeDir, viewFileName);
   // Fix path separators for ES modules
   importPath = importPath.replace(/\\/g, '/');
-  
+
   // Ensure it starts with ./
   if (!importPath.startsWith('.')) {
     importPath = `./${importPath}`;
   }
-  
+
   // Create wrapper content
   const wrapperContent = `
 import React from 'react';
@@ -67,7 +67,7 @@ if (rootElement) {
   );
 }
 `;
-  
+
   fs.writeFileSync(wrapperPath, wrapperContent, 'utf-8');
 
   const buildOptions: esbuild.BuildOptions = {

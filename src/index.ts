@@ -3,9 +3,9 @@ import pkg from "../package.json";
 const version = pkg.version;
 
 import readline from "readline";
-import { Server_Static } from "./server/serverClasses/Server_Static";
 import { join } from "path";
 import fs from "fs/promises";
+import { Server_DockerCompose } from "./server/serverClasses/v3/technological/Server_DockerCompose";
 
 const init = async () => {
   console.log("initializing the testeranto folder");
@@ -30,7 +30,7 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
     process.exit(0);
   }
 
-  console.log(`hello testeranto v${version} - running in ${mode} mode\n Press 'q' to initiate a graceful shutdown.\nPress 'CTRL + c' to quit forcefully.\n`);
+  console.log(`testeranto v${version} running in ${mode} mode`);
 
   if (mode !== "once" && mode !== "dev" && mode != "-v") {
     console.error(`The 3rd argument should be '-v', 'init', 'dev' or 'once', not '${mode}'.`);
@@ -38,8 +38,10 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
     process.exit(-1);
   }
 
+  console.log(`Press 'q' to initiate a graceful shutdown. Press 'CTRL + c' to quit forcefully.`);
+
   const config = (await import(process.cwd() + '/testeranto/testeranto.ts')).default;
-  const server = new Server_Static(config, mode);
+  const server = new Server_DockerCompose(config, mode);
 
   readline.emitKeypressEvents(process.stdin);
   if (process.stdin.isTTY) process.stdin.setRawMode(true);
@@ -47,20 +49,18 @@ const mode = process.argv[2] as "once" | "dev" | "-v" | "init";
   process.stdin.on("keypress", async (str, key) => {
     if (key.name === "q") {
       console.log("Testeranto is shutting down gracefully...");
-
       await server.stop();
-
       process.exit(0);
     }
     // Handle Ctrl+C through keypress when in raw mode
     if (key.ctrl && key.name === "c") {
-      console.log("\nForce quitting...");
+      console.log("Testeranto is shutting down forcefully!");
       process.exit(1);
     }
   });
 
   process.on("SIGINT", async () => {
-    console.log("\nForce quitting...");
+    console.log("Testeranto is shutting down forcefully!");
     process.exit(1);
   });
 

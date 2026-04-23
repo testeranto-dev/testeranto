@@ -5,9 +5,9 @@ import { generateViewBundleUtil } from './static/generateViewBundleUtil';
 import { generateViewSlicesUtil } from './static/generateViewSlicesUtil';
 import { generateViewHtmlFilesUtil } from './static/generateViewHtmlFilesUtil';
 import { createErrorBundleUtil } from "./static/createErrorBundleUtil";
-import { Server_Lock } from "./Server_Lock";
+import { Server_Vscode } from "./Server_Vscode";
 
-export class Server_Static extends Server_Lock {
+export class Server_Static extends Server_Vscode {
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
     super(configs, mode);

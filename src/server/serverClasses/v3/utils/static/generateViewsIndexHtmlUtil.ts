@@ -1,0 +1,91 @@
+export const generateViewsIndexHtmlUtil = (views: Record<string, any>): string => {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testeranto Views</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 0;
+      padding: 40px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-top: 0;
+      color: #333;
+    }
+    .view-list {
+      list-style: none;
+      padding: 0;
+    }
+    .view-item {
+      margin-bottom: 15px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      transition: background-color 0.2s;
+    }
+    .view-item:hover {
+      background-color: #f9f9f9;
+    }
+    .view-link {
+      display: block;
+      text-decoration: none;
+      color: #007acc;
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .view-link:hover {
+      text-decoration: underline;
+    }
+    .view-path {
+      font-size: 14px;
+      color: #666;
+      font-family: monospace;
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .empty {
+      text-align: center;
+      color: #666;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Testeranto Views</h1>
+    ${Object.keys(views).length > 0 ? `
+      <p>Available views:</p>
+      <ul class="view-list">
+        ${Object.entries(views).map(([key, viewConfig]) => `
+          <li class="view-item">
+            <a href="/testeranto/views/${key}.html" class="view-link">${key}</a>
+            <div class="view-path">${viewConfig.filePath}</div>
+          </li>
+        `).join('')}
+      </ul>
+      <p>You can also access the <a href="/testeranto/reports/index.html">main stakeholder report</a>.</p>
+    ` : `
+      <div class="empty">
+        <p>No views are currently configured.</p>
+        <p>Add views to your testeranto configuration to see them here.</p>
+      </div>
+    `}
+  </div>
+</body>
+</html>`;
+}

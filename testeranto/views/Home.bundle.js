@@ -465,7 +465,7 @@
       exports.useTransition = function() {
         return ReactSharedInternals.H.useTransition();
       };
-      exports.version = "19.2.5";
+      exports.version = "19.2.4";
     }
   });
 
@@ -481,9 +481,9 @@
     }
   });
 
-  // node_modules/react-dom/node_modules/scheduler/cjs/scheduler.production.js
+  // node_modules/scheduler/cjs/scheduler.production.js
   var require_scheduler_production = __commonJS({
-    "node_modules/react-dom/node_modules/scheduler/cjs/scheduler.production.js"(exports) {
+    "node_modules/scheduler/cjs/scheduler.production.js"(exports) {
       "use strict";
       function push(heap, node) {
         var index = heap.length;
@@ -754,9 +754,9 @@
     }
   });
 
-  // node_modules/react-dom/node_modules/scheduler/index.js
+  // node_modules/scheduler/index.js
   var require_scheduler = __commonJS({
-    "node_modules/react-dom/node_modules/scheduler/index.js"(exports, module) {
+    "node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       if (true) {
         module.exports = require_scheduler_production();
@@ -911,7 +911,7 @@
       exports.useFormStatus = function() {
         return ReactSharedInternals.H.useHostTransitionStatus();
       };
-      exports.version = "19.2.5";
+      exports.version = "19.2.4";
     }
   });
 
@@ -12584,12 +12584,12 @@
         }
       };
       var isomorphicReactPackageVersion$jscomp$inline_1840 = React4.version;
-      if ("19.2.5" !== isomorphicReactPackageVersion$jscomp$inline_1840)
+      if ("19.2.4" !== isomorphicReactPackageVersion$jscomp$inline_1840)
         throw Error(
           formatProdErrorMessage(
             527,
             isomorphicReactPackageVersion$jscomp$inline_1840,
-            "19.2.5"
+            "19.2.4"
           )
         );
       ReactDOMSharedInternals.findDOMNode = function(componentOrElement) {
@@ -12607,10 +12607,10 @@
       };
       var internals$jscomp$inline_2347 = {
         bundleType: 0,
-        version: "19.2.5",
+        version: "19.2.4",
         rendererPackageName: "react-dom",
         currentDispatcherRef: ReactSharedInternals,
-        reconcilerVersion: "19.2.5"
+        reconcilerVersion: "19.2.4"
       };
       if ("undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__) {
         hook$jscomp$inline_2348 = __REACT_DEVTOOLS_GLOBAL_HOOK__;
@@ -12678,7 +12678,7 @@
         listenToAllSupportedEvents(container);
         return new ReactDOMHydrationRoot(initialChildren);
       };
-      exports.version = "19.2.5";
+      exports.version = "19.2.4";
     }
   });
 

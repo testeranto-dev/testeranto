@@ -200,6 +200,7 @@
     "Other"
   ],
   "scripts": {
+    "dev4": "yarn dev2 && testeranto init && testeranto dev",
     "dev3": "yarn package:vsce && yarn dev2 && testeranto init && testeranto dev",
     "serve": "testeranto dev",
     "dev2": "yarn bundle && bun build ./src/index.ts --compile --outfile ./dist/testeranto && bun link",
@@ -424,6 +425,7 @@
     "glob": "^10.3.10",
     "graphology": "^0.26.0",
     "gray-matter": "^4.0.3",
+    "hono": "^4.12.14",
     "js-yaml": "^4.1.0",
     "license-checker": "^25.0.1",
     "lodash": "^4.18.1",

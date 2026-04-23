@@ -66,22 +66,7 @@ export const nodeBuildCommand = (
   return `yarn tsx /workspace/testeranto/node_runtime.ts /workspace/${projectConfigPath} /workspace/${nodeConfigPath} '${configJson}'`;
 };
 
-export const nodeBddCommand = (
-  fpath: string,
-  nodeConfigPath: string,
-  configKey: string,
-) => {
-  // fpath has .mjs extension (the bundled file), but we need to use the original test file path
-  // for the directory structure. The original test file has .ts extension.
-  // Convert .mjs back to .ts for the fs path to match the directory we created.
-  const originalPath = fpath.replace(/\.mjs$/, '.ts');
-
-  const jsonStr = JSON.stringify({
-    ports: [1111],
-    fs: `testeranto/reports/${configKey}/${originalPath}/`,
-  });
-  return `yarn tsx testeranto/bundles/${configKey}/${fpath} '${jsonStr}'`;
-};
+export { nodeBddCommand } from "./utils/nodeBddCommand";
 
 // BuildKit-based building
 export const nodeBuildKitBuild = async (
