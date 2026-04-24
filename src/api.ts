@@ -1,25 +1,4 @@
 export type IFileRouteResponse = {
-  nodes?: Array<{
-    id: string;
-    type: 'file' | 'folder';
-    label: string;
-    description?: string;
-    status?: 'todo' | 'doing' | 'done' | 'blocked';
-    priority?: 'low' | 'medium' | 'high' | 'critical';
-    timestamp?: string;
-    metadata?: Record<string, any>;
-    icon?: string;
-  }>;
-  edges?: Array<{
-    source: string;
-    target: string;
-    attributes: {
-      type: string;
-      timestamp?: string;
-      metadata?: Record<string, any>;
-      directed?: boolean;
-    };
-  }>;
   tree: any;
   timestamp: string;
 }

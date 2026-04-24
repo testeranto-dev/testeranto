@@ -7,7 +7,6 @@ import type { IMode } from "../../../types";
 import { Server_Base } from "../ServerBase";
 import { addAgentNodesPure } from "../utils/graph/addAgentNodesPure";
 import { addViewNodesPure } from "../utils/graph/addViewNodesPure";
-import { addRuntimeNodesPure } from "../utils/graph/addRuntimeNodesPure";
 import { generateEdgesPure } from "../utils/graph/generateEdgesPure";
 import { updateAllAgentSliceFilesPure } from "../utils/graph/updateAllAgentSliceFilesPure";
 
@@ -190,8 +189,59 @@ ${graphData.edges.length} edges`);
   protected addRuntimeNodesFromConfig(): void {
     this.logBusinessMessage("Adding runtime nodes from configuration (V3)");
     const timestamp = new Date().toISOString();
-    const operations = addRuntimeNodesPure(this.configs, timestamp);
-    this.applyOperations(operations);
+
+    for (const [configKey, runtimeConfig] of Object.entries(this.configs.runtimes)) {
+      const runtimeNodeId = `runtime:${configKey}`;
+      // Add runtime node if not already present
+      if (!this.graph.nodes.find(n => n.id === runtimeNodeId)) {
+        this.graph.nodes.push({
+          id: runtimeNodeId,
+          type: { category: 'resource', type: 'runtime' },
+          label: configKey,
+          description: `Runtime: ${runtimeConfig.runtime}`,
+          metadata: {
+            runtime: runtimeConfig.runtime,
+            configKey,
+          },
+          timestamp,
+        });
+      }
+
+      // Add test nodes and edges
+      const tests = runtimeConfig.tests || [];
+      for (const testPath of tests) {
+        const testNodeId = `test:${configKey}:${testPath}`;
+        if (!this.graph.nodes.find(n => n.id === testNodeId)) {
+          this.graph.nodes.push({
+            id: testNodeId,
+            type: { category: 'file', type: 'entrypoint' },
+            label: testPath.split('/').pop() || testPath,
+            description: `Test: ${testPath}`,
+            metadata: {
+              testPath,
+              configKey,
+              runtime: runtimeConfig.runtime,
+            },
+            timestamp,
+          });
+        }
+
+        // Add edge from runtime to test if not already present
+        const edgeExists = this.graph.edges.find(
+          e => e.source === runtimeNodeId && e.target === testNodeId
+        );
+        if (!edgeExists) {
+          this.graph.edges.push({
+            source: runtimeNodeId,
+            target: testNodeId,
+            attributes: {
+              type: { category: 'ownership', type: 'has', directed: true },
+              timestamp,
+            },
+          });
+        }
+      }
+    }
   }
 
   protected generateEdges(): void {

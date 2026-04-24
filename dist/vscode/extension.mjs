@@ -2136,46 +2136,39 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
 // src/vscode/providers/FileTreeDataProvider.ts
 import * as vscode11 from "vscode";
 var FileTreeDataProvider = class extends BaseTreeDataProvider {
-  treeData = null;
+  treeData = [];
   constructor() {
     super();
+    console.log("[FileTreeDataProvider] Constructor called");
     setTimeout(() => {
-      this.loadGraphData().then(() => {
+      this.loadFiles().then(() => {
         this._onDidChangeTreeData.fire();
       });
     }, 100);
   }
-  async loadGraphData() {
+  async loadFiles() {
     try {
-      console.log("[FileTreeDataProvider] Loading graph data from files API endpoint");
+      console.log("[FileTreeDataProvider] Loading file data from files API endpoint");
       const filesUrl = getApiUrl("getFiles");
-      const response2 = await fetch(filesUrl, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
-        }
-      });
+      const response2 = await fetch(filesUrl);
       if (!response2.ok) {
-        throw new Error(`Server returned ${response2.status}: ${response2.statusText}`);
+        throw new Error(`HTTP error! status: ${response2.status}`);
       }
       const data = await response2.json();
-      console.log("[FileTreeDataProvider] Has tree?", !!data.tree, "Type:", typeof data.tree);
-      if (data.tree && Array.isArray(data.tree)) {
-        console.log("[FileTreeDataProvider] Using server-provided tree with", data.tree.length, "root nodes");
+      if (data && Array.isArray(data.tree)) {
         this.treeData = data.tree;
+        console.log("[FileTreeDataProvider] Loaded", data.tree.length, "root nodes from API");
       } else {
-        console.log("[FileTreeDataProvider] No tree in response");
-        this.treeData = null;
+        console.warn("[FileTreeDataProvider] API response does not contain tree array:", data);
+        this.treeData = [];
       }
     } catch (error) {
-      console.error("[FileTreeDataProvider] Failed to load graph data from API:", error);
-      this.treeData = null;
-      console.error(`[FileTreeDataProvider] Error details: ${error instanceof Error ? error.message : String(error)}`);
-      console.error(`[FileTreeDataProvider] Make sure server is running on http://localhost:3000`);
+      console.error("[FileTreeDataProvider] Failed to load file data from API:", error);
+      this.treeData = [];
     }
   }
   refresh() {
-    this.loadGraphData().then(() => {
+    this.loadFiles().then(() => {
       this._onDidChangeTreeData.fire();
     }).catch((error) => {
       console.error("[FileTreeDataProvider] Error in refresh:", error);
@@ -2187,95 +2180,32 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
   }
   async getChildren(element) {
     if (!element) {
-      return this.buildFileSystemTree();
+      return this.getRootItems();
     }
-    const elementData = element.data || {};
-    if (elementData.isFolder && elementData.children) {
-      return elementData.children;
+    if (element.children) {
+      return element.children;
     }
     return [];
   }
-  buildFileSystemTree() {
+  getRootItems() {
     const items = [];
-    items.push(new TestTreeItem(
-      "Refresh",
-      3 /* Info */,
-      vscode11.TreeItemCollapsibleState.None,
-      {
-        description: "Reload graph data",
-        refresh: true
-      },
-      {
-        command: "testeranto.refreshFileTree",
-        title: "Refresh",
-        arguments: []
-      },
-      new vscode11.ThemeIcon("refresh")
-    ));
-    if (this.treeData && Array.isArray(this.treeData)) {
-      console.log("[FileTreeDataProvider] Using server-provided tree structure");
-      const treeItems = this.convertServerTreeToItems(this.treeData);
-      items.push(...treeItems);
+    if (this.treeData.length === 0) {
+      items.push(new TestTreeItem(
+        "No files found",
+        3 /* Info */,
+        vscode11.TreeItemCollapsibleState.None,
+        {
+          description: "No files available"
+        },
+        void 0,
+        new vscode11.ThemeIcon("info")
+      ));
       return items;
     }
-    items.push(new TestTreeItem(
-      "Cannot connect to server",
-      3 /* Info */,
-      vscode11.TreeItemCollapsibleState.None,
-      {
-        description: "Testeranto server is not running on port 3000.",
-        startServer: true
-      },
-      {
-        command: "testeranto.startServer",
-        title: "Start Server",
-        arguments: []
-      },
-      new vscode11.ThemeIcon("warning")
-    ));
-    return items;
-  }
-  convertServerTreeToItems(treeNodes) {
-    const items = [];
-    for (const treeNode of treeNodes) {
-      if (treeNode.type === "folder") {
-        const children = treeNode.children && Array.isArray(treeNode.children) ? this.convertServerTreeToItems(treeNode.children) : [];
-        const folderItem = new TestTreeItem(
-          treeNode.name,
-          2 /* File */,
-          children.length > 0 ? vscode11.TreeItemCollapsibleState.Collapsed : vscode11.TreeItemCollapsibleState.None,
-          {
-            isFolder: true,
-            folderPath: treeNode.path || "",
-            folderId: treeNode.id || "",
-            description: treeNode.description || "Folder",
-            fileCount: this.countFilesInServerTree(treeNode),
-            children
-          },
-          void 0,
-          new vscode11.ThemeIcon("folder")
-        );
-        items.push(folderItem);
-      } else if (treeNode.type === "file") {
-        const fileItem = new TestTreeItem(
-          treeNode.name,
-          2 /* File */,
-          vscode11.TreeItemCollapsibleState.None,
-          {
-            isFile: true,
-            fileName: treeNode.path || "",
-            fileType: treeNode.metadata?.fileType || "file",
-            description: treeNode.description || "File"
-          },
-          treeNode.path ? {
-            command: "testeranto.openFile",
-            title: "Open File",
-            arguments: [{ fileName: treeNode.path }]
-          } : void 0,
-          this.getIconForFile(treeNode)
-        );
-        items.push(fileItem);
-      }
+    console.log(`[FileTreeDataProvider] Processing ${this.treeData.length} root nodes`);
+    for (const node of this.treeData) {
+      const item = this.createTreeItem(node);
+      items.push(item);
     }
     items.sort((a, b) => {
       const aIsFolder = a.data?.isFolder === true;
@@ -2286,52 +2216,130 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
     });
     return items;
   }
-  countFilesInServerTree(treeNode) {
-    let count = 0;
-    if (treeNode.type === "file") {
-      count++;
+  createTreeItem(node) {
+    const isFolder = node.type === "folder";
+    const label = node.name || node.id;
+    const filePath = node.path || "";
+    const metadata = node.metadata || {};
+    let description = "";
+    if (isFolder) {
+      description += "Folder";
+    } else {
+      description += "File";
     }
-    if (treeNode.children && Array.isArray(treeNode.children)) {
-      for (const child of treeNode.children) {
-        count += this.countFilesInServerTree(child);
+    let icon;
+    if (isFolder) {
+      icon = new vscode11.ThemeIcon("folder");
+    } else {
+      const fileType = metadata.fileType || metadata.testPath ? "test" : "file";
+      switch (fileType) {
+        case "input_file":
+        case "source":
+          icon = new vscode11.ThemeIcon("file-code");
+          break;
+        case "log":
+          icon = new vscode11.ThemeIcon("output");
+          break;
+        case "documentation":
+          icon = new vscode11.ThemeIcon("book");
+          break;
+        case "config":
+          icon = new vscode11.ThemeIcon("settings-gear");
+          break;
+        case "test":
+          icon = new vscode11.ThemeIcon("beaker");
+          break;
+        default:
+          icon = new vscode11.ThemeIcon("file");
       }
     }
-    return count;
-  }
-  getIconForFile(treeNode) {
-    const fileType = treeNode.metadata?.fileType || treeNode.type;
-    switch (fileType) {
-      case "input_file":
-      case "source":
-        return new vscode11.ThemeIcon("file-code");
-      case "log":
-        return new vscode11.ThemeIcon("output");
-      case "documentation":
-        return new vscode11.ThemeIcon("book");
-      case "config":
-        return new vscode11.ThemeIcon("settings-gear");
-      default:
-        return new vscode11.ThemeIcon("file");
+    let children;
+    if (isFolder && node.children && node.children.length > 0) {
+      children = node.children.map((child) => this.createTreeItem(child));
+      children.sort((a, b) => {
+        const aIsFolder = a.data?.isFolder === true;
+        const bIsFolder = b.data?.isFolder === true;
+        if (aIsFolder && !bIsFolder) return -1;
+        if (!aIsFolder && bIsFolder) return 1;
+        return (a.label?.toString() || "").localeCompare(b.label?.toString() || "");
+      });
     }
+    const item = new TestTreeItem(
+      label,
+      2 /* File */,
+      isFolder && children && children.length > 0 ? vscode11.TreeItemCollapsibleState.Collapsed : vscode11.TreeItemCollapsibleState.None,
+      {
+        description,
+        isFolder,
+        filePath,
+        nodeId: node.id,
+        fileName: filePath,
+        fileType: isFolder ? "folder" : "file"
+      },
+      !isFolder && filePath ? {
+        command: "testeranto.openFile",
+        title: "Open File",
+        arguments: [{ fileName: filePath }]
+      } : void 0,
+      icon
+    );
+    item.children = children;
+    let tooltip = `${isFolder ? "Folder" : "File"}: ${label}
+`;
+    tooltip += `Path: ${filePath}
+`;
+    tooltip += `ID: ${node.id}
+`;
+    if (metadata.filePath) {
+      tooltip += `File Path: ${metadata.filePath}
+`;
+    }
+    if (metadata.localPath) {
+      tooltip += `Local Path: ${metadata.localPath}
+`;
+    }
+    if (metadata.url) {
+      tooltip += `URL: ${metadata.url}
+`;
+    }
+    if (metadata.testPath) {
+      tooltip += `Test Path: ${metadata.testPath}
+`;
+    }
+    if (metadata.configKey) {
+      tooltip += `Config Key: ${metadata.configKey}
+`;
+    }
+    if (metadata.runtime) {
+      tooltip += `Runtime: ${metadata.runtime}
+`;
+    }
+    item.tooltip = tooltip;
+    return item;
   }
   handleWebSocketMessage(message) {
     super.handleWebSocketMessage(message);
-    console.log(`[FileTreeDataProvider] Received message type: ${message.type}, url: ${message.url}`);
+    console.log(`[FileTreeDataProvider] Received message type: ${message.type}`);
     if (message.type === "resourceChanged") {
-      const filesPath = getApiPath("getFiles");
-      if (message.url === filesPath || message.url === "/~/graph") {
-        console.log("[FileTreeDataProvider] Relevant update, refreshing");
+      if (message.url === "/~/files" || message.url === "/~/graph") {
+        console.log("[FileTreeDataProvider] File data changed, refreshing from API");
         this.refresh();
       }
     } else if (message.type === "graphUpdated") {
-      console.log("[FileTreeDataProvider] Graph updated, refreshing");
+      console.log("[FileTreeDataProvider] Graph updated, refreshing from API");
       this.refresh();
+    } else if (message.type === "fileUpdated") {
+      console.log("[FileTreeDataProvider] File updated, refreshing from API");
+      this.refresh();
+    } else if (message.type === "connected") {
+      console.log("[FileTreeDataProvider] WebSocket connected, refreshing data");
+      setTimeout(() => this.refresh(), 1e3);
     }
   }
   subscribeToGraphUpdates() {
     super.subscribeToGraphUpdates();
-    this.subscribeToSlice(wsApi.slices.files);
-    this.subscribeToSlice(wsApi.slices.graph);
+    this.subscribeToSlice("/files");
+    this.subscribeToSlice("/graph");
   }
 };
 

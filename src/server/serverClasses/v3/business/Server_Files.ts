@@ -200,6 +200,26 @@ export abstract class Server_Files extends Server_Runtime {
         const inputFiles = testInfo.files;
         await this.updateGraphWithInputFiles(configKey, testName, inputFiles);
 
+        // Also add edges from the test node to each input file
+        const testNodeId = `test:${configKey}:${testName}`;
+        const timestamp = new Date().toISOString();
+        for (const inputFile of inputFiles) {
+          const fileNodeId = `file:${inputFile}`;
+          const edgeExists = this.graph.edges.find(
+            (e: any) => e.source === testNodeId && e.target === fileNodeId
+          );
+          if (!edgeExists) {
+            this.graph.edges.push({
+              source: testNodeId,
+              target: fileNodeId,
+              attributes: {
+                type: { category: 'association', type: 'associatedWith', directed: true },
+                timestamp,
+              },
+            });
+          }
+        }
+
         await this.scheduleTest(runtime, testName, configKey, configValue);
       }
     }

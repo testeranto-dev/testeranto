@@ -1,41 +1,144 @@
 {
   "items": [
     {
-      "id": "docker-9b2b9fa11ac8fa71bf740c5822893814a56798765ffc3c3fe8cc30b1dc771fce",
-      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
-      "timestamp": "2026-04-24T04:21:56.275Z",
+      "id": "runtime:nodetests",
+      "label": "nodetests",
+      "timestamp": "2026-04-24T13:30:29.578Z",
       "metadata": {
-        "containerId": "9b2b9fa11ac8fa71bf740c5822893814a56798765ffc3c3fe8cc30b1dc771fce",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+        "runtime": "node",
+        "configKey": "nodetests"
+      }
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "index.ts",
+      "timestamp": "2026-04-24T13:30:29.578Z",
+      "metadata": {
+        "testPath": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      }
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "Calculator.test.node.ts",
+      "timestamp": "2026-04-24T13:30:29.578Z",
+      "metadata": {
+        "testPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      }
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "Circle.test.ts",
+      "timestamp": "2026-04-24T13:30:29.578Z",
+      "metadata": {
+        "testPath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      }
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "Rectangle.test.ts",
+      "timestamp": "2026-04-24T13:30:29.578Z",
+      "metadata": {
+        "testPath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      }
+    },
+    {
+      "id": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "label": "AiderProcessTreeDataProvider.test.ts",
+      "timestamp": "2026-04-24T13:30:29.578Z",
+      "metadata": {
+        "testPath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "configKey": "nodetests",
+        "runtime": "node"
+      }
+    },
+    {
+      "id": "runtime:webtests",
+      "label": "webtests",
+      "timestamp": "2026-04-24T13:30:29.578Z",
+      "metadata": {
+        "runtime": "web",
+        "configKey": "webtests"
+      }
+    },
+    {
+      "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "Calculator.test.web.ts",
+      "timestamp": "2026-04-24T13:30:29.578Z",
+      "metadata": {
+        "testPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "configKey": "webtests",
+        "runtime": "web"
+      }
+    },
+    {
+      "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "Calculator.test.web.react.ts",
+      "timestamp": "2026-04-24T13:30:29.578Z",
+      "metadata": {
+        "testPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        "configKey": "webtests",
+        "runtime": "web"
+      }
+    },
+    {
+      "id": "docker-66b980ad086dc14aa18ce9f9b106ef89494b6e2d4b01dd7e79babbc37cc3bcce",
+      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "timestamp": "2026-04-24T13:30:32.193Z",
+      "metadata": {
+        "containerId": "66b980ad086dc14aa18ce9f9b106ef89494b6e2d4b01dd7e79babbc37cc3bcce",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.193Z"
+      }
+    },
+    {
+      "id": "docker-e22e45d16dedcabaa04254a53c0fa202e7bd9950399cddab7174fd47df9d2700",
+      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+      "timestamp": "2026-04-24T13:30:32.270Z",
+      "metadata": {
+        "containerId": "e22e45d16dedcabaa04254a53c0fa202e7bd9950399cddab7174fd47df9d2700",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
         "processType": "aider",
         "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+        "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:21:56.275Z"
+        "startTime": "2026-04-24T13:30:32.270Z"
       }
     },
     {
-      "id": "docker-e96b15230a72d739dd3f58212c8ae098e7e6f446932db59cc0446ea3edf62719",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "timestamp": "2026-04-24T04:21:56.407Z",
+      "id": "docker-77ad16eb170010f74b3ca2bd49cc057aa102490036b0ce420db532f6f79f5e28",
+      "label": "nodetests-builder",
+      "timestamp": "2026-04-24T13:30:32.368Z",
       "metadata": {
-        "containerId": "e96b15230a72d739dd3f58212c8ae098e7e6f446932db59cc0446ea3edf62719",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-        "processType": "check",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+        "containerId": "77ad16eb170010f74b3ca2bd49cc057aa102490036b0ce420db532f6f79f5e28",
+        "serviceName": "nodetests-builder",
+        "processType": "builder",
+        "configKey": "nodetests",
+        "testName": "builder",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:21:56.407Z"
+        "startTime": "2026-04-24T13:30:32.368Z"
       }
     },
     {
-      "id": "docker-d202220fbbcdcfe41d764067152f63619e73ad3dafe19a1a290609c53037e550",
+      "id": "docker-fb00c9013c8af081760faba787608fe855310b14bd98253d887da546ffd4d1aa",
       "label": "agent-prodirek",
-      "timestamp": "2026-04-24T04:21:56.425Z",
+      "timestamp": "2026-04-24T13:30:32.377Z",
       "metadata": {
-        "containerId": "d202220fbbcdcfe41d764067152f63619e73ad3dafe19a1a290609c53037e550",
+        "containerId": "fb00c9013c8af081760faba787608fe855310b14bd98253d887da546ffd4d1aa",
         "serviceName": "agent-prodirek",
         "processType": "agent",
         "configKey": "agent",
@@ -45,26 +148,26 @@
       }
     },
     {
-      "id": "docker-604d5f9bb4d9b72c275bb191eaed94d0b0480a97b5615ad1ac963edc65cceb78",
-      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
-      "timestamp": "2026-04-24T04:21:56.432Z",
+      "id": "docker-7530fc6d9e0f844f3a97258b4a6484290733c247da0b0d8510b3b60e18cb39fe",
+      "label": "webtests-builder",
+      "timestamp": "2026-04-24T13:30:32.387Z",
       "metadata": {
-        "containerId": "604d5f9bb4d9b72c275bb191eaed94d0b0480a97b5615ad1ac963edc65cceb78",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
-        "processType": "aider",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+        "containerId": "7530fc6d9e0f844f3a97258b4a6484290733c247da0b0d8510b3b60e18cb39fe",
+        "serviceName": "webtests-builder",
+        "processType": "builder",
+        "configKey": "webtests",
+        "testName": "builder",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:21:56.432Z"
+        "startTime": "2026-04-24T13:30:32.387Z"
       }
     },
     {
-      "id": "docker-ec35bd37ee4526190cfa85e4f7cd7ce81d6edf03b0c78fc542011ece01850c41",
+      "id": "docker-97fb0ff00c3502417f9488f45e2498d08a22b6790c1c7a9c94f7bd0aeb53d80e",
       "label": "agent-arko",
-      "timestamp": "2026-04-24T04:21:56.485Z",
+      "timestamp": "2026-04-24T13:30:32.393Z",
       "metadata": {
-        "containerId": "ec35bd37ee4526190cfa85e4f7cd7ce81d6edf03b0c78fc542011ece01850c41",
+        "containerId": "97fb0ff00c3502417f9488f45e2498d08a22b6790c1c7a9c94f7bd0aeb53d80e",
         "serviceName": "agent-arko",
         "processType": "agent",
         "configKey": "agent",
@@ -74,591 +177,576 @@
       }
     },
     {
-      "id": "docker-ce792da54ab84eaefe9a7855c5f923db74b94b3e612596cfb995e38cd6919f50",
-      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
-      "timestamp": "2026-04-24T04:21:56.491Z",
-      "metadata": {
-        "containerId": "ce792da54ab84eaefe9a7855c5f923db74b94b3e612596cfb995e38cd6919f50",
-        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
-        "processType": "aider",
-        "configKey": "nodetests",
-        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.491Z"
-      }
-    },
-    {
-      "id": "docker-04948f71f9be2a13202c4dd1220e0f25df55ea8dcd3b417836205dbac47fcde2",
-      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
-      "timestamp": "2026-04-24T04:21:56.494Z",
-      "metadata": {
-        "containerId": "04948f71f9be2a13202c4dd1220e0f25df55ea8dcd3b417836205dbac47fcde2",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
-        "processType": "aider",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.494Z"
-      }
-    },
-    {
-      "id": "docker-d0d813f4d1f61a5384a887f71c2812b77705635a4a003e95c910f708f097ea2b",
-      "label": "webtests-builder",
-      "timestamp": "2026-04-24T04:21:56.548Z",
-      "metadata": {
-        "containerId": "d0d813f4d1f61a5384a887f71c2812b77705635a4a003e95c910f708f097ea2b",
-        "serviceName": "webtests-builder",
-        "processType": "builder",
-        "configKey": "webtests",
-        "testName": "builder",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.548Z"
-      }
-    },
-    {
-      "id": "docker-9e055362bea219b5502e1acec39db659e86b52cfbf103b85cc71f418bb463532",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
-      "timestamp": "2026-04-24T04:21:56.592Z",
-      "metadata": {
-        "containerId": "9e055362bea219b5502e1acec39db659e86b52cfbf103b85cc71f418bb463532",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
-        "processType": "aider",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.592Z"
-      }
-    },
-    {
-      "id": "docker-137a51a543b1a703296b4d766c2a55de205b4ecc0146ef4fc50ddb32ed34f6f0",
-      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "timestamp": "2026-04-24T04:21:56.596Z",
-      "metadata": {
-        "containerId": "137a51a543b1a703296b4d766c2a55de205b4ecc0146ef4fc50ddb32ed34f6f0",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.596Z"
-      }
-    },
-    {
-      "id": "docker-f8969624bbeb453d083c0278e84f2e76dfadbcef854784d6c12edb44e0676191",
-      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "timestamp": "2026-04-24T04:21:56.601Z",
-      "metadata": {
-        "containerId": "f8969624bbeb453d083c0278e84f2e76dfadbcef854784d6c12edb44e0676191",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.601Z"
-      }
-    },
-    {
-      "id": "docker-c8842b87d7ef3e470889ad5908bd8a5acee0ea9b188fc69f5c39a949c5c68cdb",
-      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
-      "timestamp": "2026-04-24T04:21:56.694Z",
-      "metadata": {
-        "containerId": "c8842b87d7ef3e470889ad5908bd8a5acee0ea9b188fc69f5c39a949c5c68cdb",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
-        "processType": "aider",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.694Z"
-      }
-    },
-    {
-      "id": "docker-74f4d4f87a81a5cc2f78262db2940e5b81a729312174f3196960e8acef31f259",
-      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "timestamp": "2026-04-24T04:21:56.703Z",
-      "metadata": {
-        "containerId": "74f4d4f87a81a5cc2f78262db2940e5b81a729312174f3196960e8acef31f259",
-        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.703Z"
-      }
-    },
-    {
-      "id": "docker-344132bf2ccf7668e3a4c6abaaa71306e9d116e41d66371507aa6c304d514e8e",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
-      "timestamp": "2026-04-24T04:21:56.825Z",
-      "metadata": {
-        "containerId": "344132bf2ccf7668e3a4c6abaaa71306e9d116e41d66371507aa6c304d514e8e",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
-        "processType": "aider",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:56.825Z"
-      }
-    },
-    {
-      "id": "docker-0203de7b017b93141749c74be11a35c57e698b6bdc5445dd5c536fdb6967f00f",
+      "id": "docker-4a3bb5bd6d9b5824258e8c1bd69f7f041c3c52b67dd0c96fa806792257aa3587",
       "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "timestamp": "2026-04-24T04:21:56.953Z",
+      "timestamp": "2026-04-24T13:30:32.395Z",
       "metadata": {
-        "containerId": "0203de7b017b93141749c74be11a35c57e698b6bdc5445dd5c536fdb6967f00f",
+        "containerId": "4a3bb5bd6d9b5824258e8c1bd69f7f041c3c52b67dd0c96fa806792257aa3587",
         "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
         "processType": "bdd",
         "configKey": "webtests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:21:56.953Z"
+        "startTime": "2026-04-24T13:30:32.395Z"
       }
     },
     {
-      "id": "docker-2e87e88e9d96be80926d52001322fb48d0064725bcfc7b0019861ce043d9b33f",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "timestamp": "2026-04-24T04:21:57.030Z",
+      "id": "docker-51ae8541a2bba34c8de7a1f644f0b56448380385012378e7c855dcc4680e8ff9",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
+      "timestamp": "2026-04-24T13:30:32.543Z",
       "metadata": {
-        "containerId": "2e87e88e9d96be80926d52001322fb48d0064725bcfc7b0019861ce043d9b33f",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-        "processType": "check",
+        "containerId": "51ae8541a2bba34c8de7a1f644f0b56448380385012378e7c855dcc4680e8ff9",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
+        "processType": "aider",
         "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:21:57.030Z"
+        "startTime": "2026-04-24T13:30:32.543Z"
       }
     },
     {
-      "id": "docker-8de4a9a532903d5b5d7333f01e2a5f77f949f746070f450a8fd662e2d2af1074",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "timestamp": "2026-04-24T04:21:57.136Z",
+      "id": "docker-f5b2715e5e34b67ee07be0d3b489dde990f3e9fa519bbbcbcde961926992db2e",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
+      "timestamp": "2026-04-24T13:30:32.663Z",
       "metadata": {
-        "containerId": "8de4a9a532903d5b5d7333f01e2a5f77f949f746070f450a8fd662e2d2af1074",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-        "processType": "bdd",
+        "containerId": "f5b2715e5e34b67ee07be0d3b489dde990f3e9fa519bbbcbcde961926992db2e",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
+        "processType": "aider",
         "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:21:57.136Z"
+        "startTime": "2026-04-24T13:30:32.663Z"
       }
     },
     {
-      "id": "docker-42861ef57bb037c096641ee41b6d044d713e055af853b27e4636148e1029d9a9",
-      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "timestamp": "2026-04-24T04:21:57.137Z",
+      "id": "docker-62a1f598f99b5799cff6e893ed08a09cb567c4f9b499ccf860e5ff83d826da28",
+      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+      "timestamp": "2026-04-24T13:30:32.668Z",
       "metadata": {
-        "containerId": "42861ef57bb037c096641ee41b6d044d713e055af853b27e4636148e1029d9a9",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:57.137Z"
-      }
-    },
-    {
-      "id": "docker-ba7ce1803b51fa82e0250a79c5bc3be140f5bd1c37d2ddad938424af8687cd0d",
-      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "timestamp": "2026-04-24T04:21:57.142Z",
-      "metadata": {
-        "containerId": "ba7ce1803b51fa82e0250a79c5bc3be140f5bd1c37d2ddad938424af8687cd0d",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:57.142Z"
-      }
-    },
-    {
-      "id": "docker-4f68dfd700c2e8fb9eb2e5036d41da36afc42bc5d2299af39f6cfe037e17cfe0",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "timestamp": "2026-04-24T04:21:57.143Z",
-      "metadata": {
-        "containerId": "4f68dfd700c2e8fb9eb2e5036d41da36afc42bc5d2299af39f6cfe037e17cfe0",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-        "processType": "check",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:57.143Z"
-      }
-    },
-    {
-      "id": "docker-03b4d599ac1137080cc3af071c8f272cb867f5d259d356e99b40b31dc6b13068",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "timestamp": "2026-04-24T04:21:57.147Z",
-      "metadata": {
-        "containerId": "03b4d599ac1137080cc3af071c8f272cb867f5d259d356e99b40b31dc6b13068",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-        "processType": "check",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:57.147Z"
-      }
-    },
-    {
-      "id": "docker-5c8d5cbcd8e2154849fb648bf50d3e9001265f64f318420c04be1f617793d4a9",
-      "label": "nodetests-builder",
-      "timestamp": "2026-04-24T04:21:57.147Z",
-      "metadata": {
-        "containerId": "5c8d5cbcd8e2154849fb648bf50d3e9001265f64f318420c04be1f617793d4a9",
-        "serviceName": "nodetests-builder",
-        "processType": "builder",
-        "configKey": "nodetests",
-        "testName": "builder",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:57.147Z"
-      }
-    },
-    {
-      "id": "docker-4f68dfd700c2e8fb9eb2e5036d41da36afc42bc5d2299af39f6cfe037e17cfe0",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "timestamp": "2026-04-24T04:21:59.260Z",
-      "metadata": {
-        "containerId": "4f68dfd700c2e8fb9eb2e5036d41da36afc42bc5d2299af39f6cfe037e17cfe0",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-        "processType": "check",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:21:59.260Z"
-      }
-    },
-    {
-      "id": "docker-137a51a543b1a703296b4d766c2a55de205b4ecc0146ef4fc50ddb32ed34f6f0",
-      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "timestamp": "2026-04-24T04:22:00.123Z",
-      "metadata": {
-        "containerId": "137a51a543b1a703296b4d766c2a55de205b4ecc0146ef4fc50ddb32ed34f6f0",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:00.123Z"
-      }
-    },
-    {
-      "id": "docker-d0d813f4d1f61a5384a887f71c2812b77705635a4a003e95c910f708f097ea2b",
-      "label": "webtests-builder",
-      "timestamp": "2026-04-24T04:22:00.127Z",
-      "metadata": {
-        "containerId": "d0d813f4d1f61a5384a887f71c2812b77705635a4a003e95c910f708f097ea2b",
-        "serviceName": "webtests-builder",
-        "processType": "builder",
-        "configKey": "webtests",
-        "testName": "builder",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:00.127Z"
-      }
-    },
-    {
-      "id": "docker-f8969624bbeb453d083c0278e84f2e76dfadbcef854784d6c12edb44e0676191",
-      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "timestamp": "2026-04-24T04:22:00.730Z",
-      "metadata": {
-        "containerId": "f8969624bbeb453d083c0278e84f2e76dfadbcef854784d6c12edb44e0676191",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:00.730Z"
-      }
-    },
-    {
-      "id": "docker-5c8d5cbcd8e2154849fb648bf50d3e9001265f64f318420c04be1f617793d4a9",
-      "label": "nodetests-builder",
-      "timestamp": "2026-04-24T04:22:01.165Z",
-      "metadata": {
-        "containerId": "5c8d5cbcd8e2154849fb648bf50d3e9001265f64f318420c04be1f617793d4a9",
-        "serviceName": "nodetests-builder",
-        "processType": "builder",
-        "configKey": "nodetests",
-        "testName": "builder",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:01.165Z"
-      }
-    },
-    {
-      "id": "docker-ba7ce1803b51fa82e0250a79c5bc3be140f5bd1c37d2ddad938424af8687cd0d",
-      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "timestamp": "2026-04-24T04:22:01.201Z",
-      "metadata": {
-        "containerId": "ba7ce1803b51fa82e0250a79c5bc3be140f5bd1c37d2ddad938424af8687cd0d",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:01.201Z"
-      }
-    },
-    {
-      "id": "docker-c8842b87d7ef3e470889ad5908bd8a5acee0ea9b188fc69f5c39a949c5c68cdb",
-      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
-      "timestamp": "2026-04-24T04:22:01.585Z",
-      "metadata": {
-        "containerId": "c8842b87d7ef3e470889ad5908bd8a5acee0ea9b188fc69f5c39a949c5c68cdb",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+        "containerId": "62a1f598f99b5799cff6e893ed08a09cb567c4f9b499ccf860e5ff83d826da28",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
         "processType": "aider",
         "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:22:01.585Z"
+        "startTime": "2026-04-24T13:30:32.668Z"
       }
     },
     {
-      "id": "docker-e96b15230a72d739dd3f58212c8ae098e7e6f446932db59cc0446ea3edf62719",
+      "id": "docker-0fd85b192f674040c821c2445285cd83fbfe63a10fc05df07540c0b978cf1380",
       "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "timestamp": "2026-04-24T04:22:01.637Z",
+      "timestamp": "2026-04-24T13:30:32.672Z",
       "metadata": {
-        "containerId": "e96b15230a72d739dd3f58212c8ae098e7e6f446932db59cc0446ea3edf62719",
+        "containerId": "0fd85b192f674040c821c2445285cd83fbfe63a10fc05df07540c0b978cf1380",
         "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
         "processType": "check",
         "configKey": "webtests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:22:01.637Z"
+        "startTime": "2026-04-24T13:30:32.672Z"
       }
     },
     {
-      "id": "docker-42861ef57bb037c096641ee41b6d044d713e055af853b27e4636148e1029d9a9",
-      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "timestamp": "2026-04-24T04:22:01.648Z",
+      "id": "docker-af32fd1d0974a7f23da87a8d8679a9c35f4d6293034afbe9b6188c5f0c91b577",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "timestamp": "2026-04-24T13:30:32.700Z",
       "metadata": {
-        "containerId": "42861ef57bb037c096641ee41b6d044d713e055af853b27e4636148e1029d9a9",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:01.648Z"
-      }
-    },
-    {
-      "id": "docker-ce792da54ab84eaefe9a7855c5f923db74b94b3e612596cfb995e38cd6919f50",
-      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
-      "timestamp": "2026-04-24T04:22:02.307Z",
-      "metadata": {
-        "containerId": "ce792da54ab84eaefe9a7855c5f923db74b94b3e612596cfb995e38cd6919f50",
-        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
-        "processType": "aider",
-        "configKey": "nodetests",
-        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:02.307Z"
-      }
-    },
-    {
-      "id": "docker-9b2b9fa11ac8fa71bf740c5822893814a56798765ffc3c3fe8cc30b1dc771fce",
-      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
-      "timestamp": "2026-04-24T04:22:03.260Z",
-      "metadata": {
-        "containerId": "9b2b9fa11ac8fa71bf740c5822893814a56798765ffc3c3fe8cc30b1dc771fce",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
-        "processType": "aider",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:03.260Z"
-      }
-    },
-    {
-      "id": "docker-9e055362bea219b5502e1acec39db659e86b52cfbf103b85cc71f418bb463532",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
-      "timestamp": "2026-04-24T04:22:03.312Z",
-      "metadata": {
-        "containerId": "9e055362bea219b5502e1acec39db659e86b52cfbf103b85cc71f418bb463532",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
-        "processType": "aider",
+        "containerId": "af32fd1d0974a7f23da87a8d8679a9c35f4d6293034afbe9b6188c5f0c91b577",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+        "processType": "check",
         "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:22:03.312Z"
+        "startTime": "2026-04-24T13:30:32.700Z"
       }
     },
     {
-      "id": "docker-ec35bd37ee4526190cfa85e4f7cd7ce81d6edf03b0c78fc542011ece01850c41",
-      "label": "agent-arko",
-      "timestamp": "2026-04-24T04:22:03.319Z",
-      "metadata": {
-        "containerId": "ec35bd37ee4526190cfa85e4f7cd7ce81d6edf03b0c78fc542011ece01850c41",
-        "serviceName": "agent-arko",
-        "processType": "agent",
-        "configKey": "agent",
-        "testName": "arko",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:03.319Z"
-      }
-    },
-    {
-      "id": "docker-0203de7b017b93141749c74be11a35c57e698b6bdc5445dd5c536fdb6967f00f",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "timestamp": "2026-04-24T04:22:03.468Z",
-      "metadata": {
-        "containerId": "0203de7b017b93141749c74be11a35c57e698b6bdc5445dd5c536fdb6967f00f",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-        "processType": "bdd",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:03.468Z"
-      }
-    },
-    {
-      "id": "docker-d202220fbbcdcfe41d764067152f63619e73ad3dafe19a1a290609c53037e550",
-      "label": "agent-prodirek",
-      "timestamp": "2026-04-24T04:22:03.587Z",
-      "metadata": {
-        "containerId": "d202220fbbcdcfe41d764067152f63619e73ad3dafe19a1a290609c53037e550",
-        "serviceName": "agent-prodirek",
-        "processType": "agent",
-        "configKey": "agent",
-        "testName": "prodirek",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:03.587Z"
-      }
-    },
-    {
-      "id": "docker-8de4a9a532903d5b5d7333f01e2a5f77f949f746070f450a8fd662e2d2af1074",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "timestamp": "2026-04-24T04:22:04.209Z",
-      "metadata": {
-        "containerId": "8de4a9a532903d5b5d7333f01e2a5f77f949f746070f450a8fd662e2d2af1074",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-        "processType": "bdd",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:04.209Z"
-      }
-    },
-    {
-      "id": "docker-2e87e88e9d96be80926d52001322fb48d0064725bcfc7b0019861ce043d9b33f",
+      "id": "docker-ffd572dcda45075660725dd18aa5c212c15c80fc6848eaa2106b5de7cfe9be85",
       "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "timestamp": "2026-04-24T04:22:04.214Z",
+      "timestamp": "2026-04-24T13:30:32.713Z",
       "metadata": {
-        "containerId": "2e87e88e9d96be80926d52001322fb48d0064725bcfc7b0019861ce043d9b33f",
+        "containerId": "ffd572dcda45075660725dd18aa5c212c15c80fc6848eaa2106b5de7cfe9be85",
         "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
         "processType": "check",
         "configKey": "webtests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:22:04.214Z"
+        "startTime": "2026-04-24T13:30:32.713Z"
       }
     },
     {
-      "id": "docker-04948f71f9be2a13202c4dd1220e0f25df55ea8dcd3b417836205dbac47fcde2",
-      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
-      "timestamp": "2026-04-24T04:22:04.656Z",
-      "metadata": {
-        "containerId": "04948f71f9be2a13202c4dd1220e0f25df55ea8dcd3b417836205dbac47fcde2",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
-        "processType": "aider",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:04.656Z"
-      }
-    },
-    {
-      "id": "docker-344132bf2ccf7668e3a4c6abaaa71306e9d116e41d66371507aa6c304d514e8e",
-      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
-      "timestamp": "2026-04-24T04:22:05.098Z",
-      "metadata": {
-        "containerId": "344132bf2ccf7668e3a4c6abaaa71306e9d116e41d66371507aa6c304d514e8e",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
-        "processType": "aider",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:05.098Z"
-      }
-    },
-    {
-      "id": "docker-74f4d4f87a81a5cc2f78262db2940e5b81a729312174f3196960e8acef31f259",
-      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "timestamp": "2026-04-24T04:22:05.647Z",
-      "metadata": {
-        "containerId": "74f4d4f87a81a5cc2f78262db2940e5b81a729312174f3196960e8acef31f259",
-        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-        "status": "running",
-        "isActive": true,
-        "startTime": "2026-04-24T04:22:05.647Z"
-      }
-    },
-    {
-      "id": "docker-03b4d599ac1137080cc3af071c8f272cb867f5d259d356e99b40b31dc6b13068",
+      "id": "docker-8c461d0a872531ffeaec29d2fc34805afa8ccd297137d068d1a1505c437164ab",
       "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "timestamp": "2026-04-24T04:22:05.882Z",
+      "timestamp": "2026-04-24T13:30:32.724Z",
       "metadata": {
-        "containerId": "03b4d599ac1137080cc3af071c8f272cb867f5d259d356e99b40b31dc6b13068",
+        "containerId": "8c461d0a872531ffeaec29d2fc34805afa8ccd297137d068d1a1505c437164ab",
         "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
         "processType": "check",
         "configKey": "webtests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:22:05.882Z"
+        "startTime": "2026-04-24T13:30:32.724Z"
       }
     },
     {
-      "id": "docker-604d5f9bb4d9b72c275bb191eaed94d0b0480a97b5615ad1ac963edc65cceb78",
-      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
-      "timestamp": "2026-04-24T04:22:05.935Z",
+      "id": "docker-640f2391357032ff255aa4d4ec7b3731aea67a34b10d7b718b7438bd85ffa778",
+      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "timestamp": "2026-04-24T13:30:32.752Z",
       "metadata": {
-        "containerId": "604d5f9bb4d9b72c275bb191eaed94d0b0480a97b5615ad1ac963edc65cceb78",
+        "containerId": "640f2391357032ff255aa4d4ec7b3731aea67a34b10d7b718b7438bd85ffa778",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.752Z"
+      }
+    },
+    {
+      "id": "docker-7a2f857319bc323be5dc1a1551748a5c24881225b42aaa81085d4c79cda3e882",
+      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "timestamp": "2026-04-24T13:30:32.752Z",
+      "metadata": {
+        "containerId": "7a2f857319bc323be5dc1a1551748a5c24881225b42aaa81085d4c79cda3e882",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.752Z"
+      }
+    },
+    {
+      "id": "docker-46a81bb05ef25f5bed4ed631c6dd941a4d270e76f2cf86f125f6fc04e3ff8c8c",
+      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+      "timestamp": "2026-04-24T13:30:32.768Z",
+      "metadata": {
+        "containerId": "46a81bb05ef25f5bed4ed631c6dd941a4d270e76f2cf86f125f6fc04e3ff8c8c",
+        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+        "processType": "aider",
+        "configKey": "nodetests",
+        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.768Z"
+      }
+    },
+    {
+      "id": "docker-512a0494b78fcf77f07fb9ea3085391ce0f9cf20630900460bde0bb03c1bd386",
+      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "timestamp": "2026-04-24T13:30:32.774Z",
+      "metadata": {
+        "containerId": "512a0494b78fcf77f07fb9ea3085391ce0f9cf20630900460bde0bb03c1bd386",
+        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.774Z"
+      }
+    },
+    {
+      "id": "docker-b5fd6be978cd8fbb736c16ed8ae7db9ec37f41c93cf7d81c43ff7b7531862bd0",
+      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+      "timestamp": "2026-04-24T13:30:32.774Z",
+      "metadata": {
+        "containerId": "b5fd6be978cd8fbb736c16ed8ae7db9ec37f41c93cf7d81c43ff7b7531862bd0",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+        "processType": "aider",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.774Z"
+      }
+    },
+    {
+      "id": "docker-34b59aec0a4c990952c664094503e33addd2f8384d6f9653ef5d0f6f9f02a51f",
+      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "timestamp": "2026-04-24T13:30:32.785Z",
+      "metadata": {
+        "containerId": "34b59aec0a4c990952c664094503e33addd2f8384d6f9653ef5d0f6f9f02a51f",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.785Z"
+      }
+    },
+    {
+      "id": "docker-d2cac286144d2eddb7beb70dd45362bd2f926de27ea4d0fa11b7d19215afb731",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "timestamp": "2026-04-24T13:30:32.790Z",
+      "metadata": {
+        "containerId": "d2cac286144d2eddb7beb70dd45362bd2f926de27ea4d0fa11b7d19215afb731",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+        "processType": "bdd",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.790Z"
+      }
+    },
+    {
+      "id": "docker-a38888f47a6fa11c25f3580208a8cf4691d879ac73c547c0b85569303e0e5d74",
+      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+      "timestamp": "2026-04-24T13:30:32.835Z",
+      "metadata": {
+        "containerId": "a38888f47a6fa11c25f3580208a8cf4691d879ac73c547c0b85569303e0e5d74",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+        "processType": "aider",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:32.835Z"
+      }
+    },
+    {
+      "id": "docker-640f2391357032ff255aa4d4ec7b3731aea67a34b10d7b718b7438bd85ffa778",
+      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "timestamp": "2026-04-24T13:30:33.740Z",
+      "metadata": {
+        "containerId": "640f2391357032ff255aa4d4ec7b3731aea67a34b10d7b718b7438bd85ffa778",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:33.740Z"
+      }
+    },
+    {
+      "id": "docker-66b980ad086dc14aa18ce9f9b106ef89494b6e2d4b01dd7e79babbc37cc3bcce",
+      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "timestamp": "2026-04-24T13:30:33.916Z",
+      "metadata": {
+        "containerId": "66b980ad086dc14aa18ce9f9b106ef89494b6e2d4b01dd7e79babbc37cc3bcce",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:33.916Z"
+      }
+    },
+    {
+      "id": "docker-77ad16eb170010f74b3ca2bd49cc057aa102490036b0ce420db532f6f79f5e28",
+      "label": "nodetests-builder",
+      "timestamp": "2026-04-24T13:30:34.113Z",
+      "metadata": {
+        "containerId": "77ad16eb170010f74b3ca2bd49cc057aa102490036b0ce420db532f6f79f5e28",
+        "serviceName": "nodetests-builder",
+        "processType": "builder",
+        "configKey": "nodetests",
+        "testName": "builder",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:34.113Z"
+      }
+    },
+    {
+      "id": "docker-7a2f857319bc323be5dc1a1551748a5c24881225b42aaa81085d4c79cda3e882",
+      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "timestamp": "2026-04-24T13:30:34.383Z",
+      "metadata": {
+        "containerId": "7a2f857319bc323be5dc1a1551748a5c24881225b42aaa81085d4c79cda3e882",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:34.383Z"
+      }
+    },
+    {
+      "id": "docker-7530fc6d9e0f844f3a97258b4a6484290733c247da0b0d8510b3b60e18cb39fe",
+      "label": "webtests-builder",
+      "timestamp": "2026-04-24T13:30:34.477Z",
+      "metadata": {
+        "containerId": "7530fc6d9e0f844f3a97258b4a6484290733c247da0b0d8510b3b60e18cb39fe",
+        "serviceName": "webtests-builder",
+        "processType": "builder",
+        "configKey": "webtests",
+        "testName": "builder",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:34.477Z"
+      }
+    },
+    {
+      "id": "docker-af32fd1d0974a7f23da87a8d8679a9c35f4d6293034afbe9b6188c5f0c91b577",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "timestamp": "2026-04-24T13:30:34.658Z",
+      "metadata": {
+        "containerId": "af32fd1d0974a7f23da87a8d8679a9c35f4d6293034afbe9b6188c5f0c91b577",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+        "processType": "check",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:34.658Z"
+      }
+    },
+    {
+      "id": "docker-0fd85b192f674040c821c2445285cd83fbfe63a10fc05df07540c0b978cf1380",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "timestamp": "2026-04-24T13:30:34.685Z",
+      "metadata": {
+        "containerId": "0fd85b192f674040c821c2445285cd83fbfe63a10fc05df07540c0b978cf1380",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+        "processType": "check",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:34.685Z"
+      }
+    },
+    {
+      "id": "docker-512a0494b78fcf77f07fb9ea3085391ce0f9cf20630900460bde0bb03c1bd386",
+      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "timestamp": "2026-04-24T13:30:34.860Z",
+      "metadata": {
+        "containerId": "512a0494b78fcf77f07fb9ea3085391ce0f9cf20630900460bde0bb03c1bd386",
+        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:34.860Z"
+      }
+    },
+    {
+      "id": "docker-b5fd6be978cd8fbb736c16ed8ae7db9ec37f41c93cf7d81c43ff7b7531862bd0",
+      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+      "timestamp": "2026-04-24T13:30:34.862Z",
+      "metadata": {
+        "containerId": "b5fd6be978cd8fbb736c16ed8ae7db9ec37f41c93cf7d81c43ff7b7531862bd0",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+        "processType": "aider",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:34.862Z"
+      }
+    },
+    {
+      "id": "docker-8c461d0a872531ffeaec29d2fc34805afa8ccd297137d068d1a1505c437164ab",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "timestamp": "2026-04-24T13:30:34.903Z",
+      "metadata": {
+        "containerId": "8c461d0a872531ffeaec29d2fc34805afa8ccd297137d068d1a1505c437164ab",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+        "processType": "check",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:34.903Z"
+      }
+    },
+    {
+      "id": "docker-97fb0ff00c3502417f9488f45e2498d08a22b6790c1c7a9c94f7bd0aeb53d80e",
+      "label": "agent-arko",
+      "timestamp": "2026-04-24T13:30:35.017Z",
+      "metadata": {
+        "containerId": "97fb0ff00c3502417f9488f45e2498d08a22b6790c1c7a9c94f7bd0aeb53d80e",
+        "serviceName": "agent-arko",
+        "processType": "agent",
+        "configKey": "agent",
+        "testName": "arko",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:35.017Z"
+      }
+    },
+    {
+      "id": "docker-34b59aec0a4c990952c664094503e33addd2f8384d6f9653ef5d0f6f9f02a51f",
+      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "timestamp": "2026-04-24T13:30:35.138Z",
+      "metadata": {
+        "containerId": "34b59aec0a4c990952c664094503e33addd2f8384d6f9653ef5d0f6f9f02a51f",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:35.138Z"
+      }
+    },
+    {
+      "id": "docker-4a3bb5bd6d9b5824258e8c1bd69f7f041c3c52b67dd0c96fa806792257aa3587",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "timestamp": "2026-04-24T13:30:35.196Z",
+      "metadata": {
+        "containerId": "4a3bb5bd6d9b5824258e8c1bd69f7f041c3c52b67dd0c96fa806792257aa3587",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+        "processType": "bdd",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:35.196Z"
+      }
+    },
+    {
+      "id": "docker-d2cac286144d2eddb7beb70dd45362bd2f926de27ea4d0fa11b7d19215afb731",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "timestamp": "2026-04-24T13:30:35.324Z",
+      "metadata": {
+        "containerId": "d2cac286144d2eddb7beb70dd45362bd2f926de27ea4d0fa11b7d19215afb731",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+        "processType": "bdd",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:35.324Z"
+      }
+    },
+    {
+      "id": "docker-e22e45d16dedcabaa04254a53c0fa202e7bd9950399cddab7174fd47df9d2700",
+      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+      "timestamp": "2026-04-24T13:30:35.404Z",
+      "metadata": {
+        "containerId": "e22e45d16dedcabaa04254a53c0fa202e7bd9950399cddab7174fd47df9d2700",
         "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
         "processType": "aider",
         "configKey": "nodetests",
         "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
         "status": "running",
         "isActive": true,
-        "startTime": "2026-04-24T04:22:05.935Z"
+        "startTime": "2026-04-24T13:30:35.404Z"
+      }
+    },
+    {
+      "id": "docker-62a1f598f99b5799cff6e893ed08a09cb567c4f9b499ccf860e5ff83d826da28",
+      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+      "timestamp": "2026-04-24T13:30:35.736Z",
+      "metadata": {
+        "containerId": "62a1f598f99b5799cff6e893ed08a09cb567c4f9b499ccf860e5ff83d826da28",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+        "processType": "aider",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:35.736Z"
+      }
+    },
+    {
+      "id": "docker-46a81bb05ef25f5bed4ed631c6dd941a4d270e76f2cf86f125f6fc04e3ff8c8c",
+      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+      "timestamp": "2026-04-24T13:30:35.832Z",
+      "metadata": {
+        "containerId": "46a81bb05ef25f5bed4ed631c6dd941a4d270e76f2cf86f125f6fc04e3ff8c8c",
+        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+        "processType": "aider",
+        "configKey": "nodetests",
+        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:35.832Z"
+      }
+    },
+    {
+      "id": "docker-51ae8541a2bba34c8de7a1f644f0b56448380385012378e7c855dcc4680e8ff9",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
+      "timestamp": "2026-04-24T13:30:35.992Z",
+      "metadata": {
+        "containerId": "51ae8541a2bba34c8de7a1f644f0b56448380385012378e7c855dcc4680e8ff9",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
+        "processType": "aider",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:35.992Z"
+      }
+    },
+    {
+      "id": "docker-f5b2715e5e34b67ee07be0d3b489dde990f3e9fa519bbbcbcde961926992db2e",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
+      "timestamp": "2026-04-24T13:30:36.021Z",
+      "metadata": {
+        "containerId": "f5b2715e5e34b67ee07be0d3b489dde990f3e9fa519bbbcbcde961926992db2e",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
+        "processType": "aider",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:36.021Z"
+      }
+    },
+    {
+      "id": "docker-ffd572dcda45075660725dd18aa5c212c15c80fc6848eaa2106b5de7cfe9be85",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "timestamp": "2026-04-24T13:30:36.149Z",
+      "metadata": {
+        "containerId": "ffd572dcda45075660725dd18aa5c212c15c80fc6848eaa2106b5de7cfe9be85",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+        "processType": "check",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:36.149Z"
+      }
+    },
+    {
+      "id": "docker-a38888f47a6fa11c25f3580208a8cf4691d879ac73c547c0b85569303e0e5d74",
+      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+      "timestamp": "2026-04-24T13:30:36.178Z",
+      "metadata": {
+        "containerId": "a38888f47a6fa11c25f3580208a8cf4691d879ac73c547c0b85569303e0e5d74",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+        "processType": "aider",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:36.178Z"
+      }
+    },
+    {
+      "id": "docker-fb00c9013c8af081760faba787608fe855310b14bd98253d887da546ffd4d1aa",
+      "label": "agent-prodirek",
+      "timestamp": "2026-04-24T13:30:36.334Z",
+      "metadata": {
+        "containerId": "fb00c9013c8af081760faba787608fe855310b14bd98253d887da546ffd4d1aa",
+        "serviceName": "agent-prodirek",
+        "processType": "agent",
+        "configKey": "agent",
+        "testName": "prodirek",
+        "status": "running",
+        "isActive": true,
+        "startTime": "2026-04-24T13:30:36.334Z"
       }
     }
   ],
   "viewType": "gantt",
-  "timestamp": "2026-04-24T04:22:06.180Z"
+  "timestamp": "2026-04-24T13:30:36.673Z"
 }

@@ -2,6 +2,7 @@ import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { Server_Polyglot } from "./business/Server_Polyglot";
 import { Server_Files } from "./business/Server_Files";
+import { buildFileTreeFromGraph } from "./utils/buildFileTreeFromGraph";
 
 /**
  * Server V3 - Abstract Logical Core (Position 0)
@@ -332,11 +333,10 @@ export abstract class Server extends Server_Files {
   // ========== API Route Handlers (for Server_Api) ==========
 
   protected async handleFilesRoute(request: Request): Promise<Response> {
+    const tree = buildFileTreeFromGraph(this.graph.nodes, this.graph.edges);
     return new Response(
       JSON.stringify({
-        nodes: [],
-        edges: [],
-        tree: {},
+        tree,
         timestamp: new Date().toISOString()
       }),
       {
