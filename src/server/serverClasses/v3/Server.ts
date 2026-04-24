@@ -1,7 +1,6 @@
 import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
-import { Server_Polyglot } from "./business/Server_Polyglot";
-import { Server_Files } from "./business/Server_Files";
+import { Server_DockerCompose } from "./technological/Server_DockerCompose";
 import { buildFileTreeFromGraph } from "./utils/buildFileTreeFromGraph";
 
 /**
@@ -13,7 +12,7 @@ import { buildFileTreeFromGraph } from "./utils/buildFileTreeFromGraph";
  * 
  * This class orchestrates the business workflows and maintains the core state.
  */
-export abstract class Server extends Server_Files {
+export abstract class Server extends Server_DockerCompose {
   protected isRunning: boolean = false;
   protected startedAt: Date | null = null;
   protected businessState: Map<string, any> = new Map();
@@ -58,9 +57,6 @@ export abstract class Server extends Server_Files {
     await this.setupComponents();
     await this.generateViewSlices();
     await this.generateViewHtmlFiles();
-
-    // Setup API routes before starting HTTP server
-    await this.setupApi();
 
     // Setup API routes before starting HTTP server
     await this.setupApi();
@@ -219,15 +215,13 @@ export abstract class Server extends Server_Files {
   // ========== HTTP Server Methods ==========
   // These are implemented by Server_HTTP
 
-  protected async startHttpServer(port: number = 3000, hostname?: string): Promise<void> {
-    // This will be implemented by Server_HTTP
-    this.logBusinessMessage(`Starting HTTP server on port ${port}...`);
-  }
+  abstract startHttpServer(port: number, hostname?: string): Promise<void>
+  abstract stopHttpServer(): Promise<void>
 
-  protected async stopHttpServer(): Promise<void> {
-    // This will be implemented by Server_HTTP
-    this.logBusinessMessage("Stopping HTTP server...");
-  }
+  // protected async stopHttpServer(): Promise<void> {
+  //   // This will be implemented by Server_HTTP
+  //   this.logBusinessMessage("Stopping HTTP server...");
+  // }
 
   // ========== API Setup Methods ==========
   // These are implemented by Server_Api
@@ -235,15 +229,7 @@ export abstract class Server extends Server_Files {
   protected abstract setupApi(): Promise<void>;
 
   // ========== Docker Service Methods ==========
-  // These can be overridden by subclasses
-
-  protected async startDockerServices(): Promise<void> {
-    throw new Error("startDockerServices must be implemented by subclass");
-  }
-
-  protected async stopDockerServices(): Promise<void> {
-    throw new Error("stopDockerServices must be implemented by subclass");
-  }
+  // These are implemented by Server_DockerCompose
 
   // ========== Test Monitoring Methods ==========
   // These can be overridden by subclasses
@@ -274,25 +260,7 @@ export abstract class Server extends Server_Files {
     this.logBusinessMessage("Test monitoring stopped");
   }
 
-  private async checkExistingTestResults(): Promise<void> {
-    throw new Error("checkExistingTestResults must be implemented");
-  }
 
-  private async initializeFileWatching(): Promise<void> {
-    throw new Error("initializeFileWatching must be implemented");
-  }
-
-  private async startLoggingForAllServices(): Promise<void> {
-    throw new Error("startLoggingForAllServices must be implemented");
-  }
-
-  private async stopAllFileWatchers(): Promise<void> {
-    throw new Error("stopAllFileWatchers must be implemented");
-  }
-
-  protected async cleanupDockerProcesses(): Promise<void> {
-    throw new Error("cleanupDockerProcesses must be implemented by subclass");
-  }
 
   // ========== Graph Methods (delegate to Server_Graph) ==========
 
@@ -346,6 +314,8 @@ export abstract class Server extends Server_Files {
     );
   }
 
+  // Process nodes are populated by the Docker events watcher into the graph.
+  // The graph is the source of truth; these routes query it.
   protected async handleProcessRoute(request: Request): Promise<Response> {
     const processNodes = this.queryNodes((node: any) => {
       // Accept nodes whose type is an object with category === 'process'
@@ -396,7 +366,8 @@ export abstract class Server extends Server_Files {
 
   protected async handleAiderRoute(request: Request): Promise<Response> {
     const aiderNodes = this.queryNodes((node: any) =>
-      node.type?.category === 'process' && node.type?.type === 'aider'
+      (node.type?.category === 'process' && node.type?.type === 'aider') ||
+      node.metadata?.isAgentAider === true
     );
 
     const aiderEdges = this.queryEdges((edge: any) =>

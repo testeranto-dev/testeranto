@@ -110,6 +110,24 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
         this.ws.send(JSON.stringify(subscribeMessage));
         this.subscribedSlices.add('/graph');
         console.log('[BaseTreeDataProvider] Subscribed to graph updates');
+
+        // Subscribe to agents slice
+        const agentsSubscribeMessage = {
+            type: 'subscribeToSlice',
+            slicePath: '/agents'
+        };
+        this.ws.send(JSON.stringify(agentsSubscribeMessage));
+        this.subscribedSlices.add('/agents');
+        console.log('[BaseTreeDataProvider] Subscribed to agents slice');
+
+        // Subscribe to aider slice
+        const aiderSubscribeMessage = {
+            type: 'subscribeToSlice',
+            slicePath: '/aider'
+        };
+        this.ws.send(JSON.stringify(aiderSubscribeMessage));
+        this.subscribedSlices.add('/aider');
+        console.log('[BaseTreeDataProvider] Subscribed to aider slice');
     }
 
     protected subscribeToSlice(slicePath: string): void {

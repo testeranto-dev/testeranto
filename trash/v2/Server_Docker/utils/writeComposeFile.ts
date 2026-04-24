@@ -1,4 +1,3 @@
-import type { ITesterantoConfig } from "../../../../src/server/Types";
 import {
   consoleError,
   consoleLog,

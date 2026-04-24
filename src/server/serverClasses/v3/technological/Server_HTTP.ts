@@ -20,13 +20,19 @@ export class Server_HTTP extends Server_STDIO {
   protected port: number = 3000;
   protected hostname: string = '0.0.0.0';
 
-  constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode);
+  constructor(
+    configs: ITesterantoConfig,
+    mode: IMode,
+    getCurrentTestResults: () => any,
+    projectRoot?: string,
+    resourceChangedCallback?: (path: string) => void
+  ) {
+    super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
     // Ensure routes is properly initialized as a Map
     if (!this.routes || !(this.routes instanceof Map)) {
       this.routes = new Map();
     }
-    this.setupHonoApp();
+    // Hono app setup is handled by Server_WS_HTTP which provides the actual HTTP server
   }
 
   // ========== File Operations for Server_Static ==========
@@ -46,82 +52,31 @@ export class Server_HTTP extends Server_STDIO {
     await writeViewsIndexHtmlUtil(html);
   }
 
-  // Setup Hono app with static file serving
-  private setupHonoApp(): void {
-    // Handle /~/ API routes first (before static file serving)
-    this.app.all('/~/', (c) => {
-      return this.handleHonoRequest(c.req);
-    });
-    this.app.all('/~/*', (c) => {
-      return this.handleHonoRequest(c.req);
-    });
+  // Hono app setup is handled by Server_WS_HTTP which provides the actual HTTP server
+  // No setupHonoApp method needed here
 
-    // Serve static files from testeranto/views directory
-    this.app.use('/testeranto/views/*', serveStatic({ 
-      root: './',
-      onNotFound: (path, c) => {
-        this.logBusinessMessage(`Static file not found: ${path}`);
-        return c.text('File not found', 404);
-      }
-    }));
-
-    // Serve other static files from root (excluding /~/ routes)
-    this.app.use('/*', serveStatic({ 
-      root: './',
-      onNotFound: (path, c) => {
-        this.logBusinessMessage(`Static file not found: ${path}`);
-        return c.text('File not found', 404);
-      }
-    }));
-
-    // Handle all other requests through Hono
-    this.app.all('*', (c) => {
-      return this.handleHonoRequest(c.req);
-    });
-  }
-
-  // HTTP server lifecycle
-  async startHttpServer(port: number = 3000, hostname?: string): Promise<void> {
-    this.port = port;
-    this.hostname = hostname || '0.0.0.0';
-    
-    this.logBusinessMessage(`Starting HTTP server on ${this.hostname}:${this.port} using Hono with Bun.serve()...`);
-    
-    // Create the Bun HTTP server with Hono
-    this.httpServer = Bun.serve({
-      port: this.port,
-      hostname: this.hostname,
-      fetch: this.app.fetch,
-    });
-    
-    this.logBusinessMessage(`HTTP server started at ${this.httpServer.url}`);
-  }
-
-  async stopHttpServer(): Promise<void> {
-    this.logBusinessMessage('Stopping HTTP server...');
-    
-    if (this.httpServer) {
-      this.httpServer.stop();
-      this.httpServer = null;
-      this.logBusinessMessage("HTTP server stopped");
-    }
-  }
+  // HTTP server lifecycle - implemented by Server_WS_HTTP with WebSocket support
+  // These methods are implemented by Server_WS_HTTP which provides the actual implementation
+  // No-op stubs removed - Server_WS_HTTP provides the actual implementation
 
   // Handle requests through Hono
   private async handleHonoRequest(request: Request): Promise<Response> {
+    const { handleHonoRequest } = require("../utils/http/handleHonoRequest");
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
     
     this.logBusinessMessage(`Handling ${method} ${path}`);
     
+    const result = handleHonoRequest({ method, path, url });
+    
     // Handle /~/ routes (unified API for all clients)
-    if (path.startsWith('/~/')) {
+    if (result.isApiRoute) {
       return await this.handleRouteRequest(request, url);
     }
     
     // Handle root path - redirect to views index
-    if (path === '/' || path === '') {
+    if (result.isRootPath) {
       // Check if index.html exists in testeranto/views
       const indexPath = './testeranto/views/index.html';
       const exists = await this.fileExists(indexPath);
@@ -149,10 +104,13 @@ export class Server_HTTP extends Server_STDIO {
   }
 
   private async handleRouteRequest(request: Request, url: URL): Promise<Response> {
+    const { handleRouteRequest } = require("../utils/http/handleRouteRequest");
     const routeName = url.pathname.slice(3); // Remove '/~/'
     const method = request.method;
     
     this.logBusinessMessage(`Handling API route: ${method} ${routeName}`);
+    
+    const result = handleRouteRequest({ routeName, method, url });
     
     // Try to find a matching route handler
     const methodRoutes = this.routes.get(method);
@@ -178,6 +136,9 @@ export class Server_HTTP extends Server_STDIO {
   }
 
   private async handleFallbackRequest(request: Request, path: string): Promise<Response> {
+    const { handleFallbackRequest } = require("../utils/http/handleFallbackRequest");
+    const result = handleFallbackRequest({ path, method: request.method });
+    
     // All static files should be handled by the static middleware
     // If we reach here, it's a 404
     return new Response(

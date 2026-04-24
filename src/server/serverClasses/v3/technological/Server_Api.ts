@@ -23,8 +23,14 @@ export abstract class Server_Api extends Server_WS_HTTP {
   // Track routes for configuration (business concern)
   protected apiRoutes: Array<{ method: string; path: string; handler: any }> = [];
 
-  constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode);
+  constructor(
+    configs: ITesterantoConfig,
+    mode: IMode,
+    getCurrentTestResults: () => any,
+    projectRoot?: string,
+    resourceChangedCallback?: (path: string) => void
+  ) {
+    super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
   }
 
   // ========== HTTP API Registration ==========
@@ -204,6 +210,93 @@ export abstract class Server_Api extends Server_WS_HTTP {
         return await this.handlePostChatMessage(request);
       case 'getChatHistory':
         return await this.handleGetChatHistory(request);
+      case 'launchAgent':
+        {
+          // Extract agent name from URL path: /~/agents/:agentName
+          const pathParts = url.pathname.split('/').filter(Boolean);
+          const agentName = pathParts[pathParts.length - 1];
+          if (!agentName) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                error: 'Missing agent name in URL',
+                timestamp: new Date().toISOString()
+              }),
+              {
+                status: 400,
+                headers: { "Content-Type": "application/json" }
+              }
+            );
+          }
+          // Delegate to spawnAgent with the agent profile name
+          const result = await this.spawnAgent(agentName);
+          return new Response(
+            JSON.stringify({
+              success: true,
+              agentName: result.agentName,
+              containerId: result.containerId,
+              timestamp: new Date().toISOString()
+            }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json" }
+            }
+          );
+        }
+      case 'openProcessTerminal':
+        {
+          // Parse the request body to get nodeId, label, containerId, serviceName
+          const body = await request.json().catch(() => ({}));
+          const { nodeId, label, containerId, serviceName } = body;
+
+          if (!nodeId) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                error: 'Missing required field: nodeId',
+                timestamp: new Date().toISOString()
+              }),
+              {
+                status: 400,
+                headers: { "Content-Type": "application/json" }
+              }
+            );
+          }
+
+          try {
+            const result = await this.openProcessTerminal(
+              nodeId,
+              label || nodeId,
+              containerId || '',
+              serviceName || ''
+            );
+
+            return new Response(
+              JSON.stringify({
+                success: true,
+                ...result,
+                timestamp: new Date().toISOString()
+              }),
+              {
+                status: 200,
+                headers: { "Content-Type": "application/json" }
+              }
+            );
+          } catch (error: any) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                error: error.message,
+                message: 'Failed to open process terminal',
+                timestamp: new Date().toISOString()
+              }),
+              {
+                status: 500,
+                headers: { "Content-Type": "application/json" }
+              }
+            );
+          }
+        }
       default:
         // For other endpoints, return a placeholder response
         return new Response(
@@ -325,6 +418,18 @@ export abstract class Server_Api extends Server_WS_HTTP {
     );
   }
 
+  // ========== Route Registration ==========
+
+  /**
+   * Register a custom HTTP route with a handler.
+   */
+  protected registerRoute(method: string, path: string, handler: (request: Request) => Promise<Response>): void {
+    this.addRoute(method, path, async (request: Request) => {
+      return await handler(request);
+    });
+    this.logBusinessMessage(`Registered custom route: ${method} ${path}`);
+  }
+
   // ========== API Route Discovery ==========
 
   getRegisteredHttpRoutes(): Array<{ method: string; path: string; endpointKey: string }> {
@@ -413,15 +518,8 @@ export abstract class Server_Api extends Server_WS_HTTP {
   }
 
   private matchWsMessageToApi(type: string): string | null {
-    for (const [key, message] of Object.entries(wsApi)) {
-      // Skip slices as it's not a message type
-      if (key === 'slices') continue;
-
-      if (message.type === type) {
-        return key;
-      }
-    }
-    return null;
+    const { matchWsMessageToApi } = require("../utils/api/matchWsMessageToApi");
+    return matchWsMessageToApi(type);
   }
 
   // ========== Override WebSocket Handling ==========
@@ -552,6 +650,73 @@ export abstract class Server_Api extends Server_WS_HTTP {
     this.broadcastToChannel(channel, message);
   }
 
+  // ========== API Route Registration ==========
+
+  /**
+   * Register custom API routes. Override in subclasses to add routes.
+   * Default implementation registers the spawn‑agent endpoint.
+   */
+  protected registerApiRoutes(): void {
+    // Register the spawn‑agent endpoint
+    this.registerRoute('POST', '/~/agents/spawn', async (request: Request) => {
+      return await this.handleSpawnAgent(request);
+    });
+    this.logBusinessMessage('Registered spawn‑agent route: POST /~/agents/spawn');
+  }
+
+  /**
+   * Handle a POST /~/agents/spawn request.
+   * Parses the JSON body and delegates to spawnAgent().
+   */
+  private async handleSpawnAgent(request: Request): Promise<Response> {
+    try {
+      const body = await request.json();
+      const { profile, loadFiles, message, model } = body;
+
+      if (!profile) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Missing required field: profile',
+            timestamp: new Date().toISOString(),
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          },
+        );
+      }
+
+      const result = await this.spawnAgent(profile, loadFiles, message, model);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          agentName: result.agentName,
+          containerId: result.containerId,
+          timestamp: new Date().toISOString(),
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    } catch (error: any) {
+      this.logBusinessError('Error spawning agent:', error);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: error.message,
+          timestamp: new Date().toISOString(),
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    }
+  }
+
   // ========== API Server Lifecycle ==========
 
   async setupApi(): Promise<void> {
@@ -567,10 +732,16 @@ export abstract class Server_Api extends Server_WS_HTTP {
     // Register default HTTP API routes
     await this.registerDefaultHttpRoutes();
 
+    // Register custom API routes (e.g., spawn agent)
+    this.registerApiRoutes();
+
     this.logBusinessMessage("API server setup complete");
   }
 
   private async registerDefaultHttpRoutes(): Promise<void> {
+    const { registerDefaultHttpRoutes } = require("../utils/api/registerDefaultHttpRoutes");
+    const routes = registerDefaultHttpRoutes(this.configs);
+    
     this.logBusinessMessage("Registering all HTTP API routes from api.ts...");
 
     // First, add a health check route

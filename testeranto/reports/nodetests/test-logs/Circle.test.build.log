@@ -1,7 +1,7 @@
-[2026-04-24T13:55:59.180Z] Build log for test: src/lib/tiposkripto/tests/circle/Circle.test.ts
+[2026-04-24T22:31:09.758Z] Build log for test: src/lib/tiposkripto/tests/circle/Circle.test.ts
 Output: testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs
 Entry point: src/lib/tiposkripto/tests/circle/Circle.test.ts
 
-[2026-04-24T13:55:59.132Z] INFO: Build started for nodetests
+[2026-04-24T22:31:09.687Z] INFO: Build started for nodetests
 
-[2026-04-24T13:55:59.180Z] Build completed for: src/lib/tiposkripto/tests/circle/Circle.test.ts
+[2026-04-24T22:31:09.758Z] Build completed for: src/lib/tiposkripto/tests/circle/Circle.test.ts

@@ -219,26 +219,19 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       return items;
     }
     
-    // Find all aider process nodes
+    // Find all aider process nodes (these represent running agents)
     const aiderProcessNodes = this.graphData.nodes.filter((node: any) => 
       node.type === 'aider_process'
-    );
-    
-    // Find all agent nodes for grouping
-    const agentNodes = this.graphData.nodes.filter((node: any) => 
-      node.type === 'agent'
     );
     
     if (aiderProcessNodes.length === 0) {
       items.push(
         new TestTreeItem(
-          'No aider processes found',
+          'No running agents',
           TreeItemType.Info,
           vscode.TreeItemCollapsibleState.None,
           { 
-            info: agentNodes.length > 0 
-              ? 'Agents are running but no aider processes are active.'
-              : 'No agents or aider processes found.'
+            info: 'No agents are currently running. Launch one from the Agents view.'
           },
           undefined,
           new vscode.ThemeIcon('info')
@@ -247,116 +240,59 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       return items;
     }
     
-    // Group aider processes by their agent
-    const aiderByAgent = new Map<string, any[]>();
-    
-    for (const aiderNode of aiderProcessNodes) {
-      // Find which agent this aider process belongs to
-      const edge = this.graphData.edges.find((e: any) => 
-        e.target === aiderNode.id && e.attributes.type === 'hasAiderProcess'
-      );
+    // Create items for each aider process (running agent)
+    for (const node of aiderProcessNodes) {
+      const metadata = node.metadata || {};
+      const containerName = metadata.containerName || '';
+      const agentName = metadata.agentName || node.label || node.id;
+      const label = node.label || agentName;
+      const status = node.status || 'running';
       
-      if (edge) {
-        const agentId = edge.source;
-        if (!aiderByAgent.has(agentId)) {
-          aiderByAgent.set(agentId, []);
-        }
-        aiderByAgent.get(agentId)!.push(aiderNode);
+      // Determine icon based on status
+      let icon: vscode.ThemeIcon;
+      if (status === 'running') {
+        icon = new vscode.ThemeIcon('play-circle', new vscode.ThemeColor('testing.iconPassed'));
+      } else if (status === 'stopped') {
+        icon = new vscode.ThemeIcon('circle-slash', new vscode.ThemeColor('testing.iconUnset'));
       } else {
-        // Ungrouped aider process
-        if (!aiderByAgent.has('ungrouped')) {
-          aiderByAgent.set('ungrouped', []);
-        }
-        aiderByAgent.get('ungrouped')!.push(aiderNode);
-      }
-    }
-    
-    // Create group items
-    for (const [agentId, aiderNodes] of aiderByAgent.entries()) {
-      let groupLabel = 'Ungrouped Aider Processes';
-      let groupIcon = new vscode.ThemeIcon('server');
-      
-      if (agentId !== 'ungrouped') {
-        const agentNode = agentNodes.find((n: any) => n.id === agentId);
-        if (agentNode) {
-          groupLabel = `Agent: ${agentNode.metadata?.agentName || agentNode.label || agentId}`;
-          groupIcon = new vscode.ThemeIcon('person');
-        } else {
-          groupLabel = `Agent: ${agentId}`;
-          groupIcon = new vscode.ThemeIcon('person');
-        }
+        icon = new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'));
       }
       
-      const groupItem = new TestTreeItem(
-        groupLabel,
+      const item = new TestTreeItem(
+        label,
         TreeItemType.Info,
-        vscode.TreeItemCollapsibleState.Collapsed,
+        vscode.TreeItemCollapsibleState.None,
         {
-          description: `${aiderNodes.length} aider process(es)`,
-          groupId: agentId,
-          isGroup: true
+          description: `Container: ${containerName}`,
+          status,
+          containerName,
+          agentName,
+          metadata,
+          isAiderProcess: true,
+          nodeId: node.id
         },
-        undefined,
-        groupIcon
+        {
+          command: 'testeranto.openAiderTerminal',
+          title: 'Open Aider Terminal',
+          arguments: [containerName, label, agentName]
+        },
+        icon
       );
       
-      // Create child items for each aider process
-      groupItem.children = aiderNodes.map((node: any) => {
-        const metadata = node.metadata || {};
-        const containerName = metadata.containerName || '';
-        const agentName = metadata.agentName || '';
-        const label = node.label || 'Aider Process';
-        const status = node.status || 'unknown';
-        
-        // Determine icon based on status
-        let icon: vscode.ThemeIcon;
-        if (status === 'running') {
-          icon = new vscode.ThemeIcon('play-circle', new vscode.ThemeColor('testing.iconPassed'));
-        } else if (status === 'stopped') {
-          icon = new vscode.ThemeIcon('circle-slash', new vscode.ThemeColor('testing.iconUnset'));
-        } else {
-          icon = new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'));
-        }
-        
-        const item = new TestTreeItem(
-          label,
-          TreeItemType.Info,
-          vscode.TreeItemCollapsibleState.None,
-          {
-            description: `Status: ${status}`,
-            status,
-            containerName,
-            agentName,
-            metadata,
-            isAiderProcess: true,
-            nodeId: node.id
-          },
-          {
-            command: 'testeranto.openAiderTerminal',
-            title: 'Open Aider Terminal',
-            arguments: [containerName, label, agentName]
-          },
-          icon
-        );
-        
-        // Build tooltip
-        let tooltip = `Type: ${node.type}\n`;
-        tooltip += `ID: ${node.id}\n`;
-        tooltip += `Container: ${containerName}\n`;
-        tooltip += `Status: ${status}\n`;
-        tooltip += `Agent: ${agentName || 'None'}\n`;
-        if (metadata.containerId) {
-          tooltip += `Container ID: ${metadata.containerId}\n`;
-        }
-        if (metadata.timestamp) {
-          tooltip += `Created: ${metadata.timestamp}\n`;
-        }
-        item.tooltip = tooltip;
-        
-        return item;
-      });
+      // Build tooltip
+      let tooltip = `Agent: ${agentName}\n`;
+      tooltip += `ID: ${node.id}\n`;
+      tooltip += `Container: ${containerName}\n`;
+      tooltip += `Status: ${status}\n`;
+      if (metadata.containerId) {
+        tooltip += `Container ID: ${metadata.containerId}\n`;
+      }
+      if (metadata.timestamp) {
+        tooltip += `Created: ${metadata.timestamp}\n`;
+      }
+      item.tooltip = tooltip;
       
-      items.push(groupItem);
+      items.push(item);
     }
     
     return items;
@@ -385,9 +321,30 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
         console.log('[AiderProcessTreeDataProvider] Relevant update, refreshing');
         this.refresh();
       }
+
+      // Handle agent spawn notification - open a terminal tab
+      if (message.url === '/~/agents/spawn' && message.agentName && message.containerName) {
+        console.log(`[AiderProcessTreeDataProvider] Agent spawned: ${message.agentName}, opening terminal`);
+        this.openAgentTerminal(message.agentName, message.containerName);
+      }
     } else if (message.type === 'graphUpdated') {
       console.log('[AiderProcessTreeDataProvider] Graph updated, refreshing');
       this.refresh();
+    }
+  }
+
+  private async openAgentTerminal(agentName: string, containerName: string): Promise<void> {
+    try {
+      // Execute the command to open an aider terminal
+      await vscode.commands.executeCommand(
+        'testeranto.openAiderTerminal',
+        containerName,
+        `Agent: ${agentName}`,
+        agentName
+      );
+      console.log(`[AiderProcessTreeDataProvider] Executed openAiderTerminal command for ${agentName}`);
+    } catch (error) {
+      console.error('[AiderProcessTreeDataProvider] Failed to open agent terminal:', error);
     }
   }
 

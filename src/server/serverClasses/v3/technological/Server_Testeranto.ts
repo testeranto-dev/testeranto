@@ -1,4 +1,3 @@
-import { Server_DockerCompose } from './Server_DockerCompose';
-import { Server_FS } from './Server_FS';
+import { Server } from '../Server';
 
-export class Server_Testeranto extends Server_DockerCompose { }
+export class Server_Testeranto extends Server { }

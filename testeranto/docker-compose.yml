@@ -52,27 +52,6 @@ services:
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"
-  nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider:
-    image: "testeranto-aider:latest"
-    container_name: "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider"
-    environment:
-      NODE_ENV: production
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-      - "/Users/adam/Code/testeranto:/workspace"
-    working_dir: /workspace
-    command: "tail -f /dev/null"
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
   nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -87,27 +66,6 @@ services:
     command: "yarn tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/\"}'"
     networks:
       - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider:
-    image: "testeranto-aider:latest"
-    container_name: "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider"
-    environment:
-      NODE_ENV: production
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-      - "/Users/adam/Code/testeranto:/workspace"
-    working_dir: /workspace
-    command: "tail -f /dev/null"
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"
@@ -128,27 +86,6 @@ services:
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"
-  nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider:
-    image: "testeranto-aider:latest"
-    container_name: "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider"
-    environment:
-      NODE_ENV: production
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-      - "/Users/adam/Code/testeranto:/workspace"
-    working_dir: /workspace
-    command: "tail -f /dev/null"
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
   nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -163,27 +100,6 @@ services:
     command: "yarn tsx testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/\"}'"
     networks:
       - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider:
-    image: "testeranto-aider:latest"
-    container_name: "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider"
-    environment:
-      NODE_ENV: production
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-      - "/Users/adam/Code/testeranto:/workspace"
-    working_dir: /workspace
-    command: "tail -f /dev/null"
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"
@@ -204,27 +120,6 @@ services:
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"
-  nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider:
-    image: "testeranto-aider:latest"
-    container_name: "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider"
-    environment:
-      NODE_ENV: production
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-      - "/Users/adam/Code/testeranto:/workspace"
-    working_dir: /workspace
-    command: "tail -f /dev/null"
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
   webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -239,27 +134,6 @@ services:
     command: "yarn tsx testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts/\"}'"
     networks:
       - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider:
-    image: "testeranto-aider:latest"
-    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider"
-    environment:
-      NODE_ENV: production
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-      - "/Users/adam/Code/testeranto:/workspace"
-    working_dir: /workspace
-    command: "tail -f /dev/null"
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"
@@ -314,27 +188,6 @@ services:
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"
-  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider:
-    image: "testeranto-aider:latest"
-    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider"
-    environment:
-      NODE_ENV: production
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-      - "/Users/adam/Code/testeranto:/workspace"
-    working_dir: /workspace
-    command: "tail -f /dev/null"
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
   webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0:
     build:
       context: /Users/adam/Code/testeranto
@@ -367,100 +220,6 @@ services:
     networks:
       - allTests_network
     restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  agent-prodirek:
-    image: "testeranto-aider:latest"
-    container_name: "agent-prodirek"
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto:/workspace"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-    working_dir: /workspace
-    command:
-      - sh
-      - "-c"
-      - "# Create agent instructions file from config
-         echo \"Creating agent instructions for prodirek\"
-         
-         # Create the instruction file with content from config
-         cat > /tmp/agent_load.txt << 'EOF'
-/read SOUL.md
-/read testeranto/slices/agents/prodirek.json
-/read testeranto/agents/prodirek.md
-EOF
-
-         # Create the instruction file with content from config
-         cat > /tmp/agent_message.txt << 'EOF'
-Your name is \"prodirek\". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from prodirek!\"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/prodirek
-EOF
-
-         echo \"Starting aider for agent prodirek with instructions from config\"
-         aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
-         EXIT_CODE=$?
-         echo \"Aider exited with code $EXIT_CODE\"
-         # Exit with the same code (no restart)
-         exit $EXIT_CODE"
-    environment:
-      MODE: dev
-      NODE_ENV: production
-      AGENT_NAME: prodirek
-      EDITOR: vim
-      EXIT_CODE: 0
-    restart: no
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  agent-arko:
-    image: "testeranto-aider:latest"
-    container_name: "agent-arko"
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto:/workspace"
-      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
-    working_dir: /workspace
-    command:
-      - sh
-      - "-c"
-      - "# Create agent instructions file from config
-         echo \"Creating agent instructions for arko\"
-         
-         # Create the instruction file with content from config
-         cat > /tmp/agent_load.txt << 'EOF'
-/read SOUL.md
-/read testeranto/slices/agents/arko.json
-/read testeranto/agents/arko.md
-EOF
-
-         # Create the instruction file with content from config
-         cat > /tmp/agent_message.txt << 'EOF'
-Your name is \"arko\". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H \"Content-Type: application/json\" -d '{\"agentName\": \"prodirek\", \"content\": \"Hello from arko!\"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/arko
-EOF
-
-         echo \"Starting aider for agent arko with instructions from config\"
-         aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
-         EXIT_CODE=$?
-         echo \"Aider exited with code $EXIT_CODE\"
-         # Exit with the same code (no restart)
-         exit $EXIT_CODE"
-    environment:
-      MODE: dev
-      NODE_ENV: production
-      AGENT_NAME: arko
-      EDITOR: vim
-      EXIT_CODE: 0
-    restart: no
-    networks:
-      - allTests_network
-    tty: true
-    stdin_open: true
     extra_hosts:
       host.docker.internal: "host-gateway"
 

@@ -5,21 +5,400 @@ import "vscode";
 import "vscode";
 
 // src/vscode/extension/ExtensionActivatorCore.ts
-import * as vscode33 from "vscode";
+import * as vscode34 from "vscode";
 
-// src/vscode/extension/createOutputChannel.ts
+// src/vscode/commands/registerOpenProcessTerminalCommand.ts
 import * as vscode from "vscode";
-function createOutputChannel() {
-  return vscode.window.createOutputChannel("Testeranto");
+function registerOpenProcessTerminalCommand(context, outputChannel, terminalManager) {
+  const openProcessTerminalCommand = vscode.commands.registerCommand("testeranto.openProcessTerminal", async (nodeId, label, containerId, serviceName) => {
+    try {
+      outputChannel.appendLine(`[Testeranto] Opening terminal for process: ${nodeId || "unknown"}`);
+      if (!nodeId) {
+        vscode.window.showWarningMessage("No process node ID provided");
+        return;
+      }
+      await terminalManager.openProcessTerminal(nodeId, label || "Process", containerId || "", serviceName || "");
+    } catch (error) {
+      outputChannel.appendLine(`[Testeranto] Error opening process terminal: ${error.message}`);
+      vscode.window.showErrorMessage(`Failed to open process terminal: ${error.message}`);
+    }
+  });
+  context.subscriptions.push(openProcessTerminalCommand);
 }
 
-// src/vscode/extension/createManagers.ts
+// src/vscode/commands/registerOpenAiderTerminalCommand.ts
 import "vscode";
 
 // src/vscode/TerminalManager.ts
-import * as vscode2 from "vscode";
+import * as vscode9 from "vscode";
+
+// src/vscode/utilities/fetchAiderProcesses.ts
+import "vscode";
+async function fetchAiderProcesses() {
+  try {
+    const response = await fetch("http://localhost:3000/~/open-process-terminal");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.aiderProcesses || [];
+  } catch (error) {
+    console.error("Failed to fetch aider processes from server:", error);
+    return [];
+  }
+}
+
+// src/vscode/utilities/createAiderTerminals.ts
+async function createAiderTerminals() {
+  try {
+    const aiderProcesses = await fetchAiderProcesses();
+    console.log(`Found ${aiderProcesses.length} aider processes`);
+    for (const process2 of aiderProcesses) {
+      console.log(`Aider process available: ${process2.testName} (${process2.runtime}) - ${process2.isActive ? "running" : "stopped"}`);
+    }
+  } catch (error) {
+    console.error("Failed to fetch aider processes:", error);
+  }
+}
+
+// src/vscode/utilities/createAiderTerminal.ts
+import * as vscode3 from "vscode";
 import * as path from "path";
 import * as fs from "fs";
+async function createAiderTerminal(runtime, testName, terminals, getTerminalKey, getWorkspaceRoot2) {
+  const key = getTerminalKey(runtime, testName);
+  let terminal = terminals.get(key);
+  if (terminal && terminal.exitStatus === void 0) {
+    terminal.show();
+    return terminal;
+  }
+  terminal = vscode3.window.createTerminal(`Aider: ${testName} (${runtime})`);
+  terminals.set(key, terminal);
+  terminal.sendText(`echo "Opening aider terminal for: ${testName}"`);
+  terminal.sendText(`echo "Runtime: ${runtime}"`);
+  terminal.sendText(`echo ""`);
+  terminal.sendText(`echo "Note: Aider terminal support requires server implementation."`);
+  terminal.sendText(`echo "This endpoint may not be fully implemented yet."`);
+  terminal.sendText(`echo ""`);
+  terminal.sendText(`echo "Attempting to connect to server..."`);
+  try {
+    const nodeId = `aider:${runtime}:${testName}`;
+    const response = await fetch("http://localhost:3000/~/open-process-terminal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nodeId,
+        label: `Aider: ${testName}`,
+        containerId: "",
+        serviceName: `aider-${runtime}-${testName}`
+      })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { error: `Server error: ${response.status} ${response.statusText}` };
+      }
+      terminal.sendText(`echo "\u274C Server error: ${errorData.error || "Failed to open aider terminal"}"`);
+      terminal.sendText(`echo "Message: ${errorData.message || "No details provided"}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "Aider terminals may require additional server configuration."`);
+    } else {
+      const data = await response.json();
+      if (data.success && data.script) {
+        terminal.sendText(`echo "\u2705 Server provided terminal script"`);
+        terminal.sendText(`echo "Executing..."`);
+        terminal.sendText(`echo ""`);
+        const workspaceRoot = getWorkspaceRoot2();
+        if (workspaceRoot) {
+          const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
+          fs.writeFileSync(scriptPath, data.script, { mode: 493 });
+          terminal.sendText(`"${scriptPath}" && rm -f "${scriptPath}"`);
+        } else {
+          const escapedScript = data.script.replace(/'/g, `'"'"'`);
+          terminal.sendText(`/bin/sh << 'EOF'
+${escapedScript}
+EOF`);
+        }
+      } else {
+        terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
+        terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
+      }
+    }
+  } catch (error) {
+    terminal.sendText(`echo "\u274C Failed to connect to server"`);
+    terminal.sendText(`echo "Error: ${error.message}"`);
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Make sure the Testeranto server is running on port 3000."`);
+  }
+  terminal.show();
+  return terminal;
+}
+
+// src/vscode/utilities/openContainerTerminal.ts
+import * as vscode4 from "vscode";
+import * as path2 from "path";
+import * as fs2 from "fs";
+async function openContainerTerminal(containerName, label, agentName, terminals, getWorkspaceRoot2) {
+  const key = `container:${containerName}`;
+  let terminal = terminals.get(key);
+  if (terminal && terminal.exitStatus === void 0) {
+    terminal.show();
+    return terminal;
+  }
+  const terminalName = agentName ? `Aider: ${agentName}` : `Container: ${label}`;
+  terminal = vscode4.window.createTerminal(terminalName);
+  terminals.set(key, terminal);
+  terminal.sendText(`echo "Opening terminal to container: ${containerName}"`);
+  terminal.sendText(`echo "Label: ${label}"`);
+  if (agentName) {
+    terminal.sendText(`echo "Agent: ${agentName}"`);
+  }
+  terminal.sendText(`echo ""`);
+  terminal.sendText(`echo "Connecting to server..."`);
+  try {
+    const nodeId = `container:${containerName}`;
+    const response = await fetch("http://localhost:3000/~/open-process-terminal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nodeId,
+        label: label || `Container: ${containerName}`,
+        containerId: containerName,
+        serviceName: agentName || containerName
+      })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { error: `Server error: ${response.status} ${response.statusText}` };
+      }
+      terminal.sendText(`echo "\u274C Server error: ${errorData.error || "Failed to open container terminal"}"`);
+      terminal.sendText(`echo "Message: ${errorData.message || "No details provided"}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "You may need to manually connect to the container:"`);
+      terminal.sendText(`echo "  docker exec -it ${containerName} /bin/sh"`);
+    } else {
+      const data = await response.json();
+      if (data.success && data.script) {
+        terminal.sendText(`echo "\u2705 Server provided terminal script"`);
+        terminal.sendText(`echo "Executing..."`);
+        terminal.sendText(`echo ""`);
+        const workspaceRoot = getWorkspaceRoot2();
+        if (workspaceRoot) {
+          const scriptPath = path2.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
+          fs2.writeFileSync(scriptPath, data.script, { mode: 493 });
+          terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
+        } else {
+          const escapedScript = data.script.replace(/'/g, `'"'"'`);
+          terminal.sendText(`/bin/sh << 'EOF'
+${escapedScript}
+EOF`);
+        }
+      } else {
+        terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
+        terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
+      }
+    }
+  } catch (error) {
+    terminal.sendText(`echo "\u274C Failed to connect to server"`);
+    terminal.sendText(`echo "Error: ${error.message}"`);
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Make sure the Testeranto server is running."`);
+  }
+  terminal.show();
+  return terminal;
+}
+
+// src/vscode/utilities/restartAiderProcess.ts
+import * as vscode5 from "vscode";
+async function restartAiderProcess(runtime, testName, terminals, getTerminalKey) {
+  try {
+    const key = getTerminalKey(runtime, testName);
+    let terminal = terminals.get(key);
+    if (!terminal || terminal.exitStatus !== void 0) {
+      terminal = vscode5.window.createTerminal(`Aider: ${testName} (${runtime})`);
+      terminals.set(key, terminal);
+    }
+    terminal.sendText(`echo "To restart aider process for ${testName}, please use the server API"`);
+    terminal.sendText(`echo "The server manages all aider processes and graph updates"`);
+    terminal.show();
+    vscode5.window.showInformationMessage(`Aider processes are managed by the server. Check the Aider Processes view.`);
+  } catch (error) {
+    console.error("Failed to handle aider process restart:", error);
+    vscode5.window.showErrorMessage(`Failed to handle aider process: ${error}`);
+  }
+}
+
+// src/vscode/utilities/openProcessTerminal.ts
+import * as vscode6 from "vscode";
+async function openProcessTerminal(nodeId, label, containerId, serviceName, terminals, getWorkspaceRoot2) {
+  const key = `process:${nodeId}`;
+  let terminal = terminals.get(key);
+  if (terminal && terminal.exitStatus === void 0) {
+    terminal.show();
+    return terminal;
+  }
+  const terminalName = `Process: ${label}`;
+  terminal = vscode6.window.createTerminal(terminalName);
+  terminals.set(key, terminal);
+  terminal.sendText(`echo "Opening terminal for: ${label}"`);
+  terminal.sendText(`echo "Node ID: ${nodeId}"`);
+  terminal.sendText(`echo ""`);
+  terminal.sendText(`echo "Connecting to server to get container information..."`);
+  try {
+    const response = await fetch("http://localhost:3000/~/open-process-terminal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nodeId, label, containerId, serviceName })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { error: `Server error: ${response.status} ${response.statusText}` };
+      }
+      terminal.sendText(`echo "\u274C Server error: ${errorData.error || "Failed to open terminal"}"`);
+      terminal.sendText(`echo "Message: ${errorData.message || "No details provided"}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "Note: The server may not support this type of terminal."`);
+      terminal.sendText(`echo "Check server logs for more information."`);
+      terminal.show();
+      return terminal;
+    }
+    const data = await response.json();
+    if (data.success && data.command) {
+      terminal.sendText(`echo "\u2705 Server provided terminal command"`);
+      terminal.sendText(`echo "Container: ${data.containerId || "unknown"}"`);
+      terminal.sendText(`echo "Service: ${data.serviceName || "unknown"}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "To detach from the container without stopping it:"`);
+      terminal.sendText(`echo "  Press Ctrl+P, Ctrl+Q"`);
+      terminal.sendText(`echo "To send Ctrl+C to the container:"`);
+      terminal.sendText(`echo "  Press Ctrl+C"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "Running command..."`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(data.command);
+    } else {
+      terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
+      terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
+      terminal.sendText(`echo "Message: ${data.message || "No message"}"`);
+    }
+  } catch (error) {
+    terminal.sendText(`echo "\u274C Failed to connect to server"`);
+    terminal.sendText(`echo "Error: ${error.message}"`);
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Make sure the Testeranto server is running on port 3000."`);
+    terminal.sendText(`echo "Run 'testeranto dev' in your project to start the server."`);
+  }
+  terminal.show();
+  return terminal;
+}
+
+// src/vscode/utilities/openAiderTerminal.ts
+import * as vscode7 from "vscode";
+import * as path3 from "path";
+import * as fs3 from "fs";
+async function openAiderTerminal(containerName, label, agentName, terminals, getWorkspaceRoot2) {
+  if (!containerName) {
+    const terminal2 = vscode7.window.createTerminal(`Aider: ${label}`);
+    terminal2.sendText(`echo "\u274C Error: No container name provided for aider terminal"`);
+    terminal2.show();
+    return terminal2;
+  }
+  const key = `aider:${containerName}`;
+  let terminal = terminals.get(key);
+  if (terminal && terminal.exitStatus === void 0) {
+    terminal.show();
+    return terminal;
+  }
+  const terminalName = agentName ? `Aider: ${agentName}` : `Aider: ${label}`;
+  terminal = vscode7.window.createTerminal(terminalName);
+  terminals.set(key, terminal);
+  terminal.sendText(`echo "Opening aider terminal to container: ${containerName}"`);
+  terminal.sendText(`echo "Label: ${label}"`);
+  if (agentName) {
+    terminal.sendText(`echo "Agent: ${agentName}"`);
+  }
+  terminal.sendText(`echo ""`);
+  terminal.sendText(`echo "Connecting to server..."`);
+  try {
+    const nodeId = `aider-container:${containerName}`;
+    const response = await fetch("http://localhost:3000/~/open-process-terminal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nodeId,
+        label: label || `Aider: ${containerName}`,
+        containerId: containerName,
+        serviceName: agentName || `aider-${containerName}`
+      })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { error: `Server error: ${response.status} ${response.statusText}` };
+      }
+      terminal.sendText(`echo "\u274C Server error: ${errorData.error || "Failed to open aider container terminal"}"`);
+      terminal.sendText(`echo "Message: ${errorData.message || "No details provided"}"`);
+      terminal.sendText(`echo ""`);
+      terminal.sendText(`echo "You may need to manually attach to the aider container:"`);
+      terminal.sendText(`echo "  docker attach ${containerName}"`);
+      terminal.sendText(`echo "  (Use Ctrl+P, Ctrl+Q to detach)"`);
+    } else {
+      const data = await response.json();
+      if (data.success && data.script) {
+        terminal.sendText(`echo "\u2705 Server provided terminal script"`);
+        terminal.sendText(`echo "Executing..."`);
+        terminal.sendText(`echo ""`);
+        const workspaceRoot = getWorkspaceRoot2();
+        if (workspaceRoot) {
+          const scriptPath = path3.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
+          fs3.writeFileSync(scriptPath, data.script, { mode: 493 });
+          terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
+        } else {
+          const escapedScript = data.script.replace(/'/g, `'"'"'`);
+          terminal.sendText(`/bin/sh << 'EOF'
+${escapedScript}
+EOF`);
+        }
+      } else {
+        terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
+        terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
+      }
+    }
+  } catch (error) {
+    terminal.sendText(`echo "\u274C Failed to connect to server"`);
+    terminal.sendText(`echo "Error: ${error.message}"`);
+    terminal.sendText(`echo ""`);
+    terminal.sendText(`echo "Make sure the Testeranto server is running."`);
+  }
+  terminal.show();
+  return terminal;
+}
+
+// src/vscode/utilities/getWorkspaceRoot.ts
+import * as vscode8 from "vscode";
+function getWorkspaceRoot() {
+  const workspaceFolders = vscode8.workspace.workspaceFolders;
+  if (workspaceFolders && workspaceFolders.length > 0) {
+    return workspaceFolders[0].uri.fsPath;
+  }
+  return null;
+}
+
+// src/vscode/TerminalManager.ts
 var TerminalManager = class {
   terminals = /* @__PURE__ */ new Map();
   getTerminalKey(runtime, testName) {
@@ -27,7 +406,7 @@ var TerminalManager = class {
   }
   createTerminal(runtime, testName) {
     const key = this.getTerminalKey(runtime, testName);
-    const terminal = vscode2.window.createTerminal(`Testeranto: ${testName} (${runtime})`);
+    const terminal = vscode9.window.createTerminal(`Testeranto: ${testName} (${runtime})`);
     this.terminals.set(key, terminal);
     return terminal;
   }
@@ -67,353 +446,58 @@ var TerminalManager = class {
   // All data should be loaded from a json file
   // you will receive WS updates when this file changes
   async fetchAiderProcesses() {
-    try {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data.aiderProcesses || [];
-    } catch (error) {
-      console.error("Failed to fetch aider processes from server:", error);
-      return [];
-    }
+    return fetchAiderProcesses();
   }
   // Create terminals for all aider processes (but don't automatically start them)
   async createAiderTerminals() {
-    try {
-      const aiderProcesses = await this.fetchAiderProcesses();
-      console.log(`Found ${aiderProcesses.length} aider processes`);
-      for (const process of aiderProcesses) {
-        console.log(`Aider process available: ${process.testName} (${process.runtime}) - ${process.isActive ? "running" : "stopped"}`);
-      }
-    } catch (error) {
-      console.error("Failed to fetch aider processes:", error);
-    }
+    return createAiderTerminals();
   }
   async createAiderTerminal(runtime, testName) {
-    const key = this.getTerminalKey(runtime, testName);
-    let terminal = this.terminals.get(key);
-    if (terminal && terminal.exitStatus === void 0) {
-      terminal.show();
-      return terminal;
-    }
-    terminal = vscode2.window.createTerminal(`Aider: ${testName} (${runtime})`);
-    this.terminals.set(key, terminal);
-    terminal.sendText(`echo "Opening aider terminal for: ${testName}"`);
-    terminal.sendText(`echo "Runtime: ${runtime}"`);
-    terminal.sendText(`echo ""`);
-    terminal.sendText(`echo "Note: Aider terminal support requires server implementation."`);
-    terminal.sendText(`echo "This endpoint may not be fully implemented yet."`);
-    terminal.sendText(`echo ""`);
-    terminal.sendText(`echo "Attempting to connect to server..."`);
-    try {
-      const nodeId = `aider:${runtime}:${testName}`;
-      const response2 = await fetch("http://localhost:3000/~/open-process-terminal", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          nodeId,
-          label: `Aider: ${testName}`,
-          containerId: "",
-          serviceName: `aider-${runtime}-${testName}`
-        })
-      });
-      if (!response2.ok) {
-        const errorText = await response2.text();
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { error: `Server error: ${response2.status} ${response2.statusText}` };
-        }
-        terminal.sendText(`echo "\u274C Server error: ${errorData.error || "Failed to open aider terminal"}"`);
-        terminal.sendText(`echo "Message: ${errorData.message || "No details provided"}"`);
-        terminal.sendText(`echo ""`);
-        terminal.sendText(`echo "Aider terminals may require additional server configuration."`);
-      } else {
-        const data = await response2.json();
-        if (data.success && data.script) {
-          terminal.sendText(`echo "\u2705 Server provided terminal script"`);
-          terminal.sendText(`echo "Executing..."`);
-          terminal.sendText(`echo ""`);
-          const workspaceRoot = this.getWorkspaceRoot();
-          if (workspaceRoot) {
-            const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
-            fs.writeFileSync(scriptPath, data.script, { mode: 493 });
-            terminal.sendText(`"${scriptPath}" && rm -f "${scriptPath}"`);
-          } else {
-            const escapedScript = data.script.replace(/'/g, `'"'"'`);
-            terminal.sendText(`/bin/sh << 'EOF'
-${escapedScript}
-EOF`);
-          }
-        } else {
-          terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
-          terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
-        }
-      }
-    } catch (error) {
-      terminal.sendText(`echo "\u274C Failed to connect to server"`);
-      terminal.sendText(`echo "Error: ${error.message}"`);
-      terminal.sendText(`echo ""`);
-      terminal.sendText(`echo "Make sure the Testeranto server is running on port 3000."`);
-    }
-    terminal.show();
-    return terminal;
+    return createAiderTerminal(
+      runtime,
+      testName,
+      this.terminals,
+      this.getTerminalKey.bind(this),
+      this.getWorkspaceRoot.bind(this)
+    );
   }
   // Open a terminal to a specific container
   async openContainerTerminal(containerName, label, agentName) {
-    const key = `container:${containerName}`;
-    let terminal = this.terminals.get(key);
-    if (terminal && terminal.exitStatus === void 0) {
-      terminal.show();
-      return terminal;
-    }
-    const terminalName = agentName ? `Aider: ${agentName}` : `Container: ${label}`;
-    terminal = vscode2.window.createTerminal(terminalName);
-    this.terminals.set(key, terminal);
-    terminal.sendText(`echo "Opening terminal to container: ${containerName}"`);
-    terminal.sendText(`echo "Label: ${label}"`);
-    if (agentName) {
-      terminal.sendText(`echo "Agent: ${agentName}"`);
-    }
-    terminal.sendText(`echo ""`);
-    terminal.sendText(`echo "Connecting to server..."`);
-    try {
-      const nodeId = `container:${containerName}`;
-      const response2 = await fetch("http://localhost:3000/~/open-process-terminal", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          nodeId,
-          label: label || `Container: ${containerName}`,
-          containerId: containerName,
-          serviceName: agentName || containerName
-        })
-      });
-      if (!response2.ok) {
-        const errorText = await response2.text();
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { error: `Server error: ${response2.status} ${response2.statusText}` };
-        }
-        terminal.sendText(`echo "\u274C Server error: ${errorData.error || "Failed to open container terminal"}"`);
-        terminal.sendText(`echo "Message: ${errorData.message || "No details provided"}"`);
-        terminal.sendText(`echo ""`);
-        terminal.sendText(`echo "You may need to manually connect to the container:"`);
-        terminal.sendText(`echo "  docker exec -it ${containerName} /bin/sh"`);
-      } else {
-        const data = await response2.json();
-        if (data.success && data.script) {
-          terminal.sendText(`echo "\u2705 Server provided terminal script"`);
-          terminal.sendText(`echo "Executing..."`);
-          terminal.sendText(`echo ""`);
-          const workspaceRoot = this.getWorkspaceRoot();
-          if (workspaceRoot) {
-            const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
-            fs.writeFileSync(scriptPath, data.script, { mode: 493 });
-            terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
-          } else {
-            const escapedScript = data.script.replace(/'/g, `'"'"'`);
-            terminal.sendText(`/bin/sh << 'EOF'
-${escapedScript}
-EOF`);
-          }
-        } else {
-          terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
-          terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
-        }
-      }
-    } catch (error) {
-      terminal.sendText(`echo "\u274C Failed to connect to server"`);
-      terminal.sendText(`echo "Error: ${error.message}"`);
-      terminal.sendText(`echo ""`);
-      terminal.sendText(`echo "Make sure the Testeranto server is running."`);
-    }
-    terminal.show();
-    return terminal;
+    return openContainerTerminal(
+      containerName,
+      label,
+      agentName,
+      this.terminals,
+      this.getWorkspaceRoot.bind(this)
+    );
   }
   // Restart a specific aider process
   async restartAiderProcess(runtime, testName) {
-    try {
-      const key = this.getTerminalKey(runtime, testName);
-      let terminal = this.terminals.get(key);
-      if (!terminal || terminal.exitStatus !== void 0) {
-        terminal = vscode2.window.createTerminal(`Aider: ${testName} (${runtime})`);
-        this.terminals.set(key, terminal);
-      }
-      terminal.sendText(`echo "To restart aider process for ${testName}, please use the server API"`);
-      terminal.sendText(`echo "The server manages all aider processes and graph updates"`);
-      terminal.show();
-      vscode2.window.showInformationMessage(`Aider processes are managed by the server. Check the Aider Processes view.`);
-    } catch (error) {
-      console.error("Failed to handle aider process restart:", error);
-      vscode2.window.showErrorMessage(`Failed to handle aider process: ${error}`);
-    }
+    return restartAiderProcess(runtime, testName, this.terminals, this.getTerminalKey.bind(this));
   }
   // Open a terminal to a Docker process using the server API
   async openProcessTerminal(nodeId, label, containerId, serviceName) {
-    const key = `process:${nodeId}`;
-    let terminal = this.terminals.get(key);
-    if (terminal && terminal.exitStatus === void 0) {
-      terminal.show();
-      return terminal;
-    }
-    const terminalName = `Process: ${label}`;
-    terminal = vscode2.window.createTerminal(terminalName);
-    this.terminals.set(key, terminal);
-    terminal.sendText(`echo "Opening terminal for: ${label}"`);
-    terminal.sendText(`echo "Node ID: ${nodeId}"`);
-    terminal.sendText(`echo ""`);
-    terminal.sendText(`echo "Connecting to server to get container information..."`);
-    try {
-      const response2 = await fetch("http://localhost:3000/~/open-process-terminal", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ nodeId, label, containerId, serviceName })
-      });
-      if (!response2.ok) {
-        const errorText = await response2.text();
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { error: `Server error: ${response2.status} ${response2.statusText}` };
-        }
-        terminal.sendText(`echo "\u274C Server error: ${errorData.error || "Failed to open terminal"}"`);
-        terminal.sendText(`echo "Message: ${errorData.message || "No details provided"}"`);
-        terminal.sendText(`echo ""`);
-        terminal.sendText(`echo "Note: The server may not support this type of terminal."`);
-        terminal.sendText(`echo "Check server logs for more information."`);
-        terminal.show();
-        return terminal;
-      }
-      const data = await response2.json();
-      if (data.success && data.command) {
-        terminal.sendText(`echo "\u2705 Server provided terminal command"`);
-        terminal.sendText(`echo "Container: ${data.containerId || "unknown"}"`);
-        terminal.sendText(`echo "Service: ${data.serviceName || "unknown"}"`);
-        terminal.sendText(`echo ""`);
-        terminal.sendText(`echo "To detach from the container without stopping it:"`);
-        terminal.sendText(`echo "  Press Ctrl+P, Ctrl+Q"`);
-        terminal.sendText(`echo "To send Ctrl+C to the container:"`);
-        terminal.sendText(`echo "  Press Ctrl+C"`);
-        terminal.sendText(`echo ""`);
-        terminal.sendText(`echo "Running command..."`);
-        terminal.sendText(`echo ""`);
-        terminal.sendText(data.command);
-      } else {
-        terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
-        terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
-        terminal.sendText(`echo "Message: ${data.message || "No message"}"`);
-      }
-    } catch (error) {
-      terminal.sendText(`echo "\u274C Failed to connect to server"`);
-      terminal.sendText(`echo "Error: ${error.message}"`);
-      terminal.sendText(`echo ""`);
-      terminal.sendText(`echo "Make sure the Testeranto server is running on port 3000."`);
-      terminal.sendText(`echo "Run 'testeranto dev' in your project to start the server."`);
-    }
-    terminal.show();
-    return terminal;
+    return openProcessTerminal(
+      nodeId,
+      label,
+      containerId,
+      serviceName,
+      this.terminals,
+      this.getWorkspaceRoot.bind(this)
+    );
   }
   // Open a terminal to an aider container
   async openAiderTerminal(containerName, label, agentName) {
-    if (!containerName) {
-      const terminal2 = vscode2.window.createTerminal(`Aider: ${label}`);
-      terminal2.sendText(`echo "\u274C Error: No container name provided for aider terminal"`);
-      terminal2.show();
-      return terminal2;
-    }
-    const key = `aider:${containerName}`;
-    let terminal = this.terminals.get(key);
-    if (terminal && terminal.exitStatus === void 0) {
-      terminal.show();
-      return terminal;
-    }
-    const terminalName = agentName ? `Aider: ${agentName}` : `Aider: ${label}`;
-    terminal = vscode2.window.createTerminal(terminalName);
-    this.terminals.set(key, terminal);
-    terminal.sendText(`echo "Opening aider terminal to container: ${containerName}"`);
-    terminal.sendText(`echo "Label: ${label}"`);
-    if (agentName) {
-      terminal.sendText(`echo "Agent: ${agentName}"`);
-    }
-    terminal.sendText(`echo ""`);
-    terminal.sendText(`echo "Connecting to server..."`);
-    try {
-      const nodeId = `aider-container:${containerName}`;
-      const response2 = await fetch("http://localhost:3000/~/open-process-terminal", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          nodeId,
-          label: label || `Aider: ${containerName}`,
-          containerId: containerName,
-          serviceName: agentName || `aider-${containerName}`
-        })
-      });
-      if (!response2.ok) {
-        const errorText = await response2.text();
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { error: `Server error: ${response2.status} ${response2.statusText}` };
-        }
-        terminal.sendText(`echo "\u274C Server error: ${errorData.error || "Failed to open aider container terminal"}"`);
-        terminal.sendText(`echo "Message: ${errorData.message || "No details provided"}"`);
-        terminal.sendText(`echo ""`);
-        terminal.sendText(`echo "You may need to manually attach to the aider container:"`);
-        terminal.sendText(`echo "  docker attach ${containerName}"`);
-        terminal.sendText(`echo "  (Use Ctrl+P, Ctrl+Q to detach)"`);
-      } else {
-        const data = await response2.json();
-        if (data.success && data.script) {
-          terminal.sendText(`echo "\u2705 Server provided terminal script"`);
-          terminal.sendText(`echo "Executing..."`);
-          terminal.sendText(`echo ""`);
-          const workspaceRoot = this.getWorkspaceRoot();
-          if (workspaceRoot) {
-            const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
-            fs.writeFileSync(scriptPath, data.script, { mode: 493 });
-            terminal.sendText(`/bin/sh "${scriptPath}" && rm -f "${scriptPath}"`);
-          } else {
-            const escapedScript = data.script.replace(/'/g, `'"'"'`);
-            terminal.sendText(`/bin/sh << 'EOF'
-${escapedScript}
-EOF`);
-          }
-        } else {
-          terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
-          terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
-        }
-      }
-    } catch (error) {
-      terminal.sendText(`echo "\u274C Failed to connect to server"`);
-      terminal.sendText(`echo "Error: ${error.message}"`);
-      terminal.sendText(`echo ""`);
-      terminal.sendText(`echo "Make sure the Testeranto server is running."`);
-    }
-    terminal.show();
-    return terminal;
+    return openAiderTerminal(
+      containerName,
+      label,
+      agentName,
+      this.terminals,
+      this.getWorkspaceRoot.bind(this)
+    );
   }
   getWorkspaceRoot() {
-    const workspaceFolders = vscode2.workspace.workspaceFolders;
-    if (workspaceFolders && workspaceFolders.length > 0) {
-      return workspaceFolders[0].uri.fsPath;
-    }
-    return null;
+    return getWorkspaceRoot();
   }
   createAllTerminals() {
     this.createAiderTerminals().catch((error) => {
@@ -422,8 +506,93 @@ EOF`);
   }
 };
 
+// src/vscode/commands/registerOpenAiderTerminalCommand.ts
+function registerOpenAiderTerminalCommand(context, outputChannel, terminalManager) {
+  outputChannel.appendLine("[Testeranto] Skipping duplicate registration of testeranto.openAiderTerminal (already registered by CommandManager)");
+}
+
+// src/vscode/commands/registerOpenViewCommand.ts
+import * as vscode11 from "vscode";
+function registerOpenViewCommand(context, outputChannel) {
+  const openViewCommand = vscode11.commands.registerCommand("testeranto.openView", async (viewKey, viewUrl) => {
+    try {
+      outputChannel.appendLine(`[Testeranto] Opening view: ${viewKey || "unknown"}`);
+      if (!viewKey) {
+        vscode11.window.showWarningMessage("No view key provided");
+        return;
+      }
+      const actualViewUrl = viewUrl || `http://localhost:3000/testeranto/views/${viewKey}.html`;
+      const panel = vscode11.window.createWebviewPanel(
+        `testeranto.view.${viewKey}`,
+        `View: ${viewKey}`,
+        vscode11.ViewColumn.One,
+        {
+          enableScripts: true,
+          retainContextWhenHidden: true
+        }
+      );
+      panel.webview.html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body, html {
+                            margin: 0;
+                            padding: 0;
+                            height: 100%;
+                            overflow: hidden;
+                        }
+                        iframe {
+                            width: 100%;
+                            height: 100vh;
+                            border: none;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <iframe src="${actualViewUrl}"></iframe>
+                </body>
+                </html>
+            `;
+      outputChannel.appendLine(`[Testeranto] Opened view: ${viewKey} at ${actualViewUrl}`);
+    } catch (error) {
+      outputChannel.appendLine(`[Testeranto] Error opening view: ${error.message}`);
+      vscode11.window.showErrorMessage(`Failed to open view: ${error.message}`);
+    }
+  });
+  context.subscriptions.push(openViewCommand);
+}
+
+// src/vscode/registerCheckServerCommand.ts
+import * as vscode12 from "vscode";
+function registerCheckServerCommand(context) {
+  const checkServerCommand = vscode12.commands.registerCommand("testeranto.checkServer", async () => {
+    try {
+      const response = await fetch("http://localhost:3000/~/configs", {
+        method: "GET",
+        signal: AbortSignal.timeout?.(3e3) || (() => {
+          const controller = new AbortController();
+          setTimeout(() => controller.abort(), 3e3);
+          return controller.signal;
+        })()
+      });
+      if (response.ok) {
+        vscode12.window.showInformationMessage("\u2705 Testeranto server is running");
+      } else {
+        vscode12.window.showWarningMessage("\u26A0\uFE0F Server responded with error: " + response.status);
+      }
+    } catch (error) {
+      vscode12.window.showErrorMessage("\u274C Cannot connect to Testeranto server. Make sure it is running on port 3000.");
+    }
+  });
+  context.subscriptions.push(checkServerCommand);
+}
+
+// src/vscode/extension/createManagers.ts
+import "vscode";
+
 // src/vscode/statusBarManager.ts
-import * as vscode3 from "vscode";
+import * as vscode13 from "vscode";
 var StatusBarManager = class _StatusBarManager {
   mainStatusBarItem;
   serverStatusBarItem;
@@ -431,9 +600,9 @@ var StatusBarManager = class _StatusBarManager {
   // New status bar item for lock status
   static instance = null;
   constructor() {
-    this.mainStatusBarItem = vscode3.window.createStatusBarItem(vscode3.StatusBarAlignment.Right, 100);
-    this.serverStatusBarItem = vscode3.window.createStatusBarItem(vscode3.StatusBarAlignment.Right, 99);
-    this.lockStatusBarItem = vscode3.window.createStatusBarItem(vscode3.StatusBarAlignment.Right, 98);
+    this.mainStatusBarItem = vscode13.window.createStatusBarItem(vscode13.StatusBarAlignment.Right, 100);
+    this.serverStatusBarItem = vscode13.window.createStatusBarItem(vscode13.StatusBarAlignment.Right, 99);
+    this.lockStatusBarItem = vscode13.window.createStatusBarItem(vscode13.StatusBarAlignment.Right, 98);
   }
   static getInstance() {
     if (!_StatusBarManager.instance) {
@@ -448,13 +617,13 @@ var StatusBarManager = class _StatusBarManager {
   }
   initialize() {
     if (!this.mainStatusBarItem) {
-      this.mainStatusBarItem = vscode3.window.createStatusBarItem(vscode3.StatusBarAlignment.Right, 100);
+      this.mainStatusBarItem = vscode13.window.createStatusBarItem(vscode13.StatusBarAlignment.Right, 100);
     }
     if (!this.serverStatusBarItem) {
-      this.serverStatusBarItem = vscode3.window.createStatusBarItem(vscode3.StatusBarAlignment.Right, 99);
+      this.serverStatusBarItem = vscode13.window.createStatusBarItem(vscode13.StatusBarAlignment.Right, 99);
     }
     if (!this.lockStatusBarItem) {
-      this.lockStatusBarItem = vscode3.window.createStatusBarItem(vscode3.StatusBarAlignment.Right, 98);
+      this.lockStatusBarItem = vscode13.window.createStatusBarItem(vscode13.StatusBarAlignment.Right, 98);
     }
     this.mainStatusBarItem.text = "$(beaker) Testeranto";
     this.mainStatusBarItem.tooltip = "Testeranto: Dockerized, AI powered BDD test framework";
@@ -463,7 +632,7 @@ var StatusBarManager = class _StatusBarManager {
     this.serverStatusBarItem.text = "$(circle-slash) Server";
     this.serverStatusBarItem.tooltip = "Testeranto server not running. Click to start.";
     this.serverStatusBarItem.command = "testeranto.startServer";
-    this.serverStatusBarItem.backgroundColor = new vscode3.ThemeColor("statusBarItem.warningBackground");
+    this.serverStatusBarItem.backgroundColor = new vscode13.ThemeColor("statusBarItem.warningBackground");
     this.serverStatusBarItem.show();
     this.lockStatusBarItem.text = "$(unlock) Files: Unlocked";
     this.lockStatusBarItem.tooltip = "All files are unlocked and available for testing";
@@ -488,7 +657,7 @@ var StatusBarManager = class _StatusBarManager {
     } else {
       this.serverStatusBarItem.text = "$(circle-slash) Server";
       this.serverStatusBarItem.tooltip = "Testeranto server not running. Click to start.";
-      this.serverStatusBarItem.backgroundColor = new vscode3.ThemeColor("statusBarItem.warningBackground");
+      this.serverStatusBarItem.backgroundColor = new vscode13.ThemeColor("statusBarItem.warningBackground");
     }
     this.updateLockStatusFromGraph(graphData);
   }
@@ -506,7 +675,7 @@ var StatusBarManager = class _StatusBarManager {
     if (lockedCount > 0) {
       this.lockStatusBarItem.text = `$(lock) Files: ${lockedCount} locked`;
       this.lockStatusBarItem.tooltip = `${lockedCount} file(s) are locked. Click for details.`;
-      this.lockStatusBarItem.backgroundColor = new vscode3.ThemeColor("statusBarItem.warningBackground");
+      this.lockStatusBarItem.backgroundColor = new vscode13.ThemeColor("statusBarItem.warningBackground");
       let tooltipDetails = `${lockedCount} file(s) are locked:
 
 `;
@@ -536,13 +705,13 @@ var StatusBarManager = class _StatusBarManager {
       this.initialize();
     }
     try {
-      const workspaceFolders = vscode3.workspace.workspaceFolders;
+      const workspaceFolders = vscode13.workspace.workspaceFolders;
       if (workspaceFolders && workspaceFolders.length > 0) {
         const workspaceRoot = workspaceFolders[0].uri;
       } else {
         this.serverStatusBarItem.text = "$(circle-slash) Server";
         this.serverStatusBarItem.tooltip = "No workspace folder open";
-        this.serverStatusBarItem.backgroundColor = new vscode3.ThemeColor("statusBarItem.warningBackground");
+        this.serverStatusBarItem.backgroundColor = new vscode13.ThemeColor("statusBarItem.warningBackground");
         this.lockStatusBarItem.text = "$(unlock) Files: Unknown";
         this.lockStatusBarItem.tooltip = "Lock status unknown (no workspace)";
         this.lockStatusBarItem.backgroundColor = void 0;
@@ -551,10 +720,10 @@ var StatusBarManager = class _StatusBarManager {
       console.error("[Testeranto] Error checking server status:", error);
       this.serverStatusBarItem.text = "$(error) Server Error";
       this.serverStatusBarItem.tooltip = "Error checking server status";
-      this.serverStatusBarItem.backgroundColor = new vscode3.ThemeColor("statusBarItem.errorBackground");
+      this.serverStatusBarItem.backgroundColor = new vscode13.ThemeColor("statusBarItem.errorBackground");
       this.lockStatusBarItem.text = "$(error) Lock Error";
       this.lockStatusBarItem.tooltip = "Error checking lock status";
-      this.lockStatusBarItem.backgroundColor = new vscode3.ThemeColor("statusBarItem.errorBackground");
+      this.lockStatusBarItem.backgroundColor = new vscode13.ThemeColor("statusBarItem.errorBackground");
     }
   }
   getMainStatusBarItem() {
@@ -588,7 +757,7 @@ var StatusBarManager = class _StatusBarManager {
     if (hasLockedFiles && lockedCount > 0) {
       this.lockStatusBarItem.text = `$(lock) Files: ${lockedCount} locked`;
       this.lockStatusBarItem.tooltip = `${lockedCount} file(s) are locked for system restart`;
-      this.lockStatusBarItem.backgroundColor = new vscode3.ThemeColor("statusBarItem.warningBackground");
+      this.lockStatusBarItem.backgroundColor = new vscode13.ThemeColor("statusBarItem.warningBackground");
     } else {
       this.lockStatusBarItem.text = "$(unlock) Files: Unlocked";
       this.lockStatusBarItem.tooltip = "All files are unlocked and available for testing";
@@ -610,14 +779,20 @@ function createManagers(outputChannel) {
   return { terminalManager, statusBarManager };
 }
 
+// src/vscode/extension/createOutputChannel.ts
+import * as vscode15 from "vscode";
+function createOutputChannel() {
+  return vscode15.window.createOutputChannel("Testeranto");
+}
+
 // src/vscode/extension/createProviders.ts
 import "vscode";
 
 // src/vscode/providers/TestTreeDataProvider.ts
-import * as vscode8 from "vscode";
+import * as vscode19 from "vscode";
 
 // src/vscode/TestTreeItem.ts
-import * as vscode5 from "vscode";
+import * as vscode16 from "vscode";
 
 // src/vscode/types.ts
 var TreeItemType = /* @__PURE__ */ ((TreeItemType2) => {
@@ -630,7 +805,7 @@ var TreeItemType = /* @__PURE__ */ ((TreeItemType2) => {
 })(TreeItemType || {});
 
 // src/vscode/TestTreeItem.ts
-var TestTreeItem = class extends vscode5.TreeItem {
+var TestTreeItem = class extends vscode16.TreeItem {
   constructor(label, type, collapsibleState, data, command, iconPath, contextValue) {
     super(label, collapsibleState);
     this.label = label;
@@ -651,13 +826,13 @@ var TestTreeItem = class extends vscode5.TreeItem {
   getDefaultIcon() {
     switch (this.type) {
       case 0 /* Runtime */:
-        return new vscode5.ThemeIcon("symbol-namespace");
+        return new vscode16.ThemeIcon("symbol-namespace");
       case 1 /* Test */:
-        return new vscode5.ThemeIcon("beaker");
+        return new vscode16.ThemeIcon("beaker");
       case 2 /* File */:
-        return new vscode5.ThemeIcon("file");
+        return new vscode16.ThemeIcon("file");
       case 3 /* Info */:
-        return new vscode5.ThemeIcon("info");
+        return new vscode16.ThemeIcon("info");
       default:
         return void 0;
     }
@@ -686,10 +861,10 @@ var TestTreeItem = class extends vscode5.TreeItem {
 };
 
 // src/vscode/providers/BaseTreeDataProvider.ts
-import * as vscode7 from "vscode";
+import * as vscode18 from "vscode";
 
 // src/vscode/providers/utils/apiUtils.ts
-import * as vscode6 from "vscode";
+import * as vscode17 from "vscode";
 
 // src/api.ts
 var wsApi = {
@@ -1146,32 +1321,32 @@ var API = {
 };
 function getApiUrl(endpoint, params) {
   const apiDef = API[endpoint];
-  let path3 = apiDef.path;
+  let path4 = apiDef.path;
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      path3 = path3.replace(`:${key}`, encodeURIComponent(value));
+      path4 = path4.replace(`:${key}`, encodeURIComponent(value));
     }
   }
   const baseUrl = "http://localhost:3000";
-  return `${baseUrl}${path3}`;
+  return `${baseUrl}${path4}`;
 }
 function getApiPath(endpoint, params) {
   const apiDef = API[endpoint];
-  let path3 = apiDef.path;
+  let path4 = apiDef.path;
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      path3 = path3.replace(`:${key}`, encodeURIComponent(value));
+      path4 = path4.replace(`:${key}`, encodeURIComponent(value));
     }
   }
-  return path3;
+  return path4;
 }
 
 // src/vscode/providers/utils/apiUtils.ts
 var ApiUtils = class {
   static getBaseUrl() {
     try {
-      const config = vscode6.workspace.getConfiguration("testeranto");
-      const serverPort = config.get("serverPort") || 3e3;
+      const config2 = vscode17.workspace.getConfiguration("testeranto");
+      const serverPort = config2.get("serverPort") || 3e3;
       const baseUrl = `http://localhost:${serverPort}`;
       console.log(`[ApiUtils] Using server URL: ${baseUrl}`);
       return baseUrl;
@@ -1185,15 +1360,15 @@ var ApiUtils = class {
     if (!endpoint) {
       throw new Error(`Endpoint ${endpointKey} not found in vscodeHttpAPI`);
     }
-    let path3 = endpoint.path;
+    let path4 = endpoint.path;
     if (params && endpoint.params) {
       for (const [key, value] of Object.entries(params)) {
         if (endpoint.params[key]) {
-          path3 = path3.replace(`:${key}`, value);
+          path4 = path4.replace(`:${key}`, value);
         }
       }
     }
-    const url = `${this.getBaseUrl()}${path3}`;
+    const url = `${this.getBaseUrl()}${path4}`;
     if (query && Object.keys(query).length > 0) {
       const queryParams = new URLSearchParams();
       for (const [key, value] of Object.entries(query)) {
@@ -1212,12 +1387,12 @@ var ApiUtils = class {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
     try {
-      const response2 = await fetch(url, {
+      const response = await fetch(url, {
         ...options,
         signal: controller.signal
       });
       clearTimeout(timeoutId);
-      return response2;
+      return response;
     } catch (error) {
       clearTimeout(timeoutId);
       if (error.name === "AbortError") {
@@ -1288,7 +1463,7 @@ var ApiUtils = class {
 
 // src/vscode/providers/BaseTreeDataProvider.ts
 var BaseTreeDataProvider = class {
-  _onDidChangeTreeData = new vscode7.EventEmitter();
+  _onDidChangeTreeData = new vscode18.EventEmitter();
   onDidChangeTreeData = this._onDidChangeTreeData.event;
   ws = null;
   isConnected = false;
@@ -1299,7 +1474,7 @@ var BaseTreeDataProvider = class {
   getTreeItem(element) {
     if (element === null || element === void 0) {
       console.error("[BaseTreeDataProvider] getTreeItem called with null/undefined element");
-      const item = new vscode7.TreeItem("Invalid item", vscode7.TreeItemCollapsibleState.None);
+      const item = new vscode18.TreeItem("Invalid item", vscode18.TreeItemCollapsibleState.None);
       item.tooltip = "This item could not be loaded";
       return item;
     }
@@ -1368,6 +1543,20 @@ var BaseTreeDataProvider = class {
     this.ws.send(JSON.stringify(subscribeMessage));
     this.subscribedSlices.add("/graph");
     console.log("[BaseTreeDataProvider] Subscribed to graph updates");
+    const agentsSubscribeMessage = {
+      type: "subscribeToSlice",
+      slicePath: "/agents"
+    };
+    this.ws.send(JSON.stringify(agentsSubscribeMessage));
+    this.subscribedSlices.add("/agents");
+    console.log("[BaseTreeDataProvider] Subscribed to agents slice");
+    const aiderSubscribeMessage = {
+      type: "subscribeToSlice",
+      slicePath: "/aider"
+    };
+    this.ws.send(JSON.stringify(aiderSubscribeMessage));
+    this.subscribedSlices.add("/aider");
+    console.log("[BaseTreeDataProvider] Subscribed to aider slice");
   }
   subscribeToSlice(slicePath) {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
@@ -1433,11 +1622,11 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
   async loadGraphData() {
     try {
       console.log("[TestTreeDataProvider] Loading graph data from runtime slice API endpoint");
-      const response2 = await fetch(ApiUtils.getRuntimeSliceUrl());
-      if (!response2.ok) {
-        throw new Error(`HTTP error! status: ${response2.status}`);
+      const response = await fetch(ApiUtils.getRuntimeSliceUrl());
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response2.json();
+      const data = await response.json();
       this.graphData = data;
       console.log("[TestTreeDataProvider] Loaded graph data from API:", this.graphData?.nodes?.length, "nodes");
     } catch (error) {
@@ -1479,7 +1668,7 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
     items.push(new TestTreeItem(
       "Refresh",
       3 /* Info */,
-      vscode8.TreeItemCollapsibleState.None,
+      vscode19.TreeItemCollapsibleState.None,
       {
         description: "Reload graph data",
         refresh: true
@@ -1489,13 +1678,13 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
         title: "Refresh",
         arguments: []
       },
-      new vscode8.ThemeIcon("refresh")
+      new vscode19.ThemeIcon("refresh")
     ));
     if (!this.graphData) {
       items.push(new TestTreeItem(
         "Cannot connect to server",
         3 /* Info */,
-        vscode8.TreeItemCollapsibleState.None,
+        vscode19.TreeItemCollapsibleState.None,
         {
           description: "Testeranto server is not running on port 3000.",
           startServer: true
@@ -1505,7 +1694,7 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
           title: "Start Server",
           arguments: []
         },
-        new vscode8.ThemeIcon("warning")
+        new vscode19.ThemeIcon("warning")
       ));
       return items;
     }
@@ -1521,14 +1710,14 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
       items.push(new TestTreeItem(
         runtimeKey,
         0 /* Runtime */,
-        vscode8.TreeItemCollapsibleState.Collapsed,
+        vscode19.TreeItemCollapsibleState.Collapsed,
         {
           runtimeKey,
           description: `${data.count} test(s)`,
           count: data.count
         },
         void 0,
-        new vscode8.ThemeIcon("symbol-namespace")
+        new vscode19.ThemeIcon("symbol-namespace")
       ));
     }
     return items;
@@ -1543,16 +1732,16 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
       const failed = node.metadata?.failed;
       let icon;
       if (failed === true || status === "blocked") {
-        icon = new vscode8.ThemeIcon("error", new vscode8.ThemeColor("testing.iconFailed"));
+        icon = new vscode19.ThemeIcon("error", new vscode19.ThemeColor("testing.iconFailed"));
       } else if (failed === false || status === "done") {
-        icon = new vscode8.ThemeIcon("check", new vscode8.ThemeColor("testing.iconPassed"));
+        icon = new vscode19.ThemeIcon("check", new vscode19.ThemeColor("testing.iconPassed"));
       } else {
-        icon = new vscode8.ThemeIcon("circle-outline", new vscode8.ThemeColor("testing.iconUnset"));
+        icon = new vscode19.ThemeIcon("circle-outline", new vscode19.ThemeColor("testing.iconUnset"));
       }
       return new TestTreeItem(
         node.label || node.id,
         1 /* Test */,
-        vscode8.TreeItemCollapsibleState.None,
+        vscode19.TreeItemCollapsibleState.None,
         {
           runtimeKey,
           testId: node.id,
@@ -1585,7 +1774,7 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
 };
 
 // src/vscode/providers/DockerProcessTreeDataProvider.ts
-import * as vscode9 from "vscode";
+import * as vscode20 from "vscode";
 var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
   processes = [];
   processMap = /* @__PURE__ */ new Map();
@@ -1601,11 +1790,11 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
   async loadProcesses() {
     try {
       console.log("[DockerProcessTreeDataProvider] Loading process data from /~/process API endpoint");
-      const response2 = await fetch("http://localhost:3000/~/process");
-      if (!response2.ok) {
-        throw new Error(`HTTP error! status: ${response2.status}`);
+      const response = await fetch("http://localhost:3000/~/process");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response2.json();
+      const data = await response.json();
       if (data && Array.isArray(data.processes)) {
         this.processes = data.processes;
         this.processMap.clear();
@@ -1648,12 +1837,12 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
       items.push(new TestTreeItem(
         "No docker processes found",
         3 /* Info */,
-        vscode9.TreeItemCollapsibleState.None,
+        vscode20.TreeItemCollapsibleState.None,
         {
           description: "No docker processes available"
         },
         void 0,
-        new vscode9.ThemeIcon("info")
+        new vscode20.ThemeIcon("info")
       ));
       return items;
     }
@@ -1704,31 +1893,31 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
     let icon;
     if (isAider) {
       if (status === "running") {
-        icon = new vscode9.ThemeIcon("comment-discussion", new vscode9.ThemeColor("testing.iconPassed"));
+        icon = new vscode20.ThemeIcon("comment-discussion", new vscode20.ThemeColor("testing.iconPassed"));
       } else {
-        icon = new vscode9.ThemeIcon("comment", new vscode9.ThemeColor("testing.iconUnset"));
+        icon = new vscode20.ThemeIcon("comment", new vscode20.ThemeColor("testing.iconUnset"));
       }
     } else {
       if (status === "running") {
-        icon = new vscode9.ThemeIcon("play-circle", new vscode9.ThemeColor("testing.iconPassed"));
+        icon = new vscode20.ThemeIcon("play-circle", new vscode20.ThemeColor("testing.iconPassed"));
       } else if (status === "exited") {
         if (exitCode === 0) {
-          icon = new vscode9.ThemeIcon("check", new vscode9.ThemeColor("testing.iconPassed"));
+          icon = new vscode20.ThemeIcon("check", new vscode20.ThemeColor("testing.iconPassed"));
         } else {
-          icon = new vscode9.ThemeIcon("error", new vscode9.ThemeColor("testing.iconFailed"));
+          icon = new vscode20.ThemeIcon("error", new vscode20.ThemeColor("testing.iconFailed"));
         }
       } else if (status === "stopped") {
-        icon = new vscode9.ThemeIcon("circle-slash", new vscode9.ThemeColor("testing.iconUnset"));
+        icon = new vscode20.ThemeIcon("circle-slash", new vscode20.ThemeColor("testing.iconUnset"));
       } else if (status === "failed") {
-        icon = new vscode9.ThemeIcon("error", new vscode9.ThemeColor("testing.iconFailed"));
+        icon = new vscode20.ThemeIcon("error", new vscode20.ThemeColor("testing.iconFailed"));
       } else {
-        icon = new vscode9.ThemeIcon("circle-outline", new vscode9.ThemeColor("testing.iconUnset"));
+        icon = new vscode20.ThemeIcon("circle-outline", new vscode20.ThemeColor("testing.iconUnset"));
       }
     }
     const item = new TestTreeItem(
       label,
       3 /* Info */,
-      vscode9.TreeItemCollapsibleState.None,
+      vscode20.TreeItemCollapsibleState.None,
       {
         description,
         status,
@@ -1833,7 +2022,7 @@ var DockerProcessTreeDataProvider = class extends BaseTreeDataProvider {
 };
 
 // src/vscode/providers/AiderProcessTreeDataProvider.ts
-import * as vscode10 from "vscode";
+import * as vscode21 from "vscode";
 var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
   graphData = null;
   agents = [];
@@ -1864,11 +2053,11 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
   async fetchAiderProcessesDirectly() {
     try {
       const aiderUrl = getApiUrl("getAider");
-      const response2 = await fetch(aiderUrl, {
+      const response = await fetch(aiderUrl, {
         method: "GET"
       });
-      if (response2.ok) {
-        const data = await response2.json();
+      if (response.ok) {
+        const data = await response.json();
         console.log("[AiderProcessTreeDataProvider] Raw aider data:", JSON.stringify(data, null, 2));
         this.graphData = this.graphData || { nodes: [], edges: [] };
         const existingIds = new Set(this.graphData.nodes.map((n) => n.id));
@@ -1897,7 +2086,7 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
         }
         return;
       } else {
-        console.warn(`[AiderProcessTreeDataProvider] Failed to fetch from ${aiderUrl}:`, response2.status);
+        console.warn(`[AiderProcessTreeDataProvider] Failed to fetch from ${aiderUrl}:`, response.status);
       }
     } catch (error) {
       console.error(`[AiderProcessTreeDataProvider] Error fetching from getAider API:`, error);
@@ -1938,7 +2127,7 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
       new TestTreeItem(
         "Refresh",
         TreeItemType.Action,
-        vscode10.TreeItemCollapsibleState.None,
+        vscode21.TreeItemCollapsibleState.None,
         {
           action: "refresh",
           info: "Refresh the view to try loading data again."
@@ -1948,7 +2137,7 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
           title: "Refresh",
           arguments: []
         },
-        new vscode10.ThemeIcon("refresh")
+        new vscode21.ThemeIcon("refresh")
       )
     );
     if (!this.graphData) {
@@ -1956,7 +2145,7 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
         new TestTreeItem(
           "Cannot connect to server",
           3 /* Info */,
-          vscode10.TreeItemCollapsibleState.None,
+          vscode21.TreeItemCollapsibleState.None,
           {
             info: "Testeranto server is not running on port 3000.",
             startServer: true
@@ -1966,7 +2155,7 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
             title: "Start Server",
             arguments: []
           },
-          new vscode10.ThemeIcon("warning")
+          new vscode21.ThemeIcon("warning")
         )
       );
       return items;
@@ -1976,12 +2165,12 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
         new TestTreeItem(
           "No aider data available",
           3 /* Info */,
-          vscode10.TreeItemCollapsibleState.None,
+          vscode21.TreeItemCollapsibleState.None,
           {
             info: 'The server returned empty graph data. Try running "Testeranto: Start Server" or check if the server is running on port 3000.'
           },
           void 0,
-          new vscode10.ThemeIcon("info")
+          new vscode21.ThemeIcon("info")
         )
       );
       return items;
@@ -1989,123 +2178,73 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
     const aiderProcessNodes = this.graphData.nodes.filter(
       (node) => node.type === "aider_process"
     );
-    const agentNodes = this.graphData.nodes.filter(
-      (node) => node.type === "agent"
-    );
     if (aiderProcessNodes.length === 0) {
       items.push(
         new TestTreeItem(
-          "No aider processes found",
+          "No running agents",
           3 /* Info */,
-          vscode10.TreeItemCollapsibleState.None,
+          vscode21.TreeItemCollapsibleState.None,
           {
-            info: agentNodes.length > 0 ? "Agents are running but no aider processes are active." : "No agents or aider processes found."
+            info: "No agents are currently running. Launch one from the Agents view."
           },
           void 0,
-          new vscode10.ThemeIcon("info")
+          new vscode21.ThemeIcon("info")
         )
       );
       return items;
     }
-    const aiderByAgent = /* @__PURE__ */ new Map();
-    for (const aiderNode of aiderProcessNodes) {
-      const edge = this.graphData.edges.find(
-        (e) => e.target === aiderNode.id && e.attributes.type === "hasAiderProcess"
-      );
-      if (edge) {
-        const agentId = edge.source;
-        if (!aiderByAgent.has(agentId)) {
-          aiderByAgent.set(agentId, []);
-        }
-        aiderByAgent.get(agentId).push(aiderNode);
+    for (const node of aiderProcessNodes) {
+      const metadata = node.metadata || {};
+      const containerName = metadata.containerName || "";
+      const agentName = metadata.agentName || node.label || node.id;
+      const label = node.label || agentName;
+      const status = node.status || "running";
+      let icon;
+      if (status === "running") {
+        icon = new vscode21.ThemeIcon("play-circle", new vscode21.ThemeColor("testing.iconPassed"));
+      } else if (status === "stopped") {
+        icon = new vscode21.ThemeIcon("circle-slash", new vscode21.ThemeColor("testing.iconUnset"));
       } else {
-        if (!aiderByAgent.has("ungrouped")) {
-          aiderByAgent.set("ungrouped", []);
-        }
-        aiderByAgent.get("ungrouped").push(aiderNode);
+        icon = new vscode21.ThemeIcon("circle-outline", new vscode21.ThemeColor("testing.iconUnset"));
       }
-    }
-    for (const [agentId, aiderNodes] of aiderByAgent.entries()) {
-      let groupLabel = "Ungrouped Aider Processes";
-      let groupIcon = new vscode10.ThemeIcon("server");
-      if (agentId !== "ungrouped") {
-        const agentNode = agentNodes.find((n) => n.id === agentId);
-        if (agentNode) {
-          groupLabel = `Agent: ${agentNode.metadata?.agentName || agentNode.label || agentId}`;
-          groupIcon = new vscode10.ThemeIcon("person");
-        } else {
-          groupLabel = `Agent: ${agentId}`;
-          groupIcon = new vscode10.ThemeIcon("person");
-        }
-      }
-      const groupItem = new TestTreeItem(
-        groupLabel,
+      const item = new TestTreeItem(
+        label,
         3 /* Info */,
-        vscode10.TreeItemCollapsibleState.Collapsed,
+        vscode21.TreeItemCollapsibleState.None,
         {
-          description: `${aiderNodes.length} aider process(es)`,
-          groupId: agentId,
-          isGroup: true
+          description: `Container: ${containerName}`,
+          status,
+          containerName,
+          agentName,
+          metadata,
+          isAiderProcess: true,
+          nodeId: node.id
         },
-        void 0,
-        groupIcon
+        {
+          command: "testeranto.openAiderTerminal",
+          title: "Open Aider Terminal",
+          arguments: [containerName, label, agentName]
+        },
+        icon
       );
-      groupItem.children = aiderNodes.map((node) => {
-        const metadata = node.metadata || {};
-        const containerName = metadata.containerName || "";
-        const agentName = metadata.agentName || "";
-        const label = node.label || "Aider Process";
-        const status = node.status || "unknown";
-        let icon;
-        if (status === "running") {
-          icon = new vscode10.ThemeIcon("play-circle", new vscode10.ThemeColor("testing.iconPassed"));
-        } else if (status === "stopped") {
-          icon = new vscode10.ThemeIcon("circle-slash", new vscode10.ThemeColor("testing.iconUnset"));
-        } else {
-          icon = new vscode10.ThemeIcon("circle-outline", new vscode10.ThemeColor("testing.iconUnset"));
-        }
-        const item = new TestTreeItem(
-          label,
-          3 /* Info */,
-          vscode10.TreeItemCollapsibleState.None,
-          {
-            description: `Status: ${status}`,
-            status,
-            containerName,
-            agentName,
-            metadata,
-            isAiderProcess: true,
-            nodeId: node.id
-          },
-          {
-            command: "testeranto.openAiderTerminal",
-            title: "Open Aider Terminal",
-            arguments: [containerName, label, agentName]
-          },
-          icon
-        );
-        let tooltip = `Type: ${node.type}
+      let tooltip = `Agent: ${agentName}
 `;
-        tooltip += `ID: ${node.id}
+      tooltip += `ID: ${node.id}
 `;
-        tooltip += `Container: ${containerName}
+      tooltip += `Container: ${containerName}
 `;
-        tooltip += `Status: ${status}
+      tooltip += `Status: ${status}
 `;
-        tooltip += `Agent: ${agentName || "None"}
+      if (metadata.containerId) {
+        tooltip += `Container ID: ${metadata.containerId}
 `;
-        if (metadata.containerId) {
-          tooltip += `Container ID: ${metadata.containerId}
+      }
+      if (metadata.timestamp) {
+        tooltip += `Created: ${metadata.timestamp}
 `;
-        }
-        if (metadata.timestamp) {
-          tooltip += `Created: ${metadata.timestamp}
-`;
-        }
-        item.tooltip = tooltip;
-        return item;
-      });
-      items.push(groupItem);
+      }
+      item.tooltip = tooltip;
+      items.push(item);
     }
     return items;
   }
@@ -2120,9 +2259,26 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
         console.log("[AiderProcessTreeDataProvider] Relevant update, refreshing");
         this.refresh();
       }
+      if (message.url === "/~/agents/spawn" && message.agentName && message.containerName) {
+        console.log(`[AiderProcessTreeDataProvider] Agent spawned: ${message.agentName}, opening terminal`);
+        this.openAgentTerminal(message.agentName, message.containerName);
+      }
     } else if (message.type === "graphUpdated") {
       console.log("[AiderProcessTreeDataProvider] Graph updated, refreshing");
       this.refresh();
+    }
+  }
+  async openAgentTerminal(agentName, containerName) {
+    try {
+      await vscode21.commands.executeCommand(
+        "testeranto.openAiderTerminal",
+        containerName,
+        `Agent: ${agentName}`,
+        agentName
+      );
+      console.log(`[AiderProcessTreeDataProvider] Executed openAiderTerminal command for ${agentName}`);
+    } catch (error) {
+      console.error("[AiderProcessTreeDataProvider] Failed to open agent terminal:", error);
     }
   }
   subscribeToGraphUpdates() {
@@ -2134,7 +2290,7 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
 };
 
 // src/vscode/providers/FileTreeDataProvider.ts
-import * as vscode11 from "vscode";
+import * as vscode22 from "vscode";
 var FileTreeDataProvider = class extends BaseTreeDataProvider {
   treeData = [];
   constructor() {
@@ -2150,11 +2306,11 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
     try {
       console.log("[FileTreeDataProvider] Loading file data from files API endpoint");
       const filesUrl = getApiUrl("getFiles");
-      const response2 = await fetch(filesUrl);
-      if (!response2.ok) {
-        throw new Error(`HTTP error! status: ${response2.status}`);
+      const response = await fetch(filesUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response2.json();
+      const data = await response.json();
       if (data && Array.isArray(data.tree)) {
         this.treeData = data.tree;
         console.log("[FileTreeDataProvider] Loaded", data.tree.length, "root nodes from API");
@@ -2193,12 +2349,12 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
       items.push(new TestTreeItem(
         "No files found",
         3 /* Info */,
-        vscode11.TreeItemCollapsibleState.None,
+        vscode22.TreeItemCollapsibleState.None,
         {
           description: "No files available"
         },
         void 0,
-        new vscode11.ThemeIcon("info")
+        new vscode22.ThemeIcon("info")
       ));
       return items;
     }
@@ -2229,28 +2385,28 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
     }
     let icon;
     if (isFolder) {
-      icon = new vscode11.ThemeIcon("folder");
+      icon = new vscode22.ThemeIcon("folder");
     } else {
       const fileType = metadata.fileType || metadata.testPath ? "test" : "file";
       switch (fileType) {
         case "input_file":
         case "source":
-          icon = new vscode11.ThemeIcon("file-code");
+          icon = new vscode22.ThemeIcon("file-code");
           break;
         case "log":
-          icon = new vscode11.ThemeIcon("output");
+          icon = new vscode22.ThemeIcon("output");
           break;
         case "documentation":
-          icon = new vscode11.ThemeIcon("book");
+          icon = new vscode22.ThemeIcon("book");
           break;
         case "config":
-          icon = new vscode11.ThemeIcon("settings-gear");
+          icon = new vscode22.ThemeIcon("settings-gear");
           break;
         case "test":
-          icon = new vscode11.ThemeIcon("beaker");
+          icon = new vscode22.ThemeIcon("beaker");
           break;
         default:
-          icon = new vscode11.ThemeIcon("file");
+          icon = new vscode22.ThemeIcon("file");
       }
     }
     let children;
@@ -2267,7 +2423,7 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
     const item = new TestTreeItem(
       label,
       2 /* File */,
-      isFolder && children && children.length > 0 ? vscode11.TreeItemCollapsibleState.Collapsed : vscode11.TreeItemCollapsibleState.None,
+      isFolder && children && children.length > 0 ? vscode22.TreeItemCollapsibleState.Collapsed : vscode22.TreeItemCollapsibleState.None,
       {
         description,
         isFolder,
@@ -2344,7 +2500,7 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
 };
 
 // src/vscode/providers/ViewTreeDataProvider.ts
-import * as vscode12 from "vscode";
+import * as vscode23 from "vscode";
 var ViewTreeDataProvider = class extends BaseTreeDataProvider {
   views = [];
   viewMap = /* @__PURE__ */ new Map();
@@ -2360,11 +2516,11 @@ var ViewTreeDataProvider = class extends BaseTreeDataProvider {
   async loadViews() {
     try {
       console.log("[ViewTreeDataProvider] Loading view data from /~/views API endpoint");
-      const response2 = await fetch("http://localhost:3000/~/views");
-      if (!response2.ok) {
-        throw new Error(`HTTP error! status: ${response2.status}`);
+      const response = await fetch("http://localhost:3000/~/views");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response2.json();
+      const data = await response.json();
       if (data && Array.isArray(data.views)) {
         this.views = data.views;
         this.viewMap.clear();
@@ -2407,12 +2563,12 @@ var ViewTreeDataProvider = class extends BaseTreeDataProvider {
       items.push(new TestTreeItem(
         "No views found",
         3 /* Info */,
-        vscode12.TreeItemCollapsibleState.None,
+        vscode23.TreeItemCollapsibleState.None,
         {
           description: "No views available"
         },
         void 0,
-        new vscode12.ThemeIcon("info")
+        new vscode23.ThemeIcon("info")
       ));
       return items;
     }
@@ -2438,18 +2594,18 @@ var ViewTreeDataProvider = class extends BaseTreeDataProvider {
     description += ` \u2022 ${viewType}`;
     let icon;
     if (viewType === "kanban") {
-      icon = new vscode12.ThemeIcon("columns");
+      icon = new vscode23.ThemeIcon("columns");
     } else if (viewType === "gantt") {
-      icon = new vscode12.ThemeIcon("graph");
+      icon = new vscode23.ThemeIcon("graph");
     } else if (viewType === "eisenhower") {
-      icon = new vscode12.ThemeIcon("dashboard");
+      icon = new vscode23.ThemeIcon("dashboard");
     } else {
-      icon = new vscode12.ThemeIcon("eye");
+      icon = new vscode23.ThemeIcon("eye");
     }
     const item = new TestTreeItem(
       label,
       3 /* Info */,
-      vscode12.TreeItemCollapsibleState.None,
+      vscode23.TreeItemCollapsibleState.None,
       {
         description,
         viewType,
@@ -2518,17 +2674,17 @@ var ViewTreeDataProvider = class extends BaseTreeDataProvider {
 };
 
 // src/vscode/providers/AgentTreeDataProvider.ts
-import * as vscode13 from "vscode";
+import * as vscode24 from "vscode";
 var AgentTreeDataProvider = class extends BaseTreeDataProvider {
-  agents = [];
+  runningAgents = [];
   constructor() {
     super();
   }
   async getChildren(element) {
     try {
       if (!element) {
-        if (this.agents.length === 0) {
-          await this.loadAgents();
+        if (this.runningAgents.length === 0) {
+          await this.loadRunningAgents();
         }
         return this.getAgentItems();
       }
@@ -2544,17 +2700,17 @@ var AgentTreeDataProvider = class extends BaseTreeDataProvider {
         new TestTreeItem(
           "Error loading agents",
           3 /* Info */,
-          vscode13.TreeItemCollapsibleState.None,
+          vscode24.TreeItemCollapsibleState.None,
           {
             info: error instanceof Error ? error.message : "Unknown error"
           },
           void 0,
-          new vscode13.ThemeIcon("error")
+          new vscode24.ThemeIcon("error")
         ),
         new TestTreeItem(
           "Refresh",
           TreeItemType.Action,
-          vscode13.TreeItemCollapsibleState.None,
+          vscode24.TreeItemCollapsibleState.None,
           {
             action: "refresh",
             info: "Click to retry"
@@ -2564,7 +2720,7 @@ var AgentTreeDataProvider = class extends BaseTreeDataProvider {
             title: "Refresh",
             arguments: []
           },
-          new vscode13.ThemeIcon("refresh")
+          new vscode24.ThemeIcon("refresh")
         )
       ];
     }
@@ -2575,7 +2731,7 @@ var AgentTreeDataProvider = class extends BaseTreeDataProvider {
       new TestTreeItem(
         "Refresh",
         TreeItemType.Action,
-        vscode13.TreeItemCollapsibleState.None,
+        vscode24.TreeItemCollapsibleState.None,
         {
           action: "refresh",
           info: "Refresh the view to try loading data again."
@@ -2585,45 +2741,65 @@ var AgentTreeDataProvider = class extends BaseTreeDataProvider {
           title: "Refresh",
           arguments: []
         },
-        new vscode13.ThemeIcon("refresh")
+        new vscode24.ThemeIcon("refresh")
       )
     );
-    if (this.agents.length === 0) {
+    if (this.runningAgents.length === 0) {
       items.push(
         new TestTreeItem(
-          "No agents configured",
+          "No configured agents",
           3 /* Info */,
-          vscode13.TreeItemCollapsibleState.None,
+          vscode24.TreeItemCollapsibleState.None,
           {
-            info: "The server returned an empty agents array. Check your testeranto.ts configuration."
+            info: "No agents are configured. Add agent profiles to testeranto config."
           }
         )
       );
       return items;
     }
-    return this.agents.map((agent) => {
-      const agentName = agent.name || agent.key;
+    for (const agent of this.runningAgents) {
+      const agentName = agent.agentName || agent.name || agent.id;
       if (!agentName) {
-        throw new Error("Agent missing name and key properties");
+        continue;
       }
-      const agentConfig = agent.config || {};
-      return new TestTreeItem(
+      const status = agent.status || "configured";
+      const loadCount = agent.config?.load?.length || 0;
+      const item = new TestTreeItem(
         agentName,
         3 /* Info */,
-        vscode13.TreeItemCollapsibleState.Collapsed,
+        vscode24.TreeItemCollapsibleState.Collapsed,
         {
-          description: agentConfig.message ? agentConfig.message.substring(0, 50) + "..." : "Agent",
+          description: `${loadCount} load file(s)`,
           agentName,
+          status,
           action: "launchAgent"
         },
-        void 0,
-        new vscode13.ThemeIcon("person"),
+        {
+          command: "testeranto.launchAgent",
+          title: "Launch Agent",
+          arguments: [agentName]
+        },
+        new vscode24.ThemeIcon("person"),
         "agentItem"
       );
-    });
+      let tooltip = `Agent: ${agentName}
+`;
+      tooltip += `Status: ${status}
+`;
+      tooltip += `Load files: ${loadCount}
+`;
+      if (agent.config?.message) {
+        const msgPreview = agent.config.message.substring(0, 100) + (agent.config.message.length > 100 ? "..." : "");
+        tooltip += `Message: ${msgPreview}
+`;
+      }
+      item.tooltip = tooltip;
+      items.push(item);
+    }
+    return items;
   }
   async getAgentDetails(agentName) {
-    const agent = this.agents.find((a) => (a.name || a.key) === agentName);
+    const agent = this.runningAgents.find((a) => (a.agentName || a.name || a.id) === agentName);
     if (!agent) {
       return [];
     }
@@ -2631,103 +2807,111 @@ var AgentTreeDataProvider = class extends BaseTreeDataProvider {
     details.push(new TestTreeItem(
       `Name: ${agentName}`,
       3 /* Info */,
-      vscode13.TreeItemCollapsibleState.None,
+      vscode24.TreeItemCollapsibleState.None,
       { info: agentName }
     ));
-    const agentConfig = agent.config || {};
-    if (agentConfig.message) {
+    details.push(new TestTreeItem(
+      `Status: ${agent.status || "configured"}`,
+      3 /* Info */,
+      vscode24.TreeItemCollapsibleState.None,
+      { info: agent.status || "configured" }
+    ));
+    const loadFiles = agent.config?.load || [];
+    if (loadFiles.length > 0) {
       details.push(new TestTreeItem(
-        `Description: ${agentConfig.message.substring(0, 100)}...`,
+        `Load files (${loadFiles.length})`,
         3 /* Info */,
-        vscode13.TreeItemCollapsibleState.None,
-        { info: agentConfig.message }
+        vscode24.TreeItemCollapsibleState.None,
+        { info: loadFiles.join("\n") }
       ));
     }
-    if (agentConfig.load && Array.isArray(agentConfig.load)) {
+    const message = agent.config?.message || "";
+    if (message) {
+      const msgPreview = message.substring(0, 200) + (message.length > 200 ? "..." : "");
       details.push(new TestTreeItem(
-        `Loads: ${agentConfig.load.length} items`,
+        "Message",
         3 /* Info */,
-        vscode13.TreeItemCollapsibleState.None,
-        { info: agentConfig.load.join(", ") }
+        vscode24.TreeItemCollapsibleState.None,
+        { info: msgPreview }
       ));
     }
     details.push(new TestTreeItem(
       "Launch Agent",
       4 /* Config */,
-      vscode13.TreeItemCollapsibleState.None,
+      vscode24.TreeItemCollapsibleState.None,
       {
         agentName,
         action: "launchAgent",
-        description: "Click to launch this agent"
+        description: "Click to launch this agent as a Docker container"
       },
       {
         command: "testeranto.launchAgent",
         title: "Launch Agent",
         arguments: [agentName]
       },
-      new vscode13.ThemeIcon("rocket"),
+      new vscode24.ThemeIcon("play"),
       "agentLaunchItem"
-    ));
-    details.push(new TestTreeItem(
-      "View Agent Slice",
-      4 /* Config */,
-      vscode13.TreeItemCollapsibleState.None,
-      {
-        agentName,
-        action: "viewAgentSlice",
-        description: "Click to view this agent's slice data"
-      },
-      {
-        command: "testeranto.openView",
-        title: "View Agent Slice",
-        arguments: [`agent-${agentName}`, `Agent: ${agentName}`, `/~/agents/${agentName}`]
-      },
-      new vscode13.ThemeIcon("eye"),
-      "agentViewSliceItem"
     ));
     return details;
   }
-  async loadAgents() {
-    console.log("[AgentTreeDataProvider] Loading agents from API endpoint");
+  async loadRunningAgents() {
+    console.log("[AgentTreeDataProvider] Loading agents from /~/agents API endpoint");
     const agentsUrl = getApiUrl("getAllAgents");
-    const response2 = await fetch(agentsUrl, {
+    const response = await fetch(agentsUrl, {
       method: "GET",
       headers: {
         "Accept": "application/json"
       }
     });
-    if (!response2.ok) {
-      throw new Error(`Server returned ${response2.status}: ${response2.statusText}`);
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}: ${response.statusText}`);
     }
-    const data = await response2.json();
+    const data = await response.json();
     console.log("[AgentTreeDataProvider] Response:", data);
-    if (data && Array.isArray(data)) {
-      this.agents = data;
-      console.log(
-        `[AgentTreeDataProvider] Loaded ${this.agents.length} agents:`,
-        this.agents.map((a) => a.name || a.key || "unnamed").join(", ")
-      );
-    } else if (data && data.agents && Array.isArray(data.agents)) {
-      this.agents = data.agents;
-      console.log(
-        `[AgentTreeDataProvider] Loaded ${this.agents.length} agents:`,
-        this.agents.map((a) => a.name || a.key || "unnamed").join(", ")
-      );
-    } else {
-      this.agents = [];
-      console.log("[AgentTreeDataProvider] No agents configured or empty response");
-    }
+    const agents = data.agents || [];
+    this.runningAgents = agents.map((agent) => ({
+      agentName: agent.name || agent.key || "unknown",
+      containerName: "",
+      containerId: "",
+      status: "configured",
+      id: agent.name || agent.key || "unknown",
+      config: agent.config || {}
+    }));
+    console.log(
+      `[AgentTreeDataProvider] Loaded ${this.runningAgents.length} configured agents:`,
+      this.runningAgents.map((a) => a.agentName).join(", ")
+    );
   }
   refresh() {
     console.log("[AgentTreeDataProvider] Manual refresh triggered");
-    this.agents = [];
+    this.runningAgents = [];
     this._onDidChangeTreeData.fire();
-    this.loadAgents().then(() => {
+    this.loadRunningAgents().then(() => {
       this._onDidChangeTreeData.fire();
     }).catch((error) => {
       console.error("[AgentTreeDataProvider] Error in refresh:", error);
       this._onDidChangeTreeData.fire();
     });
+  }
+  handleWebSocketMessage(message) {
+    super.handleWebSocketMessage(message);
+    console.log(`[AgentTreeDataProvider] Received message type: ${message.type}, url: ${message.url}`);
+    if (message.type === "resourceChanged") {
+      if (message.url === "/~/agents/spawn" || message.url === "/~/agents" || message.url === "/~/aider" || message.url === "/~/graph") {
+        console.log("[AgentTreeDataProvider] Relevant update, refreshing");
+        this.refresh();
+      }
+    } else if (message.type === "graphUpdated") {
+      console.log("[AgentTreeDataProvider] Graph updated, refreshing");
+      this.refresh();
+    }
+  }
+  subscribeToGraphUpdates() {
+    super.subscribeToGraphUpdates();
+    this.subscribeToSlice(wsApi.slices.agents);
+    this.subscribeToSlice(wsApi.slices.aider);
+    this.subscribeToSlice(wsApi.slices.graph);
+    this.subscribeToSlice("/agents");
   }
 };
 
@@ -2784,697 +2968,120 @@ function verifyProviders(providers, outputChannel) {
   }
 }
 
+// src/vscode/extension/handleActivationError.ts
+import * as vscode26 from "vscode";
+function handleActivationError(error, outputChannel) {
+  outputChannel.appendLine(`[Testeranto] ERROR during extension activation: ${error}`);
+  outputChannel.appendLine(`[Testeranto] Stack trace: ${error.stack}`);
+  vscode26.window.showErrorMessage(`Testeranto extension failed to activate: ${error.message}`);
+  console.error("[Testeranto] Extension activation failed:", error);
+}
+
+// src/vscode/extension/refreshProviders.ts
+import "vscode";
+function refreshProviders(providers, outputChannel) {
+  outputChannel.appendLine("[Testeranto] Refreshing tree data providers...");
+  const refreshIfPossible = (provider, name) => {
+    if (typeof provider.refresh === "function") {
+      outputChannel.appendLine(`[Testeranto] Refreshing ${name}...`);
+      provider.refresh();
+    }
+  };
+  refreshIfPossible(providers.runtimeProvider, "runtimeProvider");
+  refreshIfPossible(providers.dockerProcessProvider, "dockerProcessProvider");
+  refreshIfPossible(providers.aiderProcessProvider, "aiderProcessProvider");
+  refreshIfPossible(providers.fileTreeProvider, "fileTreeProvider");
+  refreshIfPossible(providers.viewTreeProvider, "viewTreeProvider");
+  refreshIfPossible(providers.agentProvider, "agentProvider");
+  outputChannel.appendLine("[Testeranto] Tree data providers refreshed");
+}
+
 // src/vscode/extension/registerCommands.ts
 import "vscode";
 
 // src/vscode/commandManager.ts
-import * as vscode25 from "vscode";
-
-// src/vscode/providers/utils/registerCommands.tsx
 import "vscode";
 
-// src/vscode/commands/testCommands.ts
-import * as vscode15 from "vscode";
-var registerTestCommands = (terminalManager) => {
+// src/vscode/providers/utils/registerCommands.ts
+import * as vscode28 from "vscode";
+function registerCommands(context, terminalManager, runtimeProvider, statusBarManager, dockerProcessProvider, aiderProcessProvider, fileTreeProvider, agentProvider, viewTreeProvider) {
   const disposables = [];
-  disposables.push(
-    vscode15.commands.registerCommand(
-      "testeranto.showTests",
-      () => {
-        vscode15.window.showInformationMessage("Showing Testeranto Dashboard");
-        vscode15.commands.executeCommand("testeranto.unifiedView.focus");
-      }
-    )
-  );
-  disposables.push(
-    vscode15.commands.registerCommand(
-      "testeranto.runTest",
-      async (item) => {
-        if (item.type === 1 /* Test */) {
-          const { runtime, testName } = item.data || {};
-          vscode15.window.showInformationMessage(`Running ${testName} for ${runtime}...`);
-          const terminal = terminalManager.showTerminal(runtime, testName);
-          if (terminal) {
-            vscode15.window.showInformationMessage(`Terminal for ${testName} is ready`, { modal: false });
-          } else {
-            vscode15.window.showWarningMessage(`Terminal for ${testName} not found`);
-          }
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode15.commands.registerCommand(
-      "testeranto.launchAiderTerminal",
-      async (data) => {
-        let runtime;
-        let testName;
-        if (data && typeof data === "object") {
-          runtime = data.runtimeKey || data.runtime;
-          testName = data.testName;
-        } else {
-          vscode15.window.showErrorMessage("Cannot launch aider: Invalid test data");
-          return;
-        }
-        if (!runtime || !testName) {
-          vscode15.window.showErrorMessage("Cannot launch aider: Missing runtime or test name");
-          return;
-        }
-        vscode15.window.showInformationMessage(`Launching aider for ${testName} (${runtime})...`);
-        const terminal = await terminalManager.createAiderTerminal(runtime, testName);
-        terminal.show();
-      }
-    )
-  );
-  disposables.push(
-    vscode15.commands.registerCommand(
-      "testeranto.openAiderTerminal",
-      async (containerName, label, agentName) => {
-        try {
-          vscode15.window.showInformationMessage(`Opening aider terminal for ${label || "Aider"}...`);
-          const terminal = await terminalManager.openAiderTerminal(containerName || "", label || "Aider", agentName);
-          terminal.show();
-        } catch (err) {
-          vscode15.window.showErrorMessage(`Error opening aider terminal: ${err}`);
-        }
-      }
-    )
-  );
-  return disposables;
-};
-
-// src/vscode/commands/processCommands.ts
-import * as vscode16 from "vscode";
-var registerProcessCommands = (dockerProcessProvider, aiderProcessProvider, fileTreeProvider) => {
-  const disposables = [];
-  disposables.push(
-    vscode16.commands.registerCommand(
-      "testeranto.refreshDockerProcesses",
-      async () => {
-        try {
-          if (dockerProcessProvider && typeof dockerProcessProvider.refresh === "function") {
-            await dockerProcessProvider.refresh();
-            vscode16.window.showInformationMessage("Docker processes refreshed");
-          } else {
-            vscode16.window.showWarningMessage("Docker process provider not available");
-          }
-        } catch (err) {
-          vscode16.window.showErrorMessage(`Error refreshing Docker processes: ${err}`);
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode16.commands.registerCommand(
-      "testeranto.refreshAiderProcesses",
-      async () => {
-        try {
-          if (aiderProcessProvider && typeof aiderProcessProvider.refresh === "function") {
-            await aiderProcessProvider.refresh();
-            vscode16.window.showInformationMessage("Aider processes refreshed");
-          } else {
-            vscode16.window.showWarningMessage("Aider process provider not available");
-          }
-        } catch (err) {
-          vscode16.window.showErrorMessage(`Error refreshing aider processes: ${err}`);
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode16.commands.registerCommand(
-      "testeranto.refreshFileTree",
-      async () => {
-        try {
-          if (fileTreeProvider && typeof fileTreeProvider.refresh === "function") {
-            await fileTreeProvider.refresh();
-            vscode16.window.showInformationMessage("File tree refreshed");
-          } else {
-            vscode16.window.showWarningMessage("File tree provider not available");
-          }
-        } catch (err) {
-          vscode16.window.showErrorMessage(`Error refreshing file tree: ${err}`);
-        }
-      }
-    )
-  );
-  return disposables;
-};
-
-// src/vscode/commands/agentCommands.ts
-import * as vscode17 from "vscode";
-var registerAgentCommands = (agentProvider, chatProvider) => {
-  const disposables = [];
-  disposables.push(
-    vscode17.commands.registerCommand(
-      "testeranto.refreshAgents",
-      async () => {
-        try {
-          if (agentProvider && typeof agentProvider.refresh === "function") {
-            await agentProvider.refresh();
-            vscode17.window.showInformationMessage("Agents refreshed");
-          } else {
-            vscode17.window.showWarningMessage("Agent provider not available");
-          }
-        } catch (err) {
-          vscode17.window.showErrorMessage(`Error refreshing agents: ${err}`);
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode17.commands.registerCommand(
-      "testeranto.launchAgent",
-      async (agentName) => {
-        try {
-          vscode17.window.showInformationMessage(`Launching ${agentName} agent...`);
-          const url = ApiUtils.getUrl("launchAgent", { agentName });
-          const response2 = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            }
-          });
-          if (response2.ok) {
-            const data = await response2.json();
-            vscode17.window.showInformationMessage(`${agentName} agent launched with suffix: ${data.suffix}`);
-            if (agentProvider && typeof agentProvider.refresh === "function") {
-              await agentProvider.refresh();
-            }
-          } else {
-            vscode17.window.showErrorMessage(`Failed to launch ${agentName} agent: ${response2.statusText}`);
-          }
-        } catch (err) {
-          vscode17.window.showErrorMessage(`Error launching agent: ${err}`);
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode17.commands.registerCommand(
-      "testeranto.openAgentWebview",
-      async (agentName, suffix) => {
-        try {
-          const baseUrl = ApiUtils.getBaseUrl();
-          const url = `${baseUrl}/${agentName}`;
-          if (suffix && suffix !== "undefined") {
-            const instanceUrl = `${baseUrl}/${agentName}/${suffix}`;
-            vscode17.env.openExternal(vscode17.Uri.parse(instanceUrl));
-          } else {
-            vscode17.env.openExternal(vscode17.Uri.parse(url));
-          }
-          vscode17.window.showInformationMessage(`Opening ${agentName} agent in browser...`);
-        } catch (err) {
-          vscode17.window.showErrorMessage(`Error opening agent webview: ${err}`);
-        }
-      }
-    )
-  );
-  return disposables;
-};
-
-// src/vscode/commands/serverCommands.ts
-import * as vscode18 from "vscode";
-var registerServerCommands = (statusBarManager, runtimeProvider) => {
-  const disposables = [];
-  disposables.push(
-    vscode18.commands.registerCommand("testeranto.refresh", async () => {
-      vscode18.window.showInformationMessage("Refreshing all Testeranto views...");
-      await statusBarManager.updateServerStatus();
-      if (runtimeProvider && typeof runtimeProvider.refresh === "function") {
-        runtimeProvider.refresh();
-      }
-    })
-  );
-  disposables.push(
-    vscode18.commands.registerCommand("testeranto.retryConnection", (provider) => {
-      vscode18.window.showInformationMessage("Retrying connection to server...");
-      if (provider && typeof provider.setupWebSocket === "function") {
-        if (provider.connectionAttempts !== void 0) {
-          provider.connectionAttempts = 0;
-        }
-        if (provider.isConnected !== void 0) {
-          provider.isConnected = false;
-        }
-        provider.setupWebSocket();
-        if (typeof provider.refresh === "function") {
-          provider.refresh();
-        }
-      } else {
-        vscode18.window.showWarningMessage("Provider does not support WebSocket reconnection");
-      }
-    })
-  );
-  disposables.push(
-    vscode18.commands.registerCommand("testeranto.startServer", async () => {
-      vscode18.window.showInformationMessage("Starting Testeranto server...");
-      const terminal = vscode18.window.createTerminal("Testeranto Server");
-      terminal.show();
-      const workspaceFolders = vscode18.workspace.workspaceFolders;
-      if (workspaceFolders && workspaceFolders.length > 0) {
-        const workspacePath = workspaceFolders[0].uri.fsPath;
-        terminal.sendText(`cd "${workspacePath}" && npm start`);
-      } else {
-        terminal.sendText("npm start");
-      }
-      vscode18.window.showInformationMessage("Server starting in terminal. It may take a few moments...");
-      setTimeout(async () => {
-        await statusBarManager.updateServerStatus();
-        if (runtimeProvider && typeof runtimeProvider.refresh === "function") {
-          runtimeProvider.refresh();
-        }
-      }, 5e3);
-    })
-  );
-  disposables.push(
-    vscode18.commands.registerCommand("testeranto.checkServerStatus", async () => {
-      try {
-        const response2 = await ApiUtils.fetchWithTimeout(ApiUtils.getConfigsUrl(), {}, 2e3);
-        if (response2.ok) {
-          vscode18.window.showInformationMessage("\u2705 Server is running and reachable");
-        } else {
-          vscode18.window.showWarningMessage(`\u26A0\uFE0F Server responded with status: ${response2.status}`);
-        }
-      } catch (error) {
-        vscode18.window.showErrorMessage(`\u274C Cannot connect to server: ${error.message}`);
-      }
-    })
-  );
-  disposables.push(
-    vscode18.commands.registerCommand("testeranto.checkLockStatus", async () => {
-      try {
-        const url = ApiUtils.getUrl("getLockStatus");
-        const response2 = await fetch(url);
-        if (response2.ok) {
-          const data = await response2.json();
-          if (data.hasLockedFiles) {
-            vscode18.window.showInformationMessage(
-              `Files are locked: ${data.lockedCount} file(s) locked for system restart`,
-              { modal: false }
-            );
-          } else {
-            vscode18.window.showInformationMessage(
-              "All files are unlocked and available for testing",
-              { modal: false }
-            );
-          }
-        } else {
-          vscode18.window.showErrorMessage("Failed to fetch lock status from server");
-        }
-      } catch (err) {
-        vscode18.window.showErrorMessage(`Error checking lock status: ${err}`);
-      }
-    })
-  );
-  return disposables;
-};
-
-// src/vscode/commands/configCommands.ts
-import * as vscode19 from "vscode";
-var registerConfigCommands = () => {
-  const disposables = [];
-  disposables.push(
-    vscode19.commands.registerCommand(
-      "testeranto.openConfig",
-      async () => {
-        try {
-          const uri = vscode19.Uri.file("allTests.ts");
-          const doc = await vscode19.workspace.openTextDocument(uri);
-          await vscode19.window.showTextDocument(doc);
-        } catch (err) {
-          vscode19.window.showWarningMessage("Could not open allTests.ts configuration file");
-        }
-      }
-    )
-  );
-  disposables.push(
-    vscode19.commands.registerCommand(
-      "testeranto.openTesterantoConfig",
-      async () => {
-        try {
-          const workspaceFolders = vscode19.workspace.workspaceFolders;
-          if (workspaceFolders && workspaceFolders.length > 0) {
-            const workspaceRoot = workspaceFolders[0].uri;
-            const configUri = vscode19.Uri.joinPath(workspaceRoot, "testeranto", "testeranto.ts");
-            try {
-              const doc = await vscode19.workspace.openTextDocument(configUri);
-              await vscode19.window.showTextDocument(doc);
-            } catch (err) {
-              const alternativePaths = [
-                vscode19.Uri.joinPath(workspaceRoot, "testeranto.ts"),
-                vscode19.Uri.file("testeranto/testeranto.ts"),
-                vscode19.Uri.file("testeranto.ts")
-              ];
-              let opened = false;
-              for (const uri of alternativePaths) {
-                try {
-                  const doc = await vscode19.workspace.openTextDocument(uri);
-                  await vscode19.window.showTextDocument(doc);
-                  opened = true;
-                  break;
-                } catch (e) {
-                }
-              }
-              if (!opened) {
-                const files = await vscode19.workspace.findFiles("**/testeranto.ts", "**/node_modules/**", 1);
-                if (files.length > 0) {
-                  const doc = await vscode19.workspace.openTextDocument(files[0]);
-                  await vscode19.window.showTextDocument(doc);
-                } else {
-                  vscode19.window.showWarningMessage("Could not find testeranto/testeranto.ts configuration file");
-                }
-              }
-            }
-          } else {
-            vscode19.window.showWarningMessage("No workspace folder open");
-          }
-        } catch (err) {
-          vscode19.window.showErrorMessage(`Error opening testeranto config: ${err}`);
-        }
-      }
-    )
-  );
-  return disposables;
-};
-
-// src/vscode/commands/chatCommands.ts
-import "vscode";
-var registerChatCommands = (chatProvider) => {
-  const disposables = [];
-  return disposables;
-};
-
-// src/vscode/providers/utils/showProcessLogs.ts
-import * as vscode21 from "vscode";
-var showProcessLogs = () => {
-  return vscode21.commands.registerCommand(
-    "testeranto.showProcessLogs",
-    async (processId, processName) => {
-      try {
-        const outputChannel = vscode21.window.createOutputChannel(`Process: ${processName || processId}`);
-        outputChannel.show(true);
-        const response2 = await fetch(ApiUtils.getProcessLogsUrl(processId));
-        if (!response2.ok) {
-          throw new Error(`HTTP ${response2.status}: ${response2.statusText}`);
-        }
-        const data = await response2.json();
-        outputChannel.appendLine(`=== Logs for ${processName || processId} ===`);
-        outputChannel.appendLine(`Process ID: ${processId}`);
-        outputChannel.appendLine(`
-=== End of logs ===`);
-      } catch (err) {
-        vscode21.window.showErrorMessage(`Error fetching process logs: ${err}`);
-      }
-    }
-  );
-};
-
-// src/vscode/providers/utils/openFile.ts
-import * as vscode22 from "vscode";
-import * as path2 from "path";
-var openFile = () => {
-  return vscode22.commands.registerCommand(
-    "testeranto.openFile",
-    async (arg) => {
-      console.log("[CommandManager] openFile called with arg:", arg);
-      let fileName;
-      let itemLabel;
-      if (arg && typeof arg === "object") {
-        if ("type" in arg && arg.type === 2 /* File */) {
-          const item = arg;
-          fileName = item.data?.fileName || item.label;
-          itemLabel = item.label;
-        } else if ("fileName" in arg) {
-          fileName = arg.fileName;
-          itemLabel = arg.fileName;
-        }
-      }
-      if (!fileName) {
-        console.error("[CommandManager] openFile called with invalid argument:", arg);
-        vscode22.window.showErrorMessage("Cannot open file: Invalid argument");
-        return;
-      }
-      console.log("[CommandManager] Opening file:", fileName);
-      const workspaceFolders = vscode22.workspace.workspaceFolders;
-      if (workspaceFolders && workspaceFolders.length > 0) {
-        const workspaceRoot = workspaceFolders[0].uri;
-        let fileUri;
-        if (fileName.startsWith("/")) {
-          fileUri = vscode22.Uri.file(fileName);
-        } else {
-          fileUri = vscode22.Uri.joinPath(workspaceRoot, fileName);
-        }
-        console.log("[CommandManager] File URI:", fileUri.toString());
-        try {
-          const doc = await vscode22.workspace.openTextDocument(fileUri);
-          await vscode22.window.showTextDocument(doc);
-          console.log("[CommandManager] File opened successfully");
-        } catch (err) {
-          console.error("[CommandManager] Error opening file:", err);
-          const files = await vscode22.workspace.findFiles(`**/${path2.basename(fileName)}`, null, 1);
-          if (files.length > 0) {
-            const doc = await vscode22.workspace.openTextDocument(files[0]);
-            await vscode22.window.showTextDocument(doc);
-          } else {
-            vscode22.window.showWarningMessage(`Could not open file: ${fileName}`);
-          }
-        }
-      } else {
-        vscode22.window.showWarningMessage("No workspace folder open");
-      }
-    }
-  );
-};
-
-// src/vscode/providers/utils/openServerWebview.ts
-import * as vscode23 from "vscode";
-
-// src/vscode/providers/utils/getFallbackHtmlContent.tsx
-function getFallbackHtmlContent() {
-  return `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Testeranto - Stakeholder Report</title>
-            <style>
-                body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-                    margin: 0;
-                    padding: 0;
-                    background-color: #f5f5f5;
-                }
-                #root {
-                    min-height: 100vh;
-                }
-                .loading {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    font-size: 1.2rem;
-                    color: #666;
-                }
-                .error-container {
-                    padding: 40px;
-                    text-align: center;
-                }
-                .error-title {
-                    color: #d32f2f;
-                    margin-bottom: 20px;
-                }
-                .refresh-button {
-                    margin-top: 20px;
-                    padding: 10px 20px;
-                    background-color: #007acc;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-size: 14px;
-                }
-                .refresh-button:hover {
-                    background-color: #005a9e;
-                }
-            </style>
-        </head>
-        <body>
-            <div id="root">
-                <div class="error-container">
-                    <h1 class="error-title">Report Not Found</h1>
-                    <p>The Testeranto report file could not be found.</p>
-                    <p>Please make sure the server is running and has generated the report files.</p>
-                    <button class="refresh-button" onclick="refreshReport()">Refresh Report</button>
-                </div>
-            </div>
-            <script>
-                const vscode = acquireVsCodeApi();
-                
-                function refreshReport() {
-                    vscode.postMessage({
-                        command: 'refresh'
-                    });
-                }
-                
-                // Try to start the server if not running
-                setTimeout(() => {
-                    vscode.postMessage({
-                        command: 'alert',
-                        text: 'Report not found. Please start the server first.'
-                    });
-                }, 1000);
-            </script>
-        </body>
-        </html>
-    `;
-}
-
-// src/vscode/providers/utils/openServerWebview.ts
-var openServerWebview = () => {
-  return vscode23.commands.registerCommand("testeranto.openServerWebview", async () => {
-    try {
-      const workspaceFolders = vscode23.workspace.workspaceFolders;
-      if (!workspaceFolders || workspaceFolders.length === 0) {
-        vscode23.window.showErrorMessage("No workspace folder open");
-        return;
-      }
-      const workspaceRoot = workspaceFolders[0].uri;
-      const reportHtmlUri = vscode23.Uri.joinPath(workspaceRoot, "testeranto", "reports", "index.html");
-      try {
-        await vscode23.workspace.fs.stat(reportHtmlUri);
-      } catch (error) {
-        vscode23.window.showWarningMessage("Report file not found. Starting server to generate it...");
-        await vscode23.commands.executeCommand("testeranto.startServer");
-        await new Promise((resolve) => setTimeout(resolve, 5e3));
-      }
-      const panel = vscode23.window.createWebviewPanel(
-        "testerantoServer",
-        "Testeranto Server Report",
-        vscode23.ViewColumn.One,
-        {
-          enableScripts: true,
-          retainContextWhenHidden: true,
-          localResourceRoots: [vscode23.Uri.joinPath(workspaceRoot, "testeranto", "reports")]
-        }
-      );
-      let htmlContent;
-      try {
-        const fileContent = await vscode23.workspace.fs.readFile(reportHtmlUri);
-        htmlContent = Buffer.from(fileContent).toString("utf-8");
-      } catch (error) {
-        htmlContent = getFallbackHtmlContent();
-      }
-      const reportJsUri = panel.webview.asWebviewUri(
-        vscode23.Uri.joinPath(workspaceRoot, "testeranto", "reports", "index.js")
-      );
-      const updatedHtmlContent = htmlContent.replace(
-        /<script type="module">[\s\S]*?<\/script>/,
-        `<script type="module">
-                            // Wait for the stakeholder app to be loaded
-                            async function initApp() {
-                                const root = document.getElementById('root');
-                                try {
-                                    // Import the stakeholder app module using webview URI
-                                    const { renderApp } = await import('${reportJsUri}');
-                                    renderApp(root);
-                                } catch (error) {
-                                    console.error('Failed to load stakeholder report:', error);
-                                    root.innerHTML = \`
-                                        <div style="padding: 40px; text-align: center;">
-                                            <h1 style="color: #d32f2f;">Error Loading Report</h1>
-                                            <p>\${error.message}</p>
-                                            <p>Please make sure the Testeranto server has generated the report files.</p>
-                                            <details style="text-align: left; max-width: 800px; margin: 20px auto;">
-                                                <summary>Technical Details</summary>
-                                                <pre style="background: #f5f5f5; padding: 10px; overflow: auto;">\${error.stack}</pre>
-                                            </details>
-                                        </div>
-                                    \`;
-                                }
-                            }
-                            
-                            // Start the app when the DOM is ready
-                            if (document.readyState === 'loading') {
-                                document.addEventListener('DOMContentLoaded', initApp);
-                            } else {
-                                initApp();
-                            }
-                        </script>`
-      );
-      panel.webview.html = updatedHtmlContent;
-      panel.webview.onDidReceiveMessage(
-        (message) => {
-          switch (message.command) {
-            case "alert":
-              vscode23.window.showErrorMessage(message.text);
-              return;
-            case "refresh":
-              vscode23.workspace.fs.readFile(reportHtmlUri).then((fileContent) => {
-                const newHtmlContent = Buffer.from(fileContent).toString("utf-8");
-                const updatedNewHtmlContent = newHtmlContent.replace(
-                  /<script type="module">[\s\S]*?<\/script>/,
-                  `<script type="module">
-                                                // Wait for the stakeholder app to be loaded
-                                                async function initApp() {
-                                                    const root = document.getElementById('root');
-                                                    try {
-                                                        // Import the stakeholder app module using webview URI
-                                                        const { renderApp } = await import('${reportJsUri}');
-                                                        renderApp(root);
-                                                    } catch (error) {
-                                                        console.error('Failed to load stakeholder report:', error);
-                                                        root.innerHTML = \`
-                                                            <div style="padding: 40px; text-align: center;">
-                                                                <h1 style="color: #d32f2f;">Error Loading Report</h1>
-                                                                <p>\${error.message}</p>
-                                                                <p>Please make sure the Testeranto server has generated the report files.</p>
-                                                                <details style="text-align: left; max-width: 800px; margin: 20px auto;">
-                                                                    <summary>Technical Details</summary>
-                                                                    <pre style="background: #f5f5f5; padding: 10px; overflow: auto;">\${error.stack}</pre>
-                                                                </details>
-                                                            </div>
-                                                        \`;
-                                                    }
-                                                }
-                                                
-                                                // Start the app when the DOM is ready
-                                                if (document.readyState === 'loading') {
-                                                    document.addEventListener('DOMContentLoaded', initApp);
-                                                } else {
-                                                    initApp();
-                                                }
-                                            </script>`
-                );
-                panel.webview.html = updatedNewHtmlContent;
-              });
-              return;
-          }
-        }
-        // undefined,
-        // disposables
-      );
-    } catch (error) {
-      vscode23.window.showErrorMessage(`Failed to open server webview: ${error.message}`);
+  const refreshCommand = vscode28.commands.registerCommand("testeranto.refresh", () => {
+    if (runtimeProvider && typeof runtimeProvider.refresh === "function") {
+      runtimeProvider.refresh();
     }
   });
-};
-
-// src/vscode/providers/utils/registerCommands.tsx
-var registerCommands = (context, terminalManager, runtimeProvider, statusBarManager, dockerProcessProvider, aiderProcessProvider, fileTreeProvider, agentProvider, chatProvider) => {
-  console.log("[VS Code] Registering commands");
-  const disposables = [];
-  disposables.push(...registerTestCommands(terminalManager));
-  disposables.push(...registerProcessCommands(dockerProcessProvider, aiderProcessProvider, fileTreeProvider));
-  disposables.push(...registerAgentCommands(agentProvider, chatProvider));
-  disposables.push(...registerServerCommands(statusBarManager, runtimeProvider));
-  disposables.push(...registerConfigCommands());
-  disposables.push(...registerChatCommands(chatProvider));
-  disposables.push(openFile());
-  disposables.push(showProcessLogs());
-  disposables.push(openServerWebview());
-  return disposables;
-};
+  const refreshDockerProcessesCommand = vscode28.commands.registerCommand("testeranto.refreshDockerProcesses", () => {
+    if (dockerProcessProvider && typeof dockerProcessProvider.refresh === "function") {
+      dockerProcessProvider.refresh();
+    }
+  });
+  const refreshAiderProcessesCommand = vscode28.commands.registerCommand("testeranto.refreshAiderProcesses", () => {
+    if (aiderProcessProvider && typeof aiderProcessProvider.refresh === "function") {
+      aiderProcessProvider.refresh();
+    }
+  });
+  const refreshFileTreeCommand = vscode28.commands.registerCommand("testeranto.refreshFileTree", () => {
+    if (fileTreeProvider && typeof fileTreeProvider.refresh === "function") {
+      fileTreeProvider.refresh();
+    }
+  });
+  const refreshViewTreeCommand = vscode28.commands.registerCommand("testeranto.refreshViewTree", () => {
+    if (viewTreeProvider && typeof viewTreeProvider.refresh === "function") {
+      viewTreeProvider.refresh();
+    }
+  });
+  const refreshAgentsCommand = vscode28.commands.registerCommand("testeranto.refreshAgents", () => {
+    if (agentProvider && typeof agentProvider.refresh === "function") {
+      agentProvider.refresh();
+    }
+  });
+  const openFileCommand = vscode28.commands.registerCommand("testeranto.openFile", async (args) => {
+    try {
+      const { fileName, runtime } = args;
+      if (!fileName) {
+        vscode28.window.showErrorMessage("No file specified");
+        return;
+      }
+      const document = await vscode28.workspace.openTextDocument(fileName);
+      await vscode28.window.showTextDocument(document);
+    } catch (error) {
+      vscode28.window.showErrorMessage(`Error opening file: ${error.message}`);
+    }
+  });
+  const openAiderTerminalCommand = vscode28.commands.registerCommand(
+    "testeranto.openAiderTerminal",
+    async (runtime, testName, containerId) => {
+      console.log(`[openAiderTerminal] Opening terminal for aider: ${testName} (${runtime}), container: ${containerId}`);
+      const terminal = await terminalManager.createAiderTerminal(runtime, testName);
+      terminal.show();
+      if (containerId && containerId !== "unknown") {
+        terminal.sendText(`echo "Aider process for ${testName} (${runtime})"`);
+        terminal.sendText(`echo "Container ID: ${containerId}"`);
+        terminal.sendText(`echo "To attach: docker exec -it ${containerId} /bin/bash"`);
+      }
+    }
+  );
+  const restartAiderProcessCommand = vscode28.commands.registerCommand("testeranto.restartAiderProcess", async (runtime, testName) => {
+    try {
+      await terminalManager.restartAiderProcess(runtime, testName);
+      vscode28.window.showInformationMessage(`Restarted aider process for ${testName}`);
+    } catch (error) {
+      vscode28.window.showErrorMessage(`Error restarting aider process: ${error.message}`);
+    }
+  });
+  return [
+    refreshCommand,
+    refreshDockerProcessesCommand,
+    refreshAiderProcessesCommand,
+    refreshFileTreeCommand,
+    refreshViewTreeCommand,
+    refreshAgentsCommand,
+    openFileCommand,
+    openAiderTerminalCommand,
+    restartAiderProcessCommand
+  ];
+}
 
 // src/vscode/commandManager.ts
 var CommandManager = class {
@@ -3486,7 +3093,6 @@ var CommandManager = class {
   fileTreeProvider;
   viewTreeProvider;
   agentProvider;
-  chatProvider;
   constructor(terminalManager, statusBarManager) {
     this.terminalManager = terminalManager;
     this.statusBarManager = statusBarManager;
@@ -3515,9 +3121,6 @@ var CommandManager = class {
   setAgentProvider(provider) {
     this.agentProvider = provider;
   }
-  setChatProvider(provider) {
-    this.chatProvider = provider;
-  }
   registerCommands(context) {
     const disposables = registerCommands(
       context,
@@ -3530,11 +3133,6 @@ var CommandManager = class {
       this.agentProvider,
       this.viewTreeProvider
     );
-    const testCommand = vscode25.commands.registerCommand("testeranto.testLogging", () => {
-      vscode25.window.showInformationMessage("Testeranto test command works!");
-      console.log("[Testeranto] Test command executed successfully");
-    });
-    disposables.push(testCommand);
     return disposables;
   }
 };
@@ -3563,43 +3161,43 @@ function registerCommands2(context, terminalManager, statusBarManager, providers
 }
 
 // src/vscode/extension/registerTreeViews.ts
-import * as vscode27 from "vscode";
+import * as vscode31 from "vscode";
 function registerTreeViews(providers, context, outputChannel) {
   outputChannel.appendLine("[Testeranto] Registering tree data providers with VS Code...");
-  vscode27.window.registerTreeDataProvider("testeranto.runtimeView", providers.runtimeProvider);
-  vscode27.window.registerTreeDataProvider("testeranto.dockerProcessView", providers.dockerProcessProvider);
-  vscode27.window.registerTreeDataProvider("testeranto.aiderProcessView", providers.aiderProcessProvider);
-  vscode27.window.registerTreeDataProvider("testeranto.fileTreeView", providers.fileTreeProvider);
-  vscode27.window.registerTreeDataProvider("testeranto.viewView", providers.viewTreeProvider);
-  vscode27.window.registerTreeDataProvider("testeranto.agentView", providers.agentProvider);
+  vscode31.window.registerTreeDataProvider("testeranto.runtimeView", providers.runtimeProvider);
+  vscode31.window.registerTreeDataProvider("testeranto.dockerProcessView", providers.dockerProcessProvider);
+  vscode31.window.registerTreeDataProvider("testeranto.aiderProcessView", providers.aiderProcessProvider);
+  vscode31.window.registerTreeDataProvider("testeranto.fileTreeView", providers.fileTreeProvider);
+  vscode31.window.registerTreeDataProvider("testeranto.viewView", providers.viewTreeProvider);
+  vscode31.window.registerTreeDataProvider("testeranto.agentView", providers.agentProvider);
   outputChannel.appendLine("[Testeranto] Tree data providers registered successfully");
   outputChannel.appendLine("[Testeranto] Creating tree views...");
-  const runtimeTreeView = vscode27.window.createTreeView("testeranto.runtimeView", {
+  const runtimeTreeView = vscode31.window.createTreeView("testeranto.runtimeView", {
     treeDataProvider: providers.runtimeProvider,
     showCollapseAll: true
   });
   outputChannel.appendLine("[Testeranto] Runtime tree view created successfully");
-  const dockerProcessTreeView = vscode27.window.createTreeView("testeranto.dockerProcessView", {
+  const dockerProcessTreeView = vscode31.window.createTreeView("testeranto.dockerProcessView", {
     treeDataProvider: providers.dockerProcessProvider,
     showCollapseAll: true
   });
   outputChannel.appendLine("[Testeranto] Docker process tree view created successfully");
-  const aiderProcessTreeView = vscode27.window.createTreeView("testeranto.aiderProcessView", {
+  const aiderProcessTreeView = vscode31.window.createTreeView("testeranto.aiderProcessView", {
     treeDataProvider: providers.aiderProcessProvider,
     showCollapseAll: true
   });
   outputChannel.appendLine("[Testeranto] Aider process tree view created successfully");
-  const fileTreeView = vscode27.window.createTreeView("testeranto.fileTreeView", {
+  const fileTreeView = vscode31.window.createTreeView("testeranto.fileTreeView", {
     treeDataProvider: providers.fileTreeProvider,
     showCollapseAll: true
   });
   outputChannel.appendLine("[Testeranto] File tree view created successfully");
-  const viewTreeView = vscode27.window.createTreeView("testeranto.viewView", {
+  const viewTreeView = vscode31.window.createTreeView("testeranto.viewView", {
     treeDataProvider: providers.viewTreeProvider,
     showCollapseAll: true
   });
   outputChannel.appendLine("[Testeranto] View tree view created successfully");
-  const agentTreeView = vscode27.window.createTreeView("testeranto.agentView", {
+  const agentTreeView = vscode31.window.createTreeView("testeranto.agentView", {
     treeDataProvider: providers.agentProvider,
     showCollapseAll: true
   });
@@ -3614,6 +3212,31 @@ function registerTreeViews(providers, context, outputChannel) {
     agentTreeView
   );
   outputChannel.appendLine("[Testeranto] Tree views added to subscriptions");
+}
+
+// src/vscode/extension/setupCleanup.ts
+import "vscode";
+function setupCleanup(context, outputChannel, terminalManager, statusBarManager, providers, commandDisposables) {
+  context.subscriptions.push({
+    dispose: () => {
+      outputChannel.appendLine("[Testeranto] Extension deactivating...");
+      terminalManager.disposeAll();
+      providers.runtimeProvider.dispose?.();
+      providers.dockerProcessProvider.dispose?.();
+      providers.aiderProcessProvider.dispose?.();
+      providers.fileTreeProvider.dispose?.();
+      providers.viewTreeProvider.dispose?.();
+      providers.agentProvider.dispose?.();
+      statusBarManager.dispose();
+      outputChannel.dispose();
+    }
+  });
+  context.subscriptions.push(
+    outputChannel,
+    ...commandDisposables,
+    statusBarManager.getMainStatusBarItem(),
+    statusBarManager.getServerStatusBarItem()
+  );
 }
 
 // src/vscode/extension/testProviders.ts
@@ -3651,264 +3274,561 @@ async function testProviders(providers, outputChannel) {
   }
 }
 
-// src/vscode/extension/refreshProviders.ts
-import "vscode";
-function refreshProviders(providers, outputChannel) {
-  outputChannel.appendLine("[Testeranto] Refreshing tree data providers...");
-  const refreshIfPossible = (provider, name) => {
-    if (typeof provider.refresh === "function") {
-      outputChannel.appendLine(`[Testeranto] Refreshing ${name}...`);
-      provider.refresh();
-    }
+// src/views/defaultViews/EisenhowerMatrix.ts
+var EisenhowerMatrixSlicer = (graphData) => {
+  const items = graphData.nodes.filter(
+    (node) => node.metadata?.frontmatter?.urgency !== void 0 || node.metadata?.frontmatter?.importance !== void 0
+  ).map((node) => ({
+    id: node.id,
+    label: node.label || node.id,
+    urgency: node.metadata?.frontmatter?.urgency,
+    importance: node.metadata?.frontmatter?.importance,
+    metadata: node.metadata
+  }));
+  return {
+    items,
+    viewType: "eisenhower",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
   };
-  refreshIfPossible(providers.runtimeProvider, "runtimeProvider");
-  refreshIfPossible(providers.dockerProcessProvider, "dockerProcessProvider");
-  refreshIfPossible(providers.aiderProcessProvider, "aiderProcessProvider");
-  refreshIfPossible(providers.fileTreeProvider, "fileTreeProvider");
-  refreshIfPossible(providers.viewTreeProvider, "viewTreeProvider");
-  refreshIfPossible(providers.agentProvider, "agentProvider");
-  outputChannel.appendLine("[Testeranto] Tree data providers refreshed");
-}
+};
 
-// src/vscode/extension/registerAdditionalCommands.ts
-import * as vscode30 from "vscode";
-function registerAdditionalCommands(context, outputChannel, terminalManager) {
-  registerCheckServerCommand(context);
-  registerOpenProcessTerminalCommand(context, outputChannel, terminalManager);
-  registerOpenViewCommand(context, outputChannel);
-  registerOpenChatCommand(context, outputChannel);
-}
-function registerCheckServerCommand(context) {
-  const checkServerCommand = vscode30.commands.registerCommand("testeranto.checkServer", async () => {
-    try {
-      const response2 = await fetch("http://localhost:3000/~/configs", {
-        method: "GET",
-        signal: AbortSignal.timeout?.(3e3) || (() => {
-          const controller = new AbortController();
-          setTimeout(() => controller.abort(), 3e3);
-          return controller.signal;
-        })()
-      });
-      if (response2.ok) {
-        vscode30.window.showInformationMessage("\u2705 Testeranto server is running");
-      } else {
-        vscode30.window.showWarningMessage("\u26A0\uFE0F Server responded with error: " + response2.status);
+// src/views/defaultViews/Gantt.ts
+var GanttSlicer = (graphData) => {
+  const items = graphData.nodes.filter(
+    (node) => node.timestamp || node.metadata?.frontmatter?.dueDate || node.metadata?.frontmatter?.startDate
+  ).map((node) => ({
+    id: node.id,
+    label: node.label || node.id,
+    startDate: node.metadata?.frontmatter?.startDate,
+    dueDate: node.metadata?.frontmatter?.dueDate,
+    timestamp: node.timestamp,
+    metadata: node.metadata
+  }));
+  return {
+    items,
+    viewType: "gantt",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+};
+
+// src/views/defaultViews/KanbanBoard.ts
+var KanbanSlicer = (graphData) => {
+  const items = graphData.nodes.filter((node) => {
+    if (node.type && typeof node.type === "object") {
+      if (node.type.category === "file" && node.type.type === "feature") {
+        return true;
       }
-    } catch (error) {
-      vscode30.window.showErrorMessage("\u274C Cannot connect to Testeranto server. Make sure it is running on port 3000.");
-    }
-  });
-  context.subscriptions.push(checkServerCommand);
-}
-function registerOpenProcessTerminalCommand(context, outputChannel, terminalManager) {
-  const openProcessTerminalCommand = vscode30.commands.registerCommand("testeranto.openProcessTerminal", async (nodeId, label, containerId, serviceName) => {
-    try {
-      outputChannel.appendLine(`[Testeranto] Opening terminal for process: ${nodeId || "unknown"}`);
-      if (!nodeId) {
-        vscode30.window.showWarningMessage("No process node ID provided");
-        return;
+      if (node.type.category === "file" && node.type.type !== "feature") {
+        return false;
       }
-      await terminalManager.openProcessTerminal(nodeId, label || "Process", containerId || "", serviceName || "");
-    } catch (error) {
-      outputChannel.appendLine(`[Testeranto] Error opening process terminal: ${error.message}`);
-      vscode30.window.showErrorMessage(`Failed to open process terminal: ${error.message}`);
     }
-  });
-  context.subscriptions.push(openProcessTerminalCommand);
-}
-function registerOpenViewCommand(context, outputChannel) {
-  const openViewCommand = vscode30.commands.registerCommand("testeranto.openView", async (viewKey, viewUrl) => {
-    try {
-      outputChannel.appendLine(`[Testeranto] Opening view: ${viewKey || "unknown"}`);
-      if (!viewKey) {
-        vscode30.window.showWarningMessage("No view key provided");
-        return;
+    if (typeof node.type === "string") {
+      if (node.type === "feature") {
+        return true;
       }
-      const actualViewUrl = viewUrl || `http://localhost:3000/testeranto/views/${viewKey}.html`;
-      const panel = vscode30.window.createWebviewPanel(
-        `testeranto.view.${viewKey}`,
-        `View: ${viewKey}`,
-        vscode30.ViewColumn.One,
-        {
-          enableScripts: true,
-          retainContextWhenHidden: true
-        }
-      );
-      panel.webview.html = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body, html {
-                            margin: 0;
-                            padding: 0;
-                            height: 100%;
-                            overflow: hidden;
-                        }
-                        iframe {
-                            width: 100%;
-                            height: 100vh;
-                            border: none;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <iframe src="${actualViewUrl}"></iframe>
-                </body>
-                </html>
-            `;
-      outputChannel.appendLine(`[Testeranto] Opened view: ${viewKey} at ${actualViewUrl}`);
-    } catch (error) {
-      outputChannel.appendLine(`[Testeranto] Error opening view: ${error.message}`);
-      vscode30.window.showErrorMessage(`Failed to open view: ${error.message}`);
+      if (["test", "input_file", "output_file", "process", "verb", "agent", "view"].includes(node.type)) {
+        return false;
+      }
     }
+    if (node.id?.startsWith("feature:")) {
+      return true;
+    }
+    if (node.metadata?.feature) {
+      return true;
+    }
+    if (node.metadata?.frontmatter) {
+      if (node.metadata.frontmatter.status || node.metadata.frontmatter.priority) {
+        return true;
+      }
+    }
+    if (node.id?.includes("test:") || node.id?.includes("entrypoint:") || node.id?.includes("process:") || node.id?.includes("verb:")) {
+      return false;
+    }
+    return false;
+  }).map((node) => {
+    let status = node.status;
+    let priority = node.priority;
+    if (node.metadata?.frontmatter) {
+      if (node.metadata.frontmatter.status) {
+        status = node.metadata.frontmatter.status;
+      }
+      if (node.metadata.frontmatter.priority) {
+        priority = node.metadata.frontmatter.priority;
+      }
+    }
+    if (!status && node.metadata?.status) {
+      status = node.metadata.status;
+    }
+    if (!priority && node.metadata?.priority) {
+      priority = node.metadata.priority;
+    }
+    if (!status) {
+      status = "todo";
+    }
+    let label = node.label || node.id;
+    if (label.startsWith("Feature: ")) {
+      label = label.substring("Feature: ".length);
+    }
+    if (node.id?.startsWith("feature:")) {
+      const parts = node.id.split(":");
+      if (parts.length > 3) {
+        label = parts.slice(3).join(":");
+      }
+    }
+    return {
+      id: node.id,
+      label,
+      status,
+      priority,
+      metadata: node.metadata
+    };
   });
-  context.subscriptions.push(openViewCommand);
-}
-function registerOpenChatCommand(context, outputChannel) {
-  const openChatCommand = vscode30.commands.registerCommand("testeranto.openChat", async () => {
-    try {
-      outputChannel.appendLine("[Testeranto] Opening group chat");
-      const panel = vscode30.window.createWebviewPanel(
-        "testeranto.chat",
-        "Testeranto Group Chat",
-        vscode30.ViewColumn.One,
-        {
-          enableScripts: true,
-          retainContextWhenHidden: true
-        }
-      );
-      panel.webview.html = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 20px; }
-                        #messages { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-                        .message { margin-bottom: 10px; }
-                        .message .sender { font-weight: bold; }
-                        .message .time { font-size: 0.8em; color: #666; }
-                        #messageInput { width: 70%; padding: 5px; }
-                        #sendButton { padding: 5px 10px; }
-                    </style>
-                </head>
-                <body>
-                    <h1>Testeranto Group Chat</h1>
-                    <div id="messages"></div>
-                    <input type="text" id="messageInput" placeholder="Type a message...">
-                    <button id="sendButton">Send</button>
-                    <script>
-                        const vscode = acquireVsCodeApi();
-                        const messagesDiv = document.getElementById('messages');
-                        const messageInput = document.getElementById('messageInput');
-                        const sendButton = document.getElementById('sendButton');
-                        
-                        function addMessage(sender, text, time) {
-                            const messageDiv = document.createElement('div');
-                            messageDiv.className = 'message';
-                            messageDiv.innerHTML = \`
-                                <div class="sender">\${sender}</div>
-                                <div class="text">\${text}</div>
-                                <div class="time">\${time}</div>
-                            \`;
-                            messagesDiv.appendChild(messageDiv);
-                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                        }
-                        
-                        sendButton.addEventListener('click', () => {
-                            const text = messageInput.value.trim();
-                            if (text) {
-                                vscode.postMessage({
-                                    command: 'sendMessage',
-                                    text: text
-                                });
-                                messageInput.value = '';
-                            }
-                        });
-                        
-                        messageInput.addEventListener('keypress', (e) => {
-                            if (e.key === 'Enter') {
-                                sendButton.click();
-                            }
-                        });
-                        
-                        window.addEventListener('message', event => {
-                            const message = event.data;
-                            if (message.command === 'receiveMessage') {
-                                addMessage(message.sender, message.text, message.time);
-                            }
-                        });
-                        
-                        addMessage('System', 'Chat started. Messages are not persisted yet.', new Date().toLocaleTimeString());
-                    </script>
-                </body>
-                </html>
-            `;
-      panel.webview.onDidReceiveMessage(
-        async (message) => {
-          if (message.command === "sendMessage") {
-            outputChannel.appendLine(`[Testeranto] Chat message: ${message.text}`);
-            panel.webview.postMessage({
-              command: "receiveMessage",
-              sender: "You",
-              text: message.text,
-              time: (/* @__PURE__ */ new Date()).toLocaleTimeString()
-            });
+  return {
+    items,
+    viewType: "kanban",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+};
+
+// src/views/defaultViews/Chat.ts
+var ChatSlicer = (graphData) => {
+  const messages = graphData.nodes.filter((node) => {
+    if (node.type && typeof node.type === "object") {
+      return node.type.category === "chat" && node.type.type === "chat_message";
+    }
+    return node.type === "chat_message" || node.attributes?.type && node.attributes.type === "chat_message";
+  }).map((node) => ({
+    id: node.id,
+    content: node.content || node.label || node.id,
+    agentName: node.agentName || node.attributes?.agentName,
+    timestamp: node.timestamp || node.attributes?.timestamp,
+    metadata: node.metadata || node.attributes
+  }));
+  return {
+    messages,
+    viewType: "chat",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+};
+
+// src/views/defaultViews/DebugGraph.ts
+var DebugGraphSlicer = (graphData) => {
+  const nodes = graphData.nodes.map((node) => ({
+    id: node.id,
+    label: node.label,
+    type: node.type,
+    x: Math.random() * 800,
+    // Default positions for sigma.js
+    y: Math.random() * 600,
+    size: 5,
+    color: "#4a90e2",
+    attributes: node.attributes
+  }));
+  const edges = (graphData.edges || []).map((edge) => ({
+    source: edge.source,
+    target: edge.target,
+    type: edge.attributes?.type,
+    weight: edge.attributes?.weight,
+    attributes: edge.attributes
+  }));
+  return {
+    nodes,
+    edges,
+    viewType: "debug",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+};
+
+// src/views/defaultViews/Home.ts
+var HomeSlicer = (graphData) => {
+  const views = graphData.nodes.filter((node) => {
+    if (node.type && typeof node.type === "object") {
+      return node.type.category === "view" && node.type.type === "view";
+    }
+    return false;
+  }).map((node) => ({
+    id: node.id,
+    label: node.label || node.id,
+    description: node.description,
+    type: "view",
+    metadata: node.metadata
+  }));
+  return {
+    views,
+    viewType: "home",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+};
+
+// testeranto/testeranto.ts
+var m = (n) => `You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "prodirek", "content": "Hello from ${n}!"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/${n}`;
+var config = {
+  views: {
+    Home: {
+      slicer: HomeSlicer,
+      filePath: "src/views/defaultViews/HomeView.tsx"
+    },
+    Kanban: {
+      slicer: KanbanSlicer,
+      filePath: "src/views/defaultViews/KanbanBoardView.tsx"
+    },
+    EisenhowerMatrix: {
+      slicer: EisenhowerMatrixSlicer,
+      filePath: "src/views/defaultViews/EisenhowerMatrixView.tsx"
+    },
+    Gantt: {
+      slicer: GanttSlicer,
+      filePath: "src/views/defaultViews/GanttView.tsx"
+    },
+    Chat: {
+      slicer: ChatSlicer,
+      filePath: "src/views/defaultViews/ChatView.tsx"
+    },
+    DebugGraph: {
+      slicer: DebugGraphSlicer,
+      filePath: "src/views/defaultViews/DebugGraphView.tsx"
+    }
+  },
+  agents: {
+    "prodirek": {
+      load: [
+        `/read SOUL.md`,
+        `/read testeranto/slices/agents/prodirek.json`,
+        `/read testeranto/agents/prodirek.md`
+      ],
+      message: `Your name is "prodirek". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. ` + m("prodirek"),
+      sliceFunction: (graphManager) => {
+        const graphData = graphManager.getGraphData();
+        const allNodes = graphData.nodes;
+        const features = allNodes.filter((node) => node.type === "feature").map((node) => ({
+          id: node.id,
+          label: node.label,
+          status: node.status || node.metadata?.frontmatter?.status,
+          priority: node.priority || node.metadata?.frontmatter?.priority,
+          description: node.description,
+          metadata: node.metadata ? {
+            frontmatter: node.metadata.frontmatter
+          } : void 0
+        }));
+        const documentation = allNodes.filter((node) => node.type === "documentation").map((node) => ({
+          id: node.id,
+          label: node.label,
+          content: node.metadata?.content ? node.metadata.content.substring(0, 200) + (node.metadata.content.length > 200 ? "..." : "") : void 0
+        }));
+        const chatMessages = allNodes.filter(
+          (node) => node.type && typeof node.type === "object" && node.type.category === "chat" && node.type.type === "chat_message"
+        ).map((node) => ({
+          id: node.id,
+          agentName: node.agentName || node.metadata?.agentName,
+          content: node.content || node.metadata?.content,
+          timestamp: node.timestamp || node.metadata?.timestamp,
+          preview: node.content || node.metadata?.content ? (node.content || node.metadata?.content).substring(0, 100) + ((node.content || node.metadata?.content).length > 100 ? "..." : "") : void 0
+        }));
+        const agents = allNodes.filter((node) => node.type === "agent").map((node) => ({
+          id: node.id,
+          name: node.agentName,
+          label: node.label,
+          description: node.description,
+          message: node.message
+          // Add the message field
+        }));
+        return {
+          viewType: "agent",
+          agentName: "prodirek",
+          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+          data: {
+            features,
+            documentation,
+            chatMessages,
+            agents,
+            summary: {
+              totalFeatures: features.length,
+              totalDocumentation: documentation.length,
+              totalChatMessages: chatMessages.length,
+              totalAgents: agents.length
+            }
           }
-        },
-        void 0,
-        context.subscriptions
-      );
-    } catch (error) {
-      outputChannel.appendLine(`[Testeranto] Error opening chat: ${error.message}`);
-      vscode30.window.showErrorMessage(`Failed to open chat: ${error.message}`);
+        };
+      }
+    },
+    "arko": {
+      load: [
+        `/read SOUL.md`,
+        `/read testeranto/slices/agents/arko.json`,
+        `/read testeranto/agents/arko.md`
+      ],
+      message: `Your name is "arko". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. ` + m("arko"),
+      sliceFunction: (graphManager) => {
+        const graphData = graphManager.getGraphData();
+        const allNodes = graphData.nodes;
+        const configs = allNodes.filter((node) => node.type === "config").map((node) => ({
+          id: node.id,
+          label: node.label,
+          key: node.metadata?.configKey,
+          runtime: node.metadata?.runtime
+        }));
+        const entrypoints = allNodes.filter((node) => node.type === "entrypoint").map((node) => ({
+          id: node.id,
+          label: node.label,
+          testName: node.metadata?.testName,
+          configKey: node.metadata?.configKey,
+          runtime: node.metadata?.runtime
+        }));
+        const chatMessages = allNodes.filter(
+          (node) => node.type && typeof node.type === "object" && node.type.category === "chat" && node.type.type === "chat_message"
+        ).map((node) => ({
+          id: node.id,
+          agentName: node.agentName || node.metadata?.agentName,
+          content: node.content || node.metadata?.content,
+          timestamp: node.timestamp || node.metadata?.timestamp,
+          preview: node.content || node.metadata?.content ? (node.content || node.metadata?.content).substring(0, 100) + ((node.content || node.metadata?.content).length > 100 ? "..." : "") : void 0
+        }));
+        const agents = allNodes.filter((node) => node.type === "agent").map((node) => ({
+          id: node.id,
+          name: node.agentName,
+          label: node.label,
+          role: "agent",
+          message: node.message
+          // Add the message field
+        }));
+        return {
+          viewType: "agent",
+          agentName: "arko",
+          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+          data: {
+            configs,
+            entrypoints,
+            chatMessages,
+            agents,
+            summary: {
+              totalConfigs: configs.length,
+              totalEntrypoints: entrypoints.length,
+              totalChatMessages: chatMessages.length,
+              totalAgents: agents.length
+            }
+          }
+        };
+      }
     }
-  });
-  context.subscriptions.push(openChatCommand);
-}
-
-// src/vscode/extension/setupCleanup.ts
-import "vscode";
-function setupCleanup(context, outputChannel, terminalManager, statusBarManager, providers, commandDisposables) {
-  context.subscriptions.push({
-    dispose: () => {
-      outputChannel.appendLine("[Testeranto] Extension deactivating...");
-      terminalManager.disposeAll();
-      providers.runtimeProvider.dispose?.();
-      providers.dockerProcessProvider.dispose?.();
-      providers.aiderProcessProvider.dispose?.();
-      providers.fileTreeProvider.dispose?.();
-      providers.viewTreeProvider.dispose?.();
-      providers.agentProvider.dispose?.();
-      statusBarManager.dispose();
-      outputChannel.dispose();
+  },
+  volumes: [
+    `${process.cwd()}/src:/workspace/src`,
+    `${process.cwd()}/test:/workspace/test`,
+    `${process.cwd()}/SOUL.md:/workspace/SOUL.md`
+    // Note: node_modules is NOT mounted to avoid platform incompatibility
+  ],
+  featureIngestor: async function(s) {
+    const response = await fetch(s);
+    const data = await response.text();
+    const url = new URL(s);
+    const hostname = url.hostname.replace(/\./g, "_");
+    const pathname = url.pathname.replace(/\//g, "_").replace(/\./g, "_") || "index";
+    const filename = `${pathname}.md`;
+    const filepath = `tickets/web/${hostname}/${filename}`;
+    return { data, filepath };
+  },
+  runtimes: {
+    nodetests: {
+      runtime: "node",
+      tests: [
+        "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+        // "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
+        // "src/vscode/providers/logic/FileTreeLogic.test.ts",
+        // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
+        // "src/vscode/providers/utils/testTree/debugTest.js",
+        // "src/server/serverClasses/Server_Http/utils/handleCollatedFilesUtils/fileOperations.ts.",
+      ],
+      checks: [
+        // (x) => `yarn eslint ${x.join(" ")} `,
+        // (x) => `yarn tsc --noEmit ${x.join(" ")}`,
+        // // Run the calculator test
+        // (x) => {
+        //   const calculatorTest = x.find(f => f.includes("Calculator.test.node.ts"));
+        //   if (calculatorTest) {
+        //     return `yarn tsx ${calculatorTest}`;
+        //   }
+        //   return "echo 'No calculator test found'";
+        // },
+        // // Run Jest tests
+        // (x) =>
+        //   `yarn jest ${x.filter((f) => f.includes("jest.test")).join(" ")} --passWithNoTests`,
+        // () => `yarn node test/logFilesTest.js`, // you can run regular tests too!
+        // () => `src/vscode/providers/utils/testTree/debugTest.js`
+      ],
+      dockerfile: `testeranto/runtimes/node/node.Dockerfile`,
+      buildOptions: `testeranto/runtimes/node/node.mjs`,
+      buildKitOptions: {
+        // Single-stage Dockerfile, no targetStage needed
+      },
+      outputs: []
+    },
+    webtests: {
+      runtime: "web",
+      tests: [
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+        // We could add a standard web test framework like Vitest here
+      ],
+      checks: [
+        (x) => `yarn eslint ${x.join(" ")} `,
+        (x) => `yarn tsc --noEmit ${x.join(" ")}`
+      ],
+      dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
+      buildOptions: `testeranto/runtimes/web/web.ts`,
+      buildKitOptions: {
+        // Single-stage Dockerfile, no targetStage needed
+      },
+      outputs: []
     }
-  });
-  context.subscriptions.push(
-    outputChannel,
-    ...commandDisposables,
-    statusBarManager.getMainStatusBarItem(),
-    statusBarManager.getServerStatusBarItem()
-  );
-}
-
-// src/vscode/extension/handleActivationError.ts
-import * as vscode32 from "vscode";
-function handleActivationError(error, outputChannel) {
-  outputChannel.appendLine(`[Testeranto] ERROR during extension activation: ${error}`);
-  outputChannel.appendLine(`[Testeranto] Stack trace: ${error.stack}`);
-  vscode32.window.showErrorMessage(`Testeranto extension failed to activate: ${error.message}`);
-  console.error("[Testeranto] Extension activation failed:", error);
-}
+    // javatests: {
+    //   runtime: "java",
+    //   tests: [
+    //     // "src/java/test/java/com/example/calculator/CalculatorTest.java",
+    //     // "src/java/test/java/com/example/calculator/CalculatorJUnitTest.java", // Standard JUnit test
+    //   ],
+    //   checks: [
+    //     (x: string[]) => `javac -cp ".:lib/*" ${x.join(" ")}`,
+    //     // Run JUnit tests
+    //     (x: string[]) =>
+    //       `java -cp ".:lib/*:." org.junit.platform.console.ConsoleLauncher --select-class=com.example.calculator.CalculatorJUnitTest`,
+    //   ],
+    //   dockerfile: `testeranto/runtimes/java/java.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/java/java.java`,
+    //   buildKitOptions: {
+    //     cacheMounts: ["/root/.m2", "/root/.gradle"],
+    //   },
+    //   outputs: ["src/lib/kafe/examples/calculator/Calculator.java"]
+    // },
+    // rubytests: {
+    //   runtime: "ruby",
+    //   tests: [
+    //     // "src/lib/rubeno/examples/calculator/Calculator.test.rb",
+    //   ],
+    //   checks: [
+    //     // Syntax check with proper load path
+    //     // (x) => {
+    //     //   const firstTest = x[0];
+    //     //   const dir = firstTest.substring(0, firstTest.lastIndexOf('/'));
+    //     //   const libDir = dir.substring(0, dir.lastIndexOf('/lib/') + 4);
+    //     //   return `cd /workspace/${dir} && ruby -I/workspace/${libDir} -c Calculator.test.rb`;
+    //     // },
+    //     // // Run the calculator test with proper load path
+    //     // (x) => {
+    //     //   const firstTest = x[0];
+    //     //   const dir = firstTest.substring(0, firstTest.lastIndexOf('/'));
+    //     //   const libDir = dir.substring(0, dir.lastIndexOf('/lib/') + 4);
+    //     //   return `cd /workspace/${dir} && ruby -I/workspace/${libDir} run_test.rb`;
+    //     // },
+    //   ],
+    //   dockerfile: `testeranto/runtimes/ruby/ruby.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/ruby/ruby.rb`,
+    //   buildKitOptions: {
+    //     // Single-stage Dockerfile, no targetStage needed
+    //   },
+    //   outputs: [
+    //     "test_output",
+    //     "testeranto/reports/rubytests"
+    //   ],
+    // },
+    // pythontests: {
+    //   runtime: "python",
+    //   tests: [
+    //     "src/lib/pitono/examples/calculator_test.py",
+    //   ],
+    //   checks: [
+    //     // Python syntax check
+    //     (x) => `python -m py_compile ${x.join(" ")}`,
+    //     // Run the calculator test
+    //     (x) => `cd src/lib/pitono/examples && python calculator_test.py`,
+    //     // Run unittest tests (if any)
+    //     (x) =>
+    //       `python -m unittest ${x.filter((f) => f.includes("unittest.test")).join(" ")}`,
+    //   ],
+    //   dockerfile: `testeranto/runtimes/python/python.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/python/python.py`,
+    //   buildKitOptions: {
+    //     // Single-stage Dockerfile, no targetStage needed
+    //   },
+    //   outputs: [
+    //     "testeranto/reports/pythontests"
+    //   ],
+    // },
+    // golangtests: {
+    //   runtime: "golang",
+    //   tests: [
+    //     // Way 1: Golingvu tests on Testeranto
+    //     // "src/lib/golingvu/examples/calculator/golingvu_test.go",
+    //     // Way 2: Standard Go tests on Testeranto  
+    //     // "src/lib/golingvu/examples/calculator/native_test.go",
+    //     // // Additional test files
+    //     // "src/lib/golingvu/golingvu_test.go",
+    //     // "src/lib/golingvu/interopt_test.go",
+    //     // "src/lib/golingvu/integration_test.go",
+    //     // "src/lib/golingvu/package_test.go",
+    //   ],
+    //   checks: [
+    //     // Simple syntax check
+    //     () => "go fmt ./...",
+    //     // Simple vet check
+    //     () => "go vet ./...",
+    //     // Run Golingvu tests
+    //     (x) => {
+    //       const calculatorTest = x.find(f => f.includes("golingvu_test.go"));
+    //       if (calculatorTest) {
+    //         return `go test -v ${calculatorTest}`;
+    //       }
+    //       return "echo 'No golang calculator test found'";
+    //     },
+    //     // All tests together
+    //     () => "go test -v ./src/lib/golingvu/...",
+    //     // Coverage report
+    //     () => "go test -coverprofile=coverage.out ./src/lib/golingvu/... && go tool cover -func=coverage.out",
+    //     // Lint check - use version compatible with Go 1.22
+    //     () => "golangci-lint run ./src/lib/golingvu/... --timeout=5m"
+    //   ],
+    //   dockerfile: `testeranto/runtimes/golang/golang.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/golang/golang.ts`,
+    //   buildKitOptions: {
+    //     cacheMounts: [
+    //       "/go/pkg/mod",
+    //       "/root/.cache/go-build"
+    //     ],
+    //   },
+    //   outputs: [
+    //     "coverage.out",
+    //     "coverage.html"
+    //   ],
+    // },
+    // rusttests: {
+    //   runtime: "rust",
+    //   tests: [
+    //     // "src/lib/rusto/examples/calculator_test.rs",
+    //     // "src/lib/rusto/examples/calculator_complete_test.rs",
+    //   ],
+    //   checks: [
+    //     // (x) => `cargo test --manifest-path=${x[0].split("/src/")[0]}/Cargo.toml`,
+    //   ],
+    //   dockerfile: `testeranto/runtimes/rust/rust.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/rust/rust.ts`,
+    //   buildKitOptions: {
+    //     // Single-stage Dockerfile, no targetStage needed
+    //   },
+    //   outputs: [],
+    // },
+  }
+};
+var testeranto_default = config;
 
 // src/vscode/extension/ExtensionActivatorCore.ts
 async function activateExtension(context) {
-  console.log("[Testeranto] EXTENSION ACTIVATION STARTED - MINIMAL TEST");
   const outputChannel = createOutputChannel();
   outputChannel.show(true);
-  outputChannel.appendLine("[Testeranto] Extension activating... MINIMAL TEST");
+  outputChannel.appendLine("[Testeranto] Extension activating...");
   try {
-    vscode33.window.showInformationMessage("Testeranto extension is loading...");
     outputChannel.appendLine("[Testeranto] =========================================");
     outputChannel.appendLine("[Testeranto] Extension activation started");
     outputChannel.appendLine("[Testeranto] =========================================");
@@ -3922,8 +3842,55 @@ async function activateExtension(context) {
       providers,
       outputChannel
     );
-    vscode33.window.showInformationMessage("Testeranto extension is now active! Use the Testeranto view in the Activity Bar to explore tests.");
-    registerAdditionalCommands(context, outputChannel, terminalManager);
+    context.subscriptions.push(
+      vscode34.commands.registerCommand("testeranto.launchAgent", async () => {
+        outputChannel.appendLine("[Testeranto] Launching agent...");
+        try {
+          const profiles = Object.keys(testeranto_default.agents || {});
+          if (profiles.length === 0) {
+            vscode34.window.showErrorMessage("No agent profiles configured");
+            return;
+          }
+          const selectedProfile = await vscode34.window.showQuickPick(profiles, {
+            placeHolder: "Select agent profile to launch"
+          });
+          if (!selectedProfile) {
+            return;
+          }
+          const response = await fetch("http://localhost:3000/~/agents/spawn", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              profile: selectedProfile
+            })
+          });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Server returned ${response.status}`);
+          }
+          const result = await response.json();
+          outputChannel.appendLine(`[Testeranto] Agent launched: ${result.agentName} (container: ${result.containerId})`);
+          vscode34.window.showInformationMessage(`Agent ${result.agentName} launched successfully`);
+          providers.agentTreeDataProvider?.refresh();
+          vscode34.commands.executeCommand(
+            "testeranto.openAiderTerminal",
+            `agent-${result.agentName}`,
+            `Agent: ${result.agentName}`,
+            result.agentName
+          );
+        } catch (error) {
+          outputChannel.appendLine(`[Testeranto] Failed to launch agent: ${error.message}`);
+          vscode34.window.showErrorMessage(`Failed to launch agent: ${error.message}`);
+        }
+      })
+    );
+    vscode34.window.showInformationMessage("Testeranto extension is now active! Use the Testeranto view in the Activity Bar to explore tests.");
+    registerCheckServerCommand(context);
+    registerOpenProcessTerminalCommand(context, outputChannel, terminalManager);
+    registerOpenAiderTerminalCommand(context, outputChannel, terminalManager);
+    registerOpenViewCommand(context, outputChannel);
     registerTreeViews(providers, context, outputChannel);
     await testProviders(providers, outputChannel);
     refreshProviders(providers, outputChannel);
@@ -3933,7 +3900,6 @@ async function activateExtension(context) {
   } catch (error) {
     handleActivationError(error, outputChannel);
   }
-  outputChannel.appendLine("[Testeranto] Extension activation function completed");
 }
 
 // src/vscode/extension/ExtensionActivator.ts

@@ -74,7 +74,7 @@ export abstract class Server_Graph extends Server_Base {
     this.logBusinessMessage("Adding nodes from configuration...");
     this.addAgentNodesFromConfig();
     this.addViewNodesFromConfig();
-    this.addRuntimeNodesFromConfig();
+    // Runtime nodes are added by the Docker events watcher when containers start.
 
     // 3. Generate edges between nodes
     this.logBusinessMessage("Generating edges...");
@@ -186,63 +186,8 @@ ${graphData.edges.length} edges`);
     this.applyOperations(operations);
   }
 
-  protected addRuntimeNodesFromConfig(): void {
-    this.logBusinessMessage("Adding runtime nodes from configuration (V3)");
-    const timestamp = new Date().toISOString();
-
-    for (const [configKey, runtimeConfig] of Object.entries(this.configs.runtimes)) {
-      const runtimeNodeId = `runtime:${configKey}`;
-      // Add runtime node if not already present
-      if (!this.graph.nodes.find(n => n.id === runtimeNodeId)) {
-        this.graph.nodes.push({
-          id: runtimeNodeId,
-          type: { category: 'resource', type: 'runtime' },
-          label: configKey,
-          description: `Runtime: ${runtimeConfig.runtime}`,
-          metadata: {
-            runtime: runtimeConfig.runtime,
-            configKey,
-          },
-          timestamp,
-        });
-      }
-
-      // Add test nodes and edges
-      const tests = runtimeConfig.tests || [];
-      for (const testPath of tests) {
-        const testNodeId = `test:${configKey}:${testPath}`;
-        if (!this.graph.nodes.find(n => n.id === testNodeId)) {
-          this.graph.nodes.push({
-            id: testNodeId,
-            type: { category: 'file', type: 'entrypoint' },
-            label: testPath.split('/').pop() || testPath,
-            description: `Test: ${testPath}`,
-            metadata: {
-              testPath,
-              configKey,
-              runtime: runtimeConfig.runtime,
-            },
-            timestamp,
-          });
-        }
-
-        // Add edge from runtime to test if not already present
-        const edgeExists = this.graph.edges.find(
-          e => e.source === runtimeNodeId && e.target === testNodeId
-        );
-        if (!edgeExists) {
-          this.graph.edges.push({
-            source: runtimeNodeId,
-            target: testNodeId,
-            attributes: {
-              type: { category: 'ownership', type: 'has', directed: true },
-              timestamp,
-            },
-          });
-        }
-      }
-    }
-  }
+  // Runtime nodes are now added by the Docker events watcher when containers start.
+  // No need to pre-create them from configuration.
 
   protected generateEdges(): void {
     this.logBusinessMessage("Generating graph edges (V3)");
@@ -270,12 +215,6 @@ ${graphData.edges.length} edges`);
       }
     };
     updateAllAgentSliceFilesPure(graphData, this.projectRoot, this.configs);
-  }
-
-  // Public method to apply a graph update (called by Docker events watcher)
-  applyUpdate(update: { operations: GraphOperation[]; timestamp: string }): void {
-    this.logBusinessMessage(`[applyUpdate] applying ${update.operations.length} operations from update at ${update.timestamp}`);
-    this.applyOperations(update.operations);
   }
 
   // Public method to apply a graph update (called by Docker events watcher)

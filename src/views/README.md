@@ -15,12 +15,6 @@ The main component that:
 - Handles updates (in dynamic mode)
 - Manages loading and error states
 
-### `ViewManager`
-Manages multiple views with:
-- View switching
-- Context for view state
-- Consistent configuration
-
 ### `compileView`
 Utility to compile views to static HTML files at build time.
 
@@ -47,41 +41,6 @@ function MyView() {
         // Send update to server
       }}
     />
-  );
-}
-```
-
-### View Manager
-```tsx
-import { ViewManager } from './ViewManager';
-import { KanbanBoard, GanttChart } from './defaultViews';
-
-const views = [
-  {
-    id: 'kanban',
-    name: 'Kanban Board',
-    dataPath: '/data/kanban.json',
-    component: KanbanBoard,
-  },
-  {
-    id: 'gantt',
-    name: 'Gantt Chart',
-    dataPath: '/data/gantt.json',
-    component: GanttChart,
-  },
-];
-
-function App() {
-  return (
-    <ViewManager
-      views={views}
-      staticMode={false}
-      onSendUpdate={async (path, data) => {
-        // Handle updates
-      }}
-    >
-      {/* Optional: Add view selector UI here */}
-    </ViewManager>
   );
 }
 ```

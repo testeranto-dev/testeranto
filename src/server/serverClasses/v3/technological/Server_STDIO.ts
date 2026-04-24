@@ -17,8 +17,14 @@ export class Server_STDIO extends Server_CommandLine {
   protected stderr: Writable;
   protected stdioListeners: Map<string, Function[]> = new Map();
 
-  constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode);
+  constructor(
+    configs: ITesterantoConfig,
+    mode: IMode,
+    getCurrentTestResults: () => any,
+    projectRoot?: string,
+    resourceChangedCallback?: (path: string) => void
+  ) {
+    super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
     
     // Initialize with default streams (process.stdin, process.stdout, process.stderr)
     this.stdin = process.stdin;

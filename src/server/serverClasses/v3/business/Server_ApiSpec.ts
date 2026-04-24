@@ -2,7 +2,6 @@ import { API, wsApi } from "../../../../api";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { Server_Lock } from "./Server_Lock";
-import { Server_Static } from "./Server_Static";
 
 /**
  * Server_ApiSpec - Business Layer (-1.5)
@@ -165,7 +164,7 @@ export abstract class Server_ApiSpec extends Server_Lock {
     for (const [key, spec] of Object.entries(this.apiSpec.ws)) {
       // Skip slices as it's not a message type
       if (key === 'slices') continue;
-      
+
       if (spec.type === message.type) {
         messageType = key;
         break;
@@ -403,7 +402,7 @@ export abstract class Server_ApiSpec extends Server_Lock {
           errors.push(`WebSocket slices must be an object`);
           continue;
         }
-        
+
         // For slices, we expect it to be a record of string keys to string values
         // The actual wsApi.slices has string values like '/files', '/process', etc.
         // We'll validate that each value is a string
@@ -416,7 +415,7 @@ export abstract class Server_ApiSpec extends Server_Lock {
             errors.push(`WebSocket slice ${sliceKey} must be a string, got ${typeof sliceValue}`);
           }
         }
-      } 
+      }
       // Skip entries that have a 'check' property - these are HTTP route checkers, not WebSocket messages
       else if (message.check) {
         // These are HTTP route checkers, not WebSocket messages
@@ -453,7 +452,7 @@ export abstract class Server_ApiSpec extends Server_Lock {
     for (const [key, message] of Object.entries(this.apiSpec.ws)) {
       // Skip slices as it's not a message type
       if (key === 'slices') continue;
-      
+
       if (message.type === type) {
         return key;
       }

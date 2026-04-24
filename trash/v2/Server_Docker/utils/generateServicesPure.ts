@@ -110,12 +110,6 @@ export const generateServicesPure = (
       // Add restart: "no" policy to prevent automatic restarts
       services[getBddServiceName(uid)].restart = "no";
 
-      services[getAiderServiceName(uid)] = aiderDockerComposeFile(
-        getAiderServiceName(uid),
-        configs
-      );
-      // Add restart: "no" policy to prevent automatic restarts
-      services[getAiderServiceName(uid)].restart = "no";
 
       checks.forEach((check: ICheck, ndx: number) => {
         const command = check([]);
@@ -152,73 +146,6 @@ export const generateServicesPure = (
     };
   }
 
-  // Create agent services in docker-compose.yml
-  const agents = configs.agents || {};
-  consoleLog(`[generateServicesPure] Creating ${Object.keys(agents).length} agent services in docker-compose.yml`);
-
-  for (const [agentName, agentConfig] of Object.entries(agents)) {
-    const agentServiceName = `agent-${agentName}`;
-
-    // Get the load commands and message from agent config
-    const loadCommands = agentConfig.load || [];
-    const message = agentConfig.message || '';
-
-    // Create the instruction file content
-    // First, process load commands (they should start with /read or /add)
-    const loadCommandsContent = loadCommands
-      .filter(cmd => cmd.trim().length > 0)
-      .join('\n');
-
-    // The message is separate and should be added after load commands
-    // Add a clear separator between load commands and the message
-    // const instructionContent = loadCommandsContent + 
-    //   (loadCommandsContent ? '\n\n# --- Agent Instructions ---\n\n' : '') + 
-    //   message;
-
-    services[agentServiceName] = {
-      image: 'testeranto-aider:latest',
-      container_name: agentServiceName,
-      volumes: [
-        ...(configs.volumes || []),
-        `${process.cwd()}:/workspace`,
-        `${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml`,
-      ],
-      working_dir: '/workspace',
-      command: [
-        'sh', '-c',
-        `# Create agent instructions file from config
-         echo "Creating agent instructions for ${agentName}"
-           
-         # Create the instruction file with content from config
-        cat > /tmp/agent_load.txt << 'EOF'
-${loadCommandsContent}
-EOF
-   
-
-         # Create the instruction file with content from config
-        cat > /tmp/agent_message.txt << 'EOF'
-${message}
-EOF
-
-         echo "Starting aider for agent ${agentName} with instructions from config"
-         aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
-         EXIT_CODE=$?
-         echo "Aider exited with code $EXIT_CODE"
-         # Exit with the same code (no restart)
-         exit $EXIT_CODE`
-      ],
-      environment: {
-        MODE: mode,
-        NODE_ENV: 'production',
-        AGENT_NAME: agentName,
-        EDITOR: 'vim',
-      },
-      restart: 'no',
-      networks: ['allTests_network'],
-      tty: true,
-      stdin_open: true,
-    };
-  }
 
   for (const serviceName in services) {
     if (!services[serviceName].networks) {

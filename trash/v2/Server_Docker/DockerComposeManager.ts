@@ -1,5 +1,3 @@
-import type { ITesterantoConfig } from "../../../src/server/Types";
-import type { IMode } from "../../types";
 import { executeDockerComposeCommand, spawnPromise } from "./utils";
 import { BuilderServicesManager } from "./BuilderServicesManager";
 import { AiderImageBuilder } from "./AiderImageBuilder";
@@ -10,6 +8,8 @@ import { writeComposeFile } from "./utils/writeComposeFile";
 import { writeConfigForExtensionOnStop } from "./utils/writeConfigForExtensionOnStop";
 import { writeConfigForExtensionPure } from "./utils/writeConfigForExtensionPure";
 import { processCwd } from "./Server_Docker_Dependents";
+import type { IMode } from "../../../src/server/types";
+import type { ITesterantoConfig } from "../../../src/Types";
 
 export interface IDockerComposeResult {
   exitCode: number;

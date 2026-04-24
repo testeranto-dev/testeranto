@@ -22,8 +22,14 @@ export abstract class Server_Logs extends Server_Aider {
   protected logFormats: Map<string, (level: string, message: string, meta?: any) => string> = new Map();
   protected logStructures: Map<string, any> = new Map();
 
-  constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode);
+  constructor(
+    configs: ITesterantoConfig,
+    mode: IMode,
+    getCurrentTestResults: () => any,
+    projectRoot?: string,
+    resourceChangedCallback?: (path: string) => void
+  ) {
+    super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
     this.initializeLogFormats();
     this.initializeLogStructures();
   }

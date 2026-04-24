@@ -2,10 +2,10 @@ import matter from "gray-matter";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../graph";
-import { Server_Runtime } from "./Server_Runtime";
+import { Server_Api_Routing } from "./Server_Api_Routing";
 import { createFolderNodesAndEdges } from "../utils/createFolderNodesAndEdges";
 
-export abstract class Server_Files extends Server_Runtime {
+export abstract class Server_Files extends Server_Api_Routing {
   protected inputFileWatchers: Map<string, () => void> = new Map();
   protected testResultWatchers: Map<string, () => void> = new Map();
   protected featureFileWatchers: Map<string, () => void> = new Map();
@@ -26,6 +26,7 @@ export abstract class Server_Files extends Server_Runtime {
   protected abstract unwatchFile(path: string): void;
   protected abstract readFile(path: string): Promise<string>;
   protected abstract fileExists(path: string): Promise<boolean>;
+  protected abstract mkdir(path: string, recursive?: boolean): Promise<void>;
   protected abstract readdir(path: string): Promise<string[]>;
   protected abstract joinPaths(...paths: string[]): string;
   protected abstract resolvePath(path: string): string;
@@ -125,12 +126,8 @@ export abstract class Server_Files extends Server_Runtime {
     frontmatter: any,
   ): Promise<void>;
 
-  protected abstract startDockerProcess(
-    runtime: string,
-    testName: string,
-    configKey: string,
-    configValue: any,
-  ): Promise<void>;
+  // Docker processes are now started by the Docker events watcher.
+  // No need to manually start them from here.
 
   protected async startFileWatching(): Promise<void> {
     for (const [configKey] of Object.entries(this.configs.runtimes)) {

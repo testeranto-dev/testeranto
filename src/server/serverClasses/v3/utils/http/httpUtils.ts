@@ -25,11 +25,11 @@ export function createHttpServer(routes: Route[], middlewares: Middleware[] = []
         const url = parse(req.url || '', true);
         const method = req.method || 'GET';
         const path = url.pathname || '';
-        
-        const route = routes.find(r => 
+
+        const route = routes.find(r =>
           r.method.toUpperCase() === method.toUpperCase() && r.path === path
         );
-        
+
         if (route) {
           await route.handler(req, res);
         } else {
@@ -38,22 +38,11 @@ export function createHttpServer(routes: Route[], middlewares: Middleware[] = []
         }
       }
     };
-    
+
     await next();
   });
-  
-  return server;
-}
 
-export function startHttpServer(server: HttpServer, port: number, hostname?: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    server.listen(port, hostname || 'localhost', () => {
-      console.log(`HTTP server listening on ${hostname || 'localhost'}:${port}`);
-      resolve();
-    });
-    
-    server.on('error', reject);
-  });
+  return server;
 }
 
 export function stopHttpServer(server: HttpServer): Promise<void> {

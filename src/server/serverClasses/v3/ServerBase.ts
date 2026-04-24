@@ -86,4 +86,14 @@ export abstract class Server_Base {
   protected logBusinessWarning(message: string): void {
     console.warn(`[Business] ${message}`);
   }
+
+  /**
+   * Broadcast a message to all WebSocket clients.
+   * Implemented by technological layers (Server_WS_HTTP).
+   */
+  protected abstract broadcastApiMessage(
+    messageType: string,
+    data: any,
+    filter?: (client: any) => boolean
+  ): void;
 }

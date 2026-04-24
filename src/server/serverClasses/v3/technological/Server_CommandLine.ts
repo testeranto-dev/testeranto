@@ -1,9 +1,7 @@
-import { Server_Runtime } from "../business/Server_Runtime";
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
-import { Server } from "../Server";
 import { Server_FS } from "./Server_FS";
 
 const execAsync = promisify(exec);
@@ -19,8 +17,14 @@ const execAsync = promisify(exec);
 export class Server_CommandLine extends Server_FS {
   private processes: Map<string, any> = new Map();
 
-  constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode);
+  constructor(
+    configs: ITesterantoConfig,
+    mode: IMode,
+    getCurrentTestResults: () => any,
+    projectRoot?: string,
+    resourceChangedCallback?: (path: string) => void
+  ) {
+    super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
   }
 
   // Command execution

@@ -1,28 +1,39 @@
-import { exec, spawn } from 'child_process';
-import fs from 'fs/promises';
-import path from 'path';
-import { promisify } from 'util';
+import { exec, spawn } from "child_process";
+import path from "path";
+import { promisify } from "util";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
+import { getAiderServiceName } from "../utils/aider/getAiderServiceName";
+import { parseDockerEvent } from "../utils/docker/parseDockerEvent";
+import { generateServiceName } from "../utils/generateServiceName";
+import { getBaseServiceName } from "../utils/test/getBaseServiceName";
+import { getBddServiceName } from "../utils/test/getBddServiceName";
+import { getInputFiles } from "../utils/test/getInputFiles";
 import { Server_Api } from "./Server_Api";
-import { generateAgentService } from "../business/utils/generateAgentService";
-import { generateAiderService } from "../business/utils/generateAiderService";
-import { generateBddService } from "../business/utils/generateBddService";
-import { generateBuilderService } from "../business/utils/generateBuilderService";
-import { generateCheckService } from "../business/utils/generateCheckService";
-import { generateServiceName } from "../business/utils/generateServiceName";
-import { generateYaml } from "../business/utils/generateYaml";
-import { yamlValueToString } from '../business/utils/yamlValueToString';
-import { addProcessNodeToGraphV3Pure } from "../utils/graph/addProcessNodeToGraphV3Pure";
 import { BuildKitBuilder } from "./utils/BuildKit_Utils";
+import { handleDockerEventUtil } from "./utils/docker/handleDockerEventUtil";
+import { generateAgentService } from "./utils/generateAgentService";
+import { generateAiderService } from "./utils/generateAiderService";
+import { generateBddService } from "./utils/generateBddService";
+import { generateBuilderService } from "./utils/generateBuilderService";
+import { generateCheckService } from "./utils/generateCheckService";
+import { generateYaml } from "./utils/generateYaml";
+import { yamlValueToString } from "./utils/yamlValueToString";
 
 const execAsync = promisify(exec);
 
 export class Server_DockerCompose extends Server_Api {
   private dockerEventsCleanup: (() => void) | null = null;
+  private testLaunchLocks: Map<string, boolean> = new Map();
 
-  constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode);
+  constructor(
+    configs: ITesterantoConfig,
+    mode: IMode,
+    getCurrentTestResults: () => any,
+    projectRoot?: string,
+    resourceChangedCallback?: (path: string) => void
+  ) {
+    super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
   }
 
   async dockerComposeUp(services?: string[]): Promise<void> {
@@ -185,17 +196,13 @@ export class Server_DockerCompose extends Server_Api {
       services[builderServiceName] = this.generateBuilderService(configKey, configValue);
     }
 
-    // Add test services (BDD, aider, checks)
+    // Add test services (BDD and checks only - no aider services)
     for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
       if (configValue.tests) {
         for (const testName of configValue.tests) {
           // BDD service
           const bddServiceName = this.generateServiceName(configKey, testName, 'bdd');
           services[bddServiceName] = this.generateBddService(configKey, configValue, testName);
-
-          // Aider service
-          const aiderServiceName = this.generateServiceName(configKey, testName, 'aider');
-          services[aiderServiceName] = this.generateAiderService(configKey, configValue, testName);
 
           // Check services (if checks exist)
           if (configValue.checks && configValue.checks.length > 0) {
@@ -208,13 +215,6 @@ export class Server_DockerCompose extends Server_Api {
       }
     }
 
-    // Add agent services
-    if (this.configs.agents) {
-      for (const [agentName, agentConfig] of Object.entries(this.configs.agents)) {
-        const agentServiceName = `agent-${agentName}`;
-        services[agentServiceName] = this.generateAgentService(agentName, agentConfig);
-      }
-    }
 
     // Add network
     services.networks = {
@@ -225,6 +225,22 @@ export class Server_DockerCompose extends Server_Api {
 
     this.logBusinessMessage(`Generated ${Object.keys(services).length} services`);
     return services;
+  }
+
+  /**
+   * Generate an agent service configuration for docker-compose.yml.
+   * Follows V2 pattern from generateServicesPure.ts.
+   */
+  private generateAgentService(agentName: string, agentConfig: any): any {
+    return generateAgentService(this.configs, agentName, agentConfig, this.mode, process.cwd());
+  }
+
+  /**
+   * Generate an aider service configuration for a given test.
+   * Follows V2 pattern from generateServicesPure.ts and aiderDockerComposeFile.
+   */
+  private generateAiderService(configKey: string, configValue: any, testName: string): any {
+    return generateAiderService(this.configs, configKey, configValue, testName, this.mode, process.cwd());
   }
 
   // Generate service name similar to V2
@@ -242,20 +258,12 @@ export class Server_DockerCompose extends Server_Api {
     return generateBddService(configKey, configValue, testName);
   }
 
-  // Generate aider service configuration
-  private generateAiderService(configKey: string, configValue: any, testName: string): any {
-    return generateAiderService(configKey, configValue, testName);
-  }
 
   // Generate check service configuration
   private generateCheckService(configKey: string, configValue: any, testName: string, checkIndex: number): any {
     return generateCheckService(configKey, configValue, testName, checkIndex);
   }
 
-  // Generate agent service configuration
-  private generateAgentService(agentName: string, agentConfig: any): any {
-    return generateAgentService(agentName, agentConfig, this.mode);
-  }
 
   // Write docker-compose.yml file
   private async writeComposeFile(services: Record<string, any>): Promise<void> {
@@ -263,17 +271,16 @@ export class Server_DockerCompose extends Server_Api {
     this.logBusinessMessage(`Writing docker-compose.yml to ${composePath}`);
 
     // Create YAML content
-    const yamlContent = this.generateYaml(services);
+    const yamlContent = generateYaml(services);
 
     const dir = path.dirname(composePath);
-    try {
-      await fs.access(dir);
-    } catch {
-      await fs.mkdir(dir, { recursive: true });
+    const dirExists = await this.fileExists(dir);
+    if (!dirExists) {
+      await this.mkdir(dir, true);
     }
 
     // Write file
-    await fs.writeFile(composePath, yamlContent, 'utf-8');
+    await this.writeFile(composePath, yamlContent);
     this.logBusinessMessage(`docker-compose.yml written successfully`);
   }
 
@@ -448,22 +455,22 @@ export class Server_DockerCompose extends Server_Api {
   }
 
   // Implement other abstract methods from Server class
-  private async checkExistingTestResults(): Promise<void> {
+  async checkExistingTestResults(): Promise<void> {
     this.logBusinessMessage("Checking existing test results...");
     // Implementation would check for existing test results
   }
 
-  private async initializeFileWatching(): Promise<void> {
+  async initializeFileWatching(): Promise<void> {
     this.logBusinessMessage("Initializing file watching...");
     // Implementation would setup file watchers
   }
 
-  private async startLoggingForAllServices(): Promise<void> {
+  async startLoggingForAllServices(): Promise<void> {
     this.logBusinessMessage("Starting logging for all services...");
     // Implementation would start logging for all Docker services
   }
 
-  private async stopAllFileWatchers(): Promise<void> {
+  async stopAllFileWatchers(): Promise<void> {
     this.logBusinessMessage("Stopping all file watchers...");
     // Implementation would stop all file watchers
   }
@@ -541,166 +548,244 @@ export class Server_DockerCompose extends Server_Api {
 
   // Handle a Docker event and update the graph accordingly
   private handleDockerEvent(event: any): void {
-    this.logBusinessMessage(`[handleDockerEvent] received event: Type=${event.Type}, Action=${event.Action || event.status}, id=${(event.id || event.Actor?.ID || '?').substring(0, 12)}`);
-
-    // Only process container events
-    if (event.Type !== 'container') {
-      this.logBusinessMessage(`[handleDockerEvent] skipping non-container event (Type=${event.Type})`);
+    const parsed = parseDockerEvent(event);
+    if (!parsed) {
+      this.logBusinessMessage(`[handleDockerEvent] Could not parse event: ${JSON.stringify(event).substring(0, 200)}`);
       return;
     }
 
-    const containerId = event.id || event.Actor?.ID;
-    if (!containerId) {
-      this.logBusinessMessage(`[handleDockerEvent] no containerId found in event`);
+    const result = handleDockerEventUtil(
+      event,
+      parsed.containerId,
+      parsed.action,
+      parsed.serviceName,
+      parsed.processType,
+      parsed.configKey,
+      parsed.testName,
+    );
+
+    if (result.operations.length > 0) {
+      this.logBusinessMessage(`[handleDockerEvent] Applying ${result.operations.length} operations for ${parsed.action} on ${parsed.containerId}`);
+      this.applyUpdate(result);
+      this.saveGraph();
+      this.broadcastGraphUpdated();
+    }
+  }
+
+  // ========== Aider Launching (V2 pattern) ==========
+
+  /**
+   * Get the aider service name for a given test.
+   */
+  private getAiderServiceName(configKey: string, testName: string): string {
+    return getAiderServiceName(configKey, testName);
+  }
+
+  /**
+   * Get the BDD service name for a given test.
+   */
+  private getBddServiceName(configKey: string, testName: string): string {
+    return getBddServiceName(configKey, testName);
+  }
+
+  /**
+   * Get the base service name for a given test.
+   */
+  private getBaseServiceName(configKey: string, testName: string): string {
+    return getBaseServiceName(configKey, testName);
+  }
+
+  /**
+   * Create the aider message file for a given test.
+   * Follows V2 Server_Aider.createAiderMessageFile pattern.
+   */
+  async createAiderMessageFile(testName: string, configKey: string): Promise<string> {
+    this.logBusinessMessage(`createAiderMessageFile: ${testName} for config ${configKey}`);
+
+    const reportDir = `${process.cwd()}/testeranto/reports/${configKey}/${testName}`;
+    const messageFilePath = `${reportDir}/aider-message.txt`;
+
+    // Create the report directory if it doesn't exist
+    await this.mkdir(reportDir, true);
+
+    // Get input files for the test
+    const inputFiles = this.getInputFiles(configKey, testName);
+
+    let messageContent = '';
+
+    // Include all input files, but exclude aider-message.txt to avoid circular reference
+    const filteredInputFiles = inputFiles.filter(file => !file.includes('aider-message.txt'));
+
+    if (filteredInputFiles.length > 0) {
+      messageContent +=
+        filteredInputFiles.map((file) => {
+          const relativePath = path.relative(process.cwd(), file);
+          return `/add ${relativePath}`;
+        }).join('\n') + '\n\n';
+    }
+
+    // Get test-specific output files
+    const parentReportDir = path.dirname(reportDir);
+
+    // Transform the test file name to match the log file naming pattern
+    const testFileName = path.basename(testName);
+    const cleanTestName = testFileName
+      .toLowerCase()
+      .replace(/\./g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+
+    // Get the runtime config to know how many checks there are
+    const runtimeConfig = this.configs.runtimes[configKey];
+    const checksCount = runtimeConfig?.checks?.length || 0;
+
+    // Always look for bdd log
+    const bddLogPath = path.join(parentReportDir, `${cleanTestName}_bdd.log`);
+    const bddLogExists = await this.fileExists(bddLogPath);
+    if (bddLogExists) {
+      const relativeBddLogPath = path.relative(process.cwd(), bddLogPath);
+      messageContent += `/read ${relativeBddLogPath}\n`;
+    }
+
+    // Look for check logs based on checks count
+    for (let i = 0; i < checksCount; i++) {
+      const checkLogPath = path.join(parentReportDir, `${cleanTestName}_check-${i}.log`);
+      const checkLogExists = await this.fileExists(checkLogPath);
+      if (checkLogExists) {
+        const relativeCheckLogPath = path.relative(process.cwd(), checkLogPath);
+        messageContent += `/read ${relativeCheckLogPath}\n`;
+      }
+    }
+
+    // Add the tests.json file from the test-specific directory
+    const testsJsonPath = path.join(reportDir, 'tests.json');
+    const testsJsonExists = await this.fileExists(testsJsonPath);
+    if (testsJsonExists) {
+      const relativeTestsJsonPath = path.relative(process.cwd(), testsJsonPath);
+      messageContent += `/read ${relativeTestsJsonPath}\n`;
+    }
+
+    if (messageContent.includes('/read')) {
+      messageContent += '\n';
+    }
+
+    messageContent += 'Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.\n\n';
+
+    await this.writeFile(messageFilePath, messageContent);
+    this.logBusinessMessage(`Created aider message file at ${messageFilePath}`);
+
+    return messageFilePath;
+  }
+
+  /**
+   * Launch an aider process for the given test.
+   * Follows V2 Server_Docker_Test.launchAider pattern.
+   */
+  async launchAider(
+    runtime: string,
+    testName: string,
+    configKey: string,
+    configValue: any,
+  ): Promise<void> {
+    const lockKey = `aider:${configKey}:${testName}`;
+    if (this.testLaunchLocks.get(lockKey)) {
+      this.logBusinessMessage(`[launchAider] Skipping ${testName} - already launching`);
       return;
     }
 
-    const action = event.Action || event.status;
-    const serviceName = event.Actor?.Attributes?.['com.docker.compose.service'] || containerId;
+    this.testLaunchLocks.set(lockKey, true);
+    try {
+      // Process nodes are added by the Docker events watcher when containers start.
+      // No need to manually add them here.
 
-    this.logBusinessMessage(`[handleDockerEvent] processing: action=${action}, containerId=${containerId.substring(0, 12)}, serviceName=${serviceName}`);
+      // Start the Docker service (side effect)
+      // The Docker events watcher will handle adding/updating process nodes.
+      const serviceName = this.getAiderServiceName(configKey, testName);
+      try {
+        await this.dockerComposeUp([serviceName]);
 
-    // Determine the process type from the service name
-    let processType: 'bdd' | 'check' | 'aider' | 'builder' | 'agent' | 'unknown' = 'unknown';
-    if (serviceName.includes('-bdd')) processType = 'bdd';
-    else if (serviceName.includes('-check-')) processType = 'check';
-    else if (serviceName.includes('-aider')) processType = 'aider';
-    else if (serviceName.startsWith('agent-')) processType = 'agent';
-    else if (serviceName.includes('-builder')) processType = 'builder';
-
-    this.logBusinessMessage(`[handleDockerEvent] determined processType=${processType}`);
-
-    // Extract configKey and testName from service name
-    let configKey = '';
-    let testName = '';
-    if (processType === 'agent') {
-      configKey = 'agent';
-      testName = serviceName.replace('agent-', '');
-    } else if (processType !== 'unknown') {
-      const parts = serviceName.split('-');
-      configKey = parts[0];
-      testName = serviceName.substring(configKey.length + 1);
+      } catch (error: any) {
+        this.logBusinessError(`[launchAider] Failed to start service ${serviceName}:`, error);
+        throw error;
+      }
+    } finally {
+      setTimeout(() => {
+        this.testLaunchLocks.delete(lockKey);
+      }, 5000);
     }
+  }
 
-    this.logBusinessMessage(`[handleDockerEvent] configKey=${configKey}, testName=${testName}`);
+  // Aider updates are now handled by the Docker events watcher.
+  // No need to manually generate updates.
 
-    const nodeId = `docker-${containerId}`;
+  /**
+   * Inform aider about changes (e.g., test results).
+   * Follows V2 Server_Docker_Test.informAider pattern.
+   */
+  async informAider(
+    runtime: string,
+    testName: string,
+    configKey: string,
+    configValue: any,
+    files?: any,
+  ): Promise<void> {
+    this.logBusinessMessage(`[informAider] Informing aider: ${testName} for config ${configKey}`);
 
-    switch (action) {
-      case 'start':
-      case 'create':
-        {
-          this.logBusinessMessage(`[handleDockerEvent] creating process node for ${serviceName}`);
-          const operations = addProcessNodeToGraphV3Pure(
-            containerId,
-            serviceName,
-            processType,
-            configKey,
-            testName,
-            'running',
-          );
-          this.logBusinessMessage(`[handleDockerEvent] generated ${operations.length} operations`);
-          const timestamp = new Date().toISOString();
-          const update = { operations, timestamp };
-          this.logBusinessMessage(`[handleDockerEvent] calling applyUpdate`);
-          this.applyUpdate(update);
-          this.logBusinessMessage(`[handleDockerEvent] applyUpdate completed`);
-          console.log(`[DockerEvent] ${action} ${serviceName} (${containerId}) -> added process node`);
-          this.broadcastProcessStatusChanged(nodeId, 'running', {
-            containerId,
-            serviceName,
-            processType,
-            configKey,
-            testName,
-          });
-          this.broadcastContainerStatusChanged(containerId, 'running', serviceName);
-          this.broadcastGraphUpdated();
-          this.logBusinessMessage(`[handleDockerEvent] calling saveGraph`);
-          this.saveGraph();
-          this.logBusinessMessage(`[handleDockerEvent] saveGraph completed`);
-        }
-        break;
+    try {
+      // Create the aider message file
+      await this.createAiderMessageFile(testName, configKey);
 
-      case 'die':
-      case 'stop':
-      case 'kill':
-        {
-          this.logBusinessMessage(`[handleDockerEvent] updating process node for ${serviceName} to stopped`);
-          const operations = addProcessNodeToGraphV3Pure(
-            containerId,
-            serviceName,
-            processType,
-            configKey,
-            testName,
-            'stopped',
-          );
-          const updateOps = operations.map((op) => {
-            if (op.type === 'addNode') {
-              return {
-                type: 'updateNode' as const,
-                data: {
-                  id: op.data.id,
-                  status: 'done',
-                  metadata: {
-                    ...op.data.metadata,
-                    status: 'stopped',
-                    isActive: false,
-                  },
-                },
-                timestamp: op.timestamp,
-              };
-            }
-            return op;
-          });
-          this.logBusinessMessage(`[handleDockerEvent] generated ${updateOps.length} update operations`);
-          const timestamp = new Date().toISOString();
-          const update = { operations: updateOps, timestamp };
-          this.logBusinessMessage(`[handleDockerEvent] calling applyUpdate`);
-          this.applyUpdate(update);
-          this.logBusinessMessage(`[handleDockerEvent] applyUpdate completed`);
-          console.log(`[DockerEvent] ${action} ${serviceName} (${containerId}) -> updated process node to stopped`);
-          this.broadcastProcessStatusChanged(nodeId, 'stopped', {
-            containerId,
-            serviceName,
-            processType,
-          });
-          this.broadcastContainerStatusChanged(containerId, 'stopped', serviceName);
-          this.broadcastGraphUpdated();
-          this.logBusinessMessage(`[handleDockerEvent] calling saveGraph`);
-          this.saveGraph();
-          this.logBusinessMessage(`[handleDockerEvent] saveGraph completed`);
-        }
-        break;
+      // Get the aider service name
+      const serviceName = this.getAiderServiceName(configKey, testName);
 
-      case 'destroy':
-        {
-          this.logBusinessMessage(`[handleDockerEvent] removing process node for ${serviceName}`);
-          const timestamp = new Date().toISOString();
-          const update = {
-            operations: [
-              { type: 'removeNode', data: { id: nodeId }, timestamp },
-            ],
-            timestamp,
-          };
-          this.logBusinessMessage(`[handleDockerEvent] calling applyUpdate`);
-          this.applyUpdate(update);
-          this.logBusinessMessage(`[handleDockerEvent] applyUpdate completed`);
-          console.log(`[DockerEvent] ${action} ${serviceName} (${containerId}) -> removed process node`);
-          this.broadcastProcessStatusChanged(nodeId, 'destroyed', {
-            containerId,
-            serviceName,
-          });
-          this.broadcastContainerStatusChanged(containerId, 'destroyed', serviceName);
-          this.broadcastGraphUpdated();
-          this.logBusinessMessage(`[handleDockerEvent] calling saveGraph`);
-          this.saveGraph();
-          this.logBusinessMessage(`[handleDockerEvent] saveGraph completed`);
-        }
-        break;
+      // Restart the aider service to pick up the new message
+      await this.restartService(serviceName);
 
-      default:
-        this.logBusinessMessage(`[handleDockerEvent] unhandled action ${action} for ${serviceName} (${containerId}) -> no graph modification`);
-        console.log(`[DockerEvent] ${action} ${serviceName} (${containerId}) -> no graph modification`);
+      this.logBusinessMessage(`[informAider] Aider informed and service restarted: ${serviceName}`);
+    } catch (error: any) {
+      this.logBusinessError(`[informAider] Failed to inform aider:`, error);
+      throw error;
     }
+  }
+
+  /**
+   * Get input files for a test.
+   * This is a simplified version - in V2 this is handled by the parent class.
+   */
+  private getInputFiles(configKey: string, testName: string): string[] {
+    return getInputFiles(configKey, testName);
+  }
+
+  // Process nodes are no longer added manually. The Docker events watcher
+  // handles adding/updating/removing process nodes based on container events.
+
+  // ========== Broadcast Methods ==========
+
+  broadcastProcessStatusChanged(nodeId: string, status: string, metadata: any): void {
+    this.broadcastApiMessage('resourceChanged', {
+      url: `/~/processes/${nodeId}`,
+      message: `Process ${nodeId} status changed to ${status}`,
+      nodeId,
+      status,
+      metadata,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  broadcastContainerStatusChanged(containerId: string, status: string, serviceName: string): void {
+    this.broadcastApiMessage('resourceChanged', {
+      url: `/~/containers/${containerId}`,
+      message: `Container ${containerId} status changed to ${status}`,
+      containerId,
+      status,
+      serviceName,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  broadcastGraphUpdated(): void {
+    this.broadcastApiMessage('graphUpdated', {
+      message: 'Graph updated',
+      timestamp: new Date().toISOString()
+    });
   }
 }

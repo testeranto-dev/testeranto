@@ -30,7 +30,6 @@
     "onCommand:testeranto.refreshFileTree",
     "onCommand:testeranto.showProcessLogs",
     "onCommand:testeranto.openAiderTerminal",
-    "onCommand:testeranto.openServerWebview",
     "onCommand:testeranto.launchAgent",
     "onView:testeranto.runtimeView",
     "onView:testeranto.dockerProcessView",
@@ -52,23 +51,7 @@
       ]
     },
     "menus": {
-      "view/title": [
-        {
-          "command": "testeranto.openServerWebview",
-          "when": "view == testeranto.runtimeView",
-          "group": "navigation"
-        },
-        {
-          "command": "testeranto.openServerWebview",
-          "when": "view == testeranto.dockerProcessView",
-          "group": "navigation"
-        },
-        {
-          "command": "testeranto.openServerWebview",
-          "when": "view == testeranto.aiderProcessView",
-          "group": "navigation"
-        }
-      ]
+      "view/title": []
     },
     "views": {
       "testeranto": [
@@ -158,20 +141,12 @@
         "title": "Testeranto: Open Aider Terminal"
       },
       {
-        "command": "testeranto.openServerWebview",
-        "title": "Testeranto: Open Server Webview"
-      },
-      {
         "command": "testeranto.launchAgent",
         "title": "Testeranto: Launch Agent"
       },
       {
         "command": "testeranto.refreshAgents",
         "title": "Testeranto: Refresh Agents"
-      },
-      {
-        "command": "testeranto.openChat",
-        "title": "Testeranto: Open Group Chat"
       },
       {
         "command": "testeranto.openProcessTerminal",
@@ -445,6 +420,7 @@
     "react-test-renderer": "^19.2.0",
     "sass": "^1.90.0",
     "sigma": "^3.0.2",
+    "three-forcegraph": "^1.43.4",
     "tsc-prog": "^2.3.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",

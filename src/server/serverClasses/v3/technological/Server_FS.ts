@@ -5,7 +5,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
-import { Server } from "../Server";
+import { Server_Files } from "../business/Server_Files";
 
 const execAsync = promisify(exec);
 
@@ -17,7 +17,7 @@ const execAsync = promisify(exec);
  * Provides: File system operations
  * To be mocked in: Tests
  */
-export class Server_FS extends Server {
+export class Server_FS extends Server_Files {
   private fileWatchers: Map<string, () => void> = new Map();
 
   constructor(

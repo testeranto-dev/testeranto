@@ -8,8 +8,14 @@ import { validateRuntimeConfiguration } from "../utils/runtime/validationUtils";
 import { Server_Polyglot } from "./Server_Polyglot";
 
 export class Server_Runtime extends Server_Polyglot {
-  constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode);
+  constructor(
+    configs: ITesterantoConfig,
+    mode: IMode,
+    getCurrentTestResults: () => any,
+    projectRoot?: string,
+    resourceChangedCallback?: (path: string) => void
+  ) {
+    super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
   }
 
   async executeRuntimeBuild(runtime: string, configKey: string): Promise<void> {

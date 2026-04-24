@@ -6,25 +6,35 @@ import type { WebSocketClient } from "../utils/websocket/wsUtils";
 import type { Route, Middleware } from "../utils/http/httpUtils";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
+import { serveStatic } from 'hono/bun';
 
 export class Server_WS_HTTP extends Server_HTTP {
   protected wsServer: WebSocketServer | null = null;
-  protected httpServer: any = null;
+  // httpServer is inherited from Server_HTTP
   protected wsClients: Map<string, WebSocketClient> = new Map();
   protected channels: Map<string, Set<string>> = new Map();
   // Note: routes moved to Server_ApiSpec (business layer)
   // Note: middlewares are a technological concern for HTTP handling
   protected middlewares: Array<(request: Request, next: () => Promise<Response>) => Promise<Response>> = [];
 
-  constructor(configs: ITesterantoConfig, mode: IMode) {
-    super(configs, mode);
+  constructor(
+    configs: ITesterantoConfig,
+    mode: IMode,
+    getCurrentTestResults: () => any,
+    projectRoot?: string,
+    resourceChangedCallback?: (path: string) => void
+  ) {
+    super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
   }
 
-  async startHttpServer(port: number, hostname?: string): Promise<void> {
+  async startHttpServer(port: number = 3000, hostname?: string): Promise<void> {
     this.logBusinessMessage(`Starting HTTP server with WebSocket support using Hono with Bun.serve()...`);
 
     this.port = port;
     this.hostname = hostname || '0.0.0.0';
+
+    // Setup Hono app with static file serving before starting the server
+    this.setupHonoApp();
 
     // Create the Bun HTTP server with WebSocket support
     this.httpServer = Bun.serve({
@@ -63,6 +73,39 @@ export class Server_WS_HTTP extends Server_HTTP {
     this.logBusinessMessage(`HTTP server with WebSocket support started at ${this.httpServer.url}`);
   }
 
+  private setupHonoApp(): void {
+    // Handle /~/ API routes first (before static file serving)
+    this.app.all('/~/', (c) => {
+      return this.handleHonoRequest(c.req);
+    });
+    this.app.all('/~/*', (c) => {
+      return this.handleHonoRequest(c.req);
+    });
+
+    // Serve static files from testeranto/views directory
+    this.app.use('/testeranto/views/*', serveStatic({ 
+      root: './',
+      onNotFound: (path, c) => {
+        this.logBusinessMessage(`Static file not found: ${path}`);
+        return c.text('File not found', 404);
+      }
+    }));
+
+    // Serve other static files from root (excluding /~/ routes)
+    this.app.use('/*', serveStatic({ 
+      root: './',
+      onNotFound: (path, c) => {
+        this.logBusinessMessage(`Static file not found: ${path}`);
+        return c.text('File not found', 404);
+      }
+    }));
+
+    // Handle all other requests through Hono
+    this.app.all('*', (c) => {
+      return this.handleHonoRequest(c.req);
+    });
+  }
+
   private upgradeWebSocket(request: Request): boolean {
     // Bun handles WebSocket upgrades automatically when websocket config is provided
     // This method is called by Bun when a WebSocket upgrade is requested
@@ -70,13 +113,16 @@ export class Server_WS_HTTP extends Server_HTTP {
   }
 
   private handleWebSocketConnectionV2(ws: any): void {
-    const clientId = `ws-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const { handleWebSocketConnectionV2 } = require("../utils/websocket/handleWebSocketConnectionV2");
+    const result = handleWebSocketConnectionV2();
+    
+    const clientId = result.clientId;
     // Create client without using createWebSocketClient since Bun doesn't provide request object
     const client = {
       id: clientId,
       ws: ws,
       ip: 'unknown',
-      connectedAt: new Date()
+      connectedAt: result.connectedAt
     };
 
     this.wsClients.set(clientId, client);
@@ -92,6 +138,8 @@ export class Server_WS_HTTP extends Server_HTTP {
   }
 
   private handleWebSocketMessageV2Bun(ws: any, message: string | Buffer | object): void {
+    const { handleWebSocketMessageV2Bun } = require("../utils/websocket/handleWebSocketMessageV2Bun");
+    
     // Find client by WebSocket object
     let clientId: string | null = null;
     for (const [id, client] of this.wsClients.entries()) {
@@ -110,57 +158,42 @@ export class Server_WS_HTTP extends Server_HTTP {
       return;
     }
 
-    try {
-      let parsed;
-      if (typeof message === 'string') {
-        parsed = JSON.parse(message);
-      } else if (message instanceof Buffer) {
-        parsed = JSON.parse(new TextDecoder().decode(message));
-      } else if (typeof message === 'object' && message !== null) {
-        // Already an object (Bun may parse JSON automatically)
-        parsed = message;
-      } else {
-        throw new Error(`Unsupported message type: ${typeof message}`);
-      }
-
-      // Handle the parsed message directly
-      if (!parsed || typeof parsed !== 'object') {
-        return;
-      }
-
-      const { type } = parsed;
-
-      // Handle different message types from V2
-      switch (type) {
-        case 'subscribeToSlice':
-          this.handleSubscribeToSliceV2(client, parsed);
-          break;
-        case 'unsubscribeFromSlice':
-          this.handleUnsubscribeFromSliceV2(client, parsed);
-          break;
-        case 'subscribeToChat':
-          this.handleSubscribeToChatV2(client, parsed);
-          break;
-        case 'unsubscribeFromChat':
-          this.handleUnsubscribeFromChatV2(client, parsed);
-          break;
-        case 'sendChatMessage':
-          this.handleSendChatMessageV2(client, parsed);
-          break;
-        case 'getChatHistory':
-          this.handleGetChatHistoryV2(client, parsed);
-          break;
-        default:
-          // Handle other message types
-          this.emit('websocketMessage', { client, message: parsed });
-      }
-    } catch (error) {
-      this.logBusinessError(`Error parsing WebSocket message from client ${clientId}:`, error);
+    const parsed = handleWebSocketMessageV2Bun({ message, clientId });
+    
+    if (!parsed) {
       this.sendToClient(clientId, {
         type: 'error',
         timestamp: new Date().toISOString(),
         message: 'Invalid JSON message'
       });
+      return;
+    }
+
+    const { type } = parsed;
+
+    // Handle different message types from V2
+    switch (type) {
+      case 'subscribeToSlice':
+        this.handleSubscribeToSliceV2(client, parsed);
+        break;
+      case 'unsubscribeFromSlice':
+        this.handleUnsubscribeFromSliceV2(client, parsed);
+        break;
+      case 'subscribeToChat':
+        this.handleSubscribeToChatV2(client, parsed);
+        break;
+      case 'unsubscribeFromChat':
+        this.handleUnsubscribeFromChatV2(client, parsed);
+        break;
+      case 'sendChatMessage':
+        this.handleSendChatMessageV2(client, parsed);
+        break;
+      case 'getChatHistory':
+        this.handleGetChatHistoryV2(client, parsed);
+        break;
+      default:
+        // Handle other message types
+        this.emit('websocketMessage', { client, message: parsed });
     }
   }
 
@@ -209,8 +242,9 @@ export class Server_WS_HTTP extends Server_HTTP {
   }
 
   private cleanupClientSubscriptionsV2(clientId: string): void {
-    this.logBusinessMessage(`Cleaning up subscriptions for client ${clientId}`);
-    // Implementation would clean up slice and chat subscriptions
+    const { cleanupClientSubscriptionsV2 } = require("../utils/websocket/cleanupClientSubscriptionsV2");
+    const result = cleanupClientSubscriptionsV2(clientId);
+    this.logBusinessMessage(`Cleaned up subscriptions for client ${clientId} at ${result.timestamp}`);
   }
 
   // V2 message handler stubs
