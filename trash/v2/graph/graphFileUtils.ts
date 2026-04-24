@@ -1,17 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { Palette } from "../../../colors";
-
-// export function saveGraphDataForStaticModePure(
-//   projectRoot: string,
-//   fullGraphData: any
-// ): void {
-//   throw new Error(
-//     'saveGraphDataForStaticModePure is deprecated. ' +
-//     'Use GraphManager.saveGraphDataForStaticMode() or GraphManager.saveGraphWithConfig() instead. ' +
-//     'You need access to a GraphManager instance.'
-//   );
-// }
 
 export function writeSliceFile(
   projectRoot: string,

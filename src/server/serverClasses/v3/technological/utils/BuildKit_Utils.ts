@@ -3,7 +3,7 @@
 
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import type { ITesterantoConfig } from '../../Types';
+import type { ITesterantoConfig } from '../../../../../Types';
 
 const execAsync = promisify(exec);
 
@@ -133,16 +133,4 @@ export class BuildKitBuilder {
     };
   }
 
-  /**
-   * Check if BuildKit is available
-   */
-  static async checkBuildKitAvailable(): Promise<boolean> {
-    try {
-      const { stdout } = await execAsync('docker buildx version');
-      return stdout.includes('buildx') || stdout.includes('BuildKit');
-    } catch (error) {
-      console.error('[BuildKit] BuildKit not available');
-      return false;
-    }
-  }
 }

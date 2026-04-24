@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import type { ITesterantoConfig } from "../../../Types";
 import type { IConfigSlice } from "../../types";
-import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
+import { BuildKitBuilder } from "../../serverClasses/v3/technological/utils/BuildKit_Utils";
 
 const cargoTomlContent = `[package]
 name = "rust_builder"

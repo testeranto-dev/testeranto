@@ -1,5 +1,5 @@
 ---
-status: doing
+status: bascially done, needs polish
 ----
 
 We allow the used to define custom "views" which provide insight into the graph via a react component. We also provide as a courtesy views, but these need to retain the capacity to be entirely user-defined. Each view is actually a 2 things: a slice function that trims the graph into the right shape, and path to a react component. This component should inherit from the parent view, which is responsible for fetching the sliced json file. 

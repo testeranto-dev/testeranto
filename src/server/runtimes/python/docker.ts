@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import type { ITesterantoConfig } from "../../../Types";
-import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
+import { BuildKitBuilder } from "../../serverClasses/v3/technological/utils/BuildKit_Utils";
 
 // Import the python runtime file as text
 import pythonContent from "./python.py" with { type: "text" };

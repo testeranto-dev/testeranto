@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import type { ITesterantoConfig } from "../../../Types";
 import type { IConfigSlice } from "../../types";
-import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
+import { BuildKitBuilder } from "../../serverClasses/v3/technological/utils/BuildKit_Utils";
 // import nodeContent from "../../../../dist/node/node.js" with { type: "text" };
 import webContent from "../../../../dist/prebuild/web/web.mjs" with { type: "text" };
 import hoistContent from "../../../../dist/prebuild/web/hoist.mjs" with { type: "text" };

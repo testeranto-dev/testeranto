@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import type { IBaseTestConfig, ITesterantoConfig } from "../../../Types";
-import { BuildKitBuilder } from "../../buildkit/BuildKit_Utils";
+import { BuildKitBuilder } from "../../serverClasses/v3/technological/utils/BuildKit_Utils.js";
 
 // Import the node runtime file as text
 // import nodeContent from "../../../../../../dist/prebuild/node/node.mjs" with { type: "text" };

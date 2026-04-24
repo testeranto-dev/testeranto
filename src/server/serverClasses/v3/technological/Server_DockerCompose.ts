@@ -14,6 +14,7 @@ import { generateServiceName } from "../business/utils/generateServiceName";
 import { generateYaml } from "../business/utils/generateYaml";
 import { yamlValueToString } from '../business/utils/yamlValueToString';
 import { addProcessNodeToGraphV3Pure } from "../utils/graph/addProcessNodeToGraphV3Pure";
+import { BuildKitBuilder } from "./utils/BuildKit_Utils";
 
 const execAsync = promisify(exec);
 
@@ -25,6 +26,19 @@ export class Server_DockerCompose extends Server_Api {
   }
 
   async dockerComposeUp(services?: string[]): Promise<void> {
+    // Build images using BuildKit before starting services
+    if (services && services.length > 0) {
+      for (const serviceName of services) {
+        await this.ensureImageExists(serviceName);
+      }
+    } else {
+      // Build all images if no specific services provided
+      for (const [configKey, configValue] of Object.entries(this.configs.runtimes)) {
+        const imageName = `testeranto-${configValue.runtime || 'node'}-${configKey}:latest`;
+        await this.ensureImageExists(imageName, configKey, configValue);
+      }
+    }
+
     const serviceArgs = services ? services.join(' ') : '';
     const composePath = `testeranto/docker-compose.yml`;
     const command = `docker compose -f "${composePath}" up -d ${serviceArgs}`.trim();
@@ -53,6 +67,69 @@ export class Server_DockerCompose extends Server_Api {
     } catch (error: any) {
       console.error(`[Server_DockerCompose] dockerComposeDown failed: ${error.message}`);
       throw error;
+    }
+  }
+
+  /**
+   * Ensure a Docker image exists locally, building it with BuildKit if needed.
+   */
+  private async ensureImageExists(
+    imageNameOrService: string,
+    configKey?: string,
+    configValue?: any,
+  ): Promise<void> {
+    // Determine the image name
+    let imageName: string;
+    let runtime: string;
+    let key: string;
+    let dockerfilePath: string;
+
+    if (configKey && configValue) {
+      // Called with config details
+      runtime = configValue.runtime || 'node';
+      key = configKey;
+      imageName = `testeranto-${runtime}-${key}:latest`;
+      dockerfilePath = configValue.dockerfile;
+    } else {
+      // Called with just a service name - extract configKey from it
+      // Service names follow pattern: {configKey}-{testName}-{type}
+      const parts = imageNameOrService.split('-');
+      key = parts[0];
+      const config = this.configs.runtimes[key];
+      if (!config) {
+        this.logBusinessWarning(`No config found for key ${key}, skipping BuildKit build`);
+        return;
+      }
+      runtime = config.runtime || 'node';
+      imageName = `testeranto-${runtime}-${key}:latest`;
+      dockerfilePath = config.dockerfile;
+    }
+
+    // Check if image already exists
+    const imageExistsCmd = `docker image inspect ${imageName} > /dev/null 2>&1`;
+    try {
+      await execAsync(imageExistsCmd);
+      this.logBusinessMessage(`Image ${imageName} already exists locally`);
+      return;
+    } catch {
+      this.logBusinessMessage(`Image ${imageName} not found locally, building with BuildKit...`);
+    }
+
+    // Build with BuildKit
+    const result = await BuildKitBuilder.buildImage({
+      runtime,
+      configKey: key,
+      dockerfilePath,
+      buildContext: process.cwd(),
+      cacheMounts: configValue?.buildKitOptions?.cacheMounts || [],
+      targetStage: configValue?.buildKitOptions?.targetStage,
+      buildArgs: configValue?.buildKitOptions?.buildArgs || {},
+    });
+
+    if (result.success) {
+      this.logBusinessMessage(`✅ Built image ${imageName} with BuildKit in ${result.duration}ms`);
+    } else {
+      throw new Error(`BuildKit build failed for ${imageName}: ${result.error}`);
     }
   }
 
@@ -404,7 +481,7 @@ export class Server_DockerCompose extends Server_Api {
       this.logBusinessMessage("Docker version check succeeded");
     } catch {
       this.logBusinessMessage("Docker not available, skipping events watcher");
-      return () => {};
+      return () => { };
     }
 
     const dockerEvents = spawn('docker', ['events', '--format', '{{json .}}']);

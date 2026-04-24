@@ -1,5 +1,5 @@
 ---
-status: working
+status: 90% done
 ---
 
 The vscode extension should provide live feedback. We will start with processes. 
