@@ -3,172 +3,213 @@ import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
 
+interface ViewNode {
+  id: string;
+  type: string;
+  label: string;
+  metadata?: Record<string, any>;
+}
+
+interface ViewData {
+  views: ViewNode[];
+  message: string;
+  timestamp: string;
+  count: number;
+}
+
 export class ViewTreeDataProvider extends BaseTreeDataProvider {
-    private views: any[] = [];
+  private views: ViewNode[] = [];
+  private viewMap: Map<string, ViewNode> = new Map();
 
-    constructor() {
-        super();
-        this.loadViews();
-    }
+  constructor() {
+    super();
+    console.log('[ViewTreeDataProvider] Constructor called');
+    // Load data asynchronously
+    setTimeout(() => {
+      this.loadViews().then(() => {
+        this._onDidChangeTreeData.fire();
+      });
+    }, 100);
+  }
 
-    async getChildren(element?: TestTreeItem): Promise<TestTreeItem[]> {
-        // If element is provided, it's a view item - show its details
-        if (element) {
-            return this.getViewDetails(element);
+  private async loadViews(): Promise<void> {
+    try {
+      console.log('[ViewTreeDataProvider] Loading view data from /~/views API endpoint');
+      const response = await fetch('http://localhost:3000/~/views');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: ViewData = await response.json();
+      
+      if (data && Array.isArray(data.views)) {
+        this.views = data.views;
+        this.viewMap.clear();
+        for (const view of data.views) {
+          this.viewMap.set(view.id, view);
         }
+        console.log('[ViewTreeDataProvider] Loaded', data.views.length, 'views from API');
+      } else {
+        console.warn('[ViewTreeDataProvider] API response does not contain views array:', data);
+        this.views = [];
+      }
+    } catch (error) {
+      console.error('[ViewTreeDataProvider] Failed to load view data from API:', error);
+      this.views = [];
+    }
+  }
 
-        // Root level - show all views
-        return this.getViewItems();
+  refresh(): void {
+    this.loadViews().then(() => {
+      this._onDidChangeTreeData.fire();
+    }).catch(error => {
+      console.error('[ViewTreeDataProvider] Error in refresh:', error);
+      this._onDidChangeTreeData.fire();
+    });
+  }
+
+  getTreeItem(element: TestTreeItem): vscode.TreeItem {
+    return element;
+  }
+
+  async getChildren(element?: TestTreeItem): Promise<TestTreeItem[]> {
+    if (!element) {
+      return this.getViewItems();
+    }
+    if (element.children) {
+      return element.children;
+    }
+    return [];
+  }
+
+  private getViewItems(): TestTreeItem[] {
+    const items: TestTreeItem[] = [];
+
+    if (this.views.length === 0) {
+      items.push(new TestTreeItem(
+        'No views found',
+        TreeItemType.Info,
+        vscode.TreeItemCollapsibleState.None,
+        {
+          description: 'No views available'
+        },
+        undefined,
+        new vscode.ThemeIcon('info')
+      ));
+      return items;
     }
 
-    private async getViewItems(): Promise<TestTreeItem[]> {
-        try {
-            // Load views from the server - this will fail if server is not running
-            await this.loadViews();
+    console.log(`[ViewTreeDataProvider] Processing ${this.views.length} views`);
 
-            // If no views loaded from server, use default views
-            if (this.views.length === 0) {
-                // Default views based on common configuration
-                const defaultViewKeys = ['Kanban', 'Gantt', 'Eisenhower'];
-                this.views = defaultViewKeys.map(key => ({
-                    key,
-                    name: key,
-                    url: `http://localhost:3000/testeranto/views/${key}.html`
-                }));
-            }
-
-            return this.views.map(view => {
-                const viewKey = view.key || view.id;
-                const viewName = view.name || viewKey;
-
-                return new TestTreeItem(
-                    viewName,
-                    TreeItemType.Config,
-                    vscode.TreeItemCollapsibleState.Collapsed,
-                    {
-                        runtimeKey: viewKey,
-                        description: `Open ${viewName} view`,
-                        action: 'openView'
-                    },
-                    undefined,
-                    new vscode.ThemeIcon('eye'),
-                    'viewItem'
-                );
-            });
-        } catch (error) {
-            console.error('[ViewTreeDataProvider] Error loading views:', error);
-            return [
-                new TestTreeItem(
-                    'Cannot connect to server',
-                    TreeItemType.Info,
-                    vscode.TreeItemCollapsibleState.None,
-                    {
-                        info: 'Testeranto server is not running on port 3000.'
-                    }
-                ),
-                new TestTreeItem(
-                    'Start server',
-                    TreeItemType.Info,
-                    vscode.TreeItemCollapsibleState.None,
-                    {
-                        action: 'startServer',
-                        description: 'Click to start the server'
-                    },
-                    {
-                        command: 'testeranto.startServer',
-                        title: 'Start Server'
-                    }
-                )
-            ];
-        }
+    // Return a flat list of view items
+    for (const view of this.views) {
+      items.push(this.createViewItem(view));
     }
 
-    private async getViewDetails(element: TestTreeItem): Promise<TestTreeItem[]> {
-        const viewKey = element.data?.runtimeKey;
-        if (!viewKey) {
-            return [];
-        }
+    return items;
+  }
 
-        const view = this.views.find(v => (v.key || v.id) === viewKey);
-        if (!view) {
-            return [];
-        }
+  private createViewItem(node: ViewNode): TestTreeItem {
+    const metadata = node.metadata || {};
+    
+    const viewType = metadata.viewType || 'unknown';
+    const isActive = metadata.isActive || false;
+    const viewId = node.id;
+    const viewLabel = node.label || viewId;
 
-        const details: TestTreeItem[] = [];
+    const label = viewLabel;
 
-        // Add open action
-        // Views are always at http://localhost:3000/testeranto/views/{viewKey}.html
-        const viewUrl = `http://localhost:3000/testeranto/views/${viewKey}.html`;
-        details.push(new TestTreeItem(
-            'Open View',
-            TreeItemType.Config,
-            vscode.TreeItemCollapsibleState.None,
-            {
-                runtimeKey: viewKey,
-                action: 'openView',
-                description: 'Click to open in webview'
-            },
-            {
-                command: 'testeranto.openView',
-                title: 'Open View',
-                arguments: [viewKey, viewUrl]
-            },
-            new vscode.ThemeIcon('link-external'),
-            'viewOpenItem'
-        ));
+    // Determine description
+    let description = '';
+    if (isActive) {
+      description += 'Active';
+    } else {
+      description += 'Inactive';
+    }
+    description += ` • ${viewType}`;
 
-        return details;
+    // Determine icon based on view type
+    let icon: vscode.ThemeIcon;
+    if (viewType === 'kanban') {
+      icon = new vscode.ThemeIcon('columns');
+    } else if (viewType === 'gantt') {
+      icon = new vscode.ThemeIcon('graph');
+    } else if (viewType === 'eisenhower') {
+      icon = new vscode.ThemeIcon('dashboard');
+    } else {
+      icon = new vscode.ThemeIcon('eye');
     }
 
-    private async loadViews(): Promise<void> {
-        try {
-            console.log('[ViewTreeDataProvider] Loading views from /~/views endpoint');
-            const response = await fetch('http://localhost:3000/~/views', {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                },
-            });
+    const item = new TestTreeItem(
+      label,
+      TreeItemType.Info,
+      vscode.TreeItemCollapsibleState.None,
+      {
+        description,
+        viewType,
+        isActive,
+        nodeId: viewId,
+        viewLabel
+      },
+      {
+        command: 'testeranto.openView',
+        title: 'Open View',
+        arguments: [viewId, label]
+      },
+      icon
+    );
 
-            if (!response.ok) {
-                throw new Error(`Server returned ${response.status}: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            console.log('[ViewTreeDataProvider] Response:', data);
-
-            if (data && data.views) {
-                // Process views from server
-                this.views = data.views.map((view: any) => {
-                    const viewKey = view.key || view.id;
-                    // Ensure URL is correct
-                    let viewUrl = view.url;
-                    if (!viewUrl) {
-                        viewUrl = `http://localhost:3000/testeranto/views/${viewKey}.html`;
-                    } else if (viewUrl.includes('/stakeholder/')) {
-                        // Fix URLs with /stakeholder/ in them
-                        viewUrl = viewUrl.replace('/stakeholder/', '/');
-                    }
-                    return {
-                        key: viewKey,
-                        name: view.name || viewKey,
-                        url: viewUrl
-                    };
-                });
-                console.log(`[ViewTreeDataProvider] Loaded ${this.views.length} views from server`);
-            } else {
-                console.warn('[ViewTreeDataProvider] No views found in server response');
-                this.views = [];
-            }
-        } catch (error) {
-            console.error('[ViewTreeDataProvider] Failed to load views from server:', error);
-            // If we can't load from server, we'll use default views
-            this.views = [];
-        }
+    // Build comprehensive tooltip
+    let tooltip = `View: ${label}\n`;
+    tooltip += `Type: ${viewType}\n`;
+    tooltip += `ID: ${viewId}\n`;
+    tooltip += `Active: ${isActive ? 'Yes' : 'No'}\n`;
+    
+    if (metadata.url) {
+      tooltip += `URL: ${metadata.url}\n`;
+    }
+    
+    if (metadata.description) {
+      tooltip += `Description: ${metadata.description}\n`;
+    }
+    
+    if (metadata.createdAt) {
+      tooltip += `Created: ${metadata.createdAt}\n`;
+    }
+    
+    if (metadata.updatedAt) {
+      tooltip += `Last Updated: ${metadata.updatedAt}\n`;
     }
 
-    public refresh(): void {
-        this.loadViews();
-        super.refresh();
+    item.tooltip = tooltip;
+    return item;
+  }
+
+  protected handleWebSocketMessage(message: any): void {
+    super.handleWebSocketMessage(message);
+    console.log(`[ViewTreeDataProvider] Received message type: ${message.type}`);
+
+    // Handle various message types that indicate view data has changed
+    if (message.type === 'resourceChanged') {
+      if (message.url === '/~/views' || message.url === '/~/graph') {
+        console.log('[ViewTreeDataProvider] View data changed, refreshing from API');
+        this.refresh();
+      }
+    } else if (message.type === 'graphUpdated') {
+      console.log('[ViewTreeDataProvider] Graph updated, refreshing from API');
+      this.refresh();
+    } else if (message.type === 'viewUpdated') {
+      console.log('[ViewTreeDataProvider] View updated, refreshing from API');
+      this.refresh();
+    } else if (message.type === 'connected') {
+      console.log('[ViewTreeDataProvider] WebSocket connected, refreshing data');
+      setTimeout(() => this.refresh(), 1000);
     }
+  }
+
+  protected subscribeToGraphUpdates(): void {
+    super.subscribeToGraphUpdates();
+    // Subscribe to view updates via WebSocket
+    this.subscribeToSlice('/views');
+    this.subscribeToSlice('/graph');
+  }
 }

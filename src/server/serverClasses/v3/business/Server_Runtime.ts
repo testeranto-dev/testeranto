@@ -36,6 +36,12 @@ export class Server_Runtime extends Server_Polyglot {
     return getRuntimeVolumes(runtime);
   }
 
+  getRuntimeBuildContext(runtime: string, configKey: string): string {
+    // Default build context is the project root
+    // Override in subclasses if needed
+    return process.cwd();
+  }
+
   validateRuntimeConfiguration(runtime: string, configKey: string): void {
     validateRuntimeConfiguration(this.configs, runtime, configKey);
   }

@@ -389,6 +389,7 @@
     "@isomorphic-git/lightning-fs": "^4.6.2",
     "@jest/globals": "^30.0.4",
     "@react-sigma/core": "^5.0.6",
+    "@react-sigma/layout-forceatlas2": "^5.0.6",
     "@types/babel__generator": "^7.27.0",
     "@types/chokidar": "^2.1.7",
     "@types/dockerode": "3.3.40",

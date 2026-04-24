@@ -615,7 +615,6 @@ import "vscode";
 
 // src/vscode/providers/TestTreeDataProvider.ts
 import * as vscode8 from "vscode";
-import * as path2 from "path";
 
 // src/vscode/TestTreeItem.ts
 import * as vscode5 from "vscode";
@@ -974,6 +973,17 @@ var API = {
       return routeName === "runtime" && request.method === "GET";
     }
   },
+  getAllViews: {
+    method: "GET",
+    path: "/~/views",
+    description: "Get all views",
+    params: {},
+    query: {},
+    response: {},
+    check: (routeName, request) => {
+      return routeName === "views" && request.method === "GET";
+    }
+  },
   getView: {
     method: "GET",
     path: "/~/views/:viewName",
@@ -1136,24 +1146,24 @@ var API = {
 };
 function getApiUrl(endpoint, params) {
   const apiDef = API[endpoint];
-  let path4 = apiDef.path;
+  let path3 = apiDef.path;
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      path4 = path4.replace(`:${key}`, encodeURIComponent(value));
+      path3 = path3.replace(`:${key}`, encodeURIComponent(value));
     }
   }
   const baseUrl = "http://localhost:3000";
-  return `${baseUrl}${path4}`;
+  return `${baseUrl}${path3}`;
 }
 function getApiPath(endpoint, params) {
   const apiDef = API[endpoint];
-  let path4 = apiDef.path;
+  let path3 = apiDef.path;
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      path4 = path4.replace(`:${key}`, encodeURIComponent(value));
+      path3 = path3.replace(`:${key}`, encodeURIComponent(value));
     }
   }
-  return path4;
+  return path3;
 }
 
 // src/vscode/providers/utils/apiUtils.ts
@@ -1175,15 +1185,15 @@ var ApiUtils = class {
     if (!endpoint) {
       throw new Error(`Endpoint ${endpointKey} not found in vscodeHttpAPI`);
     }
-    let path4 = endpoint.path;
+    let path3 = endpoint.path;
     if (params && endpoint.params) {
       for (const [key, value] of Object.entries(params)) {
         if (endpoint.params[key]) {
-          path4 = path4.replace(`:${key}`, value);
+          path3 = path3.replace(`:${key}`, value);
         }
       }
     }
-    const url = `${this.getBaseUrl()}${path4}`;
+    const url = `${this.getBaseUrl()}${path3}`;
     if (query && Object.keys(query).length > 0) {
       const queryParams = new URLSearchParams();
       for (const [key, value] of Object.entries(query)) {
@@ -1411,7 +1421,6 @@ var BaseTreeDataProvider = class {
 // src/vscode/providers/TestTreeDataProvider.ts
 var TestTreeDataProvider = class extends BaseTreeDataProvider {
   graphData = null;
-  graphDataPath = null;
   constructor() {
     super();
     console.log("[TestTreeDataProvider] Constructor called");
@@ -1450,27 +1459,16 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
   }
   async getChildren(element) {
     if (!this.graphData) {
-      this.loadGraphData();
+      await this.loadGraphData();
     }
     if (!element) {
       return this.getRuntimeItems();
     }
-    const elementType = element.type;
     const elementData = element.data || {};
-    switch (elementType) {
+    switch (element.type) {
       case 0 /* Runtime */:
-        return this.getEntrypointItems(elementData.runtimeKey);
+        return this.getTestItems(elementData.runtimeKey);
       case 1 /* Test */:
-        if (elementData.testId) {
-          return this.getFileItems(elementData.testId, elementData.runtimeKey);
-        }
-        return this.getTestItems(elementData.entrypointId, elementData.runtimeKey);
-      case 3 /* Info */:
-        if (elementData.section === "input-files" || elementData.section === "output-files" || elementData.section === "test-input-files" || elementData.section === "test-output-files") {
-          return element.children || [];
-        }
-        return [];
-      case 2 /* File */:
         return [];
       default:
         return [];
@@ -1511,11 +1509,8 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
       ));
       return items;
     }
-    const configNodes = this.graphData.nodes.filter(
-      (node) => node.type === "config" || node.metadata?.configKey && node.metadata?.runtime
-    );
     const runtimeMap = /* @__PURE__ */ new Map();
-    for (const node of configNodes) {
+    for (const node of this.graphData.nodes) {
       const runtimeKey = node.metadata?.configKey || node.metadata?.runtime || "unknown";
       const current = runtimeMap.get(runtimeKey) || { count: 0, nodes: [] };
       current.count++;
@@ -1529,7 +1524,7 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
         vscode8.TreeItemCollapsibleState.Collapsed,
         {
           runtimeKey,
-          description: `${data.count} config(s)`,
+          description: `${data.count} test(s)`,
           count: data.count
         },
         void 0,
@@ -1538,327 +1533,36 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
     }
     return items;
   }
-  getEntrypointItems(runtimeKey) {
+  getTestItems(runtimeKey) {
     if (!this.graphData) return [];
-    const entrypointNodes = this.graphData.nodes.filter(
-      (node) => node.type === "entrypoint" && node.metadata?.configKey === runtimeKey
+    const testNodes = this.graphData.nodes.filter(
+      (node) => (node.type === "test" || node.type === "entrypoint") && node.metadata?.configKey === runtimeKey
     );
-    return entrypointNodes.map((node) => {
-      return new TestTreeItem(
-        node.label || node.id,
-        1 /* Test */,
-        vscode8.TreeItemCollapsibleState.Collapsed,
-        {
-          runtimeKey,
-          entrypointId: node.id,
-          description: node.description,
-          // Mark this as an entrypoint item, not a test item
-          isEntrypoint: true
-        },
-        void 0,
-        new vscode8.ThemeIcon("file-text")
-      );
-    });
-  }
-  getTestItems(entrypointId, runtimeKey) {
-    if (!this.graphData) return [];
-    const testEdges = this.graphData.edges.filter(
-      (edge) => edge.source === entrypointId && edge.attributes.type === "belongsTo"
-    );
-    const testNodes = [];
-    for (const edge of testEdges) {
-      const testNode = this.graphData.nodes.find((node) => node.id === edge.target);
-      if (testNode && testNode.type === "test") {
-        testNodes.push(testNode);
+    return testNodes.map((node) => {
+      const status = node.metadata?.status;
+      const failed = node.metadata?.failed;
+      let icon;
+      if (failed === true || status === "blocked") {
+        icon = new vscode8.ThemeIcon("error", new vscode8.ThemeColor("testing.iconFailed"));
+      } else if (failed === false || status === "done") {
+        icon = new vscode8.ThemeIcon("check", new vscode8.ThemeColor("testing.iconPassed"));
+      } else {
+        icon = new vscode8.ThemeIcon("circle-outline", new vscode8.ThemeColor("testing.iconUnset"));
       }
-    }
-    const testItems = testNodes.map((node) => {
       return new TestTreeItem(
         node.label || node.id,
         1 /* Test */,
-        vscode8.TreeItemCollapsibleState.Collapsed,
+        vscode8.TreeItemCollapsibleState.None,
         {
           runtimeKey,
           testId: node.id,
-          entrypointId,
           description: node.description,
-          status: node.metadata?.status
+          status
         },
         void 0,
-        this.getTestIcon(node)
+        icon
       );
     });
-    const fileItems = this.getEntrypointFileItems(entrypointId, runtimeKey);
-    return [...testItems, ...fileItems];
-  }
-  getEntrypointFileItems(entrypointId, runtimeKey) {
-    if (!this.graphData) return [];
-    const fileEdges = this.graphData.edges.filter(
-      (edge) => (edge.source === entrypointId || edge.target === entrypointId) && (edge.attributes.type === "associatedWith" || edge.attributes.type === "locatedIn")
-    );
-    const fileNodes = [];
-    for (const edge of fileEdges) {
-      const fileNodeId = edge.source === entrypointId ? edge.target : edge.source;
-      const fileNode = this.graphData.nodes.find((node) => node.id === fileNodeId);
-      if (fileNode && (fileNode.type === "file" || fileNode.type === "input_file")) {
-        fileNodes.push(fileNode);
-      }
-    }
-    const inputFiles = [];
-    const outputFilePaths = [];
-    for (const node of fileNodes) {
-      const isInput = node.type === "input_file" || node.metadata?.isInputFile === true || node.metadata?.filePath && (node.metadata.filePath.includes("input") || node.metadata.filePath.includes("source"));
-      if (isInput) {
-        const item = new TestTreeItem(
-          node.label || path2.basename(node.metadata?.filePath || node.id),
-          2 /* File */,
-          vscode8.TreeItemCollapsibleState.None,
-          {
-            runtimeKey,
-            entrypointId,
-            fileName: node.metadata?.filePath,
-            isFile: true,
-            fileType: "input"
-          },
-          node.metadata?.filePath ? {
-            command: "testeranto.openFile",
-            title: "Open File",
-            arguments: [{ fileName: node.metadata.filePath, runtime: runtimeKey }]
-          } : void 0,
-          new vscode8.ThemeIcon("arrow-down")
-        );
-        inputFiles.push(item);
-      } else {
-        const filePath = node.metadata?.filePath || node.label || node.id;
-        if (filePath) {
-          outputFilePaths.push({ node, path: filePath });
-        }
-      }
-    }
-    const items = [];
-    if (inputFiles.length > 0) {
-      const inputFolder = new TestTreeItem(
-        "Input Files",
-        3 /* Info */,
-        vscode8.TreeItemCollapsibleState.Collapsed,
-        {
-          runtimeKey,
-          entrypointId,
-          description: `${inputFiles.length} file(s)`,
-          count: inputFiles.length,
-          section: "input-files"
-        },
-        void 0,
-        new vscode8.ThemeIcon("folder-opened")
-      );
-      inputFolder.children = inputFiles;
-      items.push(inputFolder);
-    }
-    if (outputFilePaths.length > 0) {
-      const outputTree = this.buildFileTree(outputFilePaths);
-      const outputFolder = new TestTreeItem(
-        "Output Files",
-        3 /* Info */,
-        vscode8.TreeItemCollapsibleState.Collapsed,
-        {
-          runtimeKey,
-          entrypointId,
-          description: `${outputFilePaths.length} file(s)`,
-          count: outputFilePaths.length,
-          section: "output-files"
-        },
-        void 0,
-        new vscode8.ThemeIcon("folder-opened")
-      );
-      outputFolder.children = this.convertTreeToItems(outputTree, runtimeKey, entrypointId);
-      items.push(outputFolder);
-    }
-    return items;
-  }
-  getFileItems(testId, runtimeKey) {
-    if (!this.graphData) return [];
-    const fileEdges = this.graphData.edges.filter(
-      (edge) => (edge.source === testId || edge.target === testId) && (edge.attributes.type === "associatedWith" || edge.attributes.type === "locatedIn")
-    );
-    const fileNodes = [];
-    for (const edge of fileEdges) {
-      const fileNodeId = edge.source === testId ? edge.target : edge.source;
-      const fileNode = this.graphData.nodes.find((node) => node.id === fileNodeId);
-      if (fileNode && (fileNode.type === "file" || fileNode.type === "input_file")) {
-        fileNodes.push(fileNode);
-      }
-    }
-    const inputFiles = [];
-    const outputFilePaths = [];
-    for (const node of fileNodes) {
-      const isInput = node.type === "input_file" || node.metadata?.isInputFile === true || node.metadata?.filePath && (node.metadata.filePath.includes("input") || node.metadata.filePath.includes("source"));
-      if (isInput) {
-        const item = new TestTreeItem(
-          node.label || path2.basename(node.metadata?.filePath || node.id),
-          2 /* File */,
-          vscode8.TreeItemCollapsibleState.None,
-          {
-            runtimeKey,
-            testId,
-            fileName: node.metadata?.filePath,
-            isFile: true,
-            fileType: "input"
-          },
-          node.metadata?.filePath ? {
-            command: "testeranto.openFile",
-            title: "Open File",
-            arguments: [{ fileName: node.metadata.filePath, runtime: runtimeKey }]
-          } : void 0,
-          new vscode8.ThemeIcon("arrow-down")
-        );
-        inputFiles.push(item);
-      } else {
-        const filePath = node.metadata?.filePath || node.label || node.id;
-        if (filePath) {
-          outputFilePaths.push({ node, path: filePath });
-        }
-      }
-    }
-    const items = [];
-    if (inputFiles.length > 0) {
-      const inputFolder = new TestTreeItem(
-        "Input Files",
-        3 /* Info */,
-        vscode8.TreeItemCollapsibleState.Collapsed,
-        {
-          runtimeKey,
-          testId,
-          description: `${inputFiles.length} file(s)`,
-          count: inputFiles.length,
-          section: "test-input-files"
-        },
-        void 0,
-        new vscode8.ThemeIcon("folder-opened")
-      );
-      inputFolder.children = inputFiles;
-      items.push(inputFolder);
-    }
-    if (outputFilePaths.length > 0) {
-      const outputTree = this.buildFileTree(outputFilePaths);
-      const outputFolder = new TestTreeItem(
-        "Output Files",
-        3 /* Info */,
-        vscode8.TreeItemCollapsibleState.Collapsed,
-        {
-          runtimeKey,
-          testId,
-          description: `${outputFilePaths.length} file(s)`,
-          count: outputFilePaths.length,
-          section: "test-output-files"
-        },
-        void 0,
-        new vscode8.ThemeIcon("folder-opened")
-      );
-      outputFolder.children = this.convertTreeToItems(outputTree, runtimeKey, testId);
-      items.push(outputFolder);
-    }
-    return items;
-  }
-  buildFileTree(filePaths) {
-    const root = { type: "directory", children: {} };
-    for (const { node, path: path4 } of filePaths) {
-      const parts = path4.split(/[\\/]/).filter((part) => part.length > 0);
-      let current = root.children;
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i];
-        const isLast = i === parts.length - 1;
-        if (!current[part]) {
-          if (isLast) {
-            current[part] = {
-              type: "file",
-              path: path4,
-              node,
-              label: node.label || path4.basename(path4) || part,
-              metadata: node.metadata
-            };
-          } else {
-            current[part] = {
-              type: "directory",
-              children: {}
-            };
-          }
-        } else if (isLast) {
-          current[part] = {
-            type: "file",
-            path: path4,
-            node,
-            label: node.label || path4.basename(path4) || part,
-            metadata: node.metadata
-          };
-        }
-        if (!isLast) {
-          current = current[part].children;
-        }
-      }
-    }
-    return root;
-  }
-  convertTreeToItems(tree, runtimeKey, testId) {
-    const items = [];
-    for (const [name, node] of Object.entries(tree.children || {})) {
-      const typedNode = node;
-      if (typedNode.type === "directory") {
-        const folderItem = new TestTreeItem(
-          name,
-          2 /* File */,
-          vscode8.TreeItemCollapsibleState.Collapsed,
-          {
-            runtimeKey,
-            testId,
-            isFile: false,
-            fileType: "folder"
-          },
-          void 0,
-          new vscode8.ThemeIcon("folder")
-        );
-        folderItem.children = this.convertTreeToItems(typedNode, runtimeKey, testId);
-        items.push(folderItem);
-      } else if (typedNode.type === "file") {
-        const fileItem = new TestTreeItem(
-          name,
-          2 /* File */,
-          vscode8.TreeItemCollapsibleState.None,
-          {
-            runtimeKey,
-            testId,
-            fileName: typedNode.path,
-            isFile: true,
-            fileType: "output"
-          },
-          typedNode.path ? {
-            command: "testeranto.openFile",
-            title: "Open File",
-            arguments: [{ fileName: typedNode.path, runtime: runtimeKey }]
-          } : void 0,
-          new vscode8.ThemeIcon("arrow-up")
-        );
-        items.push(fileItem);
-      }
-    }
-    items.sort((a, b) => {
-      const aIsFolder = a.data?.isFile === false;
-      const bIsFolder = b.data?.isFile === false;
-      if (aIsFolder && !bIsFolder) return -1;
-      if (!aIsFolder && bIsFolder) return 1;
-      return a.label.toString().localeCompare(b.label.toString());
-    });
-    return items;
-  }
-  getTestIcon(node) {
-    const status = node.metadata?.status;
-    const failed = node.metadata?.failed;
-    if (failed === true || status === "blocked") {
-      return new vscode8.ThemeIcon("error", new vscode8.ThemeColor("testing.iconFailed"));
-    } else if (failed === false || status === "done") {
-      return new vscode8.ThemeIcon("check", new vscode8.ThemeColor("testing.iconPassed"));
-    } else {
-      return new vscode8.ThemeIcon("circle-outline", new vscode8.ThemeColor("testing.iconUnset"));
-    }
   }
   handleWebSocketMessage(message) {
     super.handleWebSocketMessage(message);
@@ -2635,143 +2339,173 @@ var FileTreeDataProvider = class extends BaseTreeDataProvider {
 import * as vscode12 from "vscode";
 var ViewTreeDataProvider = class extends BaseTreeDataProvider {
   views = [];
+  viewMap = /* @__PURE__ */ new Map();
   constructor() {
     super();
-    this.loadViews();
-  }
-  async getChildren(element) {
-    if (element) {
-      return this.getViewDetails(element);
-    }
-    return this.getViewItems();
-  }
-  async getViewItems() {
-    try {
-      await this.loadViews();
-      if (this.views.length === 0) {
-        const defaultViewKeys = ["Kanban", "Gantt", "Eisenhower"];
-        this.views = defaultViewKeys.map((key) => ({
-          key,
-          name: key,
-          url: `http://localhost:3000/testeranto/views/${key}.html`
-        }));
-      }
-      return this.views.map((view) => {
-        const viewKey = view.key || view.id;
-        const viewName = view.name || viewKey;
-        return new TestTreeItem(
-          viewName,
-          4 /* Config */,
-          vscode12.TreeItemCollapsibleState.Collapsed,
-          {
-            runtimeKey: viewKey,
-            description: `Open ${viewName} view`,
-            action: "openView"
-          },
-          void 0,
-          new vscode12.ThemeIcon("eye"),
-          "viewItem"
-        );
+    console.log("[ViewTreeDataProvider] Constructor called");
+    setTimeout(() => {
+      this.loadViews().then(() => {
+        this._onDidChangeTreeData.fire();
       });
-    } catch (error) {
-      console.error("[ViewTreeDataProvider] Error loading views:", error);
-      return [
-        new TestTreeItem(
-          "Cannot connect to server",
-          3 /* Info */,
-          vscode12.TreeItemCollapsibleState.None,
-          {
-            info: "Testeranto server is not running on port 3000."
-          }
-        ),
-        new TestTreeItem(
-          "Start server",
-          3 /* Info */,
-          vscode12.TreeItemCollapsibleState.None,
-          {
-            action: "startServer",
-            description: "Click to start the server"
-          },
-          {
-            command: "testeranto.startServer",
-            title: "Start Server"
-          }
-        )
-      ];
-    }
-  }
-  async getViewDetails(element) {
-    const viewKey = element.data?.runtimeKey;
-    if (!viewKey) {
-      return [];
-    }
-    const view = this.views.find((v) => (v.key || v.id) === viewKey);
-    if (!view) {
-      return [];
-    }
-    const details = [];
-    const viewUrl = `http://localhost:3000/testeranto/views/${viewKey}.html`;
-    details.push(new TestTreeItem(
-      "Open View",
-      4 /* Config */,
-      vscode12.TreeItemCollapsibleState.None,
-      {
-        runtimeKey: viewKey,
-        action: "openView",
-        description: "Click to open in webview"
-      },
-      {
-        command: "testeranto.openView",
-        title: "Open View",
-        arguments: [viewKey, viewUrl]
-      },
-      new vscode12.ThemeIcon("link-external"),
-      "viewOpenItem"
-    ));
-    return details;
+    }, 100);
   }
   async loadViews() {
     try {
-      console.log("[ViewTreeDataProvider] Loading views from /~/views endpoint");
-      const response2 = await fetch("http://localhost:3000/~/views", {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
-        }
-      });
+      console.log("[ViewTreeDataProvider] Loading view data from /~/views API endpoint");
+      const response2 = await fetch("http://localhost:3000/~/views");
       if (!response2.ok) {
-        throw new Error(`Server returned ${response2.status}: ${response2.statusText}`);
+        throw new Error(`HTTP error! status: ${response2.status}`);
       }
       const data = await response2.json();
-      console.log("[ViewTreeDataProvider] Response:", data);
-      if (data && data.views) {
-        this.views = data.views.map((view) => {
-          const viewKey = view.key || view.id;
-          let viewUrl = view.url;
-          if (!viewUrl) {
-            viewUrl = `http://localhost:3000/testeranto/views/${viewKey}.html`;
-          } else if (viewUrl.includes("/stakeholder/")) {
-            viewUrl = viewUrl.replace("/stakeholder/", "/");
-          }
-          return {
-            key: viewKey,
-            name: view.name || viewKey,
-            url: viewUrl
-          };
-        });
-        console.log(`[ViewTreeDataProvider] Loaded ${this.views.length} views from server`);
+      if (data && Array.isArray(data.views)) {
+        this.views = data.views;
+        this.viewMap.clear();
+        for (const view of data.views) {
+          this.viewMap.set(view.id, view);
+        }
+        console.log("[ViewTreeDataProvider] Loaded", data.views.length, "views from API");
       } else {
-        console.warn("[ViewTreeDataProvider] No views found in server response");
+        console.warn("[ViewTreeDataProvider] API response does not contain views array:", data);
         this.views = [];
       }
     } catch (error) {
-      console.error("[ViewTreeDataProvider] Failed to load views from server:", error);
+      console.error("[ViewTreeDataProvider] Failed to load view data from API:", error);
       this.views = [];
     }
   }
   refresh() {
-    this.loadViews();
-    super.refresh();
+    this.loadViews().then(() => {
+      this._onDidChangeTreeData.fire();
+    }).catch((error) => {
+      console.error("[ViewTreeDataProvider] Error in refresh:", error);
+      this._onDidChangeTreeData.fire();
+    });
+  }
+  getTreeItem(element) {
+    return element;
+  }
+  async getChildren(element) {
+    if (!element) {
+      return this.getViewItems();
+    }
+    if (element.children) {
+      return element.children;
+    }
+    return [];
+  }
+  getViewItems() {
+    const items = [];
+    if (this.views.length === 0) {
+      items.push(new TestTreeItem(
+        "No views found",
+        3 /* Info */,
+        vscode12.TreeItemCollapsibleState.None,
+        {
+          description: "No views available"
+        },
+        void 0,
+        new vscode12.ThemeIcon("info")
+      ));
+      return items;
+    }
+    console.log(`[ViewTreeDataProvider] Processing ${this.views.length} views`);
+    for (const view of this.views) {
+      items.push(this.createViewItem(view));
+    }
+    return items;
+  }
+  createViewItem(node) {
+    const metadata = node.metadata || {};
+    const viewType = metadata.viewType || "unknown";
+    const isActive = metadata.isActive || false;
+    const viewId = node.id;
+    const viewLabel = node.label || viewId;
+    const label = viewLabel;
+    let description = "";
+    if (isActive) {
+      description += "Active";
+    } else {
+      description += "Inactive";
+    }
+    description += ` \u2022 ${viewType}`;
+    let icon;
+    if (viewType === "kanban") {
+      icon = new vscode12.ThemeIcon("columns");
+    } else if (viewType === "gantt") {
+      icon = new vscode12.ThemeIcon("graph");
+    } else if (viewType === "eisenhower") {
+      icon = new vscode12.ThemeIcon("dashboard");
+    } else {
+      icon = new vscode12.ThemeIcon("eye");
+    }
+    const item = new TestTreeItem(
+      label,
+      3 /* Info */,
+      vscode12.TreeItemCollapsibleState.None,
+      {
+        description,
+        viewType,
+        isActive,
+        nodeId: viewId,
+        viewLabel
+      },
+      {
+        command: "testeranto.openView",
+        title: "Open View",
+        arguments: [viewId, label]
+      },
+      icon
+    );
+    let tooltip = `View: ${label}
+`;
+    tooltip += `Type: ${viewType}
+`;
+    tooltip += `ID: ${viewId}
+`;
+    tooltip += `Active: ${isActive ? "Yes" : "No"}
+`;
+    if (metadata.url) {
+      tooltip += `URL: ${metadata.url}
+`;
+    }
+    if (metadata.description) {
+      tooltip += `Description: ${metadata.description}
+`;
+    }
+    if (metadata.createdAt) {
+      tooltip += `Created: ${metadata.createdAt}
+`;
+    }
+    if (metadata.updatedAt) {
+      tooltip += `Last Updated: ${metadata.updatedAt}
+`;
+    }
+    item.tooltip = tooltip;
+    return item;
+  }
+  handleWebSocketMessage(message) {
+    super.handleWebSocketMessage(message);
+    console.log(`[ViewTreeDataProvider] Received message type: ${message.type}`);
+    if (message.type === "resourceChanged") {
+      if (message.url === "/~/views" || message.url === "/~/graph") {
+        console.log("[ViewTreeDataProvider] View data changed, refreshing from API");
+        this.refresh();
+      }
+    } else if (message.type === "graphUpdated") {
+      console.log("[ViewTreeDataProvider] Graph updated, refreshing from API");
+      this.refresh();
+    } else if (message.type === "viewUpdated") {
+      console.log("[ViewTreeDataProvider] View updated, refreshing from API");
+      this.refresh();
+    } else if (message.type === "connected") {
+      console.log("[ViewTreeDataProvider] WebSocket connected, refreshing data");
+      setTimeout(() => this.refresh(), 1e3);
+    }
+  }
+  subscribeToGraphUpdates() {
+    super.subscribeToGraphUpdates();
+    this.subscribeToSlice("/views");
+    this.subscribeToSlice("/graph");
   }
 };
 
@@ -3449,7 +3183,7 @@ var showProcessLogs = () => {
 
 // src/vscode/providers/utils/openFile.ts
 import * as vscode22 from "vscode";
-import * as path3 from "path";
+import * as path2 from "path";
 var openFile = () => {
   return vscode22.commands.registerCommand(
     "testeranto.openFile",
@@ -3489,7 +3223,7 @@ var openFile = () => {
           console.log("[CommandManager] File opened successfully");
         } catch (err) {
           console.error("[CommandManager] Error opening file:", err);
-          const files = await vscode22.workspace.findFiles(`**/${path3.basename(fileName)}`, null, 1);
+          const files = await vscode22.workspace.findFiles(`**/${path2.basename(fileName)}`, null, 1);
           if (files.length > 0) {
             const doc = await vscode22.workspace.openTextDocument(files[0]);
             await vscode22.window.showTextDocument(doc);

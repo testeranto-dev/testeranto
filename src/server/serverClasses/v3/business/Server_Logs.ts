@@ -282,6 +282,20 @@ export abstract class Server_Logs extends Server_Aider {
     return summary;
   }
 
+  /**
+   * Stream Docker build logs to stdout.
+   * This is the testable business logic – it pipes a Readable stream
+   * to the abstract writeStdout method.
+   */
+  streamDockerBuildLogs(stream: NodeJS.ReadableStream): void {
+    stream.on('data', (chunk: Buffer | string) => {
+      this.writeStdout(chunk);
+    });
+    stream.on('error', (err: Error) => {
+      this.writeStderr(`[DockerBuild] error: ${err.message}\n`);
+    });
+  }
+
   // ========== Log Filtering ==========
 
   filterLogs(logs: any[], filter: (log: any) => boolean): any[] {

@@ -336,6 +336,39 @@ export abstract class Server_ApiSpec extends Server_Lock {
     return properties;
   }
 
+  // ========== API Route Handlers ==========
+
+  protected async handleAllViewsRoute(request: Request): Promise<Response> {
+    // Get all views from config
+    const views = this.configs.views || {};
+    const viewList = Object.entries(views).map(([key, config]) => ({
+      id: key,
+      type: 'view',
+      label: config.name || key,
+      metadata: {
+        viewType: config.type || 'unknown',
+        isActive: config.isActive ?? true,
+        url: `/~/views/${key}`,
+        description: config.description || '',
+        createdAt: config.createdAt || new Date().toISOString(),
+        updatedAt: config.updatedAt || new Date().toISOString()
+      }
+    }));
+
+    return new Response(
+      JSON.stringify({
+        views: viewList,
+        message: `Found ${viewList.length} view(s)`,
+        timestamp: new Date().toISOString(),
+        count: viewList.length
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  }
+
   // ========== Setup and Cleanup ==========
 
   async setupApiSpec(): Promise<void> {

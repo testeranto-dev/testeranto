@@ -348,6 +348,18 @@ export const API: {
     }
   },
 
+  getAllViews: {
+    method: 'GET',
+    path: '/~/views',
+    description: 'Get all views',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'views' && request.method === 'GET'
+    }
+  },
+
   getView: {
     method: 'GET',
     path: '/~/views/:viewName',

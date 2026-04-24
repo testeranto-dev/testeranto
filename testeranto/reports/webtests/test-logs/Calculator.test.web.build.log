@@ -1,0 +1,7 @@
+[2026-04-24T04:22:13.187Z] Build log for test: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts
+Output: testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.mjs
+Entry point: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts
+
+[2026-04-24T04:22:13.040Z] INFO: Build started for webtests
+
+[2026-04-24T04:22:13.187Z] Build completed for: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts

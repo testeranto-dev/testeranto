@@ -102,6 +102,7 @@ export abstract class Server_Api extends Server_WS_HTTP {
   protected abstract handleRuntimeRoute(request: Request): Promise<Response>;
   protected abstract handleAgentsRoute(request: Request): Promise<Response>;
   protected abstract handleAgentSliceRoute(request: Request, agentName: string): Promise<Response>;
+  protected abstract handleAllViewsRoute(request: Request): Promise<Response>;
   protected abstract handleViewRoute(request: Request, viewName: string): Promise<Response>;
   protected abstract handlePostChatMessage(request: Request): Promise<Response>;
   protected abstract handleGetChatHistory(request: Request): Promise<Response>;
@@ -170,6 +171,8 @@ export abstract class Server_Api extends Server_WS_HTTP {
       case 'getAgentSlice':
         const agentName = url.pathname.split('/').pop();
         return await this.handleAgentSliceRoute(request, agentName || '');
+      case 'getAllViews':
+        return await this.handleAllViewsRoute(request);
       case 'getView':
         const viewName = url.pathname.split('/').pop();
         return await this.handleViewRoute(request, viewName || '');

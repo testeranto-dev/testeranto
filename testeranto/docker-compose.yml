@@ -17,6 +17,24 @@ services:
     image: "testeranto-node-nodetests:latest"
     extra_hosts:
       host.docker.internal: "host-gateway"
+  webtests-builder:
+    container_name: "webtests-builder"
+    environment:
+      NODE_ENV: production
+      ENV: web
+      MODE: dev
+    working_dir: /workspace
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/dist:/workspace/dist"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+    command: "yarn tsx /workspace/testeranto/node_runtime.ts /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/node/node.mjs '{\"name\":\"webtests\",\"tests\":[\"src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts\",\"src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts\"],\"outputs\":[]}'"
+    networks:
+      - allTests_network
+    restart: no
+    image: "testeranto-web-webtests:latest"
+    extra_hosts:
+      host.docker.internal: "host-gateway"
   nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -204,6 +222,150 @@ services:
       - allTests_network
     tty: true
     stdin_open: true
+    restart: no
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/web/web.Dockerfile
+    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd"
+    working_dir: /workspace
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/test:/workspace/test"
+      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+    command: "yarn tsx testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts/\"}'"
+    networks:
+      - allTests_network
+    restart: no
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider:
+    image: "testeranto-aider:latest"
+    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/test:/workspace/test"
+      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
+      - "/Users/adam/Code/testeranto:/workspace"
+    working_dir: /workspace
+    command: "tail -f /dev/null"
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    restart: no
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/web/web.Dockerfile
+    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0"
+    working_dir: /workspace
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/test:/workspace/test"
+      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+    command: "yarn tsx testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts_check_0.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts/\"}'"
+    networks:
+      - allTests_network
+    restart: no
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/web/web.Dockerfile
+    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1"
+    working_dir: /workspace
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/test:/workspace/test"
+      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+    command: "yarn tsx testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts_check_1.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts/\"}'"
+    networks:
+      - allTests_network
+    restart: no
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/web/web.Dockerfile
+    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd"
+    working_dir: /workspace
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/test:/workspace/test"
+      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+    command: "yarn tsx testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts/\"}'"
+    networks:
+      - allTests_network
+    restart: no
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider:
+    image: "testeranto-aider:latest"
+    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/test:/workspace/test"
+      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+      - "/Users/adam/Code/testeranto/.aider.conf.yml:/workspace/.aider.conf.yml"
+      - "/Users/adam/Code/testeranto:/workspace"
+    working_dir: /workspace
+    command: "tail -f /dev/null"
+    networks:
+      - allTests_network
+    tty: true
+    stdin_open: true
+    restart: no
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/web/web.Dockerfile
+    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0"
+    working_dir: /workspace
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/test:/workspace/test"
+      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+    command: "yarn tsx testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts_check_0.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts/\"}'"
+    networks:
+      - allTests_network
+    restart: no
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+  webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1:
+    build:
+      context: /Users/adam/Code/testeranto
+      dockerfile: testeranto/runtimes/web/web.Dockerfile
+    container_name: "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1"
+    working_dir: /workspace
+    volumes:
+      - "/Users/adam/Code/testeranto/src:/workspace/src"
+      - "/Users/adam/Code/testeranto/test:/workspace/test"
+      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
+      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
+    command: "yarn tsx testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts_check_1.mjs '{\"ports\":[1111],\"fs\":\"testeranto/reports/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts/\"}'"
+    networks:
+      - allTests_network
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"

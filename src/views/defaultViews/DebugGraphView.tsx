@@ -1,8 +1,9 @@
-import React from 'react';
-import type { GraphData } from '../../graph';
-import { BaseViewClass } from '../BaseViewClass';
 import { SigmaContainer, useLoadGraph, useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
 import { DirectedGraph } from 'graphology';
+import { useLayoutForceAtlas2, useWorkerLayoutForceAtlas2 } from '@react-sigma/layout-forceatlas2';
+import React, { useEffect } from 'react';
+import type { GraphData } from '../../graph';
+import { BaseViewClass } from '../BaseViewClass';
 
 export interface DebugGraphConfig {
   nodeColor?: string;
@@ -33,12 +34,34 @@ const SigmaGraph: React.FC<{
   hoveredNode?: string | null;
   hoveredEdge?: string | null;
 }> = (props) => {
-  const { data, config, onNodeClick, onNodeHover, onEdgeClick, onEdgeHover, hoveredNode, hoveredEdge, width, height } = props;
+  const { data, config, onNodeClick, onNodeHover, onEdgeClick, onEdgeHover, width, height } = props;
   const sigma = useSigma();
   const registerEvents = useRegisterEvents();
   const setSettings = useSetSettings();
   const loadGraph = useLoadGraph();
+  const { start, kill } = useWorkerLayoutForceAtlas2({
+    settings: { slowDown: 10 }
+  });
 
+  // Store hover state locally to avoid re-running graph build effect
+  const [localHoveredNode, setLocalHoveredNode] = React.useState<string | null>(props.hoveredNode ?? null);
+  const [localHoveredEdge, setLocalHoveredEdge] = React.useState<string | null>(props.hoveredEdge ?? null);
+
+  // Sync props to local state
+  React.useEffect(() => {
+    setLocalHoveredNode(props.hoveredNode ?? null);
+    setLocalHoveredEdge(props.hoveredEdge ?? null);
+  }, [props.hoveredNode, props.hoveredEdge]);
+
+  // Start force layout on mount
+  useEffect(() => {
+    start();
+    return () => {
+      kill();
+    };
+  }, [start, kill]);
+
+  // Build graph only when data or config changes
   React.useEffect(() => {
     if (!sigma) {
       return;
@@ -88,33 +111,10 @@ const SigmaGraph: React.FC<{
 
     loadGraph(graph);
 
+    // Set initial settings (without hover-dependent reducers)
     setSettings({
-      nodeReducer: (node, data) => {
-        const isHovered = hoveredNode === node;
-        const isConnected = isHovered || (hoveredNode ? graph.areNeighbors(hoveredNode, node) : false);
-        const isEdgeHovered = hoveredEdge !== null;
-        const dimmed = (hoveredNode !== null && !isHovered && !isConnected) || (hoveredEdge !== null && !isEdgeHovered);
-        return {
-          ...data,
-          size: isHovered ? (data.originalSize || 8) * 2 : (data.originalSize || 8),
-          color: isHovered ? '#ff6600' : dimmed ? '#cccccc' : (data.originalColor || '#4a90e2'),
-          label: data.label || node,
-          zIndex: isHovered ? 10 : dimmed ? 0 : 1
-        };
-      },
-      edgeReducer: (edge, data) => {
-        const isHovered = hoveredEdge === edge;
-        const isConnectedToHoveredNode = hoveredNode !== null && (graph.source(edge) === hoveredNode || graph.target(edge) === hoveredNode);
-        const dimmed = (hoveredNode !== null && !isConnectedToHoveredNode) || (hoveredEdge !== null && !isHovered);
-        return {
-          ...data,
-          size: isHovered ? (data.originalSize || 1) * 3 : isConnectedToHoveredNode ? (data.originalSize || 1) * 1.5 : (data.originalSize || 1),
-          color: isHovered ? '#ff6600' : isConnectedToHoveredNode ? '#ff9900' : dimmed ? '#dddddd' : (data.originalColor || '#999'),
-          zIndex: isHovered ? 10 : isConnectedToHoveredNode ? 5 : dimmed ? 0 : 1
-        };
-      },
       renderLabels: true,
-      defaultDrawEdgeLabel: () => {},
+      defaultDrawEdgeLabel: () => { },
       defaultDrawNodeLabel: (node, context, settings) => {
         const label = node.label || node.id || '';
         if (!label) return;
@@ -130,7 +130,7 @@ const SigmaGraph: React.FC<{
       labelDensity: 0.07,
       labelFont: 'sans-serif',
       labelSize: config.labelSize || 12,
-      labelColor: config.labelColor || '#333',
+      color: config.labelColor || '#333',
       labelThreshold: config.labelThreshold || 5
     });
 
@@ -200,12 +200,49 @@ const SigmaGraph: React.FC<{
       clearTimeout(timer);
       resizeObserver.disconnect();
     };
-  }, [data, config, loadGraph, setSettings, registerEvents, sigma, onNodeClick, onNodeHover, onEdgeClick, onEdgeHover, hoveredNode, hoveredEdge, width, height]);
+  }, [data, config, loadGraph, setSettings, registerEvents, sigma, onNodeClick, onNodeHover, onEdgeClick, onEdgeHover, width, height]);
+
+  // Separate effect to update reducers when hover state changes (without rebuilding graph)
+  React.useEffect(() => {
+    if (!sigma) return;
+
+    setSettings({
+      nodeReducer: (node, data) => {
+        const isHovered = localHoveredNode === node;
+        const isConnected = isHovered || (localHoveredNode ? sigma.getGraph().areNeighbors(localHoveredNode, node) : false);
+        const isEdgeHovered = localHoveredEdge !== null;
+        const dimmed = (localHoveredNode !== null && !isHovered && !isConnected) || (localHoveredEdge !== null && !isEdgeHovered);
+        return {
+          ...data,
+          size: isHovered ? (data.originalSize || 8) * 2 : (data.originalSize || 8),
+          color: isHovered ? '#ff6600' : dimmed ? '#cccccc' : (data.originalColor || '#4a90e2'),
+          label: data.label || node,
+          zIndex: isHovered ? 10 : dimmed ? 0 : 1
+        };
+      },
+      edgeReducer: (edge, data) => {
+        const graph = sigma.getGraph();
+        // Guard against edges that may have been removed
+        if (!graph.hasEdge(edge)) {
+          return data;
+        }
+        const isHovered = localHoveredEdge === edge;
+        const isConnectedToHoveredNode = localHoveredNode !== null && (graph.source(edge) === localHoveredNode || graph.target(edge) === localHoveredNode);
+        const dimmed = (localHoveredNode !== null && !isConnectedToHoveredNode) || (localHoveredEdge !== null && !isHovered);
+        return {
+          ...data,
+          size: isHovered ? (data.originalSize || 1) * 3 : isConnectedToHoveredNode ? (data.originalSize || 1) * 1.5 : (data.originalSize || 1),
+          color: isHovered ? '#ff6600' : isConnectedToHoveredNode ? '#ff9900' : dimmed ? '#dddddd' : (data.originalColor || '#999'),
+          zIndex: isHovered ? 10 : isConnectedToHoveredNode ? 5 : dimmed ? 0 : 1
+        };
+      }
+    });
+  }, [localHoveredNode, localHoveredEdge, sigma, setSettings]);
 
   return <></>;
 };
 
-export class DebugGraph extends BaseViewClass<GraphData> {
+export class DebugGraphView extends BaseViewClass<GraphData> {
   private selectedElement: SelectedElement | null = null;
   private hoveredNode: string | null = null;
   private hoveredEdge: string | null = null;
@@ -399,10 +436,9 @@ export class DebugGraph extends BaseViewClass<GraphData> {
   }
 
   renderContent() {
-    const { width = 800, height = 600 } = this.props;
     const data = this.state.data;
 
-    console.log(`[DebugGraphView.renderContent] width: ${width}, height: ${height}, has data: ${!!data}`);
+    console.log(`[DebugGraphView.renderContent] has data: ${!!data}`);
 
     if (!data) {
       console.error('[DebugGraphView] No graph data available');
@@ -422,11 +458,6 @@ export class DebugGraph extends BaseViewClass<GraphData> {
 
     const config = this.config;
 
-    const actualWidth = Math.max(width > 0 ? width : 800, 400);
-    const actualHeight = Math.max(height > 0 ? height : 600, 400);
-
-    console.log(`[DebugGraphView] Actual dimensions: ${actualWidth}x${actualHeight}`);
-
     if (!data.nodes || !Array.isArray(data.nodes) || data.nodes.length === 0) {
       return (
         <div style={{
@@ -442,138 +473,289 @@ export class DebugGraph extends BaseViewClass<GraphData> {
       );
     }
 
+    const nodes = data.nodes || [];
+    const edges = data.edges || [];
+
+    // 4-column layout: nodes list | edges list | visualization | inspector
+    // Use flexbox with equal flex for each column to fill full width
     return (
       <div style={{
-        width: `${actualWidth}px`,
-        minWidth: '400px',
-        position: 'relative',
+        width: '100%',
+        height: '100%',
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        overflow: 'hidden'
       }}>
+        {/* Column 1: Nodes list */}
         <div style={{
           flex: 1,
+          minWidth: '150px',
+          maxWidth: '25%',
+          borderRight: '1px solid #ccc',
+          backgroundColor: '#fafafa',
+          overflowY: 'auto',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          fontSize: '12px'
         }}>
-          <div
-            style={{
-              height: `${actualHeight}px`,
-              overflow: 'hidden',
-              minHeight: '400px',
-              position: 'relative'
-            }}
-          >
-            <React.Suspense fallback={
-              <div style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <div>Loading Sigma.js graph viewer...</div>
-              </div>
-            }>
-              <SigmaContainer
+          <div style={{
+            padding: '8px',
+            borderBottom: '1px solid #ccc',
+            backgroundColor: '#e0e0e0',
+            fontWeight: 'bold'
+          }}>
+            Nodes ({nodes.length})
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '4px' }}>
+            {nodes.map((node, idx) => (
+              <div
+                key={node.id || idx}
                 style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%'
+                  padding: '4px 6px',
+                  margin: '2px 0',
+                  backgroundColor: '#fff',
+                  border: '1px solid #ddd',
+                  borderRadius: '3px',
+                  cursor: 'pointer',
+                  fontSize: '11px'
                 }}
-                settings={{
-                  renderLabels: true,
-                  defaultDrawEdgeLabel: () => {},
-                  defaultDrawNodeLabel: (node, context, settings) => {
-                    const label = node.label || node.id || '';
-                    if (!label) return;
-                    context.font = `${settings.labelSize || 12}px ${settings.labelFont || 'sans-serif'}`;
-                    context.fillStyle = settings.labelColor || '#333';
-                    context.textAlign = 'center';
-                    context.textBaseline = 'middle';
-                    context.fillText(label, node.x, node.y + (node.size || 8) + 4);
-                  },
-                  enableHovering: false,
-                  zIndex: true,
-                  defaultNodeColor: config.nodeColor || '#4a90e2',
-                  defaultEdgeColor: config.edgeColor || '#999',
-                  defaultNodeSize: config.nodeSize || 5,
-                  defaultEdgeSize: config.edgeSize || 1,
-                  allowInvalidContainer: true,
-                  autoResize: true,
-                  camera: {
-                    ratio: 1,
-                    angle: 0,
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  labelRenderedSizeThreshold: 0,
-                  labelDensity: 0.07,
-                  labelFont: 'sans-serif',
-                  labelSize: config.labelSize || 12,
-                  labelColor: config.labelColor || '#333',
-                  labelThreshold: config.labelThreshold || 5
-                }}
-                graph={null}
-                initialSettings={{
-                  autoResize: true,
-                  allowInvalidContainer: false,
-                  renderLabels: true,
-                  defaultDrawEdgeLabel: () => {},
-                  defaultDrawNodeLabel: (node, context, settings) => {
-                    const label = node.label || node.id || '';
-                    if (!label) return;
-                    context.font = `${settings.labelSize || 12}px ${settings.labelFont || 'sans-serif'}`;
-                    context.fillStyle = settings.labelColor || '#333';
-                    context.textAlign = 'center';
-                    context.textBaseline = 'middle';
-                    context.fillText(label, node.x, node.y + (node.size || 8) + 4);
-                  },
-                  enableHovering: false,
-                  labelRenderedSizeThreshold: 0,
-                  labelDensity: 0.07,
-                  labelFont: 'sans-serif',
-                  labelSize: config.labelSize || 12,
-                  labelColor: config.labelColor || '#333',
-                  labelThreshold: config.labelThreshold || 5
+                onClick={() => {
+                  this.handleNodeClick({ id: node.id, ...node });
                 }}
               >
-                <SigmaGraph
-                  data={data}
-                  config={config}
-                  width={actualWidth}
-                  height={actualHeight}
-                  onNodeClick={this.handleNodeClick}
-                  onNodeHover={this.handleNodeHover}
-                  onEdgeClick={this.handleEdgeClick}
-                  onEdgeHover={this.handleEdgeHover}
-                  hoveredNode={this.state.hoveredNode as string | null}
-                  hoveredEdge={this.state.hoveredEdge as string | null}
-                />
-              </SigmaContainer>
-            </React.Suspense>
+                <div style={{ fontWeight: 600, color: '#333' }}>
+                  {node.label || node.id || `node-${idx}`}
+                </div>
+                <div style={{ color: '#666', fontSize: '10px' }}>
+                  id: {node.id}
+                  {node.type && typeof node.type === 'object' && node.type.category ? (
+                    <span> | type: {node.type.category}/{node.type.type}</span>
+                  ) : node.type ? (
+                    <span> | type: {typeof node.type === 'string' ? node.type : JSON.stringify(node.type)}</span>
+                  ) : null}
+                </div>
+              </div>
+            ))}
           </div>
-          {this.renderDetailsPanel()}
         </div>
-        {this.renderSidePanel()}
+
+        {/* Column 2: Edges list */}
+        <div style={{
+          flex: 1,
+          minWidth: '150px',
+          maxWidth: '25%',
+          borderRight: '1px solid #ccc',
+          backgroundColor: '#fafafa',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          fontSize: '12px'
+        }}>
+          <div style={{
+            padding: '8px',
+            borderBottom: '1px solid #ccc',
+            backgroundColor: '#e0e0e0',
+            fontWeight: 'bold'
+          }}>
+            Edges ({edges.length})
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '4px' }}>
+            {edges.map((edge, idx) => (
+              <div
+                key={idx}
+                style={{
+                  padding: '4px 6px',
+                  margin: '2px 0',
+                  backgroundColor: '#fff',
+                  border: '1px solid #ddd',
+                  borderRadius: '3px',
+                  cursor: 'pointer',
+                  fontSize: '11px'
+                }}
+                onClick={() => {
+                  this.handleEdgeClick({ id: `edge-${idx}`, ...edge });
+                }}
+              >
+                <div style={{ fontWeight: 600, color: '#333' }}>
+                  {edge.source} → {edge.target}
+                </div>
+                <div style={{ color: '#666', fontSize: '10px' }}>
+                  {edge.attributes?.type && typeof edge.attributes.type === 'object' && edge.attributes.type.category ? (
+                    <span>type: {edge.attributes.type.category}/{edge.attributes.type.type}</span>
+                  ) : edge.attributes?.type ? (
+                    <span>type: {typeof edge.attributes.type === 'string' ? edge.attributes.type : JSON.stringify(edge.attributes.type)}</span>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Column 3: Visualization */}
+        <div style={{
+          flex: 2,
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <React.Suspense fallback={
+            <div style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <div>Loading Sigma.js graph viewer...</div>
+            </div>
+          }>
+            <SigmaContainer
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%'
+              }}
+              settings={{
+                renderLabels: true,
+                defaultDrawEdgeLabel: () => { },
+                defaultDrawNodeLabel: (node, context, settings) => {
+                  const label = node.label || node.id || '';
+                  if (!label) return;
+                  context.font = `${settings.labelSize || 12}px ${settings.labelFont || 'sans-serif'}`;
+                  context.fillStyle = settings.labelColor || '#333';
+                  context.textAlign = 'center';
+                  context.textBaseline = 'middle';
+                  context.fillText(label, node.x, node.y + (node.size || 8) + 4);
+                },
+                enableHovering: false,
+                zIndex: true,
+                defaultNodeColor: config.nodeColor || '#4a90e2',
+                defaultEdgeColor: config.edgeColor || '#999',
+                defaultNodeSize: config.nodeSize || 5,
+                defaultEdgeSize: config.edgeSize || 1,
+                allowInvalidContainer: true,
+                autoResize: true,
+                camera: {
+                  ratio: 1,
+                  angle: 0,
+                  x: 0.5,
+                  y: 0.5
+                },
+                labelRenderedSizeThreshold: 0,
+                labelDensity: 0.07,
+                labelFont: 'sans-serif',
+                labelSize: config.labelSize || 12,
+                labelColor: config.labelColor || '#333',
+                labelThreshold: config.labelThreshold || 5
+              }}
+              graph={null}
+              initialSettings={{
+                autoResize: true,
+                allowInvalidContainer: false,
+                renderLabels: true,
+                defaultDrawEdgeLabel: () => { },
+                defaultDrawNodeLabel: (node, context, settings) => {
+                  const label = node.label || node.id || '';
+                  if (!label) return;
+                  context.font = `${settings.labelSize || 12}px ${settings.labelFont || 'sans-serif'}`;
+                  context.fillStyle = settings.labelColor || '#333';
+                  context.textAlign = 'center';
+                  context.textBaseline = 'middle';
+                  context.fillText(label, node.x, node.y + (node.size || 8) + 4);
+                },
+                enableHovering: false,
+                labelRenderedSizeThreshold: 0,
+                labelDensity: 0.07,
+                labelFont: 'sans-serif',
+                labelSize: config.labelSize || 12,
+                labelColor: config.labelColor || '#333',
+                labelThreshold: config.labelThreshold || 5
+              }}
+            >
+              <SigmaGraph
+                data={data}
+                config={config}
+                width={800}
+                height={600}
+                onNodeClick={this.handleNodeClick}
+                onNodeHover={this.handleNodeHover}
+                onEdgeClick={this.handleEdgeClick}
+                onEdgeHover={this.handleEdgeHover}
+                hoveredNode={this.state.hoveredNode as string | null}
+                hoveredEdge={this.state.hoveredEdge as string | null}
+              />
+            </SigmaContainer>
+          </React.Suspense>
+        </div>
+
+        {/* Column 4: Inspector */}
+        <div style={{
+          flex: 1,
+          minWidth: '150px',
+          maxWidth: '25%',
+          borderLeft: '1px solid #ccc',
+          backgroundColor: '#fafafa',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          fontSize: '12px'
+        }}>
+          <div style={{
+            padding: '8px',
+            borderBottom: '1px solid #ccc',
+            backgroundColor: '#e0e0e0',
+            fontWeight: 'bold'
+          }}>
+            Inspector
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '4px' }}>
+            {this.renderInspectorContent()}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  private renderInspectorContent() {
+    const selected = this.state.selectedElement as SelectedElement | null;
+    if (!selected) {
+      return (
+        <div style={{
+          padding: '8px',
+          color: '#666',
+          fontSize: '11px'
+        }}>
+          Click a node or edge to inspect its details.
+        </div>
+      );
+    }
+
+    const data = selected.data;
+    const entries = Object.entries(data).filter(([key]) => key !== 'nodeData' && key !== 'edgeData' && key !== 'originalColor' && key !== 'originalSize');
+
+    return (
+      <div>
+        <div style={{ fontWeight: 'bold', marginBottom: '8px', color: '#333', fontSize: '12px' }}>
+          {selected.type === 'node' ? 'Node' : 'Edge'}: {selected.id}
+        </div>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <tbody>
+            {entries.map(([key, value]) => (
+              <tr key={key} style={{ borderBottom: '1px solid #ddd' }}>
+                <td style={{ padding: '4px 8px', fontWeight: 600, color: '#555', width: '80px', verticalAlign: 'top', fontSize: '11px' }}>
+                  {key}
+                </td>
+                <td style={{ padding: '4px 8px', color: '#333', wordBreak: 'break-all', fontSize: '11px' }}>
+                  {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }
 }
-
-export const DebugGraphView: React.FC<{ slicePath: string; width?: number; height?: number }> = ({
-  slicePath,
-  width = 800,
-  height = 600
-}) => {
-  return (
-    <DebugGraph
-      slicePath={slicePath}
-      width={width}
-      height={height}
-    />
-  );
-};
 
 export default DebugGraphView;

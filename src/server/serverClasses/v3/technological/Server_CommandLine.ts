@@ -130,4 +130,27 @@ export class Server_CommandLine extends Server_FS {
     }
     return null;
   }
+
+  /**
+   * Spawn a `docker build` process and return its stdout/stderr streams.
+   * This is the mockable technological layer.
+   */
+  async spawnDockerBuild(
+    buildContext: string,
+    dockerfilePath: string,
+  ): Promise<{ stdout: NodeJS.ReadableStream; stderr: NodeJS.ReadableStream }> {
+    const { spawn } = await import('child_process');
+    const child = spawn('docker', [
+      'build',
+      '-f', dockerfilePath,
+      buildContext,
+    ], {
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+    return {
+      stdout: child.stdout,
+      stderr: child.stderr,
+    };
+  }
 }

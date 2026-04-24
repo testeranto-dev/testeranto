@@ -3,13 +3,13 @@ import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../graph";
 import { Server_Runtime } from "./Server_Runtime";
+import { createFolderNodesAndEdges } from "../utils/createFolderNodesAndEdges";
 
 export abstract class Server_Files extends Server_Runtime {
   protected inputFileWatchers: Map<string, () => void> = new Map();
   protected testResultWatchers: Map<string, () => void> = new Map();
   protected featureFileWatchers: Map<string, () => void> = new Map();
 
-  // Graph property – available from Server_Graph in the inheritance chain
   protected abstract get graph(): TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>;
 
   constructor(
@@ -86,11 +86,9 @@ export abstract class Server_Files extends Server_Runtime {
         });
       }
 
-      // Create folder nodes for the input file's path
-      const parentFolderId = this.createFolderNodesAndEdges(inputFile, timestamp);
+      const parentFolderId = createFolderNodesAndEdges(graph, inputFile, timestamp);
 
-      // Connect input file to its parent folder
-      if (parentFolderId !== '') {
+      if (parentFolderId) {
         const folderEdgeExists = graph.edges.find(
           (e: any) => e.source === parentFolderId && e.target === fileNodeId
         );
@@ -106,7 +104,6 @@ export abstract class Server_Files extends Server_Runtime {
         }
       }
 
-      // Connect entrypoint to input file
       const entrypointToFileEdgeExists = graph.edges.find(
         (e: any) => e.source === entrypointId && e.target === fileNodeId
       );
@@ -123,56 +120,6 @@ export abstract class Server_Files extends Server_Runtime {
     }
   }
 
-  /**
-   * Create folder nodes for a file path and return the parent folder ID.
-   */
-  private createFolderNodesAndEdges(filePath: string, timestamp: string): string {
-    const graph = this.graph;
-    const pathParts = filePath.split('/').filter(Boolean);
-    let currentPath = '';
-    let parentFolderId = '';
-
-    for (const part of pathParts) {
-      currentPath = currentPath ? `${currentPath}/${part}` : part;
-      const folderNodeId = `folder:${currentPath}`;
-      const existingFolderNode = graph.nodes.find((n: any) => n.id === folderNodeId);
-
-      if (!existingFolderNode) {
-        graph.nodes.push({
-          id: folderNodeId,
-          type: { category: 'file', type: 'folder' },
-          label: part,
-          description: `Folder: ${currentPath}`,
-          metadata: {
-            path: currentPath
-          },
-          timestamp
-        });
-      }
-
-      // Connect parent folder to child folder
-      if (parentFolderId !== '') {
-        const folderEdgeExists = graph.edges.find(
-          (e: any) => e.source === parentFolderId && e.target === folderNodeId
-        );
-        if (!folderEdgeExists) {
-          graph.edges.push({
-            source: parentFolderId,
-            target: folderNodeId,
-            attributes: {
-              type: { category: 'structural', type: 'contains', directed: true },
-              timestamp
-            }
-          });
-        }
-      }
-
-      parentFolderId = folderNodeId;
-    }
-
-    return parentFolderId;
-  }
-
   protected abstract updateFeatureNode(
     featurePath: string,
     frontmatter: any,
@@ -186,8 +133,6 @@ export abstract class Server_Files extends Server_Runtime {
   ): Promise<void>;
 
   protected async startFileWatching(): Promise<void> {
-    console.log("[Server_Files] Starting file watching...");
-
     for (const [configKey] of Object.entries(this.configs.runtimes)) {
       const inputFilePath = this.joinPaths(
         this.projectRoot,
@@ -197,8 +142,11 @@ export abstract class Server_Files extends Server_Runtime {
         "inputFiles.json",
       );
 
+      if (!(await this.fileExists(inputFilePath))) {
+        continue;
+      }
+
       const unwatch = this.watchFile(inputFilePath, async () => {
-        console.log(`[Server_Files] File changed: ${inputFilePath}`);
         await this.handleInputFileChange(configKey, inputFilePath);
       });
       this.inputFileWatchers.set(configKey, unwatch);
@@ -206,8 +154,6 @@ export abstract class Server_Files extends Server_Runtime {
   }
 
   protected async stopFileWatching(): Promise<void> {
-    console.log("[Server_Files] Stopping file watching...");
-
     for (const unwatch of this.inputFileWatchers.values()) {
       unwatch();
     }
@@ -228,8 +174,6 @@ export abstract class Server_Files extends Server_Runtime {
     configKey: string,
     inputFilePath: string,
   ): Promise<void> {
-    console.log(`[Server_Files] Input file changed: ${inputFilePath}`);
-
     if (!(await this.fileExists(inputFilePath))) {
       return;
     }
@@ -251,10 +195,6 @@ export abstract class Server_Files extends Server_Runtime {
       const oldHash = this.getStoredHash(configKey, testName);
 
       if (newHash !== oldHash) {
-        console.log(
-          `[Server_Files] Hash changed for ${testName}: ${oldHash} -> ${newHash}`,
-        );
-
         this.setStoredHash(configKey, testName, newHash);
 
         const inputFiles = testInfo.files;
@@ -270,8 +210,6 @@ export abstract class Server_Files extends Server_Runtime {
     testName: string,
     testsJsonPath: string,
   ): Promise<void> {
-    console.log(`[Server_Files] Test result changed: ${testsJsonPath}`);
-
     if (!(await this.fileExists(testsJsonPath))) {
       return;
     }
@@ -281,7 +219,6 @@ export abstract class Server_Files extends Server_Runtime {
 
     await this.updateGraphWithTestResult(configKey, testName, testResult);
 
-    // Extract features from individualResults (per fileWatch.md spec)
     const individualResults = testResult.individualResults || [];
     const features: string[] = [];
     for (const individualResult of individualResults) {
@@ -305,17 +242,14 @@ export abstract class Server_Files extends Server_Runtime {
       }
 
       const unwatch = this.watchFile(absoluteFeaturePath, async () => {
-        console.log(`[Server_Files] File changed: ${absoluteFeaturePath}`);
         await this.handleFeatureFileChange(absoluteFeaturePath);
       });
       this.featureFileWatchers.set(absoluteFeaturePath, unwatch);
     }
 
-    // Set up a watcher for the tests.json file itself if not already watching
     const watcherKey = `${configKey}:${testName}`;
     if (!this.testResultWatchers.has(watcherKey)) {
       const unwatch = this.watchFile(testsJsonPath, async () => {
-        console.log(`[Server_Files] File changed: ${testsJsonPath}`);
         await this.handleTestResultChange(configKey, testName, testsJsonPath);
       });
       this.testResultWatchers.set(watcherKey, unwatch);
@@ -323,8 +257,6 @@ export abstract class Server_Files extends Server_Runtime {
   }
 
   protected async handleFeatureFileChange(featurePath: string): Promise<void> {
-    console.log(`[Server_Files] Feature file changed: ${featurePath}`);
-
     if (!(await this.fileExists(featurePath))) {
       return;
     }

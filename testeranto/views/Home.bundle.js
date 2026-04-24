@@ -12949,31 +12949,6 @@
       const { loading, error, data } = this.state;
       const { width = 800, height = 600 } = this.props;
       if (loading) {
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width,
-          height,
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-          backgroundColor: "#fafafa"
-        }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: { textAlign: "center" }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Loading view..." }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Loading slice data from:" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { style: {
-            fontFamily: "monospace",
-            backgroundColor: "#f0f0f0",
-            padding: "5px",
-            borderRadius: "3px",
-            margin: "10px",
-            wordBreak: "break-all"
-          }, children: this.props.slicePath }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
-            "WebSocket: ",
-            this.ws?.readyState === WebSocket.OPEN ? "Connected" : "Connecting..."
-          ] })
-        ] }) });
       }
       if (error) {
         return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { style: {

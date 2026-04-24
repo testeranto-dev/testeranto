@@ -62,8 +62,7 @@ const SigmaGraph: React.FC<SigmaDebugGraphProps> = (props) => {
           size: config.nodeSize || 8,
           color: config.nodeColor || '#4a90e2',
           x: Math.random() * 100,
-          y: Math.random() * 100,
-          type: 'circle'
+          y: Math.random() * 100
         });
       } catch (error) {
         console.error(`[SigmaDebugGraph] Error adding node ${index}:`, error);
@@ -77,8 +76,7 @@ const SigmaGraph: React.FC<SigmaDebugGraphProps> = (props) => {
           try {
             graph.addEdge(edge.source, edge.target, {
               size: config.edgeSize || 1,
-              color: config.edgeColor || '#999',
-              type: 'line'
+              color: config.edgeColor || '#999'
             });
           } catch (error) {
             console.warn(`[SigmaDebugGraph] Could not add edge ${index}:`, error);
@@ -105,8 +103,7 @@ const SigmaGraph: React.FC<SigmaDebugGraphProps> = (props) => {
         return {
           ...data,
           color: config.edgeColor || '#999',
-          size: config.edgeSize || 1,
-          type: 'line'
+          size: config.edgeSize || 1
         };
       },
       // Completely disable all label rendering

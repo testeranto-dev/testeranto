@@ -7,8 +7,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 219.1973314837667,
-      "y": 588.6044342954416,
+      "x": 526.2433885775123,
+      "y": 410.47781572026315,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -19,8 +19,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 263.5116930769535,
-      "y": 28.99701305616953,
+      "x": 243.37015551466462,
+      "y": 258.94765060060774,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -31,8 +31,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 274.66526736003266,
-      "y": 558.1146689196765,
+      "x": 133.62025742478824,
+      "y": 182.97238255004308,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -43,8 +43,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 526.4459119112581,
-      "y": 216.28965766098955,
+      "x": 645.6187665768529,
+      "y": 481.11463225909415,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -55,8 +55,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 147.94806184465043,
-      "y": 586.7040722370905,
+      "x": 539.328719157828,
+      "y": 539.457623373524,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -67,8 +67,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 739.5513068072316,
-      "y": 361.7910450334927,
+      "x": 609.0836205040812,
+      "y": 54.764042259996295,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -79,8 +79,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 126.94512872398951,
-      "y": 568.1298940924793,
+      "x": 26.508304325490517,
+      "y": 74.98002352667508,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -91,8 +91,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 457.41331263919653,
-      "y": 150.98658239432896,
+      "x": 303.6649013664561,
+      "y": 30.656235625299132,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -103,320 +103,548 @@
         "category": "resource",
         "type": "runtime"
       },
-      "x": 362.75346832868144,
-      "y": 517.164831618,
+      "x": 267.9412408125688,
+      "y": 25.74718041311339,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-bf9d5799b76e5b6f4bab9d892e1e40b94cd9277a797d7861d2818e783b36b8f3",
+      "id": "runtime:webtests",
+      "label": "webtests",
+      "type": {
+        "category": "resource",
+        "type": "runtime"
+      },
+      "x": 229.01564568590206,
+      "y": 270.9283946854949,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-9b2b9fa11ac8fa71bf740c5822893814a56798765ffc3c3fe8cc30b1dc771fce",
       "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
       "type": {
         "category": "process",
         "type": "aider"
       },
-      "x": 493.53480173069187,
-      "y": 56.640378136541436,
+      "x": 755.4006130751843,
+      "y": 594.367702322334,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-cc1f69a242411da65ea4c086cca318d7370561d719e8e3d0cbbf554468eae6cf",
-      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+      "id": "docker-e96b15230a72d739dd3f58212c8ae098e7e6f446932db59cc0446ea3edf62719",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
       "type": {
         "category": "process",
-        "type": "aider"
+        "type": "check"
       },
-      "x": 38.39601947710172,
-      "y": 51.228619782218686,
+      "x": 397.9722629789574,
+      "y": 428.7114055979504,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-2c7713faa983d44c5e0201e493ae7a3cc627f7f4f8086bafeff2664c25b047a6",
-      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
-      "type": {
-        "category": "process",
-        "type": "aider"
-      },
-      "x": 578.7798537193611,
-      "y": 375.73765032998165,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-f54438d2e603302d18c3b7afa69b655945df5e38d7a17ce6e6353ca29543e187",
-      "label": "nodetests-builder",
-      "type": {
-        "category": "process",
-        "type": "builder"
-      },
-      "x": 417.6802928936371,
-      "y": 593.0306787037324,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-1b3847d6233207c36b985a95d1a551531def407b396903c76a53ae84ac55b17d",
-      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 127.20434318519737,
-      "y": 204.93919173322382,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-dfa868ec8fa6e9dd34205b3077d4eb952c43d29f0c97a48760fad30b1a0e3d41",
-      "label": "agent-arko",
-      "type": {
-        "category": "process",
-        "type": "agent"
-      },
-      "x": 279.6230948576951,
-      "y": 272.6481374765797,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-fa4de01ae315e8e6562c215ff34aafda4183d656e92ab0692654c25d3ddd3ee4",
-      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 405.3118968420777,
-      "y": 482.14588014428483,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-aa3b3e3229335f234bfd508be4dc85e84e5cf897a725e74da0f49424bbdbdb24",
-      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
-      "type": {
-        "category": "process",
-        "type": "aider"
-      },
-      "x": 366.54732071018225,
-      "y": 422.86142617548046,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-789f8790b6a814994b06aac3d1c1a395371867256d02d72a8f89fdf5d9cd62e6",
-      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 437.842465594309,
-      "y": 345.5722530707249,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-2cae8580f24ff474f41c7c18f5155037a0bfa32d56b09c958e6c69ab1646c589",
+      "id": "docker-d202220fbbcdcfe41d764067152f63619e73ad3dafe19a1a290609c53037e550",
       "label": "agent-prodirek",
       "type": {
         "category": "process",
         "type": "agent"
       },
-      "x": 42.01670491937088,
-      "y": 156.59198166412813,
+      "x": 53.15463749962177,
+      "y": 138.68925589191716,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-2838055cffd77f8225fe8125cffe55e0c483659e3d5c5e9c75d25bbb9e959bf1",
-      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 92.07869929914052,
-      "y": 309.2176904079936,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-0a0de0832602fb6281b549cc3b58b19ee9c2adb1f19013bc99fd1d69cb83c42a",
+      "id": "docker-604d5f9bb4d9b72c275bb191eaed94d0b0480a97b5615ad1ac963edc65cceb78",
       "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
       "type": {
         "category": "process",
         "type": "aider"
       },
-      "x": 237.65537292028452,
-      "y": 71.35695674587504,
+      "x": 693.7877982274109,
+      "y": 159.11720925212734,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-ee1250bd147efd074713918a190755fdb50dab0a015c3a78e76ddb7b47654cc7",
-      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 96.71071719695226,
-      "y": 414.33414301416775,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-f54438d2e603302d18c3b7afa69b655945df5e38d7a17ce6e6353ca29543e187",
-      "label": "nodetests-builder",
-      "type": {
-        "category": "process",
-        "type": "builder"
-      },
-      "x": 747.5429260111503,
-      "y": 573.4435756668042,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-1b3847d6233207c36b985a95d1a551531def407b396903c76a53ae84ac55b17d",
-      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 179.1009314462925,
-      "y": 295.9215828196973,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-ee1250bd147efd074713918a190755fdb50dab0a015c3a78e76ddb7b47654cc7",
-      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 717.3577929232968,
-      "y": 1.5045174553574236,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-2c7713faa983d44c5e0201e493ae7a3cc627f7f4f8086bafeff2664c25b047a6",
-      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
-      "type": {
-        "category": "process",
-        "type": "aider"
-      },
-      "x": 362.1804283219503,
-      "y": 77.30253228517843,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-789f8790b6a814994b06aac3d1c1a395371867256d02d72a8f89fdf5d9cd62e6",
-      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 708.9956057829374,
-      "y": 298.40729545495964,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-fa4de01ae315e8e6562c215ff34aafda4183d656e92ab0692654c25d3ddd3ee4",
-      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 667.2492573740318,
-      "y": 123.63149289871282,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-2838055cffd77f8225fe8125cffe55e0c483659e3d5c5e9c75d25bbb9e959bf1",
-      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 577.3998709753528,
-      "y": 564.9086350667598,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "docker-dfa868ec8fa6e9dd34205b3077d4eb952c43d29f0c97a48760fad30b1a0e3d41",
+      "id": "docker-ec35bd37ee4526190cfa85e4f7cd7ce81d6edf03b0c78fc542011ece01850c41",
       "label": "agent-arko",
       "type": {
         "category": "process",
         "type": "agent"
       },
-      "x": 504.15048327724685,
-      "y": 472.93961534876473,
+      "x": 194.36517910497395,
+      "y": 388.7695656689508,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-2cae8580f24ff474f41c7c18f5155037a0bfa32d56b09c958e6c69ab1646c589",
-      "label": "agent-prodirek",
+      "id": "docker-ce792da54ab84eaefe9a7855c5f923db74b94b3e612596cfb995e38cd6919f50",
+      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
       "type": {
         "category": "process",
-        "type": "agent"
+        "type": "aider"
       },
-      "x": 112.32122704963663,
-      "y": 178.997934242862,
+      "x": 421.59566154402154,
+      "y": 238.38680199962468,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-bf9d5799b76e5b6f4bab9d892e1e40b94cd9277a797d7861d2818e783b36b8f3",
+      "id": "docker-04948f71f9be2a13202c4dd1220e0f25df55ea8dcd3b417836205dbac47fcde2",
+      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 124.14931685517168,
+      "y": 490.91754213318336,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-d0d813f4d1f61a5384a887f71c2812b77705635a4a003e95c910f708f097ea2b",
+      "label": "webtests-builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 387.5573246826461,
+      "y": 587.1659191678799,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-9e055362bea219b5502e1acec39db659e86b52cfbf103b85cc71f418bb463532",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 434.9673581424541,
+      "y": 62.93736262787537,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-137a51a543b1a703296b4d766c2a55de205b4ecc0146ef4fc50ddb32ed34f6f0",
+      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 103.85400480189118,
+      "y": 410.6674268308649,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-f8969624bbeb453d083c0278e84f2e76dfadbcef854784d6c12edb44e0676191",
+      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 28.76593158184182,
+      "y": 352.3891157177974,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-c8842b87d7ef3e470889ad5908bd8a5acee0ea9b188fc69f5c39a949c5c68cdb",
+      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 769.1819530468782,
+      "y": 478.6915057685486,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-74f4d4f87a81a5cc2f78262db2940e5b81a729312174f3196960e8acef31f259",
+      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 752.3255422855528,
+      "y": 509.441517960656,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-344132bf2ccf7668e3a4c6abaaa71306e9d116e41d66371507aa6c304d514e8e",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 39.971206945079274,
+      "y": 324.1414258015058,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-0203de7b017b93141749c74be11a35c57e698b6bdc5445dd5c536fdb6967f00f",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 146.6284020352199,
+      "y": 111.62482066681815,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-2e87e88e9d96be80926d52001322fb48d0064725bcfc7b0019861ce043d9b33f",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 215.74597145001314,
+      "y": 563.9743649524553,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-8de4a9a532903d5b5d7333f01e2a5f77f949f746070f450a8fd662e2d2af1074",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 266.734056251345,
+      "y": 229.1424516326188,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-42861ef57bb037c096641ee41b6d044d713e055af853b27e4636148e1029d9a9",
+      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 605.0489797184492,
+      "y": 420.88168762580307,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-ba7ce1803b51fa82e0250a79c5bc3be140f5bd1c37d2ddad938424af8687cd0d",
+      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 67.35898120728567,
+      "y": 498.1936986225856,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-4f68dfd700c2e8fb9eb2e5036d41da36afc42bc5d2299af39f6cfe037e17cfe0",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 263.2043033944554,
+      "y": 444.60285816138963,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-03b4d599ac1137080cc3af071c8f272cb867f5d259d356e99b40b31dc6b13068",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 195.04823632156106,
+      "y": 10.953072330795433,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-5c8d5cbcd8e2154849fb648bf50d3e9001265f64f318420c04be1f617793d4a9",
+      "label": "nodetests-builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 618.47661453774,
+      "y": 498.3154668161788,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-4f68dfd700c2e8fb9eb2e5036d41da36afc42bc5d2299af39f6cfe037e17cfe0",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 268.75388334367824,
+      "y": 261.11412082094984,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-137a51a543b1a703296b4d766c2a55de205b4ecc0146ef4fc50ddb32ed34f6f0",
+      "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 309.5685913428648,
+      "y": 578.1254726508456,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-d0d813f4d1f61a5384a887f71c2812b77705635a4a003e95c910f708f097ea2b",
+      "label": "webtests-builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 612.4529957950311,
+      "y": 225.93103865553513,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-f8969624bbeb453d083c0278e84f2e76dfadbcef854784d6c12edb44e0676191",
+      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 594.8962587068539,
+      "y": 596.8399978761994,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-5c8d5cbcd8e2154849fb648bf50d3e9001265f64f318420c04be1f617793d4a9",
+      "label": "nodetests-builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 681.2681503000703,
+      "y": 534.9413473423053,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-ba7ce1803b51fa82e0250a79c5bc3be140f5bd1c37d2ddad938424af8687cd0d",
+      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 292.19328592346,
+      "y": 51.81475406926794,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-c8842b87d7ef3e470889ad5908bd8a5acee0ea9b188fc69f5c39a949c5c68cdb",
+      "label": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-aider",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 322.24907782858406,
+      "y": 360.9905024856903,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-e96b15230a72d739dd3f58212c8ae098e7e6f446932db59cc0446ea3edf62719",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 568.2512829770134,
+      "y": 127.90486398599201,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-42861ef57bb037c096641ee41b6d044d713e055af853b27e4636148e1029d9a9",
+      "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 67.24215846376663,
+      "y": 251.02636826468452,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-ce792da54ab84eaefe9a7855c5f923db74b94b3e612596cfb995e38cd6919f50",
+      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 369.97613227849183,
+      "y": 29.083071266527295,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-9b2b9fa11ac8fa71bf740c5822893814a56798765ffc3c3fe8cc30b1dc771fce",
       "label": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-aider",
       "type": {
         "category": "process",
         "type": "aider"
       },
-      "x": 168.37182172123983,
-      "y": 276.90699399708257,
+      "x": 414.78934508895725,
+      "y": 394.8304025626918,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-aa3b3e3229335f234bfd508be4dc85e84e5cf897a725e74da0f49424bbdbdb24",
-      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-aider",
+      "id": "docker-9e055362bea219b5502e1acec39db659e86b52cfbf103b85cc71f418bb463532",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-aider",
       "type": {
         "category": "process",
         "type": "aider"
       },
-      "x": 642.6038931403623,
-      "y": 275.7426901293168,
+      "x": 532.4612938051758,
+      "y": 83.04677540073638,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-0a0de0832602fb6281b549cc3b58b19ee9c2adb1f19013bc99fd1d69cb83c42a",
-      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+      "id": "docker-ec35bd37ee4526190cfa85e4f7cd7ce81d6edf03b0c78fc542011ece01850c41",
+      "label": "agent-arko",
       "type": {
         "category": "process",
-        "type": "aider"
+        "type": "agent"
       },
-      "x": 292.6608454046467,
-      "y": 461.5608980013548,
+      "x": 541.5422348793643,
+      "y": 369.5386307529139,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "docker-cc1f69a242411da65ea4c086cca318d7370561d719e8e3d0cbbf554468eae6cf",
+      "id": "docker-0203de7b017b93141749c74be11a35c57e698b6bdc5445dd5c536fdb6967f00f",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 581.4015913696601,
+      "y": 322.9034123054048,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-d202220fbbcdcfe41d764067152f63619e73ad3dafe19a1a290609c53037e550",
+      "label": "agent-prodirek",
+      "type": {
+        "category": "process",
+        "type": "agent"
+      },
+      "x": 319.62763646286544,
+      "y": 426.4059223002347,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-8de4a9a532903d5b5d7333f01e2a5f77f949f746070f450a8fd662e2d2af1074",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 798.6202808641668,
+      "y": 240.88409781355966,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-2e87e88e9d96be80926d52001322fb48d0064725bcfc7b0019861ce043d9b33f",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 0.620026684606767,
+      "y": 487.78716906955225,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-04948f71f9be2a13202c4dd1220e0f25df55ea8dcd3b417836205dbac47fcde2",
       "label": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-aider",
       "type": {
         "category": "process",
         "type": "aider"
       },
-      "x": 435.6742697965779,
-      "y": 430.25212800882736,
+      "x": 284.02499171525255,
+      "y": 277.93088525889874,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-344132bf2ccf7668e3a4c6abaaa71306e9d116e41d66371507aa6c304d514e8e",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-aider",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 216.55099479416836,
+      "y": 588.9400497667617,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-74f4d4f87a81a5cc2f78262db2940e5b81a729312174f3196960e8acef31f259",
+      "label": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 749.9576679234056,
+      "y": 86.17310345233695,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-03b4d599ac1137080cc3af071c8f272cb867f5d259d356e99b40b31dc6b13068",
+      "label": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 286.3548073359265,
+      "y": 385.3627290977759,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "docker-604d5f9bb4d9b72c275bb191eaed94d0b0480a97b5615ad1ac963edc65cceb78",
+      "label": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-aider",
+      "type": {
+        "category": "process",
+        "type": "aider"
+      },
+      "x": 13.010032495815782,
+      "y": 574.0320348011063,
       "size": 5,
       "color": "#4a90e2"
     }
@@ -436,7 +664,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -453,7 +681,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -470,7 +698,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -487,7 +715,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -504,7 +732,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -521,7 +749,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -538,7 +766,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -555,7 +783,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -572,7 +800,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -589,7 +817,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -606,7 +834,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -623,7 +851,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -640,7 +868,24 @@
           "type": "uses",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
+      }
+    },
+    {
+      "source": "view:Home",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -657,7 +902,24 @@
           "type": "uses",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
+      }
+    },
+    {
+      "source": "view:Kanban",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -674,7 +936,24 @@
           "type": "uses",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
+      }
+    },
+    {
+      "source": "view:EisenhowerMatrix",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -691,7 +970,24 @@
           "type": "uses",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
+      }
+    },
+    {
+      "source": "view:Gantt",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -708,7 +1004,24 @@
           "type": "uses",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
+      }
+    },
+    {
+      "source": "view:Chat",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
@@ -725,12 +1038,29 @@
           "type": "uses",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:01.703Z"
+        "timestamp": "2026-04-24T04:21:53.452Z"
+      }
+    },
+    {
+      "source": "view:DebugGraph",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:53.452Z"
       }
     },
     {
       "source": "config:nodetests",
-      "target": "docker-bf9d5799b76e5b6f4bab9d892e1e40b94cd9277a797d7861d2818e783b36b8f3",
+      "target": "docker-9b2b9fa11ac8fa71bf740c5822893814a56798765ffc3c3fe8cc30b1dc771fce",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -742,7 +1072,27 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.904Z",
+        "timestamp": "2026-04-24T04:21:56.275Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-e96b15230a72d739dd3f58212c8ae098e7e6f446932db59cc0446ea3edf62719",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:56.407Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -750,7 +1100,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-cc1f69a242411da65ea4c086cca318d7370561d719e8e3d0cbbf554468eae6cf",
+      "target": "docker-604d5f9bb4d9b72c275bb191eaed94d0b0480a97b5615ad1ac963edc65cceb78",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -762,7 +1112,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.916Z",
+        "timestamp": "2026-04-24T04:21:56.432Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -770,7 +1120,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-2c7713faa983d44c5e0201e493ae7a3cc627f7f4f8086bafeff2664c25b047a6",
+      "target": "docker-ce792da54ab84eaefe9a7855c5f923db74b94b3e612596cfb995e38cd6919f50",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -782,7 +1132,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.920Z",
+        "timestamp": "2026-04-24T04:21:56.491Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -790,7 +1140,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-f54438d2e603302d18c3b7afa69b655945df5e38d7a17ce6e6353ca29543e187",
+      "target": "docker-04948f71f9be2a13202c4dd1220e0f25df55ea8dcd3b417836205dbac47fcde2",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -802,7 +1152,47 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.920Z",
+        "timestamp": "2026-04-24T04:21:56.494Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-d0d813f4d1f61a5384a887f71c2812b77705635a4a003e95c910f708f097ea2b",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:56.548Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-9e055362bea219b5502e1acec39db659e86b52cfbf103b85cc71f418bb463532",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:56.592Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -810,7 +1200,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-1b3847d6233207c36b985a95d1a551531def407b396903c76a53ae84ac55b17d",
+      "target": "docker-137a51a543b1a703296b4d766c2a55de205b4ecc0146ef4fc50ddb32ed34f6f0",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -822,7 +1212,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.948Z",
+        "timestamp": "2026-04-24T04:21:56.596Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -830,7 +1220,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-fa4de01ae315e8e6562c215ff34aafda4183d656e92ab0692654c25d3ddd3ee4",
+      "target": "docker-f8969624bbeb453d083c0278e84f2e76dfadbcef854784d6c12edb44e0676191",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -842,7 +1232,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.956Z",
+        "timestamp": "2026-04-24T04:21:56.601Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -850,7 +1240,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-aa3b3e3229335f234bfd508be4dc85e84e5cf897a725e74da0f49424bbdbdb24",
+      "target": "docker-c8842b87d7ef3e470889ad5908bd8a5acee0ea9b188fc69f5c39a949c5c68cdb",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -862,7 +1252,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.959Z",
+        "timestamp": "2026-04-24T04:21:56.694Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -870,7 +1260,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-789f8790b6a814994b06aac3d1c1a395371867256d02d72a8f89fdf5d9cd62e6",
+      "target": "docker-74f4d4f87a81a5cc2f78262db2940e5b81a729312174f3196960e8acef31f259",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -882,7 +1272,87 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.976Z",
+        "timestamp": "2026-04-24T04:21:56.703Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-344132bf2ccf7668e3a4c6abaaa71306e9d116e41d66371507aa6c304d514e8e",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:56.825Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-0203de7b017b93141749c74be11a35c57e698b6bdc5445dd5c536fdb6967f00f",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:56.953Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-2e87e88e9d96be80926d52001322fb48d0064725bcfc7b0019861ce043d9b33f",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:57.030Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-8de4a9a532903d5b5d7333f01e2a5f77f949f746070f450a8fd662e2d2af1074",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:57.136Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -890,7 +1360,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-2838055cffd77f8225fe8125cffe55e0c483659e3d5c5e9c75d25bbb9e959bf1",
+      "target": "docker-42861ef57bb037c096641ee41b6d044d713e055af853b27e4636148e1029d9a9",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -902,7 +1372,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:03.990Z",
+        "timestamp": "2026-04-24T04:21:57.137Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -910,7 +1380,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-0a0de0832602fb6281b549cc3b58b19ee9c2adb1f19013bc99fd1d69cb83c42a",
+      "target": "docker-ba7ce1803b51fa82e0250a79c5bc3be140f5bd1c37d2ddad938424af8687cd0d",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -922,7 +1392,47 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.027Z",
+        "timestamp": "2026-04-24T04:21:57.142Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-4f68dfd700c2e8fb9eb2e5036d41da36afc42bc5d2299af39f6cfe037e17cfe0",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:57.143Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-03b4d599ac1137080cc3af071c8f272cb867f5d259d356e99b40b31dc6b13068",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:57.147Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -930,7 +1440,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-ee1250bd147efd074713918a190755fdb50dab0a015c3a78e76ddb7b47654cc7",
+      "target": "docker-5c8d5cbcd8e2154849fb648bf50d3e9001265f64f318420c04be1f617793d4a9",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -942,7 +1452,27 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.033Z",
+        "timestamp": "2026-04-24T04:21:57.147Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-4f68dfd700c2e8fb9eb2e5036d41da36afc42bc5d2299af39f6cfe037e17cfe0",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:21:59.260Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -950,7 +1480,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-f54438d2e603302d18c3b7afa69b655945df5e38d7a17ce6e6353ca29543e187",
+      "target": "docker-137a51a543b1a703296b4d766c2a55de205b4ecc0146ef4fc50ddb32ed34f6f0",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -962,7 +1492,27 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.413Z",
+        "timestamp": "2026-04-24T04:22:00.123Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-d0d813f4d1f61a5384a887f71c2812b77705635a4a003e95c910f708f097ea2b",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:22:00.127Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -970,7 +1520,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-1b3847d6233207c36b985a95d1a551531def407b396903c76a53ae84ac55b17d",
+      "target": "docker-f8969624bbeb453d083c0278e84f2e76dfadbcef854784d6c12edb44e0676191",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -982,7 +1532,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.611Z",
+        "timestamp": "2026-04-24T04:22:00.730Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -990,7 +1540,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-ee1250bd147efd074713918a190755fdb50dab0a015c3a78e76ddb7b47654cc7",
+      "target": "docker-5c8d5cbcd8e2154849fb648bf50d3e9001265f64f318420c04be1f617793d4a9",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1002,7 +1552,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.718Z",
+        "timestamp": "2026-04-24T04:22:01.165Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1010,7 +1560,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-2c7713faa983d44c5e0201e493ae7a3cc627f7f4f8086bafeff2664c25b047a6",
+      "target": "docker-ba7ce1803b51fa82e0250a79c5bc3be140f5bd1c37d2ddad938424af8687cd0d",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1022,7 +1572,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.734Z",
+        "timestamp": "2026-04-24T04:22:01.201Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1030,7 +1580,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-789f8790b6a814994b06aac3d1c1a395371867256d02d72a8f89fdf5d9cd62e6",
+      "target": "docker-c8842b87d7ef3e470889ad5908bd8a5acee0ea9b188fc69f5c39a949c5c68cdb",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1042,7 +1592,27 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.747Z",
+        "timestamp": "2026-04-24T04:22:01.585Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-e96b15230a72d739dd3f58212c8ae098e7e6f446932db59cc0446ea3edf62719",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:22:01.637Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1050,7 +1620,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-fa4de01ae315e8e6562c215ff34aafda4183d656e92ab0692654c25d3ddd3ee4",
+      "target": "docker-42861ef57bb037c096641ee41b6d044d713e055af853b27e4636148e1029d9a9",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1062,7 +1632,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.769Z",
+        "timestamp": "2026-04-24T04:22:01.648Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1070,7 +1640,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-2838055cffd77f8225fe8125cffe55e0c483659e3d5c5e9c75d25bbb9e959bf1",
+      "target": "docker-ce792da54ab84eaefe9a7855c5f923db74b94b3e612596cfb995e38cd6919f50",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1082,7 +1652,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.816Z",
+        "timestamp": "2026-04-24T04:22:02.307Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1090,7 +1660,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-bf9d5799b76e5b6f4bab9d892e1e40b94cd9277a797d7861d2818e783b36b8f3",
+      "target": "docker-9b2b9fa11ac8fa71bf740c5822893814a56798765ffc3c3fe8cc30b1dc771fce",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1102,7 +1672,87 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.937Z",
+        "timestamp": "2026-04-24T04:22:03.260Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-9e055362bea219b5502e1acec39db659e86b52cfbf103b85cc71f418bb463532",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:22:03.312Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-0203de7b017b93141749c74be11a35c57e698b6bdc5445dd5c536fdb6967f00f",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:22:03.468Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-8de4a9a532903d5b5d7333f01e2a5f77f949f746070f450a8fd662e2d2af1074",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:22:04.209Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-2e87e88e9d96be80926d52001322fb48d0064725bcfc7b0019861ce043d9b33f",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:22:04.214Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1110,7 +1760,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-aa3b3e3229335f234bfd508be4dc85e84e5cf897a725e74da0f49424bbdbdb24",
+      "target": "docker-04948f71f9be2a13202c4dd1220e0f25df55ea8dcd3b417836205dbac47fcde2",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1122,7 +1772,27 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:04.957Z",
+        "timestamp": "2026-04-24T04:22:04.656Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-344132bf2ccf7668e3a4c6abaaa71306e9d116e41d66371507aa6c304d514e8e",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:22:05.098Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1130,7 +1800,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-0a0de0832602fb6281b549cc3b58b19ee9c2adb1f19013bc99fd1d69cb83c42a",
+      "target": "docker-74f4d4f87a81a5cc2f78262db2940e5b81a729312174f3196960e8acef31f259",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1142,7 +1812,27 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:05.036Z",
+        "timestamp": "2026-04-24T04:22:05.647Z",
+        "metadata": {
+          "relationship": "config_has_process"
+        }
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "docker-03b4d599ac1137080cc3af071c8f272cb867f5d259d356e99b40b31dc6b13068",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-24T04:22:05.882Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1150,7 +1840,7 @@
     },
     {
       "source": "config:nodetests",
-      "target": "docker-cc1f69a242411da65ea4c086cca318d7370561d719e8e3d0cbbf554468eae6cf",
+      "target": "docker-604d5f9bb4d9b72c275bb191eaed94d0b0480a97b5615ad1ac963edc65cceb78",
       "type": {
         "category": "ownership",
         "type": "has",
@@ -1162,7 +1852,7 @@
           "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-23T21:39:05.066Z",
+        "timestamp": "2026-04-24T04:22:05.935Z",
         "metadata": {
           "relationship": "config_has_process"
         }
@@ -1170,5 +1860,5 @@
     }
   ],
   "viewType": "debug",
-  "timestamp": "2026-04-23T21:39:05.308Z"
+  "timestamp": "2026-04-24T04:22:06.180Z"
 }

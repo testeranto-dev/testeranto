@@ -277,6 +277,26 @@ const config: ITesterantoConfig = {
       outputs: [],
     },
 
+
+    webtests: {
+      runtime: "web",
+      tests: [
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        // We could add a standard web test framework like Vitest here
+      ],
+      checks: [
+        (x) => `yarn eslint ${x.join(" ")} `,
+        (x) => `yarn tsc --noEmit ${x.join(" ")}`,
+      ],
+      dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
+      buildOptions: `testeranto/runtimes/web/web.ts`,
+      buildKitOptions: {
+        // Single-stage Dockerfile, no targetStage needed
+      },
+      outputs: [],
+    },
+
     // javatests: {
     //   runtime: "java",
     //   tests: [
@@ -331,24 +351,7 @@ const config: ITesterantoConfig = {
 
 
 
-    // webtests: {
-    //   runtime: "web",
-    //   tests: [
-    //     "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-    //     "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-    //     // We could add a standard web test framework like Vitest here
-    //   ],
-    //   checks: [
-    //     (x) => `yarn eslint ${x.join(" ")} `,
-    //     (x) => `yarn tsc --noEmit ${x.join(" ")}`,
-    //   ],
-    //   dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
-    //   buildOptions: `testeranto/runtimes/web/web.ts`,
-    //   buildKitOptions: {
-    //     // Single-stage Dockerfile, no targetStage needed
-    //   },
-    //   outputs: [],
-    // },
+
 
     // pythontests: {
     //   runtime: "python",
