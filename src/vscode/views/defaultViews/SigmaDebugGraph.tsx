@@ -6,7 +6,7 @@ const omit = <T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K
   keys.forEach(key => delete result[key]);
   return result;
 };
-import type { GraphData } from '../../graph';
+import type { GraphData } from '../../../graph';
 import type { DebugGraphConfig } from './DebugGraphView';
 
 interface SigmaDebugGraphProps {
@@ -48,13 +48,13 @@ const SigmaGraph: React.FC<SigmaDebugGraphProps> = (props) => {
       try {
         // Ensure node has required properties
         const nodeId = node.id || `node-${index}`;
-        
+
         // Check if node already exists
         if (graph.hasNode(nodeId)) {
           console.warn(`[SigmaDebugGraph] Node ${nodeId} already exists, skipping`);
           return;
         }
-        
+
         // Don't include label property to prevent label rendering
         // Use simple attributes to avoid Sigma.js compatibility issues
         graph.addNode(nodeId, {
@@ -137,7 +137,7 @@ const SigmaGraph: React.FC<SigmaDebugGraphProps> = (props) => {
 
     // Get container reference
     const container = sigma.getContainer();
-    
+
     // Force a refresh after a short delay to ensure container has dimensions
     const timer = setTimeout(() => {
       console.log(`[SigmaDebugGraph] Refreshing camera, sigma available:`, !!sigma);

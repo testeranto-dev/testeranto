@@ -1,422 +1,422 @@
 {
   "items": [
     {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "timestamp": "2026-04-24T22:30:57.341Z",
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "timestamp": "2026-04-25T01:21:47.724Z",
       "metadata": {
-        "containerId": "2eac7701b8cbcaa59d08d5a1a1a8c1d28152083865bd00edc5308e61d0401634",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-        "processType": "bdd",
+        "containerId": "580c8b0f96880dbd0b49f8d4d095901aa5a426a936fca7f4097a53645d0ae381",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+        "processType": "check",
         "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
         "isActive": true,
-        "startedAt": "2026-04-24T22:30:57.341Z",
-        "updatedAt": "2026-04-24T22:30:57.341Z",
+        "startedAt": "2026-04-25T01:21:47.724Z",
+        "updatedAt": "2026-04-25T01:21:47.724Z",
         "isAgentAider": false
       }
     },
     {
       "id": "builder_process:webtests:builder",
       "label": "builder process for builder",
-      "timestamp": "2026-04-24T22:30:57.343Z",
+      "timestamp": "2026-04-25T01:21:47.747Z",
       "metadata": {
-        "containerId": "b1875d066b6883df7dcf144a4d545354b12c96934785835709a06620baed19cd",
+        "containerId": "1c086238bbd86b4e5b4595810301c14e1338063bf56b1d3aa6aa4953b142b495",
         "serviceName": "webtests-builder",
         "processType": "builder",
         "configKey": "webtests",
         "testName": "builder",
         "isActive": true,
-        "startedAt": "2026-04-24T22:30:57.343Z",
-        "updatedAt": "2026-04-24T22:30:57.343Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "timestamp": "2026-04-24T22:30:57.744Z",
-      "metadata": {
-        "containerId": "8c3329cc66ce8b30d35473421b02e8c30d3f3c16b069a240bb9818d60db33bb5",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:30:57.744Z",
-        "updatedAt": "2026-04-24T22:30:57.744Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "builder_process:nodetests:builder",
-      "label": "builder process for builder",
-      "timestamp": "2026-04-24T22:30:57.754Z",
-      "metadata": {
-        "containerId": "6591a1f7a2eb2a5b3f5200cbbac941c166133d2fe04b3d3149d718c011ad000a",
-        "serviceName": "nodetests-builder",
-        "processType": "builder",
-        "configKey": "nodetests",
-        "testName": "builder",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:30:57.754Z",
-        "updatedAt": "2026-04-24T22:30:57.754Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "timestamp": "2026-04-24T22:30:57.817Z",
-      "metadata": {
-        "containerId": "2a43ff376ccab09d2b31841883ad4d5cd8e252495e46ad6cac2b04e84b095d4d",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-        "processType": "bdd",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:30:57.817Z",
-        "updatedAt": "2026-04-24T22:30:57.817Z",
+        "startedAt": "2026-04-25T01:21:47.747Z",
+        "updatedAt": "2026-04-25T01:21:47.747Z",
         "isAgentAider": false
       }
     },
     {
       "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
       "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "timestamp": "2026-04-24T22:30:58.125Z",
+      "timestamp": "2026-04-25T01:21:47.750Z",
       "metadata": {
-        "containerId": "a7ee9e3033335de4faeb9f937ef89fb060306ac182bf3f347dc58aec551ed8b6",
+        "containerId": "61b60ed4b5e3dffe93c4ffe6a4f764fd4e86010bd75206e8616dbb42f4b2cea2",
         "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
         "processType": "bdd",
         "configKey": "nodetests",
         "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
         "isActive": true,
-        "startedAt": "2026-04-24T22:30:58.125Z",
-        "updatedAt": "2026-04-24T22:30:58.125Z",
+        "startedAt": "2026-04-25T01:21:47.750Z",
+        "updatedAt": "2026-04-25T01:21:47.750Z",
         "isAgentAider": false
       }
     },
     {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "timestamp": "2026-04-24T22:30:58.155Z",
+      "id": "builder_process:nodetests:builder",
+      "label": "builder process for builder",
+      "timestamp": "2026-04-25T01:21:47.750Z",
       "metadata": {
-        "containerId": "2f5c6a331c532cc694c20d2689f84e60a559c75a8c5f11d77a3d9480b442a726",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-        "processType": "check",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:30:58.155Z",
-        "updatedAt": "2026-04-24T22:30:58.155Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "timestamp": "2026-04-24T22:30:58.156Z",
-      "metadata": {
-        "containerId": "7d97893ef78ecc97c6fc0ee2777757aeaf474b56d30406ac299ac4118cadd69e",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-        "processType": "bdd",
+        "containerId": "f47fc9af17524916b64337a5dc90a33e3c5235c64975389698b460b728086abd",
+        "serviceName": "nodetests-builder",
+        "processType": "builder",
         "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+        "testName": "builder",
         "isActive": true,
-        "startedAt": "2026-04-24T22:30:58.156Z",
-        "updatedAt": "2026-04-24T22:30:58.156Z",
+        "startedAt": "2026-04-25T01:21:47.750Z",
+        "updatedAt": "2026-04-25T01:21:47.750Z",
         "isAgentAider": false
       }
     },
     {
       "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
       "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "timestamp": "2026-04-24T22:30:58.194Z",
+      "timestamp": "2026-04-25T01:21:47.754Z",
       "metadata": {
-        "containerId": "7b1a09043161aa4d5602fcdcfc4e895d00510a5dbce11966de060121398f0b6e",
+        "containerId": "5f1f793c0edfc5da076e96e5ea3ed1f97ab2f51da73e232b01adeb5d1124b696",
         "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
         "processType": "check",
         "configKey": "webtests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
         "isActive": true,
-        "startedAt": "2026-04-24T22:30:58.194Z",
-        "updatedAt": "2026-04-24T22:30:58.194Z",
+        "startedAt": "2026-04-25T01:21:47.754Z",
+        "updatedAt": "2026-04-25T01:21:47.754Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "timestamp": "2026-04-25T01:21:47.754Z",
+      "metadata": {
+        "containerId": "3eecfefc4c82834fa9696f98c12ca347814de6c8fc8a7b9461b1f3b4583f7132",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:47.754Z",
+        "updatedAt": "2026-04-25T01:21:47.754Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "timestamp": "2026-04-25T01:21:47.754Z",
+      "metadata": {
+        "containerId": "771e2c39c104270cfde07f0478522d25eab6219ee331b8201a307247e3943cde",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+        "processType": "bdd",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:47.754Z",
+        "updatedAt": "2026-04-25T01:21:47.754Z",
         "isAgentAider": false
       }
     },
     {
       "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
       "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "timestamp": "2026-04-24T22:30:58.194Z",
+      "timestamp": "2026-04-25T01:21:47.754Z",
       "metadata": {
-        "containerId": "c9f53b17fcc046cbd45c1727a40a2bb0b54193b900b3590b1241dfe5dd791ee5",
+        "containerId": "1d567b84f1bf2ab45e56223c9cd90899dd03d6c1c52899c07cb23e99805e6247",
         "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
         "processType": "bdd",
         "configKey": "nodetests",
         "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
         "isActive": true,
-        "startedAt": "2026-04-24T22:30:58.194Z",
-        "updatedAt": "2026-04-24T22:30:58.194Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "timestamp": "2026-04-24T22:30:58.273Z",
-      "metadata": {
-        "containerId": "07d407e64cd2350dbd63abcbc09a38b33303166ac25532cddf6c66d85d11b685",
-        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:30:58.273Z",
-        "updatedAt": "2026-04-24T22:30:58.273Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "timestamp": "2026-04-24T22:30:58.274Z",
-      "metadata": {
-        "containerId": "03a782a0a8ece892f0978324b38a1ebef879b02c8ab3c417bcb62ed144201d39",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-        "processType": "check",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:30:58.274Z",
-        "updatedAt": "2026-04-24T22:30:58.274Z",
+        "startedAt": "2026-04-25T01:21:47.754Z",
+        "updatedAt": "2026-04-25T01:21:47.754Z",
         "isAgentAider": false
       }
     },
     {
       "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
       "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "timestamp": "2026-04-24T22:30:58.285Z",
+      "timestamp": "2026-04-25T01:21:47.788Z",
       "metadata": {
-        "containerId": "385545904e9e118b4808d686250842def931ca73291620a076576131bae546b1",
+        "containerId": "cfe2b386185b916c644f8082b60f7198eaa2e85735e2405fda6ebdf60412a771",
         "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
         "processType": "check",
         "configKey": "webtests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
         "isActive": true,
-        "startedAt": "2026-04-24T22:30:58.285Z",
-        "updatedAt": "2026-04-24T22:30:58.285Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "timestamp": "2026-04-24T22:31:00.577Z",
-      "metadata": {
-        "containerId": "03a782a0a8ece892f0978324b38a1ebef879b02c8ab3c417bcb62ed144201d39",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-        "processType": "check",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:31:00.577Z",
-        "updatedAt": "2026-04-24T22:31:00.577Z",
+        "startedAt": "2026-04-25T01:21:47.788Z",
+        "updatedAt": "2026-04-25T01:21:47.788Z",
         "isAgentAider": false
       }
     },
     {
       "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
       "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "timestamp": "2026-04-24T22:31:00.658Z",
+      "timestamp": "2026-04-25T01:21:47.805Z",
       "metadata": {
-        "containerId": "2eac7701b8cbcaa59d08d5a1a1a8c1d28152083865bd00edc5308e61d0401634",
+        "containerId": "717f09811f381eaa4b28d926d9408b728e62c2f64f47297a4553d39bff5b1614",
         "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
         "processType": "bdd",
         "configKey": "webtests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
         "isActive": true,
-        "startedAt": "2026-04-24T22:31:00.658Z",
-        "updatedAt": "2026-04-24T22:31:00.658Z",
+        "startedAt": "2026-04-25T01:21:47.805Z",
+        "updatedAt": "2026-04-25T01:21:47.805Z",
         "isAgentAider": false
       }
     },
     {
       "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
       "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "timestamp": "2026-04-24T22:31:00.817Z",
+      "timestamp": "2026-04-25T01:21:47.805Z",
       "metadata": {
-        "containerId": "07d407e64cd2350dbd63abcbc09a38b33303166ac25532cddf6c66d85d11b685",
+        "containerId": "fdc108b98a130202d40b2914f52789856bce2817a74e53054d14b3cb629a4902",
         "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
         "processType": "bdd",
         "configKey": "nodetests",
         "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
         "isActive": true,
-        "startedAt": "2026-04-24T22:31:00.817Z",
-        "updatedAt": "2026-04-24T22:31:00.817Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "builder_process:webtests:builder",
-      "label": "builder process for builder",
-      "timestamp": "2026-04-24T22:31:01.043Z",
-      "metadata": {
-        "containerId": "b1875d066b6883df7dcf144a4d545354b12c96934785835709a06620baed19cd",
-        "serviceName": "webtests-builder",
-        "processType": "builder",
-        "configKey": "webtests",
-        "testName": "builder",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:31:01.043Z",
-        "updatedAt": "2026-04-24T22:31:01.043Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "timestamp": "2026-04-24T22:31:01.072Z",
-      "metadata": {
-        "containerId": "2a43ff376ccab09d2b31841883ad4d5cd8e252495e46ad6cac2b04e84b095d4d",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-        "processType": "bdd",
-        "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:31:01.072Z",
-        "updatedAt": "2026-04-24T22:31:01.072Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "builder_process:nodetests:builder",
-      "label": "builder process for builder",
-      "timestamp": "2026-04-24T22:31:01.089Z",
-      "metadata": {
-        "containerId": "6591a1f7a2eb2a5b3f5200cbbac941c166133d2fe04b3d3149d718c011ad000a",
-        "serviceName": "nodetests-builder",
-        "processType": "builder",
-        "configKey": "nodetests",
-        "testName": "builder",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:31:01.089Z",
-        "updatedAt": "2026-04-24T22:31:01.089Z",
+        "startedAt": "2026-04-25T01:21:47.805Z",
+        "updatedAt": "2026-04-25T01:21:47.805Z",
         "isAgentAider": false
       }
     },
     {
       "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
       "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "timestamp": "2026-04-24T22:31:01.473Z",
+      "timestamp": "2026-04-25T01:21:47.805Z",
       "metadata": {
-        "containerId": "8c3329cc66ce8b30d35473421b02e8c30d3f3c16b069a240bb9818d60db33bb5",
+        "containerId": "4d492dfc33a1ce8422fecb7b94eabb8efa5a1af6fcdea50e206aa0e294e5d2e4",
         "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
         "processType": "bdd",
         "configKey": "nodetests",
         "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
         "isActive": true,
-        "startedAt": "2026-04-24T22:31:01.473Z",
-        "updatedAt": "2026-04-24T22:31:01.473Z",
+        "startedAt": "2026-04-25T01:21:47.805Z",
+        "updatedAt": "2026-04-25T01:21:47.805Z",
         "isAgentAider": false
       }
     },
     {
-      "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "timestamp": "2026-04-24T22:31:01.491Z",
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "timestamp": "2026-04-25T01:21:47.806Z",
       "metadata": {
-        "containerId": "a7ee9e3033335de4faeb9f937ef89fb060306ac182bf3f347dc58aec551ed8b6",
-        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-        "processType": "bdd",
-        "configKey": "nodetests",
-        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-        "isActive": true,
-        "startedAt": "2026-04-24T22:31:01.491Z",
-        "updatedAt": "2026-04-24T22:31:01.491Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "timestamp": "2026-04-24T22:31:01.509Z",
-      "metadata": {
-        "containerId": "7b1a09043161aa4d5602fcdcfc4e895d00510a5dbce11966de060121398f0b6e",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+        "containerId": "ffbca5499c52f9f1a93cf62d618be690f126adf91ad646f54a9914bfe1f1b421",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
         "processType": "check",
         "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
         "isActive": true,
-        "startedAt": "2026-04-24T22:31:01.509Z",
-        "updatedAt": "2026-04-24T22:31:01.509Z",
+        "startedAt": "2026-04-25T01:21:47.806Z",
+        "updatedAt": "2026-04-25T01:21:47.806Z",
         "isAgentAider": false
       }
     },
     {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "timestamp": "2026-04-24T22:31:02.014Z",
+      "id": "builder_process:webtests:builder",
+      "label": "builder process for builder",
+      "timestamp": "2026-04-25T01:21:48.764Z",
       "metadata": {
-        "containerId": "2f5c6a331c532cc694c20d2689f84e60a559c75a8c5f11d77a3d9480b442a726",
-        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-        "processType": "check",
+        "containerId": "1c086238bbd86b4e5b4595810301c14e1338063bf56b1d3aa6aa4953b142b495",
+        "serviceName": "webtests-builder",
+        "processType": "builder",
         "configKey": "webtests",
-        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+        "testName": "builder",
         "isActive": true,
-        "startedAt": "2026-04-24T22:31:02.014Z",
-        "updatedAt": "2026-04-24T22:31:02.014Z",
+        "startedAt": "2026-04-25T01:21:48.764Z",
+        "updatedAt": "2026-04-25T01:21:48.764Z",
         "isAgentAider": false
       }
     },
     {
       "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
       "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "timestamp": "2026-04-24T22:31:02.074Z",
+      "timestamp": "2026-04-25T01:21:48.929Z",
       "metadata": {
-        "containerId": "c9f53b17fcc046cbd45c1727a40a2bb0b54193b900b3590b1241dfe5dd791ee5",
+        "containerId": "1d567b84f1bf2ab45e56223c9cd90899dd03d6c1c52899c07cb23e99805e6247",
         "serviceName": "nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
         "processType": "bdd",
         "configKey": "nodetests",
         "testName": "src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
         "isActive": true,
-        "startedAt": "2026-04-24T22:31:02.074Z",
-        "updatedAt": "2026-04-24T22:31:02.074Z",
+        "startedAt": "2026-04-25T01:21:48.929Z",
+        "updatedAt": "2026-04-25T01:21:48.929Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "timestamp": "2026-04-25T01:21:48.984Z",
+      "metadata": {
+        "containerId": "5f1f793c0edfc5da076e96e5ea3ed1f97ab2f51da73e232b01adeb5d1124b696",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+        "processType": "check",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:48.984Z",
+        "updatedAt": "2026-04-25T01:21:48.984Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "timestamp": "2026-04-25T01:21:49.017Z",
+      "metadata": {
+        "containerId": "61b60ed4b5e3dffe93c4ffe6a4f764fd4e86010bd75206e8616dbb42f4b2cea2",
+        "serviceName": "nodetests-src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:49.017Z",
+        "updatedAt": "2026-04-25T01:21:49.017Z",
         "isAgentAider": false
       }
     },
     {
       "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
       "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "timestamp": "2026-04-24T22:31:02.074Z",
+      "timestamp": "2026-04-25T01:21:49.075Z",
       "metadata": {
-        "containerId": "385545904e9e118b4808d686250842def931ca73291620a076576131bae546b1",
+        "containerId": "cfe2b386185b916c644f8082b60f7198eaa2e85735e2405fda6ebdf60412a771",
         "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
         "processType": "check",
         "configKey": "webtests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
         "isActive": true,
-        "startedAt": "2026-04-24T22:31:02.074Z",
-        "updatedAt": "2026-04-24T22:31:02.074Z",
+        "startedAt": "2026-04-25T01:21:49.075Z",
+        "updatedAt": "2026-04-25T01:21:49.075Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "builder_process:nodetests:builder",
+      "label": "builder process for builder",
+      "timestamp": "2026-04-25T01:21:49.177Z",
+      "metadata": {
+        "containerId": "f47fc9af17524916b64337a5dc90a33e3c5235c64975389698b460b728086abd",
+        "serviceName": "nodetests-builder",
+        "processType": "builder",
+        "configKey": "nodetests",
+        "testName": "builder",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:49.177Z",
+        "updatedAt": "2026-04-25T01:21:49.177Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "timestamp": "2026-04-25T01:21:49.319Z",
+      "metadata": {
+        "containerId": "4d492dfc33a1ce8422fecb7b94eabb8efa5a1af6fcdea50e206aa0e294e5d2e4",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:49.319Z",
+        "updatedAt": "2026-04-25T01:21:49.319Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "timestamp": "2026-04-25T01:21:49.550Z",
+      "metadata": {
+        "containerId": "580c8b0f96880dbd0b49f8d4d095901aa5a426a936fca7f4097a53645d0ae381",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+        "processType": "check",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:49.550Z",
+        "updatedAt": "2026-04-25T01:21:49.550Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "timestamp": "2026-04-25T01:21:49.762Z",
+      "metadata": {
+        "containerId": "fdc108b98a130202d40b2914f52789856bce2817a74e53054d14b3cb629a4902",
+        "serviceName": "nodetests-src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+        "processType": "bdd",
+        "configKey": "nodetests",
+        "testName": "src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:49.762Z",
+        "updatedAt": "2026-04-25T01:21:49.762Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "timestamp": "2026-04-25T01:21:49.911Z",
+      "metadata": {
+        "containerId": "ffbca5499c52f9f1a93cf62d618be690f126adf91ad646f54a9914bfe1f1b421",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+        "processType": "check",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:49.911Z",
+        "updatedAt": "2026-04-25T01:21:49.911Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "timestamp": "2026-04-25T01:21:49.992Z",
+      "metadata": {
+        "containerId": "771e2c39c104270cfde07f0478522d25eab6219ee331b8201a307247e3943cde",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+        "processType": "bdd",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:49.992Z",
+        "updatedAt": "2026-04-25T01:21:49.992Z",
         "isAgentAider": false
       }
     },
     {
       "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
       "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "timestamp": "2026-04-24T22:31:02.137Z",
+      "timestamp": "2026-04-25T01:21:50.093Z",
       "metadata": {
-        "containerId": "7d97893ef78ecc97c6fc0ee2777757aeaf474b56d30406ac299ac4118cadd69e",
+        "containerId": "3eecfefc4c82834fa9696f98c12ca347814de6c8fc8a7b9461b1f3b4583f7132",
         "serviceName": "nodetests-src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
         "processType": "bdd",
         "configKey": "nodetests",
         "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
         "isActive": true,
-        "startedAt": "2026-04-24T22:31:02.137Z",
-        "updatedAt": "2026-04-24T22:31:02.137Z",
+        "startedAt": "2026-04-25T01:21:50.093Z",
+        "updatedAt": "2026-04-25T01:21:50.093Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "timestamp": "2026-04-25T01:21:50.292Z",
+      "metadata": {
+        "containerId": "717f09811f381eaa4b28d926d9408b728e62c2f64f47297a4553d39bff5b1614",
+        "serviceName": "webtests-src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+        "processType": "bdd",
+        "configKey": "webtests",
+        "testName": "src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+        "isActive": true,
+        "startedAt": "2026-04-25T01:21:50.292Z",
+        "updatedAt": "2026-04-25T01:21:50.292Z",
         "isAgentAider": false
       }
     }
   ],
   "viewType": "gantt",
-  "timestamp": "2026-04-24T22:31:02.172Z"
+  "timestamp": "2026-04-25T01:21:50.452Z"
 }

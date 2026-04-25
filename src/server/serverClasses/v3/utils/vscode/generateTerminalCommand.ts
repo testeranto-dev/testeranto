@@ -4,9 +4,9 @@ export function generateTerminalCommand(
   label: string,
   isAiderProcess: boolean,
 ): string {
-  if (isAiderProcess) {
-    return `docker exec -it ${containerId} aider`;
-  } else {
-    return `docker exec -it ${containerId} /bin/bash`;
-  }
+  // Always attach to the running process inside the container
+  return `docker attach ${containerId}`;
 }
+
+// Re-export for backward compatibility
+export { generateTerminalCommand as openProcessTerminal };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Palette } from '../../colors';
+import { Palette } from '../../../colors';
 import type { Node } from 'typescript';
 
 export interface NodeDetailsModalProps {

@@ -1,9 +1,9 @@
  1 [x] Create new business classes at positions 11-14 in the stack
- 2 [ ] Extract functions to individual files in src/server/serverClasses/v3/utils/
- 3 [ ] Move methods from technological classes to the appropriate business classes
- 4 [ ] Update imports in all affected files
+ 2 [x] Extract functions to individual files in src/server/serverClasses/v3/utils/
+ 3 [x] Move methods from technological classes to the appropriate business classes
+ 4 [x] Update imports in all affected files
  5 [ ] Update the stack in index.md
- 6 [ ] Update Server_Testeranto.ts to extend the correct class
+ 6 [x] Update Server_Testeranto.ts to extend the correct class
 
 6. Key Principles to Follow
 

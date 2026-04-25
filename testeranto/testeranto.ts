@@ -1,10 +1,10 @@
 import type { ITesterantoConfig } from "../src/Types";
-import { EisenhowerMatrixSlicer } from "../src/views/defaultViews/EisenhowerMatrix";
-import { GanttSlicer } from "../src/views/defaultViews/Gantt";
-import { KanbanSlicer } from "../src/views/defaultViews/KanbanBoard";
-import { ChatSlicer } from "../src/views/defaultViews/Chat";
-import { DebugGraphSlicer } from "../src/views/defaultViews/DebugGraph";
-import { HomeSlicer } from "../src/views/defaultViews/Home";
+import { EisenhowerMatrixSlicer } from "../src/vscode/views/defaultViews/EisenhowerMatrix";
+import { GanttSlicer } from "../src/vscode/views/defaultViews/Gantt";
+import { KanbanSlicer } from "../src/vscode/views/defaultViews/KanbanBoard";
+import { ChatSlicer } from "../src/vscode/views/defaultViews/Chat";
+import { DebugGraphSlicer } from "../src/vscode/views/defaultViews/DebugGraph";
+import { HomeSlicer } from "../src/vscode/views/defaultViews/Home";
 
 export const golangciLintCommand = (files: string[]): string => {
   // Simple implementation - just run on all Go files

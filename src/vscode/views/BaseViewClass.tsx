@@ -1,5 +1,5 @@
 import React from 'react';
-import type { GraphData } from '../graph';
+import type { GraphData } from '../../graph';
 import { getSliceFilePath, extractViewName } from './utils';
 
 export interface BaseViewProps<T = GraphData> {
@@ -26,6 +26,7 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectTimeout: NodeJS.Timeout | null = null;
+  private debounceTimer: NodeJS.Timeout | null = null;
 
   componentDidMount() {
     this.loadData();
@@ -49,6 +50,10 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
 
   componentWillUnmount() {
     this.disconnectWebSocket();
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
   }
 
   connectWebSocket() {
@@ -147,32 +152,30 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
       timestamp: message.timestamp
     });
 
-    // Handle different message types
+    // Determine if we need to reload data
+    let shouldReload = false;
+
     switch (message.type) {
       case 'resourceChanged':
-        // Check if this resource change affects our view
         if (message.url && message.url.includes(`/~/views/${viewName}`)) {
           console.log(`[BaseViewClass] Resource changed for view ${viewName}, reloading data`);
-          this.loadData();
+          shouldReload = true;
         } else if (message.url && message.url === '/~/graph') {
-          // Graph updates should trigger view reloads
           console.log(`[BaseViewClass] Graph resource changed, reloading data for view ${viewName}`);
-          this.loadData();
+          shouldReload = true;
         }
         break;
 
       case 'sliceUpdated':
-        // Direct slice update notification
         if (message.slicePath === `/~/views/${viewName}/slice`) {
           console.log(`[BaseViewClass] Slice updated for view ${viewName}, reloading data`);
-          this.loadData();
+          shouldReload = true;
         }
         break;
 
       case 'graphUpdated':
-        // Graph updates often mean view slices need refreshing
         console.log(`[BaseViewClass] Graph updated, reloading data for view ${viewName}`);
-        this.loadData();
+        shouldReload = true;
         break;
 
       case 'subscribedToSlice':
@@ -188,9 +191,19 @@ export abstract class BaseViewClass<T = GraphData> extends React.Component<BaseV
         break;
 
       default:
-        // Log unhandled message types for debugging
         console.log(`[BaseViewClass] Unhandled message type: ${message.type}`);
         break;
+    }
+
+    if (shouldReload) {
+      // Debounce: clear any pending reload and schedule a new one after 500ms
+      if (this.debounceTimer) {
+        clearTimeout(this.debounceTimer);
+      }
+      this.debounceTimer = setTimeout(() => {
+        this.debounceTimer = null;
+        this.loadData();
+      }, 500);
     }
   }
 

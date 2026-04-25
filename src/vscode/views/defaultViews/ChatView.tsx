@@ -1,6 +1,6 @@
 import React from 'react';
-import type { GraphData } from '../../graph';
-import type { VizConfig } from '../../grafeovidajo';
+import type { GraphData } from '../../../graph';
+import type { VizConfig } from '../../../grafeovidajo';
 import { BaseViewClass } from '../BaseViewClass';
 
 export interface ChatConfig extends VizConfig {
@@ -11,6 +11,12 @@ export interface ChatConfig extends VizConfig {
 }
 
 export class Chat extends BaseViewClass<GraphData> {
+  state = {
+    ...this.state,
+    inputText: '',
+    sending: false,
+  };
+
   get config(): ChatConfig {
     return this.props.config || {
       showTimestamps: true,
@@ -20,10 +26,51 @@ export class Chat extends BaseViewClass<GraphData> {
     };
   }
 
+  handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ inputText: e.target.value });
+  };
+
+  handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      this.sendMessage();
+    }
+  };
+
+  sendMessage = async () => {
+    const text = this.state.inputText.trim();
+    if (!text) return;
+
+    this.setState({ sending: true });
+
+    try {
+      const response = await fetch('/~/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: text,
+          agentName: 'user'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
+      }
+
+      this.setState({ inputText: '' });
+      // Reload data to show the new message
+      this.loadData();
+    } catch (err) {
+      console.error('Failed to send chat message:', err);
+    } finally {
+      this.setState({ sending: false });
+    }
+  };
+
   renderMessage(message: any, index: number) {
     const config = this.config;
     const { width = 800 } = this.props;
-    
+
     const messageStyle: React.CSSProperties = {
       margin: '10px 0',
       padding: '10px',
@@ -105,16 +152,16 @@ export class Chat extends BaseViewClass<GraphData> {
     }
 
     return (
-      <div style={{ 
-        width: '100%', 
-        height: '100%', 
+      <div style={{
+        width: '100%',
+        height: '100%',
         overflow: 'auto',
         padding: '20px',
         boxSizing: 'border-box'
       }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div style={{ 
-            marginBottom: '20px', 
+          <div style={{
+            marginBottom: '20px',
             paddingBottom: '10px',
             borderBottom: '2px solid #4a90e2'
           }}>
@@ -124,6 +171,45 @@ export class Chat extends BaseViewClass<GraphData> {
             </div>
           </div>
           {messages.map((message, index) => this.renderMessage(message, index))}
+        </div>
+        <div style={{
+          maxWidth: '800px',
+          margin: '0 auto',
+          padding: '10px 0',
+          borderTop: '1px solid #e0e0e0',
+          display: 'flex',
+          gap: '8px',
+        }}>
+          <input
+            type="text"
+            value={this.state.inputText}
+            onChange={this.handleInputChange}
+            onKeyDown={this.handleKeyDown}
+            placeholder="Type a message..."
+            disabled={this.state.sending}
+            style={{
+              flex: 1,
+              padding: '8px 12px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              fontSize: '14px',
+            }}
+          />
+          <button
+            onClick={this.sendMessage}
+            disabled={this.state.sending || !this.state.inputText.trim()}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#4a90e2',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: this.state.sending || !this.state.inputText.trim() ? 'not-allowed' : 'pointer',
+              fontSize: '14px',
+            }}
+          >
+            {this.state.sending ? 'Sending...' : 'Send'}
+          </button>
         </div>
       </div>
     );

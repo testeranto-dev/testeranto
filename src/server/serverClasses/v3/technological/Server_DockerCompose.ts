@@ -19,6 +19,7 @@ import { generateBuilderService } from "./utils/generateBuilderService";
 import { generateCheckService } from "./utils/generateCheckService";
 import { generateYaml } from "./utils/generateYaml";
 import { yamlValueToString } from "./utils/yamlValueToString";
+import { getContainerInfo } from "../utils";
 
 const execAsync = promisify(exec);
 
@@ -332,35 +333,6 @@ export class Server_DockerCompose extends Server_Api {
     }
   }
 
-  async getContainerInfo(serviceName: string): Promise<any> {
-    const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
-    const command = `docker compose -f "${composePath}" ps -q ${serviceName}`;
-
-    try {
-      const { stdout } = await execAsync(command);
-      const containerId = stdout.trim();
-
-      if (!containerId) {
-        throw new Error(`Service ${serviceName} not found or not running`);
-      }
-
-      const inspectCommand = `docker inspect ${containerId}`;
-      const { stdout: inspectStdout } = await execAsync(inspectCommand);
-      const containerInfo = JSON.parse(inspectStdout)[0];
-
-      return {
-        id: containerInfo.Id,
-        name: containerInfo.Name.replace(/^\//, ''),
-        status: containerInfo.State.Status,
-        state: containerInfo.State,
-        config: containerInfo.Config
-      };
-    } catch (error: any) {
-      console.error(`[Server_DockerCompose] getContainerInfo failed for ${serviceName}: ${error.message}`);
-      throw error;
-    }
-  }
-
   async getServiceLogs(serviceName: string, tail: number = 100): Promise<string> {
     const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
     const command = `docker compose -f "${composePath}" logs --tail ${tail} ${serviceName}`;
@@ -376,7 +348,7 @@ export class Server_DockerCompose extends Server_Api {
 
   async isServiceRunning(serviceName: string): Promise<boolean> {
     try {
-      const info = await this.getContainerInfo(serviceName);
+      const info = await getContainerInfo(serviceName);
       return info.status === 'running';
     } catch {
       return false;
@@ -554,6 +526,17 @@ export class Server_DockerCompose extends Server_Api {
       return;
     }
 
+    // Look up any pending requestUid for this container
+    let requestUid: string | undefined;
+    if (parsed.serviceName && this.pendingRequestUids) {
+      requestUid = this.pendingRequestUids.get(parsed.serviceName);
+      if (requestUid) {
+        this.logBusinessMessage(`[handleDockerEvent] Found pending requestUid ${requestUid} for container ${parsed.serviceName}`);
+        // Clean up after use
+        this.pendingRequestUids.delete(parsed.serviceName);
+      }
+    }
+
     const result = handleDockerEventUtil(
       event,
       parsed.containerId,
@@ -562,6 +545,7 @@ export class Server_DockerCompose extends Server_Api {
       parsed.processType,
       parsed.configKey,
       parsed.testName,
+      requestUid,
     );
 
     if (result.operations.length > 0) {
@@ -571,6 +555,7 @@ export class Server_DockerCompose extends Server_Api {
       this.broadcastGraphUpdated();
     }
   }
+
 
   // ========== Aider Launching (V2 pattern) ==========
 

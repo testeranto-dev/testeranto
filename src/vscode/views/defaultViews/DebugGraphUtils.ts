@@ -1,4 +1,4 @@
-import type { GraphData } from '../../graph';
+import type { GraphData } from '../../../graph';
 import type { DebugGraphConfig } from './DebugGraphView';
 
 export interface SelectedElement {

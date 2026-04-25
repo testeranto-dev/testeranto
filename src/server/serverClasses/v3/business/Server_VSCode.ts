@@ -1,4 +1,4 @@
-import { getProcessLogs, connectDockerProcess } from "../utils";
+import { getProcessLogs, connectDockerProcess, getContainerInfo } from "../utils";
 import { Server_Graph } from "./Server_Graph";
 
 /**
@@ -36,7 +36,39 @@ export abstract class Server_VSCode extends Server_Graph {
     containerId: string,
     serviceName: string
   ): Promise<{ success: boolean; error?: string; message?: string; command?: string; containerId?: string; serviceName?: string }> {
-    const processNode = this.getProcessNode(nodeId);
+    // Try multiple node ID formats to find the process node
+    // The VSCode extension may send different formats depending on the code path
+    const possibleNodeIds: string[] = [nodeId];
+
+    // If nodeId is "aider:agent-spawn-22:Agent: spawn-22", extract container name and try graph format
+    if (nodeId.startsWith('aider:')) {
+      const parts = nodeId.split(':');
+      if (parts.length >= 2) {
+        const containerName = parts[1]; // e.g., "agent-spawn-22"
+        possibleNodeIds.push(`aider_process:agent:${containerName}`);
+      }
+    }
+
+    // If nodeId is just a container name like "agent-spawn-22"
+    if (nodeId.startsWith('agent-')) {
+      possibleNodeIds.push(`aider_process:agent:${nodeId}`);
+    }
+
+    // If nodeId is already in correct format "aider_process:agent:agent-spawn-22"
+    if (nodeId.startsWith('aider_process:agent:')) {
+      possibleNodeIds.push(nodeId);
+    }
+
+    let processNode: any = null;
+    let foundNodeId: string | null = null;
+
+    for (const possibleId of possibleNodeIds) {
+      processNode = this.getProcessNode(possibleId);
+      if (processNode) {
+        foundNodeId = possibleId;
+        break;
+      }
+    }
 
     if (!processNode) {
       throw new Error(`Process ${nodeId} not found in graph`);
@@ -51,21 +83,9 @@ export abstract class Server_VSCode extends Server_Graph {
       throw new Error(`Process ${nodeId} does not have container information in the graph and no containerId was provided`);
     }
 
-    const containerInfo = await this.getContainerInfo(actualContainerId);
-
-    if (!containerInfo) {
-      throw new Error(`Container not found for process ${nodeId}`);
-    }
-
-    const isRunning = containerInfo.State?.Running === true;
-    if (!isRunning) {
-      throw new Error(`Container for process ${nodeId} is not running`);
-    }
-
-    const containerName = containerInfo.Name ? containerInfo.Name.replace(/^\//, '') : actualServiceName;
     const isAiderProcess = this.determineIfAiderProcess(processNode);
-
-    const command = this.generateTerminalCommand(actualContainerId, containerName || `process-${nodeId}`, label, isAiderProcess);
+    const containerName = actualServiceName || `process-${nodeId}`;
+    const command = this.generateTerminalCommand(actualContainerId, containerName, label, isAiderProcess);
 
     return {
       success: true,

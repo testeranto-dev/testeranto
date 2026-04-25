@@ -4,7 +4,6 @@ import { createAiderTerminals as createAiderTerminalsUtil } from './utilities/cr
 import { createAiderTerminal as createAiderTerminalUtil } from './utilities/createAiderTerminal';
 import { openContainerTerminal as openContainerTerminalUtil } from './utilities/openContainerTerminal';
 import { restartAiderProcess as restartAiderProcessUtil } from './utilities/restartAiderProcess';
-import { openProcessTerminal as openProcessTerminalUtil } from './utilities/openProcessTerminal';
 import { openAiderTerminal as openAiderTerminalUtil } from './utilities/openAiderTerminal';
 import { getWorkspaceRoot as getWorkspaceRootUtil } from './utilities/getWorkspaceRoot';
 
@@ -82,13 +81,14 @@ export class TerminalManager {
   }
 
   // Open a terminal to a specific container
-  async openContainerTerminal(containerName: string, label: string, agentName?: string): Promise<vscode.Terminal> {
+  async openContainerTerminal(containerName: string, label: string, agentName?: string, containerId?: string): Promise<vscode.Terminal> {
     return openContainerTerminalUtil(
       containerName,
       label,
       agentName,
       this.terminals,
-      this.getWorkspaceRoot.bind(this)
+      this.getWorkspaceRoot.bind(this),
+      containerId
     );
   }
 
@@ -99,24 +99,19 @@ export class TerminalManager {
 
   // Open a terminal to a Docker process using the server API
   async openProcessTerminal(nodeId: string, label: string, containerId: string, serviceName: string): Promise<vscode.Terminal> {
-    return openProcessTerminalUtil(
-      nodeId,
-      label,
-      containerId,
-      serviceName,
-      this.terminals,
-      this.getWorkspaceRoot.bind(this)
-    );
+    // Reuse openContainerTerminal which now calls the shared utility
+    return this.openContainerTerminal(containerId, label, undefined, containerId);
   }
 
   // Open a terminal to an aider container
-  async openAiderTerminal(containerName: string, label: string, agentName?: string): Promise<vscode.Terminal> {
+  async openAiderTerminal(containerName: string, label: string, agentName?: string, containerId?: string): Promise<vscode.Terminal> {
     return openAiderTerminalUtil(
       containerName,
       label,
       agentName,
       this.terminals,
-      this.getWorkspaceRoot.bind(this)
+      this.getWorkspaceRoot.bind(this),
+      containerId
     );
   }
 

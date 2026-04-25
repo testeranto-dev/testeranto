@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import ThreeForceGraph from 'three-forcegraph';
-import type { GraphData } from '../../graph';
+import type { GraphData } from '../../../graph';
 import type { DebugGraphConfig } from './DebugGraphView';
 import { convertGraphData } from './DebugGraphUtils';
 
@@ -29,7 +29,6 @@ export const DebugGraphThree: React.FC<DebugGraphThreeProps> = ({
   const forceGraphRef = useRef<ThreeForceGraph | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
-  const animationStartedRef = useRef(false);
 
   // Initialize scene, camera, renderer, force graph once
   useEffect(() => {
@@ -67,9 +66,9 @@ export const DebugGraphThree: React.FC<DebugGraphThreeProps> = ({
     backLight.position.set(-1, -0.5, -1);
     scene.add(backLight);
 
-    // Force graph
+    // Force graph – do NOT call graphData() here; layout will be initialised
+    // when real data arrives in the data‑update effect.
     const forceGraph = new ThreeForceGraph()
-      .graphData({ nodes: [], links: [] }) // start empty
       .nodeColor((node: any) => node.color || config.nodeColor || '#4a90e2')
       .nodeVal((node: any) => node.val || 1)
       .nodeOpacity(0.8)
@@ -80,8 +79,8 @@ export const DebugGraphThree: React.FC<DebugGraphThreeProps> = ({
       .linkDirectionalArrowRelPos(1)
       .linkDirectionalParticles(2)
       .linkDirectionalParticleSpeed(0.005)
-      .cooldownTime(3000)
-      .warmupTicks(100);
+      .cooldownTime(Infinity)   // keep simulation running forever
+      .warmupTicks(0);          // no warmup ticks needed
 
     // Event callbacks
     if (typeof forceGraph.onNodeClick === 'function') {
@@ -107,6 +106,16 @@ export const DebugGraphThree: React.FC<DebugGraphThreeProps> = ({
 
     scene.add(forceGraph);
     forceGraphRef.current = forceGraph;
+
+    // Start the render loop immediately (no tickFrame calls – the library
+    // advances the simulation internally when graphData() is called later)
+    const animate = () => {
+      animationIdRef.current = requestAnimationFrame(animate);
+      if (rendererRef.current && sceneRef.current && cameraRef.current) {
+        rendererRef.current.render(sceneRef.current, cameraRef.current);
+      }
+    };
+    animate();
 
     // Resize observer
     const resizeObserver = new ResizeObserver(() => {
@@ -153,26 +162,7 @@ export const DebugGraphThree: React.FC<DebugGraphThreeProps> = ({
 
     const converted = convertGraphData(data, config);
     fg.graphData(converted);
-    fg.d3ReheatSimulation();
-
-    // Start animation loop only after first data update that has at least one node
-    if (!animationStartedRef.current && converted.nodes.length > 0) {
-      animationStartedRef.current = true;
-      const animate = () => {
-        animationIdRef.current = requestAnimationFrame(animate);
-        if (forceGraphRef.current && typeof forceGraphRef.current.tickFrame === 'function') {
-          // Only tick if the graph currently has nodes (layout may not be ready otherwise)
-          const currentData = forceGraphRef.current.graphData();
-          if (currentData && currentData.nodes && currentData.nodes.length > 0) {
-            forceGraphRef.current.tickFrame();
-          }
-        }
-        if (rendererRef.current && sceneRef.current && cameraRef.current) {
-          rendererRef.current.render(sceneRef.current, cameraRef.current);
-        }
-      };
-      animate();
-    }
+    // No manual tickFrame call – the library handles the simulation internally
   }, [data, config]);
 
   // Update styling when config changes (without recreating graph)

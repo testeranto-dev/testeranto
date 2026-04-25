@@ -1,5 +1,5 @@
 import React from 'react';
-import type { GraphData } from '../../graph';
+import type { GraphData } from '../../../graph';
 
 interface DebugGraphSidePanelProps {
   data: GraphData | null;

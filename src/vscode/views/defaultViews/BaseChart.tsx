@@ -1,11 +1,11 @@
 
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { Palette } from '../../colors';
+import { Palette } from '../../../colors';
 import {
   type VizConfig, type VizComponentProps, projectGraph, layoutGrid,
   // layoutForce,
   layoutTree, layoutTimeline, applyStyles
-} from '../../grafeovidajo';
+} from '../../../grafeovidajo';
 
 // Define TreeConfig interface locally since we need it for type checking
 interface TreeConfig extends VizConfig {
@@ -110,7 +110,7 @@ export const BaseChart: React.FC<VizComponentProps> = (props) => {
 
   // Ensure style exists
   const safeStyle = config.style || {};
-  
+
   // Apply styles
   const styledGraph = applyStyles(laidOutGraph, safeStyle);
 

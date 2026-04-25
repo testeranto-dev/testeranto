@@ -1,7 +1,7 @@
 // DO NOT PUT THE SLICER FUNCTION IN THIS FILE
 import React from 'react';
 import { BaseChart } from './BaseChart';
-import type { VizConfig } from '../../grafeovidajo';
+import type { VizConfig } from '../../../grafeovidajo';
 import { BaseViewClass } from '../BaseViewClass';
 import type { IEisenhower, EisenhowerItem } from './EisenhowerMatrix';
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import type { GraphData } from '../../graph';
-import { type VizConfig, type VizComponentProps } from './../../grafeovidajo';
+import type { GraphData } from '../../../graph';
+import { type VizConfig, type VizComponentProps } from '../../../grafeovidajo';
 import { BaseChart } from './BaseChart';
 
 export interface TreeConfig extends VizConfig {
@@ -10,7 +10,7 @@ export interface TreeConfig extends VizConfig {
   levelSeparation: number;
 }
 
-import type { GraphData } from '../../graph';
+import type { GraphData } from '../../../graph';
 import type { ViewComponentProps } from '../BaseView';
 
 // Define the specific props for TreeGraph
@@ -51,10 +51,10 @@ export const TreeGraph: React.FC<TreeGraphProps> = (props) => {
 };
 
 // Wrapper component that uses BaseView
-export const TreeGraphView: React.FC<{ slicePath: string; width?: number; height?: number }> = ({ 
-  slicePath, 
-  width = 800, 
-  height = 600 
+export const TreeGraphView: React.FC<{ slicePath: string; width?: number; height?: number }> = ({
+  slicePath,
+  width = 800,
+  height = 600
 }) => {
   const treeConfig: TreeConfig = {
     rootId: undefined,

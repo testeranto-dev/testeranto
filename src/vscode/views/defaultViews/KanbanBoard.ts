@@ -1,7 +1,7 @@
 // DO NOT PUT THE VIEW IN THIS FILE
 
-import type { GraphData } from "../../graph"
-import type { IView } from "../../Types";
+import type { GraphData } from "../../../graph"
+import type { IView } from "../../../Types";
 
 export type KanbanItem = {
   id: string;
@@ -28,7 +28,7 @@ export const KanbanSlicer = (graphData: GraphData): IKanban => {
   const items: KanbanItem[] = graphData.nodes
     .filter(node => {
       // Check if node is a feature node by multiple indicators
-      
+
       // 1. Check by type object (preferred way)
       if (node.type && typeof node.type === 'object') {
         // Feature nodes should have category 'file' and type 'feature'
@@ -40,7 +40,7 @@ export const KanbanSlicer = (graphData: GraphData): IKanban => {
           return false;
         }
       }
-      
+
       // 2. Check by string type (for backward compatibility)
       if (typeof node.type === 'string') {
         if (node.type === 'feature') {
@@ -51,17 +51,17 @@ export const KanbanSlicer = (graphData: GraphData): IKanban => {
           return false;
         }
       }
-      
+
       // 3. Check by id prefix
       if (node.id?.startsWith('feature:')) {
         return true;
       }
-      
+
       // 4. Check by metadata
       if (node.metadata?.feature) {
         return true;
       }
-      
+
       // 5. Check if it's a markdown file with frontmatter
       if (node.metadata?.frontmatter) {
         // Only include if it's likely a feature (has status, priority, etc.)
@@ -69,14 +69,14 @@ export const KanbanSlicer = (graphData: GraphData): IKanban => {
           return true;
         }
       }
-      
+
       // Exclude nodes that are clearly not features
       // Check for test-related nodes
-      if (node.id?.includes('test:') || node.id?.includes('entrypoint:') || 
-          node.id?.includes('process:') || node.id?.includes('verb:')) {
+      if (node.id?.includes('test:') || node.id?.includes('entrypoint:') ||
+        node.id?.includes('process:') || node.id?.includes('verb:')) {
         return false;
       }
-      
+
       // By default, exclude nodes that don't clearly indicate they're features
       return false;
     })
@@ -84,7 +84,7 @@ export const KanbanSlicer = (graphData: GraphData): IKanban => {
       // Determine status from various sources
       let status = node.status;
       let priority = node.priority;
-      
+
       // Check frontmatter first (from markdown files)
       if (node.metadata?.frontmatter) {
         if (node.metadata.frontmatter.status) {
@@ -94,7 +94,7 @@ export const KanbanSlicer = (graphData: GraphData): IKanban => {
           priority = node.metadata.frontmatter.priority;
         }
       }
-      
+
       // Fallback to metadata directly
       if (!status && node.metadata?.status) {
         status = node.metadata.status;
@@ -102,12 +102,12 @@ export const KanbanSlicer = (graphData: GraphData): IKanban => {
       if (!priority && node.metadata?.priority) {
         priority = node.metadata.priority;
       }
-      
+
       // Default status if none found
       if (!status) {
         status = 'todo';
       }
-      
+
       // Create a clean label
       let label = node.label || node.id;
       // Remove prefixes for cleaner display
@@ -121,7 +121,7 @@ export const KanbanSlicer = (graphData: GraphData): IKanban => {
           label = parts.slice(3).join(':');
         }
       }
-      
+
       return {
         id: node.id,
         label: label,

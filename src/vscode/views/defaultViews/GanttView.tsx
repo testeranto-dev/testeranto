@@ -1,6 +1,6 @@
 import React from 'react';
-import type { GraphData } from '../../graph';
-import type { VizConfig } from '../../grafeovidajo';
+import type { GraphData } from '../../../graph';
+import type { VizConfig } from '../../../grafeovidajo';
 import { BaseViewClass } from '../BaseViewClass';
 
 export interface GanttConfig extends VizConfig {

@@ -325,7 +325,7 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       // Handle agent spawn notification - open a terminal tab
       if (message.url === '/~/agents/spawn' && message.agentName && message.containerName) {
         console.log(`[AiderProcessTreeDataProvider] Agent spawned: ${message.agentName}, opening terminal`);
-        this.openAgentTerminal(message.agentName, message.containerName);
+        this.openAgentTerminal(message.agentName, message.containerName, message.containerId);
       }
     } else if (message.type === 'graphUpdated') {
       console.log('[AiderProcessTreeDataProvider] Graph updated, refreshing');
@@ -333,14 +333,15 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
     }
   }
 
-  private async openAgentTerminal(agentName: string, containerName: string): Promise<void> {
+  private async openAgentTerminal(agentName: string, containerName: string, containerId?: string): Promise<void> {
     try {
       // Execute the command to open an aider terminal
       await vscode.commands.executeCommand(
         'testeranto.openAiderTerminal',
         containerName,
         `Agent: ${agentName}`,
-        agentName
+        agentName,
+        containerId
       );
       console.log(`[AiderProcessTreeDataProvider] Executed openAiderTerminal command for ${agentName}`);
     } catch (error) {

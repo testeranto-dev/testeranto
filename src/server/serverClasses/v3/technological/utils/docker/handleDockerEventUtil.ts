@@ -17,6 +17,7 @@ export function handleDockerEventUtil(
   processType: string,
   configKey: string,
   testName: string,
+  requestUid?: string,
 ): DockerEventResult {
   const timestamp = new Date().toISOString();
   const operations: DockerEventResult['operations'] = [];
@@ -62,6 +63,7 @@ export function handleDockerEventUtil(
             updatedAt: timestamp,
             isAgentAider: serviceName.startsWith('agent-'),
             agentName: serviceName.startsWith('agent-') ? serviceName.replace('agent-', '') : undefined,
+            requestUid,
           },
           timestamp,
         },
@@ -81,6 +83,7 @@ export function handleDockerEventUtil(
             isActive: false,
             finishedAt: timestamp,
             updatedAt: timestamp,
+            requestUid,
           },
         },
         timestamp,
@@ -106,6 +109,7 @@ export function handleDockerEventUtil(
           id: nodeId,
           metadata: {
             updatedAt: timestamp,
+            requestUid,
           },
         },
         timestamp,

@@ -1,4 +1,4 @@
-import { getContainerInfo } from "./containerInfo";
+import { getContainerInfo } from "./getContainerInfo";
 
 export async function isServiceRunning(serviceName: string): Promise<boolean> {
   try {

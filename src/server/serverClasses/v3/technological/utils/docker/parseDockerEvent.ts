@@ -24,6 +24,11 @@ export function parseDockerEvent(event: any): ParsedDockerEvent | null {
     return null;
   }
 
+  // Only process container events, ignore network, image, volume, etc.
+  if (eventType !== 'container') {
+    return null;
+  }
+
   // Extract service name from container name or labels
   const containerName = event.Actor?.Attributes?.name || event.from || '';
   const serviceName = containerName.replace(/^\//, '');

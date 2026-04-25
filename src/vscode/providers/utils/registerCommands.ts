@@ -76,17 +76,11 @@ export function registerCommands(
   // Register the openAiderTerminal command
   const openAiderTerminalCommand = vscode.commands.registerCommand(
     'testeranto.openAiderTerminal',
-    async (runtime: string, testName: string, containerId: string) => {
-      console.log(`[openAiderTerminal] Opening terminal for aider: ${testName} (${runtime}), container: ${containerId}`);
-      const terminal = await terminalManager.createAiderTerminal(runtime, testName);
+    async (containerName: string, label: string, agentName?: string, containerId?: string) => {
+      console.log(`[openAiderTerminal] Opening terminal for aider: ${label} (${containerName}), agent: ${agentName}, container: ${containerId}`);
+      // Use the openAiderTerminal utility which calls the server API with the correct node ID format
+      const terminal = await terminalManager.openAiderTerminal(containerName, label, agentName, containerId);
       terminal.show();
-
-      // If we have a container ID, we could attach to it
-      if (containerId && containerId !== 'unknown') {
-        terminal.sendText(`echo "Aider process for ${testName} (${runtime})"`);
-        terminal.sendText(`echo "Container ID: ${containerId}"`);
-        terminal.sendText(`echo "To attach: docker exec -it ${containerId} /bin/bash"`);
-      }
     }
   );
 

@@ -1,13 +1,10 @@
 import fs from 'fs';
 import fsp from 'fs/promises';
 import pathModule from 'path';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { Server_Files } from "../business/Server_Files";
-
-const execAsync = promisify(exec);
+import { EventQueue } from '../business/utils/EventQueue';
 
 /**
  * Server_FS - Technological Layer (+1)
@@ -19,13 +16,14 @@ const execAsync = promisify(exec);
  */
 export class Server_FS extends Server_Files {
   private fileWatchers: Map<string, () => void> = new Map();
+  protected fileEventQueue: EventQueue<any> = new EventQueue();
 
   constructor(
     configs: ITesterantoConfig,
     mode: IMode,
     getCurrentTestResults: () => any = () => ({}),
     projectRoot: string = process.cwd(),
-    resourceChangedCallback: (path: string) => void = () => {},
+    resourceChangedCallback: (path: string) => void = () => { },
   ) {
     super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
   }

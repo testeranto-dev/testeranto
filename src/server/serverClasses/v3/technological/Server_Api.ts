@@ -245,22 +245,14 @@ export abstract class Server_Api extends Server_WS_HTTP {
         }
       case 'openProcessTerminal':
         {
-          // Parse the request body to get nodeId, label, containerId, serviceName
           const body = await request.json().catch(() => ({}));
           const { nodeId, label, containerId, serviceName } = body;
 
           if (!nodeId) {
-            return new Response(
-              JSON.stringify({
-                success: false,
-                error: 'Missing required field: nodeId',
-                timestamp: new Date().toISOString()
-              }),
-              {
-                status: 400,
-                headers: { "Content-Type": "application/json" }
-              }
-            );
+            return new Response('Missing required field: nodeId', {
+              status: 400,
+              headers: { "Content-Type": "text/plain" }
+            });
           }
 
           try {
@@ -271,30 +263,16 @@ export abstract class Server_Api extends Server_WS_HTTP {
               serviceName || ''
             );
 
-            return new Response(
-              JSON.stringify({
-                success: true,
-                ...result,
-                timestamp: new Date().toISOString()
-              }),
-              {
-                status: 200,
-                headers: { "Content-Type": "application/json" }
-              }
-            );
+            // Return just the shell command as plain text
+            return new Response(result.command, {
+              status: 200,
+              headers: { "Content-Type": "text/plain" }
+            });
           } catch (error: any) {
-            return new Response(
-              JSON.stringify({
-                success: false,
-                error: error.message,
-                message: 'Failed to open process terminal',
-                timestamp: new Date().toISOString()
-              }),
-              {
-                status: 500,
-                headers: { "Content-Type": "application/json" }
-              }
-            );
+            return new Response(error.message, {
+              status: 500,
+              headers: { "Content-Type": "text/plain" }
+            });
           }
         }
       default:
@@ -667,11 +645,12 @@ export abstract class Server_Api extends Server_WS_HTTP {
   /**
    * Handle a POST /~/agents/spawn request.
    * Parses the JSON body and delegates to spawnAgent().
+   * Supports requestUid for async graph operation correlation.
    */
   private async handleSpawnAgent(request: Request): Promise<Response> {
     try {
       const body = await request.json();
-      const { profile, loadFiles, message, model } = body;
+      const { profile, loadFiles, message, model, requestUid } = body;
 
       if (!profile) {
         return new Response(
@@ -687,13 +666,14 @@ export abstract class Server_Api extends Server_WS_HTTP {
         );
       }
 
-      const result = await this.spawnAgent(profile, loadFiles, message, model);
+      const result = await this.spawnAgent(profile, loadFiles, message, model, requestUid);
 
       return new Response(
         JSON.stringify({
           success: true,
           agentName: result.agentName,
           containerId: result.containerId,
+          requestUid,
           timestamp: new Date().toISOString(),
         }),
         {

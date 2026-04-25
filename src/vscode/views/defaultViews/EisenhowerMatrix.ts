@@ -1,6 +1,6 @@
 // DO NOT PUT THE VIEW IN THIS FILE
 
-import type { GraphData } from "../../graph"
+import type { GraphData } from "../../../graph"
 
 export type EisenhowerItem = {
   id: string;
@@ -9,7 +9,7 @@ export type EisenhowerItem = {
   importance?: number;
   metadata?: {
     frontmatter?: {
-      urgency?: number; 
+      urgency?: number;
       importance?: number;
     };
   };

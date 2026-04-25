@@ -1,6 +1,7 @@
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { Server_Runtime } from "./Server_Runtime";
+import { EventQueue } from "./utils/EventQueue";
 /**
  * Server_Docker - Business Layer (position 11)
  * 
@@ -12,7 +13,10 @@ import { Server_Runtime } from "./Server_Runtime";
  * that was previously in Server_DockerCompose (technological layer).
  * Technological Docker command execution remains in Server_DockerCompose.
  */
+
 export abstract class Server_Docker extends Server_Runtime {
+  protected dockerEventQueue: EventQueue<any> = new EventQueue();
+
   constructor(
     configs: ITesterantoConfig,
     mode: IMode,
@@ -21,6 +25,13 @@ export abstract class Server_Docker extends Server_Runtime {
     resourceChangedCallback?: (path: string) => void
   ) {
     super(configs, mode, getCurrentTestResults, projectRoot, resourceChangedCallback);
+
+    // Start draining the Docker event queue periodically
+    setInterval(() => {
+      this.dockerEventQueue.drain((event) => {
+        this.handleDockerEvent(event);
+      });
+    }, 500);
   }
 
   // ========== Docker Event Processing (Business Logic) ==========

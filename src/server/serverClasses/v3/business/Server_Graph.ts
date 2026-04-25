@@ -111,17 +111,6 @@ export abstract class Server_Graph extends Server_Base {
       }
     };
 
-    this.logBusinessMessage(`[saveGraph] nodes count: ${graphData.nodes.length}`);
-    if (graphData.nodes.length > 0) {
-      this.logBusinessMessage(`[saveGraph] first few node ids: ${graphData.nodes.slice(0, 5).map(n => n.id).join(', ')}`);
-    }
-    this.logBusinessMessage(`[saveGraph] edges count: ${graphData.edges.length}`);
-
-    // Implementation would save to file
-    // For now, just log
-    this.logBusinessMessage(`Graph saved with ${graphData.nodes.length} nodes and
-${graphData.edges.length} edges`);
-
     // Call resource changed callback
     if (this.resourceChangedCallback) {
       this.logBusinessMessage(`[saveGraph] calling resourceChangedCallback`);
@@ -355,22 +344,28 @@ ${graphData.edges.length} edges`);
   }
 
   protected determineIfAiderProcess(processNode: any): boolean {
-    return processNode?.type?.includes('aider') || false;
+    if (!processNode?.type) return false;
+    // type can be a string like "aider_process" or an object like { category: 'process', type: 'aider' }
+    if (typeof processNode.type === 'string') {
+      return processNode.type.includes('aider');
+    }
+    if (typeof processNode.type === 'object' && processNode.type !== null) {
+      return processNode.type.type === 'aider' || processNode.type.category === 'aider';
+    }
+    return false;
   }
 
   protected generateTerminalCommand(containerId: string, containerName: string, label:
     string, isAiderProcess: boolean): string {
-    if (isAiderProcess) {
-      return `docker exec -it ${containerId} aider`;
-    } else {
-      return `docker exec -it ${containerId} /bin/bash`;
-    }
+    // Delegate to the shared utility function
+    const { generateTerminalCommand } = require('../utils/vscode/generateTerminalCommand');
+    return generateTerminalCommand(containerId, containerName, label, isAiderProcess);
   }
 
-  async getContainerInfo(containerId: string): Promise<any> {
-    this.logBusinessMessage(`getContainerInfo ${containerId}`);
-    // Implementation would get container info from Docker
-    return { State: { Running: true }, Name: containerId };
-  }
+  // async getContainerInfo(containerId: string): Promise<any> {
+  //   this.logBusinessMessage(`getContainerInfo ${containerId}`);
+  //   // Implementation would get container info from Docker
+  //   return { State: { Running: true }, Name: containerId };
+  // }
 
 }

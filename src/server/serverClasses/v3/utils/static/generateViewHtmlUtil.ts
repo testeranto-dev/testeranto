@@ -59,7 +59,7 @@ export const generateViewHtmlUtil = (viewKey: string, viewPath: string): string 
     const viewPath = '${viewPath}';
     const dataPath = '/testeranto/slices/views/' + viewKey + '.json';
     
-    console.log('[View HTML] Setting up configuration for view:', viewKey);
+    console.log('[View HTML!] Setting up configuration for view:', viewKey);
     console.log('[View HTML] Data path:', dataPath);
     
     window.TESTERANTO_VIEW_CONFIG = {

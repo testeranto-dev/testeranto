@@ -1,6 +1,6 @@
 import React from 'react';
 import type { IHome } from './Home';
-import type { VizConfig } from '../../grafeovidajo';
+import type { VizConfig } from '../../../grafeovidajo';
 import { BaseViewClass } from '../BaseViewClass';
 
 export interface HomeConfig extends VizConfig {
@@ -31,7 +31,7 @@ export class Home extends BaseViewClass<IHome> {
     const config = this.config;
     const { width = 800 } = this.props;
     const isHovered = this.state.hoveredCardId === (view.id || `view-${index}`);
-    
+
     const cardStyle: React.CSSProperties = {
       width: config.cardWidth,
       height: config.cardHeight,
@@ -108,17 +108,17 @@ export class Home extends BaseViewClass<IHome> {
       } else {
         viewKey = view.label;
       }
-      
+
       // Handle known discrepancies between viewKey and HTML filename
       const specialCases: Record<string, string> = {
         'Kanban': 'KanBan',
         // Add other special cases as needed
       };
-      
+
       if (specialCases[viewKey]) {
         viewKey = specialCases[viewKey];
       }
-      
+
       // Remove any 'view:' prefix if present
       const cleanViewKey = viewKey.replace(/^view:/, '');
       window.location.href = `/testeranto/views/${cleanViewKey}.html`;
@@ -196,19 +196,19 @@ export class Home extends BaseViewClass<IHome> {
     };
 
     return (
-      <div style={{ 
-        width: '100%', 
-        height: '100%', 
+      <div style={{
+        width: '100%',
+        height: '100%',
         overflow: 'auto',
         backgroundColor: '#f5f5f5'
       }}>
-        <div style={{ 
+        <div style={{
           padding: '30px',
           maxWidth: '1400px',
           margin: '0 auto'
         }}>
-          <div style={{ 
-            marginBottom: '30px', 
+          <div style={{
+            marginBottom: '30px',
             paddingBottom: '20px',
             borderBottom: '3px solid #4a90e2'
           }}>
@@ -218,13 +218,13 @@ export class Home extends BaseViewClass<IHome> {
             </div>
           </div>
           <div style={gridStyle}>
-            {views.map((view: any, index: number) => 
+            {views.map((view: any, index: number) =>
               this.renderViewCard(view, index, false)
             )}
           </div>
           {views.length === 0 && (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: '40px',
               backgroundColor: 'white',
               borderRadius: '12px',
@@ -234,7 +234,7 @@ export class Home extends BaseViewClass<IHome> {
               <p style={{ color: '#999' }}>
                 View nodes will appear here when they are added to the graph.
               </p>
-              <button 
+              <button
                 onClick={() => window.location.reload()}
                 style={{
                   padding: '10px 20px',
@@ -250,7 +250,7 @@ export class Home extends BaseViewClass<IHome> {
               </button>
             </div>
           )}
-          <div style={{ 
+          <div style={{
             marginTop: '40px',
             padding: '20px',
             backgroundColor: '#f0f0f0',

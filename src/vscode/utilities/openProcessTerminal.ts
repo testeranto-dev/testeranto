@@ -27,10 +27,13 @@ export async function openProcessTerminal(
   terminal.sendText(`echo "Connecting to server to get container information..."`);
 
   try {
+    // For agent containers, ensure nodeId follows the graph pattern
+    // aider_process:agent:agent-{profile}-{counter}
+    const actualNodeId = nodeId.startsWith('aider_process:agent:') ? nodeId : `aider_process:agent:${nodeId}`;
     const response = await fetch('http://localhost:3000/~/open-process-terminal', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nodeId, label, containerId, serviceName })
+      body: JSON.stringify({ nodeId: actualNodeId, label, containerId, serviceName })
     });
 
     if (!response.ok) {

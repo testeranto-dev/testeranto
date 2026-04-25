@@ -4,11 +4,14 @@ import type { IMode } from "../../../types";
 import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../graph";
 import { Server_Api_Routing } from "./Server_Api_Routing";
 import { createFolderNodesAndEdges } from "../utils/createFolderNodesAndEdges";
+import { EventQueue } from "./utils/EventQueue";
 
 export abstract class Server_Files extends Server_Api_Routing {
   protected inputFileWatchers: Map<string, () => void> = new Map();
   protected testResultWatchers: Map<string, () => void> = new Map();
   protected featureFileWatchers: Map<string, () => void> = new Map();
+
+  protected fileEventQueue: EventQueue<{ configKey: string; inputFilePath: string }> = new EventQueue();
 
   protected abstract get graph(): TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>;
 
@@ -144,10 +147,17 @@ export abstract class Server_Files extends Server_Api_Routing {
       }
 
       const unwatch = this.watchFile(inputFilePath, async () => {
-        await this.handleInputFileChange(configKey, inputFilePath);
+        this.fileEventQueue.push({ configKey, inputFilePath });
       });
       this.inputFileWatchers.set(configKey, unwatch);
     }
+
+    // Start draining the file event queue periodically
+    setInterval(() => {
+      this.fileEventQueue.drain(async (event) => {
+        await this.handleInputFileChange(event.configKey, event.inputFilePath);
+      });
+    }, 500);
   }
 
   protected async stopFileWatching(): Promise<void> {

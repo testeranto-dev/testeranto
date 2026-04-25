@@ -56,7 +56,14 @@ export async function activateExtension(context: vscode.ExtensionContext): Promi
                         return;
                     }
 
-                    // Call the spawn agent API endpoint
+                    // Generate a unique requestUid for this async operation
+                    const requestUid = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                    outputChannel.appendLine(`[Testeranto] Generated requestUid: ${requestUid}`);
+
+                    // Start waiting for the notification before making the API call
+                    const notificationPromise = providers.agentTreeDataProvider?.waitForNotification?.(requestUid, 60000);
+
+                    // Call the spawn agent API endpoint with the requestUid
                     const response = await fetch('http://localhost:3000/~/agents/spawn', {
                         method: 'POST',
                         headers: {
@@ -64,6 +71,7 @@ export async function activateExtension(context: vscode.ExtensionContext): Promi
                         },
                         body: JSON.stringify({
                             profile: selectedProfile,
+                            requestUid,
                         }),
                     });
 
@@ -74,17 +82,31 @@ export async function activateExtension(context: vscode.ExtensionContext): Promi
 
                     const result = await response.json();
                     outputChannel.appendLine(`[Testeranto] Agent launched: ${result.agentName} (container: ${result.containerId})`);
+
+                    // Wait for the graph update notification with matching UID
+                    if (notificationPromise) {
+                        outputChannel.appendLine(`[Testeranto] Waiting for graph update notification with requestUid: ${requestUid}`);
+                        try {
+                            const notification = await notificationPromise;
+                            outputChannel.appendLine(`[Testeranto] Received graph update notification for ${result.agentName}`);
+                        } catch (waitError: any) {
+                            outputChannel.appendLine(`[Testeranto] Warning: ${waitError.message}`);
+                            // Continue anyway - the agent was spawned successfully
+                        }
+                    }
+
                     vscode.window.showInformationMessage(`Agent ${result.agentName} launched successfully`);
 
                     // Refresh the agent tree view
                     providers.agentTreeDataProvider?.refresh();
 
-                    // Open a terminal to the new agent
+                    // Open a terminal to the new agent using the actual container ID
                     vscode.commands.executeCommand(
                         'testeranto.openAiderTerminal',
                         `agent-${result.agentName}`,
                         `Agent: ${result.agentName}`,
-                        result.agentName
+                        result.agentName,
+                        result.containerId
                     );
                 } catch (error: any) {
                     outputChannel.appendLine(`[Testeranto] Failed to launch agent: ${error.message}`);

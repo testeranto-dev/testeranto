@@ -12,6 +12,9 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
     protected isConnected: boolean = false;
     protected subscribedSlices: Set<string> = new Set();
 
+    // Map of pending requestUids to their resolve/reject functions
+    private pendingNotifications: Map<string, { resolve: (message: any) => void; reject: (error: Error) => void; timeout: NodeJS.Timeout }> = new Map();
+
     constructor() {
         this.setupWebSocket();
     }
@@ -31,6 +34,28 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
+    }
+
+    /**
+     * Wait for a WebSocket notification with a matching requestUid.
+     * Returns a Promise that resolves with the notification message when received,
+     * or rejects after the timeout (default 30 seconds).
+     */
+    protected waitForNotification(requestUid: string, timeoutMs: number = 30000): Promise<any> {
+        return new Promise((resolve, reject) => {
+            // If already resolved, reject immediately
+            if (this.pendingNotifications.has(requestUid)) {
+                reject(new Error(`Duplicate requestUid: ${requestUid}`));
+                return;
+            }
+
+            const timeout = setTimeout(() => {
+                this.pendingNotifications.delete(requestUid);
+                reject(new Error(`Timeout waiting for notification with requestUid: ${requestUid}`));
+            }, timeoutMs);
+
+            this.pendingNotifications.set(requestUid, { resolve, reject, timeout });
+        });
     }
 
     protected setupWebSocket(): void {
@@ -65,6 +90,15 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
                 try {
                     const message = JSON.parse(event.data);
                     console.log('[BaseTreeDataProvider] WebSocket message received:', message.type, message);
+
+                    // Check if this message has a requestUid that we're waiting for
+                    if (message.requestUid && this.pendingNotifications.has(message.requestUid)) {
+                        const pending = this.pendingNotifications.get(message.requestUid)!;
+                        clearTimeout(pending.timeout);
+                        this.pendingNotifications.delete(message.requestUid);
+                        pending.resolve(message);
+                    }
+
                     this.handleWebSocketMessage(message);
                 } catch (error) {
                     console.error('[BaseTreeDataProvider] Error parsing WebSocket message:', error);
@@ -82,6 +116,12 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
                 this.isConnected = false;
                 this.subscribedSlices.clear();
                 this.ws = null;
+                // Reject all pending notifications
+                for (const [uid, pending] of this.pendingNotifications) {
+                    clearTimeout(pending.timeout);
+                    pending.reject(new Error('WebSocket connection closed'));
+                }
+                this.pendingNotifications.clear();
                 // Attempt to reconnect after a delay
                 setTimeout(() => {
                     console.log('[BaseTreeDataProvider] Attempting to reconnect WebSocket...');
@@ -172,6 +212,13 @@ export abstract class BaseTreeDataProvider implements vscode.TreeDataProvider<Te
     }
 
     public dispose(): void {
+        // Reject all pending notifications
+        for (const [uid, pending] of this.pendingNotifications) {
+            clearTimeout(pending.timeout);
+            pending.reject(new Error('Provider disposed'));
+        }
+        this.pendingNotifications.clear();
+
         if (this.ws) {
             // Unsubscribe from all slices
             for (const slicePath of this.subscribedSlices) {

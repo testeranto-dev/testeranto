@@ -16,7 +16,7 @@ export * from './ws/connectionManager';
 
 export * from './docker/composeUp';
 export * from './docker/composeDown';
-export * from './docker/containerInfo';
+export * from './docker/getContainerInfo';
 
 export * from './graph/getGraphData';
 export * from './graph/applyUpdate';

@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the AI powered test framework for polyglot projects",
-  "version": "0.350.0",
+  "version": "0.351.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -175,6 +175,8 @@
     "Other"
   ],
   "scripts": {
+    "storybook": "rakonto --dev",
+    "build-storybook": "rakonto",
     "dev4": "yarn dev2 && testeranto init && testeranto dev",
     "dev3": "yarn package:vsce && yarn dev2 && testeranto init && testeranto dev",
     "serve": "testeranto dev",
@@ -413,6 +415,7 @@
     "node-static": "^0.7.11",
     "puppeteer": "^24.4.0",
     "puppeteer-core": "24.4.0",
+    "rakonto": "^0.0.21",
     "react": "^19.2.4",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.2.4",

@@ -1,4 +1,4 @@
-import type { GraphData } from "../../graph";
+import type { GraphData } from "../../../graph";
 
 export type ChatMessage = {
   id: string;
@@ -23,7 +23,7 @@ export const ChatSlicer = (graphData: GraphData): IChat => {
       }
       // For backward compatibility, also check string type
       return node.type === 'chat_message' ||
-             (node.attributes?.type && node.attributes.type === 'chat_message');
+        (node.attributes?.type && node.attributes.type === 'chat_message');
     })
     .map(node => ({
       id: node.id,

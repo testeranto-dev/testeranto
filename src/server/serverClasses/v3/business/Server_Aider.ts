@@ -14,6 +14,9 @@ const execAsync = promisify(exec);
  * Provides: Aider-specific business logic
  */
 export abstract class Server_Aider extends Server_VSCode {
+  // Map from container name to requestUid for async graph operations
+  protected pendingRequestUids: Map<string, string> = new Map();
+
   async createAiderMessageFile(testName: string, configKey: string): Promise<string> {
     return await createAiderMessageFile(testName, configKey);
   }
@@ -77,15 +80,54 @@ export abstract class Server_Aider extends Server_VSCode {
   }
 
   /**
+   * Wait for a Docker container to be in the "running" state.
+   * Polls `docker inspect` every 500ms until the container is running
+   * or the timeout (default 15 seconds) is reached.
+   */
+  private async waitForContainerRunning(
+    containerName: string,
+    timeoutMs: number = 15000,
+  ): Promise<void> {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeoutMs) {
+      try {
+        const { stdout } = await execAsync(
+          `docker inspect --format='{{.State.Status}}' ${containerName}`,
+        );
+        const status = stdout.trim();
+        if (status === 'running') {
+          this.logBusinessMessage(
+            `Container ${containerName} is now running (waited ${Date.now() - startTime}ms)`,
+          );
+          return;
+        }
+      } catch {
+        // Container may not exist yet; continue polling
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    throw new Error(
+      `Timeout waiting for container ${containerName} to become running after ${timeoutMs}ms`,
+    );
+  }
+
+  /**
    * Spawn a new agent container with the given profile and parameters.
    * The agent will be named {profile}-{nextCounter} (e.g., arko-1, prodirek-3).
    * The container runs aider with the provided message and load files.
+   *
+   * After spawning, this method waits for the container to be running and
+   * then flushes the Docker event stream by waiting a short additional period,
+   * ensuring the Docker events watcher has processed the container start event.
+   *
+   * @param requestUid Optional UID to correlate async graph updates with this request.
    */
   async spawnAgent(
     profile: string,
     loadFiles?: string[],
     message?: string,
-    model?: string
+    model?: string,
+    requestUid?: string,
   ): Promise<{ agentName: string; containerId: string }> {
     this.logBusinessMessage(`Spawning agent: profile=${profile}`);
 
@@ -94,7 +136,8 @@ export abstract class Server_Aider extends Server_VSCode {
 
     // Use provided values or fall back to config defaults
     const resolvedLoadFiles = loadFiles || agentConfig?.load || [];
-    const resolvedMessage = message || agentConfig?.message || `Your name is "${profile}".`;
+    const resolvedMessage =
+      message || agentConfig?.message || `Your name is "${profile}".`;
 
     // Get the next counter for this profile
     const currentCounter = await this.getAgentCounter(profile);
@@ -107,16 +150,17 @@ export abstract class Server_Aider extends Server_VSCode {
     const imageName = 'testeranto-aider:latest';
     const containerName = `agent-${agentName}`;
 
+    // Store the requestUid for this container so the Docker event handler can include it
+    if (requestUid) {
+      this.pendingRequestUids.set(containerName, requestUid);
+      this.logBusinessMessage(`Stored requestUid ${requestUid} for container ${containerName}`);
+    }
+
     // Create load file content
-    const loadContent = resolvedLoadFiles.map(f => `/read ${f}`).join('\n');
+    const loadContent = resolvedLoadFiles.map((f) => `/read ${f}`).join('\n');
 
     // Build environment variables
-    const envVars = [
-      // `-e AGENT_NAME=${profile}`,
-      // `-e AGENT_INSTANCE=${nextCounter}`,
-      // `-e AGENT_LOAD_FILES=${loadContent}`,
-      // `-e AGENT_MESSAGE=${resolvedMessage}`,
-    ];
+    const envVars: string[] = [];
 
     if (model) {
       envVars.push(`-e AGENT_MODEL=${model}`);
@@ -131,21 +175,36 @@ export abstract class Server_Aider extends Server_VSCode {
       `-v "${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml"`,
     ];
 
-    // Run aider with the message file and load files
-    // The container will execute aider with the provided message
-    // Use single quotes around the message to avoid shell quoting issues
+    // Run aider directly as the main process (not via sh -c) so that
+    // `docker attach` connects to the aider process, not to a shell.
     const escapedMessage = resolvedMessage.replace(/'/g, "'\\''");
-    const aiderCommand = `aider --message '${escapedMessage}' ${resolvedLoadFiles.map(f => `--file ${f}`).join(' ')}`;
-    // Do not specify --network; the default bridge network will be used.
-    // The allTests_network may not exist when spawning agents on demand.
-    const command = `docker run -d --name ${containerName} ${envVars.join(' ')} ${volumes.join(' ')} --add-host host.docker.internal:host-gateway ${imageName} sh -c "${aiderCommand}"`;
+    const aiderArgs = resolvedLoadFiles.map((f) => `--file ${f}`).join(' ');
+    const command = `docker run -d -t -i --name ${containerName} ${envVars.join(' ')} ${volumes.join(' ')} --add-host host.docker.internal:host-gateway ${imageName} aider --message '${escapedMessage}' ${aiderArgs}`;
 
     this.logBusinessMessage(`Running: ${command}`);
 
     try {
       const { stdout } = await execAsync(command);
       const containerId = stdout.trim();
-      this.logBusinessMessage(`Spawned agent container ${containerName} with ID ${containerId}`);
+      this.logBusinessMessage(
+        `Spawned agent container ${containerName} with ID ${containerId}`,
+      );
+
+      // Wait for the container to be running (flushes the Docker event stream)
+      await this.waitForContainerRunning(containerName);
+
+      // Wait for the node to appear in the graph (ensures Docker events watcher processed the start event)
+      const nodeId = `aider_process:agent:${containerName}`;
+      const startTime = Date.now();
+      const timeoutMs = 10000;
+      while (Date.now() - startTime < timeoutMs) {
+        const node = this.getNode(nodeId);
+        if (node) {
+          this.logBusinessMessage(`Node ${nodeId} found in graph after ${Date.now() - startTime}ms`);
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      }
 
       // Save the updated counter
       await this.saveAgentCounter(profile, nextCounter);
@@ -157,12 +216,20 @@ export abstract class Server_Aider extends Server_VSCode {
         agentName,
         containerId,
         containerName,
-        timestamp: new Date().toISOString()
+        requestUid,
+        timestamp: new Date().toISOString(),
       });
 
       return { agentName, containerId };
     } catch (error: any) {
-      this.logBusinessError(`Failed to spawn agent container ${containerName}:`, error);
+      // Clean up stored UID on failure
+      if (requestUid) {
+        this.pendingRequestUids.delete(containerName);
+      }
+      this.logBusinessError(
+        `Failed to spawn agent container ${containerName}:`,
+        error,
+      );
       throw new Error(`Failed to spawn agent container: ${error.message}`);
     }
   }
