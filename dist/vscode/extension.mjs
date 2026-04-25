@@ -799,12 +799,23 @@ var wsApi = {
   }
 };
 var API = {
-  // TODO 
-  // spawnAgent: {
-  //   agent: string,
-  //   loadfile: string,
-  //   message: string
-  // },
+  spawnAgent: {
+    method: "POST",
+    path: "/~/agents/spawn",
+    description: "Spawn a new agent container",
+    params: {
+      profile: "",
+      loadFiles: [],
+      message: "",
+      model: "",
+      requestUid: ""
+    },
+    query: {},
+    response: {},
+    check: (routeName, request) => {
+      return routeName === "agents/spawn" && request.method === "POST";
+    }
+  },
   getConfigs: {
     method: "GET",
     path: "/~/configs",
@@ -868,15 +879,15 @@ var API = {
   // Chat is now handled via WebSocket messages
   launchAgent: {
     method: "POST",
-    path: "/~/agents/:agentName",
-    description: "Launch a new agent instance",
+    path: "/~/agents/launch/:agentName",
+    description: "Launch a new agent instance by profile name",
     params: {
       agentName: ""
     },
     query: {},
     response: {},
     check: (routeName, request) => {
-      return routeName.startsWith("agents/") && request.method === "POST";
+      return routeName.startsWith("agents/launch/") && request.method === "POST";
     }
   },
   getAgents: {
@@ -3715,7 +3726,8 @@ async function activateExtension(context) {
           const requestUid = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
           outputChannel.appendLine(`[Testeranto] Generated requestUid: ${requestUid}`);
           const notificationPromise = providers.agentTreeDataProvider?.waitForNotification?.(requestUid, 6e4);
-          const response = await fetch("http://localhost:3000/~/agents/spawn", {
+          const spawnUrl = getApiUrl("spawnAgent");
+          const response = await fetch(spawnUrl, {
             method: "POST",
             headers: {
               "Content-Type": "application/json"

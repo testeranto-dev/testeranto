@@ -138,12 +138,23 @@ export const API: {
   }
 } = {
 
-  // TODO 
-  // spawnAgent: {
-  //   agent: string,
-  //   loadfile: string,
-  //   message: string
-  // },
+  spawnAgent: {
+    method: 'POST',
+    path: '/~/agents/spawn',
+    description: 'Spawn a new agent container',
+    params: {
+      profile: '',
+      loadFiles: [],
+      message: '',
+      model: '',
+      requestUid: ''
+    },
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'agents/spawn' && request.method === 'POST'
+    }
+  },
 
   getConfigs: {
     method: 'GET',
@@ -216,15 +227,15 @@ export const API: {
 
   launchAgent: {
     method: 'POST',
-    path: '/~/agents/:agentName',
-    description: 'Launch a new agent instance',
+    path: '/~/agents/launch/:agentName',
+    description: 'Launch a new agent instance by profile name',
     params: {
       agentName: ''
     },
     query: {},
     response: {} as any,
     check: (routeName: string, request: { method: string }) => {
-      return routeName.startsWith('agents/') && request.method === 'POST'
+      return routeName.startsWith('agents/launch/') && request.method === 'POST'
     }
   },
 

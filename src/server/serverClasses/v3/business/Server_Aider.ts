@@ -156,7 +156,7 @@ export abstract class Server_Aider extends Server_VSCode {
       this.logBusinessMessage(`Stored requestUid ${requestUid} for container ${containerName}`);
     }
 
-    // Create load file content
+    // Create load file content (same pattern as generateAgentService.ts)
     const loadContent = resolvedLoadFiles.map((f) => `/read ${f}`).join('\n');
 
     // Build environment variables
@@ -175,11 +175,12 @@ export abstract class Server_Aider extends Server_VSCode {
       `-v "${process.cwd()}/.aider.conf.yml:/workspace/.aider.conf.yml"`,
     ];
 
-    // Run aider directly as the main process (not via sh -c) so that
-    // `docker attach` connects to the aider process, not to a shell.
+    // Use sh -c to create load file and message file, then run aider with --load
+    // This matches the pattern in generateAgentService.ts
     const escapedMessage = resolvedMessage.replace(/'/g, "'\\''");
-    const aiderArgs = resolvedLoadFiles.map((f) => `--file ${f}`).join(' ');
-    const command = `docker run -d -t -i --name ${containerName} ${envVars.join(' ')} ${volumes.join(' ')} --add-host host.docker.internal:host-gateway ${imageName} aider --message '${escapedMessage}' ${aiderArgs}`;
+    const loadContentEscaped = loadContent.replace(/'/g, "'\\''");
+
+    const command = `docker run -d -t -i --name ${containerName} ${envVars.join(' ')} ${volumes.join(' ')} --add-host host.docker.internal:host-gateway ${imageName} sh -c 'cat > /tmp/agent_load.txt << EOF\n${loadContentEscaped}\nEOF\ncat > /tmp/agent_message.txt << EOF\n${escapedMessage}\nEOF\naider --load /tmp/agent_load.txt --message "$(cat /tmp/agent_message.txt)" --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1'`;
 
     this.logBusinessMessage(`Running: ${command}`);
 

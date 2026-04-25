@@ -210,9 +210,13 @@ export abstract class Server_Api extends Server_WS_HTTP {
         return await this.handlePostChatMessage(request);
       case 'getChatHistory':
         return await this.handleGetChatHistory(request);
+      case 'spawnAgent':
+        {
+          return await this.handleSpawnAgent(request);
+        }
       case 'launchAgent':
         {
-          // Extract agent name from URL path: /~/agents/:agentName
+          // Extract agent name from URL path: /~/agents/launch/:agentName
           const pathParts = url.pathname.split('/').filter(Boolean);
           const agentName = pathParts[pathParts.length - 1];
           if (!agentName) {
@@ -635,11 +639,9 @@ export abstract class Server_Api extends Server_WS_HTTP {
    * Default implementation registers the spawn‑agent endpoint.
    */
   protected registerApiRoutes(): void {
-    // Register the spawn‑agent endpoint
-    this.registerRoute('POST', '/~/agents/spawn', async (request: Request) => {
-      return await this.handleSpawnAgent(request);
-    });
-    this.logBusinessMessage('Registered spawn‑agent route: POST /~/agents/spawn');
+    // The spawn‑agent endpoint is now defined in api.ts and registered
+    // via registerDefaultHttpRoutes(). No custom route needed.
+    this.logBusinessMessage('Spawn‑agent route is defined in api.ts');
   }
 
   /**
@@ -668,11 +670,28 @@ export abstract class Server_Api extends Server_WS_HTTP {
 
       const result = await this.spawnAgent(profile, loadFiles, message, model, requestUid);
 
+      // Also generate the terminal command so the caller can attach immediately
+      let terminalCommand: string | undefined;
+      try {
+        const containerName = `agent-${result.agentName}`;
+        const terminalResult = await this.openProcessTerminal(
+          `aider_process:agent:${containerName}`,
+          `Agent: ${result.agentName}`,
+          result.containerId,
+          containerName,
+        );
+        terminalCommand = terminalResult.command;
+      } catch {
+        // Non‑fatal – the agent was spawned successfully even if we can't
+        // generate the terminal command right now.
+      }
+
       return new Response(
         JSON.stringify({
           success: true,
           agentName: result.agentName,
           containerId: result.containerId,
+          command: terminalCommand,
           requestUid,
           timestamp: new Date().toISOString(),
         }),
@@ -709,11 +728,8 @@ export abstract class Server_Api extends Server_WS_HTTP {
       }
     });
 
-    // Register default HTTP API routes
+    // Register default HTTP API routes (generic patterns like /~/agents/:agentName)
     await this.registerDefaultHttpRoutes();
-
-    // Register custom API routes (e.g., spawn agent)
-    this.registerApiRoutes();
 
     this.logBusinessMessage("API server setup complete");
   }

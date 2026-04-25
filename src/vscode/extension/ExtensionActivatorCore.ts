@@ -13,6 +13,7 @@ import { registerTreeViews } from "./registerTreeViews";
 import { setupCleanup } from "./setupCleanup";
 import { testProviders } from "./testProviders";
 import config from "../../../testeranto/testeranto";
+import { getApiUrl } from "../../api";
 
 export async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
     const outputChannel = createOutputChannel();
@@ -64,7 +65,8 @@ export async function activateExtension(context: vscode.ExtensionContext): Promi
                     const notificationPromise = providers.agentTreeDataProvider?.waitForNotification?.(requestUid, 60000);
 
                     // Call the spawn agent API endpoint with the requestUid
-                    const response = await fetch('http://localhost:3000/~/agents/spawn', {
+                    const spawnUrl = getApiUrl('spawnAgent');
+                    const response = await fetch(spawnUrl, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

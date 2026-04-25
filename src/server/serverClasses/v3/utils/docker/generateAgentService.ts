@@ -39,7 +39,9 @@ EOF
       cat > /tmp/agent_message.txt << 'EOF'
 ${message}
 EOF
-
+       cat "hello"
+       cat /tmp/agent_message.txt
+       cat "goodbye"
        echo "Starting aider for agent ${agentName} with instructions from config"
        aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
        EXIT_CODE=$?

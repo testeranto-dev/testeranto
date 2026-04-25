@@ -3,7 +3,9 @@ import path from "path";
 import { promisify } from "util";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
+import { getContainerInfo } from "../utils";
 import { getAiderServiceName } from "../utils/aider/getAiderServiceName";
+import { generateAgentService } from "../utils/docker/generateAgentService";
 import { parseDockerEvent } from "../utils/docker/parseDockerEvent";
 import { generateServiceName } from "../utils/generateServiceName";
 import { getBaseServiceName } from "../utils/test/getBaseServiceName";
@@ -12,14 +14,12 @@ import { getInputFiles } from "../utils/test/getInputFiles";
 import { Server_Api } from "./Server_Api";
 import { BuildKitBuilder } from "./utils/BuildKit_Utils";
 import { handleDockerEventUtil } from "./utils/docker/handleDockerEventUtil";
-import { generateAgentService } from "./utils/generateAgentService";
 import { generateAiderService } from "./utils/generateAiderService";
 import { generateBddService } from "./utils/generateBddService";
 import { generateBuilderService } from "./utils/generateBuilderService";
 import { generateCheckService } from "./utils/generateCheckService";
 import { generateYaml } from "./utils/generateYaml";
 import { yamlValueToString } from "./utils/yamlValueToString";
-import { getContainerInfo } from "../utils";
 
 const execAsync = promisify(exec);
 

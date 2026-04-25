@@ -33,25 +33,29 @@ export const registerAgentCommands = (
                 try {
                     vscode.window.showInformationMessage(`Launching ${agentName} agent...`);
 
-                    // Call the server endpoint to launch the agent using API definition
-                    const url = ApiUtils.getUrl('launchAgent', { agentName });
+                    // Call the spawn agent API endpoint with the profile name
+                    const url = ApiUtils.getUrl('spawnAgent');
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
-                        }
+                        },
+                        body: JSON.stringify({
+                            profile: agentName
+                        })
                     });
 
                     if (response.ok) {
                         const data = await response.json();
-                        vscode.window.showInformationMessage(`${agentName} agent launched with suffix: ${data.suffix}`);
+                        vscode.window.showInformationMessage(`${agentName} agent launched: ${data.agentName} (container: ${data.containerId})`);
 
                         // Refresh the agent provider
                         if (agentProvider && typeof (agentProvider as any).refresh === 'function') {
                             await (agentProvider as any).refresh();
                         }
                     } else {
-                        vscode.window.showErrorMessage(`Failed to launch ${agentName} agent: ${response.statusText}`);
+                        const errorData = await response.json();
+                        vscode.window.showErrorMessage(`Failed to launch ${agentName} agent: ${errorData.error || response.statusText}`);
                     }
                 } catch (err) {
                     vscode.window.showErrorMessage(`Error launching agent: ${err}`);
