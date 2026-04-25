@@ -9,9 +9,8 @@ export function generateAgentService(
   projectRoot: string,
 ): any {
   const loadCommands = agentConfig.load || [];
-  const message = agentConfig.message || '';
 
-  const loadCommandsContent = loadCommands
+  const loadContent = loadCommands
     .filter((cmd: string) => cmd.trim().length > 0)
     .join('\n');
 
@@ -29,21 +28,13 @@ export function generateAgentService(
       `# Create agent instructions file from config
        echo "Creating agent instructions for ${agentName}"
          
-       # Create the instruction file with content from config
+       # Create the load file with only operations
+       # The agent's personality/instructions are in the JSON slice file
       cat > /tmp/agent_load.txt << 'EOF'
-${loadCommandsContent}
+${loadContent}
 EOF
-   
-
-       # Create the instruction file with content from config
-      cat > /tmp/agent_message.txt << 'EOF'
-${message}
-EOF
-       cat "hello"
-       cat /tmp/agent_message.txt
-       cat "goodbye"
-       echo "Starting aider for agent ${agentName} with instructions from config"
-       aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update 2>&1
+       echo "Starting aider for agent ${agentName}"
+       aider --load /tmp/agent_load.txt --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update --message 'Adopt the persona given in the context files, then wait for further instructions. You will find a json file with your name on it. Within, you will find a list of other agents, yourself included.' 2>&1
        EXIT_CODE=$?
        echo "Aider exited with code $EXIT_CODE"
        # Exit with the same code (no restart)

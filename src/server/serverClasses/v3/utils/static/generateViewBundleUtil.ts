@@ -64,7 +64,7 @@ if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     React.createElement(${componentName}, {
-      slicePath: '/~/views/${viewKey}/slice'
+      slicePath: '/testeranto/slices/views/${viewKey}.json'
     })
   );
 }

@@ -16,6 +16,7 @@ export function updateAllAgentSliceFilesPure(
       getGraphData: () => graphData
     };
     const sliceData = agentConfig.sliceFunction(mockGraphManager);
+
     writeAgentSliceFile(projectRoot, agentName, sliceData);
   }
 }

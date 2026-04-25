@@ -1,6 +1,3 @@
-import { createErrorBundle } from "../utils/static/createErrorBundle";
-import { generateViewBundle } from "../utils/static/generateBundle";
-import { generateViewHtml } from "../utils/static/generateViewHtml";
 import { Server_ApiSpec } from "./Server_ApiSpec";
 import { generateViewBundleUtil } from "../utils/static/generateViewBundleUtil";
 import { createErrorBundleUtil } from "../utils/static/createErrorBundleUtil";
@@ -31,46 +28,42 @@ export abstract class Server_Static extends Server_ApiSpec {
 
   async generateViewSlices(): Promise<void> {
     this.logBusinessMessage(`Generating view slices (V2 business logic)...`);
-    
+
     if (this.configs.views) {
       for (const [viewKey, viewConfig] of Object.entries(this.configs.views)) {
         this.logBusinessMessage(`Generating slice for view: ${viewKey}`);
         await this.generateViewSliceUtil(viewKey, viewConfig);
       }
     }
-    
+
     this.logBusinessMessage("View slices generated");
   }
 
   async generateViewHtmlFiles(): Promise<void> {
     this.logBusinessMessage(`Generating view HTML files (V2 business logic)...`);
-    
-    if (!this.configs.views) {
-      this.logBusinessMessage("No views configured");
-      return;
-    }
-    
+
+
     this.logBusinessMessage(`Found ${Object.keys(this.configs.views).length} views`);
-    
+
     for (const [viewKey, viewConfig] of Object.entries(this.configs.views)) {
       this.logBusinessMessage(`Generating HTML for view: ${viewKey} from ${viewConfig.filePath}`);
-      
+
       try {
         const html = this.generateViewHtml(viewKey, viewConfig.filePath);
         this.logBusinessMessage(`Generated HTML for ${viewKey}`);
-        
+
         await this.generateViewBundle(viewKey, viewConfig.filePath);
         this.logBusinessMessage(`Generated bundle for ${viewKey}`);
-        
+
         await this.writeViewHtmlFileUtil(viewKey, html);
         this.logBusinessMessage(`Wrote HTML file for ${viewKey}`);
-        
+
         this.logBusinessMessage(`HTML and bundle generated for view: ${viewKey}`);
       } catch (error) {
         this.logBusinessError(`Failed to generate view ${viewKey}:`, error);
       }
     }
-    
+
     try {
       const indexHtml = this.generateViewsIndexHtml(this.configs.views);
       await this.writeViewsIndexHtmlUtil(indexHtml);
@@ -78,7 +71,7 @@ export abstract class Server_Static extends Server_ApiSpec {
     } catch (error) {
       this.logBusinessError(`Failed to generate views index:`, error);
     }
-    
+
     this.logBusinessMessage("View HTML files generated");
   }
 

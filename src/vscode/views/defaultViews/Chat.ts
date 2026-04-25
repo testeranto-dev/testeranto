@@ -27,9 +27,9 @@ export const ChatSlicer = (graphData: GraphData): IChat => {
     })
     .map(node => ({
       id: node.id,
-      content: node.content || node.label || node.id,
-      agentName: node.agentName || node.attributes?.agentName,
-      timestamp: node.timestamp || node.attributes?.timestamp,
+      content: node.content || node.metadata?.content || node.label || node.id,
+      agentName: node.sender || node.agentName || node.metadata?.sender || node.metadata?.agentName,
+      timestamp: node.timestamp || node.metadata?.timestamp,
       metadata: node.metadata || node.attributes
     }));
 

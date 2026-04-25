@@ -7,8 +7,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 484.41023218516665,
-      "y": 542.9741493253161,
+      "x": 305.870693886474,
+      "y": 455.26111391480487,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -19,8 +19,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 752.8192420089524,
-      "y": 59.09615022775936,
+      "x": 551.8044040376205,
+      "y": 214.15278165245292,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -31,8 +31,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 63.99548818584471,
-      "y": 28.021408661081892,
+      "x": 146.13588880098928,
+      "y": 430.83425224885633,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -43,8 +43,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 638.9119292671242,
-      "y": 260.81961305824547,
+      "x": 302.926413859299,
+      "y": 134.77430430748845,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -55,8 +55,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 393.36523055933947,
-      "y": 365.0143146267577,
+      "x": 536.1846559243415,
+      "y": 475.6551873360347,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -67,8 +67,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 380.80228908751116,
-      "y": 528.263698291464,
+      "x": 792.9096491054363,
+      "y": 408.03605235290036,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -79,8 +79,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 196.41095466182242,
-      "y": 109.76881542621963,
+      "x": 725.8891135057019,
+      "y": 400.87824247891194,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -91,152 +91,20 @@
         "category": "view",
         "type": "view"
       },
-      "x": 459.2558480394217,
-      "y": 1.612525520049779,
+      "x": 578.9236965179933,
+      "y": 599.4283279054773,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "builder_process:webtests:builder",
-      "label": "builder process for builder",
+      "id": "unknown_process::",
+      "label": "unknown process for ",
       "type": {
         "category": "process",
-        "type": "builder"
+        "type": "unknown"
       },
-      "x": 668.7441513744334,
-      "y": 328.02572379344576,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 752.0156849390671,
-      "y": 220.32493022386848,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 552.9954139899553,
-      "y": 60.464824663026896,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 174.24922823248724,
-      "y": 357.79541698812994,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 740.465709180458,
-      "y": 529.8257049401866,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "builder_process:nodetests:builder",
-      "label": "builder process for builder",
-      "type": {
-        "category": "process",
-        "type": "builder"
-      },
-      "x": 205.7411988192629,
-      "y": 384.89234791731536,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 169.71615060251023,
-      "y": 582.137899184749,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 744.7033307195154,
-      "y": 376.2731661922548,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 449.5927170135805,
-      "y": 91.21796769696329,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 358.8938237445986,
-      "y": 542.3869079002374,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 759.493007387321,
-      "y": 232.44102673594617,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 57.637127441075634,
-      "y": 166.61928519662195,
+      "x": 266.18235627887856,
+      "y": 158.4213646323097,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -247,56 +115,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 441.80320131527606,
-      "y": 432.091995849712,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "builder_process:webtests:builder",
-      "label": "builder process for builder",
-      "type": {
-        "category": "process",
-        "type": "builder"
-      },
-      "x": 220.02258928469737,
-      "y": 322.48523270227145,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "builder_process:nodetests:builder",
-      "label": "builder process for builder",
-      "type": {
-        "category": "process",
-        "type": "builder"
-      },
-      "x": 267.1702204204191,
-      "y": 83.11315176493268,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 483.56909072720964,
-      "y": 366.0552320576885,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 460.325986585645,
-      "y": 511.4375284009398,
+      "x": 131.66744082036087,
+      "y": 286.4896875580501,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -307,20 +127,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 63.63132945835916,
-      "y": 235.18602283370146,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 144.4450188441918,
-      "y": 577.4919719319748,
+      "x": 197.86011707150016,
+      "y": 79.21234121160319,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -331,8 +139,20 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 765.1504928183087,
-      "y": 583.4887165347171,
+      "x": 750.5350824459539,
+      "y": 7.889583132231226,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 668.3928770365964,
+      "y": 109.17488087977092,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -343,32 +163,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 460.69045563090924,
-      "y": 38.790488841751,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 45.50016814197582,
-      "y": 381.5717255429412,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 330.02208158931705,
-      "y": 292.52674013351987,
+      "x": 451.6253178225189,
+      "y": 37.53925773244544,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -379,20 +175,20 @@
         "category": "process",
         "type": "check"
       },
-      "x": 574.8278823099655,
-      "y": 286.7041011642876,
+      "x": 756.4692833655225,
+      "y": 159.41880805953795,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
       "type": {
         "category": "process",
         "type": "bdd"
       },
-      "x": 382.65836919812995,
-      "y": 208.54097012338497,
+      "x": 389.12739627691894,
+      "y": 413.7115216757185,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -403,8 +199,224 @@
         "category": "process",
         "type": "check"
       },
-      "x": 551.0741987343922,
-      "y": 2.8059688483460743,
+      "x": 571.569426988666,
+      "y": 135.32068551444442,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 486.04441831795697,
+      "y": 489.5751461784692,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:webtests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 473.24458128178526,
+      "y": 111.0693837737953,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 184.64860805024745,
+      "y": 5.715872178228043,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 606.0819911715296,
+      "y": 37.175117507810285,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:nodetests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 501.49721610261093,
+      "y": 149.91856050494545,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 532.2693415971548,
+      "y": 334.06061147758373,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 358.4554056581955,
+      "y": 592.9899274436046,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:nodetests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 142.4789728702903,
+      "y": 201.84348327969883,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 205.45454429903086,
+      "y": 286.5638330572726,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 206.4662867761629,
+      "y": 296.2346449515675,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:webtests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 238.18840903423873,
+      "y": 190.6160050008371,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 533.0087851278737,
+      "y": 153.64663653055678,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 711.7966974462826,
+      "y": 566.820984293666,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 385.61599225206356,
+      "y": 479.08620010910494,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 62.8021689303317,
+      "y": 512.7330819256103,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 230.53783547772736,
+      "y": 451.30331933730014,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 34.432384654321964,
+      "y": 279.7894889964725,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 613.4390082015326,
+      "y": 413.7098143942342,
       "size": 5,
       "color": "#4a90e2"
     }
@@ -424,7 +436,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -441,7 +453,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -458,7 +470,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -475,7 +487,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -492,7 +504,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -509,7 +521,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -526,7 +538,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -543,7 +555,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -560,7 +572,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -577,7 +589,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -594,7 +606,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -611,10 +623,10 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     }
   ],
   "viewType": "debug",
-  "timestamp": "2026-04-25T02:18:46.457Z"
+  "timestamp": "2026-04-25T18:56:49.079Z"
 }

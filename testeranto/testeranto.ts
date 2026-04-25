@@ -12,34 +12,34 @@ export const golangciLintCommand = (files: string[]): string => {
 };
 
 
-const m = (n: string) => `You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "prodirek", "content": "Hello from ${n}!"}'. Learn more about yourself at http://host.docker.internal:3000/~/agents/${n}`
+const m = (n: string) => `You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "${n}", "content": "Hello from ${n}!"}'.`
 
 const config: ITesterantoConfig = {
 
   views: {
     Home: {
       slicer: HomeSlicer,
-      filePath: 'src/views/defaultViews/HomeView.tsx'
+      filePath: 'src/vscode/views/defaultViews/HomeView.tsx'
     },
     Kanban: {
       slicer: KanbanSlicer,
-      filePath: 'src/views/defaultViews/KanbanBoardView.tsx'
+      filePath: 'src/vscode/views/defaultViews/KanbanBoardView.tsx'
     },
     EisenhowerMatrix: {
       slicer: EisenhowerMatrixSlicer,
-      filePath: 'src/views/defaultViews/EisenhowerMatrixView.tsx'
+      filePath: 'src/vscode/views/defaultViews/EisenhowerMatrixView.tsx'
     },
     Gantt: {
       slicer: GanttSlicer,
-      filePath: 'src/views/defaultViews/GanttView.tsx'
+      filePath: 'src/vscode/views/defaultViews/GanttView.tsx'
     },
     Chat: {
       slicer: ChatSlicer,
-      filePath: 'src/views/defaultViews/ChatView.tsx'
+      filePath: 'src/vscode/views/defaultViews/ChatView.tsx'
     },
     DebugGraph: {
       slicer: DebugGraphSlicer,
-      filePath: 'src/views/defaultViews/DebugGraphView.tsx'
+      filePath: 'src/vscode/views/defaultViews/DebugGraphView.tsx'
     },
   },
 
@@ -48,7 +48,7 @@ const config: ITesterantoConfig = {
       load: [
         `/read SOUL.md`,
         `/read testeranto/slices/agents/prodirek.json`,
-        `/read testeranto/agents/prodirek.md`
+        // `/read testeranto/agents/prodirek.md`
       ],
       message: `Your name is "prodirek". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. ` + m('prodirek'),
 
@@ -89,7 +89,7 @@ const config: ITesterantoConfig = {
           )
           .map((node: any) => ({
             id: node.id,
-            agentName: node.agentName || node.metadata?.agentName,
+            sender: node.sender || node.metadata?.sender,
             content: node.content || node.metadata?.content,
             timestamp: node.timestamp || node.metadata?.timestamp,
             preview: (node.content || node.metadata?.content) ?
@@ -99,13 +99,18 @@ const config: ITesterantoConfig = {
           }));
 
         const agents = allNodes
-          .filter((node: any) => node.type === 'agent')
+          .filter((node: any) =>
+            node.type &&
+            typeof node.type === 'object' &&
+            node.type.category === 'agent' &&
+            node.type.type === 'agent'
+          )
           .map((node: any) => ({
             id: node.id,
-            name: node.agentName,
+            name: node.agentName || node.metadata?.agentName,
             label: node.label,
             description: node.description,
-            message: node.message // Add the message field
+            message: node.message || node.metadata?.message
           }));
 
         return {
@@ -132,7 +137,7 @@ const config: ITesterantoConfig = {
       load: [
         `/read SOUL.md`,
         `/read testeranto/slices/agents/arko.json`,
-        `/read testeranto/agents/arko.md`
+        // `/read testeranto/agents/arko.md`
       ],
       message: `Your name is "arko". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. ` + m('arko'),
 
@@ -169,7 +174,7 @@ const config: ITesterantoConfig = {
           )
           .map((node: any) => ({
             id: node.id,
-            agentName: node.agentName || node.metadata?.agentName,
+            sender: node.sender || node.metadata?.sender,
             content: node.content || node.metadata?.content,
             timestamp: node.timestamp || node.metadata?.timestamp,
             preview: (node.content || node.metadata?.content) ?
@@ -179,13 +184,18 @@ const config: ITesterantoConfig = {
           }));
 
         const agents = allNodes
-          .filter((node: any) => node.type === 'agent')
+          .filter((node: any) =>
+            node.type &&
+            typeof node.type === 'object' &&
+            node.type.category === 'agent' &&
+            node.type.type === 'agent'
+          )
           .map((node: any) => ({
             id: node.id,
-            name: node.agentName,
+            name: node.agentName || node.metadata?.agentName,
             label: node.label,
             role: 'agent',
-            message: node.message // Add the message field
+            message: node.message || node.metadata?.message
           }));
 
         return {

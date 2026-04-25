@@ -7,9 +7,9 @@
       "type": "view",
       "metadata": {
         "viewKey": "Home",
-        "viewPath": "src/views/defaultViews/HomeView.tsx",
+        "viewPath": "src/vscode/views/defaultViews/HomeView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Home.json",
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -19,9 +19,9 @@
       "type": "view",
       "metadata": {
         "viewKey": "Kanban",
-        "viewPath": "src/views/defaultViews/KanbanBoardView.tsx",
+        "viewPath": "src/vscode/views/defaultViews/KanbanBoardView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -31,9 +31,9 @@
       "type": "view",
       "metadata": {
         "viewKey": "EisenhowerMatrix",
-        "viewPath": "src/views/defaultViews/EisenhowerMatrixView.tsx",
+        "viewPath": "src/vscode/views/defaultViews/EisenhowerMatrixView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -43,9 +43,9 @@
       "type": "view",
       "metadata": {
         "viewKey": "Gantt",
-        "viewPath": "src/views/defaultViews/GanttView.tsx",
+        "viewPath": "src/vscode/views/defaultViews/GanttView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -55,9 +55,9 @@
       "type": "view",
       "metadata": {
         "viewKey": "Chat",
-        "viewPath": "src/views/defaultViews/ChatView.tsx",
+        "viewPath": "src/vscode/views/defaultViews/ChatView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     },
     {
@@ -67,12 +67,12 @@
       "type": "view",
       "metadata": {
         "viewKey": "DebugGraph",
-        "viewPath": "src/views/defaultViews/DebugGraphView.tsx",
+        "viewPath": "src/vscode/views/defaultViews/DebugGraphView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/DebugGraph.json",
-        "timestamp": "2026-04-25T02:18:41.392Z"
+        "timestamp": "2026-04-25T18:56:44.705Z"
       }
     }
   ],
   "viewType": "home",
-  "timestamp": "2026-04-25T02:18:46.457Z"
+  "timestamp": "2026-04-25T18:56:49.078Z"
 }

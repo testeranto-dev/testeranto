@@ -477,12 +477,12 @@ export abstract class Server extends Server_DockerCompose {
   protected async handlePostChatMessage(request: Request): Promise<Response> {
     try {
       const body = await request.json();
-      const { agentName, content } = body;
+      const { sender, content } = body;
 
-      if (!agentName || !content) {
+      if (!sender || !content) {
         return new Response(
           JSON.stringify({
-            error: 'Missing required fields: agentName and content',
+            error: 'Missing required fields: sender and content',
             timestamp: new Date().toISOString()
           }),
           {
@@ -496,18 +496,21 @@ export abstract class Server extends Server_DockerCompose {
       const chatNode = {
         id: messageId,
         type: { category: 'chat', type: 'chat_message' },
-        label: `Chat message from ${agentName}`,
+        label: `Chat message from ${sender}`,
         description: content,
+        content: content,
+        sender: sender,
+        timestamp: new Date().toISOString(),
         metadata: {
-          agentName,
+          sender,
           content,
           timestamp: new Date().toISOString()
-        },
-        timestamp: new Date().toISOString()
+        }
       };
 
       this.addNode(chatNode);
       this.updateAllAgentSliceFiles();
+      this.writeViewSliceFiles();
 
       this.broadcastApiMessage('resourceChanged', {
         url: '/~/chat',
@@ -552,7 +555,7 @@ export abstract class Server extends Server_DockerCompose {
 
       const chatHistory = chatNodes.map((node: any) => ({
         id: node.id,
-        agentName: node.metadata?.agentName || node.agentName,
+        sender: node.metadata?.sender || node.sender,
         content: node.metadata?.content || node.content || node.description,
         timestamp: node.metadata?.timestamp || node.timestamp,
         label: node.label

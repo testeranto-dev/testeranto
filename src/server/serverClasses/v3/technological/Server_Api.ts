@@ -532,13 +532,13 @@ export abstract class Server_Api extends Server_WS_HTTP {
 
   private async handleWebSocketChatMessage(client: any, message: any): Promise<void> {
     try {
-      const { agentName, content } = message;
+      const { sender, content } = message;
 
-      if (!agentName || !content) {
+      if (!sender || !content) {
         this.sendToClient(client.id, {
           type: 'error',
           timestamp: new Date().toISOString(),
-          message: 'Missing required fields: agentName and content'
+          message: 'Missing required fields: sender and content'
         });
         return;
       }
@@ -548,10 +548,10 @@ export abstract class Server_Api extends Server_WS_HTTP {
       const chatNode = {
         id: messageId,
         type: { category: 'chat', type: 'chat_message' },
-        label: `Chat message from ${agentName}`,
+        label: `Chat message from ${sender}`,
         description: content,
         metadata: {
-          agentName,
+          sender,
           content,
           timestamp: new Date().toISOString(),
           via: 'websocket'
@@ -584,7 +584,7 @@ export abstract class Server_Api extends Server_WS_HTTP {
       this.broadcastToChannel('chat', {
         type: 'newChatMessage',
         messageId,
-        agentName,
+        sender,
         content,
         timestamp: new Date().toISOString()
       });
@@ -652,7 +652,7 @@ export abstract class Server_Api extends Server_WS_HTTP {
   private async handleSpawnAgent(request: Request): Promise<Response> {
     try {
       const body = await request.json();
-      const { profile, loadFiles, message, model, requestUid } = body;
+      const { profile, loadFiles, model, requestUid } = body;
 
       if (!profile) {
         return new Response(
@@ -668,7 +668,7 @@ export abstract class Server_Api extends Server_WS_HTTP {
         );
       }
 
-      const result = await this.spawnAgent(profile, loadFiles, message, model, requestUid);
+      const result = await this.spawnAgent(profile, loadFiles, model, requestUid);
 
       // Also generate the terminal command so the caller can attach immediately
       let terminalCommand: string | undefined;

@@ -15,6 +15,7 @@ export class Chat extends BaseViewClass<GraphData> {
     ...this.state,
     inputText: '',
     sending: false,
+    data: null as any,
   };
 
   get config(): ChatConfig {
@@ -25,6 +26,24 @@ export class Chat extends BaseViewClass<GraphData> {
       reverseOrder: true // Show newest first
     };
   }
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  loadData = async () => {
+    try {
+      const slicePath = this.props.slicePath || '/testeranto/slices/views/Chat.json';
+      const response = await fetch(slicePath);
+      if (!response.ok) {
+        throw new Error(`Failed to load slice data: ${response.status} ${response.statusText}`);
+      }
+      const data = await response.json();
+      this.setState({ data });
+    } catch (err) {
+      console.error('Failed to load chat data:', err);
+    }
+  };
 
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ inputText: e.target.value });
@@ -48,8 +67,8 @@ export class Chat extends BaseViewClass<GraphData> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: text,
-          agentName: 'user'
+          sender: 'user',
+          content: text
         }),
       });
 

@@ -3123,3 +3123,1141 @@
 [2026-04-25T02:18:52.488Z] [NODE BUILDER] Metafile updated
 [2026-04-25T02:18:52.434Z] INFO: Build started for webtests
 [2026-04-25T02:18:52.522Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:26:49.640Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T02:26:49.642Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T02:26:49.761Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T02:27:00.517Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T02:27:00.519Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T02:27:00.591Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T02:27:00.704Z] node > build ended with 0 errors
+[2026-04-25T02:27:00.705Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:27:00.705Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:27:00.707Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:27:00.708Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:27:00.708Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:27:00.708Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:27:00.708Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:27:00.608Z] INFO: Build started for webtests
+[2026-04-25T02:27:00.704Z] LOG: node > build ended with 0 errors
+[2026-04-25T02:27:00.709Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:27:00.711Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:27:00.711Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:27:00.711Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:27:00.711Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:27:00.712Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T02:27:00.712Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T02:27:00.733Z] node > build ended with 0 errors
+[2026-04-25T02:27:00.733Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:27:00.733Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:27:00.734Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:27:00.734Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:27:00.734Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:27:00.735Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:27:00.735Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:27:00.713Z] INFO: Build started for webtests
+[2026-04-25T02:27:00.737Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:28:31.933Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T02:28:31.935Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T02:28:31.974Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T02:28:43.877Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T02:28:43.879Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T02:28:44.056Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T02:28:44.156Z] node > build ended with 0 errors
+[2026-04-25T02:28:44.157Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:28:44.157Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:28:44.160Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:28:44.161Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:28:44.161Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:28:44.163Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:28:44.163Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:28:44.080Z] INFO: Build started for webtests
+[2026-04-25T02:28:44.156Z] LOG: node > build ended with 0 errors
+[2026-04-25T02:28:44.175Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:28:44.183Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:28:44.183Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:28:44.183Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:28:44.185Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:28:44.187Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T02:28:44.187Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T02:28:44.231Z] node > build ended with 0 errors
+[2026-04-25T02:28:44.231Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:28:44.232Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:28:44.232Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:28:44.232Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:28:44.232Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:28:44.236Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:28:44.237Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:28:44.187Z] INFO: Build started for webtests
+[2026-04-25T02:28:44.249Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:42:18.541Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T02:42:18.546Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T02:44:41.395Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T02:44:41.396Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T02:44:41.476Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T02:44:41.573Z] node > build ended with 0 errors
+[2026-04-25T02:44:41.574Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:44:41.575Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:44:41.577Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:44:41.577Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:44:41.577Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:44:41.578Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:44:41.578Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:44:41.580Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:44:41.511Z] INFO: Build started for webtests
+[2026-04-25T02:44:41.573Z] LOG: node > build ended with 0 errors
+[2026-04-25T02:44:41.583Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:44:41.584Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:44:41.584Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:44:41.584Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:44:41.587Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T02:44:41.587Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T02:44:41.613Z] node > build ended with 0 errors
+[2026-04-25T02:44:41.613Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:44:41.613Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:44:41.614Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:44:41.614Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:44:41.614Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:44:41.615Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:44:41.615Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:44:41.588Z] INFO: Build started for webtests
+[2026-04-25T02:44:41.616Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:52:44.582Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T02:52:44.583Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T02:52:58.749Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T02:52:58.751Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T02:52:58.943Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T02:52:59.035Z] node > build ended with 0 errors
+[2026-04-25T02:52:59.035Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:52:59.036Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:52:59.037Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:52:59.037Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:52:59.037Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:52:59.038Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:52:59.038Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:52:59.040Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:52:58.979Z] INFO: Build started for webtests
+[2026-04-25T02:52:59.035Z] LOG: node > build ended with 0 errors
+[2026-04-25T02:52:59.041Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:52:59.041Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:52:59.041Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:52:59.041Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:52:59.042Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T02:52:59.042Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T02:52:59.064Z] node > build ended with 0 errors
+[2026-04-25T02:52:59.064Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:52:59.064Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:52:59.065Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:52:59.065Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:52:59.065Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:52:59.066Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:52:59.066Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:52:59.068Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:52:59.042Z] INFO: Build started for webtests
+[2026-04-25T02:54:02.996Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T02:54:02.999Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T02:54:13.782Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T02:54:13.782Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T02:54:13.884Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T02:54:13.930Z] node > build ended with 0 errors
+[2026-04-25T02:54:13.930Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:54:13.931Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:54:13.932Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:54:13.932Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:54:13.932Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:54:13.932Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:54:13.933Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:54:13.934Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:54:13.902Z] INFO: Build started for webtests
+[2026-04-25T02:54:13.930Z] LOG: node > build ended with 0 errors
+[2026-04-25T02:54:13.936Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:54:13.937Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:54:13.937Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:54:13.937Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:54:13.938Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T02:54:13.938Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T02:54:13.956Z] node > build ended with 0 errors
+[2026-04-25T02:54:13.956Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T02:54:13.956Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T02:54:13.956Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T02:54:13.956Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T02:54:13.956Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T02:54:13.957Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T02:54:13.957Z] [NODE BUILDER] Metafile updated
+[2026-04-25T02:54:13.958Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T02:54:13.938Z] INFO: Build started for webtests
+[2026-04-25T03:04:54.372Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T03:04:54.380Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T03:04:54.398Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T03:05:08.000Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T03:05:08.001Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T03:05:08.164Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T03:05:08.238Z] node > build ended with 0 errors
+[2026-04-25T03:05:08.238Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:05:08.238Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:05:08.239Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:05:08.239Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:05:08.240Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:05:08.240Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:05:08.240Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:05:08.241Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:05:08.203Z] INFO: Build started for webtests
+[2026-04-25T03:05:08.238Z] LOG: node > build ended with 0 errors
+[2026-04-25T03:05:08.242Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:05:08.242Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:05:08.242Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:05:08.243Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:05:08.244Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T03:05:08.244Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T03:05:08.262Z] node > build ended with 0 errors
+[2026-04-25T03:05:08.262Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:05:08.262Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:05:08.262Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:05:08.263Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:05:08.263Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:05:08.263Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:05:08.263Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:05:08.264Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:05:08.244Z] INFO: Build started for webtests
+[2026-04-25T03:10:55.938Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T03:10:55.939Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T03:10:55.963Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T03:11:10.015Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T03:11:10.016Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T03:11:10.138Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T03:11:10.187Z] node > build ended with 0 errors
+[2026-04-25T03:11:10.188Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:11:10.188Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:11:10.190Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:11:10.191Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:11:10.191Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:11:10.191Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:11:10.191Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:11:10.155Z] INFO: Build started for webtests
+[2026-04-25T03:11:10.187Z] LOG: node > build ended with 0 errors
+[2026-04-25T03:11:10.193Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:11:10.196Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:11:10.196Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:11:10.196Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:11:10.196Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:11:10.197Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T03:11:10.197Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T03:11:10.211Z] node > build ended with 0 errors
+[2026-04-25T03:11:10.212Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:11:10.212Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:11:10.212Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:11:10.212Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:11:10.212Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:11:10.213Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:11:10.213Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:11:10.214Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:11:10.198Z] INFO: Build started for webtests
+[2026-04-25T03:23:55.619Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T03:23:55.620Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T03:23:55.681Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T03:23:55.718Z] node > build ended with 0 errors
+[2026-04-25T03:23:55.719Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:23:55.719Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:23:55.720Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:23:55.720Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:23:55.720Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:23:55.721Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:23:55.721Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:23:55.691Z] INFO: Build started for webtests
+[2026-04-25T03:23:55.718Z] LOG: node > build ended with 0 errors
+[2026-04-25T03:23:55.723Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:23:55.723Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:23:55.724Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:23:55.724Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:23:55.724Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:23:55.725Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T03:23:55.725Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T03:23:55.739Z] node > build ended with 0 errors
+[2026-04-25T03:23:55.739Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:23:55.739Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:23:55.740Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:23:55.740Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:23:55.740Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:23:55.740Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:23:55.740Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:23:55.725Z] INFO: Build started for webtests
+[2026-04-25T03:23:55.741Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:27:01.590Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T03:27:01.592Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T03:27:14.327Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T03:27:14.329Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T03:27:14.428Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T03:27:14.505Z] node > build ended with 0 errors
+[2026-04-25T03:27:14.506Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:27:14.506Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:27:14.508Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:27:14.509Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:27:14.509Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:27:14.510Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:27:14.510Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:27:14.444Z] INFO: Build started for webtests
+[2026-04-25T03:27:14.505Z] LOG: node > build ended with 0 errors
+[2026-04-25T03:27:14.518Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:27:14.521Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:27:14.521Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:27:14.521Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:27:14.522Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:27:14.524Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T03:27:14.524Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T03:27:14.586Z] node > build ended with 0 errors
+[2026-04-25T03:27:14.586Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:27:14.587Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:27:14.657Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:27:14.660Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:27:14.660Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:27:14.662Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:27:14.662Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:27:14.665Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:27:14.523Z] INFO: Build started for webtests
+[2026-04-25T03:28:37.930Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T03:28:37.931Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T03:28:37.987Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T03:28:44.223Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T03:28:44.224Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T03:28:44.282Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T03:28:44.377Z] node > build ended with 0 errors
+[2026-04-25T03:28:44.302Z] INFO: Build started for webtests
+[2026-04-25T03:28:44.377Z] LOG: node > build ended with 0 errors
+[2026-04-25T03:28:44.378Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:28:44.378Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:28:44.379Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:28:44.379Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:28:44.379Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:28:44.380Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:28:44.380Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:28:44.383Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:28:44.385Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:28:44.386Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:28:44.386Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:28:44.387Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:28:44.388Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T03:28:44.388Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T03:28:44.426Z] node > build ended with 0 errors
+[2026-04-25T03:28:44.427Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:28:44.427Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:28:44.427Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:28:44.427Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:28:44.427Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:28:44.435Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:28:44.435Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:28:44.463Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:28:44.388Z] INFO: Build started for webtests
+[2026-04-25T03:32:55.489Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T03:32:55.490Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T03:32:55.523Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T03:33:10.287Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T03:33:10.293Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T03:33:10.452Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T03:33:10.685Z] node > build ended with 0 errors
+[2026-04-25T03:33:10.687Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:33:10.687Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:33:10.689Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:33:10.689Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:33:10.690Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:33:10.691Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:33:10.693Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:33:10.696Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:33:10.564Z] INFO: Build started for webtests
+[2026-04-25T03:33:10.684Z] LOG: node > build ended with 0 errors
+[2026-04-25T03:33:10.699Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:33:10.699Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:33:10.699Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:33:10.699Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:33:10.703Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T03:33:10.704Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T03:33:10.728Z] node > build ended with 0 errors
+[2026-04-25T03:33:10.729Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:33:10.729Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:33:10.730Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:33:10.730Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:33:10.730Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:33:10.731Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:33:10.731Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:33:10.733Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:33:10.703Z] INFO: Build started for webtests
+[2026-04-25T03:47:17.489Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T03:47:17.490Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T03:47:17.516Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T03:47:25.034Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T03:47:25.035Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T03:47:25.152Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T03:47:25.199Z] node > build ended with 0 errors
+[2026-04-25T03:47:25.200Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:47:25.200Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:47:25.201Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:47:25.201Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:47:25.201Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:47:25.202Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:47:25.202Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:47:25.164Z] INFO: Build started for webtests
+[2026-04-25T03:47:25.199Z] LOG: node > build ended with 0 errors
+[2026-04-25T03:47:25.202Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:47:25.204Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:47:25.204Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:47:25.204Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:47:25.204Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:47:25.205Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T03:47:25.205Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T03:47:25.217Z] node > build ended with 0 errors
+[2026-04-25T03:47:25.217Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:47:25.217Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:47:25.218Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:47:25.218Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:47:25.218Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:47:25.218Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:47:25.218Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:47:25.219Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:47:25.205Z] INFO: Build started for webtests
+[2026-04-25T03:53:42.554Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T03:53:42.556Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T03:53:42.573Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T03:53:52.466Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T03:53:52.467Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T03:53:52.678Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T03:53:52.822Z] node > build ended with 0 errors
+[2026-04-25T03:53:52.848Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:53:52.848Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:53:53.051Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:53:53.065Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:53:53.096Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:53:53.099Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:53:53.102Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:53:53.105Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:53:52.708Z] INFO: Build started for webtests
+[2026-04-25T03:53:52.822Z] LOG: node > build ended with 0 errors
+[2026-04-25T03:53:53.112Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:53:53.113Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:53:53.114Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:53:53.115Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:53:53.136Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T03:53:53.136Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T03:53:53.161Z] node > build ended with 0 errors
+[2026-04-25T03:53:53.161Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T03:53:53.161Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T03:53:53.162Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T03:53:53.162Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T03:53:53.162Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T03:53:53.163Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T03:53:53.172Z] [NODE BUILDER] Metafile updated
+[2026-04-25T03:53:53.198Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T03:53:53.136Z] INFO: Build started for webtests
+[2026-04-25T04:00:31.989Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T04:00:31.993Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T04:00:40.826Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T04:00:40.829Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T04:00:40.935Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T04:00:41.014Z] node > build ended with 0 errors
+[2026-04-25T04:00:41.015Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T04:00:41.015Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T04:00:41.017Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:00:41.017Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:00:41.017Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:00:41.018Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:00:41.018Z] [NODE BUILDER] Metafile updated
+[2026-04-25T04:00:41.020Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T04:00:40.955Z] INFO: Build started for webtests
+[2026-04-25T04:00:41.014Z] LOG: node > build ended with 0 errors
+[2026-04-25T04:00:41.021Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:00:41.022Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:00:41.022Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:00:41.022Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:00:41.023Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T04:00:41.023Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T04:00:41.047Z] node > build ended with 0 errors
+[2026-04-25T04:00:41.048Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T04:00:41.048Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T04:00:41.048Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:00:41.048Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:00:41.048Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:00:41.050Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:00:41.050Z] [NODE BUILDER] Metafile updated
+[2026-04-25T04:00:41.051Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T04:00:41.023Z] INFO: Build started for webtests
+[2026-04-25T04:46:32.337Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T04:46:32.338Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T04:46:32.391Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T04:46:50.781Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T04:46:50.784Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T04:46:50.864Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T04:46:50.940Z] node > build ended with 0 errors
+[2026-04-25T04:46:50.941Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T04:46:50.941Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T04:46:50.942Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:46:50.943Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:46:50.943Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:46:50.943Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:46:50.943Z] [NODE BUILDER] Metafile updated
+[2026-04-25T04:46:50.944Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T04:46:50.885Z] INFO: Build started for webtests
+[2026-04-25T04:46:50.940Z] LOG: node > build ended with 0 errors
+[2026-04-25T04:46:50.945Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:46:50.945Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:46:50.945Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:46:50.946Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:46:50.948Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T04:46:50.948Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T04:46:50.971Z] node > build ended with 0 errors
+[2026-04-25T04:46:50.971Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T04:46:50.971Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T04:46:50.971Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:46:50.971Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:46:50.971Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:46:50.972Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:46:50.972Z] [NODE BUILDER] Metafile updated
+[2026-04-25T04:46:50.949Z] INFO: Build started for webtests
+[2026-04-25T04:46:50.973Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T04:51:47.179Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T04:51:47.180Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T04:51:47.216Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T04:52:13.245Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T04:52:13.246Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T04:52:13.318Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T04:52:13.363Z] node > build ended with 0 errors
+[2026-04-25T04:52:13.364Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T04:52:13.364Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T04:52:13.366Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:52:13.366Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:52:13.366Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:52:13.367Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:52:13.367Z] [NODE BUILDER] Metafile updated
+[2026-04-25T04:52:13.369Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T04:52:13.332Z] INFO: Build started for webtests
+[2026-04-25T04:52:13.363Z] LOG: node > build ended with 0 errors
+[2026-04-25T04:52:13.372Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:52:13.373Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:52:13.373Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:52:13.373Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:52:13.375Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T04:52:13.375Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T04:52:13.400Z] node > build ended with 0 errors
+[2026-04-25T04:52:13.400Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T04:52:13.400Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T04:52:13.401Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T04:52:13.401Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T04:52:13.401Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T04:52:13.401Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T04:52:13.401Z] [NODE BUILDER] Metafile updated
+[2026-04-25T04:52:13.402Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T04:52:13.375Z] INFO: Build started for webtests
+[2026-04-25T05:05:09.723Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T05:05:09.725Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T05:05:09.732Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T05:05:15.080Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T05:05:15.081Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T05:05:15.141Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T05:05:15.187Z] node > build ended with 0 errors
+[2026-04-25T05:05:15.188Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:05:15.188Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:05:15.189Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:05:15.189Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:05:15.189Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:05:15.190Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:05:15.190Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:05:15.152Z] INFO: Build started for webtests
+[2026-04-25T05:05:15.187Z] LOG: node > build ended with 0 errors
+[2026-04-25T05:05:15.192Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:05:15.193Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:05:15.194Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:05:15.194Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:05:15.195Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:05:15.197Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T05:05:15.197Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T05:05:15.210Z] node > build ended with 0 errors
+[2026-04-25T05:05:15.210Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:05:15.210Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:05:15.211Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:05:15.211Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:05:15.211Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:05:15.211Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:05:15.211Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:05:15.197Z] INFO: Build started for webtests
+[2026-04-25T05:05:15.212Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:07:10.564Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T05:07:10.564Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T05:07:10.622Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T05:07:23.244Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T05:07:23.245Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T05:07:23.613Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T05:07:23.696Z] node > build ended with 0 errors
+[2026-04-25T05:07:23.697Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:07:23.697Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:07:23.698Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:07:23.699Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:07:23.699Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:07:23.699Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:07:23.699Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:07:23.701Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:07:23.644Z] INFO: Build started for webtests
+[2026-04-25T05:07:23.696Z] LOG: node > build ended with 0 errors
+[2026-04-25T05:07:23.703Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:07:23.703Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:07:23.703Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:07:23.703Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:07:23.704Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T05:07:23.704Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T05:07:23.721Z] node > build ended with 0 errors
+[2026-04-25T05:07:23.721Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:07:23.721Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:07:23.722Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:07:23.722Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:07:23.722Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:07:23.723Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:07:23.723Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:07:23.724Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:07:23.704Z] INFO: Build started for webtests
+[2026-04-25T05:07:48.377Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T05:07:48.380Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T05:07:48.417Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T05:07:53.915Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T05:07:53.916Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T05:07:53.977Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T05:07:54.014Z] node > build ended with 0 errors
+[2026-04-25T05:07:54.015Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:07:54.015Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:07:54.016Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:07:54.016Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:07:54.016Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:07:54.017Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:07:54.017Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:07:54.018Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:07:53.987Z] INFO: Build started for webtests
+[2026-04-25T05:07:54.014Z] LOG: node > build ended with 0 errors
+[2026-04-25T05:07:54.019Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:07:54.019Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:07:54.019Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:07:54.020Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:07:54.021Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T05:07:54.021Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T05:07:54.035Z] node > build ended with 0 errors
+[2026-04-25T05:07:54.036Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:07:54.036Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:07:54.036Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:07:54.036Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:07:54.036Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:07:54.036Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:07:54.036Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:07:54.021Z] INFO: Build started for webtests
+[2026-04-25T05:07:54.038Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:11:18.298Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T05:11:18.300Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T05:11:18.344Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T05:11:30.558Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T05:11:30.559Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T05:11:30.622Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T05:11:30.671Z] node > build ended with 0 errors
+[2026-04-25T05:11:30.671Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:11:30.671Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:11:30.673Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:11:30.673Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:11:30.673Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:11:30.673Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:11:30.673Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:11:30.674Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:11:30.675Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:11:30.675Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:11:30.675Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:11:30.675Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:11:30.643Z] INFO: Build started for webtests
+[2026-04-25T05:11:30.671Z] LOG: node > build ended with 0 errors
+[2026-04-25T05:11:30.676Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T05:11:30.676Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T05:11:30.692Z] node > build ended with 0 errors
+[2026-04-25T05:11:30.692Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:11:30.692Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:11:30.693Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:11:30.693Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:11:30.693Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:11:30.693Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:11:30.693Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:11:30.694Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:11:30.677Z] INFO: Build started for webtests
+[2026-04-25T05:15:07.024Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T05:15:07.025Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T05:15:07.045Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T05:15:12.055Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T05:15:12.056Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T05:15:12.129Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T05:15:12.191Z] node > build ended with 0 errors
+[2026-04-25T05:15:12.192Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:15:12.192Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:15:12.193Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:15:12.193Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:15:12.193Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:15:12.193Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:15:12.194Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:15:12.153Z] INFO: Build started for webtests
+[2026-04-25T05:15:12.191Z] LOG: node > build ended with 0 errors
+[2026-04-25T05:15:12.195Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:15:12.196Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:15:12.196Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:15:12.196Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:15:12.197Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:15:12.197Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T05:15:12.197Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T05:15:12.211Z] node > build ended with 0 errors
+[2026-04-25T05:15:12.211Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:15:12.211Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:15:12.212Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:15:12.212Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:15:12.212Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:15:12.213Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:15:12.213Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:15:12.197Z] INFO: Build started for webtests
+[2026-04-25T05:15:12.216Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:16:29.609Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T05:16:29.611Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T05:16:29.676Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T05:16:44.112Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T05:16:44.114Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T05:16:44.177Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T05:16:44.242Z] node > build ended with 0 errors
+[2026-04-25T05:16:44.243Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:16:44.243Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:16:44.244Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:16:44.244Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:16:44.244Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:16:44.246Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:16:44.246Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:16:44.194Z] INFO: Build started for webtests
+[2026-04-25T05:16:44.242Z] LOG: node > build ended with 0 errors
+[2026-04-25T05:16:44.247Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:16:44.249Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:16:44.249Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:16:44.249Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:16:44.250Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:16:44.250Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T05:16:44.250Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T05:16:44.264Z] node > build ended with 0 errors
+[2026-04-25T05:16:44.264Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T05:16:44.264Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T05:16:44.265Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T05:16:44.265Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T05:16:44.265Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T05:16:44.265Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T05:16:44.265Z] [NODE BUILDER] Metafile updated
+[2026-04-25T05:16:44.267Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T05:16:44.250Z] INFO: Build started for webtests
+[2026-04-25T12:22:08.818Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:22:08.820Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:22:27.085Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:22:27.085Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:22:27.142Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:22:27.184Z] node > build ended with 0 errors
+[2026-04-25T12:22:27.184Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:22:27.184Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:22:27.186Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:22:27.186Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:22:27.186Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:22:27.186Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:22:27.186Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:22:27.151Z] INFO: Build started for webtests
+[2026-04-25T12:22:27.184Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:22:27.188Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:22:27.189Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:22:27.189Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:22:27.189Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:22:27.189Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:22:27.190Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:22:27.190Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:22:27.205Z] node > build ended with 0 errors
+[2026-04-25T12:22:27.205Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:22:27.205Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:22:27.205Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:22:27.206Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:22:27.206Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:22:27.206Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:22:27.206Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:22:27.207Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:22:27.190Z] INFO: Build started for webtests
+[2026-04-25T12:24:07.104Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:24:07.104Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:24:07.131Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T12:24:11.458Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:24:11.460Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:24:11.522Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:24:11.558Z] node > build ended with 0 errors
+[2026-04-25T12:24:11.559Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:24:11.559Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:24:11.560Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:24:11.560Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:24:11.560Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:24:11.560Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:24:11.560Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:24:11.534Z] INFO: Build started for webtests
+[2026-04-25T12:24:11.558Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:24:11.562Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:24:11.563Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:24:11.563Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:24:11.563Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:24:11.564Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:24:11.564Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:24:11.564Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:24:11.577Z] node > build ended with 0 errors
+[2026-04-25T12:24:11.577Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:24:11.577Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:24:11.578Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:24:11.578Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:24:11.578Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:24:11.578Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:24:11.578Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:24:11.579Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:24:11.565Z] INFO: Build started for webtests
+[2026-04-25T12:24:33.997Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:24:33.998Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:24:34.053Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T12:24:46.247Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:24:46.248Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:24:46.295Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:24:46.328Z] node > build ended with 0 errors
+[2026-04-25T12:24:46.328Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:24:46.328Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:24:46.330Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:24:46.330Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:24:46.330Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:24:46.331Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:24:46.331Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:24:46.304Z] INFO: Build started for webtests
+[2026-04-25T12:24:46.327Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:24:46.333Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:24:46.337Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:24:46.337Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:24:46.337Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:24:46.338Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:24:46.339Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:24:46.339Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:24:46.354Z] node > build ended with 0 errors
+[2026-04-25T12:24:46.354Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:24:46.354Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:24:46.354Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:24:46.354Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:24:46.354Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:24:46.355Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:24:46.355Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:24:46.339Z] INFO: Build started for webtests
+[2026-04-25T12:24:46.356Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:27:58.730Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:27:58.732Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:27:58.832Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T12:28:04.478Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:28:04.479Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:28:04.538Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:28:04.611Z] node > build ended with 0 errors
+[2026-04-25T12:28:04.617Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:28:04.617Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:28:04.622Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:28:04.622Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:28:04.623Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:28:04.628Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:28:04.629Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:28:04.643Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:28:04.552Z] INFO: Build started for webtests
+[2026-04-25T12:28:04.611Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:28:04.675Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:28:04.675Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:28:04.675Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:28:04.678Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:28:04.682Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:28:04.682Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:28:04.705Z] node > build ended with 0 errors
+[2026-04-25T12:28:04.705Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:28:04.706Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:28:04.706Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:28:04.706Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:28:04.706Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:28:04.706Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:28:04.707Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:28:04.682Z] INFO: Build started for webtests
+[2026-04-25T12:28:04.708Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:30:28.958Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:30:28.961Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:30:29.016Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T12:30:33.174Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:30:33.175Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:30:33.263Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:30:33.298Z] node > build ended with 0 errors
+[2026-04-25T12:30:33.298Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:30:33.298Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:30:33.299Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:30:33.300Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:30:33.300Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:30:33.301Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:30:33.301Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:30:33.303Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:30:33.273Z] INFO: Build started for webtests
+[2026-04-25T12:30:33.297Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:30:33.305Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:30:33.305Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:30:33.305Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:30:33.305Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:30:33.306Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:30:33.306Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:30:33.320Z] node > build ended with 0 errors
+[2026-04-25T12:30:33.320Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:30:33.320Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:30:33.321Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:30:33.321Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:30:33.321Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:30:33.322Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:30:33.322Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:30:33.306Z] INFO: Build started for webtests
+[2026-04-25T12:30:33.323Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:32:34.498Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:32:40.892Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:32:40.893Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:32:40.951Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:32:40.989Z] node > build ended with 0 errors
+[2026-04-25T12:32:40.990Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:32:40.990Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:32:40.991Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:32:40.991Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:32:40.991Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:32:40.992Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:32:40.993Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:32:40.960Z] INFO: Build started for webtests
+[2026-04-25T12:32:40.989Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:32:40.995Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:32:40.996Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:32:40.996Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:32:40.996Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:32:40.996Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:32:40.997Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:32:40.997Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:32:41.011Z] node > build ended with 0 errors
+[2026-04-25T12:32:41.011Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:32:41.011Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:32:41.011Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:32:41.011Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:32:41.011Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:32:41.012Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:32:41.012Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:32:40.997Z] INFO: Build started for webtests
+[2026-04-25T12:32:41.013Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:39:06.121Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:39:06.122Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:39:12.136Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:39:12.137Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:39:12.200Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:39:12.236Z] node > build ended with 0 errors
+[2026-04-25T12:39:12.238Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:39:12.238Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:39:12.240Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:39:12.241Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:39:12.241Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:39:12.241Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:39:12.241Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:39:12.213Z] INFO: Build started for webtests
+[2026-04-25T12:39:12.236Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:39:12.242Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:39:12.243Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:39:12.243Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:39:12.243Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:39:12.244Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:39:12.244Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:39:12.244Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:39:12.259Z] node > build ended with 0 errors
+[2026-04-25T12:39:12.259Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:39:12.259Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:39:12.259Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:39:12.259Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:39:12.259Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:39:12.260Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:39:12.260Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:39:12.244Z] INFO: Build started for webtests
+[2026-04-25T12:39:12.261Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:43:28.655Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:43:28.656Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:43:28.785Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T12:43:34.607Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:43:34.608Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:43:34.672Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:43:34.710Z] node > build ended with 0 errors
+[2026-04-25T12:43:34.711Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:43:34.711Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:43:34.712Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:43:34.712Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:43:34.712Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:43:34.713Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:43:34.713Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:43:34.685Z] INFO: Build started for webtests
+[2026-04-25T12:43:34.710Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:43:34.717Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:43:34.720Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:43:34.720Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:43:34.720Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:43:34.721Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:43:34.721Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:43:34.721Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:43:34.738Z] node > build ended with 0 errors
+[2026-04-25T12:43:34.738Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:43:34.738Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:43:34.739Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:43:34.739Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:43:34.739Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:43:34.739Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:43:34.739Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:43:34.741Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:43:34.722Z] INFO: Build started for webtests
+[2026-04-25T12:50:40.569Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:50:40.573Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:50:46.474Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:50:46.475Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:50:46.533Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:50:46.583Z] node > build ended with 0 errors
+[2026-04-25T12:50:46.583Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:50:46.583Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:50:46.585Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:50:46.585Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:50:46.585Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:50:46.585Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:50:46.585Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:50:46.586Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:50:46.544Z] INFO: Build started for webtests
+[2026-04-25T12:50:46.583Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:50:46.589Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:50:46.589Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:50:46.589Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:50:46.589Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:50:46.590Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:50:46.591Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:50:46.613Z] node > build ended with 0 errors
+[2026-04-25T12:50:46.613Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:50:46.613Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:50:46.613Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:50:46.613Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:50:46.613Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:50:46.614Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:50:46.614Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:50:46.616Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:50:46.590Z] INFO: Build started for webtests
+[2026-04-25T12:52:15.822Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:52:15.826Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:52:27.035Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:52:27.036Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:52:27.101Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:52:27.150Z] node > build ended with 0 errors
+[2026-04-25T12:52:27.151Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:52:27.151Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:52:27.153Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:52:27.153Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:52:27.153Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:52:27.154Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:52:27.154Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:52:27.156Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:52:27.124Z] INFO: Build started for webtests
+[2026-04-25T12:52:27.150Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:52:27.159Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:52:27.159Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:52:27.159Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:52:27.159Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:52:27.160Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:52:27.160Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:52:27.176Z] node > build ended with 0 errors
+[2026-04-25T12:52:27.176Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:52:27.176Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:52:27.176Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:52:27.177Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:52:27.177Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:52:27.177Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:52:27.177Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:52:27.160Z] INFO: Build started for webtests
+[2026-04-25T12:52:27.178Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:54:23.843Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:54:23.846Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:54:23.945Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T12:54:29.971Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:54:29.972Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:54:30.036Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:54:30.074Z] node > build ended with 0 errors
+[2026-04-25T12:54:30.074Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:54:30.074Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:54:30.076Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:54:30.076Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:54:30.076Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:54:30.076Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:54:30.076Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:54:30.078Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:54:30.048Z] INFO: Build started for webtests
+[2026-04-25T12:54:30.074Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:54:30.079Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:54:30.079Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:54:30.079Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:54:30.080Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:54:30.080Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:54:30.080Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:54:30.092Z] node > build ended with 0 errors
+[2026-04-25T12:54:30.093Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:54:30.093Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:54:30.093Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:54:30.093Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:54:30.093Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:54:30.093Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:54:30.093Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:54:30.095Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:54:30.080Z] INFO: Build started for webtests
+[2026-04-25T12:57:36.463Z] [NODE BUILDER] Received SIGTERM - producing output artifacts
+[2026-04-25T12:57:36.467Z] [NODE BUILDER] Disposing esbuild context
+[2026-04-25T12:57:36.540Z] [NODE BUILDER] Producing output artifacts for config webtests
+[2026-04-25T12:57:41.746Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T12:57:41.747Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T12:57:41.811Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T12:57:41.848Z] node > build ended with 0 errors
+[2026-04-25T12:57:41.849Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:57:41.849Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:57:41.850Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:57:41.850Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:57:41.850Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:57:41.851Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:57:41.852Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:57:41.826Z] INFO: Build started for webtests
+[2026-04-25T12:57:41.848Z] LOG: node > build ended with 0 errors
+[2026-04-25T12:57:41.853Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:57:41.855Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:57:41.855Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:57:41.855Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:57:41.855Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:57:41.856Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T12:57:41.856Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T12:57:41.868Z] node > build ended with 0 errors
+[2026-04-25T12:57:41.868Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T12:57:41.868Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T12:57:41.869Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T12:57:41.869Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T12:57:41.869Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T12:57:41.869Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T12:57:41.869Z] [NODE BUILDER] Metafile updated
+[2026-04-25T12:57:41.870Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T12:57:41.856Z] INFO: Build started for webtests
+[2026-04-25T18:56:52.314Z] [NODE BUILDER] is now bundling:  webtests
+[2026-04-25T18:56:52.315Z] [NODE BUILDER] Entry points: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts, src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts
+[2026-04-25T18:56:52.404Z] [NODE BUILDER] Running in dev mode - starting watch mode
+[2026-04-25T18:56:52.475Z] node > build ended with 0 errors
+[2026-04-25T18:56:52.478Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T18:56:52.478Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T18:56:52.481Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T18:56:52.482Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T18:56:52.482Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T18:56:52.482Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T18:56:52.482Z] [NODE BUILDER] Metafile updated
+[2026-04-25T18:56:52.437Z] INFO: Build started for webtests
+[2026-04-25T18:56:52.475Z] LOG: node > build ended with 0 errors
+[2026-04-25T18:56:52.484Z] [NODE BUILDER] Triggered inputFiles.json update
+[2026-04-25T18:56:52.486Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T18:56:52.487Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T18:56:52.487Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T18:56:52.488Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T18:56:52.489Z] [NODE BUILDER] Watch mode active - waiting for file changes...
+[2026-04-25T18:56:52.489Z] [NODE BUILDER] Keeping process alive for continuous watching...
+[2026-04-25T18:56:52.509Z] node > build ended with 0 errors
+[2026-04-25T18:56:52.509Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.build.log
+[2026-04-25T18:56:52.509Z] [node Builder] Created build log for src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts at /workspace/testeranto/reports/webtests/test-logs/Calculator.test.web.react.build.log
+[2026-04-25T18:56:52.510Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts: 21 local files (filtered), hash: f7b530cb3c366d260992e22d576c5c14
+[2026-04-25T18:56:52.510Z] [node Builder] Processed src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts: 6 local files (filtered), hash: b5b7697cc5b6fdb2a13be7a223f4b7ce
+[2026-04-25T18:56:52.510Z] [node Builder] Skipping output without entryPoint: testeranto/bundles/webtests/chunk-54F62W6T.mjs
+[2026-04-25T18:56:52.511Z] [node Builder] Wrote inputFiles.json for 2 tests to testeranto/bundles/webtests/inputFiles.json
+[2026-04-25T18:56:52.511Z] [NODE BUILDER] Metafile updated
+[2026-04-25T18:56:52.489Z] INFO: Build started for webtests
+[2026-04-25T18:56:52.515Z] [NODE BUILDER] Triggered inputFiles.json update

@@ -8,7 +8,7 @@ export function addAgentNodesPure(
   const operations: GraphOperation[] = [];
   if (!configs.agents) return operations;
 
-  for (const [agentName] of Object.entries(configs.agents)) {
+  for (const [agentName, agentConfig] of Object.entries(configs.agents)) {
     operations.push({
       type: 'addNode',
       data: {

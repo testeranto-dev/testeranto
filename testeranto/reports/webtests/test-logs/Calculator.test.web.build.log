@@ -1,7 +1,7 @@
-[2026-04-25T02:18:52.479Z] Build log for test: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts
+[2026-04-25T18:56:52.509Z] Build log for test: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts
 Output: testeranto/bundles/webtests/src/lib/tiposkripto/tests/calculator/Calculator.test.web.mjs
 Entry point: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts
 
-[2026-04-25T02:18:52.434Z] INFO: Build started for webtests
+[2026-04-25T18:56:52.489Z] INFO: Build started for webtests
 
-[2026-04-25T02:18:52.479Z] Build completed for: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts
+[2026-04-25T18:56:52.509Z] Build completed for: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts

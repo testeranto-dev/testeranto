@@ -9,6 +9,8 @@ import { addAgentNodesPure } from "../utils/graph/addAgentNodesPure";
 import { addViewNodesPure } from "../utils/graph/addViewNodesPure";
 import { generateEdgesPure } from "../utils/graph/generateEdgesPure";
 import { updateAllAgentSliceFilesPure } from "../utils/graph/updateAllAgentSliceFilesPure";
+import { generateTerminalCommand } from "../utils/vscode/generateTerminalCommand";
+import { generateViewSliceUtil } from "../utils/static/generateViewSliceUtil";
 
 /**
  * Server_Graph - Business Layer (-5)
@@ -135,10 +137,8 @@ export abstract class Server_Graph extends Server_Base {
       for (const [viewKey, viewConfig] of Object.entries(this.configs.views)) {
         this.logBusinessMessage(`Writing slice for view: ${viewKey}`);
         // Use the utility function to write the slice file with graph data
-        import("../utils/static/generateViewSliceUtil").then(({ generateViewSliceUtil }) => {
-          generateViewSliceUtil(viewKey, viewConfig, graphData).catch((err: any) => {
-            this.logBusinessError(`Failed to write slice for view ${viewKey}:`, err);
-          });
+        generateViewSliceUtil(viewKey, viewConfig, graphData).catch((err: any) => {
+          this.logBusinessError(`Failed to write slice for view ${viewKey}:`, err);
         });
       }
     }
@@ -358,7 +358,6 @@ export abstract class Server_Graph extends Server_Base {
   protected generateTerminalCommand(containerId: string, containerName: string, label:
     string, isAiderProcess: boolean): string {
     // Delegate to the shared utility function
-    const { generateTerminalCommand } = require('../utils/vscode/generateTerminalCommand');
     return generateTerminalCommand(containerId, containerName, label, isAiderProcess);
   }
 
