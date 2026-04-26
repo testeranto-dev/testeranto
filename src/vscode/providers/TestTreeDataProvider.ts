@@ -3,30 +3,10 @@ import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
 import { ApiUtils } from './utils/apiUtils';
-
-interface GraphNode {
-  id: string;
-  type: string;
-  label: string;
-  description?: string;
-  metadata?: Record<string, any>;
-}
-
-interface GraphEdge {
-  source: string;
-  target: string;
-  attributes: {
-    type: string;
-  };
-}
-
-interface GraphData {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-}
+import type { GetRuntimeResponse } from '../../api';
 
 export class TestTreeDataProvider extends BaseTreeDataProvider {
-  private graphData: GraphData | null = null;
+  private graphData: GetRuntimeResponse | null = null;
 
   constructor() {
     super();
@@ -47,7 +27,8 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       }
       const data = await response.json();
       this.graphData = data;
-      console.log('[TestTreeDataProvider] Loaded graph data from API:', this.graphData?.nodes?.length, 'nodes');
+      const runtimeCount = Object.keys(this.graphData?.runtimes || {}).length;
+      console.log('[TestTreeDataProvider] Loaded graph data from API:', runtimeCount, 'runtimes');
     } catch (error) {
       console.error('[TestTreeDataProvider] Failed to load graph data from API:', error);
       this.graphData = null;
@@ -127,26 +108,20 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
       return items;
     }
 
-    // Group nodes by runtime (configKey)
-    const runtimeMap = new Map<string, { count: number; nodes: GraphNode[] }>();
+    // Use the runtimes object from the response
+    const runtimeKeys = Object.keys(this.graphData.runtimes || {});
 
-    for (const node of this.graphData.nodes) {
-      const runtimeKey = node.metadata?.configKey || node.metadata?.runtime || 'unknown';
-      const current = runtimeMap.get(runtimeKey) || { count: 0, nodes: [] };
-      current.count++;
-      current.nodes.push(node);
-      runtimeMap.set(runtimeKey, current);
-    }
-
-    for (const [runtimeKey, data] of runtimeMap.entries()) {
+    for (const runtimeKey of runtimeKeys) {
+      const runtimeData = this.graphData.runtimes[runtimeKey];
+      const testCount = runtimeData.tests?.length || 0;
       items.push(new TestTreeItem(
         runtimeKey,
         TreeItemType.Runtime,
         vscode.TreeItemCollapsibleState.Collapsed,
         {
           runtimeKey,
-          description: `${data.count} test(s)`,
-          count: data.count
+          description: `${testCount} test(s)`,
+          count: testCount
         },
         undefined,
         new vscode.ThemeIcon('symbol-namespace')
@@ -159,36 +134,29 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
   private getTestItems(runtimeKey: string): TestTreeItem[] {
     if (!this.graphData) return [];
 
-    // Find nodes that belong to this runtime and are test-like
-    const testNodes = this.graphData.nodes.filter(node =>
-      (node.type === 'test' || node.type === 'entrypoint') &&
-      node.metadata?.configKey === runtimeKey
-    );
+    const runtimeData = this.graphData.runtimes?.[runtimeKey];
+    if (!runtimeData) return [];
 
-    return testNodes.map(node => {
-      const status = node.metadata?.status;
-      const failed = node.metadata?.failed;
-      let icon: vscode.ThemeIcon;
-      if (failed === true || status === 'blocked') {
-        icon = new vscode.ThemeIcon('error', new vscode.ThemeColor('testing.iconFailed'));
-      } else if (failed === false || status === 'done') {
-        icon = new vscode.ThemeIcon('check', new vscode.ThemeColor('testing.iconPassed'));
-      } else {
-        icon = new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'));
-      }
+    const testPaths = runtimeData.tests || [];
 
+    return testPaths.map((testPath: string) => {
+      const fileName = testPath.split('/').pop() || testPath;
       return new TestTreeItem(
-        node.label || node.id,
+        fileName,
         TreeItemType.Test,
         vscode.TreeItemCollapsibleState.None,
         {
           runtimeKey,
-          testId: node.id,
-          description: node.description,
-          status
+          testId: testPath,
+          description: testPath,
+          status: 'unknown'
         },
-        undefined,
-        icon
+        {
+          command: 'testeranto.launchAiderForTest',
+          title: 'Launch Aider',
+          arguments: [runtimeKey, testPath, runtimeKey]
+        },
+        new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'))
       );
     });
   }

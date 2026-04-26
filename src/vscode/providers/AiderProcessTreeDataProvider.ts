@@ -4,28 +4,8 @@ import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
 import { getApiUrl, getApiPath, wsApi, GetAiderResponse } from '../../api';
 
-interface GraphNode {
-  id: string;
-  type: string;
-  label: string;
-  metadata?: Record<string, any>;
-}
-
-interface GraphEdge {
-  source: string;
-  target: string;
-  attributes: {
-    type: string;
-  };
-}
-
-interface GraphData {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-}
-
 export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
-  private graphData: GraphData | null = null;
+  private graphData: GetAiderResponse | null = null;
   private agents: any[] = [];
 
   constructor() {
@@ -69,20 +49,27 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
         const data: GetAiderResponse = await response.json();
         console.log('[AiderProcessTreeDataProvider] Raw aider data:', JSON.stringify(data, null, 2));
         
+        // Ensure data is an object with nodes array
+        if (!data || typeof data !== 'object' || !Array.isArray(data.nodes)) {
+          console.warn('[AiderProcessTreeDataProvider] Invalid response format, missing nodes array');
+          this.graphData = { nodes: [], edges: [] };
+          this.agents = [];
+          return;
+        }
+        
         // The aider slice contains both agent nodes and aider process nodes
         // We need to filter for aider_process type nodes
-        this.graphData = this.graphData || { nodes: [], edges: [] };
-        const existingIds = new Set(this.graphData.nodes.map(n => n.id));
+        this.graphData = { nodes: [], edges: [] };
         
         // Extract aider process nodes (type: 'aider_process')
-        const aiderProcessNodes = data.nodes?.filter((node: any) => 
+        const aiderProcessNodes = data.nodes.filter((node: any) => 
           node.type === 'aider_process'
-        ) || [];
+        );
         
         // Also extract agent nodes for reference
-        const agentNodes = data.nodes?.filter((node: any) => 
+        const agentNodes = data.nodes.filter((node: any) => 
           node.type === 'agent'
-        ) || [];
+        );
         
         // Clear existing data and add new nodes
         this.graphData.nodes = [];
@@ -180,6 +167,25 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       )
     );
     
+    // Add "Launch Agent" item using the unified spawn route
+    items.push(
+      new TestTreeItem(
+        'Launch Agent',
+        TreeItemType.Action,
+        vscode.TreeItemCollapsibleState.None,
+        { 
+          action: 'launchAgent',
+          info: 'Launch a new agent using the unified spawn endpoint.'
+        },
+        {
+          command: 'testeranto.launchAgent',
+          title: 'Launch Agent',
+          arguments: []
+        },
+        new vscode.ThemeIcon('add')
+      )
+    );
+    
     // Check if we have graph data
     if (!this.graphData) {
       items.push(
@@ -202,7 +208,7 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       return items;
     }
     
-    if (this.graphData.nodes.length === 0) {
+    if (!Array.isArray(this.graphData.nodes) || this.graphData.nodes.length === 0) {
       items.push(
         new TestTreeItem(
           'No aider data available',
@@ -322,10 +328,11 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
         this.refresh();
       }
 
-      // Handle agent spawn notification - open a terminal tab
+      // Handle agent spawn notification - the extension already opens a terminal
+      // when it initiates the spawn, so we don't need to open another one here.
+      // This notification is for other clients (e.g., web UI).
       if (message.url === '/~/agents/spawn' && message.agentName && message.containerName) {
-        console.log(`[AiderProcessTreeDataProvider] Agent spawned: ${message.agentName}, opening terminal`);
-        this.openAgentTerminal(message.agentName, message.containerName, message.containerId);
+        console.log(`[AiderProcessTreeDataProvider] Agent spawned: ${message.agentName}, skipping terminal open (already handled by extension)`);
       }
     } else if (message.type === 'graphUpdated') {
       console.log('[AiderProcessTreeDataProvider] Graph updated, refreshing');
@@ -333,21 +340,6 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
     }
   }
 
-  private async openAgentTerminal(agentName: string, containerName: string, containerId?: string): Promise<void> {
-    try {
-      // Execute the command to open an aider terminal
-      await vscode.commands.executeCommand(
-        'testeranto.openAiderTerminal',
-        containerName,
-        `Agent: ${agentName}`,
-        agentName,
-        containerId
-      );
-      console.log(`[AiderProcessTreeDataProvider] Executed openAiderTerminal command for ${agentName}`);
-    } catch (error) {
-      console.error('[AiderProcessTreeDataProvider] Failed to open agent terminal:', error);
-    }
-  }
 
   protected subscribeToGraphUpdates(): void {
     super.subscribeToGraphUpdates();

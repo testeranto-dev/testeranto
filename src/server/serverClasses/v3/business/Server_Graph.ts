@@ -6,11 +6,13 @@ import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { Server_Base } from "../ServerBase";
 import { addAgentNodesPure } from "../utils/graph/addAgentNodesPure";
+import { addRuntimeNodesPure } from "../utils/graph/addRuntimeNodesPure";
 import { addViewNodesPure } from "../utils/graph/addViewNodesPure";
 import { generateEdgesPure } from "../utils/graph/generateEdgesPure";
 import { updateAllAgentSliceFilesPure } from "../utils/graph/updateAllAgentSliceFilesPure";
 import { generateTerminalCommand } from "../utils/vscode/generateTerminalCommand";
 import { generateViewSliceUtil } from "../utils/static/generateViewSliceUtil";
+import { parseAgentMarkdown } from "../../../../shared/utilities/parseAgentMarkdown";
 
 /**
  * Server_Graph - Business Layer (-5)
@@ -75,26 +77,68 @@ export abstract class Server_Graph extends Server_Base {
     // 2. Add nodes from configuration
     this.logBusinessMessage("Adding nodes from configuration...");
     this.addAgentNodesFromConfig();
+    this.addRuntimeNodesFromConfig();
     this.addViewNodesFromConfig();
-    // Runtime nodes are added by the Docker events watcher when containers start.
 
-    // 3. Generate edges between nodes
+    // 3. Parse agent markdown files and enrich agent nodes with parsed data
+    this.logBusinessMessage("Parsing agent markdown files...");
+    await this.enrichAgentNodesWithParsedMarkdown();
+
+    // 4. Generate edges between nodes
     this.logBusinessMessage("Generating edges...");
     this.generateEdges();
 
-    // 4. Write view slice files
+    // 5. Write view slice files
     this.logBusinessMessage("Writing view slice files...");
     this.writeViewSliceFiles();
 
-    // 5. Update agent slice files
+    // 6. Update agent slice files
     this.logBusinessMessage("Updating agent slice files...");
     this.updateAllAgentSliceFiles();
 
-    // 6. Save initial graph state
+    // 7. Save initial graph state
     this.logBusinessMessage("Saving initial graph state...");
     await this.saveGraph();
 
     this.logBusinessMessage("Graph component setup complete");
+  }
+
+  /**
+   * Parse each agent's persona markdown file and store the parsed data
+   * (personaBody, readFiles, addFiles) in the agent node's attributes.
+   */
+  private async enrichAgentNodesWithParsedMarkdown(): Promise<void> {
+
+    for (const [agentName, agentConfig] of Object.entries(this.configs.agents || {})) {
+      const personaFile = (agentConfig as any).persona;
+      if (!personaFile) {
+        this.logBusinessWarning(`Agent ${agentName} has no persona file, skipping markdown parsing`);
+        continue;
+      }
+
+      const absolutePersonaPath = `${this.projectRoot}/${personaFile}`;
+      const parsed = parseAgentMarkdown(absolutePersonaPath);
+
+      // Find the agent node in the graph and enrich it
+      const agentNode = this.graph.nodes.find(
+        (n: any) => n.id === `agent:${agentName}` || n.label === agentName
+      );
+      if (!agentNode) {
+        this.logBusinessWarning(`Agent node not found for ${agentName}, skipping enrichment`);
+        continue;
+      }
+
+      // Store parsed data in the node's metadata
+      agentNode.metadata = {
+        ...agentNode.metadata,
+        personaBody: parsed.personaBody,
+        readFiles: parsed.readFiles,
+        addFiles: parsed.addFiles,
+        personaFilePath: personaFile,
+      };
+
+      this.logBusinessMessage(`Enriched agent node ${agentName} with parsed markdown data`);
+    }
   }
 
   // V3 Server_Graph business logic: save graph with proper structure
@@ -175,8 +219,12 @@ export abstract class Server_Graph extends Server_Base {
     this.applyOperations(operations);
   }
 
-  // Runtime nodes are now added by the Docker events watcher when containers start.
-  // No need to pre-create them from configuration.
+  protected addRuntimeNodesFromConfig(): void {
+    this.logBusinessMessage("Adding runtime nodes from configuration (V3)");
+    const timestamp = new Date().toISOString();
+    const operations = addRuntimeNodesPure(this.configs, timestamp);
+    this.applyOperations(operations);
+  }
 
   protected generateEdges(): void {
     this.logBusinessMessage("Generating graph edges (V3)");
@@ -219,18 +267,32 @@ export abstract class Server_Graph extends Server_Base {
       this.logBusinessMessage(`[applyOperations] operation: type=${op.type}, id=${op.data?.id || op.data?.source || '?'}`);
       switch (op.type) {
         case 'addNode':
-          this.logBusinessMessage(`[applyOperations] adding node: ${op.data.id}`);
-          this.graph.nodes.push(op.data);
-          this.logBusinessMessage(`[applyOperations] node added, total nodes: ${this.graph.nodes.length}`);
+          {
+            const existingNode = this.graph.nodes.find(n => n.id === op.data.id);
+            if (existingNode) {
+              this.logBusinessMessage(`[applyOperations] node already exists, skipping add: ${op.data.id}`);
+            } else {
+              this.logBusinessMessage(`[applyOperations] adding node: ${op.data.id}`);
+              this.graph.nodes.push(op.data);
+              this.logBusinessMessage(`[applyOperations] node added, total nodes: ${this.graph.nodes.length}`);
+            }
+          }
           break;
         case 'addEdge':
-          this.logBusinessMessage(`[applyOperations] adding edge: ${op.data.source} -> ${op.data.target}`);
-          this.graph.edges.push({
-            source: op.data.source,
-            target: op.data.target,
-            attributes: op.data.attributes
-          });
-          this.logBusinessMessage(`[applyOperations] edge added, total edges: ${this.graph.edges.length}`);
+          {
+            const existingEdge = this.graph.edges.find(e => e.source === op.data.source && e.target === op.data.target);
+            if (existingEdge) {
+              this.logBusinessMessage(`[applyOperations] edge already exists, skipping add: ${op.data.source} -> ${op.data.target}`);
+            } else {
+              this.logBusinessMessage(`[applyOperations] adding edge: ${op.data.source} -> ${op.data.target}`);
+              this.graph.edges.push({
+                source: op.data.source,
+                target: op.data.target,
+                attributes: op.data.attributes
+              });
+              this.logBusinessMessage(`[applyOperations] edge added, total edges: ${this.graph.edges.length}`);
+            }
+          }
           break;
         case 'updateNode':
           {

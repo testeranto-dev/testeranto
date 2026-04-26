@@ -99,7 +99,7 @@ export class TerminalManager {
 
   // Open a terminal to a Docker process using the server API
   async openProcessTerminal(nodeId: string, label: string, containerId: string, serviceName: string): Promise<vscode.Terminal> {
-    // Reuse openContainerTerminal which now calls the shared utility
+    // Use the unified spawn endpoint
     return this.openContainerTerminal(containerId, label, undefined, containerId);
   }
 

@@ -2,6 +2,8 @@ import { API, wsApi, matchApiRoute } from "../../../../api";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { Server_WS_HTTP } from "./Server_WS_HTTP";
+import { matchWsMessageToApi } from "../utils/api/matchWsMessageToApi";
+import { registerDefaultHttpRoutes } from "../utils/api/registerDefaultHttpRoutes";
 
 /**
  * Server_Api - Technological Layer (+4.5)
@@ -232,13 +234,31 @@ export abstract class Server_Api extends Server_WS_HTTP {
               }
             );
           }
-          // Delegate to spawnAgent with the agent profile name
-          const result = await this.spawnAgent(agentName);
+          // Do NOT spawn the container here. Return the Docker command
+          // that the user will run in their own terminal.
+          const agentConfig = this.configs.agents?.[agentName];
+          if (!agentConfig) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                error: `Agent profile '${agentName}' not found in configuration`,
+                timestamp: new Date().toISOString()
+              }),
+              {
+                status: 404,
+                headers: { "Content-Type": "application/json" }
+              }
+            );
+          }
+          const serviceName = `agent-${agentName}`;
+          const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
+          const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
           return new Response(
             JSON.stringify({
               success: true,
-              agentName: result.agentName,
-              containerId: result.containerId,
+              agentName,
+              containerId: '',          // unknown until the user runs the command
+              command,
               timestamp: new Date().toISOString()
             }),
             {
@@ -246,6 +266,14 @@ export abstract class Server_Api extends Server_WS_HTTP {
               headers: { "Content-Type": "application/json" }
             }
           );
+        }
+      case 'launchAiderForTest':
+        {
+          return await this.handleLaunchAiderForTest(request);
+        }
+      case 'launchAiderForTest':
+        {
+          return await this.handleLaunchAiderForTest(request);
         }
       case 'openProcessTerminal':
         {
@@ -500,7 +528,6 @@ export abstract class Server_Api extends Server_WS_HTTP {
   }
 
   private matchWsMessageToApi(type: string): string | null {
-    const { matchWsMessageToApi } = require("../utils/api/matchWsMessageToApi");
     return matchWsMessageToApi(type);
   }
 
@@ -645,6 +672,10 @@ export abstract class Server_Api extends Server_WS_HTTP {
   }
 
   /**
+   * DEPRECATED – The VSCode extension now composes the Docker command locally.
+   * This endpoint should be removed once the new architecture is fully validated.
+   * The extension no longer calls this endpoint.
+   *
    * Handle a POST /~/agents/spawn request.
    * Parses the JSON body and delegates to spawnAgent().
    * Supports requestUid for async graph operation correlation.
@@ -652,7 +683,7 @@ export abstract class Server_Api extends Server_WS_HTTP {
   private async handleSpawnAgent(request: Request): Promise<Response> {
     try {
       const body = await request.json();
-      const { profile, loadFiles, model, requestUid } = body;
+      const { profile, loadFiles, model } = body;
 
       if (!profile) {
         return new Response(
@@ -668,31 +699,37 @@ export abstract class Server_Api extends Server_WS_HTTP {
         );
       }
 
-      const result = await this.spawnAgent(profile, loadFiles, model, requestUid);
-
-      // Also generate the terminal command so the caller can attach immediately
-      let terminalCommand: string | undefined;
-      try {
-        const containerName = `agent-${result.agentName}`;
-        const terminalResult = await this.openProcessTerminal(
-          `aider_process:agent:${containerName}`,
-          `Agent: ${result.agentName}`,
-          result.containerId,
-          containerName,
+      // Do NOT spawn the container here.  The server only returns the
+      // Docker command that the user will run in their own terminal.
+      // The Docker events watcher will detect the container when it
+      // starts and create the graph node asynchronously.
+      const agentConfig = this.configs.agents?.[profile];
+      if (!agentConfig) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: `Agent profile '${profile}' not found in configuration`,
+            timestamp: new Date().toISOString(),
+          }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json' },
+          },
         );
-        terminalCommand = terminalResult.command;
-      } catch {
-        // Non‑fatal – the agent was spawned successfully even if we can't
-        // generate the terminal command right now.
       }
+
+      // Build the docker‑compose command that the user will execute.
+      // The service name follows the pattern used by generateAgentService.
+      const serviceName = `agent-${profile}`;
+      const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
+      const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
 
       return new Response(
         JSON.stringify({
           success: true,
-          agentName: result.agentName,
-          containerId: result.containerId,
-          command: terminalCommand,
-          requestUid,
+          agentName: profile,
+          containerId: '',          // unknown until the user runs the command
+          command,
           timestamp: new Date().toISOString(),
         }),
         {
@@ -701,7 +738,7 @@ export abstract class Server_Api extends Server_WS_HTTP {
         },
       );
     } catch (error: any) {
-      this.logBusinessError('Error spawning agent:', error);
+      this.logBusinessError('Error generating agent command:', error);
       return new Response(
         JSON.stringify({
           success: false,
@@ -735,7 +772,6 @@ export abstract class Server_Api extends Server_WS_HTTP {
   }
 
   private async registerDefaultHttpRoutes(): Promise<void> {
-    const { registerDefaultHttpRoutes } = require("../utils/api/registerDefaultHttpRoutes");
     const routes = registerDefaultHttpRoutes(this.configs);
     
     this.logBusinessMessage("Registering all HTTP API routes from api.ts...");

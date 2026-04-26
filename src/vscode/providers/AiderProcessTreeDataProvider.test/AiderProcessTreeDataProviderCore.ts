@@ -1,25 +1,11 @@
 /**
  * Core business logic for AiderProcessTreeDataProvider without external dependencies
  */
-export interface GraphNode {
-  id: string;
-  type: string;
-  label: string;
-  metadata?: Record<string, any>;
-}
+import type { GetAiderResponse } from "../../../api";
 
-export interface GraphEdge {
-  source: string;
-  target: string;
-  attributes: {
-    type: string;
-  };
-}
-
-export interface GraphData {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-}
+export type GraphNode = NonNullable<GetAiderResponse['nodes']>[number];
+export type GraphEdge = NonNullable<GetAiderResponse['edges']>[number];
+export type GraphData = GetAiderResponse;
 
 export interface Agent {
   name: string;
@@ -47,7 +33,7 @@ export class AiderProcessTreeDataProviderCore {
   /**
    * Process graph data and agents to create tree items
    */
-  processGraphData(graphData: GraphData | null, agents: Agent[]): TreeItemData[] {
+  processGraphData(graphData: GetAiderResponse | null, agents: Agent[]): TreeItemData[] {
     const items: TreeItemData[] = [];
 
     // Add refresh item
@@ -144,6 +130,7 @@ export class AiderProcessTreeDataProviderCore {
    * Create tree item data from a graph node
    */
   createTreeItemData(node: GraphNode, entrypointNode?: GraphNode): TreeItemData {
+    // GraphNode is now imported from api.ts
     const metadata = node.metadata || {};
     const status = metadata.status || 'stopped';
     const exitCode = metadata.exitCode;
@@ -188,7 +175,7 @@ export class AiderProcessTreeDataProviderCore {
    * Filter aider processes for a specific entrypoint
    */
   filterAiderProcessesForEntrypoint(
-    graphData: GraphData,
+    graphData: GetAiderResponse,
     entrypointId: string
   ): GraphNode[] {
     const connectedEdges = graphData.edges.filter(edge =>
@@ -210,6 +197,7 @@ export class AiderProcessTreeDataProviderCore {
    * Group nodes by type
    */
   groupNodesByType(nodes: GraphNode[]): Record<string, GraphNode[]> {
+    // GraphNode is now imported from api.ts
     const groups: Record<string, GraphNode[]> = {};
     
     for (const node of nodes) {

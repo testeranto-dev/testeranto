@@ -21,15 +21,36 @@ export async function openContainerTerminal(
   terminal = vscode.window.createTerminal(terminalName);
   terminals.set(key, terminal);
 
-  // Use the shared utility to generate the command
-  const command = generateTerminalCommand(
-    containerId || containerName,
-    containerName,
-    label,
-    !!agentName
-  );
+  // Use the open-process-terminal endpoint to get the terminal command
+  try {
+    const nodeId = `aider_process:agent:${containerName}`;
+    const response = await fetch('http://localhost:3000/~/open-process-terminal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nodeId,
+        label,
+        containerId: containerId || containerName,
+        serviceName: agentName || containerName
+      })
+    });
 
-  vscode.commands.executeCommand('workbench.action.terminal.sendSequence', { text: command });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.command) {
+        vscode.commands.executeCommand('workbench.action.terminal.sendSequence', { text: data.command });
+      }
+    }
+  } catch (error) {
+    // Fallback to the shared utility if open-process-terminal endpoint fails
+    const command = generateTerminalCommand(
+      containerId || containerName,
+      containerName,
+      label,
+      !!agentName
+    );
+    vscode.commands.executeCommand('workbench.action.terminal.sendSequence', { text: command });
+  }
 
   terminal.show();
   return terminal;

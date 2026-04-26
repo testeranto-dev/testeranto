@@ -32,6 +32,7 @@ export abstract class Server_Api_Routing extends Server_WS {
    */
   protected abstract handleSpawnAgent(request: Request): Promise<Response>;
 
+
   /**
    * Handle a WebSocket chat message.
    * Business logic for chat message processing.

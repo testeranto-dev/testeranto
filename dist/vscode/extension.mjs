@@ -63,8 +63,6 @@ async function createAiderTerminals() {
 
 // src/vscode/utilities/createAiderTerminal.ts
 import * as vscode3 from "vscode";
-import * as path from "path";
-import * as fs from "fs";
 async function createAiderTerminal(runtime, testName, terminals, getTerminalKey, getWorkspaceRoot2) {
   const key = getTerminalKey(runtime, testName);
   let terminal = terminals.get(key);
@@ -107,21 +105,11 @@ async function createAiderTerminal(runtime, testName, terminals, getTerminalKey,
       terminal.sendText(`echo "Aider terminals may require additional server configuration."`);
     } else {
       const data = await response.json();
-      if (data.success && data.script) {
-        terminal.sendText(`echo "\u2705 Server provided terminal script"`);
+      if (data.success && data.command) {
+        terminal.sendText(`echo "\u2705 Server provided terminal command"`);
         terminal.sendText(`echo "Executing..."`);
         terminal.sendText(`echo ""`);
-        const workspaceRoot = getWorkspaceRoot2();
-        if (workspaceRoot) {
-          const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
-          fs.writeFileSync(scriptPath, data.script, { mode: 493 });
-          terminal.sendText(`"${scriptPath}" && rm -f "${scriptPath}"`);
-        } else {
-          const escapedScript = data.script.replace(/'/g, `'"'"'`);
-          terminal.sendText(`/bin/sh << 'EOF'
-${escapedScript}
-EOF`);
-        }
+        terminal.sendText(data.command);
       } else {
         terminal.sendText(`echo "\u26A0\uFE0F Server response indicates failure"`);
         terminal.sendText(`echo "Error: ${data.error || "Unknown error"}"`);
@@ -156,13 +144,33 @@ async function openContainerTerminal(containerName, label, agentName, terminals,
   const terminalName = agentName ? `Aider: ${agentName}` : `Container: ${label}`;
   terminal = vscode4.window.createTerminal(terminalName);
   terminals.set(key, terminal);
-  const command = generateTerminalCommand(
-    containerId || containerName,
-    containerName,
-    label,
-    !!agentName
-  );
-  vscode4.commands.executeCommand("workbench.action.terminal.sendSequence", { text: command });
+  try {
+    const nodeId = `aider_process:agent:${containerName}`;
+    const response = await fetch("http://localhost:3000/~/open-process-terminal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nodeId,
+        label,
+        containerId: containerId || containerName,
+        serviceName: agentName || containerName
+      })
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.command) {
+        vscode4.commands.executeCommand("workbench.action.terminal.sendSequence", { text: data.command });
+      }
+    }
+  } catch (error) {
+    const command = generateTerminalCommand(
+      containerId || containerName,
+      containerName,
+      label,
+      !!agentName
+    );
+    vscode4.commands.executeCommand("workbench.action.terminal.sendSequence", { text: command });
+  }
   terminal.show();
   return terminal;
 }
@@ -199,19 +207,32 @@ async function openAiderTerminal(containerName, label, agentName, terminals, get
   const terminalName = agentName ? `Aider: ${agentName}` : `Aider: ${label}`;
   terminal = vscode6.window.createTerminal(terminalName);
   terminals.set(key, terminal);
-  const nodeId = `aider_process:agent:${containerName}`;
-  const response = await fetch("http://localhost:3000/~/open-process-terminal", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nodeId,
-      label: label || `Aider: ${containerName}`,
-      containerId: containerId || containerName,
-      serviceName: agentName || `aider-${containerName}`
-    })
-  });
-  const command = await response.text();
-  vscode6.commands.executeCommand("workbench.action.terminal.sendSequence", { text: command });
+  try {
+    const nodeId = `aider_process:agent:${containerName}`;
+    const response = await fetch("http://localhost:3000/~/open-process-terminal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nodeId,
+        label: label || `Aider: ${containerName}`,
+        containerId: containerId || containerName,
+        serviceName: agentName || `aider-${containerName}`
+      })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      terminal.sendText(`echo "Error: ${errorText}"`);
+    } else {
+      const data = await response.json();
+      if (data.command) {
+        terminal.sendText(data.command);
+      } else {
+        terminal.sendText(`echo "No command returned from open-process-terminal endpoint"`);
+      }
+    }
+  } catch (error) {
+    terminal.sendText(`echo "Error: ${error.message}"`);
+  }
   terminal.show();
   return terminal;
 }
@@ -877,19 +898,6 @@ var API = {
   },
   // Note: According to tickets/chat.md, we no longer need POST endpoint for chat
   // Chat is now handled via WebSocket messages
-  launchAgent: {
-    method: "POST",
-    path: "/~/agents/launch/:agentName",
-    description: "Launch a new agent instance by profile name",
-    params: {
-      agentName: ""
-    },
-    query: {},
-    response: {},
-    check: (routeName, request) => {
-      return routeName.startsWith("agents/launch/") && request.method === "POST";
-    }
-  },
   getAgents: {
     method: "GET",
     path: "/~/agents/:agentName",
@@ -1155,24 +1163,24 @@ var API = {
 };
 function getApiUrl(endpoint, params) {
   const apiDef = API[endpoint];
-  let path2 = apiDef.path;
+  let path = apiDef.path;
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      path2 = path2.replace(`:${key}`, encodeURIComponent(value));
+      path = path.replace(`:${key}`, encodeURIComponent(value));
     }
   }
   const baseUrl = "http://localhost:3000";
-  return `${baseUrl}${path2}`;
+  return `${baseUrl}${path}`;
 }
 function getApiPath(endpoint, params) {
   const apiDef = API[endpoint];
-  let path2 = apiDef.path;
+  let path = apiDef.path;
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      path2 = path2.replace(`:${key}`, encodeURIComponent(value));
+      path = path.replace(`:${key}`, encodeURIComponent(value));
     }
   }
-  return path2;
+  return path;
 }
 
 // src/vscode/providers/utils/apiUtils.ts
@@ -1194,15 +1202,15 @@ var ApiUtils = class {
     if (!endpoint) {
       throw new Error(`Endpoint ${endpointKey} not found in vscodeHttpAPI`);
     }
-    let path2 = endpoint.path;
+    let path = endpoint.path;
     if (params && endpoint.params) {
       for (const [key, value] of Object.entries(params)) {
         if (endpoint.params[key]) {
-          path2 = path2.replace(`:${key}`, value);
+          path = path.replace(`:${key}`, value);
         }
       }
     }
-    const url = `${this.getBaseUrl()}${path2}`;
+    const url = `${this.getBaseUrl()}${path}`;
     if (query && Object.keys(query).length > 0) {
       const queryParams = new URLSearchParams();
       for (const [key, value] of Object.entries(query)) {
@@ -1498,7 +1506,8 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
       }
       const data = await response.json();
       this.graphData = data;
-      console.log("[TestTreeDataProvider] Loaded graph data from API:", this.graphData?.nodes?.length, "nodes");
+      const runtimeCount = Object.keys(this.graphData?.runtimes || {}).length;
+      console.log("[TestTreeDataProvider] Loaded graph data from API:", runtimeCount, "runtimes");
     } catch (error) {
       console.error("[TestTreeDataProvider] Failed to load graph data from API:", error);
       this.graphData = null;
@@ -1568,23 +1577,18 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
       ));
       return items;
     }
-    const runtimeMap = /* @__PURE__ */ new Map();
-    for (const node of this.graphData.nodes) {
-      const runtimeKey = node.metadata?.configKey || node.metadata?.runtime || "unknown";
-      const current = runtimeMap.get(runtimeKey) || { count: 0, nodes: [] };
-      current.count++;
-      current.nodes.push(node);
-      runtimeMap.set(runtimeKey, current);
-    }
-    for (const [runtimeKey, data] of runtimeMap.entries()) {
+    const runtimeKeys = Object.keys(this.graphData.runtimes || {});
+    for (const runtimeKey of runtimeKeys) {
+      const runtimeData = this.graphData.runtimes[runtimeKey];
+      const testCount = runtimeData.tests?.length || 0;
       items.push(new TestTreeItem(
         runtimeKey,
         0 /* Runtime */,
         vscode18.TreeItemCollapsibleState.Collapsed,
         {
           runtimeKey,
-          description: `${data.count} test(s)`,
-          count: data.count
+          description: `${testCount} test(s)`,
+          count: testCount
         },
         void 0,
         new vscode18.ThemeIcon("symbol-namespace")
@@ -1594,32 +1598,27 @@ var TestTreeDataProvider = class extends BaseTreeDataProvider {
   }
   getTestItems(runtimeKey) {
     if (!this.graphData) return [];
-    const testNodes = this.graphData.nodes.filter(
-      (node) => (node.type === "test" || node.type === "entrypoint") && node.metadata?.configKey === runtimeKey
-    );
-    return testNodes.map((node) => {
-      const status = node.metadata?.status;
-      const failed = node.metadata?.failed;
-      let icon;
-      if (failed === true || status === "blocked") {
-        icon = new vscode18.ThemeIcon("error", new vscode18.ThemeColor("testing.iconFailed"));
-      } else if (failed === false || status === "done") {
-        icon = new vscode18.ThemeIcon("check", new vscode18.ThemeColor("testing.iconPassed"));
-      } else {
-        icon = new vscode18.ThemeIcon("circle-outline", new vscode18.ThemeColor("testing.iconUnset"));
-      }
+    const runtimeData = this.graphData.runtimes?.[runtimeKey];
+    if (!runtimeData) return [];
+    const testPaths = runtimeData.tests || [];
+    return testPaths.map((testPath) => {
+      const fileName = testPath.split("/").pop() || testPath;
       return new TestTreeItem(
-        node.label || node.id,
+        fileName,
         1 /* Test */,
         vscode18.TreeItemCollapsibleState.None,
         {
           runtimeKey,
-          testId: node.id,
-          description: node.description,
-          status
+          testId: testPath,
+          description: testPath,
+          status: "unknown"
         },
-        void 0,
-        icon
+        {
+          command: "testeranto.launchAiderForTest",
+          title: "Launch Aider",
+          arguments: [runtimeKey, testPath, runtimeKey]
+        },
+        new vscode18.ThemeIcon("circle-outline", new vscode18.ThemeColor("testing.iconUnset"))
       );
     });
   }
@@ -1929,14 +1928,19 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
       if (response.ok) {
         const data = await response.json();
         console.log("[AiderProcessTreeDataProvider] Raw aider data:", JSON.stringify(data, null, 2));
-        this.graphData = this.graphData || { nodes: [], edges: [] };
-        const existingIds = new Set(this.graphData.nodes.map((n) => n.id));
-        const aiderProcessNodes = data.nodes?.filter(
+        if (!data || typeof data !== "object" || !Array.isArray(data.nodes)) {
+          console.warn("[AiderProcessTreeDataProvider] Invalid response format, missing nodes array");
+          this.graphData = { nodes: [], edges: [] };
+          this.agents = [];
+          return;
+        }
+        this.graphData = { nodes: [], edges: [] };
+        const aiderProcessNodes = data.nodes.filter(
           (node) => node.type === "aider_process"
-        ) || [];
-        const agentNodes = data.nodes?.filter(
+        );
+        const agentNodes = data.nodes.filter(
           (node) => node.type === "agent"
-        ) || [];
+        );
         this.graphData.nodes = [];
         aiderProcessNodes.forEach((node) => {
           this.graphData.nodes.push({
@@ -2010,6 +2014,23 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
         new vscode20.ThemeIcon("refresh")
       )
     );
+    items.push(
+      new TestTreeItem(
+        "Launch Agent",
+        TreeItemType.Action,
+        vscode20.TreeItemCollapsibleState.None,
+        {
+          action: "launchAgent",
+          info: "Launch a new agent using the unified spawn endpoint."
+        },
+        {
+          command: "testeranto.launchAgent",
+          title: "Launch Agent",
+          arguments: []
+        },
+        new vscode20.ThemeIcon("add")
+      )
+    );
     if (!this.graphData) {
       items.push(
         new TestTreeItem(
@@ -2030,7 +2051,7 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
       );
       return items;
     }
-    if (this.graphData.nodes.length === 0) {
+    if (!Array.isArray(this.graphData.nodes) || this.graphData.nodes.length === 0) {
       items.push(
         new TestTreeItem(
           "No aider data available",
@@ -2130,26 +2151,11 @@ var AiderProcessTreeDataProvider = class extends BaseTreeDataProvider {
         this.refresh();
       }
       if (message.url === "/~/agents/spawn" && message.agentName && message.containerName) {
-        console.log(`[AiderProcessTreeDataProvider] Agent spawned: ${message.agentName}, opening terminal`);
-        this.openAgentTerminal(message.agentName, message.containerName, message.containerId);
+        console.log(`[AiderProcessTreeDataProvider] Agent spawned: ${message.agentName}, skipping terminal open (already handled by extension)`);
       }
     } else if (message.type === "graphUpdated") {
       console.log("[AiderProcessTreeDataProvider] Graph updated, refreshing");
       this.refresh();
-    }
-  }
-  async openAgentTerminal(agentName, containerName, containerId) {
-    try {
-      await vscode20.commands.executeCommand(
-        "testeranto.openAiderTerminal",
-        containerName,
-        `Agent: ${agentName}`,
-        agentName,
-        containerId
-      );
-      console.log(`[AiderProcessTreeDataProvider] Executed openAiderTerminal command for ${agentName}`);
-    } catch (error) {
-      console.error("[AiderProcessTreeDataProvider] Failed to open agent terminal:", error);
     }
   }
   subscribeToGraphUpdates() {
@@ -2875,270 +2881,6 @@ import "vscode";
 
 // src/vscode/providers/utils/registerCommands.ts
 import * as vscode27 from "vscode";
-function registerCommands(context, terminalManager, runtimeProvider, statusBarManager, dockerProcessProvider, aiderProcessProvider, fileTreeProvider, agentProvider, viewTreeProvider) {
-  const disposables = [];
-  const refreshCommand = vscode27.commands.registerCommand("testeranto.refresh", () => {
-    if (runtimeProvider && typeof runtimeProvider.refresh === "function") {
-      runtimeProvider.refresh();
-    }
-  });
-  const refreshDockerProcessesCommand = vscode27.commands.registerCommand("testeranto.refreshDockerProcesses", () => {
-    if (dockerProcessProvider && typeof dockerProcessProvider.refresh === "function") {
-      dockerProcessProvider.refresh();
-    }
-  });
-  const refreshAiderProcessesCommand = vscode27.commands.registerCommand("testeranto.refreshAiderProcesses", () => {
-    if (aiderProcessProvider && typeof aiderProcessProvider.refresh === "function") {
-      aiderProcessProvider.refresh();
-    }
-  });
-  const refreshFileTreeCommand = vscode27.commands.registerCommand("testeranto.refreshFileTree", () => {
-    if (fileTreeProvider && typeof fileTreeProvider.refresh === "function") {
-      fileTreeProvider.refresh();
-    }
-  });
-  const refreshViewTreeCommand = vscode27.commands.registerCommand("testeranto.refreshViewTree", () => {
-    if (viewTreeProvider && typeof viewTreeProvider.refresh === "function") {
-      viewTreeProvider.refresh();
-    }
-  });
-  const refreshAgentsCommand = vscode27.commands.registerCommand("testeranto.refreshAgents", () => {
-    if (agentProvider && typeof agentProvider.refresh === "function") {
-      agentProvider.refresh();
-    }
-  });
-  const openFileCommand = vscode27.commands.registerCommand("testeranto.openFile", async (args) => {
-    try {
-      const { fileName, runtime } = args;
-      if (!fileName) {
-        vscode27.window.showErrorMessage("No file specified");
-        return;
-      }
-      const document = await vscode27.workspace.openTextDocument(fileName);
-      await vscode27.window.showTextDocument(document);
-    } catch (error) {
-      vscode27.window.showErrorMessage(`Error opening file: ${error.message}`);
-    }
-  });
-  const openAiderTerminalCommand = vscode27.commands.registerCommand(
-    "testeranto.openAiderTerminal",
-    async (containerName, label, agentName, containerId) => {
-      console.log(`[openAiderTerminal] Opening terminal for aider: ${label} (${containerName}), agent: ${agentName}, container: ${containerId}`);
-      const terminal = await terminalManager.openAiderTerminal(containerName, label, agentName, containerId);
-      terminal.show();
-    }
-  );
-  const restartAiderProcessCommand = vscode27.commands.registerCommand("testeranto.restartAiderProcess", async (runtime, testName) => {
-    try {
-      await terminalManager.restartAiderProcess(runtime, testName);
-      vscode27.window.showInformationMessage(`Restarted aider process for ${testName}`);
-    } catch (error) {
-      vscode27.window.showErrorMessage(`Error restarting aider process: ${error.message}`);
-    }
-  });
-  return [
-    refreshCommand,
-    refreshDockerProcessesCommand,
-    refreshAiderProcessesCommand,
-    refreshFileTreeCommand,
-    refreshViewTreeCommand,
-    refreshAgentsCommand,
-    openFileCommand,
-    openAiderTerminalCommand,
-    restartAiderProcessCommand
-  ];
-}
-
-// src/vscode/commandManager.ts
-var CommandManager = class {
-  terminalManager;
-  statusBarManager;
-  runtimeProvider;
-  dockerProcessProvider;
-  aiderProcessProvider;
-  fileTreeProvider;
-  viewTreeProvider;
-  agentProvider;
-  constructor(terminalManager, statusBarManager) {
-    this.terminalManager = terminalManager;
-    this.statusBarManager = statusBarManager;
-    this.runtimeProvider = null;
-    this.dockerProcessProvider = null;
-    this.aiderProcessProvider = null;
-    this.fileTreeProvider = null;
-    this.viewTreeProvider = null;
-    this.agentProvider = null;
-  }
-  setRuntimeProvider(provider) {
-    this.runtimeProvider = provider;
-  }
-  setDockerProcessProvider(provider) {
-    this.dockerProcessProvider = provider;
-  }
-  setAiderProcessProvider(provider) {
-    this.aiderProcessProvider = provider;
-  }
-  setFileTreeProvider(provider) {
-    this.fileTreeProvider = provider;
-  }
-  setViewTreeProvider(provider) {
-    this.viewTreeProvider = provider;
-  }
-  setAgentProvider(provider) {
-    this.agentProvider = provider;
-  }
-  registerCommands(context) {
-    const disposables = registerCommands(
-      context,
-      this.terminalManager,
-      this.runtimeProvider,
-      this.statusBarManager,
-      this.dockerProcessProvider,
-      this.aiderProcessProvider,
-      this.fileTreeProvider,
-      this.agentProvider,
-      this.viewTreeProvider
-    );
-    return disposables;
-  }
-};
-
-// src/vscode/extension/registerCommands.ts
-function registerCommands2(context, terminalManager, statusBarManager, providers, outputChannel) {
-  outputChannel.appendLine("[Testeranto] Creating CommandManager...");
-  const commandManager = new CommandManager(terminalManager, statusBarManager);
-  commandManager.setRuntimeProvider(providers.runtimeProvider);
-  commandManager.setDockerProcessProvider(providers.dockerProcessProvider);
-  commandManager.setAiderProcessProvider(providers.aiderProcessProvider);
-  commandManager.setFileTreeProvider(providers.fileTreeProvider);
-  commandManager.setViewTreeProvider(providers.viewTreeProvider);
-  commandManager.setAgentProvider(providers.agentProvider);
-  const commandDisposables = commandManager.registerCommands(
-    context,
-    terminalManager,
-    providers.runtimeProvider,
-    statusBarManager,
-    providers.dockerProcessProvider,
-    providers.aiderProcessProvider,
-    providers.fileTreeProvider
-  );
-  outputChannel.appendLine("[Testeranto] CommandManager created and commands registered");
-  return { commandManager, commandDisposables };
-}
-
-// src/vscode/extension/registerTreeViews.ts
-import * as vscode30 from "vscode";
-function registerTreeViews(providers, context, outputChannel) {
-  outputChannel.appendLine("[Testeranto] Registering tree data providers with VS Code...");
-  vscode30.window.registerTreeDataProvider("testeranto.runtimeView", providers.runtimeProvider);
-  vscode30.window.registerTreeDataProvider("testeranto.dockerProcessView", providers.dockerProcessProvider);
-  vscode30.window.registerTreeDataProvider("testeranto.aiderProcessView", providers.aiderProcessProvider);
-  vscode30.window.registerTreeDataProvider("testeranto.fileTreeView", providers.fileTreeProvider);
-  vscode30.window.registerTreeDataProvider("testeranto.viewView", providers.viewTreeProvider);
-  vscode30.window.registerTreeDataProvider("testeranto.agentView", providers.agentProvider);
-  outputChannel.appendLine("[Testeranto] Tree data providers registered successfully");
-  outputChannel.appendLine("[Testeranto] Creating tree views...");
-  const runtimeTreeView = vscode30.window.createTreeView("testeranto.runtimeView", {
-    treeDataProvider: providers.runtimeProvider,
-    showCollapseAll: true
-  });
-  outputChannel.appendLine("[Testeranto] Runtime tree view created successfully");
-  const dockerProcessTreeView = vscode30.window.createTreeView("testeranto.dockerProcessView", {
-    treeDataProvider: providers.dockerProcessProvider,
-    showCollapseAll: true
-  });
-  outputChannel.appendLine("[Testeranto] Docker process tree view created successfully");
-  const aiderProcessTreeView = vscode30.window.createTreeView("testeranto.aiderProcessView", {
-    treeDataProvider: providers.aiderProcessProvider,
-    showCollapseAll: true
-  });
-  outputChannel.appendLine("[Testeranto] Aider process tree view created successfully");
-  const fileTreeView = vscode30.window.createTreeView("testeranto.fileTreeView", {
-    treeDataProvider: providers.fileTreeProvider,
-    showCollapseAll: true
-  });
-  outputChannel.appendLine("[Testeranto] File tree view created successfully");
-  const viewTreeView = vscode30.window.createTreeView("testeranto.viewView", {
-    treeDataProvider: providers.viewTreeProvider,
-    showCollapseAll: true
-  });
-  outputChannel.appendLine("[Testeranto] View tree view created successfully");
-  const agentTreeView = vscode30.window.createTreeView("testeranto.agentView", {
-    treeDataProvider: providers.agentProvider,
-    showCollapseAll: true
-  });
-  outputChannel.appendLine("[Testeranto] Agent tree view created successfully");
-  outputChannel.appendLine("[Testeranto] Adding tree views to context subscriptions...");
-  context.subscriptions.push(
-    runtimeTreeView,
-    dockerProcessTreeView,
-    aiderProcessTreeView,
-    fileTreeView,
-    viewTreeView,
-    agentTreeView
-  );
-  outputChannel.appendLine("[Testeranto] Tree views added to subscriptions");
-}
-
-// src/vscode/extension/setupCleanup.ts
-import "vscode";
-function setupCleanup(context, outputChannel, terminalManager, statusBarManager, providers, commandDisposables) {
-  context.subscriptions.push({
-    dispose: () => {
-      outputChannel.appendLine("[Testeranto] Extension deactivating...");
-      terminalManager.disposeAll();
-      providers.runtimeProvider.dispose?.();
-      providers.dockerProcessProvider.dispose?.();
-      providers.aiderProcessProvider.dispose?.();
-      providers.fileTreeProvider.dispose?.();
-      providers.viewTreeProvider.dispose?.();
-      providers.agentProvider.dispose?.();
-      statusBarManager.dispose();
-      outputChannel.dispose();
-    }
-  });
-  context.subscriptions.push(
-    outputChannel,
-    ...commandDisposables,
-    statusBarManager.getMainStatusBarItem(),
-    statusBarManager.getServerStatusBarItem()
-  );
-}
-
-// src/vscode/extension/testProviders.ts
-import "vscode";
-async function testProviders(providers, outputChannel) {
-  outputChannel.appendLine("[Testeranto] Testing providers by calling getChildren()...");
-  try {
-    const runtimeChildren = await providers.runtimeProvider.getChildren();
-    outputChannel.appendLine(`[Testeranto] runtimeProvider.getChildren() returned ${runtimeChildren?.length || 0} items`);
-    if (runtimeChildren && runtimeChildren.length > 0) {
-      runtimeChildren.forEach((item, index) => {
-        outputChannel.appendLine(`[Testeranto]   Item ${index}: ${item.label} (${item.type})`);
-      });
-    }
-  } catch (error) {
-    outputChannel.appendLine(`[Testeranto] ERROR testing runtimeProvider: ${error}`);
-  }
-  try {
-    const dockerChildren = await providers.dockerProcessProvider.getChildren();
-    outputChannel.appendLine(`[Testeranto] dockerProcessProvider.getChildren() returned ${dockerChildren?.length || 0} items`);
-  } catch (error) {
-    outputChannel.appendLine(`[Testeranto] dockerProcessProvider error (non-fatal): ${error}`);
-  }
-  try {
-    const fileChildren = await providers.fileTreeProvider.getChildren();
-    outputChannel.appendLine(`[Testeranto] fileTreeProvider.getChildren() returned ${fileChildren?.length || 0} items`);
-  } catch (error) {
-    outputChannel.appendLine(`[Testeranto] fileTreeProvider error (non-fatal): ${error}`);
-  }
-  try {
-    const viewChildren = await providers.viewTreeProvider.getChildren();
-    outputChannel.appendLine(`[Testeranto] viewTreeProvider.getChildren() returned ${viewChildren?.length || 0} items`);
-  } catch (error) {
-    outputChannel.appendLine(`[Testeranto] viewTreeProvider error (non-fatal): ${error}`);
-  }
-}
 
 // src/vscode/views/defaultViews/EisenhowerMatrix.ts
 var EisenhowerMatrixSlicer = (graphData) => {
@@ -3327,7 +3069,6 @@ var HomeSlicer = (graphData) => {
 };
 
 // testeranto/testeranto.ts
-var m = (n) => `You can communicate with other agents through the graph: Chat messages are added to the graph when aider blocks complete. Your slice data (available in 'YOU_NAME.json') includes other agents' messages as chat_message nodes. You can post a message by curling the endpoint: curl -X POST http://host.docker.internal:3000/~/chat -H "Content-Type: application/json" -d '{"agentName": "${n}", "content": "Hello from ${n}!"}'.`;
 var config = {
   views: {
     Home: {
@@ -3357,12 +3098,7 @@ var config = {
   },
   agents: {
     "prodirek": {
-      load: [
-        `/read SOUL.md`,
-        `/read testeranto/slices/agents/prodirek.json`
-        // `/read testeranto/agents/prodirek.md`
-      ],
-      message: `Your name is "prodirek". You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the "specifications" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs. ` + m("prodirek"),
+      persona: `testeranto/agents/prodirek.md`,
       sliceFunction: (graphManager) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
@@ -3419,12 +3155,7 @@ var config = {
       }
     },
     "arko": {
-      load: [
-        `/read SOUL.md`,
-        `/read testeranto/slices/agents/arko.json`
-        // `/read testeranto/agents/arko.md`
-      ],
-      message: `Your name is "arko". You are a Software Architect. Your responsibilities are: 1) You will be given a ticket to implement. 2) Use these docs to implement new features. 3) Create testeranto test(s) for your work. You should focus on the adapter- the product manager and the junior engineer will take care of the specifications and implementations. You have deputized to make broad architectural decisions. 4) Your ticket will contain some files to add to your context to get you started. You should limit yourself to the files given to you. Do not add any more files to your context. ` + m("arko"),
+      persona: `testeranto/agents/arko.md`,
       sliceFunction: (graphManager) => {
         const graphData = graphManager.getGraphData();
         const allNodes = graphData.nodes;
@@ -3691,6 +3422,356 @@ var config = {
 };
 var testeranto_default = config;
 
+// src/vscode/providers/utils/registerCommands.ts
+function registerCommands(context, terminalManager, runtimeProvider, statusBarManager, dockerProcessProvider, aiderProcessProvider, fileTreeProvider, agentProvider, viewTreeProvider) {
+  const disposables = [];
+  const refreshCommand = vscode27.commands.registerCommand("testeranto.refresh", () => {
+    if (runtimeProvider && typeof runtimeProvider.refresh === "function") {
+      runtimeProvider.refresh();
+    }
+  });
+  const refreshDockerProcessesCommand = vscode27.commands.registerCommand("testeranto.refreshDockerProcesses", () => {
+    if (dockerProcessProvider && typeof dockerProcessProvider.refresh === "function") {
+      dockerProcessProvider.refresh();
+    }
+  });
+  const refreshAiderProcessesCommand = vscode27.commands.registerCommand("testeranto.refreshAiderProcesses", () => {
+    if (aiderProcessProvider && typeof aiderProcessProvider.refresh === "function") {
+      aiderProcessProvider.refresh();
+    }
+  });
+  const refreshFileTreeCommand = vscode27.commands.registerCommand("testeranto.refreshFileTree", () => {
+    if (fileTreeProvider && typeof fileTreeProvider.refresh === "function") {
+      fileTreeProvider.refresh();
+    }
+  });
+  const refreshViewTreeCommand = vscode27.commands.registerCommand("testeranto.refreshViewTree", () => {
+    if (viewTreeProvider && typeof viewTreeProvider.refresh === "function") {
+      viewTreeProvider.refresh();
+    }
+  });
+  const refreshAgentsCommand = vscode27.commands.registerCommand("testeranto.refreshAgents", () => {
+    if (agentProvider && typeof agentProvider.refresh === "function") {
+      agentProvider.refresh();
+    }
+  });
+  const openFileCommand = vscode27.commands.registerCommand("testeranto.openFile", async (args) => {
+    try {
+      const { fileName, runtime } = args;
+      if (!fileName) {
+        vscode27.window.showErrorMessage("No file specified");
+        return;
+      }
+      const document = await vscode27.workspace.openTextDocument(fileName);
+      await vscode27.window.showTextDocument(document);
+    } catch (error) {
+      vscode27.window.showErrorMessage(`Error opening file: ${error.message}`);
+    }
+  });
+  const openAiderTerminalCommand = vscode27.commands.registerCommand(
+    "testeranto.openAiderTerminal",
+    async (containerName, label, agentName, containerId) => {
+      console.log(`[openAiderTerminal] Opening terminal for aider: ${label} (${containerName}), agent: ${agentName}, container: ${containerId}`);
+      const terminal = await terminalManager.openAiderTerminal(containerName, label, agentName, containerId);
+      terminal.show();
+    }
+  );
+  const restartAiderProcessCommand = vscode27.commands.registerCommand("testeranto.restartAiderProcess", async (runtime, testName) => {
+    try {
+      await terminalManager.restartAiderProcess(runtime, testName);
+      vscode27.window.showInformationMessage(`Restarted aider process for ${testName}`);
+    } catch (error) {
+      vscode27.window.showErrorMessage(`Error restarting aider process: ${error.message}`);
+    }
+  });
+  const launchAiderForTestCommand = vscode27.commands.registerCommand("testeranto.launchAiderForTest", async (runtime, testName, configKey) => {
+    try {
+      const agentProfiles = Object.keys(testeranto_default.agents || {});
+      let selectedProfile;
+      if (agentProfiles.length > 0) {
+        const picked = await vscode27.window.showQuickPick(
+          agentProfiles,
+          {
+            placeHolder: "Select agent profile",
+            title: `Launch aider for ${testName}`
+          }
+        );
+        if (!picked) {
+          return;
+        }
+        selectedProfile = picked;
+      }
+      const agentConfig = selectedProfile ? testeranto_default.agents?.[selectedProfile] : void 0;
+      const defaultMessage = agentConfig?.message || "";
+      const message = await vscode27.window.showInputBox({
+        prompt: "Enter the message for aider to process (leave empty for interactive)",
+        placeHolder: "e.g., Fix the failing test by implementing the missing function",
+        title: `Message for aider (${testName})`,
+        value: defaultMessage,
+        ignoreFocusOut: true
+      });
+      if (message === void 0) {
+        return;
+      }
+      const requestUid = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const response = await fetch("http://localhost:3000/~/agents/spawn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          profile: selectedProfile,
+          message: message || void 0,
+          testName,
+          configKey,
+          requestUid
+        })
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Server returned ${response.status}`);
+      }
+      const result = await response.json();
+      vscode27.window.showInformationMessage(result.message);
+      const terminal = vscode27.window.createTerminal(`Agent: ${result.agentName}`);
+      terminal.show();
+      terminal.sendText(result.command);
+    } catch (error) {
+      vscode27.window.showErrorMessage(`Error launching aider: ${error.message}`);
+    }
+  });
+  return [
+    refreshCommand,
+    refreshDockerProcessesCommand,
+    refreshAiderProcessesCommand,
+    refreshFileTreeCommand,
+    refreshViewTreeCommand,
+    refreshAgentsCommand,
+    openFileCommand,
+    openAiderTerminalCommand,
+    restartAiderProcessCommand,
+    launchAiderForTestCommand
+  ];
+}
+
+// src/vscode/commandManager.ts
+var CommandManager = class {
+  terminalManager;
+  statusBarManager;
+  runtimeProvider;
+  dockerProcessProvider;
+  aiderProcessProvider;
+  fileTreeProvider;
+  viewTreeProvider;
+  agentProvider;
+  constructor(terminalManager, statusBarManager) {
+    this.terminalManager = terminalManager;
+    this.statusBarManager = statusBarManager;
+    this.runtimeProvider = null;
+    this.dockerProcessProvider = null;
+    this.aiderProcessProvider = null;
+    this.fileTreeProvider = null;
+    this.viewTreeProvider = null;
+    this.agentProvider = null;
+  }
+  setRuntimeProvider(provider) {
+    this.runtimeProvider = provider;
+  }
+  setDockerProcessProvider(provider) {
+    this.dockerProcessProvider = provider;
+  }
+  setAiderProcessProvider(provider) {
+    this.aiderProcessProvider = provider;
+  }
+  setFileTreeProvider(provider) {
+    this.fileTreeProvider = provider;
+  }
+  setViewTreeProvider(provider) {
+    this.viewTreeProvider = provider;
+  }
+  setAgentProvider(provider) {
+    this.agentProvider = provider;
+  }
+  registerCommands(context) {
+    const disposables = registerCommands(
+      context,
+      this.terminalManager,
+      this.runtimeProvider,
+      this.statusBarManager,
+      this.dockerProcessProvider,
+      this.aiderProcessProvider,
+      this.fileTreeProvider,
+      this.agentProvider,
+      this.viewTreeProvider
+    );
+    return disposables;
+  }
+};
+
+// src/vscode/extension/registerCommands.ts
+function registerCommands2(context, terminalManager, statusBarManager, providers, outputChannel) {
+  outputChannel.appendLine("[Testeranto] Creating CommandManager...");
+  const commandManager = new CommandManager(terminalManager, statusBarManager);
+  commandManager.setRuntimeProvider(providers.runtimeProvider);
+  commandManager.setDockerProcessProvider(providers.dockerProcessProvider);
+  commandManager.setAiderProcessProvider(providers.aiderProcessProvider);
+  commandManager.setFileTreeProvider(providers.fileTreeProvider);
+  commandManager.setViewTreeProvider(providers.viewTreeProvider);
+  commandManager.setAgentProvider(providers.agentProvider);
+  const commandDisposables = commandManager.registerCommands(
+    context,
+    terminalManager,
+    providers.runtimeProvider,
+    statusBarManager,
+    providers.dockerProcessProvider,
+    providers.aiderProcessProvider,
+    providers.fileTreeProvider
+  );
+  outputChannel.appendLine("[Testeranto] CommandManager created and commands registered");
+  return { commandManager, commandDisposables };
+}
+
+// src/vscode/extension/registerTreeViews.ts
+import * as vscode30 from "vscode";
+function registerTreeViews(providers, context, outputChannel) {
+  outputChannel.appendLine("[Testeranto] Registering tree data providers with VS Code...");
+  vscode30.window.registerTreeDataProvider("testeranto.runtimeView", providers.runtimeProvider);
+  vscode30.window.registerTreeDataProvider("testeranto.dockerProcessView", providers.dockerProcessProvider);
+  vscode30.window.registerTreeDataProvider("testeranto.aiderProcessView", providers.aiderProcessProvider);
+  vscode30.window.registerTreeDataProvider("testeranto.fileTreeView", providers.fileTreeProvider);
+  vscode30.window.registerTreeDataProvider("testeranto.viewView", providers.viewTreeProvider);
+  vscode30.window.registerTreeDataProvider("testeranto.agentView", providers.agentProvider);
+  outputChannel.appendLine("[Testeranto] Tree data providers registered successfully");
+  outputChannel.appendLine("[Testeranto] Creating tree views...");
+  const runtimeTreeView = vscode30.window.createTreeView("testeranto.runtimeView", {
+    treeDataProvider: providers.runtimeProvider,
+    showCollapseAll: true
+  });
+  outputChannel.appendLine("[Testeranto] Runtime tree view created successfully");
+  const dockerProcessTreeView = vscode30.window.createTreeView("testeranto.dockerProcessView", {
+    treeDataProvider: providers.dockerProcessProvider,
+    showCollapseAll: true
+  });
+  outputChannel.appendLine("[Testeranto] Docker process tree view created successfully");
+  const aiderProcessTreeView = vscode30.window.createTreeView("testeranto.aiderProcessView", {
+    treeDataProvider: providers.aiderProcessProvider,
+    showCollapseAll: true
+  });
+  outputChannel.appendLine("[Testeranto] Aider process tree view created successfully");
+  const fileTreeView = vscode30.window.createTreeView("testeranto.fileTreeView", {
+    treeDataProvider: providers.fileTreeProvider,
+    showCollapseAll: true
+  });
+  outputChannel.appendLine("[Testeranto] File tree view created successfully");
+  const viewTreeView = vscode30.window.createTreeView("testeranto.viewView", {
+    treeDataProvider: providers.viewTreeProvider,
+    showCollapseAll: true
+  });
+  outputChannel.appendLine("[Testeranto] View tree view created successfully");
+  const agentTreeView = vscode30.window.createTreeView("testeranto.agentView", {
+    treeDataProvider: providers.agentProvider,
+    showCollapseAll: true
+  });
+  outputChannel.appendLine("[Testeranto] Agent tree view created successfully");
+  outputChannel.appendLine("[Testeranto] Adding tree views to context subscriptions...");
+  context.subscriptions.push(
+    runtimeTreeView,
+    dockerProcessTreeView,
+    aiderProcessTreeView,
+    fileTreeView,
+    viewTreeView,
+    agentTreeView
+  );
+  outputChannel.appendLine("[Testeranto] Tree views added to subscriptions");
+}
+
+// src/vscode/extension/setupCleanup.ts
+import "vscode";
+function setupCleanup(context, outputChannel, terminalManager, statusBarManager, providers, commandDisposables) {
+  context.subscriptions.push({
+    dispose: () => {
+      outputChannel.appendLine("[Testeranto] Extension deactivating...");
+      terminalManager.disposeAll();
+      providers.runtimeProvider.dispose?.();
+      providers.dockerProcessProvider.dispose?.();
+      providers.aiderProcessProvider.dispose?.();
+      providers.fileTreeProvider.dispose?.();
+      providers.viewTreeProvider.dispose?.();
+      providers.agentProvider.dispose?.();
+      statusBarManager.dispose();
+      outputChannel.dispose();
+    }
+  });
+  context.subscriptions.push(
+    outputChannel,
+    ...commandDisposables,
+    statusBarManager.getMainStatusBarItem(),
+    statusBarManager.getServerStatusBarItem()
+  );
+}
+
+// src/vscode/extension/testProviders.ts
+import "vscode";
+async function testProviders(providers, outputChannel) {
+  outputChannel.appendLine("[Testeranto] Testing providers by calling getChildren()...");
+  try {
+    const runtimeChildren = await providers.runtimeProvider.getChildren();
+    outputChannel.appendLine(`[Testeranto] runtimeProvider.getChildren() returned ${runtimeChildren?.length || 0} items`);
+    if (runtimeChildren && runtimeChildren.length > 0) {
+      runtimeChildren.forEach((item, index) => {
+        outputChannel.appendLine(`[Testeranto]   Item ${index}: ${item.label} (${item.type})`);
+      });
+    }
+  } catch (error) {
+    outputChannel.appendLine(`[Testeranto] ERROR testing runtimeProvider: ${error}`);
+  }
+  try {
+    const dockerChildren = await providers.dockerProcessProvider.getChildren();
+    outputChannel.appendLine(`[Testeranto] dockerProcessProvider.getChildren() returned ${dockerChildren?.length || 0} items`);
+  } catch (error) {
+    outputChannel.appendLine(`[Testeranto] dockerProcessProvider error (non-fatal): ${error}`);
+  }
+  try {
+    const fileChildren = await providers.fileTreeProvider.getChildren();
+    outputChannel.appendLine(`[Testeranto] fileTreeProvider.getChildren() returned ${fileChildren?.length || 0} items`);
+  } catch (error) {
+    outputChannel.appendLine(`[Testeranto] fileTreeProvider error (non-fatal): ${error}`);
+  }
+  try {
+    const viewChildren = await providers.viewTreeProvider.getChildren();
+    outputChannel.appendLine(`[Testeranto] viewTreeProvider.getChildren() returned ${viewChildren?.length || 0} items`);
+  } catch (error) {
+    outputChannel.appendLine(`[Testeranto] viewTreeProvider error (non-fatal): ${error}`);
+  }
+}
+
+// src/vscode/utilities/buildAgentCommand.ts
+function buildAgentCommand(profile, personaBody, readFiles, addFiles, personaFilePath, workspaceRoot, model) {
+  const imageName = "testeranto-aider:latest";
+  const agentName = `${profile}-${Date.now()}`;
+  const containerName = `agent-${agentName}`;
+  const volumes = [
+    `-v "${workspaceRoot}/src:/workspace/src"`,
+    `-v "${workspaceRoot}/test:/workspace/test"`,
+    `-v "${workspaceRoot}/SOUL.md:/workspace/SOUL.md"`,
+    `-v "${workspaceRoot}:/workspace"`,
+    `-v "${workspaceRoot}/.aider.conf.yml:/workspace/.aider.conf.yml"`
+  ];
+  const fileArgs = [];
+  const readArgs = [];
+  if (personaFilePath) {
+    readArgs.push(`--read "${personaFilePath}"`);
+  }
+  for (const filePath of addFiles) {
+    fileArgs.push(`--file "${filePath}"`);
+  }
+  for (const filePath of readFiles) {
+    readArgs.push(`--read "${filePath}"`);
+  }
+  const command = `
+docker run -it --rm --name ${containerName} ${volumes.join(" ")} --add-host host.docker.internal:host-gateway ${imageName} sh -c 'aider   --no-analytics --no-show-model-warnings --no-show-release-notes --no-check-update   ${fileArgs.join(" \\\n  ")}   ${readArgs.join(" \\\n  ")}   
+  '`;
+  return command;
+}
+
 // src/vscode/extension/ExtensionActivatorCore.ts
 async function activateExtension(context) {
   const outputChannel = createOutputChannel();
@@ -3725,44 +3806,40 @@ async function activateExtension(context) {
           if (!selectedProfile) {
             return;
           }
-          const requestUid = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-          outputChannel.appendLine(`[Testeranto] Generated requestUid: ${requestUid}`);
-          const notificationPromise = providers.agentTreeDataProvider?.waitForNotification?.(requestUid, 6e4);
-          const spawnUrl = getApiUrl("spawnAgent");
-          const response = await fetch(spawnUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              profile: selectedProfile,
-              requestUid
-            })
-          });
+          const agentConfig = testeranto_default.agents?.[selectedProfile];
+          if (!agentConfig) {
+            vscode33.window.showErrorMessage(`Agent profile '${selectedProfile}' not found in configuration`);
+            return;
+          }
+          const workspaceRoot = vscode33.workspace.workspaceFolders?.[0]?.uri?.fsPath || process.cwd();
+          const apiUrl = getApiUrl("getAgentSlice", { agentName: selectedProfile });
+          const response = await fetch(apiUrl, { signal: AbortSignal.timeout?.(3e3) });
           if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `Server returned ${response.status}`);
+            throw new Error(`Failed to fetch agent data from server: ${response.status}`);
           }
-          const result = await response.json();
-          outputChannel.appendLine(`[Testeranto] Agent launched: ${result.agentName} (container: ${result.containerId})`);
-          if (notificationPromise) {
-            outputChannel.appendLine(`[Testeranto] Waiting for graph update notification with requestUid: ${requestUid}`);
-            try {
-              const notification = await notificationPromise;
-              outputChannel.appendLine(`[Testeranto] Received graph update notification for ${result.agentName}`);
-            } catch (waitError) {
-              outputChannel.appendLine(`[Testeranto] Warning: ${waitError.message}`);
-            }
-          }
-          vscode33.window.showInformationMessage(`Agent ${result.agentName} launched successfully`);
-          providers.agentTreeDataProvider?.refresh();
-          vscode33.commands.executeCommand(
-            "testeranto.openAiderTerminal",
-            `agent-${result.agentName}`,
-            `Agent: ${result.agentName}`,
-            result.agentName,
-            result.containerId
+          const agentData = await response.json();
+          const metadata = agentData.metadata || {};
+          const personaBody = metadata.personaBody || "";
+          const readFiles = metadata.readFiles || [];
+          const addFiles = metadata.addFiles || [];
+          const personaFilePath = metadata.personaFilePath || "";
+          const command = buildAgentCommand(
+            selectedProfile,
+            personaBody,
+            readFiles,
+            addFiles,
+            personaFilePath,
+            workspaceRoot
           );
+          outputChannel.appendLine(`[Testeranto] Agent command composed locally for profile: ${selectedProfile}`);
+          const terminal = vscode33.window.createTerminal(`Agent: ${selectedProfile}`);
+          terminal.show();
+          const lines = command.split("\n");
+          for (const line of lines) {
+            terminal.sendText(line, false);
+          }
+          terminal.sendText("", true);
+          vscode33.window.showInformationMessage(`Agent command ready for ${selectedProfile}. Press Enter in the terminal to start the container.`);
         } catch (error) {
           outputChannel.appendLine(`[Testeranto] Failed to launch agent: ${error.message}`);
           vscode33.window.showErrorMessage(`Failed to launch agent: ${error.message}`);

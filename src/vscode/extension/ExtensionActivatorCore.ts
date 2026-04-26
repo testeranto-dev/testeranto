@@ -1,3 +1,4 @@
+
 import * as vscode from "vscode";
 import { registerOpenProcessTerminalCommand } from "../commands/registerOpenProcessTerminalCommand";
 import { registerOpenAiderTerminalCommand } from "../commands/registerOpenAiderTerminalCommand";
@@ -14,6 +15,7 @@ import { setupCleanup } from "./setupCleanup";
 import { testProviders } from "./testProviders";
 import config from "../../../testeranto/testeranto";
 import { getApiUrl } from "../../api";
+import { buildAgentCommand } from "../utilities/buildAgentCommand";
 
 export async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
     const outputChannel = createOutputChannel();
@@ -37,7 +39,7 @@ export async function activateExtension(context: vscode.ExtensionContext): Promi
             outputChannel
         );
 
-        // Register launch agent command
+        // Register launch agent command (unified agent creation route)
         context.subscriptions.push(
             vscode.commands.registerCommand('testeranto.launchAgent', async () => {
                 outputChannel.appendLine('[Testeranto] Launching agent...');
@@ -57,59 +59,62 @@ export async function activateExtension(context: vscode.ExtensionContext): Promi
                         return;
                     }
 
-                    // Generate a unique requestUid for this async operation
-                    const requestUid = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-                    outputChannel.appendLine(`[Testeranto] Generated requestUid: ${requestUid}`);
+                    // Compose the Docker command locally using the agent config.
+                    // No server request needed – the Docker events watcher will
+                    // detect the container when it starts and create the graph node.
+                    const agentConfig = config.agents?.[selectedProfile];
+                    if (!agentConfig) {
+                        vscode.window.showErrorMessage(`Agent profile '${selectedProfile}' not found in configuration`);
+                        return;
+                    }
 
-                    // Start waiting for the notification before making the API call
-                    const notificationPromise = providers.agentTreeDataProvider?.waitForNotification?.(requestUid, 60000);
+                    // Use workspace root from VSCode, not process.cwd()
+                    const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri?.fsPath || process.cwd();
 
-                    // Call the spawn agent API endpoint with the requestUid
-                    const spawnUrl = getApiUrl('spawnAgent');
-                    const response = await fetch(spawnUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            profile: selectedProfile,
-                            requestUid,
-                        }),
-                    });
-
+                    // Fetch agent data from the graph via the server API.
+                    // The server has already parsed the markdown file and stored
+                    // personaBody, readFiles, addFiles in the agent node's metadata.
+                    const apiUrl = getApiUrl('getAgentSlice', { agentName: selectedProfile });
+                    const response = await fetch(apiUrl, { signal: AbortSignal.timeout?.(3000) });
                     if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || `Server returned ${response.status}`);
+                        throw new Error(`Failed to fetch agent data from server: ${response.status}`);
                     }
+                    const agentData = await response.json();
+                    // The agent slice response includes metadata with parsed data
+                    const metadata = agentData.metadata || {};
+                    const personaBody = metadata.personaBody || "";
+                    const readFiles: string[] = metadata.readFiles || [];
+                    const addFiles: string[] = metadata.addFiles || [];
+                    const personaFilePath = metadata.personaFilePath || "";
 
-                    const result = await response.json();
-                    outputChannel.appendLine(`[Testeranto] Agent launched: ${result.agentName} (container: ${result.containerId})`);
-
-                    // Wait for the graph update notification with matching UID
-                    if (notificationPromise) {
-                        outputChannel.appendLine(`[Testeranto] Waiting for graph update notification with requestUid: ${requestUid}`);
-                        try {
-                            const notification = await notificationPromise;
-                            outputChannel.appendLine(`[Testeranto] Received graph update notification for ${result.agentName}`);
-                        } catch (waitError: any) {
-                            outputChannel.appendLine(`[Testeranto] Warning: ${waitError.message}`);
-                            // Continue anyway - the agent was spawned successfully
-                        }
-                    }
-
-                    vscode.window.showInformationMessage(`Agent ${result.agentName} launched successfully`);
-
-                    // Refresh the agent tree view
-                    providers.agentTreeDataProvider?.refresh();
-
-                    // Open a terminal to the new agent using the actual container ID
-                    vscode.commands.executeCommand(
-                        'testeranto.openAiderTerminal',
-                        `agent-${result.agentName}`,
-                        `Agent: ${result.agentName}`,
-                        result.agentName,
-                        result.containerId
+                    // Build the Docker command using the shared utility
+                    const command = buildAgentCommand(
+                        selectedProfile,
+                        personaBody,
+                        readFiles,
+                        addFiles,
+                        personaFilePath,
+                        workspaceRoot,
                     );
+
+                    outputChannel.appendLine(`[Testeranto] Agent command composed locally for profile: ${selectedProfile}`);
+
+                    // Open a terminal and send the command line by line
+                    // The heredoc approach with backslash-newline continuation
+                    // makes it easy to send in lines without truncation
+                    const terminal = vscode.window.createTerminal(`Agent: ${selectedProfile}`);
+                    terminal.show();
+
+                    // Split the command into lines and send each one
+                    const lines = command.split('\n');
+                    for (const line of lines) {
+                        terminal.sendText(line, false);
+                    }
+                    // Send a final newline to execute the assembled command
+                    terminal.sendText('', true);
+
+                    vscode.window.showInformationMessage(`Agent command ready for ${selectedProfile}. Press Enter in the terminal to start the container.`);
+
                 } catch (error: any) {
                     outputChannel.appendLine(`[Testeranto] Failed to launch agent: ${error.message}`);
                     vscode.window.showErrorMessage(`Failed to launch agent: ${error.message}`);

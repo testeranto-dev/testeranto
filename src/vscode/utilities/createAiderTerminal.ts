@@ -56,19 +56,11 @@ export async function createAiderTerminal(
       terminal.sendText(`echo "Aider terminals may require additional server configuration."`);
     } else {
       const data = await response.json();
-      if (data.success && data.script) {
-        terminal.sendText(`echo "✅ Server provided terminal script"`);
+      if (data.success && data.command) {
+        terminal.sendText(`echo "✅ Server provided terminal command"`);
         terminal.sendText(`echo "Executing..."`);
         terminal.sendText(`echo ""`);
-        const workspaceRoot = getWorkspaceRoot();
-        if (workspaceRoot) {
-          const scriptPath = path.join(workspaceRoot, `.testeranto_terminal_${Date.now()}.sh`);
-          fs.writeFileSync(scriptPath, data.script, { mode: 0o755 });
-          terminal.sendText(`"${scriptPath}" && rm -f "${scriptPath}"`);
-        } else {
-          const escapedScript = data.script.replace(/'/g, "'\"'\"'");
-          terminal.sendText(`/bin/sh << 'EOF'\n${escapedScript}\nEOF`);
-        }
+        terminal.sendText(data.command);
       } else {
         terminal.sendText(`echo "⚠️ Server response indicates failure"`);
         terminal.sendText(`echo "Error: ${data.error || 'Unknown error'}"`);

@@ -22,7 +22,6 @@ export * from './graph/getGraphData';
 export * from './graph/applyUpdate';
 
 export * from './aider/createMessageFile';
-export * from './aider/launchAider';
 export * from './aider/informAider';
 
 export * from './lock/acquireLock';

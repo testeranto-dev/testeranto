@@ -3,51 +3,29 @@ import type { IMode } from "../../types";
 import { Server_DockerCompose } from "./technological/Server_DockerCompose";
 import { buildFileTreeFromGraph } from "./utils/buildFileTreeFromGraph";
 
-/**
- * Server V3 - Abstract Logical Core (Position 0)
- * 
- * Contains pure business logic with no external dependencies.
- * All external operations are defined as abstract methods to be implemented
- * by technological layers (FS, HTTP, CLI, etc.) or business layers (Graph, Aider, etc.).
- * 
- * This class orchestrates the business workflows and maintains the core state.
- */
 export abstract class Server extends Server_DockerCompose {
   protected isRunning: boolean = false;
   protected startedAt: Date | null = null;
   protected businessState: Map<string, any> = new Map();
 
   constructor(configs: ITesterantoConfig, mode: IMode) {
-    // Call parent constructor with required parameters for Server_Graph
     super(
       configs,
       mode,
-      () => this.getCurrentTestResults(), // getCurrentTestResults function
-      process.cwd(), // projectRoot
-      (path: string) => this.resourceChanged(path) // resourceChangedCallback
+      () => this.getCurrentTestResults(),
+      process.cwd(),
+      (path: string) => this.resourceChanged(path)
     );
   }
 
-  // Method to get current test results (required by Server_Graph constructor)
   protected getCurrentTestResults(): any {
-    return {}; // Default implementation
+    return {};
   }
 
-  // Resource changed callback (required by Server_Graph constructor)
   protected resourceChanged(path: string): void {
     this.logBusinessMessage(`Resource changed: ${path}`);
-    // Implementation would notify WebSocket clients, etc.
   }
 
-  // protected initializeDockerCompose(): void {
-  //   this.logBusinessMessage("Docker Compose initialized (this instance)");
-  // }
-
-
-  /**
-   * Main business logic entrypoint.
-   * Orchestrates the startup sequence following the V3 plan.
-   */
   async start(): Promise<void> {
     this.logBusinessMessage("Starting server...");
 
@@ -57,13 +35,8 @@ export abstract class Server extends Server_DockerCompose {
     await this.setupComponents();
     await this.generateViewSlices();
     await this.generateViewHtmlFiles();
-
-    // Setup API routes before starting HTTP server
     await this.setupApi();
-
-    // Start HTTP server before workflows
     await this.startHttpServer(3000);
-
     await this.startPolyglotWorkflows();
     await this.startWorkflows();
 
@@ -74,9 +47,6 @@ export abstract class Server extends Server_DockerCompose {
     await this.saveGraph();
   }
 
-  /**
-   * Stop all business operations and clean up resources.
-   */
   async stop(): Promise<void> {
     if (!this.isRunning) {
       this.logBusinessMessage("Server is not running, nothing to stop");
@@ -95,14 +65,10 @@ export abstract class Server extends Server_DockerCompose {
     await this.notifyStopped();
   }
 
-
-  // ========== Server abstract methods ==========
   protected async validateConfigs(): Promise<void> {
-    // Check that runtimes exist (from Server_Base.validateConfigs())
     if (!this.configs.runtimes || Object.keys(this.configs.runtimes).length === 0) {
       throw new Error("No runtimes configured");
     }
-
   }
 
   protected async initializeState(): Promise<void> {
@@ -111,7 +77,6 @@ export abstract class Server extends Server_DockerCompose {
 
   protected async setupComponents(): Promise<void> {
     await this.setupGraph();
-    // Start file watching after graph is initialized
     await this.startFileWatching();
     await this.setupViews();
     await this.setupLogs();
@@ -176,63 +141,30 @@ export abstract class Server extends Server_DockerCompose {
     this.logBusinessMessage("All components notified of server stop");
   }
 
-  /**
-   * Store a value in the business state.
-   * Used for sharing data between business components.
-   */
   protected setBusinessState(key: string, value: any): void {
     this.businessState.set(key, value);
   }
 
-  /**
-   * Retrieve a value from the business state.
-   */
   protected getBusinessState<T = any>(key: string): T | undefined {
     return this.businessState.get(key);
   }
 
-  /**
-   * Remove a value from the business state.
-   */
   protected deleteBusinessState(key: string): boolean {
     return this.businessState.delete(key);
   }
 
-  /**
-   * Clear all business state.
-   */
   protected clearBusinessState(): void {
     this.businessState.clear();
   }
 
-  /**
-   * Get all business state keys.
-   */
   protected getBusinessStateKeys(): string[] {
     return Array.from(this.businessState.keys());
   }
 
-  // ========== HTTP Server Methods ==========
-  // These are implemented by Server_HTTP
-
   abstract startHttpServer(port: number, hostname?: string): Promise<void>
   abstract stopHttpServer(): Promise<void>
 
-  // protected async stopHttpServer(): Promise<void> {
-  //   // This will be implemented by Server_HTTP
-  //   this.logBusinessMessage("Stopping HTTP server...");
-  // }
-
-  // ========== API Setup Methods ==========
-  // These are implemented by Server_Api
-
   protected abstract setupApi(): Promise<void>;
-
-  // ========== Docker Service Methods ==========
-  // These are implemented by Server_DockerCompose
-
-  // ========== Test Monitoring Methods ==========
-  // These can be overridden by subclasses
 
   protected async startTestMonitoring(): Promise<void> {
     await this.checkExistingTestResults();
@@ -240,48 +172,26 @@ export abstract class Server extends Server_DockerCompose {
       await this.initializeFileWatching();
     }
     await this.startLoggingForAllServices();
-
     this.logBusinessMessage("Test monitoring started");
   }
 
   protected async stopTestMonitoring(): Promise<void> {
-    this.logBusinessMessage("Stopping test monitoring (V2 Server_Docker_Test business logic)...");
-
-    // V2 Server_Docker_Test.stop() business logic:
-
-    // 1. Stop all file watchers
-    this.logBusinessMessage("Stopping all file watchers...");
+    this.logBusinessMessage("Stopping test monitoring...");
     await this.stopAllFileWatchers();
-
-    // 2. Clear process tracking
-    this.logBusinessMessage("Clearing process tracking...");
-    // Implementation would clear process tracking maps
-
     this.logBusinessMessage("Test monitoring stopped");
   }
 
-
-
-  // ========== Graph Methods (delegate to Server_Graph) ==========
-
   protected queryNodes(filter: (node: any) => boolean): any[] {
-    // Delegate to the graph's queryNodes method
     return super.queryNodes(filter);
   }
 
   protected addNode(node: any): string {
-    // Delegate to the graph's addNode method
     return super.addNode(node);
   }
 
   protected updateAllAgentSliceFiles(): void {
-    // Delegate to the graph's updateAllAgentSliceFiles method
     super.updateAllAgentSliceFiles();
   }
-
-
-
-  // ========== Server_Static Abstract Method Implementations ==========
 
   protected async generateViewSliceUtil(viewKey: string, viewConfig: any): Promise<void> {
     const { generateViewSliceUtil } = await import("./utils/static/generateViewSliceUtil");
@@ -298,8 +208,6 @@ export abstract class Server extends Server_DockerCompose {
     await writeViewsIndexHtmlUtil(html);
   }
 
-  // ========== API Route Handlers (for Server_Api) ==========
-
   protected async handleFilesRoute(request: Request): Promise<Response> {
     const tree = buildFileTreeFromGraph(this.graph.nodes, this.graph.edges);
     return new Response(
@@ -314,13 +222,8 @@ export abstract class Server extends Server_DockerCompose {
     );
   }
 
-  // Process nodes are populated by the Docker events watcher into the graph.
-  // The graph is the source of truth; these routes query it.
   protected async handleProcessRoute(request: Request): Promise<Response> {
     const processNodes = this.queryNodes((node: any) => {
-      // Accept nodes whose type is an object with category === 'process'
-      // OR a string that includes 'process'
-      // OR nodes that have a metadata.processType field
       if (node.type?.category === 'process') return true;
       if (typeof node.type === 'string' && node.type.toLowerCase().includes('process')) return true;
       if (node.metadata?.processType) return true;
@@ -374,12 +277,14 @@ export abstract class Server extends Server_DockerCompose {
       aiderNodes.some(n => n.id === edge.source || n.id === edge.target)
     );
 
+    const response: import("../../../../api").GetAiderResponse = {
+      nodes: aiderNodes,
+      edges: aiderEdges,
+      timestamp: new Date().toISOString()
+    };
+
     return new Response(
-      JSON.stringify({
-        nodes: aiderNodes,
-        edges: aiderEdges,
-        timestamp: new Date().toISOString()
-      }),
+      JSON.stringify(response),
       {
         status: 200,
         headers: { "Content-Type": "application/json" }
@@ -392,16 +297,39 @@ export abstract class Server extends Server_DockerCompose {
       node.type?.category === 'resource' && node.type?.type === 'runtime'
     );
 
-    const runtimeEdges = this.queryEdges((edge: any) =>
-      runtimeNodes.some(n => n.id === edge.source || n.id === edge.target)
-    );
+    const runtimes: Record<string, {
+      tests: string[];
+      checks?: string[];
+      outputs?: string[];
+      dockerfile?: string;
+      buildOptions?: string;
+      runtime: string;
+    }> = {};
+
+    for (const node of runtimeNodes) {
+      const runtimeName = node.metadata?.runtimeName;
+      if (!runtimeName) continue;
+
+      const config = this.configs.runtimes?.[runtimeName];
+      if (!config) continue;
+
+      runtimes[runtimeName] = {
+        tests: config.tests || [],
+        checks: config.checks?.map((check: any) => check.toString()) || [],
+        outputs: config.outputs || [],
+        dockerfile: config.dockerfile,
+        buildOptions: config.buildOptions,
+        runtime: config.runtime
+      };
+    }
+
+    const response: import("../../../../api").GetRuntimeResponse = {
+      runtimes,
+      timestamp: new Date().toISOString()
+    };
 
     return new Response(
-      JSON.stringify({
-        nodes: runtimeNodes,
-        edges: runtimeEdges,
-        timestamp: new Date().toISOString()
-      }),
+      JSON.stringify(response),
       {
         status: 200,
         headers: { "Content-Type": "application/json" }
@@ -440,7 +368,12 @@ export abstract class Server extends Server_DockerCompose {
       );
     }
 
-    // Get chat messages for the agent slice
+    // Find the agent node in the graph to retrieve parsed markdown metadata
+    const agentNode = this.graph.nodes.find(
+      (n: any) => n.id === `agent:${agentName}` || n.label === agentName
+    );
+    const metadata = agentNode?.metadata || {};
+
     const chatNodes = this.queryNodes?.((node: any) =>
       node.type?.category === 'chat' && node.type?.type === 'chat_message'
     ) || [];
@@ -456,6 +389,7 @@ export abstract class Server extends Server_DockerCompose {
       JSON.stringify({
         agentName,
         config: agentConfig,
+        metadata,
         chatMessages,
         timestamp: new Date().toISOString()
       }),
@@ -474,55 +408,94 @@ export abstract class Server extends Server_DockerCompose {
     });
   }
 
-  protected async handlePostChatMessage(request: Request): Promise<Response> {
-    try {
+  protected async registerDefaultHttpRoutes(): Promise<void> {
+    // Register all HTTP API routes from the API specification
+    // These routes are used by VSCode extension, views, and agents
+    
+    // GET routes
+    this.addRoute('GET', '/~/files', (request) => this.handleFilesRoute(request));
+    this.addRoute('GET', '/~/process', (request) => this.handleProcessRoute(request));
+    this.addRoute('GET', '/~/aider', (request) => this.handleAiderRoute(request));
+    this.addRoute('GET', '/~/runtime', (request) => this.handleRuntimeRoute(request));
+    this.addRoute('GET', '/~/agents', (request) => this.handleAgentsRoute(request));
+    this.addRoute('GET', '/~/views', (request) => this.handleAllViewsRoute(request));
+    this.addRoute('GET', '/~/chat', (request) => this.handleGetChatHistory(request));
+    this.addRoute('GET', '/~/configs', async (request) => {
+      return new Response(
+        JSON.stringify({
+          configs: this.configs,
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    this.addRoute('GET', '/~/app-state', async (request) => {
+      return new Response(
+        JSON.stringify({
+          isRunning: this.isRunning,
+          startedAt: this.startedAt,
+          mode: this.mode,
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    this.addRoute('GET', '/~/health', async (request) => {
+      return new Response(
+        JSON.stringify({
+          status: 'ok',
+          timestamp: new Date().toISOString(),
+          message: 'Testeranto API server is running'
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    
+    // POST routes
+    this.addRoute('POST', '/~/agents/spawn', (request) => this.handleSpawnAgent(request));
+    this.addRoute('POST', '/~/open-process-terminal', async (request) => {
       const body = await request.json();
-      const { sender, content } = body;
-
-      if (!sender || !content) {
+      const { nodeId, label, containerId, serviceName } = body;
+      
+      try {
+        const result = await this.openProcessTerminal(nodeId, label, containerId, serviceName);
+        return new Response(
+          JSON.stringify(result),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+      } catch (error: any) {
         return new Response(
           JSON.stringify({
-            error: 'Missing required fields: sender and content',
+            success: false,
+            error: error.message,
             timestamp: new Date().toISOString()
           }),
           {
-            status: 400,
+            status: 500,
             headers: { "Content-Type": "application/json" }
           }
         );
       }
-
-      const messageId = `chat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      const chatNode = {
-        id: messageId,
-        type: { category: 'chat', type: 'chat_message' },
-        label: `Chat message from ${sender}`,
-        description: content,
-        content: content,
-        sender: sender,
-        timestamp: new Date().toISOString(),
-        metadata: {
-          sender,
-          content,
-          timestamp: new Date().toISOString()
-        }
-      };
-
-      this.addNode(chatNode);
-      this.updateAllAgentSliceFiles();
-      this.writeViewSliceFiles();
-
-      this.broadcastApiMessage('resourceChanged', {
-        url: '/~/chat',
-        message: 'New chat message added',
-        timestamp: new Date().toISOString()
-      });
-
+    });
+    this.addRoute('POST', '/~/chat', (request) => this.handlePostChatMessage(request));
+    this.addRoute('POST', '/~/down', async (request) => {
+      await this.dockerComposeDown();
       return new Response(
         JSON.stringify({
           success: true,
-          message: 'Chat message added to graph',
-          messageId,
+          message: 'Services stopped',
           timestamp: new Date().toISOString()
         }),
         {
@@ -530,67 +503,368 @@ export abstract class Server extends Server_DockerCompose {
           headers: { "Content-Type": "application/json" }
         }
       );
-    } catch (error: any) {
-      this.logBusinessError('Error handling chat message:', error);
+    });
+    this.addRoute('POST', '/~/up', async (request) => {
+      await this.dockerComposeUp();
       return new Response(
         JSON.stringify({
-          success: false,
-          error: error.message,
-          message: 'Failed to process chat message',
+          success: true,
+          message: 'Services started',
           timestamp: new Date().toISOString()
         }),
         {
-          status: 500,
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    this.addRoute('POST', '/~/start-process', async (request) => {
+      const body = await request.json();
+      const { runtime, testName, configKey } = body;
+      await this.startDockerProcess(runtime, testName, configKey, this.configs.runtimes[configKey]);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: `Process started for ${testName}`,
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    
+    // Register view routes from config
+    if (this.configs.views) {
+      for (const viewKey of Object.keys(this.configs.views)) {
+        this.addRoute('GET', `/~/views/${viewKey}`, async (request) => {
+          return await this.handleViewRoute(request, viewKey);
+        });
+      }
+    }
+    
+    // Register agent slice routes
+    if (this.configs.agents) {
+      for (const agentName of Object.keys(this.configs.agents)) {
+        this.addRoute('GET', `/~/agents/${agentName}`, async (request) => {
+          return await this.handleAgentSliceRoute(request, agentName);
+        });
+      }
+    }
+    
+    // Register git routes
+    this.addRoute('GET', '/~/git/status', async (request) => {
+      return new Response(
+        JSON.stringify({
+          status: 'unknown',
+          message: 'Git status not implemented',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    this.addRoute('POST', '/~/git/switch-branch', async (request) => {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Git operations not implemented',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 501,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    this.addRoute('POST', '/~/git/commit', async (request) => {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Git operations not implemented',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 501,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    this.addRoute('POST', '/~/git/merge', async (request) => {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Git operations not implemented',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 501,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    this.addRoute('GET', '/~/git/conflicts', async (request) => {
+      return new Response(
+        JSON.stringify({
+          conflicts: [],
+          message: 'No conflicts',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    this.addRoute('POST', '/~/git/resolve-conflict', async (request) => {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Git operations not implemented',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 501,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    
+    // Register lock status route
+    this.addRoute('GET', '/~/lock-status', async (request) => {
+      return new Response(
+        JSON.stringify({
+          hasLockedFiles: false,
+          lockedFiles: [],
+          lockedCount: 0,
+          message: 'No files locked',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    
+    // Register user-agents route
+    this.addRoute('GET', '/~/user-agents', async (request) => {
+      return new Response(
+        JSON.stringify({
+          agents: Object.keys(this.configs.agents || {}).map(name => ({
+            name,
+            config: this.configs.agents?.[name]
+          })),
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    
+    // Register aider-processes route
+    this.addRoute('GET', '/~/aider-processes', async (request) => {
+      return await this.handleAiderRoute(request);
+    });
+    
+    // Register html-report route
+    this.addRoute('GET', '/~/html-report', async (request) => {
+      return new Response(
+        JSON.stringify({
+          html: '<html><body><h1>Report</h1></body></html>',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    
+    // Register unified-test-tree route
+    this.addRoute('GET', '/~/unified-test-tree', async (request) => {
+      return new Response(
+        JSON.stringify({
+          tree: [],
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+    
+    // Register process logs route
+    this.addRoute('GET', '/~/processes/:processId/logs', async (request) => {
+      const url = new URL(request.url);
+      const processId = url.pathname.split('/').pop();
+      return new Response(
+        JSON.stringify({
+          logs: [],
+          processId,
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    });
+  }
+
+  /**
+   * DEPRECATED – The VSCode extension now composes the Docker command locally.
+   * This endpoint should be removed once the new architecture is fully validated.
+   * The extension no longer calls this endpoint.
+   */
+  protected async handleSpawnAgent(request: Request): Promise<Response> {
+    const body = await request.json();
+    const { profile, message, loadFiles, model, requestUid, testName, configKey } = body;
+
+    if (!profile) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Missing required field: profile',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 400,
           headers: { "Content-Type": "application/json" }
         }
       );
     }
+
+    // Do NOT spawn the container here.  The server only returns the
+    // Docker command that the user will run in their own terminal.
+    // The Docker events watcher will detect the container when it
+    // starts and create the graph node asynchronously.
+    const agentConfig = this.configs.agents?.[profile];
+    if (!agentConfig) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Agent profile '${profile}' not found in configuration`,
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    // Build the docker‑compose command that the user will execute.
+    // The service name follows the pattern used by generateAgentService.
+    const serviceName = `agent-${profile}`;
+    const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
+    const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        agentName: profile,
+        containerId: '',          // unknown until the user runs the command
+        command,
+        message: `Agent command ready for ${profile}. Press Enter in the terminal to start the container.`,
+        timestamp: new Date().toISOString()
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  }
+
+  protected async handlePostChatMessage(request: Request): Promise<Response> {
+    const body = await request.json();
+    const { sender, content } = body;
+
+    if (!sender || !content) {
+      return new Response(
+        JSON.stringify({
+          error: 'Missing required fields: sender and content',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    const messageId = `chat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const chatNode = {
+      id: messageId,
+      type: { category: 'chat', type: 'chat_message' },
+      label: `Chat message from ${sender}`,
+      description: content,
+      content: content,
+      sender: sender,
+      timestamp: new Date().toISOString(),
+      metadata: {
+        sender,
+        content,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    this.addNode(chatNode);
+    this.updateAllAgentSliceFiles();
+    this.writeViewSliceFiles();
+
+    this.broadcastApiMessage('resourceChanged', {
+      url: '/~/chat',
+      message: 'New chat message added',
+      timestamp: new Date().toISOString()
+    });
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Chat message added to graph',
+        messageId,
+        timestamp: new Date().toISOString()
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   }
 
   protected async handleGetChatHistory(request: Request): Promise<Response> {
-    try {
-      const chatNodes = this.queryNodes((node: any) =>
-        node.type?.category === 'chat' && node.type?.type === 'chat_message'
-      );
+    const chatNodes = this.queryNodes((node: any) =>
+      node.type?.category === 'chat' && node.type?.type === 'chat_message'
+    );
 
-      const chatHistory = chatNodes.map((node: any) => ({
-        id: node.id,
-        sender: node.metadata?.sender || node.sender,
-        content: node.metadata?.content || node.content || node.description,
-        timestamp: node.metadata?.timestamp || node.timestamp,
-        label: node.label
-      })).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    const chatHistory = chatNodes.map((node: any) => ({
+      id: node.id,
+      sender: node.metadata?.sender || node.sender,
+      content: node.metadata?.content || node.content || node.description,
+      timestamp: node.metadata?.timestamp || node.timestamp,
+      label: node.label
+    })).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
-      return new Response(
-        JSON.stringify({
-          success: true,
-          messages: chatHistory,
-          count: chatHistory.length,
-          timestamp: new Date().toISOString()
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    } catch (error: any) {
-      this.logBusinessError('Error getting chat history:', error);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: error.message,
-          message: 'Failed to get chat history',
-          timestamp: new Date().toISOString()
-        }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    }
+    return new Response(
+      JSON.stringify({
+        success: true,
+        messages: chatHistory,
+        count: chatHistory.length,
+        timestamp: new Date().toISOString()
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   }
-
-  // ========== Abstract method implementations ==========
 
   protected async launchBddTest(
     runtime: string,
@@ -599,7 +873,6 @@ export abstract class Server extends Server_DockerCompose {
     configValue: any,
   ): Promise<void> {
     this.logBusinessMessage(`launchBddTest called: ${runtime}/${testName}/${configKey}`);
-    // TODO: implement actual BDD test launch (e.g., start Docker service)
   }
 
   protected async launchChecks(
@@ -609,32 +882,16 @@ export abstract class Server extends Server_DockerCompose {
     configValue: any,
   ): Promise<void> {
     this.logBusinessMessage(`launchChecks called: ${runtime}/${testName}/${configKey}`);
-    // TODO: implement actual checks launch (e.g., start Docker service)
   }
 
-  // ========== Utility Methods ==========
-  // These can be overridden by subclasses if needed
-
-  /**
-   * Log a business-level message.
-   * Default implementation uses console.log.
-   */
   protected logBusinessMessage(message: string): void {
     console.log(`[Business] ${message}`);
   }
 
-  /**
-   * Log a business-level error.
-   * Default implementation uses console.error.
-   */
   protected logBusinessError(message: string, error?: any): void {
     console.error(`[Business] ${message}`, error);
   }
 
-  /**
-   * Log a business-level warning.
-   * Default implementation uses console.warn.
-   */
   protected logBusinessWarning(message: string): void {
     console.warn(`[Business] ${message}`);
   }

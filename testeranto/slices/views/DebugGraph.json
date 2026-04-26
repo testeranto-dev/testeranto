@@ -7,8 +7,8 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 305.870693886474,
-      "y": 455.26111391480487,
+      "x": 351.74603461126674,
+      "y": 185.98570336993856,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -19,8 +19,32 @@
         "category": "agent",
         "type": "agent"
       },
-      "x": 551.8044040376205,
-      "y": 214.15278165245292,
+      "x": 291.13912907995837,
+      "y": 392.5912059648753,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "runtime:nodetests",
+      "label": "nodetests",
+      "type": {
+        "category": "resource",
+        "type": "runtime"
+      },
+      "x": 258.80489245294245,
+      "y": 334.9181546321515,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "runtime:webtests",
+      "label": "webtests",
+      "type": {
+        "category": "resource",
+        "type": "runtime"
+      },
+      "x": 186.2334544332862,
+      "y": 511.6665864651175,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -31,8 +55,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 146.13588880098928,
-      "y": 430.83425224885633,
+      "x": 750.4027659453862,
+      "y": 277.3837258595951,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -43,8 +67,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 302.926413859299,
-      "y": 134.77430430748845,
+      "x": 162.3284415274398,
+      "y": 347.95997209425144,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -55,8 +79,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 536.1846559243415,
-      "y": 475.6551873360347,
+      "x": 770.8310787162409,
+      "y": 224.20642917846544,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -67,8 +91,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 792.9096491054363,
-      "y": 408.03605235290036,
+      "x": 789.300087715742,
+      "y": 264.6058349262276,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -79,8 +103,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 725.8891135057019,
-      "y": 400.87824247891194,
+      "x": 20.336654733132953,
+      "y": 184.77541252843847,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -91,8 +115,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 578.9236965179933,
-      "y": 599.4283279054773,
+      "x": 1.9964271340343842,
+      "y": 111.52337778328132,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -103,80 +127,8 @@
         "category": "process",
         "type": "unknown"
       },
-      "x": 266.18235627887856,
-      "y": 158.4213646323097,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 131.66744082036087,
-      "y": 286.4896875580501,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 197.86011707150016,
-      "y": 79.21234121160319,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 750.5350824459539,
-      "y": 7.889583132231226,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 668.3928770365964,
-      "y": 109.17488087977092,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 451.6253178225189,
-      "y": 37.53925773244544,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 756.4692833655225,
-      "y": 159.41880805953795,
+      "x": 599.9848334613079,
+      "y": 437.29460050227027,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -187,68 +139,8 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 389.12739627691894,
-      "y": 413.7115216757185,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 571.569426988666,
-      "y": 135.32068551444442,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 486.04441831795697,
-      "y": 489.5751461784692,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "builder_process:webtests:builder",
-      "label": "builder process for builder",
-      "type": {
-        "category": "process",
-        "type": "builder"
-      },
-      "x": 473.24458128178526,
-      "y": 111.0693837737953,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 184.64860805024745,
-      "y": 5.715872178228043,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 606.0819911715296,
-      "y": 37.175117507810285,
+      "x": 51.055622005510145,
+      "y": 418.44810966607946,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -259,140 +151,8 @@
         "category": "process",
         "type": "builder"
       },
-      "x": 501.49721610261093,
-      "y": 149.91856050494545,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 532.2693415971548,
-      "y": 334.06061147758373,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 358.4554056581955,
-      "y": 592.9899274436046,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "builder_process:nodetests:builder",
-      "label": "builder process for builder",
-      "type": {
-        "category": "process",
-        "type": "builder"
-      },
-      "x": 142.4789728702903,
-      "y": 201.84348327969883,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 205.45454429903086,
-      "y": 286.5638330572726,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 206.4662867761629,
-      "y": 296.2346449515675,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "builder_process:webtests:builder",
-      "label": "builder process for builder",
-      "type": {
-        "category": "process",
-        "type": "builder"
-      },
-      "x": 238.18840903423873,
-      "y": 190.6160050008371,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 533.0087851278737,
-      "y": 153.64663653055678,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 711.7966974462826,
-      "y": 566.820984293666,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "type": {
-        "category": "process",
-        "type": "check"
-      },
-      "x": 385.61599225206356,
-      "y": 479.08620010910494,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 62.8021689303317,
-      "y": 512.7330819256103,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 230.53783547772736,
-      "y": 451.30331933730014,
+      "x": 511.8478177476304,
+      "y": 360.69198481674545,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -403,8 +163,8 @@
         "category": "process",
         "type": "check"
       },
-      "x": 34.432384654321964,
-      "y": 279.7894889964725,
+      "x": 267.4244673589314,
+      "y": 111.09969616779782,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -415,8 +175,116 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 613.4390082015326,
-      "y": 413.7098143942342,
+      "x": 356.57129470294046,
+      "y": 542.4922603054147,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 296.3758289416459,
+      "y": 562.5498990899861,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 699.5400505076185,
+      "y": 319.81993109354903,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 389.3006716749996,
+      "y": 135.4626619406964,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 678.6854381152563,
+      "y": 234.89085532161832,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 519.2195872429321,
+      "y": 206.06309132654556,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 522.7181855972693,
+      "y": 585.6988784120431,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 726.5938431490003,
+      "y": 131.73741944566427,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:webtests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 64.42182889134997,
+      "y": 596.175075883148,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 46.887256715582296,
+      "y": 147.96060210993232,
       "size": 5,
       "color": "#4a90e2"
     }
@@ -436,7 +304,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -453,7 +321,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -470,7 +338,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -487,7 +355,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -504,7 +372,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -521,7 +389,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -538,7 +406,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -555,7 +423,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -572,7 +440,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -589,7 +457,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -606,7 +474,7 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     },
     {
@@ -623,10 +491,214 @@
           "type": "associatedWith",
           "directed": true
         },
-        "timestamp": "2026-04-25T18:56:44.705Z"
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:Home",
+      "target": "runtime:nodetests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:Home",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:Kanban",
+      "target": "runtime:nodetests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:Kanban",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:EisenhowerMatrix",
+      "target": "runtime:nodetests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:EisenhowerMatrix",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:Gantt",
+      "target": "runtime:nodetests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:Gantt",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:Chat",
+      "target": "runtime:nodetests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:Chat",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:DebugGraph",
+      "target": "runtime:nodetests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
+      }
+    },
+    {
+      "source": "view:DebugGraph",
+      "target": "runtime:webtests",
+      "type": {
+        "category": "dependency",
+        "type": "uses",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-26T15:51:48.010Z"
       }
     }
   ],
   "viewType": "debug",
-  "timestamp": "2026-04-25T18:56:49.079Z"
+  "timestamp": "2026-04-26T15:51:53.826Z"
 }

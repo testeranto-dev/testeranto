@@ -5,7 +5,6 @@ import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { getContainerInfo } from "../utils";
 import { getAiderServiceName } from "../utils/aider/getAiderServiceName";
-import { generateAgentService } from "../utils/docker/generateAgentService";
 import { parseDockerEvent } from "../utils/docker/parseDockerEvent";
 import { generateServiceName } from "../utils/generateServiceName";
 import { getBaseServiceName } from "../utils/test/getBaseServiceName";
@@ -226,14 +225,6 @@ export class Server_DockerCompose extends Server_Api {
 
     this.logBusinessMessage(`Generated ${Object.keys(services).length} services`);
     return services;
-  }
-
-  /**
-   * Generate an agent service configuration for docker-compose.yml.
-   * Follows V2 pattern from generateServicesPure.ts.
-   */
-  private generateAgentService(agentName: string, agentConfig: any): any {
-    return generateAgentService(this.configs, agentName, agentConfig, this.mode, process.cwd());
   }
 
   /**
@@ -526,17 +517,6 @@ export class Server_DockerCompose extends Server_Api {
       return;
     }
 
-    // Look up any pending requestUid for this container
-    let requestUid: string | undefined;
-    if (parsed.serviceName && this.pendingRequestUids) {
-      requestUid = this.pendingRequestUids.get(parsed.serviceName);
-      if (requestUid) {
-        this.logBusinessMessage(`[handleDockerEvent] Found pending requestUid ${requestUid} for container ${parsed.serviceName}`);
-        // Clean up after use
-        this.pendingRequestUids.delete(parsed.serviceName);
-      }
-    }
-
     const result = handleDockerEventUtil(
       event,
       parsed.containerId,
@@ -545,7 +525,6 @@ export class Server_DockerCompose extends Server_Api {
       parsed.processType,
       parsed.configKey,
       parsed.testName,
-      requestUid,
     );
 
     if (result.operations.length > 0) {
@@ -670,28 +649,23 @@ export class Server_DockerCompose extends Server_Api {
     testName: string,
     configKey: string,
     configValue: any,
-  ): Promise<void> {
+  ): Promise<string> {
     const lockKey = `aider:${configKey}:${testName}`;
     if (this.testLaunchLocks.get(lockKey)) {
       this.logBusinessMessage(`[launchAider] Skipping ${testName} - already launching`);
-      return;
+      return '';
     }
 
     this.testLaunchLocks.set(lockKey, true);
     try {
-      // Process nodes are added by the Docker events watcher when containers start.
-      // No need to manually add them here.
-
-      // Start the Docker service (side effect)
-      // The Docker events watcher will handle adding/updating process nodes.
+      // Do NOT start the service here.  Return the command so the caller
+      // can open a terminal and let the user execute it.
+      // The Docker events watcher will detect the container when it starts
+      // and create the graph node asynchronously.
       const serviceName = this.getAiderServiceName(configKey, testName);
-      try {
-        await this.dockerComposeUp([serviceName]);
-
-      } catch (error: any) {
-        this.logBusinessError(`[launchAider] Failed to start service ${serviceName}:`, error);
-        throw error;
-      }
+      const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
+      const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
+      return command;
     } finally {
       setTimeout(() => {
         this.testLaunchLocks.delete(lockKey);

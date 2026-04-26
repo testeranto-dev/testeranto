@@ -66,7 +66,8 @@ export abstract class Server_Docker extends Server_Runtime {
     testName: string,
     configKey: string,
     configValue: any,
-  ): Promise<void>;
+    loadFiles?: string[],
+  ): Promise<string>;
 
   /**
    * Inform aider about changes (e.g., test results).

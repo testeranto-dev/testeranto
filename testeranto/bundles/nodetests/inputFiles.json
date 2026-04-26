@@ -84,7 +84,7 @@
     ]
   },
   "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts": {
-    "hash": "44e21cabac59072513921dc62a44259c",
+    "hash": "0c02dee1a9e242c6ab4f9122e9d22446",
     "files": [
       "/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
       "/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",

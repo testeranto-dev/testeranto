@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { TerminalManager } from '../../TerminalManager';
+import config from '../../../../testeranto/testeranto';
 
 export function registerCommands(
   context: vscode.ExtensionContext,
@@ -94,6 +95,76 @@ export function registerCommands(
     }
   });
 
+  // Launch aider for a specific test with agent selection and optional message
+  const launchAiderForTestCommand = vscode.commands.registerCommand('testeranto.launchAiderForTest', async (runtime: string, testName: string, configKey: string) => {
+    try {
+      // Determine agent profile selection
+      const agentProfiles = Object.keys(config.agents || {});
+      let selectedProfile: string | undefined;
+
+      if (agentProfiles.length > 0) {
+        const picked = await vscode.window.showQuickPick(
+          agentProfiles,
+          {
+            placeHolder: 'Select agent profile',
+            title: `Launch aider for ${testName}`
+          }
+        );
+
+        if (!picked) {
+          return; // User cancelled
+        }
+        selectedProfile = picked;
+      }
+
+      // Show input box pre-populated with the agent's message
+      const agentConfig = selectedProfile ? config.agents?.[selectedProfile] : undefined;
+      const defaultMessage = agentConfig?.message || '';
+      const message = await vscode.window.showInputBox({
+        prompt: 'Enter the message for aider to process (leave empty for interactive)',
+        placeHolder: 'e.g., Fix the failing test by implementing the missing function',
+        title: `Message for aider (${testName})`,
+        value: defaultMessage,
+        ignoreFocusOut: true
+      });
+
+      if (message === undefined) {
+        return; // User cancelled
+      }
+
+      // Generate a unique requestUid for this async operation
+      const requestUid = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+      // Call the server API to spawn an agent with test-specific load files
+      const response = await fetch('http://localhost:3000/~/agents/spawn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profile: selectedProfile,
+          message: message || undefined,
+          testName,
+          configKey,
+          requestUid
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Server returned ${response.status}`);
+      }
+
+      const result = await response.json();
+      vscode.window.showInformationMessage(result.message);
+
+      // Create a terminal and execute the returned shell script
+      const terminal = vscode.window.createTerminal(`Agent: ${result.agentName}`);
+      terminal.show();
+      terminal.sendText(result.command);
+    } catch (error: any) {
+      vscode.window.showErrorMessage(`Error launching aider: ${error.message}`);
+    }
+  });
+
   return [
     refreshCommand,
     refreshDockerProcessesCommand,
@@ -104,5 +175,6 @@ export function registerCommands(
     openFileCommand,
     openAiderTerminalCommand,
     restartAiderProcessCommand,
+    launchAiderForTestCommand,
   ];
 }

@@ -225,19 +225,6 @@ export const API: {
   // Note: According to tickets/chat.md, we no longer need POST endpoint for chat
   // Chat is now handled via WebSocket messages
 
-  launchAgent: {
-    method: 'POST',
-    path: '/~/agents/launch/:agentName',
-    description: 'Launch a new agent instance by profile name',
-    params: {
-      agentName: ''
-    },
-    query: {},
-    response: {} as any,
-    check: (routeName: string, request: { method: string }) => {
-      return routeName.startsWith('agents/launch/') && request.method === 'POST'
-    }
-  },
 
   getAgents: {
     method: 'GET',
@@ -520,6 +507,7 @@ export const API: {
       return routeName === 'start-process' && request.method === 'POST'
     }
   },
+
 } as const;
 
 
@@ -634,6 +622,7 @@ export interface GetAiderResponse {
       type: string;
     };
   }>;
+  timestamp?: string;
 }
 
 export interface GetAgentsResponse {
@@ -661,22 +650,19 @@ export interface GetProcessResponse {
       type: string;
     };
   }>;
+  timestamp?: string;
 }
 
 export interface GetRuntimeResponse {
-  nodes: Array<{
-    id: string;
-    type: string;
-    label: string;
-    metadata?: Record<string, any>;
+  runtimes: Record<string, {
+    tests: string[];
+    checks?: string[];
+    outputs?: string[];
+    dockerfile?: string;
+    buildOptions?: string;
+    runtime: string;
   }>;
-  edges?: Array<{
-    source: string;
-    target: string;
-    attributes: {
-      type: string;
-    };
-  }>;
+  timestamp?: string;
 }
 
 

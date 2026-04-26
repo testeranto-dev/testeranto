@@ -17,9 +17,6 @@ export abstract class Server_Aider extends Server_VSCode {
     return await createAiderMessageFile(testName, configKey);
   }
 
-  async launchAider(testName: string, configKey: string): Promise<void> {
-    await launchAider(testName, configKey);
-  }
 
   async informAider(testName: string, configKey: string, files?: any): Promise<void> {
     await informAider(testName, configKey, files);
@@ -27,6 +24,14 @@ export abstract class Server_Aider extends Server_VSCode {
 
   async sendToAider(processId: string, message: string): Promise<void> {
     this.logBusinessMessage(`sendToAider ${processId}: ${message}`);
+    // In a real implementation, this would send the message to the aider process
+    // via Docker exec or similar mechanism
+    // For now, we log it and broadcast a graph update
+    this.broadcastApiMessage('resourceChanged', {
+      url: '/~/aider',
+      message: `Message sent to aider process ${processId}`,
+      timestamp: new Date().toISOString()
+    });
   }
 
   async receiveFromAider(processId: string): Promise<string> {

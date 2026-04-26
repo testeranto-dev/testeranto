@@ -8,6 +8,7 @@ export interface LaunchAiderParams {
   serviceName: string;
   containerId?: string;
   containerInfo?: any;
+  loadFiles?: string[];
 }
 
 export interface LaunchAiderResult {
@@ -37,6 +38,7 @@ export function launchAider(params: LaunchAiderParams): LaunchAiderResult {
         processType: 'aider',
         startedAt: timestamp,
         timestamp,
+        loadFiles: params.loadFiles || [],
       },
     },
     timestamp,

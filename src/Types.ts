@@ -1,18 +1,14 @@
-
 import type { Plugin } from "esbuild";
 import type {
   Ibdd_in_any,
   Ibdd_out_any,
 } from "./lib/tiposkripto/src/CoreTypes";
 import type { ITestResourceConfiguration } from "./lib/tiposkripto/src/types";
-
 import type { BaseGiven } from "./lib/tiposkripto/src/verbs/bdd/BaseGiven";
 import type { BaseThen } from "./lib/tiposkripto/src/verbs/bdd/BaseThen";
 import type { BaseWhen } from "./lib/tiposkripto/src/verbs/bdd/BaseWhen";
-
 import type { BaseDescribe } from "./lib/tiposkripto/src/verbs/aaa/BaseDescribe";
 import type { BaseIt } from "./lib/tiposkripto/src/verbs/aaa/BaseIt";
-
 import type { BaseConfirm } from "./lib/tiposkripto/src/verbs/tdt/BaseConfirm";
 import type { BaseValue } from "./lib/tiposkripto/src/verbs/tdt/BaseValue";
 import type { BaseShould } from "./lib/tiposkripto/src/verbs/tdt/BaseShould";
@@ -30,8 +26,7 @@ export type ITesterantoConfig = {
   stakeholderReactModule?: string; // Path to custom React component module
 
   agents: Record<string, {
-    load: string[],
-    message: string,
+    persona: string,
     sliceFunction: (graphManager: any) => { nodes: any[]; edges: any[] };
   }>;
 
