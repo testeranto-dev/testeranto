@@ -1,7 +1,16 @@
 {
-  "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
-    "hash": "c519a00eba2c0853b6e2f56761187d2d",
+  "src/lib/tiposkripto/tests/abstractBase.test/index.ts": {
+    "hash": "c3b70a5aa933f98db0bba708dbddc9d2",
     "files": [
+      "/src/lib/tiposkripto/tests/abstractBase.test/index.ts"
+    ]
+  },
+  "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
+    "hash": "7ebc61e0ed34d6daa746fcbc2aa043ab",
+    "files": [
+      "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "/src/lib/tiposkripto/src/Node.ts",
       "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
       "/src/lib/tiposkripto/src/Adapters.ts",
@@ -19,10 +28,59 @@
       "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
       "/src/lib/tiposkripto/src/TestJobCreator.ts",
       "/src/lib/tiposkripto/src/ClassyImplementations.ts",
-      "/src/lib/tiposkripto/src/TestRunner.ts",
-      "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
-      "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-      "/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+      "/src/lib/tiposkripto/src/TestRunner.ts"
+    ]
+  },
+  "src/lib/tiposkripto/tests/circle/Circle.test.ts": {
+    "hash": "74cceb736da7fa87871cda92be4e72a4",
+    "files": [
+      "/src/lib/tiposkripto/tests/circle/Circle.ts",
+      "/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "/src/lib/tiposkripto/src/Node.ts",
+      "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "/src/lib/tiposkripto/src/Adapters.ts",
+      "/src/lib/tiposkripto/src/VerbProxies.ts",
+      "/src/lib/tiposkripto/src/verbs/index.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "/src/lib/tiposkripto/src/TestJobCreator.ts",
+      "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "/src/lib/tiposkripto/src/TestRunner.ts"
+    ]
+  },
+  "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts": {
+    "hash": "b1fbdde227dded43ed258b1f4a44d0a3",
+    "files": [
+      "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "/src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "/src/lib/tiposkripto/src/Node.ts",
+      "/src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "/src/lib/tiposkripto/src/Adapters.ts",
+      "/src/lib/tiposkripto/src/VerbProxies.ts",
+      "/src/lib/tiposkripto/src/verbs/index.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "/src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "/src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "/src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "/src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "/src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "/src/lib/tiposkripto/src/TestJobCreator.ts",
+      "/src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "/src/lib/tiposkripto/src/TestRunner.ts"
     ]
   }
 }

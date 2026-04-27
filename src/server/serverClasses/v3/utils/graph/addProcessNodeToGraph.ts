@@ -40,6 +40,28 @@ export function addProcessNodeToGraph(params: AddProcessNodeToGraphParams): {
     },
   ];
 
+  // Add edge from test node to process node
+  const testNodeId = `test:${params.configKey}:${params.testName}`;
+  operations.push({
+    type: 'addEdge',
+    data: {
+      source: testNodeId,
+      target: processNodeId,
+      attributes: {
+        type: {
+          category: 'ownership',
+          type: 'has',
+          directed: true,
+        },
+        timestamp,
+        metadata: {
+          relationship: 'test_has_process',
+        },
+      },
+    },
+    timestamp,
+  });
+
   return {
     operations,
     timestamp,

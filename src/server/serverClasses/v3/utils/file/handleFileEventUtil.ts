@@ -45,7 +45,22 @@ function generateFolderOperations(
   let currentPath = '';
   let parentFolderId: string | undefined;
 
-  for (const part of pathParts) {
+  // Always add the root folder node (idempotent)
+  const rootFolderId = 'folder:/';
+  ops.push({
+    type: 'addNode',
+    data: {
+      id: rootFolderId,
+      type: { category: 'file', type: 'folder' },
+      label: '/',
+      description: 'Root folder',
+      metadata: { path: '/' },
+    },
+    timestamp,
+  });
+
+  // Only create folder nodes for directory segments, not for the file itself
+  for (const part of pathParts.slice(0, -1)) {
     currentPath = currentPath ? `${currentPath}/${part}` : part;
     const folderNodeId = `folder:${currentPath}`;
 
@@ -62,39 +77,38 @@ function generateFolderOperations(
       timestamp,
     });
 
-    if (parentFolderId) {
-      ops.push({
-        type: 'addEdge',
-        data: {
-          source: parentFolderId,
-          target: folderNodeId,
-          attributes: {
-            type: { category: 'structural', type: 'contains', directed: true },
-            timestamp,
-          },
-        },
-        timestamp,
-      });
-    }
-
-    parentFolderId = folderNodeId;
-  }
-
-  // Connect the file node to its immediate parent folder
-  if (parentFolderId) {
+    // Connect to parent folder (or root if this is the first directory)
+    const sourceId = parentFolderId || rootFolderId;
     ops.push({
       type: 'addEdge',
       data: {
-        source: parentFolderId,
-        target: fileNodeId,
+        source: sourceId,
+        target: folderNodeId,
         attributes: {
-          type: { category: 'structural', type: 'locatedIn', directed: true },
+          type: { category: 'structural', type: 'contains', directed: true },
           timestamp,
         },
       },
       timestamp,
     });
+
+    parentFolderId = folderNodeId;
   }
+
+  // Connect the file node to its immediate parent folder (or root if file is at root)
+  const fileSourceId = parentFolderId || rootFolderId;
+  ops.push({
+    type: 'addEdge',
+    data: {
+      source: fileSourceId,
+      target: fileNodeId,
+      attributes: {
+        type: { category: 'structural', type: 'locatedIn', directed: true },
+        timestamp,
+      },
+    },
+    timestamp,
+  });
 
   return ops;
 }
@@ -286,6 +300,85 @@ function handleTestsJson(
       },
       timestamp,
     });
+
+    // Create verb nodes for each when and then entry
+    const testJob = testResult.testJob;
+    if (testJob) {
+      const whens = testJob.whens || [];
+      const thens = testJob.thens || [];
+
+      for (const when of whens) {
+        const verbName = when.name;
+        const verbNodeId = `verb:${configKey}:${testName}:${verbName}`;
+
+        operations.push({
+          type: 'addNode',
+          data: {
+            id: verbNodeId,
+            type: { category: 'process', type: 'verb' },
+            label: verbName,
+            description: `Verb: ${verbName}`,
+            metadata: {
+              verbName,
+              configKey,
+              testName,
+              timestamp,
+            },
+          },
+          timestamp,
+        });
+
+        // Connect verb node to test node
+        operations.push({
+          type: 'addEdge',
+          data: {
+            source: testNodeId,
+            target: verbNodeId,
+            attributes: {
+              type: { category: 'structural', type: 'contains', directed: true },
+              timestamp,
+            },
+          },
+          timestamp,
+        });
+      }
+
+      for (const then of thens) {
+        const verbName = then.name;
+        const verbNodeId = `verb:${configKey}:${testName}:${verbName}`;
+
+        operations.push({
+          type: 'addNode',
+          data: {
+            id: verbNodeId,
+            type: { category: 'process', type: 'verb' },
+            label: verbName,
+            description: `Verb: ${verbName}`,
+            metadata: {
+              verbName,
+              configKey,
+              testName,
+              timestamp,
+            },
+          },
+          timestamp,
+        });
+
+        // Connect verb node to test node
+        operations.push({
+          type: 'addEdge',
+          data: {
+            source: testNodeId,
+            target: verbNodeId,
+            attributes: {
+              type: { category: 'structural', type: 'contains', directed: true },
+              timestamp,
+            },
+          },
+          timestamp,
+        });
+      }
+    }
   } catch (err) {
     // If parsing fails, return no operations
   }

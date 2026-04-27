@@ -4,11 +4,11 @@
       "id": "agent:prodirek",
       "label": "prodirek",
       "type": {
-        "category": "agent",
+        "category": "process",
         "type": "agent"
       },
-      "x": 573.126632023648,
-      "y": 98.28589915260004,
+      "x": 763.7333820049073,
+      "y": 581.610828888855,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -16,23 +16,215 @@
       "id": "agent:arko",
       "label": "arko",
       "type": {
-        "category": "agent",
+        "category": "process",
         "type": "agent"
       },
-      "x": 515.7053484126824,
-      "y": 503.3098420015645,
+      "x": 767.781137255785,
+      "y": 146.17050709067755,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "runtime:nodetests",
+      "id": "config:nodetests",
       "label": "nodetests",
       "type": {
         "category": "resource",
-        "type": "runtime"
+        "type": "config"
       },
-      "x": 561.7652028630295,
-      "y": 132.90142382580973,
+      "x": 10.163561357031892,
+      "y": 498.13918168347163,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:webtests",
+      "label": "webtests",
+      "type": {
+        "category": "resource",
+        "type": "config"
+      },
+      "x": 74.39465059121089,
+      "y": 538.3505439972708,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:javatests",
+      "label": "javatests",
+      "type": {
+        "category": "resource",
+        "type": "config"
+      },
+      "x": 200.4921730151353,
+      "y": 143.9341704986154,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:rubytests",
+      "label": "rubytests",
+      "type": {
+        "category": "resource",
+        "type": "config"
+      },
+      "x": 633.513693039503,
+      "y": 3.4380928617461004,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:pythontests",
+      "label": "pythontests",
+      "type": {
+        "category": "resource",
+        "type": "config"
+      },
+      "x": 551.216656869105,
+      "y": 408.74388294442326,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:golangtests",
+      "label": "golangtests",
+      "type": {
+        "category": "resource",
+        "type": "config"
+      },
+      "x": 254.90175938517234,
+      "y": 495.648680717896,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "config:global",
+      "label": "global",
+      "type": {
+        "category": "resource",
+        "type": "config"
+      },
+      "x": 554.4898368610094,
+      "y": 252.70504370661772,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "label": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 223.9848814026293,
+      "y": 272.3493026290757,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "label": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 262.94732392917257,
+      "y": 32.28905051341388,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "label": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 202.15471271086568,
+      "y": 40.59441348585404,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "label": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 712.9894046978487,
+      "y": 28.75105722645701,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "label": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 346.99638749337424,
+      "y": 476.4501018457593,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "label": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 66.69109682501696,
+      "y": 19.796849754263015,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:javatests:src/java/test/java/com/example/calculator/CalculatorTest.java",
+      "label": "src/java/test/java/com/example/calculator/CalculatorTest.java",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 140.5999714365798,
+      "y": 101.26929633156152,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:rubytests:src/lib/rubeno/examples/calculator/Calculator.test.rb",
+      "label": "src/lib/rubeno/examples/calculator/Calculator.test.rb",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 342.0844624453629,
+      "y": 529.1365494153666,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "label": "src/lib/pitono/examples/calculator_test.py",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 613.1822479002797,
+      "y": 25.568421120297135,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "test:golangtests:src/lib/golingvu/examples/calculator/golingvu_test.go",
+      "label": "src/lib/golingvu/examples/calculator/golingvu_test.go",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 505.40056373143204,
+      "y": 239.34200963098337,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -43,8 +235,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 345.76685037343094,
-      "y": 451.07702953431533,
+      "x": 554.4108144492425,
+      "y": 262.93014713652616,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -55,8 +247,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 490.8352142092252,
-      "y": 560.3186781762563,
+      "x": 787.8085504930201,
+      "y": 413.08628355843257,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -67,8 +259,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 458.24711231955604,
-      "y": 514.2902478471731,
+      "x": 65.7898068165295,
+      "y": 389.97508733421944,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -79,8 +271,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 411.84997403936956,
-      "y": 506.49734738501303,
+      "x": 162.47043956270116,
+      "y": 353.35822316533915,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -91,8 +283,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 273.1710435652712,
-      "y": 48.992460164182575,
+      "x": 442.52760281071113,
+      "y": 562.4164186251644,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -103,8 +295,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 593.9483552430958,
-      "y": 535.5358437810308,
+      "x": 427.1557498331017,
+      "y": 166.05171174811434,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -115,20 +307,8 @@
         "category": "view",
         "type": "view"
       },
-      "x": 792.199990019943,
-      "y": 201.01130429412387,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "label": "Calculator.test.node.ts",
-      "type": {
-        "category": "process",
-        "type": "bdd"
-      },
-      "x": 247.03292898836384,
-      "y": 135.08836658229168,
+      "x": 524.5051986619783,
+      "y": 43.531863445503035,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -139,8 +319,20 @@
         "category": "file",
         "type": "outputFile"
       },
-      "x": 741.0066473255072,
-      "y": 561.0726238109715,
+      "x": 642.7242646289355,
+      "y": 400.56685191648313,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "folder:/",
+      "label": "/",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "x": 234.19946712021638,
+      "y": 74.17505438044354,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -151,8 +343,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 711.5405223423363,
-      "y": 540.1472939329806,
+      "x": 344.65902354758924,
+      "y": 460.1924066880838,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -163,8 +355,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 93.11099812817085,
-      "y": 414.2789371499957,
+      "x": 799.826842197968,
+      "y": 38.64353665366986,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -175,8 +367,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 416.8620489484367,
-      "y": 247.4016357637294,
+      "x": 502.7730892068907,
+      "y": 312.9533655543001,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -187,8 +379,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 234.99022763919237,
-      "y": 275.69567262662997,
+      "x": 771.4086467455016,
+      "y": 70.91605516378263,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -199,8 +391,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 238.8141383529102,
-      "y": 283.5120834297843,
+      "x": 176.48861081212388,
+      "y": 174.34678164222157,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -211,8 +403,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 354.61194028283154,
-      "y": 447.8517272926091,
+      "x": 218.07421093823532,
+      "y": 556.7125428489064,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -223,8 +415,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 489.0217239566934,
-      "y": 385.60032241905253,
+      "x": 343.6718078192829,
+      "y": 529.2355864061597,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -235,8 +427,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 161.76989809675942,
-      "y": 486.7985239527976,
+      "x": 438.2755667169612,
+      "y": 578.3382482316546,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -247,32 +439,44 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 126.05282091154662,
-      "y": 377.64477085029927,
+      "x": 254.3273659021792,
+      "y": 68.7750320925135,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
-      "label": "tests.json",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 667.2572791079278,
-      "y": 56.60686305774454,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "label": "Rectangle.test.ts",
+      "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs",
+      "label": "Calculator.test.node.mjs",
       "type": {
         "category": "process",
         "type": "bdd"
       },
-      "x": 556.5999337940746,
-      "y": 252.1723152933946,
+      "x": 109.15992808218932,
+      "y": 396.23141774036776,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs/tests.json",
+      "label": "tests.json",
+      "type": {
+        "category": "file",
+        "type": "outputFile"
+      },
+      "x": 560.3145208104177,
+      "y": 501.5829220926053,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs",
+      "label": "Calculator.test.node.mjs",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "x": 634.2939480161232,
+      "y": 225.83312057910496,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -283,8 +487,8 @@
         "category": "file",
         "type": "outputFile"
       },
-      "x": 91.52010347254978,
-      "y": 235.73716562251218,
+      "x": 578.6100746515731,
+      "y": 289.04590599720797,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -295,8 +499,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 92.04366890252977,
-      "y": 310.6641889009468,
+      "x": 306.6442244088945,
+      "y": 434.38060920156016,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -307,32 +511,44 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 562.1832655575881,
-      "y": 286.9307980176366,
+      "x": 479.25329193810944,
+      "y": 579.6174104102475,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
-      "label": "tests.json",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 724.6185905067567,
-      "y": 152.29936422029533,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "label": "Circle.test.ts",
+      "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs",
+      "label": "Rectangle.test.mjs",
       "type": {
         "category": "process",
         "type": "bdd"
       },
-      "x": 178.43497445867723,
-      "y": 238.43704105513007,
+      "x": 292.6328733047497,
+      "y": 400.2477338848313,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs/tests.json",
+      "label": "tests.json",
+      "type": {
+        "category": "file",
+        "type": "outputFile"
+      },
+      "x": 299.9952220313439,
+      "y": 327.41658858899063,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs",
+      "label": "Rectangle.test.mjs",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "x": 245.65307551813075,
+      "y": 422.395641747158,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -343,8 +559,8 @@
         "category": "file",
         "type": "outputFile"
       },
-      "x": 528.4541274200346,
-      "y": 506.90020879848583,
+      "x": 69.95318303883265,
+      "y": 282.7139722654866,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -355,8 +571,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 485.52058236678573,
-      "y": 220.13357606728684,
+      "x": 126.05613195159178,
+      "y": 370.66097190096093,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -367,20 +583,44 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 58.720462525533804,
-      "y": 142.98498336860288,
+      "x": 687.3921832751023,
+      "y": 140.69627918147933,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.mjs",
+      "label": "Circle.test.mjs",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 728.9409898081823,
+      "y": 145.3141167918231,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs/tests.json",
       "label": "tests.json",
+      "type": {
+        "category": "file",
+        "type": "outputFile"
+      },
+      "x": 780.9341444257823,
+      "y": 43.50173447458263,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs",
+      "label": "Circle.test.mjs",
       "type": {
         "category": "file",
         "type": "folder"
       },
-      "x": 794.2257190306082,
-      "y": 481.0655661679982,
+      "x": 91.62766759115941,
+      "y": 578.2409841855302,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -391,8 +631,140 @@
         "category": "process",
         "type": "unknown"
       },
-      "x": 70.93125528490506,
-      "y": 193.81564206685002,
+      "x": 447.80120002977935,
+      "y": 484.7275689630585,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-3",
+      "label": "check process for src_lib_golingvu_examples_calculator_golingvu_test-go-check-3",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 366.5552511659267,
+      "y": 151.74429134362418,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:pythontests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 326.035056023381,
+      "y": 225.28518294588446,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-1",
+      "label": "check process for src_lib_pitono_examples_calculator_test-py-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 282.7787960681317,
+      "y": 87.29412228261583,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-0",
+      "label": "check process for src_lib_golingvu_examples_calculator_golingvu_test-go-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 359.0322637398307,
+      "y": 86.13063404597649,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-2",
+      "label": "check process for src_lib_golingvu_examples_calculator_golingvu_test-go-check-2",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 266.2205831705819,
+      "y": 423.4958995709667,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-check-1",
+      "label": "check process for src_java_test_java_com_example_calculator_calculatortest-java-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 380.61929184573887,
+      "y": 565.4727506965843,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-1",
+      "label": "check process for src_lib_golingvu_examples_calculator_golingvu_test-go-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 711.4673569640714,
+      "y": 1.5575001788342924,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:rubytests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 127.12713704756169,
+      "y": 437.01540911539047,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 181.77020868072873,
+      "y": 139.12541379155797,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 183.1589873250908,
+      "y": 422.481642230164,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-check-0",
+      "label": "check process for src_java_test_java_com_example_calculator_calculatortest-java-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 122.7683818155942,
+      "y": 29.046564799100526,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -403,8 +775,212 @@
         "category": "process",
         "type": "builder"
       },
-      "x": 100.54143578909019,
-      "y": 591.7873649119406,
+      "x": 139.90384557561956,
+      "y": 315.4184958713261,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:pythontests:src_lib_pitono_examples_calculator_test-py-bdd",
+      "label": "bdd process for src_lib_pitono_examples_calculator_test-py-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 222.73901318337687,
+      "y": 340.2745681227255,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 65.10317584323514,
+      "y": 482.51219102861256,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-0",
+      "label": "check process for src_lib_pitono_examples_calculator_test-py-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 757.4438966890117,
+      "y": 310.9590107529318,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 496.05469393754555,
+      "y": 170.46441273062658,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-bdd",
+      "label": "bdd process for src_java_test_java_com_example_calculator_calculatortest-java-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 107.93795844440935,
+      "y": 371.65059454873466,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-5",
+      "label": "check process for src_lib_golingvu_examples_calculator_golingvu_test-go-check-5",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 762.4419280741753,
+      "y": 229.64992257510758,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 211.14408721993962,
+      "y": 305.55310686624733,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:javatests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 782.7488176755645,
+      "y": 242.26169620635852,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:golangtests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 93.67101167707625,
+      "y": 427.63981411702014,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-4",
+      "label": "check process for src_lib_golingvu_examples_calculator_golingvu_test-go-check-4",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 269.7541017463033,
+      "y": 407.0874119698926,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 459.24278515973856,
+      "y": 212.10029189175353,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 325.0350757747042,
+      "y": 53.903688276589534,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-bdd",
+      "label": "bdd process for src_lib_golingvu_examples_calculator_golingvu_test-go-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 709.7618060783387,
+      "y": 517.9819886374044,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-2",
+      "label": "check process for src_lib_pitono_examples_calculator_test-py-check-2",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 744.152451340552,
+      "y": 586.4013662827033,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "x": 33.79669830273686,
+      "y": 370.94090302363657,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "bdd_process:rubytests:src_lib_rubeno_examples_calculator_calculator-test-rb-bdd",
+      "label": "bdd process for src_lib_rubeno_examples_calculator_calculator-test-rb-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "x": 606.7516536463082,
+      "y": 544.7298055861129,
+      "size": 5,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "builder_process:webtests:builder",
+      "label": "builder process for builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "x": 287.53104656553523,
+      "y": 152.0353455706822,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -415,44 +991,32 @@
         "category": "process",
         "type": "bdd"
       },
-      "x": 392.7491447685316,
-      "y": 329.8188142475072,
+      "x": 654.0784542178254,
+      "y": 445.38019422530346,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/test-completed.md",
-      "label": "test-completed.md",
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
       "type": {
-        "category": "file",
-        "type": "documentation"
+        "category": "process",
+        "type": "bdd"
       },
-      "x": 679.3121047434895,
-      "y": 327.2819287268827,
+      "x": 584.6289187939059,
+      "y": 316.839972658522,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/test-completed.md",
-      "label": "test-completed.md",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 118.43956921122229,
-      "y": 349.14806955499205,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/Node.ts",
-      "label": "Node.ts",
+      "id": "file:src/lib/pitono/examples/calculator_test.py",
+      "label": "calculator_test.py",
       "type": {
         "category": "file",
         "type": "inputFile"
       },
-      "x": 373.360572289839,
-      "y": 41.54548912308449,
+      "x": 58.56723720041774,
+      "y": 257.28736629117435,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -463,8 +1027,8 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 106.6898185507826,
-      "y": 23.463064633607832,
+      "x": 287.7255595912195,
+      "y": 20.47582656628959,
       "size": 5,
       "color": "#4a90e2"
     },
@@ -475,968 +1039,848 @@
         "category": "file",
         "type": "folder"
       },
-      "x": 167.97041096541693,
-      "y": 437.42308096731574,
+      "x": 394.0636871290348,
+      "y": 388.96104710665645,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "folder:src/lib/tiposkripto",
-      "label": "tiposkripto",
+      "id": "folder:src/lib/pitono",
+      "label": "pitono",
       "type": {
         "category": "file",
         "type": "folder"
       },
-      "x": 23.040684485077545,
-      "y": 121.41981812307476,
+      "x": 315.49374343169757,
+      "y": 59.09878770709782,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "folder:src/lib/tiposkripto/src",
-      "label": "src",
+      "id": "folder:src/lib/pitono/examples",
+      "label": "examples",
       "type": {
         "category": "file",
         "type": "folder"
       },
-      "x": 99.21713456258558,
-      "y": 487.53357499913955,
+      "x": 592.2660115734599,
+      "y": 414.6513128623685,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "folder:src/lib/tiposkripto/src/Node.ts",
-      "label": "Node.ts",
+      "id": "verb:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.mjs:Step_0",
+      "label": "Step_0",
       "type": {
-        "category": "file",
-        "type": "folder"
+        "category": "verb",
+        "type": "given"
       },
-      "x": 603.8992250778887,
-      "y": 13.689522400355525,
+      "x": 157.3919328422522,
+      "y": 16.81150591849825,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
-      "label": "BaseTiposkripto.ts",
+      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs/test-completed.md",
+      "label": "test-completed.md",
       "type": {
         "category": "file",
-        "type": "inputFile"
+        "type": "documentation"
       },
-      "x": 701.8908621808034,
-      "y": 280.77287525677383,
+      "x": 680.9548866143176,
+      "y": 273.24797137350515,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "folder:src/lib/tiposkripto/src/BaseTiposkripto.ts",
-      "label": "BaseTiposkripto.ts",
+      "id": "verb:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:Step_0",
+      "label": "Step_0",
       "type": {
-        "category": "file",
-        "type": "folder"
+        "category": "verb",
+        "type": "given"
       },
-      "x": 165.95536711320148,
-      "y": 36.318243616045386,
+      "x": 119.37943324875322,
+      "y": 129.6395505809127,
       "size": 5,
       "color": "#4a90e2"
     },
     {
-      "id": "file:src/lib/tiposkripto/src/Adapters.ts",
-      "label": "Adapters.ts",
+      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs/test-completed.md",
+      "label": "test-completed.md",
       "type": {
         "category": "file",
-        "type": "inputFile"
+        "type": "documentation"
       },
-      "x": 661.3510914072558,
-      "y": 227.61758022708167,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/Adapters.ts",
-      "label": "Adapters.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 777.5400063360343,
-      "y": 134.2794368971846,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/VerbProxies.ts",
-      "label": "VerbProxies.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 724.0271897358944,
-      "y": 161.60373632774312,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/VerbProxies.ts",
-      "label": "VerbProxies.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 404.49567351706366,
-      "y": 146.58443516873984,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/index.ts",
-      "label": "index.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 134.1500394631736,
-      "y": 361.1023727314197,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs",
-      "label": "verbs",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 441.3034663595187,
-      "y": 512.1639339388632,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/index.ts",
-      "label": "index.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 435.175914918765,
-      "y": 518.6175710006838,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-      "label": "BaseGiven.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 490.94322845384227,
-      "y": 488.3388819680885,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/bdd",
-      "label": "bdd",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 39.7311510139601,
-      "y": 407.39217241824286,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-      "label": "BaseGiven.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 142.46051913625948,
-      "y": 64.52567863276298,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-      "label": "CommonUtils.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 88.53981710890339,
-      "y": 520.3351399347272,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/internal",
-      "label": "internal",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 786.9932702331574,
-      "y": 382.08704527476993,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-      "label": "CommonUtils.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 109.05215458375474,
-      "y": 267.22227972907353,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-      "label": "BaseWhen.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 463.6236961974862,
-      "y": 541.8135858912915,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-      "label": "BaseWhen.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 9.754607183910569,
-      "y": 83.80127717625878,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-      "label": "BaseThen.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 527.9797680284096,
-      "y": 110.28797832468662,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-      "label": "BaseThen.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 316.3078948185503,
-      "y": 240.9083979265253,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-      "label": "BaseDescribe.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 164.90048686323638,
-      "y": 156.97874270324007,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/aaa",
-      "label": "aaa",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 134.92281804487885,
-      "y": 476.4855131922125,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-      "label": "BaseDescribe.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 729.7126011692293,
-      "y": 556.4395944354393,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-      "label": "BaseIt.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 550.749715791393,
-      "y": 68.48570642492643,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-      "label": "BaseIt.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 713.5942807428873,
-      "y": 589.293312968048,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-      "label": "BaseConfirm.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 354.1394943734907,
-      "y": 405.9280369989313,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/tdt",
-      "label": "tdt",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 792.6299275040365,
-      "y": 2.788866814289226,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-      "label": "BaseConfirm.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 655.1050445018601,
-      "y": 598.1564302262251,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-      "label": "BaseValue.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 706.7276445658712,
-      "y": 20.15612809087859,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-      "label": "BaseValue.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 545.3519553447987,
-      "y": 176.06148500439352,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-      "label": "BaseShould.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 256.12896424320394,
-      "y": 37.65660220358109,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-      "label": "BaseShould.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 519.6987264287344,
-      "y": 549.5542555724824,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-      "label": "BaseExpected.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 182.8942157784776,
-      "y": 264.38442524533474,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-      "label": "BaseExpected.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 280.120601224651,
-      "y": 575.3160261881696,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
-      "label": "TestJobCreator.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 118.79313731896008,
-      "y": 125.69679293117417,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/TestJobCreator.ts",
-      "label": "TestJobCreator.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 183.6444121492952,
-      "y": 291.7039462063383,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
-      "label": "ClassyImplementations.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 29.633049746034423,
-      "y": 479.9693925339532,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/ClassyImplementations.ts",
-      "label": "ClassyImplementations.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 655.1967864599649,
-      "y": 327.34905577043173,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/src/TestRunner.ts",
-      "label": "TestRunner.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 322.467698921223,
-      "y": 342.7900711419365,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/src/TestRunner.ts",
-      "label": "TestRunner.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 128.8561064226421,
-      "y": 176.58981369683923,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.ts",
-      "label": "Calculator.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 375.84079352455353,
-      "y": 451.81699301265854,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/tests",
-      "label": "tests",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 732.6572955529111,
-      "y": 497.6842202830739,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/tests/calculator",
-      "label": "calculator",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 389.4915155377178,
-      "y": 537.1208373439952,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.ts",
-      "label": "Calculator.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 684.8275591679334,
-      "y": 254.23150864887495,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-      "label": "Calculator.test.specification.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 209.14777527746998,
-      "y": 434.3383608824327,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-      "label": "Calculator.test.specification.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 671.8803911349326,
-      "y": 195.85637015337613,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "label": "Calculator.test.node.ts",
-      "type": {
-        "category": "file",
-        "type": "inputFile"
-      },
-      "x": 68.03800604534248,
-      "y": 180.22430960337655,
-      "size": 5,
-      "color": "#4a90e2"
-    },
-    {
-      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "label": "Calculator.test.node.ts",
-      "type": {
-        "category": "file",
-        "type": "folder"
-      },
-      "x": 131.76048434796357,
-      "y": 195.13321529397902,
+      "x": 116.7673795242072,
+      "y": 384.4840030641575,
       "size": 5,
       "color": "#4a90e2"
     }
   ],
   "edges": [
     {
-      "source": "agent:prodirek",
-      "target": "view:Home",
+      "source": "config:global",
+      "target": "agent:prodirek",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:prodirek",
-      "target": "view:Kanban",
+      "source": "config:global",
+      "target": "agent:arko",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:prodirek",
-      "target": "view:EisenhowerMatrix",
+      "source": "config:nodetests",
+      "target": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:prodirek",
-      "target": "view:Gantt",
+      "source": "config:nodetests",
+      "target": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:prodirek",
-      "target": "view:Chat",
+      "source": "config:nodetests",
+      "target": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:prodirek",
-      "target": "view:DebugGraph",
+      "source": "config:nodetests",
+      "target": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:prodirek",
-      "target": "view:DebugGraphV2",
+      "source": "config:webtests",
+      "target": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:arko",
-      "target": "view:Home",
+      "source": "config:webtests",
+      "target": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:arko",
-      "target": "view:Kanban",
+      "source": "config:javatests",
+      "target": "test:javatests:src/java/test/java/com/example/calculator/CalculatorTest.java",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:arko",
-      "target": "view:EisenhowerMatrix",
+      "source": "config:rubytests",
+      "target": "test:rubytests:src/lib/rubeno/examples/calculator/Calculator.test.rb",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:arko",
-      "target": "view:Gantt",
+      "source": "config:pythontests",
+      "target": "test:pythontests:src/lib/pitono/examples/calculator_test.py",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:arko",
-      "target": "view:Chat",
+      "source": "config:golangtests",
+      "target": "test:golangtests:src/lib/golingvu/examples/calculator/golingvu_test.go",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "structural",
+        "type": "contains",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "structural",
+          "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.248Z"
       }
     },
     {
-      "source": "agent:arko",
-      "target": "view:DebugGraph",
+      "source": "config:nodetests",
+      "target": "agent:prodirek",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
       }
     },
     {
-      "source": "agent:arko",
-      "target": "view:DebugGraphV2",
+      "source": "config:webtests",
+      "target": "agent:prodirek",
       "type": {
-        "category": "association",
-        "type": "associatedWith",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "association",
-          "type": "associatedWith",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
       }
     },
     {
-      "source": "view:Home",
-      "target": "runtime:nodetests",
+      "source": "config:javatests",
+      "target": "agent:prodirek",
       "type": {
-        "category": "dependency",
-        "type": "uses",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "dependency",
-          "type": "uses",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
       }
     },
     {
-      "source": "view:Kanban",
-      "target": "runtime:nodetests",
+      "source": "config:rubytests",
+      "target": "agent:prodirek",
       "type": {
-        "category": "dependency",
-        "type": "uses",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "dependency",
-          "type": "uses",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
       }
     },
     {
-      "source": "view:EisenhowerMatrix",
-      "target": "runtime:nodetests",
+      "source": "config:pythontests",
+      "target": "agent:prodirek",
       "type": {
-        "category": "dependency",
-        "type": "uses",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "dependency",
-          "type": "uses",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
       }
     },
     {
-      "source": "view:Gantt",
-      "target": "runtime:nodetests",
+      "source": "config:golangtests",
+      "target": "agent:prodirek",
       "type": {
-        "category": "dependency",
-        "type": "uses",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "dependency",
-          "type": "uses",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
       }
     },
     {
-      "source": "view:Chat",
-      "target": "runtime:nodetests",
+      "source": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "target": "agent:prodirek",
       "type": {
-        "category": "dependency",
-        "type": "uses",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "dependency",
-          "type": "uses",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
       }
     },
     {
-      "source": "view:DebugGraph",
-      "target": "runtime:nodetests",
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "agent:prodirek",
       "type": {
-        "category": "dependency",
-        "type": "uses",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "dependency",
-          "type": "uses",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
       }
     },
     {
-      "source": "view:DebugGraphV2",
-      "target": "runtime:nodetests",
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "agent:prodirek",
       "type": {
-        "category": "dependency",
-        "type": "uses",
+        "category": "ownership",
+        "type": "has",
         "directed": true
       },
       "attributes": {
         "type": {
-          "category": "dependency",
-          "type": "uses",
+          "category": "ownership",
+          "type": "has",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:46.419Z"
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:javatests:src/java/test/java/com/example/calculator/CalculatorTest.java",
+      "target": "agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:rubytests:src/lib/rubeno/examples/calculator/Calculator.test.rb",
+      "target": "agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "target": "agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:golangtests:src/lib/golingvu/examples/calculator/golingvu_test.go",
+      "target": "agent:prodirek",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "config:javatests",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "config:rubytests",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:javatests:src/java/test/java/com/example/calculator/CalculatorTest.java",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:rubytests:src/lib/rubeno/examples/calculator/Calculator.test.rb",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "test:golangtests:src/lib/golingvu/examples/calculator/golingvu_test.go",
+      "target": "agent:arko",
+      "type": {
+        "category": "ownership",
+        "type": "has",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "ownership",
+          "type": "has",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:54.264Z"
+      }
+    },
+    {
+      "source": "folder:/",
+      "target": "folder:testeranto",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1453,7 +1897,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1470,7 +1914,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1487,7 +1931,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1504,7 +1948,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1521,7 +1965,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1538,7 +1982,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1555,7 +1999,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1572,28 +2016,11 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
       "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:47.571Z"
-      }
-    },
-    {
-      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
       "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
       "type": {
         "category": "structural",
@@ -1606,7 +2033,7 @@
           "type": "locatedIn",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
       }
     },
     {
@@ -1623,7 +2050,58 @@
           "type": "provides",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.571Z"
+        "timestamp": "2026-04-27T22:19:56.429Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:56.431Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs/tests.json",
+      "type": {
+        "category": "structural",
+        "type": "locatedIn",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:56.431Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs/tests.json",
+      "type": {
+        "category": "dependency",
+        "type": "provides",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "provides",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:56.431Z"
       }
     },
     {
@@ -1640,7 +2118,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.572Z"
+        "timestamp": "2026-04-27T22:19:56.433Z"
       }
     },
     {
@@ -1657,28 +2135,11 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.572Z"
+        "timestamp": "2026-04-27T22:19:56.433Z"
       }
     },
     {
       "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:47.572Z"
-      }
-    },
-    {
-      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
       "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
       "type": {
         "category": "structural",
@@ -1691,7 +2152,7 @@
           "type": "locatedIn",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.572Z"
+        "timestamp": "2026-04-27T22:19:56.433Z"
       }
     },
     {
@@ -1708,7 +2169,58 @@
           "type": "provides",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.572Z"
+        "timestamp": "2026-04-27T22:19:56.433Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:56.435Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs/tests.json",
+      "type": {
+        "category": "structural",
+        "type": "locatedIn",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:56.435Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs/tests.json",
+      "type": {
+        "category": "dependency",
+        "type": "provides",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "provides",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:56.435Z"
       }
     },
     {
@@ -1725,7 +2237,7 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.575Z"
+        "timestamp": "2026-04-27T22:19:56.438Z"
       }
     },
     {
@@ -1742,28 +2254,11 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.575Z"
+        "timestamp": "2026-04-27T22:19:56.438Z"
       }
     },
     {
       "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts",
-      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:47.575Z"
-      }
-    },
-    {
-      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
       "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
       "type": {
         "category": "structural",
@@ -1776,7 +2271,7 @@
           "type": "locatedIn",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.575Z"
+        "timestamp": "2026-04-27T22:19:56.438Z"
       }
     },
     {
@@ -1793,12 +2288,12 @@
           "type": "provides",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:47.575Z"
+        "timestamp": "2026-04-27T22:19:56.438Z"
       }
     },
     {
-      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/test-completed.md",
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs",
       "type": {
         "category": "structural",
         "type": "contains",
@@ -1810,12 +2305,12 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:48.769Z"
+        "timestamp": "2026-04-27T22:19:56.440Z"
       }
     },
     {
-      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/test-completed.md",
-      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/test-completed.md",
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs/tests.json",
       "type": {
         "category": "structural",
         "type": "locatedIn",
@@ -1827,7 +2322,585 @@
           "type": "locatedIn",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:48.769Z"
+        "timestamp": "2026-04-27T22:19:56.440Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.mjs",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs/tests.json",
+      "type": {
+        "category": "dependency",
+        "type": "provides",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "provides",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:56.440Z"
+      }
+    },
+    {
+      "source": "config:",
+      "target": "unknown_process::",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.186Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-3",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.312Z"
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "builder_process:pythontests:builder",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.588Z"
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-1",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.589Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-0",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.857Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-2",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.858Z"
+      }
+    },
+    {
+      "source": "config:javatests",
+      "target": "check_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-check-1",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.859Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-1",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.860Z"
+      }
+    },
+    {
+      "source": "config:rubytests",
+      "target": "builder_process:rubytests:builder",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:57.861Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.031Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.034Z"
+      }
+    },
+    {
+      "source": "config:javatests",
+      "target": "check_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-check-0",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.035Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "builder_process:nodetests:builder",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.042Z"
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "bdd_process:pythontests:src_lib_pitono_examples_calculator_test-py-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.043Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.043Z"
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-0",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.044Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.045Z"
+      }
+    },
+    {
+      "source": "config:javatests",
+      "target": "bdd_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.063Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-5",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.254Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.328Z"
+      }
+    },
+    {
+      "source": "config:javatests",
+      "target": "builder_process:javatests:builder",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.389Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "builder_process:golangtests:builder",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.390Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "check_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-check-4",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.398Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.399Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.410Z"
+      }
+    },
+    {
+      "source": "config:golangtests",
+      "target": "bdd_process:golangtests:src_lib_golingvu_examples_calculator_golingvu_test-go-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.411Z"
+      }
+    },
+    {
+      "source": "config:pythontests",
+      "target": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-2",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.450Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.450Z"
+      }
+    },
+    {
+      "source": "config:rubytests",
+      "target": "bdd_process:rubytests:src_lib_rubeno_examples_calculator_calculator-test-rb-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.456Z"
+      }
+    },
+    {
+      "source": "config:webtests",
+      "target": "builder_process:webtests:builder",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.457Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.460Z"
+      }
+    },
+    {
+      "source": "config:nodetests",
+      "target": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:58.500Z"
+      }
+    },
+    {
+      "source": "folder:/",
+      "target": "folder:src",
+      "type": {
+        "category": "structural",
+        "type": "contains",
+        "directed": true
+      },
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T22:19:59.746Z"
       }
     },
     {
@@ -1844,12 +2917,12 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:19:59.746Z"
       }
     },
     {
       "source": "folder:src/lib",
-      "target": "folder:src/lib/tiposkripto",
+      "target": "folder:src/lib/pitono",
       "type": {
         "category": "structural",
         "type": "contains",
@@ -1861,12 +2934,12 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:19:59.746Z"
       }
     },
     {
-      "source": "folder:src/lib/tiposkripto",
-      "target": "folder:src/lib/tiposkripto/src",
+      "source": "folder:src/lib/pitono",
+      "target": "folder:src/lib/pitono/examples",
       "type": {
         "category": "structural",
         "type": "contains",
@@ -1878,29 +2951,12 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:19:59.746Z"
       }
     },
     {
-      "source": "folder:src/lib/tiposkripto/src",
-      "target": "folder:src/lib/tiposkripto/src/Node.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/Node.ts",
-      "target": "file:src/lib/tiposkripto/src/Node.ts",
+      "source": "folder:src/lib/pitono/examples",
+      "target": "file:src/lib/pitono/examples/calculator_test.py",
       "type": {
         "category": "structural",
         "type": "locatedIn",
@@ -1912,12 +2968,12 @@
           "type": "locatedIn",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:19:59.746Z"
       }
     },
     {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/Node.ts",
+      "source": "test:pythontests:src/lib/pitono/examples/calculator_test.py",
+      "target": "file:src/lib/pitono/examples/calculator_test.py",
       "type": {
         "category": "dependency",
         "type": "requires",
@@ -1929,12 +2985,12 @@
           "type": "requires",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:19:59.746Z"
       }
     },
     {
-      "source": "folder:src/lib/tiposkripto/src",
-      "target": "folder:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.mjs",
+      "target": "verb:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.mjs:Step_0",
       "type": {
         "category": "structural",
         "type": "contains",
@@ -1946,12 +3002,15 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:20:02.076Z",
+        "metadata": {
+          "stepIndex": 0
+        }
       }
     },
     {
-      "source": "folder:src/lib/tiposkripto/src/BaseTiposkripto.ts",
-      "target": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs/test-completed.md",
       "type": {
         "category": "structural",
         "type": "locatedIn",
@@ -1963,29 +3022,12 @@
           "type": "locatedIn",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:20:02.116Z"
       }
     },
     {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src",
-      "target": "folder:src/lib/tiposkripto/src/Adapters.ts",
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs",
+      "target": "verb:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:Step_0",
       "type": {
         "category": "structural",
         "type": "contains",
@@ -1997,12 +3039,15 @@
           "type": "contains",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:20:04.483Z",
+        "metadata": {
+          "stepIndex": 0
+        }
       }
     },
     {
-      "source": "folder:src/lib/tiposkripto/src/Adapters.ts",
-      "target": "file:src/lib/tiposkripto/src/Adapters.ts",
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs/test-completed.md",
       "type": {
         "category": "structural",
         "type": "locatedIn",
@@ -2014,1064 +3059,10 @@
           "type": "locatedIn",
           "directed": true
         },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/Adapters.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src",
-      "target": "folder:src/lib/tiposkripto/src/VerbProxies.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/VerbProxies.ts",
-      "target": "file:src/lib/tiposkripto/src/VerbProxies.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/VerbProxies.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src",
-      "target": "folder:src/lib/tiposkripto/src/verbs",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs",
-      "target": "folder:src/lib/tiposkripto/src/verbs/index.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/index.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/index.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/index.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs",
-      "target": "folder:src/lib/tiposkripto/src/verbs/bdd",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/bdd",
-      "target": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs",
-      "target": "folder:src/lib/tiposkripto/src/verbs/internal",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/internal",
-      "target": "folder:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/bdd",
-      "target": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/bdd",
-      "target": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs",
-      "target": "folder:src/lib/tiposkripto/src/verbs/aaa",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/aaa",
-      "target": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/aaa",
-      "target": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs",
-      "target": "folder:src/lib/tiposkripto/src/verbs/tdt",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/tdt",
-      "target": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/tdt",
-      "target": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/tdt",
-      "target": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/tdt",
-      "target": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src",
-      "target": "folder:src/lib/tiposkripto/src/TestJobCreator.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/TestJobCreator.ts",
-      "target": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src",
-      "target": "folder:src/lib/tiposkripto/src/ClassyImplementations.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/ClassyImplementations.ts",
-      "target": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src",
-      "target": "folder:src/lib/tiposkripto/src/TestRunner.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/src/TestRunner.ts",
-      "target": "file:src/lib/tiposkripto/src/TestRunner.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/src/TestRunner.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto",
-      "target": "folder:src/lib/tiposkripto/tests",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/tests",
-      "target": "folder:src/lib/tiposkripto/tests/calculator",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/tests/calculator",
-      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.ts",
-      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/tests/calculator",
-      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/tests/calculator",
-      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "type": {
-        "category": "structural",
-        "type": "contains",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "contains",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "type": {
-        "category": "structural",
-        "type": "locatedIn",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "structural",
-          "type": "locatedIn",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
-      }
-    },
-    {
-      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-      "type": {
-        "category": "dependency",
-        "type": "requires",
-        "directed": true
-      },
-      "attributes": {
-        "type": {
-          "category": "dependency",
-          "type": "requires",
-          "directed": true
-        },
-        "timestamp": "2026-04-27T15:04:49.255Z"
+        "timestamp": "2026-04-27T22:20:04.527Z"
       }
     }
   ],
   "viewType": "debug",
-  "timestamp": "2026-04-27T15:04:50.264Z"
+  "timestamp": "2026-04-27T22:20:04.584Z"
 }

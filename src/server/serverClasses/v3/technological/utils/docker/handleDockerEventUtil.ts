@@ -69,6 +69,20 @@ export function handleDockerEventUtil(
         },
         timestamp,
       });
+
+      // Connect the process node to its config node
+      operations.push({
+        type: 'addEdge',
+        data: {
+          source: `config:${configKey}`,
+          target: nodeId,
+          attributes: {
+            type: { category: 'structural', type: 'contains', directed: true },
+            timestamp,
+          },
+        },
+        timestamp,
+      });
       break;
 
     case 'die':

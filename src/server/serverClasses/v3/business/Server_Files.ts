@@ -1,8 +1,9 @@
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
-import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../graph";
+import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes, GraphOperation } from "../../../../graph";
 import { Server_Api_Routing } from "./Server_Api_Routing";
 import { EventQueue } from "./utils/EventQueue";
+import { parseTestResultVerbs } from "../utils/graph/parseTestResultVerbs";
 
 export abstract class Server_Files extends Server_Api_Routing {
   protected inputFileWatchers: Map<string, () => void> = new Map();
@@ -161,6 +162,20 @@ export abstract class Server_Files extends Server_Api_Routing {
     const content = await this.readFile(testsJsonPath);
     const testResult = JSON.parse(content);
 
+    // Parse test result to create/update verb nodes in the graph
+    const verbOperations = parseTestResultVerbs(testResult, configKey, testName);
+
+    // Remove old verb nodes for this test before adding new ones
+    this.removeVerbNodesForTest(configKey, testName);
+
+    // Apply verb operations
+    if (verbOperations.length > 0) {
+      this.applyUpdate({
+        operations: verbOperations,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
     // Graph manipulation (output file node, edge, test node update) is now handled
     // by the file events watcher which watches testeranto/reports/{configKey}/{testName}/tests.json
     // and produces GraphOperation objects via handleFileEventUtil.
@@ -203,42 +218,41 @@ export abstract class Server_Files extends Server_Api_Routing {
       testName,
       "test-completed.md"
     );
-    try {
-      // Find input files (edges from test node to file nodes)
-      const testNodeId = `test:${configKey}:${testName}`;
-      const inputEdges = this.graph.edges.filter(
-        (e: any) => e.source === testNodeId && e.target.startsWith('file:')
-      );
-      const inputFiles: string[] = [];
-      for (const edge of inputEdges) {
-        const fileNode = this.graph.nodes.find((n: any) => n.id === edge.target);
-        if (fileNode && fileNode.metadata?.filePath) {
-          inputFiles.push(fileNode.metadata.filePath);
-        }
+
+    // Find input files (edges from test node to file nodes)
+    const testNodeId = `test:${configKey}:${testName}`;
+    const inputEdges = this.graph.edges.filter(
+      (e: any) => e.source === testNodeId && e.target.startsWith('file:')
+    );
+    const inputFiles: string[] = [];
+    for (const edge of inputEdges) {
+      const fileNode = this.graph.nodes.find((n: any) => n.id === edge.target);
+      if (fileNode && fileNode.metadata?.filePath) {
+        inputFiles.push(fileNode.metadata.filePath);
       }
+    }
 
-      // Find output files (edges from file nodes to test node)
-      const outputEdges = this.graph.edges.filter(
-        (e: any) => e.target === testNodeId && e.source.startsWith('file:')
-      );
-      const outputFiles: string[] = [];
-      for (const edge of outputEdges) {
-        const fileNode = this.graph.nodes.find((n: any) => n.id === edge.source);
-        if (fileNode && fileNode.metadata?.filePath) {
-          outputFiles.push(fileNode.metadata.filePath);
-        }
+    // Find output files (edges from file nodes to test node)
+    const outputEdges = this.graph.edges.filter(
+      (e: any) => e.target === testNodeId && e.source.startsWith('file:')
+    );
+    const outputFiles: string[] = [];
+    for (const edge of outputEdges) {
+      const fileNode = this.graph.nodes.find((n: any) => n.id === edge.source);
+      if (fileNode && fileNode.metadata?.filePath) {
+        outputFiles.push(fileNode.metadata.filePath);
       }
+    }
 
-      // Build YAML front matter
-      const readYaml = inputFiles.map(f => `  - ${f}`).join('\n');
-      const addYaml = outputFiles.map(f => `  - ${f}`).join('\n');
+    // Build YAML front matter
+    const readYaml = inputFiles.map(f => `  - ${f}`).join('\n');
+    const addYaml = outputFiles.map(f => `  - ${f}`).join('\n');
 
-      // Build a persona message that describes what the agent should do
-      const testPassed = testResult?.passed ?? false;
-      const testFailed = testResult?.failed ?? !testPassed;
-      const resultSummary = testPassed ? 'passed' : 'failed';
+    // Build a persona message that describes what the agent should do
+    const testPassed = testResult?.passed ?? false;
+    const resultSummary = testPassed ? 'passed' : 'failed';
 
-      const personaBody = `You are an agent that needs to review the test results for ${testName} (${configKey}).
+    const personaBody = `You are an agent that needs to review the test results for ${testName} (${configKey}).
 
 The test ${resultSummary}.
 
@@ -255,7 +269,7 @@ Test result details:
 ${JSON.stringify(testResult, null, 2)}
 `;
 
-      const completionData = `---
+    const completionData = `---
 read:
 ${readYaml}
 add:
@@ -264,11 +278,8 @@ ${addYaml}
 
 ${personaBody}
 `;
-      await this.writeFile(completionFilePath, completionData);
-      this.logBusinessMessage(`Test completion marker written to ${completionFilePath}`);
-    } catch (err: any) {
-      this.logBusinessError(`Failed to write test completion marker to ${completionFilePath}:`, err);
-    }
+    await this.writeFile(completionFilePath, completionData);
+    this.logBusinessMessage(`Test completion marker written to ${completionFilePath}`);
 
     const watcherKey = `${configKey}:${testName}`;
     if (!this.testResultWatchers.has(watcherKey)) {

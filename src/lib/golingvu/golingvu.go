@@ -395,7 +395,7 @@ func (gv *Golingvu) ReceiveTestResourceConfig(partialTestResource string) (IFina
 		}, fmt.Errorf("failed to marshal tests.json: %v", err)
 	}
 
-	// Follow the same pattern as tiposkripto: write to ${testResourceConfig.Fs}/tests.json
+	// Write tests.json to the specified filesystem path
 	filePath := filepath.Join(testResourceConfig.Fs, "tests.json")
 
 	// Ensure the directory exists

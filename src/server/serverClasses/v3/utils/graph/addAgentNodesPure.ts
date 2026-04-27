@@ -13,13 +13,27 @@ export function addAgentNodesPure(
       type: 'addNode',
       data: {
         id: `agent:${agentName}`,
-        type: { category: 'agent', type: 'agent' },
+        type: { category: 'process', type: 'agent' },
         label: agentName,
         description: `Agent: ${agentName}`,
         status: 'todo',
         icon: 'robot',
         metadata: {
           agentName,
+          timestamp
+        }
+      },
+      timestamp
+    });
+
+    // Associate agent with the global config node
+    operations.push({
+      type: 'addEdge',
+      data: {
+        source: 'config:global',
+        target: `agent:${agentName}`,
+        attributes: {
+          type: { category: 'structural', type: 'contains', directed: true },
           timestamp
         }
       },

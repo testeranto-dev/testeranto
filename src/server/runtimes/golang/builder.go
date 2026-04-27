@@ -222,7 +222,12 @@ func (b *Builder) processEntryPoint(entryPoint, workspace, bundlesDir string, al
 	}
 
 	// Compile the binary
-	outputExePath := filepath.Join(bundlesDir, binaryName)
+	destDir := filepath.Join(bundlesDir, filepath.Dir(relEntryPath))
+	if err := os.MkdirAll(destDir, 0755); err != nil {
+	    fmt.Fprintf(os.Stderr, "  ❌ Failed to create output directory: %v\n", err)
+	    os.Exit(1)
+	}
+	outputExePath := filepath.Join(destDir, binaryName)
 	fmt.Printf("  🔨 Compiling %s to %s...\n", relEntryPath, outputExePath)
 
 	// Build the entire package directory, not just the single file

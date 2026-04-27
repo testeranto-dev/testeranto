@@ -48,6 +48,30 @@ export function addProcessNodeToGraphV3Pure(
     timestamp,
   });
 
+  // Add edge from test node to process node
+  if (configKey && testName) {
+    const testNodeId = `test:${configKey}:${testName}`;
+    operations.push({
+      type: 'addEdge',
+      data: {
+        source: testNodeId,
+        target: nodeId,
+        attributes: {
+          type: {
+            category: 'ownership',
+            type: 'has',
+            directed: true,
+          },
+          timestamp,
+          metadata: {
+            relationship: 'test_has_process',
+          },
+        },
+      },
+      timestamp,
+    });
+  }
+
   // Optionally add an edge from the config node (if configKey is known)
   if (configKey && configKey !== 'agent') {
     const configNodeId = `config:${configKey}`;

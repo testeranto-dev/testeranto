@@ -6,6 +6,8 @@ import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { Server_Base } from "../ServerBase";
 import { addAgentNodesPure } from "../utils/graph/addAgentNodesPure";
+import { addConfigNodesPure } from "../utils/graph/addConfigNodesPure";
+import { addTestNodesPure } from "../utils/graph/addTestNodesPure";
 import { addRuntimeNodesPure } from "../utils/graph/addRuntimeNodesPure";
 import { addViewNodesPure } from "../utils/graph/addViewNodesPure";
 import { generateEdgesPure } from "../utils/graph/generateEdgesPure";
@@ -77,6 +79,8 @@ export abstract class Server_Graph extends Server_Base {
     // 2. Add nodes from configuration
     this.logBusinessMessage("Adding nodes from configuration...");
     this.addAgentNodesFromConfig();
+    this.addConfigNodesFromConfig();
+    this.addTestNodesFromConfig();
     this.addRuntimeNodesFromConfig();
     this.addViewNodesFromConfig();
 
@@ -220,15 +224,44 @@ export abstract class Server_Graph extends Server_Base {
   // These methods are now implemented using V3 pure functions
   protected addAgentNodesFromConfig(): void {
     this.logBusinessMessage("Adding agent nodes from configuration (V3)");
+    // Remove any existing agent nodes (category 'agent') before adding new ones
+    this.removeAgentNodes();
     const timestamp = new Date().toISOString();
     const operations = addAgentNodesPure(this.configs, timestamp);
     this.applyOperations(operations);
+  }
+
+  /**
+   * Remove all nodes with type 'agent' (category 'process', type 'agent') and their edges.
+   */
+  private removeAgentNodes(): void {
+    const agentNodeIds = this.graph.nodes
+      .filter(n => n.type?.type === 'agent')
+      .map(n => n.id);
+
+    for (const nodeId of agentNodeIds) {
+      this.removeNode(nodeId);
+    }
   }
 
   protected addViewNodesFromConfig(): void {
     this.logBusinessMessage("Adding view nodes from configuration (V3)");
     const timestamp = new Date().toISOString();
     const operations = addViewNodesPure(this.configs, this.projectRoot, timestamp);
+    this.applyOperations(operations);
+  }
+
+  protected addConfigNodesFromConfig(): void {
+    this.logBusinessMessage("Adding config nodes from configuration (V3)");
+    const timestamp = new Date().toISOString();
+    const operations = addConfigNodesPure(this.configs, timestamp);
+    this.applyOperations(operations);
+  }
+
+  protected addTestNodesFromConfig(): void {
+    this.logBusinessMessage("Adding test nodes from configuration (V3)");
+    const timestamp = new Date().toISOString();
+    const operations = addTestNodesPure(this.configs, timestamp);
     this.applyOperations(operations);
   }
 
@@ -286,7 +319,9 @@ export abstract class Server_Graph extends Server_Base {
               this.logBusinessMessage(`[applyOperations] node already exists, skipping add: ${op.data.id}`);
             } else {
               this.logBusinessMessage(`[applyOperations] adding node: ${op.data.id}`);
-              this.graph.nodes.push(op.data);
+              // Ensure the node has an id (should already be set)
+              const newNode = { ...op.data, id: op.data.id || `node-${Date.now()}` };
+              this.graph.nodes.push(newNode);
               this.logBusinessMessage(`[applyOperations] node added, total nodes: ${this.graph.nodes.length}`);
             }
           }
@@ -350,10 +385,37 @@ export abstract class Server_Graph extends Server_Base {
     }
   }
 
+  /**
+   * Remove all verb nodes for a given test (and their edges).
+   */
+  removeVerbNodesForTest(configKey: string, testName: string): void {
+    const prefix = `verb:${configKey}:${testName}:`;
+    const verbNodeIds = this.graph.nodes
+      .filter(n => n.id.startsWith(prefix))
+      .map(n => n.id);
+
+    for (const nodeId of verbNodeIds) {
+      this.removeNode(nodeId);
+    }
+  }
+
+  /**
+   * Generate a consistent node ID for a file path.
+   */
+  protected getFileNodeId(filePath: string): string {
+    return `file:${filePath}`;
+  }
+
   // Public graph operations
   addNode(node: any): string {
     this.logBusinessMessage(`addNode: ${JSON.stringify(node)}`);
-    const nodeId = `node-${Date.now()}`;
+    // Use the provided id if present, otherwise generate one
+    const nodeId = node.id || `node-${Date.now()}`;
+    // Avoid duplicate nodes with the same id
+    if (this.graph.nodes.find(n => n.id === nodeId)) {
+      this.logBusinessMessage(`[addNode] node already exists, skipping: ${nodeId}`);
+      return nodeId;
+    }
     this.graph.nodes.push({ ...node, id: nodeId });
     return nodeId;
   }

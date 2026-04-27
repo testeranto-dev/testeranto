@@ -1,30 +1,17 @@
 {
   "viewType": "agent",
   "agentName": "arko",
-  "timestamp": "2026-04-27T15:04:46.420Z",
+  "timestamp": "2026-04-27T22:19:54.268Z",
   "data": {
     "configs": [],
     "entrypoints": [],
     "chatMessages": [],
-    "agents": [
-      {
-        "id": "agent:prodirek",
-        "name": "prodirek",
-        "label": "prodirek",
-        "role": "agent"
-      },
-      {
-        "id": "agent:arko",
-        "name": "arko",
-        "label": "arko",
-        "role": "agent"
-      }
-    ],
+    "agents": [],
     "summary": {
       "totalConfigs": 0,
       "totalEntrypoints": 0,
       "totalChatMessages": 0,
-      "totalAgents": 2
+      "totalAgents": 0
     }
   }
 }

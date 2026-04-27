@@ -1,7 +1,9 @@
 import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { Server_DockerCompose } from "./technological/Server_DockerCompose";
-import { buildFileTreeFromGraph } from "./utils/buildFileTreeFromGraph";
+import { handleFilesRoute, handleProcessRoute, handleAiderRoute } from "./utils/routeHandlers";
+import { processTestResults } from "./utils/testResultUtils";
+import { queryNodes, queryEdges } from "./utils/graphUtils";
 import { generateViewSliceUtil } from "./utils/static/generateViewSliceUtil";
 import { writeViewHtmlFileUtil } from "./utils/static/writeViewHtmlFileUtil";
 import { writeViewsIndexHtmlUtil } from "./utils/static/writeViewsIndexHtmlUtil";
@@ -211,67 +213,15 @@ export abstract class Server extends Server_DockerCompose {
   }
 
   protected async handleFilesRoute(request: Request): Promise<Response> {
-    const tree = buildFileTreeFromGraph(this.graph.nodes, this.graph.edges);
-    return new Response(
-      JSON.stringify({
-        tree,
-        timestamp: new Date().toISOString()
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+    return handleFilesRoute(this.graph);
   }
 
   protected async handleProcessRoute(request: Request): Promise<Response> {
-    const processNodes = this.queryNodes((node: any) => {
-      return node.type?.category === 'process';
-    });
-
-    const processes = processNodes.map((node: any) => ({
-      id: node.id,
-      type: node.type?.type,
-      label: node.label,
-      metadata: node.metadata,
-    }));
-
-    return new Response(
-      JSON.stringify({
-        processes,
-        message: `Found ${processes.length} process(es)`,
-        timestamp: new Date().toISOString(),
-        count: processes.length,
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+    return handleProcessRoute(this.graph);
   }
 
   protected async handleAiderRoute(request: Request): Promise<Response> {
-    const aiderNodes = this.queryNodes((node: any) =>
-      node.type?.category === 'process' && node.type?.type === 'aider'
-    );
-
-    const aiderEdges = this.queryEdges((edge: any) =>
-      aiderNodes.some(n => n.id === edge.source || n.id === edge.target)
-    );
-
-    const response: GetAiderResponse = {
-      nodes: aiderNodes,
-      edges: aiderEdges,
-      timestamp: new Date().toISOString()
-    };
-
-    return new Response(
-      JSON.stringify(response),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+    return handleAiderRoute(this.graph);
   }
 
   protected async handleRuntimeRoute(request: Request): Promise<Response> {

@@ -1,3 +1,3 @@
 module golang-metafile-generator
 
-go 1.22.12
+go 1.20

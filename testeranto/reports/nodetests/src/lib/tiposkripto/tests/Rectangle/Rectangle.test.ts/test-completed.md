@@ -1,0 +1,420 @@
+---
+read:
+  - testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json
+  - src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts
+  - src/lib/tiposkripto/tests/Rectangle/Rectangle.ts
+  - src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+  - src/lib/tiposkripto/src/Node.ts
+  - src/lib/tiposkripto/src/BaseTiposkripto.ts
+  - src/lib/tiposkripto/src/Adapters.ts
+  - src/lib/tiposkripto/src/VerbProxies.ts
+  - src/lib/tiposkripto/src/verbs/index.ts
+  - src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts
+  - src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts
+  - src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts
+  - src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts
+  - src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts
+  - src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts
+  - src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts
+  - src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts
+  - src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts
+  - src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts
+  - src/lib/tiposkripto/src/TestJobCreator.ts
+  - src/lib/tiposkripto/src/ClassyImplementations.ts
+  - src/lib/tiposkripto/src/TestRunner.ts
+add:
+
+---
+
+You are an agent that needs to review the test results for src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts (nodetests).
+
+The test failed.
+
+Based on the test results, you need to make changes to the output files listed below.
+Review the input files to understand the expected behavior, then modify the output files accordingly.
+
+Input files (read-only):
+- testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json
+- src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts
+- src/lib/tiposkripto/tests/Rectangle/Rectangle.ts
+- src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts
+- src/lib/tiposkripto/src/Node.ts
+- src/lib/tiposkripto/src/BaseTiposkripto.ts
+- src/lib/tiposkripto/src/Adapters.ts
+- src/lib/tiposkripto/src/VerbProxies.ts
+- src/lib/tiposkripto/src/verbs/index.ts
+- src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts
+- src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts
+- src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts
+- src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts
+- src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts
+- src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts
+- src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts
+- src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts
+- src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts
+- src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts
+- src/lib/tiposkripto/src/TestJobCreator.ts
+- src/lib/tiposkripto/src/ClassyImplementations.ts
+- src/lib/tiposkripto/src/TestRunner.ts
+
+Output files (read-write):
+
+
+Test result details:
+{
+  "failed": true,
+  "fails": 5,
+  "artifacts": [],
+  "features": [
+    "https://api.github.com/repos/adamwong246/testeranto/issues/88",
+    "src/lib/tiposkripto/tests/Rectangle/README.md",
+    "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+    "src/lib/tiposkripto/README.md"
+  ],
+  "tests": 7,
+  "runTimeTests": 7,
+  "testJob": {
+    "name": "CombinedResults"
+  },
+  "timestamp": 1777318624528,
+  "individualResults": [
+    {
+      "index": 0,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+      ],
+      "error": {
+        "message": "expected 19 to equal 1529",
+        "stack": "AssertionError: expected 19 to equal 1529\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_0",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_0",
+        "error": [
+          {
+            "message": "expected 19 to equal 1529",
+            "actual": 19,
+            "expected": 1529,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected 19 to equal 1529\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+          },
+          "AssertionError: expected 19 to equal 1529\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+        ],
+        "failed": true,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 1,
+        "whens": [
+          {
+            "name": "setWidth: 4",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setHeight: 19",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "getWidth: 4",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getHeight: 1529",
+            "status": false,
+            "error": "AssertionError: expected 19 to equal 1529"
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "failed": true,
+      "fails": 4,
+      "features": [
+        "src/lib/tiposkripto/tests/Rectangle/README.md"
+      ],
+      "error": {
+        "message": "expected 1218 to equal 328",
+        "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+        "name": "AssertionError"
+      },
+      "stepName": "step_1",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_1",
+        "error": [
+          {
+            "message": "expected 1218 to equal 328",
+            "actual": 1218,
+            "expected": 328,
+            "showDiff": true,
+            "operator": "strictEqual",
+            "name": "AssertionError",
+            "ok": false,
+            "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+          },
+          "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+        ],
+        "failed": true,
+        "features": [
+          "src/lib/tiposkripto/tests/Rectangle/README.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 4,
+        "whens": [
+          {
+            "name": "setWidth: 24",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setHeight: 45",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "getWidth: 4",
+            "status": false,
+            "error": "AssertionError: expected 24 to equal 4"
+          },
+          {
+            "name": "getHeight: 5",
+            "status": false,
+            "error": "AssertionError: expected 45 to equal 5"
+          },
+          {
+            "name": "area: 20",
+            "status": false,
+            "error": "AssertionError: expected 1080 to equal 20"
+          },
+          {
+            "name": "AreaPlusCircumference: 328",
+            "status": false,
+            "error": "AssertionError: expected 1218 to equal 328"
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+        "src/lib/tiposkripto/README.md"
+      ],
+      "error": null,
+      "stepName": "step_2",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_2",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+          "src/lib/tiposkripto/README.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setHeight: 4",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setWidth: 33",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "area: 132",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+        "src/lib/tiposkripto/README.md"
+      ],
+      "error": null,
+      "stepName": "step_3",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_3",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+          "src/lib/tiposkripto/README.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [],
+        "thens": [
+          {
+            "name": "getWidth: 2",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getHeight: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+      ],
+      "error": null,
+      "stepName": "step_4",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_4",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setHeight: 5",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setWidth: 5",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "area: 25",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+      ],
+      "error": null,
+      "stepName": "step_5",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_5",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [
+          {
+            "name": "setHeight: 6",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "setWidth: 6",
+            "status": true,
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "area: 36",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "failed": false,
+      "fails": 0,
+      "features": [
+        "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+      ],
+      "error": null,
+      "stepName": "step_6",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_6",
+        "error": null,
+        "failed": false,
+        "features": [
+          "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 0,
+        "whens": [],
+        "thens": [
+          {
+            "name": "getWidth: 2",
+            "status": true,
+            "error": null
+          },
+          {
+            "name": "getHeight: 2",
+            "status": true,
+            "error": null
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 7,
+    "passed": 2,
+    "failed": 5,
+    "successRate": "28.57%"
+  }
+}
+

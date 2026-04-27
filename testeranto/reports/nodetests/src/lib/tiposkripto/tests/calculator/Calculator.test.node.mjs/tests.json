@@ -1,0 +1,38 @@
+{
+  "failed": true,
+  "fails": 1,
+  "artifacts": [],
+  "features": [],
+  "tests": 1,
+  "runTimeTests": 1,
+  "testJob": {
+    "name": "CombinedResults"
+  },
+  "timestamp": 1777328404413,
+  "individualResults": [
+    {
+      "index": 0,
+      "failed": true,
+      "fails": 1,
+      "features": [],
+      "error": {
+        "message": "input is not a constructor",
+        "stack": "TypeError: input is not a constructor\n    at another simple calculator (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:198:49)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1357:38\n    at CalculatorNodeTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:110:56)\n    at CalculatorNodeTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CalculatorNodeTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:321:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:324:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+        "name": "TypeError"
+      },
+      "stepName": "Step_0",
+      "stepType": "SpecificationError",
+      "testJob": {
+        "name": "Specification_Error",
+        "type": "Error",
+        "error": "Test specification failed: input is not a constructor"
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 1,
+    "passed": 0,
+    "failed": 1,
+    "successRate": "0.00%"
+  }
+}
