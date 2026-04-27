@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { TerminalManager } from '../../TerminalManager';
+import { launchMarkdownAgentCommand } from '../../commands/launchMarkdownAgentCommand';
 
 export function registerCommands(
   context: vscode.ExtensionContext,
@@ -84,6 +85,10 @@ export function registerCommands(
     }
   );
 
+  // Register the launchMarkdownAgent command
+  const outputChannel = vscode.window.createOutputChannel('Testeranto');
+  const launchMarkdownAgentDisposable = launchMarkdownAgentCommand(context, outputChannel);
+
   // Restart aider process
   // const restartAiderProcessCommand = vscode.commands.registerCommand('testeranto.restartAiderProcess', async (runtime: string, testName: string) => {
   //   try {
@@ -103,6 +108,7 @@ export function registerCommands(
     refreshAgentsCommand,
     openFileCommand,
     openAiderTerminalCommand,
+    launchMarkdownAgentDisposable,
     // restartAiderProcessCommand,
   ];
 }

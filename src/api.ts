@@ -473,17 +473,18 @@ export const API: {
     }
   },
 
-  openProcessTerminal: {
-    method: 'POST',
-    path: '/~/open-process-terminal',
-    description: 'Open a terminal to a process container',
-    params: {},
-    query: {},
-    response: {} as any,
-    check: (routeName: string, request: { method: string }) => {
-      return routeName === 'open-process-terminal' && request.method === 'POST'
-    }
-  },
+  // deprecated
+  // openProcessTerminal: {
+  //   method: 'POST',
+  //   path: '/~/open-process-terminal',
+  //   description: 'Open a terminal to a process container',
+  //   params: {},
+  //   query: {},
+  //   response: {} as any,
+  //   check: (routeName: string, request: { method: string }) => {
+  //     return routeName === 'open-process-terminal' && request.method === 'POST'
+  //   }
+  // },
 
   // Chat operations
   postChatMessage: {

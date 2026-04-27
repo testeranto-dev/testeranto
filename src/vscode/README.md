@@ -37,7 +37,6 @@ The VSCode extension operates differently from views and agents:
 - `/~/aider` - Aider processes and agents  
 - `/~/runtime` - Runtime configurations and tests
 - `/~/agents` - Agent configurations
-- `/~/open-process-terminal` - Open terminal to containers
 - `/~/chat` - Chat messages
 
 ## WebSocket Subscriptions

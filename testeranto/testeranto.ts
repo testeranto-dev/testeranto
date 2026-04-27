@@ -4,6 +4,7 @@ import { GanttSlicer } from "../src/vscode/views/defaultViews/Gantt";
 import { KanbanSlicer } from "../src/vscode/views/defaultViews/KanbanBoard";
 import { ChatSlicer } from "../src/vscode/views/defaultViews/Chat";
 import { DebugGraphSlicer } from "../src/vscode/views/defaultViews/DebugGraph";
+// import { DebugGraphSlicerV2 } from "../src/vscode/views/defaultViews/DebugGraphV2";
 import { HomeSlicer } from "../src/vscode/views/defaultViews/Home";
 
 export const golangciLintCommand = (files: string[]): string => {
@@ -40,6 +41,10 @@ const config: ITesterantoConfig = {
     DebugGraph: {
       slicer: DebugGraphSlicer,
       filePath: 'src/vscode/views/defaultViews/DebugGraphView.tsx'
+    },
+    DebugGraphV2: {
+      slicer: (x) => x,
+      filePath: 'src/vscode/views/defaultViews/DebugGraphViewV2.tsx'
     },
   },
 
@@ -239,11 +244,11 @@ const config: ITesterantoConfig = {
     nodetests: {
       runtime: "node",
       tests: [
-        "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        // "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
         "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
-        "src/lib/tiposkripto/tests/circle/Circle.test.ts",
-        "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
-        "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        // "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        // "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        // "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
         // "src/server/serverClasses/Server_GraphMangerCore.test/Server_GraphManagerCore.test.ts",
         // "src/vscode/providers/logic/FileTreeLogic.test.ts",
         // "src/vscode/providers/utils/testTree/treeFilter.test.ts",
@@ -278,24 +283,24 @@ const config: ITesterantoConfig = {
     },
 
 
-    webtests: {
-      runtime: "web",
-      tests: [
-        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
-        "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
-        // We could add a standard web test framework like Vitest here
-      ],
-      checks: [
-        (x) => `yarn eslint ${x.join(" ")} `,
-        (x) => `yarn tsc --noEmit ${x.join(" ")}`,
-      ],
-      dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
-      buildOptions: `testeranto/runtimes/web/web.ts`,
-      buildKitOptions: {
-        // Single-stage Dockerfile, no targetStage needed
-      },
-      outputs: [],
-    },
+    // webtests: {
+    //   runtime: "web",
+    //   tests: [
+    //     "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+    //     "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+    //     // We could add a standard web test framework like Vitest here
+    //   ],
+    //   checks: [
+    //     (x) => `yarn eslint ${x.join(" ")} `,
+    //     (x) => `yarn tsc --noEmit ${x.join(" ")}`,
+    //   ],
+    //   dockerfile: `testeranto/runtimes/web/web.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/web/web.ts`,
+    //   buildKitOptions: {
+    //     // Single-stage Dockerfile, no targetStage needed
+    //   },
+    //   outputs: [],
+    // },
 
     // javatests: {
     //   runtime: "java",

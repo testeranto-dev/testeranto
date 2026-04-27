@@ -442,6 +442,24 @@ export class Server_DockerCompose extends Server_Api {
         this.saveGraph();
         this.broadcastGraphUpdated();
       }
+
+      // If this is a tests.json file, also call handleTestResultChange to write the completion marker
+      if (filename && filename.endsWith('tests.json') && fileEventType !== 'delete') {
+        this.logBusinessMessage(`[FileEventsWatcher] Detected tests.json change, calling handleTestResultChange`);
+        // Extract configKey and testName from the path
+        // Path format: reports/{configKey}/{testName}/tests.json
+        const pathParts = filename.replace(/\\/g, '/').split('/');
+        const reportsIndex = pathParts.indexOf('reports');
+        if (reportsIndex !== -1 && pathParts.length >= reportsIndex + 3) {
+          const configKey = pathParts[reportsIndex + 1];
+          const testNameParts = pathParts.slice(reportsIndex + 2, -1);
+          const testName = testNameParts.join('/');
+          if (configKey && testName) {
+            this.logBusinessMessage(`[FileEventsWatcher] Calling handleTestResultChange for configKey=${configKey}, testName=${testName}`);
+            await this.handleTestResultChange(configKey, testName, normalizedPath);
+          }
+        }
+      }
     });
 
     this.logBusinessMessage(`File events watcher started on ${watchDir}`);

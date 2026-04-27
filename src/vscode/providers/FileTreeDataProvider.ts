@@ -186,9 +186,9 @@ export class FileTreeDataProvider extends BaseTreeDataProvider {
         fileType: isFolder ? 'folder' : 'file'
       },
       !isFolder && filePath ? {
-        command: 'testeranto.openFile',
-        title: 'Open File',
-        arguments: [{ fileName: filePath }]
+        command: filePath.endsWith('.md') ? 'testeranto.launchMarkdownAgent' : 'testeranto.openFile',
+        title: filePath.endsWith('.md') ? 'Launch as Agent' : 'Open File',
+        arguments: filePath.endsWith('.md') ? [filePath] : [{ fileName: filePath }]
       } : undefined,
       icon
     );
