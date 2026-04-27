@@ -6,7 +6,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
-    "hash": "d6f032e82285e88a98fc8258ef7542a6",
+    "hash": "3ffdf35654ad8256ab318b308c3e2c9f",
     "files": [
       "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
@@ -32,7 +32,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/circle/Circle.test.ts": {
-    "hash": "375200e78a3d01a5490d8f1eaafcb8c5",
+    "hash": "74cceb736da7fa87871cda92be4e72a4",
     "files": [
       "/src/lib/tiposkripto/tests/circle/Circle.ts",
       "/src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
@@ -84,7 +84,7 @@
     ]
   },
   "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts": {
-    "hash": "3687b19f51b444c0dbb745632a8b24ff",
+    "hash": "75dc322ab2eb0ac2545a38873a722529",
     "files": [
       "/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
       "/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",

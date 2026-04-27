@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { BASE_URL } from '../../api';
 
 export function registerOpenViewCommand(
     context: vscode.ExtensionContext,
@@ -13,8 +14,10 @@ export function registerOpenViewCommand(
                 return;
             }
 
-            const actualViewUrl = viewUrl || `http://localhost:3000/testeranto/views/${viewKey}.html`;
+            // Always construct the URL from the view key, ignoring the viewUrl parameter
+            const actualViewUrl = `${BASE_URL}/testeranto/views/${viewKey}.html`;
 
+            // Create a webview panel with an iframe pointing to the server URL
             const panel = vscode.window.createWebviewPanel(
                 `testeranto.view.${viewKey}`,
                 `View: ${viewKey}`,
@@ -25,6 +28,8 @@ export function registerOpenViewCommand(
                 }
             );
 
+            // Use an iframe to load the page from the server
+            // This avoids the complexity of fetching and modifying HTML
             panel.webview.html = `
                 <!DOCTYPE html>
                 <html>

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { TestTreeDataProvider } from "../providers/TestTreeDataProvider";
 import { DockerProcessTreeDataProvider } from "../providers/DockerProcessTreeDataProvider";
-import { AiderProcessTreeDataProvider } from "../providers/AiderProcessTreeDataProvider";
+// import { AiderProcessTreeDataProvider } from "../providers/AiderProcessTreeDataProvider";
 import { FileTreeDataProvider } from "../providers/FileTreeDataProvider";
 import { ViewTreeDataProvider } from "../providers/ViewTreeDataProvider";
 import { AgentTreeDataProvider } from "../providers/AgentTreeDataProvider";
@@ -9,7 +9,7 @@ import { AgentTreeDataProvider } from "../providers/AgentTreeDataProvider";
 export function createProviders(outputChannel: vscode.OutputChannel): {
     runtimeProvider: TestTreeDataProvider;
     dockerProcessProvider: DockerProcessTreeDataProvider;
-    aiderProcessProvider: AiderProcessTreeDataProvider;
+    // aiderProcessProvider: AiderProcessTreeDataProvider;
     fileTreeProvider: FileTreeDataProvider;
     viewTreeProvider: ViewTreeDataProvider;
     agentProvider: AgentTreeDataProvider;
@@ -22,9 +22,9 @@ export function createProviders(outputChannel: vscode.OutputChannel): {
     const dockerProcessProvider = new DockerProcessTreeDataProvider();
     outputChannel.appendLine("[Testeranto] DockerProcessTreeDataProvider created successfully - uses /~/process API endpoint");
 
-    outputChannel.appendLine("[Testeranto] Creating AiderProcessTreeDataProvider...");
-    const aiderProcessProvider = new AiderProcessTreeDataProvider();
-    outputChannel.appendLine("[Testeranto] AiderProcessTreeDataProvider created successfully - uses /~/aider API endpoint");
+    // outputChannel.appendLine("[Testeranto] Creating AiderProcessTreeDataProvider...");
+    // const aiderProcessProvider = new AiderProcessTreeDataProvider();
+    // outputChannel.appendLine("[Testeranto] AiderProcessTreeDataProvider created successfully - uses /~/aider API endpoint");
 
     outputChannel.appendLine("[Testeranto] Creating FileTreeDataProvider...");
     const fileTreeProvider = new FileTreeDataProvider();
@@ -41,7 +41,7 @@ export function createProviders(outputChannel: vscode.OutputChannel): {
     verifyProviders({
         runtimeProvider,
         dockerProcessProvider,
-        aiderProcessProvider,
+        // aiderProcessProvider,
         fileTreeProvider,
         viewTreeProvider,
         agentProvider,
@@ -50,7 +50,7 @@ export function createProviders(outputChannel: vscode.OutputChannel): {
     return {
         runtimeProvider,
         dockerProcessProvider,
-        aiderProcessProvider,
+        // aiderProcessProvider,
         fileTreeProvider,
         viewTreeProvider,
         agentProvider,

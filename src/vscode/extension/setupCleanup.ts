@@ -14,7 +14,7 @@ export function setupCleanup(
             terminalManager.disposeAll();
             providers.runtimeProvider.dispose?.();
             providers.dockerProcessProvider.dispose?.();
-            providers.aiderProcessProvider.dispose?.();
+            // providers.aiderProcessProvider.dispose?.();
             providers.fileTreeProvider.dispose?.();
             providers.viewTreeProvider.dispose?.();
             providers.agentProvider.dispose?.();

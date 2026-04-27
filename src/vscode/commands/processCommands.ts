@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import type { DockerProcessTreeDataProvider } from '../providers/DockerProcessTreeDataProvider';
-import type { AiderProcessTreeDataProvider } from '../providers/AiderProcessTreeDataProvider';
+// import type { AiderProcessTreeDataProvider } from '../providers/AiderProcessTreeDataProvider';
 
 export const registerProcessCommands = (
     dockerProcessProvider: DockerProcessTreeDataProvider,
-    aiderProcessProvider: AiderProcessTreeDataProvider,
+    // aiderProcessProvider: AiderProcessTreeDataProvider,
     fileTreeProvider: any
 ): vscode.Disposable[] => {
     const disposables: vscode.Disposable[] = [];
@@ -27,23 +27,23 @@ export const registerProcessCommands = (
         )
     );
 
-    disposables.push(
-        vscode.commands.registerCommand(
-            "testeranto.refreshAiderProcesses",
-            async () => {
-                try {
-                    if (aiderProcessProvider && typeof (aiderProcessProvider as any).refresh === 'function') {
-                        await (aiderProcessProvider as any).refresh();
-                        vscode.window.showInformationMessage("Aider processes refreshed");
-                    } else {
-                        vscode.window.showWarningMessage("Aider process provider not available");
-                    }
-                } catch (err) {
-                    vscode.window.showErrorMessage(`Error refreshing aider processes: ${err}`);
-                }
-            }
-        )
-    );
+    // disposables.push(
+    //     vscode.commands.registerCommand(
+    //         "testeranto.refreshAiderProcesses",
+    //         async () => {
+    //             try {
+    //                 if (aiderProcessProvider && typeof (aiderProcessProvider as any).refresh === 'function') {
+    //                     await (aiderProcessProvider as any).refresh();
+    //                     vscode.window.showInformationMessage("Aider processes refreshed");
+    //                 } else {
+    //                     vscode.window.showWarningMessage("Aider process provider not available");
+    //                 }
+    //             } catch (err) {
+    //                 vscode.window.showErrorMessage(`Error refreshing aider processes: ${err}`);
+    //             }
+    //         }
+    //     )
+    // );
 
     disposables.push(
         vscode.commands.registerCommand(

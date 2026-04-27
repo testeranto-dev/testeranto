@@ -1,6 +1,5 @@
-import { writeAgentSliceFile } from "../../../../../../trash/v2/graph/graphFileUtils";
 import type { ITesterantoConfig } from "../../../../../Types";
-
+import { writeAgentSliceFile } from "./writeAgentSliceFile";
 
 export function updateAllAgentSliceFilesPure(
   graphData: any,
@@ -15,8 +14,6 @@ export function updateAllAgentSliceFilesPure(
     const mockGraphManager = {
       getGraphData: () => graphData
     };
-    const sliceData = agentConfig.sliceFunction(mockGraphManager);
-
-    writeAgentSliceFile(projectRoot, agentName, sliceData);
+    writeAgentSliceFile(projectRoot, agentName, agentConfig.sliceFunction(mockGraphManager));
   }
 }

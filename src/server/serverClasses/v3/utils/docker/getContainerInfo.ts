@@ -1,4 +1,6 @@
-import { execAsync } from "../../../../../../trash/v2/Server_Docker/Server_Docker_Dependents";
+import { exec } from 'child_process';
+import { promisify } from 'util';
+const execAsync = promisify(exec);
 
 /**
  * Get container information

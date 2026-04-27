@@ -9,7 +9,7 @@ export class CommandManager {
     private statusBarManager: StatusBarManager;
     private runtimeProvider: vscode.TreeDataProvider<any> | null;
     private dockerProcessProvider: vscode.TreeDataProvider<any> | null;
-    private aiderProcessProvider: vscode.TreeDataProvider<any> | null;
+    // private aiderProcessProvider: vscode.TreeDataProvider<any> | null;
     private fileTreeProvider: vscode.TreeDataProvider<any> | null;
     private viewTreeProvider: ViewTreeDataProvider | null;
     private agentProvider: vscode.TreeDataProvider<any> | null;
@@ -19,7 +19,7 @@ export class CommandManager {
         this.statusBarManager = statusBarManager;
         this.runtimeProvider = null;
         this.dockerProcessProvider = null;
-        this.aiderProcessProvider = null;
+        // this.aiderProcessProvider = null;
         this.fileTreeProvider = null;
         this.viewTreeProvider = null;
         this.agentProvider = null;

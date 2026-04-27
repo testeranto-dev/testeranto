@@ -5,7 +5,7 @@ export function refreshProviders(
     outputChannel: vscode.OutputChannel
 ): void {
     outputChannel.appendLine("[Testeranto] Refreshing tree data providers...");
-    
+
     const refreshIfPossible = (provider: any, name: string) => {
         if (typeof provider.refresh === 'function') {
             outputChannel.appendLine(`[Testeranto] Refreshing ${name}...`);
@@ -15,10 +15,10 @@ export function refreshProviders(
 
     refreshIfPossible(providers.runtimeProvider, 'runtimeProvider');
     refreshIfPossible(providers.dockerProcessProvider, 'dockerProcessProvider');
-    refreshIfPossible(providers.aiderProcessProvider, 'aiderProcessProvider');
+    // refreshIfPossible(providers.aiderProcessProvider, 'aiderProcessProvider');
     refreshIfPossible(providers.fileTreeProvider, 'fileTreeProvider');
     refreshIfPossible(providers.viewTreeProvider, 'viewTreeProvider');
     refreshIfPossible(providers.agentProvider, 'agentProvider');
-    
+
     outputChannel.appendLine("[Testeranto] Tree data providers refreshed");
 }

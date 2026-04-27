@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { TestTreeItem } from '../TestTreeItem';
 import { TreeItemType } from '../types';
 import { BaseTreeDataProvider } from './BaseTreeDataProvider';
+import { BASE_URL, getApiPath } from '../../api';
 
 interface ViewNode {
   id: string;
@@ -35,7 +36,8 @@ export class ViewTreeDataProvider extends BaseTreeDataProvider {
   private async loadViews(): Promise<void> {
     try {
       console.log('[ViewTreeDataProvider] Loading view data from /~/views API endpoint');
-      const response = await fetch('http://localhost:3000/~/views');
+      const url = `${BASE_URL}${getApiPath('getViews')}`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

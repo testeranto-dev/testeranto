@@ -73,7 +73,7 @@ export const generateViewHtmlUtil = (viewKey: string, viewPath: string): string 
 
     // Load the view-specific bundle
     const script = document.createElement('script');
-    script.src = '/testeranto/views/' + viewKey + '.bundle.js';
+    script.src = viewKey + '.bundle.js';
     script.onload = function() {
       console.log('[View HTML] View bundle loaded successfully');
     };

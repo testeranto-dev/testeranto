@@ -337,6 +337,18 @@ export const API: {
     }
   },
 
+  getViews: {
+    method: 'GET',
+    path: '/~/views',
+    description: 'Get all views (alias for getAllViews)',
+    params: {},
+    query: {},
+    response: {} as any,
+    check: (routeName: string, request: { method: string }) => {
+      return routeName === 'views' && request.method === 'GET'
+    }
+  },
+
   getView: {
     method: 'GET',
     path: '/~/views/:viewName',
@@ -713,6 +725,9 @@ export interface GraphDataResponse {
 // Note: WebSocket API is defined separately in wsApi
 // HTTP API is defined in API object above
 
+// Base URL for the server
+export const BASE_URL = 'http://localhost:3000';
+
 // Utility function to get API URL
 export function getApiUrl<K extends keyof typeof API>(endpoint: K, params?: Record<string, string>): string {
   const apiDef = API[endpoint];
@@ -727,8 +742,7 @@ export function getApiUrl<K extends keyof typeof API>(endpoint: K, params?: Reco
 
   // For VSCode extension, we need to construct the full URL
   // Since the server runs on localhost:3000
-  const baseUrl = 'http://localhost:3000';
-  return `${baseUrl}${path}`;
+  return `${BASE_URL}${path}`;
 }
 
 // Utility function to get just the API path
