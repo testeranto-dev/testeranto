@@ -73,8 +73,6 @@ export abstract class Server_Logs extends Server_Aider {
     return levelValue >= this.currentLogLevel;
   }
 
-  // ========== Log Formatting ==========
-
   private initializeLogFormats(): void {
     // JSON format
     this.logFormats.set('json', (level, message, meta) => {

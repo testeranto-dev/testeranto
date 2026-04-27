@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { fetchAiderProcesses } from './utilities/fetchAiderProcesses';
-import { createAiderTerminals as createAiderTerminalsUtil } from './utilities/createAiderTerminals';
+// import { fetchAiderProcesses } from './utilities/fetchAiderProcesses';
+// import { createAiderTerminals as createAiderTerminalsUtil } from './utilities/createAiderTerminals';
 import { createAiderTerminal as createAiderTerminalUtil } from './utilities/createAiderTerminal';
 import { openContainerTerminal as openContainerTerminalUtil } from './utilities/openContainerTerminal';
-import { restartAiderProcess as restartAiderProcessUtil } from './utilities/restartAiderProcess';
+// import { restartAiderProcess as restartAiderProcessUtil } from './utilities/restartAiderProcess';
 import { openAiderTerminal as openAiderTerminalUtil } from './utilities/openAiderTerminal';
 import { getWorkspaceRoot as getWorkspaceRootUtil } from './utilities/getWorkspaceRoot';
 
@@ -61,14 +61,14 @@ export class TerminalManager {
   // We do not use the API in this way
   // All data should be loaded from a json file
   // you will receive WS updates when this file changes
-  async fetchAiderProcesses(): Promise<any[]> {
-    return fetchAiderProcesses();
-  }
+  // async fetchAiderProcesses(): Promise<any[]> {
+  //   return fetchAiderProcesses();
+  // }
 
   // Create terminals for all aider processes (but don't automatically start them)
-  async createAiderTerminals(): Promise<void> {
-    return createAiderTerminalsUtil();
-  }
+  // async createAiderTerminals(): Promise<void> {
+  //   return createAiderTerminalsUtil();
+  // }
 
   async createAiderTerminal(runtime: string, testName: string): Promise<vscode.Terminal> {
     return createAiderTerminalUtil(
@@ -93,9 +93,9 @@ export class TerminalManager {
   }
 
   // Restart a specific aider process
-  async restartAiderProcess(runtime: string, testName: string): Promise<void> {
-    return restartAiderProcessUtil(runtime, testName, this.terminals, this.getTerminalKey.bind(this));
-  }
+  // async restartAiderProcess(runtime: string, testName: string): Promise<void> {
+  //   return restartAiderProcessUtil(runtime, testName, this.terminals, this.getTerminalKey.bind(this));
+  // }
 
   // Open a terminal to a Docker process using the server API
   async openProcessTerminal(nodeId: string, label: string, containerId: string, serviceName: string): Promise<vscode.Terminal> {
@@ -119,10 +119,10 @@ export class TerminalManager {
     return getWorkspaceRootUtil();
   }
 
-  createAllTerminals(): void {
-    // Create terminals for all aider processes
-    this.createAiderTerminals().catch(error => {
-      console.error('Error in createAllTerminals:', error);
-    });
-  }
+  // createAllTerminals(): void {
+  //   // Create terminals for all aider processes
+  //   this.createAiderTerminals().catch(error => {
+  //     console.error('Error in createAllTerminals:', error);
+  //   });
+  // }
 }

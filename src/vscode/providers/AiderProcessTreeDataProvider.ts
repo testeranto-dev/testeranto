@@ -6,7 +6,7 @@ import { getApiUrl, getApiPath, wsApi, GetAiderResponse } from '../../api';
 
 export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
   private graphData: GetAiderResponse | null = null;
-  private agents: any[] = [];
+  private configuredAgents: any[] = [];
 
   constructor() {
     super();
@@ -24,22 +24,41 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
   private async loadGraphData(): Promise<void> {
     try {
       console.log('[AiderProcessTreeDataProvider] Loading graph data from aider API endpoint');
-      // Fetch data directly from the API
       await this.fetchAiderProcessesDirectly();
+      await this.fetchConfiguredAgents();
     } catch (error) {
       console.error('[AiderProcessTreeDataProvider] Error loading graph data from API:', error);
-      // Clear data to show error state
       this.graphData = null;
-      this.agents = [];
-      // Show error in console for debugging
+      this.configuredAgents = [];
       console.error(`[AiderProcessTreeDataProvider] Error details: ${error instanceof Error ? error.message : String(error)}`);
       console.error(`[AiderProcessTreeDataProvider] Make sure server is running on http://localhost:3000`);
     }
   }
 
+  private async fetchConfiguredAgents(): Promise<void> {
+    try {
+      const agentsUrl = getApiUrl('getAllAgents');
+      const response = await fetch(agentsUrl, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const agents = data.agents || [];
+        this.configuredAgents = agents.map((agent: any) => ({
+          agentName: agent.name || agent.key || 'unknown',
+          config: agent.config || {},
+        }));
+        console.log(`[AiderProcessTreeDataProvider] Loaded ${this.configuredAgents.length} configured agents`);
+      } else {
+        console.warn(`[AiderProcessTreeDataProvider] Failed to fetch agents: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('[AiderProcessTreeDataProvider] Error fetching configured agents:', error);
+    }
+  }
 
   private async fetchAiderProcessesDirectly(): Promise<void> {
-    // Use the API endpoint for aider
     try {
       const aiderUrl = getApiUrl('getAider');
       const response = await fetch(aiderUrl, {
@@ -49,30 +68,18 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
         const data: GetAiderResponse = await response.json();
         console.log('[AiderProcessTreeDataProvider] Raw aider data:', JSON.stringify(data, null, 2));
         
-        // Ensure data is an object with nodes array
         if (!data || typeof data !== 'object' || !Array.isArray(data.nodes)) {
           console.warn('[AiderProcessTreeDataProvider] Invalid response format, missing nodes array');
           this.graphData = { nodes: [], edges: [] };
-          this.agents = [];
           return;
         }
         
-        // The aider slice contains both agent nodes and aider process nodes
-        // We need to filter for aider_process type nodes
         this.graphData = { nodes: [], edges: [] };
         
-        // Extract aider process nodes (type: 'aider_process')
         const aiderProcessNodes = data.nodes.filter((node: any) => 
           node.type === 'aider_process'
         );
         
-        // Also extract agent nodes for reference
-        const agentNodes = data.nodes.filter((node: any) => 
-          node.type === 'agent'
-        );
-        
-        // Clear existing data and add new nodes
-        this.graphData.nodes = [];
         aiderProcessNodes.forEach((node: any) => {
           this.graphData!.nodes.push({
             id: node.id,
@@ -82,15 +89,8 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
           });
         });
         
-        // Store agents for grouping/filtering
-        this.agents = agentNodes.map((node: any) => ({
-          name: node.metadata?.agentName,
-          ...node.metadata
-        }));
+        console.log(`[AiderProcessTreeDataProvider] Successfully fetched ${aiderProcessNodes.length} aider processes`);
         
-        console.log(`[AiderProcessTreeDataProvider] Successfully fetched ${aiderProcessNodes.length} aider processes and ${agentNodes.length} agents from ${aiderUrl}`);
-        
-        // If no aider processes found, check if we should try aider-processes endpoint
         if (aiderProcessNodes.length === 0) {
           console.log('[AiderProcessTreeDataProvider] No aider processes found in /~/aider endpoint');
         }
@@ -105,12 +105,10 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
 
   refresh(): void {
     console.log('[AiderProcessTreeDataProvider] Manual refresh triggered');
-    // Clear current data to show loading state
     this.graphData = null;
-    this.agents = [];
+    this.configuredAgents = [];
     this._onDidChangeTreeData.fire();
     
-    // Load data directly
     this.loadGraphData()
       .then(() => {
         this._onDidChangeTreeData.fire();
@@ -131,24 +129,23 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
     }
 
     if (!element) {
-      return this.getAiderProcessItems();
+      return this.getRootItems();
     }
 
-    const elementType = element.type;
     const elementData = element.data || {};
 
-    if (elementType === TreeItemType.Runtime) {
-      return this.getAiderProcessesForEntrypoint(elementData.entrypointId);
+    // If the element is a configured agent, show its running instances + launch action
+    if (elementData.agentName && elementData.isConfiguredAgent) {
+      return this.getAgentChildren(elementData.agentName);
     }
 
     return [];
   }
 
-  private getAiderProcessItems(): TestTreeItem[] {
-    // Create items directly from graph data
+  private getRootItems(): TestTreeItem[] {
     const items: TestTreeItem[] = [];
     
-    // Add refresh item first
+    // Refresh item
     items.push(
       new TestTreeItem(
         'Refresh',
@@ -167,7 +164,7 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       )
     );
     
-    // Add "Launch Agent" item using the unified spawn route
+    // Launch Agent item (top-level)
     items.push(
       new TestTreeItem(
         'Launch Agent',
@@ -208,15 +205,15 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       return items;
     }
     
-    if (!Array.isArray(this.graphData.nodes) || this.graphData.nodes.length === 0) {
+    // Show configured agents as collapsible items
+    if (this.configuredAgents.length === 0) {
       items.push(
         new TestTreeItem(
-          'No aider data available',
+          'No configured agents',
           TreeItemType.Info,
           vscode.TreeItemCollapsibleState.None,
           { 
-            info: 'The server returned empty graph data. ' +
-                  'Try running "Testeranto: Start Server" or check if the server is running on port 3000.'
+            info: 'No agents are configured. Add agent profiles to testeranto config.'
           },
           undefined,
           new vscode.ThemeIcon('info')
@@ -225,36 +222,94 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       return items;
     }
     
-    // Find all aider process nodes (these represent running agents)
-    const aiderProcessNodes = this.graphData.nodes.filter((node: any) => 
-      node.type === 'aider_process'
+    for (const agent of this.configuredAgents) {
+      const agentName = agent.agentName;
+      const loadCount = agent.config?.load?.length || 0;
+      
+      const item = new TestTreeItem(
+        agentName,
+        TreeItemType.Info,
+        vscode.TreeItemCollapsibleState.Collapsed,
+        {
+          description: `${loadCount} load file(s)`,
+          agentName: agentName,
+          isConfiguredAgent: true,
+          action: 'launchAgent'
+        },
+        {
+          command: 'testeranto.launchAgent',
+          title: 'Launch Agent',
+          arguments: [agentName]
+        },
+        new vscode.ThemeIcon('person'),
+        'agentItem'
+      );
+      
+      let tooltip = `Agent: ${agentName}\n`;
+      tooltip += `Load files: ${loadCount}\n`;
+      if (agent.config?.message) {
+        const msgPreview = agent.config.message.substring(0, 100) + (agent.config.message.length > 100 ? '...' : '');
+        tooltip += `Message: ${msgPreview}\n`;
+      }
+      item.tooltip = tooltip;
+      
+      items.push(item);
+    }
+    
+    return items;
+  }
+
+  private getAgentChildren(agentName: string): TestTreeItem[] {
+    const children: TestTreeItem[] = [];
+    
+    // Launch action for this specific agent
+    children.push(
+      new TestTreeItem(
+        'Launch Agent',
+        TreeItemType.Action,
+        vscode.TreeItemCollapsibleState.None,
+        {
+          agentName: agentName,
+          action: 'launchAgent',
+          description: 'Click to launch this agent as a Docker container'
+        },
+        {
+          command: 'testeranto.launchAgent',
+          title: 'Launch Agent',
+          arguments: [agentName]
+        },
+        new vscode.ThemeIcon('play'),
+        'agentLaunchItem'
+      )
     );
     
-    if (aiderProcessNodes.length === 0) {
-      items.push(
+    // Find running instances (aider_process nodes) for this agent
+    const runningInstances = (this.graphData?.nodes || []).filter((node: any) => {
+      const metadata = node.metadata || {};
+      return node.type === 'aider_process' && 
+             (metadata.agentName === agentName || node.label === agentName);
+    });
+    
+    if (runningInstances.length === 0) {
+      children.push(
         new TestTreeItem(
-          'No running agents',
+          'No running instances',
           TreeItemType.Info,
           vscode.TreeItemCollapsibleState.None,
-          { 
-            info: 'No agents are currently running. Launch one from the Agents view.'
-          },
+          { info: `No running instances of ${agentName}` },
           undefined,
           new vscode.ThemeIcon('info')
         )
       );
-      return items;
+      return children;
     }
     
-    // Create items for each aider process (running agent)
-    for (const node of aiderProcessNodes) {
+    for (const node of runningInstances) {
       const metadata = node.metadata || {};
       const containerName = metadata.containerName || '';
-      const agentName = metadata.agentName || node.label || node.id;
       const label = node.label || agentName;
       const status = node.status || 'running';
       
-      // Determine icon based on status
       let icon: vscode.ThemeIcon;
       if (status === 'running') {
         icon = new vscode.ThemeIcon('play-circle', new vscode.ThemeColor('testing.iconPassed'));
@@ -285,7 +340,6 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
         icon
       );
       
-      // Build tooltip
       let tooltip = `Agent: ${agentName}\n`;
       tooltip += `ID: ${node.id}\n`;
       tooltip += `Container: ${containerName}\n`;
@@ -298,23 +352,19 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
       }
       item.tooltip = tooltip;
       
-      items.push(item);
+      children.push(item);
     }
     
-    return items;
+    return children;
   }
-
 
   protected handleWebSocketMessage(message: any): void {
     super.handleWebSocketMessage(message);
     console.log(`[AiderProcessTreeDataProvider] Received message type: ${message.type}, url: ${message.url}`);
 
     if (message.type === 'resourceChanged') {
-      // Check if the URL matches any of our API endpoints
       const aiderPath = getApiPath('getAider');
       const userAgentsPath = getApiPath('getUserAgents');
-      // Check for agent-related URLs (both /~/agents and /~/user-agents)
-      // Note: /~/agents requires a parameter, but WebSocket messages might use the base path
       const isAgentRelated = message.url && (
         message.url === userAgentsPath ||
         message.url.startsWith('/~/agents/') ||
@@ -328,9 +378,6 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
         this.refresh();
       }
 
-      // Handle agent spawn notification - the extension already opens a terminal
-      // when it initiates the spawn, so we don't need to open another one here.
-      // This notification is for other clients (e.g., web UI).
       if (message.url === '/~/agents/spawn' && message.agentName && message.containerName) {
         console.log(`[AiderProcessTreeDataProvider] Agent spawned: ${message.agentName}, skipping terminal open (already handled by extension)`);
       }
@@ -340,10 +387,8 @@ export class AiderProcessTreeDataProvider extends BaseTreeDataProvider {
     }
   }
 
-
   protected subscribeToGraphUpdates(): void {
     super.subscribeToGraphUpdates();
-    // Subscribe to slices using API slice names
     this.subscribeToSlice(wsApi.slices.aider);
     this.subscribeToSlice(wsApi.slices.agents);
     this.subscribeToSlice(wsApi.slices.graph);

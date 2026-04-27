@@ -9,7 +9,7 @@
         "viewKey": "Home",
         "viewPath": "src/vscode/views/defaultViews/HomeView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Home.json",
-        "timestamp": "2026-04-26T15:51:47.945Z"
+        "timestamp": "2026-04-27T02:42:55.318Z"
       }
     },
     {
@@ -21,7 +21,7 @@
         "viewKey": "Kanban",
         "viewPath": "src/vscode/views/defaultViews/KanbanBoardView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
-        "timestamp": "2026-04-26T15:51:47.945Z"
+        "timestamp": "2026-04-27T02:42:55.318Z"
       }
     },
     {
@@ -33,7 +33,7 @@
         "viewKey": "EisenhowerMatrix",
         "viewPath": "src/vscode/views/defaultViews/EisenhowerMatrixView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
-        "timestamp": "2026-04-26T15:51:47.945Z"
+        "timestamp": "2026-04-27T02:42:55.318Z"
       }
     },
     {
@@ -45,7 +45,7 @@
         "viewKey": "Gantt",
         "viewPath": "src/vscode/views/defaultViews/GanttView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
-        "timestamp": "2026-04-26T15:51:47.945Z"
+        "timestamp": "2026-04-27T02:42:55.318Z"
       }
     },
     {
@@ -57,7 +57,7 @@
         "viewKey": "Chat",
         "viewPath": "src/vscode/views/defaultViews/ChatView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
-        "timestamp": "2026-04-26T15:51:47.945Z"
+        "timestamp": "2026-04-27T02:42:55.318Z"
       }
     },
     {
@@ -69,10 +69,10 @@
         "viewKey": "DebugGraph",
         "viewPath": "src/vscode/views/defaultViews/DebugGraphView.tsx",
         "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/DebugGraph.json",
-        "timestamp": "2026-04-26T15:51:47.945Z"
+        "timestamp": "2026-04-27T02:42:55.318Z"
       }
     }
   ],
   "viewType": "home",
-  "timestamp": "2026-04-26T15:51:53.826Z"
+  "timestamp": "2026-04-27T02:46:53.245Z"
 }

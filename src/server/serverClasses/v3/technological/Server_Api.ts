@@ -212,61 +212,61 @@ export abstract class Server_Api extends Server_WS_HTTP {
         return await this.handlePostChatMessage(request);
       case 'getChatHistory':
         return await this.handleGetChatHistory(request);
-      case 'spawnAgent':
-        {
-          return await this.handleSpawnAgent(request);
-        }
-      case 'launchAgent':
-        {
-          // Extract agent name from URL path: /~/agents/launch/:agentName
-          const pathParts = url.pathname.split('/').filter(Boolean);
-          const agentName = pathParts[pathParts.length - 1];
-          if (!agentName) {
-            return new Response(
-              JSON.stringify({
-                success: false,
-                error: 'Missing agent name in URL',
-                timestamp: new Date().toISOString()
-              }),
-              {
-                status: 400,
-                headers: { "Content-Type": "application/json" }
-              }
-            );
-          }
-          // Do NOT spawn the container here. Return the Docker command
-          // that the user will run in their own terminal.
-          const agentConfig = this.configs.agents?.[agentName];
-          if (!agentConfig) {
-            return new Response(
-              JSON.stringify({
-                success: false,
-                error: `Agent profile '${agentName}' not found in configuration`,
-                timestamp: new Date().toISOString()
-              }),
-              {
-                status: 404,
-                headers: { "Content-Type": "application/json" }
-              }
-            );
-          }
-          const serviceName = `agent-${agentName}`;
-          const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
-          const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
-          return new Response(
-            JSON.stringify({
-              success: true,
-              agentName,
-              containerId: '',          // unknown until the user runs the command
-              command,
-              timestamp: new Date().toISOString()
-            }),
-            {
-              status: 200,
-              headers: { "Content-Type": "application/json" }
-            }
-          );
-        }
+      // case 'spawnAgent':
+      //   {
+      //     return await this.handleSpawnAgent(request);
+      //   }
+      // case 'launchAgent':
+      //   {
+      //     // Extract agent name from URL path: /~/agents/launch/:agentName
+      //     const pathParts = url.pathname.split('/').filter(Boolean);
+      //     const agentName = pathParts[pathParts.length - 1];
+      //     if (!agentName) {
+      //       return new Response(
+      //         JSON.stringify({
+      //           success: false,
+      //           error: 'Missing agent name in URL',
+      //           timestamp: new Date().toISOString()
+      //         }),
+      //         {
+      //           status: 400,
+      //           headers: { "Content-Type": "application/json" }
+      //         }
+      //       );
+      //     }
+      //     // Do NOT spawn the container here. Return the Docker command
+      //     // that the user will run in their own terminal.
+      //     const agentConfig = this.configs.agents?.[agentName];
+      //     if (!agentConfig) {
+      //       return new Response(
+      //         JSON.stringify({
+      //           success: false,
+      //           error: `Agent profile '${agentName}' not found in configuration`,
+      //           timestamp: new Date().toISOString()
+      //         }),
+      //         {
+      //           status: 404,
+      //           headers: { "Content-Type": "application/json" }
+      //         }
+      //       );
+      //     }
+      //     const serviceName = `agent-${agentName}`;
+      //     const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
+      //     const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
+      //     return new Response(
+      //       JSON.stringify({
+      //         success: true,
+      //         agentName,
+      //         containerId: '',          // unknown until the user runs the command
+      //         command,
+      //         timestamp: new Date().toISOString()
+      //       }),
+      //       {
+      //         status: 200,
+      //         headers: { "Content-Type": "application/json" }
+      //       }
+      //     );
+      //   }
       case 'launchAiderForTest':
         {
           return await this.handleLaunchAiderForTest(request);
@@ -680,78 +680,78 @@ export abstract class Server_Api extends Server_WS_HTTP {
    * Parses the JSON body and delegates to spawnAgent().
    * Supports requestUid for async graph operation correlation.
    */
-  private async handleSpawnAgent(request: Request): Promise<Response> {
-    try {
-      const body = await request.json();
-      const { profile, loadFiles, model } = body;
+  // private async handleSpawnAgent(request: Request): Promise<Response> {
+  //   try {
+  //     const body = await request.json();
+  //     const { profile, loadFiles, model } = body;
 
-      if (!profile) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: 'Missing required field: profile',
-            timestamp: new Date().toISOString(),
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          },
-        );
-      }
+  //     if (!profile) {
+  //       return new Response(
+  //         JSON.stringify({
+  //           success: false,
+  //           error: 'Missing required field: profile',
+  //           timestamp: new Date().toISOString(),
+  //         }),
+  //         {
+  //           status: 400,
+  //           headers: { 'Content-Type': 'application/json' },
+  //         },
+  //       );
+  //     }
 
-      // Do NOT spawn the container here.  The server only returns the
-      // Docker command that the user will run in their own terminal.
-      // The Docker events watcher will detect the container when it
-      // starts and create the graph node asynchronously.
-      const agentConfig = this.configs.agents?.[profile];
-      if (!agentConfig) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: `Agent profile '${profile}' not found in configuration`,
-            timestamp: new Date().toISOString(),
-          }),
-          {
-            status: 404,
-            headers: { 'Content-Type': 'application/json' },
-          },
-        );
-      }
+  //     // Do NOT spawn the container here.  The server only returns the
+  //     // Docker command that the user will run in their own terminal.
+  //     // The Docker events watcher will detect the container when it
+  //     // starts and create the graph node asynchronously.
+  //     const agentConfig = this.configs.agents?.[profile];
+  //     if (!agentConfig) {
+  //       return new Response(
+  //         JSON.stringify({
+  //           success: false,
+  //           error: `Agent profile '${profile}' not found in configuration`,
+  //           timestamp: new Date().toISOString(),
+  //         }),
+  //         {
+  //           status: 404,
+  //           headers: { 'Content-Type': 'application/json' },
+  //         },
+  //       );
+  //     }
 
-      // Build the docker‑compose command that the user will execute.
-      // The service name follows the pattern used by generateAgentService.
-      const serviceName = `agent-${profile}`;
-      const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
-      const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
+  //     // Build the docker‑compose command that the user will execute.
+  //     // The service name follows the pattern used by generateAgentService.
+  //     const serviceName = `agent-${profile}`;
+  //     const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
+  //     const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
 
-      return new Response(
-        JSON.stringify({
-          success: true,
-          agentName: profile,
-          containerId: '',          // unknown until the user runs the command
-          command,
-          timestamp: new Date().toISOString(),
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
-    } catch (error: any) {
-      this.logBusinessError('Error generating agent command:', error);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: error.message,
-          timestamp: new Date().toISOString(),
-        }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
-    }
-  }
+  //     return new Response(
+  //       JSON.stringify({
+  //         success: true,
+  //         agentName: profile,
+  //         containerId: '',          // unknown until the user runs the command
+  //         command,
+  //         timestamp: new Date().toISOString(),
+  //       }),
+  //       {
+  //         status: 200,
+  //         headers: { 'Content-Type': 'application/json' },
+  //       },
+  //     );
+  //   } catch (error: any) {
+  //     this.logBusinessError('Error generating agent command:', error);
+  //     return new Response(
+  //       JSON.stringify({
+  //         success: false,
+  //         error: error.message,
+  //         timestamp: new Date().toISOString(),
+  //       }),
+  //       {
+  //         status: 500,
+  //         headers: { 'Content-Type': 'application/json' },
+  //       },
+  //     );
+  //   }
+  // }
 
   // ========== API Server Lifecycle ==========
 
@@ -773,7 +773,7 @@ export abstract class Server_Api extends Server_WS_HTTP {
 
   private async registerDefaultHttpRoutes(): Promise<void> {
     const routes = registerDefaultHttpRoutes(this.configs);
-    
+
     this.logBusinessMessage("Registering all HTTP API routes from api.ts...");
 
     // First, add a health check route

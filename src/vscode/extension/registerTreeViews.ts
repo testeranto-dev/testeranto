@@ -8,7 +8,7 @@ export function registerTreeViews(
     outputChannel.appendLine("[Testeranto] Registering tree data providers with VS Code...");
     vscode.window.registerTreeDataProvider('testeranto.runtimeView', providers.runtimeProvider);
     vscode.window.registerTreeDataProvider('testeranto.dockerProcessView', providers.dockerProcessProvider);
-    vscode.window.registerTreeDataProvider('testeranto.aiderProcessView', providers.aiderProcessProvider);
+    // vscode.window.registerTreeDataProvider('testeranto.aiderProcessView', providers.aiderProcessProvider);
     vscode.window.registerTreeDataProvider('testeranto.fileTreeView', providers.fileTreeProvider);
     vscode.window.registerTreeDataProvider('testeranto.viewView', providers.viewTreeProvider);
     vscode.window.registerTreeDataProvider('testeranto.agentView', providers.agentProvider);
@@ -27,11 +27,11 @@ export function registerTreeViews(
     });
     outputChannel.appendLine("[Testeranto] Docker process tree view created successfully");
 
-    const aiderProcessTreeView = vscode.window.createTreeView("testeranto.aiderProcessView", {
-        treeDataProvider: providers.aiderProcessProvider,
-        showCollapseAll: true
-    });
-    outputChannel.appendLine("[Testeranto] Aider process tree view created successfully");
+    // const aiderProcessTreeView = vscode.window.createTreeView("testeranto.aiderProcessView", {
+    //     treeDataProvider: providers.aiderProcessProvider,
+    //     showCollapseAll: true
+    // });
+    // outputChannel.appendLine("[Testeranto] Aider process tree view created successfully");
 
     const fileTreeView = vscode.window.createTreeView("testeranto.fileTreeView", {
         treeDataProvider: providers.fileTreeProvider,
@@ -55,7 +55,7 @@ export function registerTreeViews(
     context.subscriptions.push(
         runtimeTreeView,
         dockerProcessTreeView,
-        aiderProcessTreeView,
+        // aiderProcessTreeView,
         fileTreeView,
         viewTreeView,
         agentTreeView

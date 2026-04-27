@@ -33,9 +33,9 @@ export class CommandManager {
         this.dockerProcessProvider = provider;
     }
 
-    public setAiderProcessProvider(provider: vscode.TreeDataProvider<any>): void {
-        this.aiderProcessProvider = provider;
-    }
+    // public setAiderProcessProvider(provider: vscode.TreeDataProvider<any>): void {
+    //     this.aiderProcessProvider = provider;
+    // }
 
     public setFileTreeProvider(provider: vscode.TreeDataProvider<any>): void {
         this.fileTreeProvider = provider;
@@ -45,6 +45,8 @@ export class CommandManager {
         this.viewTreeProvider = provider;
     }
 
+    // Agent functionality is now merged into AiderProcessTreeDataProvider.
+    // This setter is kept for compatibility but should not be called.
     public setAgentProvider(provider: vscode.TreeDataProvider<any>): void {
         this.agentProvider = provider;
     }
@@ -57,7 +59,7 @@ export class CommandManager {
             this.runtimeProvider,
             this.statusBarManager,
             this.dockerProcessProvider,
-            this.aiderProcessProvider,
+            // this.aiderProcessProvider,
             this.fileTreeProvider,
             this.agentProvider,
             this.viewTreeProvider

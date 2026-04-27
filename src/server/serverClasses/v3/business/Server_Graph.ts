@@ -157,6 +157,19 @@ export abstract class Server_Graph extends Server_Base {
       }
     };
 
+    // Write the graph data to disk so the debug view can read it
+    try {
+      const content = JSON.stringify(graphData, null, 2);
+      await this.writeFile(this.graphDataPath, content);
+      this.logBusinessMessage(`Graph data written to ${this.graphDataPath}`);
+    } catch (err: any) {
+      this.logBusinessError(`Failed to write graph data to ${this.graphDataPath}:`, err);
+    }
+
+    // Regenerate view slice files so that the debug graph (and other views)
+    // reflect the latest graph state, including newly added file nodes.
+    this.writeViewSliceFiles();
+
     // Call resource changed callback
     if (this.resourceChangedCallback) {
       this.logBusinessMessage(`[saveGraph] calling resourceChangedCallback`);

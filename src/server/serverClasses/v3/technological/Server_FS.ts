@@ -143,13 +143,6 @@ export class Server_FS extends Server_Files {
     // Graph update will be handled by Server_Graph layer
   }
 
-  protected async updateFeatureNode(
-    featurePath: string,
-    frontmatter: any,
-  ): Promise<void> {
-    console.log(`[Server_FS] updateFeatureNode called: featurePath=${featurePath}`);
-    // Feature node update will be handled by Server_Graph layer
-  }
 
   protected async startDockerProcess(
     runtime: string,

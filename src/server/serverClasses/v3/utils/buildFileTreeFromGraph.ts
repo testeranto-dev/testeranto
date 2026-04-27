@@ -21,7 +21,7 @@ export function buildFileTreeFromGraph(
   const fileNodes = nodes.filter(
     (n) =>
       n.type?.category === 'file' &&
-      (n.type?.type === 'folder' || n.type?.type === 'file' || n.type?.type === 'inputFile' || n.type?.type === 'entrypoint')
+      (n.type?.type === 'folder' || n.type?.type === 'file' || n.type?.type === 'inputFile' || n.type?.type === 'entrypoint' || n.type?.type === 'outputFile')
   );
 
   // Build a map of node id -> node

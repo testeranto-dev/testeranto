@@ -6,7 +6,7 @@
     ]
   },
   "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts": {
-    "hash": "ed61545b71c5f03a03e41bcf5b2ceff2",
+    "hash": "d6f032e82285e88a98fc8258ef7542a6",
     "files": [
       "/src/lib/tiposkripto/tests/calculator/Calculator.ts",
       "/src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
@@ -84,7 +84,7 @@
     ]
   },
   "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts": {
-    "hash": "0c02dee1a9e242c6ab4f9122e9d22446",
+    "hash": "3687b19f51b444c0dbb745632a8b24ff",
     "files": [
       "/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
       "/src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",

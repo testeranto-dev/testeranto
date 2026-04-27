@@ -30,7 +30,7 @@ export abstract class Server_Api_Routing extends Server_WS {
    * Handle a spawn agent request.
    * Business logic for agent spawning.
    */
-  protected abstract handleSpawnAgent(request: Request): Promise<Response>;
+  // protected abstract handleSpawnAgent(request: Request): Promise<Response>;
 
 
   /**

@@ -138,23 +138,23 @@ export const API: {
   }
 } = {
 
-  spawnAgent: {
-    method: 'POST',
-    path: '/~/agents/spawn',
-    description: 'Spawn a new agent container',
-    params: {
-      profile: '',
-      loadFiles: [],
-      message: '',
-      model: '',
-      requestUid: ''
-    },
-    query: {},
-    response: {} as any,
-    check: (routeName: string, request: { method: string }) => {
-      return routeName === 'agents/spawn' && request.method === 'POST'
-    }
-  },
+  // spawnAgent: {
+  //   method: 'POST',
+  //   path: '/~/agents/spawn',
+  //   description: 'Spawn a new agent container',
+  //   params: {
+  //     profile: '',
+  //     loadFiles: [],
+  //     message: '',
+  //     model: '',
+  //     requestUid: ''
+  //   },
+  //   query: {},
+  //   response: {} as any,
+  //   check: (routeName: string, request: { method: string }) => {
+  //     return routeName === 'agents/spawn' && request.method === 'POST'
+  //   }
+  // },
 
   getConfigs: {
     method: 'GET',
@@ -183,14 +183,14 @@ export const API: {
     response: {} as any
   },
 
-  getHtmlReport: {
-    method: 'GET',
-    path: '/~/html-report',
-    description: 'Get the HTML report',
-    params: {},
-    query: {},
-    response: {} as any
-  },
+  // getHtmlReport: {
+  //   method: 'GET',
+  //   path: '/~/html-report',
+  //   description: 'Get the HTML report',
+  //   params: {},
+  //   query: {},
+  //   response: {} as any
+  // },
 
   getAppState: {
     method: 'GET',
@@ -201,14 +201,14 @@ export const API: {
     response: {} as any
   },
 
-  getUnifiedTestTree: {
-    method: 'GET',
-    path: '/~/unified-test-tree',
-    description: 'Get the unified test tree',
-    params: {},
-    query: {},
-    response: {} as any
-  },
+  // getUnifiedTestTree: {
+  //   method: 'GET',
+  //   path: '/~/unified-test-tree',
+  //   description: 'Get the unified test tree',
+  //   params: {},
+  //   query: {},
+  //   response: {} as any
+  // },
 
   getLockStatus: {
     method: 'GET',
@@ -661,6 +661,7 @@ export interface GetRuntimeResponse {
     dockerfile?: string;
     buildOptions?: string;
     runtime: string;
+    inputFiles?: Record<string, string[]>;
   }>;
   timestamp?: string;
 }

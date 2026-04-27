@@ -39,32 +39,32 @@ export const registerServerCommands = (
         })
     );
 
-    disposables.push(
-        vscode.commands.registerCommand("testeranto.startServer", async () => {
-            vscode.window.showInformationMessage("Starting Testeranto server...");
+    // disposables.push(
+    //     vscode.commands.registerCommand("testeranto.startServer", async () => {
+    //         vscode.window.showInformationMessage("Starting Testeranto server...");
 
-            const terminal = vscode.window.createTerminal('Testeranto Server');
-            terminal.show();
+    //         const terminal = vscode.window.createTerminal('Testeranto Server');
+    //         terminal.show();
 
-            const workspaceFolders = vscode.workspace.workspaceFolders;
-            if (workspaceFolders && workspaceFolders.length > 0) {
-                const workspacePath = workspaceFolders[0].uri.fsPath;
-                terminal.sendText(`cd "${workspacePath}" && npm start`);
-            } else {
-                terminal.sendText('npm start');
-            }
+    //         const workspaceFolders = vscode.workspace.workspaceFolders;
+    //         if (workspaceFolders && workspaceFolders.length > 0) {
+    //             const workspacePath = workspaceFolders[0].uri.fsPath;
+    //             terminal.sendText(`cd "${workspacePath}" && npm start`);
+    //         } else {
+    //             terminal.sendText('npm start');
+    //         }
 
-            vscode.window.showInformationMessage('Server starting in terminal. It may take a few moments...');
+    //         vscode.window.showInformationMessage('Server starting in terminal. It may take a few moments...');
 
-            setTimeout(async () => {
-                await statusBarManager.updateServerStatus();
-                // Refresh the runtime provider if available
-                if (runtimeProvider && typeof (runtimeProvider as any).refresh === 'function') {
-                    (runtimeProvider as any).refresh();
-                }
-            }, 5000);
-        })
-    );
+    //         setTimeout(async () => {
+    //             await statusBarManager.updateServerStatus();
+    //             // Refresh the runtime provider if available
+    //             if (runtimeProvider && typeof (runtimeProvider as any).refresh === 'function') {
+    //                 (runtimeProvider as any).refresh();
+    //             }
+    //         }, 5000);
+    //     })
+    // );
 
     disposables.push(
         vscode.commands.registerCommand("testeranto.checkServerStatus", async () => {

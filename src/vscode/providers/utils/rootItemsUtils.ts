@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { TestTreeItem } from '../../TestTreeItem';
 import { TreeItemType } from '../../types';
 
-
 export function getRootItems(
     documentationFiles: string[],
     documentationTree: Record<string, any>,

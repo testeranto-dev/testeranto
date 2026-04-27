@@ -362,6 +362,192 @@ export class Server_DockerCompose extends Server_Api {
     }
   }
 
+  // ========== File Events Watcher ==========
+
+  private fileEventsCleanup: (() => void) | null = null;
+
+  /**
+   * Start a recursive file watcher on the testeranto/ directory.
+   * Produces GraphOperation objects via handleFileEventUtil and applies them
+   * via applyUpdate, following the same pattern as the Docker events watcher.
+   */
+  protected async startFileEventsWatcher(): Promise<() => void> {
+    this.logBusinessMessage("Starting file events watcher...");
+
+    const fs = await import('fs');
+    const path = await import('path');
+
+    const watchDir = path.join(process.cwd(), 'testeranto');
+
+    // Check if directory exists
+    try {
+      await fs.promises.access(watchDir);
+    } catch {
+      this.logBusinessMessage(`Directory ${watchDir} does not exist, skipping file events watcher`);
+      return () => {};
+    }
+
+    // Use fs.watch recursively (Node.js 19+ supports recursive on macOS)
+    const watcher = fs.watch(watchDir, { recursive: true }, async (eventType: string, filename: string | null) => {
+      if (!filename) return;
+
+      const fullPath = path.join(watchDir, filename);
+
+      // Normalize path separators
+      const normalizedPath = fullPath.replace(/\\/g, '/');
+
+      // Log every file system event
+      console.log(`[FileEventsWatcher] Raw event: eventType=${eventType}, filename=${filename}, normalizedPath=${normalizedPath}`);
+
+      // Determine event type
+      let fileEventType: 'change' | 'create' | 'delete';
+      if (eventType === 'rename') {
+        // rename can be create or delete; check existence
+        try {
+          await fs.promises.access(normalizedPath);
+          fileEventType = 'create';
+        } catch {
+          fileEventType = 'delete';
+        }
+      } else {
+        fileEventType = 'change';
+      }
+
+      console.log(`[FileEventsWatcher] Determined event type: ${fileEventType} for ${normalizedPath}`);
+
+      // Read file content for non-delete events
+      let content: string | undefined;
+      if (fileEventType !== 'delete') {
+        try {
+          content = await fs.promises.readFile(normalizedPath, 'utf-8');
+          console.log(`[FileEventsWatcher] Read content for ${normalizedPath}: length=${content.length}`);
+        } catch {
+          // File may have been deleted between event and read
+          content = undefined;
+          console.log(`[FileEventsWatcher] Failed to read content for ${normalizedPath}`);
+        }
+      }
+
+      // Process through handleFileEventUtil
+      const { handleFileEventUtil } = await import('../utils/file/handleFileEventUtil');
+      const result = handleFileEventUtil(normalizedPath, fileEventType, content, process.cwd());
+
+      console.log(`[FileEventsWatcher] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
+
+      if (result.operations.length > 0) {
+        this.logBusinessMessage(
+          `[FileEventsWatcher] Applying ${result.operations.length} operations for ${fileEventType} on ${normalizedPath}`,
+        );
+        this.applyUpdate(result);
+        this.saveGraph();
+        this.broadcastGraphUpdated();
+      }
+    });
+
+    this.logBusinessMessage(`File events watcher started on ${watchDir}`);
+
+    // Perform an initial scan for existing tests.json files
+    this.logBusinessMessage("Performing initial scan for existing tests.json files...");
+    try {
+      const reportsDir = path.join(watchDir, 'reports');
+      await this.scanForTestsJsonFiles(reportsDir);
+    } catch (err: any) {
+      this.logBusinessMessage(`Initial scan for tests.json files failed: ${err.message}`);
+    }
+
+    return () => {
+      watcher.close();
+      this.logBusinessMessage("Stopped file events watcher");
+    };
+  }
+
+  /**
+   * Recursively scan a directory for inputFiles.json and tests.json files and process them.
+   * Processes inputFiles.json files first so test nodes exist before tests.json processing.
+   */
+  private async scanForTestsJsonFiles(dir: string): Promise<void> {
+    const fs = await import('fs');
+    const path = await import('path');
+
+    let entries: string[];
+    try {
+      entries = await fs.promises.readdir(dir, { withFileTypes: true });
+    } catch {
+      // Directory doesn't exist or can't be read
+      return;
+    }
+
+    // First pass: process inputFiles.json files to create test nodes
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await this.scanForTestsJsonFiles(fullPath);
+      } else if (entry.name === 'inputFiles.json') {
+        this.logBusinessMessage(`[InitialScan] Found inputFiles.json at ${fullPath}`);
+        console.log(`[InitialScan] Found inputFiles.json at ${fullPath}`);
+        const normalizedPath = fullPath.replace(/\\/g, '/');
+        let content: string;
+        try {
+          content = await fs.promises.readFile(fullPath, 'utf-8');
+          console.log(`[InitialScan] Read content for ${normalizedPath}: length=${content.length}`);
+        } catch {
+          console.log(`[InitialScan] Failed to read content for ${normalizedPath}`);
+          continue;
+        }
+        const { handleFileEventUtil } = await import('../utils/file/handleFileEventUtil');
+        const result = handleFileEventUtil(normalizedPath, 'create', content, process.cwd());
+        console.log(`[InitialScan] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
+        if (result.operations.length > 0) {
+          this.logBusinessMessage(
+            `[InitialScan] Applying ${result.operations.length} operations for ${normalizedPath}`,
+          );
+          this.applyUpdate(result);
+          this.saveGraph();
+          this.broadcastGraphUpdated();
+        } else {
+          console.log(`[InitialScan] No operations returned for ${normalizedPath}`);
+        }
+      }
+    }
+
+    // Second pass: process tests.json files (test nodes should now exist)
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        // Already scanned subdirectories in first pass, but we need to scan again for tests.json
+        // This is handled by the recursive call in the first pass, but we need to ensure
+        // tests.json files are processed after inputFiles.json in the same directory.
+        // Since the first pass already recursed into subdirectories, we just need to
+        // process tests.json files at this level.
+      } else if (entry.name === 'tests.json') {
+        this.logBusinessMessage(`[InitialScan] Found tests.json at ${fullPath}`);
+        console.log(`[InitialScan] Found tests.json at ${fullPath}`);
+        const normalizedPath = fullPath.replace(/\\/g, '/');
+        let content: string;
+        try {
+          content = await fs.promises.readFile(fullPath, 'utf-8');
+          console.log(`[InitialScan] Read content for ${normalizedPath}: length=${content.length}`);
+        } catch {
+          console.log(`[InitialScan] Failed to read content for ${normalizedPath}`);
+          continue;
+        }
+        const { handleFileEventUtil } = await import('../utils/file/handleFileEventUtil');
+        const result = handleFileEventUtil(normalizedPath, 'create', content, process.cwd());
+        console.log(`[InitialScan] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
+        if (result.operations.length > 0) {
+          this.logBusinessMessage(
+            `[InitialScan] Applying ${result.operations.length} operations for ${normalizedPath}`,
+          );
+          this.applyUpdate(result);
+          this.saveGraph();
+          this.broadcastGraphUpdated();
+        } else {
+          console.log(`[InitialScan] No operations returned for ${normalizedPath}`);
+        }
+      }
+    }
+  }
+
   // Implement abstract methods from Server class
   protected async startDockerServices(): Promise<void> {
     this.logBusinessMessage("Starting Docker services (V2 business logic)...");
@@ -383,7 +569,11 @@ export class Server_DockerCompose extends Server_Api {
     this.logBusinessMessage("Starting Docker events watcher before bringing services up...");
     this.dockerEventsCleanup = await this.startDockerEventsWatcher();
 
-    // 4. Start all services (events watcher will capture their start events)
+    // 4. Start file events watcher alongside Docker watcher
+    this.logBusinessMessage("Starting file events watcher...");
+    this.fileEventsCleanup = await this.startFileEventsWatcher();
+
+    // 5. Start all services (events watcher will capture their start events)
     this.logBusinessMessage("Starting all Docker services...");
     await this.dockerComposeUp();
 
@@ -400,6 +590,12 @@ export class Server_DockerCompose extends Server_Api {
     if (this.dockerEventsCleanup) {
       this.dockerEventsCleanup();
       this.dockerEventsCleanup = null;
+    }
+
+    // Clean up file events watcher
+    if (this.fileEventsCleanup) {
+      this.fileEventsCleanup();
+      this.fileEventsCleanup = null;
     }
 
     // Stop all Docker services
@@ -563,82 +759,82 @@ export class Server_DockerCompose extends Server_Api {
    * Create the aider message file for a given test.
    * Follows V2 Server_Aider.createAiderMessageFile pattern.
    */
-  async createAiderMessageFile(testName: string, configKey: string): Promise<string> {
-    this.logBusinessMessage(`createAiderMessageFile: ${testName} for config ${configKey}`);
+  // async createAiderMessageFile(testName: string, configKey: string): Promise<string> {
+  //   this.logBusinessMessage(`createAiderMessageFile: ${testName} for config ${configKey}`);
 
-    const reportDir = `${process.cwd()}/testeranto/reports/${configKey}/${testName}`;
-    const messageFilePath = `${reportDir}/aider-message.txt`;
+  //   const reportDir = `${process.cwd()}/testeranto/reports/${configKey}/${testName}`;
+  //   const messageFilePath = `${reportDir}/aider-message.txt`;
 
-    // Create the report directory if it doesn't exist
-    await this.mkdir(reportDir, true);
+  //   // Create the report directory if it doesn't exist
+  //   await this.mkdir(reportDir, true);
 
-    // Get input files for the test
-    const inputFiles = this.getInputFiles(configKey, testName);
+  //   // Get input files for the test
+  //   const inputFiles = this.getInputFiles(configKey, testName);
 
-    let messageContent = '';
+  //   let messageContent = '';
 
-    // Include all input files, but exclude aider-message.txt to avoid circular reference
-    const filteredInputFiles = inputFiles.filter(file => !file.includes('aider-message.txt'));
+  //   // Include all input files, but exclude aider-message.txt to avoid circular reference
+  //   const filteredInputFiles = inputFiles.filter(file => !file.includes('aider-message.txt'));
 
-    if (filteredInputFiles.length > 0) {
-      messageContent +=
-        filteredInputFiles.map((file) => {
-          const relativePath = path.relative(process.cwd(), file);
-          return `/add ${relativePath}`;
-        }).join('\n') + '\n\n';
-    }
+  //   if (filteredInputFiles.length > 0) {
+  //     messageContent +=
+  //       filteredInputFiles.map((file) => {
+  //         const relativePath = path.relative(process.cwd(), file);
+  //         return `/add ${relativePath}`;
+  //       }).join('\n') + '\n\n';
+  //   }
 
-    // Get test-specific output files
-    const parentReportDir = path.dirname(reportDir);
+  //   // Get test-specific output files
+  //   const parentReportDir = path.dirname(reportDir);
 
-    // Transform the test file name to match the log file naming pattern
-    const testFileName = path.basename(testName);
-    const cleanTestName = testFileName
-      .toLowerCase()
-      .replace(/\./g, '-')
-      .replace(/[^a-z0-9-]/g, '');
+  //   // Transform the test file name to match the log file naming pattern
+  //   const testFileName = path.basename(testName);
+  //   const cleanTestName = testFileName
+  //     .toLowerCase()
+  //     .replace(/\./g, '-')
+  //     .replace(/[^a-z0-9-]/g, '');
 
-    // Get the runtime config to know how many checks there are
-    const runtimeConfig = this.configs.runtimes[configKey];
-    const checksCount = runtimeConfig?.checks?.length || 0;
+  //   // Get the runtime config to know how many checks there are
+  //   const runtimeConfig = this.configs.runtimes[configKey];
+  //   const checksCount = runtimeConfig?.checks?.length || 0;
 
-    // Always look for bdd log
-    const bddLogPath = path.join(parentReportDir, `${cleanTestName}_bdd.log`);
-    const bddLogExists = await this.fileExists(bddLogPath);
-    if (bddLogExists) {
-      const relativeBddLogPath = path.relative(process.cwd(), bddLogPath);
-      messageContent += `/read ${relativeBddLogPath}\n`;
-    }
+  //   // Always look for bdd log
+  //   const bddLogPath = path.join(parentReportDir, `${cleanTestName}_bdd.log`);
+  //   const bddLogExists = await this.fileExists(bddLogPath);
+  //   if (bddLogExists) {
+  //     const relativeBddLogPath = path.relative(process.cwd(), bddLogPath);
+  //     messageContent += `/read ${relativeBddLogPath}\n`;
+  //   }
 
-    // Look for check logs based on checks count
-    for (let i = 0; i < checksCount; i++) {
-      const checkLogPath = path.join(parentReportDir, `${cleanTestName}_check-${i}.log`);
-      const checkLogExists = await this.fileExists(checkLogPath);
-      if (checkLogExists) {
-        const relativeCheckLogPath = path.relative(process.cwd(), checkLogPath);
-        messageContent += `/read ${relativeCheckLogPath}\n`;
-      }
-    }
+  //   // Look for check logs based on checks count
+  //   for (let i = 0; i < checksCount; i++) {
+  //     const checkLogPath = path.join(parentReportDir, `${cleanTestName}_check-${i}.log`);
+  //     const checkLogExists = await this.fileExists(checkLogPath);
+  //     if (checkLogExists) {
+  //       const relativeCheckLogPath = path.relative(process.cwd(), checkLogPath);
+  //       messageContent += `/read ${relativeCheckLogPath}\n`;
+  //     }
+  //   }
 
-    // Add the tests.json file from the test-specific directory
-    const testsJsonPath = path.join(reportDir, 'tests.json');
-    const testsJsonExists = await this.fileExists(testsJsonPath);
-    if (testsJsonExists) {
-      const relativeTestsJsonPath = path.relative(process.cwd(), testsJsonPath);
-      messageContent += `/read ${relativeTestsJsonPath}\n`;
-    }
+  //   // Add the tests.json file from the test-specific directory
+  //   const testsJsonPath = path.join(reportDir, 'tests.json');
+  //   const testsJsonExists = await this.fileExists(testsJsonPath);
+  //   if (testsJsonExists) {
+  //     const relativeTestsJsonPath = path.relative(process.cwd(), testsJsonPath);
+  //     messageContent += `/read ${relativeTestsJsonPath}\n`;
+  //   }
 
-    if (messageContent.includes('/read')) {
-      messageContent += '\n';
-    }
+  //   if (messageContent.includes('/read')) {
+  //     messageContent += '\n';
+  //   }
 
-    messageContent += 'Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.\n\n';
+  //   messageContent += 'Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.\n\n';
 
-    await this.writeFile(messageFilePath, messageContent);
-    this.logBusinessMessage(`Created aider message file at ${messageFilePath}`);
+  //   await this.writeFile(messageFilePath, messageContent);
+  //   this.logBusinessMessage(`Created aider message file at ${messageFilePath}`);
 
-    return messageFilePath;
-  }
+  //   return messageFilePath;
+  // }
 
   /**
    * Launch an aider process for the given test.

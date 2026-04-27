@@ -1,9 +1,7 @@
-import matter from "gray-matter";
 import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../graph";
 import { Server_Api_Routing } from "./Server_Api_Routing";
-import { createFolderNodesAndEdges } from "../utils/createFolderNodesAndEdges";
 import { EventQueue } from "./utils/EventQueue";
 
 export abstract class Server_Files extends Server_Api_Routing {
@@ -62,72 +60,10 @@ export abstract class Server_Files extends Server_Api_Routing {
     testResult: any,
   ): Promise<void>;
 
-  protected async updateGraphWithInputFiles(
-    configKey: string,
-    testName: string,
-    inputFiles: string[],
-  ): Promise<void> {
-    const entrypointId = `entrypoint:${configKey}:${testName}`;
-    const timestamp = new Date().toISOString();
-
-    const graph = this.graph;
-    for (const inputFile of inputFiles) {
-      const fileNodeId = `file:${inputFile}`;
-      const existingFileNode = graph.nodes.find((n: any) => n.id === fileNodeId);
-
-      if (!existingFileNode) {
-        graph.nodes.push({
-          id: fileNodeId,
-          type: { category: 'file', type: 'inputFile' },
-          label: inputFile.split('/').pop() || inputFile,
-          description: `Input file: ${inputFile}`,
-          metadata: {
-            filePath: inputFile,
-            localPath: inputFile,
-            url: `file://${inputFile}`
-          },
-          timestamp
-        });
-      }
-
-      const parentFolderId = createFolderNodesAndEdges(graph, inputFile, timestamp);
-
-      if (parentFolderId) {
-        const folderEdgeExists = graph.edges.find(
-          (e: any) => e.source === parentFolderId && e.target === fileNodeId
-        );
-        if (!folderEdgeExists) {
-          graph.edges.push({
-            source: parentFolderId,
-            target: fileNodeId,
-            attributes: {
-              type: { category: 'structural', type: 'locatedIn', directed: true },
-              timestamp
-            }
-          });
-        }
-      }
-
-      const entrypointToFileEdgeExists = graph.edges.find(
-        (e: any) => e.source === entrypointId && e.target === fileNodeId
-      );
-      if (!entrypointToFileEdgeExists) {
-        graph.edges.push({
-          source: entrypointId,
-          target: fileNodeId,
-          attributes: {
-            type: { category: 'association', type: 'associatedWith', directed: true },
-            timestamp
-          }
-        });
-      }
-    }
-  }
-
-  protected abstract updateFeatureNode(
-    featurePath: string,
-    frontmatter: any,
-  ): Promise<void>;
+  // Graph manipulation methods removed.
+  // File events are now handled by the file events watcher in Server_DockerCompose,
+  // which produces GraphOperation objects and calls applyUpdate.
+  // This follows the same pattern as the Docker events watcher.
 
   // Docker processes are now started by the Docker events watcher.
   // No need to manually start them from here.
@@ -204,29 +140,10 @@ export abstract class Server_Files extends Server_Api_Routing {
       if (newHash !== oldHash) {
         this.setStoredHash(configKey, testName, newHash);
 
-        const inputFiles = testInfo.files;
-        await this.updateGraphWithInputFiles(configKey, testName, inputFiles);
-
-        // Also add edges from the test node to each input file
-        const testNodeId = `test:${configKey}:${testName}`;
-        const timestamp = new Date().toISOString();
-        for (const inputFile of inputFiles) {
-          const fileNodeId = `file:${inputFile}`;
-          const edgeExists = this.graph.edges.find(
-            (e: any) => e.source === testNodeId && e.target === fileNodeId
-          );
-          if (!edgeExists) {
-            this.graph.edges.push({
-              source: testNodeId,
-              target: fileNodeId,
-              attributes: {
-                type: { category: 'association', type: 'associatedWith', directed: true },
-                timestamp,
-              },
-            });
-          }
-        }
-
+        // Graph manipulation is now handled by the file events watcher
+        // which watches testeranto/bundles/{configKey}/inputFiles.json
+        // and produces GraphOperation objects via handleFileEventUtil.
+        // Only schedule the test here.
         await this.scheduleTest(runtime, testName, configKey, configValue);
       }
     }
@@ -244,7 +161,10 @@ export abstract class Server_Files extends Server_Api_Routing {
     const content = await this.readFile(testsJsonPath);
     const testResult = JSON.parse(content);
 
-    await this.updateGraphWithTestResult(configKey, testName, testResult);
+    // Graph manipulation (output file node, edge, test node update) is now handled
+    // by the file events watcher which watches testeranto/reports/{configKey}/{testName}/tests.json
+    // and produces GraphOperation objects via handleFileEventUtil.
+    // Only process features here.
 
     const individualResults = testResult.individualResults || [];
     const features: string[] = [];
@@ -283,18 +203,9 @@ export abstract class Server_Files extends Server_Api_Routing {
     }
   }
 
-  protected async handleFeatureFileChange(featurePath: string): Promise<void> {
-    if (!(await this.fileExists(featurePath))) {
-      return;
-    }
-
-    const content = await this.readFile(featurePath);
-    const { data: frontmatter } = matter(content);
-
-    if (frontmatter) {
-      await this.updateFeatureNode(featurePath, frontmatter);
-    }
-  }
+  // Feature file changes are now handled by the file events watcher
+  // which watches documentation files and produces GraphOperation objects
+  // via handleFileEventUtil.
 
   private storedHashes: Map<string, Map<string, string>> = new Map();
 

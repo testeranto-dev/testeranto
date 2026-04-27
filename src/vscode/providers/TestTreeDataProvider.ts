@@ -138,9 +138,11 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
     if (!runtimeData) return [];
 
     const testPaths = runtimeData.tests || [];
+    const inputFiles = runtimeData.inputFiles || {};
 
     return testPaths.map((testPath: string) => {
       const fileName = testPath.split('/').pop() || testPath;
+      const testInputFiles = inputFiles[testPath] || [];
       return new TestTreeItem(
         fileName,
         TreeItemType.Test,
@@ -149,12 +151,13 @@ export class TestTreeDataProvider extends BaseTreeDataProvider {
           runtimeKey,
           testId: testPath,
           description: testPath,
-          status: 'unknown'
+          status: 'unknown',
+          inputFiles: testInputFiles
         },
         {
-          command: 'testeranto.launchAiderForTest',
-          title: 'Launch Aider',
-          arguments: [runtimeKey, testPath, runtimeKey]
+          command: 'testeranto.runTest',
+          title: 'Run Test',
+          arguments: [runtimeKey, testPath, testInputFiles]
         },
         new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('testing.iconUnset'))
       );

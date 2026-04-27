@@ -16,6 +16,7 @@ export interface TreeItemData {
   isFile?: boolean;
   info?: string;
   action?: string;
+  inputFiles?: string[];
   description?: string;
   connected?: boolean;
   disconnected?: boolean;

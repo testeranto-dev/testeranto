@@ -12,10 +12,11 @@ import { refreshProviders } from "./refreshProviders";
 import { registerCommands } from "./registerCommands";
 import { registerTreeViews } from "./registerTreeViews";
 import { setupCleanup } from "./setupCleanup";
-import { testProviders } from "./testProviders";
+// import { testProviders } from "./testProviders";
 import config from "../../../testeranto/testeranto";
 import { getApiUrl } from "../../api";
-import { buildAgentCommand } from "../utilities/buildAgentCommand";
+import { launchAgentCommand } from "../commands/launchAgentCommand";
+import { launchRuntimeTestCommand } from "../commands/launchRuntimeTestCommand";
 
 export async function activateExtension(context: vscode.ExtensionContext): Promise<void> {
     const outputChannel = createOutputChannel();
@@ -41,85 +42,12 @@ export async function activateExtension(context: vscode.ExtensionContext): Promi
 
         // Register launch agent command (unified agent creation route)
         context.subscriptions.push(
-            vscode.commands.registerCommand('testeranto.launchAgent', async () => {
-                outputChannel.appendLine('[Testeranto] Launching agent...');
-                try {
-                    // Show quick pick to select agent profile
-                    const profiles = Object.keys(config.agents || {});
-                    if (profiles.length === 0) {
-                        vscode.window.showErrorMessage('No agent profiles configured');
-                        return;
-                    }
+            launchAgentCommand(context, outputChannel)
+        );
 
-                    const selectedProfile = await vscode.window.showQuickPick(profiles, {
-                        placeHolder: 'Select agent profile to launch'
-                    });
-
-                    if (!selectedProfile) {
-                        return;
-                    }
-
-                    // Compose the Docker command locally using the agent config.
-                    // No server request needed – the Docker events watcher will
-                    // detect the container when it starts and create the graph node.
-                    const agentConfig = config.agents?.[selectedProfile];
-                    if (!agentConfig) {
-                        vscode.window.showErrorMessage(`Agent profile '${selectedProfile}' not found in configuration`);
-                        return;
-                    }
-
-                    // Use workspace root from VSCode, not process.cwd()
-                    const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri?.fsPath || process.cwd();
-
-                    // Fetch agent data from the graph via the server API.
-                    // The server has already parsed the markdown file and stored
-                    // personaBody, readFiles, addFiles in the agent node's metadata.
-                    const apiUrl = getApiUrl('getAgentSlice', { agentName: selectedProfile });
-                    const response = await fetch(apiUrl, { signal: AbortSignal.timeout?.(3000) });
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch agent data from server: ${response.status}`);
-                    }
-                    const agentData = await response.json();
-                    // The agent slice response includes metadata with parsed data
-                    const metadata = agentData.metadata || {};
-                    const personaBody = metadata.personaBody || "";
-                    const readFiles: string[] = metadata.readFiles || [];
-                    const addFiles: string[] = metadata.addFiles || [];
-                    const personaFilePath = metadata.personaFilePath || "";
-
-                    // Build the Docker command using the shared utility
-                    const command = buildAgentCommand(
-                        selectedProfile,
-                        personaBody,
-                        readFiles,
-                        addFiles,
-                        personaFilePath,
-                        workspaceRoot,
-                    );
-
-                    outputChannel.appendLine(`[Testeranto] Agent command composed locally for profile: ${selectedProfile}`);
-
-                    // Open a terminal and send the command line by line
-                    // The heredoc approach with backslash-newline continuation
-                    // makes it easy to send in lines without truncation
-                    const terminal = vscode.window.createTerminal(`Agent: ${selectedProfile}`);
-                    terminal.show();
-
-                    // Split the command into lines and send each one
-                    const lines = command.split('\n');
-                    for (const line of lines) {
-                        terminal.sendText(line, false);
-                    }
-                    // Send a final newline to execute the assembled command
-                    terminal.sendText('', true);
-
-                    vscode.window.showInformationMessage(`Agent command ready for ${selectedProfile}. Press Enter in the terminal to start the container.`);
-
-                } catch (error: any) {
-                    outputChannel.appendLine(`[Testeranto] Failed to launch agent: ${error.message}`);
-                    vscode.window.showErrorMessage(`Failed to launch agent: ${error.message}`);
-                }
-            })
+        // Register run test command (unified test execution route)
+        context.subscriptions.push(
+            launchRuntimeTestCommand(context, outputChannel)
         );
 
         vscode.window.showInformationMessage('Testeranto extension is now active! Use the Testeranto view in the Activity Bar to explore tests.');
@@ -132,7 +60,7 @@ export async function activateExtension(context: vscode.ExtensionContext): Promi
 
         registerTreeViews(providers, context, outputChannel);
 
-        await testProviders(providers, outputChannel);
+        // await testProviders(providers, outputChannel);
 
         refreshProviders(providers, outputChannel);
 

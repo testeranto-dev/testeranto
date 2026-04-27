@@ -2,6 +2,11 @@ import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { Server_DockerCompose } from "./technological/Server_DockerCompose";
 import { buildFileTreeFromGraph } from "./utils/buildFileTreeFromGraph";
+import { generateViewSliceUtil } from "./utils/static/generateViewSliceUtil";
+import { writeViewHtmlFileUtil } from "./utils/static/writeViewHtmlFileUtil";
+import { writeViewsIndexHtmlUtil } from "./utils/static/writeViewsIndexHtmlUtil";
+import { type GetAiderResponse } from "../../../api"
+
 
 export abstract class Server extends Server_DockerCompose {
   protected isRunning: boolean = false;
@@ -194,17 +199,14 @@ export abstract class Server extends Server_DockerCompose {
   }
 
   protected async generateViewSliceUtil(viewKey: string, viewConfig: any): Promise<void> {
-    const { generateViewSliceUtil } = await import("./utils/static/generateViewSliceUtil");
     await generateViewSliceUtil(viewKey, viewConfig);
   }
 
   protected async writeViewHtmlFileUtil(viewKey: string, html: string): Promise<void> {
-    const { writeViewHtmlFileUtil } = await import("./utils/static/writeViewHtmlFileUtil");
     await writeViewHtmlFileUtil(viewKey, html);
   }
 
   protected async writeViewsIndexHtmlUtil(html: string): Promise<void> {
-    const { writeViewsIndexHtmlUtil } = await import("./utils/static/writeViewsIndexHtmlUtil");
     await writeViewsIndexHtmlUtil(html);
   }
 
@@ -224,33 +226,14 @@ export abstract class Server extends Server_DockerCompose {
 
   protected async handleProcessRoute(request: Request): Promise<Response> {
     const processNodes = this.queryNodes((node: any) => {
-      if (node.type?.category === 'process') return true;
-      if (typeof node.type === 'string' && node.type.toLowerCase().includes('process')) return true;
-      if (node.metadata?.processType) return true;
-      return false;
+      return node.type?.category === 'process';
     });
 
     const processes = processNodes.map((node: any) => ({
       id: node.id,
-      type: typeof node.type === 'string' ? node.type : (node.type?.type || 'process'),
-      label: node.label || node.id,
-      metadata: {
-        ...(node.metadata || {}),
-        status: node.status || node.metadata?.status || 'unknown',
-        containerId: node.metadata?.containerId || node.containerId,
-        serviceName: node.metadata?.serviceName || node.serviceName,
-        processType: node.metadata?.processType || node.type?.type || 'unknown',
-        isActive: node.metadata?.isActive ?? node.isActive ?? false,
-        exitCode: node.metadata?.exitCode ?? node.exitCode,
-        isAider: node.metadata?.isAider ?? node.isAider ?? false,
-        agentName: node.metadata?.agentName || node.agentName,
-        isAgentAider: node.metadata?.isAgentAider ?? node.isAgentAider ?? false,
-        image: node.metadata?.image || node.image,
-        command: node.metadata?.command || node.command,
-        startedAt: node.metadata?.startedAt || node.startedAt,
-        finishedAt: node.metadata?.finishedAt || node.finishedAt,
-        updatedAt: node.metadata?.updatedAt || node.updatedAt,
-      },
+      type: node.type?.type,
+      label: node.label,
+      metadata: node.metadata,
     }));
 
     return new Response(
@@ -269,15 +252,14 @@ export abstract class Server extends Server_DockerCompose {
 
   protected async handleAiderRoute(request: Request): Promise<Response> {
     const aiderNodes = this.queryNodes((node: any) =>
-      (node.type?.category === 'process' && node.type?.type === 'aider') ||
-      node.metadata?.isAgentAider === true
+      node.type?.category === 'process' && node.type?.type === 'aider'
     );
 
     const aiderEdges = this.queryEdges((edge: any) =>
       aiderNodes.some(n => n.id === edge.source || n.id === edge.target)
     );
 
-    const response: import("../../../../api").GetAiderResponse = {
+    const response: GetAiderResponse = {
       nodes: aiderNodes,
       edges: aiderEdges,
       timestamp: new Date().toISOString()
@@ -304,6 +286,7 @@ export abstract class Server extends Server_DockerCompose {
       dockerfile?: string;
       buildOptions?: string;
       runtime: string;
+      inputFiles?: Record<string, string[]>;
     }> = {};
 
     for (const node of runtimeNodes) {
@@ -313,13 +296,33 @@ export abstract class Server extends Server_DockerCompose {
       const config = this.configs.runtimes?.[runtimeName];
       if (!config) continue;
 
+      const inputFiles: Record<string, string[]> = {};
+      for (const testName of config.tests) {
+        const testNodeId = `test:${runtimeName}:${testName}`;
+        const testNode = this.graph.nodes.find((n: any) => n.id === testNodeId);
+        if (!testNode) continue;
+
+        const fileEdges = this.graph.edges.filter((e: any) =>
+          e.source === testNodeId && e.target.startsWith('file:')
+        );
+        const files: string[] = [];
+        for (const edge of fileEdges) {
+          const fileNode = this.graph.nodes.find((n: any) => n.id === edge.target);
+          if (fileNode && fileNode.metadata?.filePath) {
+            files.push(fileNode.metadata.filePath);
+          }
+        }
+        inputFiles[testName] = files;
+      }
+
       runtimes[runtimeName] = {
-        tests: config.tests || [],
-        checks: config.checks?.map((check: any) => check.toString()) || [],
-        outputs: config.outputs || [],
+        tests: config.tests,
+        checks: config.checks?.map((check: any) => check.toString()),
+        outputs: config.outputs,
         dockerfile: config.dockerfile,
         buildOptions: config.buildOptions,
-        runtime: config.runtime
+        runtime: config.runtime,
+        inputFiles
       };
     }
 
@@ -340,7 +343,7 @@ export abstract class Server extends Server_DockerCompose {
   protected async handleAgentsRoute(request: Request): Promise<Response> {
     return new Response(
       JSON.stringify({
-        agents: Object.keys(this.configs.agents || {}).map(name => ({
+        agents: Object.keys(this.configs.agents).map(name => ({
           name,
           config: this.configs.agents?.[name]
         })),
@@ -368,21 +371,20 @@ export abstract class Server extends Server_DockerCompose {
       );
     }
 
-    // Find the agent node in the graph to retrieve parsed markdown metadata
     const agentNode = this.graph.nodes.find(
-      (n: any) => n.id === `agent:${agentName}` || n.label === agentName
+      (n: any) => n.id === `agent:${agentName}`
     );
-    const metadata = agentNode?.metadata || {};
+    const metadata = agentNode?.metadata;
 
     const chatNodes = this.queryNodes?.((node: any) =>
       node.type?.category === 'chat' && node.type?.type === 'chat_message'
-    ) || [];
+    );
 
-    const chatMessages = chatNodes.map((node: any) => ({
+    const chatMessages = (chatNodes || []).map((node: any) => ({
       id: node.id,
-      agentName: node.metadata?.agentName || node.agentName,
-      content: node.metadata?.content || node.content || node.description,
-      timestamp: node.metadata?.timestamp || node.timestamp,
+      agentName: node.metadata?.agentName,
+      content: node.metadata?.content,
+      timestamp: node.metadata?.timestamp,
     })).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
     return new Response(
@@ -401,7 +403,7 @@ export abstract class Server extends Server_DockerCompose {
   }
 
   protected async handleViewRoute(request: Request, viewName: string): Promise<Response> {
-    const html = this.generateViewHtml(viewName, this.configs.views?.[viewName] || {});
+    const html = this.generateViewHtml(viewName, this.configs.views?.[viewName]);
     return new Response(html, {
       status: 200,
       headers: { "Content-Type": "text/html" }
@@ -411,8 +413,9 @@ export abstract class Server extends Server_DockerCompose {
   protected async registerDefaultHttpRoutes(): Promise<void> {
     // Register all HTTP API routes from the API specification
     // These routes are used by VSCode extension, views, and agents
-    
+
     // GET routes
+    // TODO this should be defined in API.ts, then imported into this file
     this.addRoute('GET', '/~/files', (request) => this.handleFilesRoute(request));
     this.addRoute('GET', '/~/process', (request) => this.handleProcessRoute(request));
     this.addRoute('GET', '/~/aider', (request) => this.handleAiderRoute(request));
@@ -459,36 +462,38 @@ export abstract class Server extends Server_DockerCompose {
         }
       );
     });
-    
+
     // POST routes
-    this.addRoute('POST', '/~/agents/spawn', (request) => this.handleSpawnAgent(request));
-    this.addRoute('POST', '/~/open-process-terminal', async (request) => {
-      const body = await request.json();
-      const { nodeId, label, containerId, serviceName } = body;
-      
-      try {
-        const result = await this.openProcessTerminal(nodeId, label, containerId, serviceName);
-        return new Response(
-          JSON.stringify(result),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" }
-          }
-        );
-      } catch (error: any) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: error.message,
-            timestamp: new Date().toISOString()
-          }),
-          {
-            status: 500,
-            headers: { "Content-Type": "application/json" }
-          }
-        );
-      }
-    });
+    // this.addRoute('POST', '/~/agents/spawn', (request) => this.handleSpawnAgent(request));
+    // this.addRoute('POST', '/~/open-process-terminal', async (request) => {
+    //   const body = await request.json();
+    //   const { nodeId, label, containerId, serviceName } = body;
+
+    //   try {
+    //     const result = await this.openProcessTerminal(nodeId, label, containerId, serviceName);
+    //     return new Response(
+    //       JSON.stringify(result),
+    //       {
+    //         status: 200,
+    //         headers: { "Content-Type": "application/json" }
+    //       }
+    //     );
+    //   } catch (error: any) {
+    //     return new Response(
+    //       JSON.stringify({
+    //         success: false,
+    //         error: error.message,
+    //         timestamp: new Date().toISOString()
+    //       }),
+    //       {
+    //         status: 500,
+    //         headers: { "Content-Type": "application/json" }
+    //       }
+    //     );
+    //   }
+    // });
+
+    // TODO should be using API.ts
     this.addRoute('POST', '/~/chat', (request) => this.handlePostChatMessage(request));
     this.addRoute('POST', '/~/down', async (request) => {
       await this.dockerComposeDown();
@@ -504,6 +509,8 @@ export abstract class Server extends Server_DockerCompose {
         }
       );
     });
+
+    // TODO should be using API.ts
     this.addRoute('POST', '/~/up', async (request) => {
       await this.dockerComposeUp();
       return new Response(
@@ -518,6 +525,8 @@ export abstract class Server extends Server_DockerCompose {
         }
       );
     });
+
+    // TODO should be using API.ts
     this.addRoute('POST', '/~/start-process', async (request) => {
       const body = await request.json();
       const { runtime, testName, configKey } = body;
@@ -534,25 +543,23 @@ export abstract class Server extends Server_DockerCompose {
         }
       );
     });
-    
+
     // Register view routes from config
-    if (this.configs.views) {
-      for (const viewKey of Object.keys(this.configs.views)) {
-        this.addRoute('GET', `/~/views/${viewKey}`, async (request) => {
-          return await this.handleViewRoute(request, viewKey);
-        });
-      }
+    for (const viewKey of Object.keys(this.configs.views)) {
+      // TODO should be using API.ts
+      this.addRoute('GET', `/~/views/${viewKey}`, async (request) => {
+        return await this.handleViewRoute(request, viewKey);
+      });
     }
-    
+
     // Register agent slice routes
-    if (this.configs.agents) {
-      for (const agentName of Object.keys(this.configs.agents)) {
-        this.addRoute('GET', `/~/agents/${agentName}`, async (request) => {
-          return await this.handleAgentSliceRoute(request, agentName);
-        });
-      }
+    // TODO should be using API.ts
+    for (const agentName of Object.keys(this.configs.agents)) {
+      this.addRoute('GET', `/~/agents/${agentName}`, async (request) => {
+        return await this.handleAgentSliceRoute(request, agentName);
+      });
     }
-    
+
     // Register git routes
     this.addRoute('GET', '/~/git/status', async (request) => {
       return new Response(
@@ -632,7 +639,7 @@ export abstract class Server extends Server_DockerCompose {
         }
       );
     });
-    
+
     // Register lock status route
     this.addRoute('GET', '/~/lock-status', async (request) => {
       return new Response(
@@ -649,7 +656,7 @@ export abstract class Server extends Server_DockerCompose {
         }
       );
     });
-    
+
     // Register user-agents route
     this.addRoute('GET', '/~/user-agents', async (request) => {
       return new Response(
@@ -666,40 +673,40 @@ export abstract class Server extends Server_DockerCompose {
         }
       );
     });
-    
+
     // Register aider-processes route
     this.addRoute('GET', '/~/aider-processes', async (request) => {
       return await this.handleAiderRoute(request);
     });
-    
+
     // Register html-report route
-    this.addRoute('GET', '/~/html-report', async (request) => {
-      return new Response(
-        JSON.stringify({
-          html: '<html><body><h1>Report</h1></body></html>',
-          timestamp: new Date().toISOString()
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    });
-    
+    // this.addRoute('GET', '/~/html-report', async (request) => {
+    //   return new Response(
+    //     JSON.stringify({
+    //       html: '<html><body><h1>Report</h1></body></html>',
+    //       timestamp: new Date().toISOString()
+    //     }),
+    //     {
+    //       status: 200,
+    //       headers: { "Content-Type": "application/json" }
+    //     }
+    //   );
+    // });
+
     // Register unified-test-tree route
-    this.addRoute('GET', '/~/unified-test-tree', async (request) => {
-      return new Response(
-        JSON.stringify({
-          tree: [],
-          timestamp: new Date().toISOString()
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    });
-    
+    // this.addRoute('GET', '/~/unified-test-tree', async (request) => {
+    //   return new Response(
+    //     JSON.stringify({
+    //       tree: [],
+    //       timestamp: new Date().toISOString()
+    //     }),
+    //     {
+    //       status: 200,
+    //       headers: { "Content-Type": "application/json" }
+    //     }
+    //   );
+    // });
+
     // Register process logs route
     this.addRoute('GET', '/~/processes/:processId/logs', async (request) => {
       const url = new URL(request.url);
@@ -716,70 +723,6 @@ export abstract class Server extends Server_DockerCompose {
         }
       );
     });
-  }
-
-  /**
-   * DEPRECATED – The VSCode extension now composes the Docker command locally.
-   * This endpoint should be removed once the new architecture is fully validated.
-   * The extension no longer calls this endpoint.
-   */
-  protected async handleSpawnAgent(request: Request): Promise<Response> {
-    const body = await request.json();
-    const { profile, message, loadFiles, model, requestUid, testName, configKey } = body;
-
-    if (!profile) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Missing required field: profile',
-          timestamp: new Date().toISOString()
-        }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    }
-
-    // Do NOT spawn the container here.  The server only returns the
-    // Docker command that the user will run in their own terminal.
-    // The Docker events watcher will detect the container when it
-    // starts and create the graph node asynchronously.
-    const agentConfig = this.configs.agents?.[profile];
-    if (!agentConfig) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: `Agent profile '${profile}' not found in configuration`,
-          timestamp: new Date().toISOString()
-        }),
-        {
-          status: 404,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    }
-
-    // Build the docker‑compose command that the user will execute.
-    // The service name follows the pattern used by generateAgentService.
-    const serviceName = `agent-${profile}`;
-    const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
-    const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        agentName: profile,
-        containerId: '',          // unknown until the user runs the command
-        command,
-        message: `Agent command ready for ${profile}. Press Enter in the terminal to start the container.`,
-        timestamp: new Date().toISOString()
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
   }
 
   protected async handlePostChatMessage(request: Request): Promise<Response> {
@@ -799,7 +742,7 @@ export abstract class Server extends Server_DockerCompose {
       );
     }
 
-    const messageId = `chat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const messageId = `chat-${Date.now()}`;
     const chatNode = {
       id: messageId,
       type: { category: 'chat', type: 'chat_message' },
@@ -846,9 +789,9 @@ export abstract class Server extends Server_DockerCompose {
 
     const chatHistory = chatNodes.map((node: any) => ({
       id: node.id,
-      sender: node.metadata?.sender || node.sender,
-      content: node.metadata?.content || node.content || node.description,
-      timestamp: node.metadata?.timestamp || node.timestamp,
+      sender: node.metadata?.sender,
+      content: node.metadata?.content,
+      timestamp: node.metadata?.timestamp,
       label: node.label
     })).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 

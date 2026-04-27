@@ -1,0 +1,5452 @@
+{
+  "nodes": [
+    {
+      "id": "agent:prodirek",
+      "type": {
+        "category": "agent",
+        "type": "agent"
+      },
+      "label": "prodirek",
+      "description": "Agent: prodirek",
+      "status": "todo",
+      "icon": "robot",
+      "metadata": {
+        "agentName": "prodirek",
+        "timestamp": "2026-04-27T02:42:55.316Z",
+        "personaBody": "Your name is prodirek. You are a Product Manager. Your responsibilities are: Groom features, tickets and documentation. Use these docs to maintain the \"specifications\" for tests. You don't need to worry about the code or the other test files- your job is to groom the specifications, keep them congruent with the docs.",
+        "readFiles": [
+          "README.md"
+        ],
+        "addFiles": [
+          "SOUL.md"
+        ],
+        "personaFilePath": "testeranto/agents/prodirek.md"
+      }
+    },
+    {
+      "id": "agent:arko",
+      "type": {
+        "category": "agent",
+        "type": "agent"
+      },
+      "label": "arko",
+      "description": "Agent: arko",
+      "status": "todo",
+      "icon": "robot",
+      "metadata": {
+        "agentName": "arko",
+        "timestamp": "2026-04-27T02:42:55.316Z",
+        "personaBody": "Your name is arko. You are a Software Architect.",
+        "readFiles": [
+          "README.md"
+        ],
+        "addFiles": [
+          "SOUL.md"
+        ],
+        "personaFilePath": "testeranto/agents/arko.md"
+      }
+    },
+    {
+      "id": "runtime:nodetests",
+      "type": {
+        "category": "resource",
+        "type": "runtime"
+      },
+      "label": "nodetests",
+      "description": "Runtime: nodetests",
+      "status": "todo",
+      "icon": "terminal",
+      "metadata": {
+        "runtimeName": "nodetests",
+        "timestamp": "2026-04-27T02:42:55.317Z"
+      }
+    },
+    {
+      "id": "runtime:webtests",
+      "type": {
+        "category": "resource",
+        "type": "runtime"
+      },
+      "label": "webtests",
+      "description": "Runtime: webtests",
+      "status": "todo",
+      "icon": "terminal",
+      "metadata": {
+        "runtimeName": "webtests",
+        "timestamp": "2026-04-27T02:42:55.317Z"
+      }
+    },
+    {
+      "id": "view:Home",
+      "type": {
+        "category": "view",
+        "type": "view"
+      },
+      "label": "Home",
+      "description": "View: Home",
+      "status": "done",
+      "icon": "eye",
+      "metadata": {
+        "viewKey": "Home",
+        "viewPath": "src/vscode/views/defaultViews/HomeView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Home.json",
+        "timestamp": "2026-04-27T02:42:55.318Z"
+      }
+    },
+    {
+      "id": "view:Kanban",
+      "type": {
+        "category": "view",
+        "type": "view"
+      },
+      "label": "Kanban",
+      "description": "View: Kanban",
+      "status": "done",
+      "icon": "eye",
+      "metadata": {
+        "viewKey": "Kanban",
+        "viewPath": "src/vscode/views/defaultViews/KanbanBoardView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Kanban.json",
+        "timestamp": "2026-04-27T02:42:55.318Z"
+      }
+    },
+    {
+      "id": "view:EisenhowerMatrix",
+      "type": {
+        "category": "view",
+        "type": "view"
+      },
+      "label": "EisenhowerMatrix",
+      "description": "View: EisenhowerMatrix",
+      "status": "done",
+      "icon": "eye",
+      "metadata": {
+        "viewKey": "EisenhowerMatrix",
+        "viewPath": "src/vscode/views/defaultViews/EisenhowerMatrixView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/EisenhowerMatrix.json",
+        "timestamp": "2026-04-27T02:42:55.318Z"
+      }
+    },
+    {
+      "id": "view:Gantt",
+      "type": {
+        "category": "view",
+        "type": "view"
+      },
+      "label": "Gantt",
+      "description": "View: Gantt",
+      "status": "done",
+      "icon": "eye",
+      "metadata": {
+        "viewKey": "Gantt",
+        "viewPath": "src/vscode/views/defaultViews/GanttView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Gantt.json",
+        "timestamp": "2026-04-27T02:42:55.318Z"
+      }
+    },
+    {
+      "id": "view:Chat",
+      "type": {
+        "category": "view",
+        "type": "view"
+      },
+      "label": "Chat",
+      "description": "View: Chat",
+      "status": "done",
+      "icon": "eye",
+      "metadata": {
+        "viewKey": "Chat",
+        "viewPath": "src/vscode/views/defaultViews/ChatView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/Chat.json",
+        "timestamp": "2026-04-27T02:42:55.318Z"
+      }
+    },
+    {
+      "id": "view:DebugGraph",
+      "type": {
+        "category": "view",
+        "type": "view"
+      },
+      "label": "DebugGraph",
+      "description": "View: DebugGraph",
+      "status": "done",
+      "icon": "eye",
+      "metadata": {
+        "viewKey": "DebugGraph",
+        "viewPath": "src/vscode/views/defaultViews/DebugGraphView.tsx",
+        "sliceDataPath": "/Users/adam/Code/testeranto/testeranto/slices/views/DebugGraph.json",
+        "timestamp": "2026-04-27T02:42:55.318Z"
+      }
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "Calculator.test.node.ts",
+      "description": "Test: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "metadata": {
+        "testResult": {
+          "failed": true,
+          "fails": 1,
+          "artifacts": [],
+          "features": [],
+          "tests": 1,
+          "runTimeTests": 1,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1777257796408,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [],
+              "error": {
+                "message": "input is not a constructor",
+                "stack": "TypeError: input is not a constructor\n    at another simple calculator (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:195:49)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1357:38\n    at CalculatorNodeTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:110:56)\n    at CalculatorNodeTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CalculatorNodeTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:318:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:321:36\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+                "name": "TypeError"
+              },
+              "stepName": "Step_0",
+              "stepType": "SpecificationError",
+              "testJob": {
+                "name": "Specification_Error",
+                "type": "Error",
+                "error": "Test specification failed: input is not a constructor"
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 1,
+            "passed": 0,
+            "failed": 1,
+            "successRate": "0.00%"
+          }
+        },
+        "updatedAt": "2026-04-27T02:43:16.422Z"
+      },
+      "status": "failed"
+    },
+    {
+      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+      "type": {
+        "category": "file",
+        "type": "outputFile"
+      },
+      "label": "tests.json",
+      "description": "Output file: testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+      "metadata": {
+        "filePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+        "localPath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+        "url": "file://testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json"
+      }
+    },
+    {
+      "id": "folder:testeranto",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "testeranto",
+      "description": "Folder: testeranto",
+      "metadata": {
+        "path": "testeranto"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "reports",
+      "description": "Folder: testeranto/reports",
+      "metadata": {
+        "path": "testeranto/reports"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "nodetests",
+      "description": "Folder: testeranto/reports/nodetests",
+      "metadata": {
+        "path": "testeranto/reports/nodetests"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "src",
+      "description": "Folder: testeranto/reports/nodetests/src",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "lib",
+      "description": "Folder: testeranto/reports/nodetests/src/lib",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "tiposkripto",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "tests",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "calculator",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Calculator.test.node.ts",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "tests.json",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json"
+      }
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "Rectangle.test.ts",
+      "description": "Test: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "metadata": {
+        "testResult": {
+          "failed": true,
+          "fails": 5,
+          "artifacts": [],
+          "features": [
+            "https://api.github.com/repos/adamwong246/testeranto/issues/88",
+            "src/lib/tiposkripto/tests/Rectangle/README.md",
+            "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+            "src/lib/tiposkripto/README.md"
+          ],
+          "tests": 7,
+          "runTimeTests": 7,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1777257796861,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+              ],
+              "error": {
+                "message": "expected 19 to equal 1529",
+                "stack": "AssertionError: expected 19 to equal 1529\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+                "name": "AssertionError"
+              },
+              "stepName": "step_0",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_0",
+                "error": [
+                  {
+                    "message": "expected 19 to equal 1529",
+                    "actual": 19,
+                    "expected": 1529,
+                    "showDiff": true,
+                    "operator": "strictEqual",
+                    "name": "AssertionError",
+                    "ok": false,
+                    "stack": "AssertionError: expected 19 to equal 1529\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                  },
+                  "AssertionError: expected 19 to equal 1529\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:132:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                ],
+                "failed": true,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/88"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 1,
+                "whens": [
+                  {
+                    "name": "setWidth: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setHeight: 19",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "getWidth: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 1529",
+                    "status": false,
+                    "error": "AssertionError: expected 19 to equal 1529"
+                  }
+                ]
+              }
+            },
+            {
+              "index": 1,
+              "failed": true,
+              "fails": 4,
+              "features": [
+                "src/lib/tiposkripto/tests/Rectangle/README.md"
+              ],
+              "error": {
+                "message": "expected 1218 to equal 328",
+                "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)",
+                "name": "AssertionError"
+              },
+              "stepName": "step_1",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_1",
+                "error": [
+                  {
+                    "message": "expected 1218 to equal 328",
+                    "actual": 1218,
+                    "expected": 328,
+                    "showDiff": true,
+                    "operator": "strictEqual",
+                    "name": "AssertionError",
+                    "ok": false,
+                    "stack": "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                  },
+                  "AssertionError: expected 1218 to equal 328\n    at BaseThen.thenCB (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:124:18)\n    at file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:312:41\n    at Object.verify (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:167:16)\n    at BaseThen.butThen (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1269:44)\n    at BaseThen.test (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:307:28)\n    at BaseGiven.give (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:211:38)\n    at async stepRunner (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1048:22)\n    at async Object.receiveTestResourceConfig (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1089:30)\n    at async TestRunner.runAllTests (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1398:24)"
+                ],
+                "failed": true,
+                "features": [
+                  "src/lib/tiposkripto/tests/Rectangle/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 4,
+                "whens": [
+                  {
+                    "name": "setWidth: 24",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setHeight: 45",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "getWidth: 4",
+                    "status": false,
+                    "error": "AssertionError: expected 24 to equal 4"
+                  },
+                  {
+                    "name": "getHeight: 5",
+                    "status": false,
+                    "error": "AssertionError: expected 45 to equal 5"
+                  },
+                  {
+                    "name": "area: 20",
+                    "status": false,
+                    "error": "AssertionError: expected 1080 to equal 20"
+                  },
+                  {
+                    "name": "AreaPlusCircumference: 328",
+                    "status": false,
+                    "error": "AssertionError: expected 1218 to equal 328"
+                  }
+                ]
+              }
+            },
+            {
+              "index": 2,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                "src/lib/tiposkripto/README.md"
+              ],
+              "error": null,
+              "stepName": "step_2",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_2",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 4",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 33",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 132",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 3,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                "src/lib/tiposkripto/README.md"
+              ],
+              "error": null,
+              "stepName": "step_3",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_3",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8",
+                  "src/lib/tiposkripto/README.md"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [],
+                "thens": [
+                  {
+                    "name": "getWidth: 2",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 2",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 4,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_4",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_4",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 5",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 5",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 25",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 5,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_5",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_5",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [
+                  {
+                    "name": "setHeight: 6",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "setWidth: 6",
+                    "status": true,
+                    "error": null
+                  }
+                ],
+                "thens": [
+                  {
+                    "name": "area: 36",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            },
+            {
+              "index": 6,
+              "failed": false,
+              "fails": 0,
+              "features": [
+                "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+              ],
+              "error": null,
+              "stepName": "step_6",
+              "stepType": "Unknown",
+              "testJob": {
+                "key": "step_6",
+                "error": null,
+                "failed": false,
+                "features": [
+                  "https://api.github.com/repos/adamwong246/testeranto/issues/8"
+                ],
+                "artifacts": [],
+                "status": true,
+                "fails": 0,
+                "whens": [],
+                "thens": [
+                  {
+                    "name": "getWidth: 2",
+                    "status": true,
+                    "error": null
+                  },
+                  {
+                    "name": "getHeight: 2",
+                    "status": true,
+                    "error": null
+                  }
+                ]
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 7,
+            "passed": 2,
+            "failed": 5,
+            "successRate": "28.57%"
+          }
+        },
+        "updatedAt": "2026-04-27T02:43:16.887Z"
+      },
+      "status": "failed"
+    },
+    {
+      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+      "type": {
+        "category": "file",
+        "type": "outputFile"
+      },
+      "label": "tests.json",
+      "description": "Output file: testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+      "metadata": {
+        "filePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+        "localPath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+        "url": "file://testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Rectangle",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Rectangle.test.ts",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "tests.json",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json"
+      }
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "Circle.test.ts",
+      "description": "Test: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "metadata": {
+        "testResult": {
+          "failed": true,
+          "fails": 1,
+          "artifacts": [],
+          "features": [],
+          "tests": 1,
+          "runTimeTests": 1,
+          "testJob": {
+            "name": "CombinedResults"
+          },
+          "timestamp": 1777257796132,
+          "individualResults": [
+            {
+              "index": 0,
+              "failed": true,
+              "fails": 1,
+              "features": [],
+              "error": {
+                "message": "Confirm.circumferenceCalculation(...) is not a function",
+                "stack": "TypeError: Confirm.circumferenceCalculation(...) is not a function\n    at CircleTest.specification [as testSpecification] (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:34:42)\n    at CircleTest.initialize (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1637:28)\n    at new NodeTiposkripto (file:///workspace/testeranto/bundles/nodetests/chunk-Y5UDLPAA.mjs:1779:10)\n    at new CircleTest (file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:262:5)\n    at file:///workspace/testeranto/bundles/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.mjs:265:27\n    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+                "name": "TypeError"
+              },
+              "stepName": "Step_0",
+              "stepType": "SpecificationError",
+              "testJob": {
+                "name": "Specification_Error",
+                "type": "Error",
+                "error": "Test specification failed: Confirm.circumferenceCalculation(...) is not a function"
+              }
+            }
+          ],
+          "summary": {
+            "totalTests": 1,
+            "passed": 0,
+            "failed": 1,
+            "successRate": "0.00%"
+          }
+        },
+        "updatedAt": "2026-04-27T02:43:16.206Z"
+      },
+      "status": "failed"
+    },
+    {
+      "id": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "type": {
+        "category": "file",
+        "type": "outputFile"
+      },
+      "label": "tests.json",
+      "description": "Output file: testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "metadata": {
+        "filePath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+        "localPath": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+        "url": "file://testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "circle",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Circle.test.ts",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts"
+      }
+    },
+    {
+      "id": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "tests.json",
+      "description": "Folder: testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "metadata": {
+        "path": "testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json"
+      }
+    },
+    {
+      "id": "unknown_process::",
+      "type": {
+        "category": "process",
+        "type": "unknown"
+      },
+      "label": "unknown process for ",
+      "description": "Container 545439f262134a3d819ec5bab80f5933e946bf566363f1f7158e624a70f18266 running unknown for ",
+      "status": "running",
+      "metadata": {
+        "updatedAt": "2026-04-27T02:46:52.983Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.008Z"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "description": "Container 7befb81e80872ca008eed3b8ed4c507ad5e9d3b3c208cd854eaa866bd3fa5c73 running check for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:10.111Z",
+        "updatedAt": "2026-04-27T02:43:10.111Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.525Z"
+    },
+    {
+      "id": "builder_process:nodetests:builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "label": "builder process for builder",
+      "description": "Container 19f684907ab246d1f44a88e338c6aaaa6c389020b86d91c02989c046bb326cc9 running builder for builder",
+      "status": "running",
+      "metadata": {
+        "containerId": "19f684907ab246d1f44a88e338c6aaaa6c389020b86d91c02989c046bb326cc9",
+        "serviceName": "nodetests-builder",
+        "processType": "builder",
+        "configKey": "nodetests",
+        "testName": "builder",
+        "isActive": true,
+        "startedAt": "2026-04-27T02:42:58.535Z",
+        "updatedAt": "2026-04-27T02:42:58.535Z",
+        "isAgentAider": false
+      },
+      "timestamp": "2026-04-27T02:42:58.535Z"
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "description": "Container c64898736884ce1f0789e0b9723d1d67aed1ec91bcd7b1854667207c9a280052 running bdd for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:16.128Z",
+        "updatedAt": "2026-04-27T02:43:16.128Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.535Z"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "description": "Container ddfdd1897ad15d67b405d2a95b178970b2a7323ff18e34fe5661a2b2a24b0c6c running check for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:09.883Z",
+        "updatedAt": "2026-04-27T02:43:09.883Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.545Z"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "description": "Container bcd95a1a011edafbec3d372b0fcc178eb4edffa24495fdbded15e46896f6d04b running bdd for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:16.821Z",
+        "updatedAt": "2026-04-27T02:43:16.821Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.547Z"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "description": "Container 34fbb871a88d73f868374a2908788f5a1023657b9b44b99fa425b9d74cb527b4 running check for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:09.135Z",
+        "updatedAt": "2026-04-27T02:43:09.135Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.574Z"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "description": "Container 61128f8be7f3b02f01048c74b485239bc8f7f1ce689a77d14c518d31feb98cc1 running bdd for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:17.283Z",
+        "updatedAt": "2026-04-27T02:43:17.283Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.575Z"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "description": "Container 97596dd3055cc83f7e0f97b757636407dcd2eb63227821cf73df03d21585bd4a running bdd for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:16.656Z",
+        "updatedAt": "2026-04-27T02:43:16.656Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.599Z"
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "description": "Container 52c7f4502f8dc7f643024cb5eb8c1fd462582504643b6d7b9d4ed367137f181e running bdd for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:16.934Z",
+        "updatedAt": "2026-04-27T02:43:16.934Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.600Z"
+    },
+    {
+      "id": "builder_process:webtests:builder",
+      "type": {
+        "category": "process",
+        "type": "builder"
+      },
+      "label": "builder process for builder",
+      "description": "Container e570793887147f5026bd6bac646d70be9e40632820ef5a24e3a0bf4563c56bd4 running builder for builder",
+      "status": "running",
+      "metadata": {
+        "containerId": "e570793887147f5026bd6bac646d70be9e40632820ef5a24e3a0bf4563c56bd4",
+        "serviceName": "webtests-builder",
+        "processType": "builder",
+        "configKey": "webtests",
+        "testName": "builder",
+        "isActive": true,
+        "startedAt": "2026-04-27T02:42:58.643Z",
+        "updatedAt": "2026-04-27T02:42:58.643Z",
+        "isAgentAider": false
+      },
+      "timestamp": "2026-04-27T02:42:58.643Z"
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "type": {
+        "category": "process",
+        "type": "check"
+      },
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "description": "Container 4466bd6e49073d095868e795e5d4b6a2c2131422e6c99adf1cdb8f84c8028f01 running check for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:10.680Z",
+        "updatedAt": "2026-04-27T02:43:10.680Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.795Z"
+    },
+    {
+      "id": "bdd_process:nodetests:src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "bdd process for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "description": "Container e52379a14c9d7ad011f3d1ea6ce7902e6ef20491e90c0c441e5520c77d8faaee running bdd for src_vscode_providers_aiderprocesstreedataprovider-test_aiderprocesstreedataprovider-test-ts-bdd",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:17.435Z",
+        "updatedAt": "2026-04-27T02:43:17.435Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.796Z"
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "description": "Container 2977bbd847e3a97bc7ee25d9e17451cdc63c9f4b60f67ecbd409f971fe7aee6e running bdd for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "status": "stopped",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-27T02:43:16.143Z",
+        "updatedAt": "2026-04-27T02:43:16.143Z"
+      },
+      "timestamp": "2026-04-27T02:42:58.796Z"
+    },
+    {
+      "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "Calculator.test.web.ts",
+      "description": "Test: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "metadata": {
+        "configKey": "webtests",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "testFilePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/Adapters.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Adapters.ts",
+      "description": "Input file: src/lib/tiposkripto/src/Adapters.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/Adapters.ts",
+        "localPath": "src/lib/tiposkripto/src/Adapters.ts",
+        "url": "file://src/lib/tiposkripto/src/Adapters.ts"
+      }
+    },
+    {
+      "id": "folder:src",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "src",
+      "description": "Folder: src",
+      "metadata": {
+        "path": "src"
+      }
+    },
+    {
+      "id": "folder:src/lib",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "lib",
+      "description": "Folder: src/lib",
+      "metadata": {
+        "path": "src/lib"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "tiposkripto",
+      "description": "Folder: src/lib/tiposkripto",
+      "metadata": {
+        "path": "src/lib/tiposkripto"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "src",
+      "description": "Folder: src/lib/tiposkripto/src",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/Adapters.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Adapters.ts",
+      "description": "Folder: src/lib/tiposkripto/src/Adapters.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/Adapters.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "CommonUtils.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "verbs",
+      "description": "Folder: src/lib/tiposkripto/src/verbs",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/internal",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "internal",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/internal",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/internal"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "CommonUtils.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseGiven.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/bdd",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "bdd",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/bdd",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/bdd"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseGiven.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/index.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "index.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/index.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/index.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/index.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/index.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/index.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "index.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/index.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/index.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseWhen.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseWhen.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseThen.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseThen.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseDescribe.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/aaa",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "aaa",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/aaa",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/aaa"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseDescribe.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseIt.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseIt.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseConfirm.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/tdt",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "tdt",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/tdt",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/tdt"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseConfirm.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseValue.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseValue.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseShould.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseShould.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseExpected.ts",
+      "description": "Input file: src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+        "localPath": "src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+        "url": "file://src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseExpected.ts",
+      "description": "Folder: src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/VerbProxies.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "VerbProxies.ts",
+      "description": "Input file: src/lib/tiposkripto/src/VerbProxies.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/VerbProxies.ts",
+        "localPath": "src/lib/tiposkripto/src/VerbProxies.ts",
+        "url": "file://src/lib/tiposkripto/src/VerbProxies.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/VerbProxies.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "VerbProxies.ts",
+      "description": "Folder: src/lib/tiposkripto/src/VerbProxies.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/VerbProxies.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "TestJobCreator.ts",
+      "description": "Input file: src/lib/tiposkripto/src/TestJobCreator.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/TestJobCreator.ts",
+        "localPath": "src/lib/tiposkripto/src/TestJobCreator.ts",
+        "url": "file://src/lib/tiposkripto/src/TestJobCreator.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "TestJobCreator.ts",
+      "description": "Folder: src/lib/tiposkripto/src/TestJobCreator.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/TestJobCreator.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "ClassyImplementations.ts",
+      "description": "Input file: src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/ClassyImplementations.ts",
+        "localPath": "src/lib/tiposkripto/src/ClassyImplementations.ts",
+        "url": "file://src/lib/tiposkripto/src/ClassyImplementations.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "ClassyImplementations.ts",
+      "description": "Folder: src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/ClassyImplementations.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/TestRunner.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "TestRunner.ts",
+      "description": "Input file: src/lib/tiposkripto/src/TestRunner.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/TestRunner.ts",
+        "localPath": "src/lib/tiposkripto/src/TestRunner.ts",
+        "url": "file://src/lib/tiposkripto/src/TestRunner.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/TestRunner.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "TestRunner.ts",
+      "description": "Folder: src/lib/tiposkripto/src/TestRunner.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/TestRunner.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "BaseTiposkripto.ts",
+      "description": "Input file: src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/BaseTiposkripto.ts",
+        "localPath": "src/lib/tiposkripto/src/BaseTiposkripto.ts",
+        "url": "file://src/lib/tiposkripto/src/BaseTiposkripto.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "BaseTiposkripto.ts",
+      "description": "Folder: src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/BaseTiposkripto.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/Web.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Web.ts",
+      "description": "Input file: src/lib/tiposkripto/src/Web.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/Web.ts",
+        "localPath": "src/lib/tiposkripto/src/Web.ts",
+        "url": "file://src/lib/tiposkripto/src/Web.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/Web.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Web.ts",
+      "description": "Folder: src/lib/tiposkripto/src/Web.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/Web.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Calculator.test.web.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "localPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+        "url": "file://src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "tests",
+      "description": "Folder: src/lib/tiposkripto/tests",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "calculator",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Calculator.test.web.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Calculator.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "localPath": "src/lib/tiposkripto/tests/calculator/Calculator.ts",
+        "url": "file://src/lib/tiposkripto/tests/calculator/Calculator.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Calculator.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator/Calculator.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Calculator.test.specification.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+        "localPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+        "url": "file://src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Calculator.test.specification.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts"
+      }
+    },
+    {
+      "id": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "Calculator.test.web.react.ts",
+      "description": "Test: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "metadata": {
+        "configKey": "webtests",
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        "testFilePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Calculator.test.web.react.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        "localPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+        "url": "file://src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Calculator.test.web.react.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "CalculatorReact.tsx",
+      "description": "Input file: src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+        "localPath": "src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+        "url": "file://src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "CalculatorReact.tsx",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Calculator.test.web.react.adapter.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+        "localPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+        "url": "file://src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Calculator.test.web.react.adapter.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Calculator.test.web.react.implementation.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+        "localPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+        "url": "file://src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Calculator.test.web.react.implementation.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts"
+      }
+    },
+    {
+      "id": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "index.ts",
+      "description": "Test: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "metadata": {
+        "configKey": "nodetests",
+        "testName": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "testFilePath": "src/lib/tiposkripto/tests/abstractBase.test/index.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "index.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "localPath": "src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+        "url": "file://src/lib/tiposkripto/tests/abstractBase.test/index.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/abstractBase.test",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "abstractBase.test",
+      "description": "Folder: src/lib/tiposkripto/tests/abstractBase.test",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/abstractBase.test"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "index.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/abstractBase.test/index.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Calculator.test.node.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "localPath": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+        "url": "file://src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Calculator.test.node.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/src/Node.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Node.ts",
+      "description": "Input file: src/lib/tiposkripto/src/Node.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/src/Node.ts",
+        "localPath": "src/lib/tiposkripto/src/Node.ts",
+        "url": "file://src/lib/tiposkripto/src/Node.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/src/Node.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Node.ts",
+      "description": "Folder: src/lib/tiposkripto/src/Node.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/src/Node.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/circle/Circle.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Circle.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/circle/Circle.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/circle/Circle.ts",
+        "localPath": "src/lib/tiposkripto/tests/circle/Circle.ts",
+        "url": "file://src/lib/tiposkripto/tests/circle/Circle.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/circle",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "circle",
+      "description": "Folder: src/lib/tiposkripto/tests/circle",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/circle"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/circle/Circle.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Circle.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/circle/Circle.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/circle/Circle.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Circle.test.specification.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+        "localPath": "src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+        "url": "file://src/lib/tiposkripto/tests/circle/Circle.test.specification.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Circle.test.specification.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/circle/Circle.test.specification.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Circle.test.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "localPath": "src/lib/tiposkripto/tests/circle/Circle.test.ts",
+        "url": "file://src/lib/tiposkripto/tests/circle/Circle.test.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Circle.test.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/circle/Circle.test.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Rectangle.test.specification.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+        "localPath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+        "url": "file://src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/Rectangle",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Rectangle",
+      "description": "Folder: src/lib/tiposkripto/tests/Rectangle",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/Rectangle"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Rectangle.test.specification.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Rectangle.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+        "localPath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+        "url": "file://src/lib/tiposkripto/tests/Rectangle/Rectangle.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Rectangle.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/Rectangle/Rectangle.ts"
+      }
+    },
+    {
+      "id": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "Rectangle.test.ts",
+      "description": "Input file: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "metadata": {
+        "filePath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "localPath": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+        "url": "file://src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts"
+      }
+    },
+    {
+      "id": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "Rectangle.test.ts",
+      "description": "Folder: src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "metadata": {
+        "path": "src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts"
+      }
+    },
+    {
+      "id": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "process",
+        "type": "bdd"
+      },
+      "label": "AiderProcessTreeDataProvider.test.ts",
+      "description": "Test: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "metadata": {
+        "configKey": "nodetests",
+        "testName": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "testFilePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+      }
+    },
+    {
+      "id": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "AiderProcessTreeDataProvider.test.implementation.ts",
+      "description": "Input file: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+      "metadata": {
+        "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+        "localPath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+        "url": "file://src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts"
+      }
+    },
+    {
+      "id": "folder:src/vscode",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "vscode",
+      "description": "Folder: src/vscode",
+      "metadata": {
+        "path": "src/vscode"
+      }
+    },
+    {
+      "id": "folder:src/vscode/providers",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "providers",
+      "description": "Folder: src/vscode/providers",
+      "metadata": {
+        "path": "src/vscode/providers"
+      }
+    },
+    {
+      "id": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "AiderProcessTreeDataProvider.test",
+      "description": "Folder: src/vscode/providers/AiderProcessTreeDataProvider.test",
+      "metadata": {
+        "path": "src/vscode/providers/AiderProcessTreeDataProvider.test"
+      }
+    },
+    {
+      "id": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "AiderProcessTreeDataProvider.test.implementation.ts",
+      "description": "Folder: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+      "metadata": {
+        "path": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts"
+      }
+    },
+    {
+      "id": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "AiderProcessTreeDataProviderCore.ts",
+      "description": "Input file: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+      "metadata": {
+        "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+        "localPath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+        "url": "file://src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts"
+      }
+    },
+    {
+      "id": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "AiderProcessTreeDataProviderCore.ts",
+      "description": "Folder: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+      "metadata": {
+        "path": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts"
+      }
+    },
+    {
+      "id": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "AiderProcessTreeDataProvider.test.specification.ts",
+      "description": "Input file: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+      "metadata": {
+        "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+        "localPath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+        "url": "file://src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts"
+      }
+    },
+    {
+      "id": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "AiderProcessTreeDataProvider.test.specification.ts",
+      "description": "Folder: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+      "metadata": {
+        "path": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts"
+      }
+    },
+    {
+      "id": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "AiderProcessTreeDataProvider.test.adapter.ts",
+      "description": "Input file: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+      "metadata": {
+        "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+        "localPath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+        "url": "file://src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts"
+      }
+    },
+    {
+      "id": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "AiderProcessTreeDataProvider.test.adapter.ts",
+      "description": "Folder: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+      "metadata": {
+        "path": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts"
+      }
+    },
+    {
+      "id": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "file",
+        "type": "inputFile"
+      },
+      "label": "AiderProcessTreeDataProvider.test.ts",
+      "description": "Input file: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "metadata": {
+        "filePath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "localPath": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+        "url": "file://src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+      }
+    },
+    {
+      "id": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "type": {
+        "category": "file",
+        "type": "folder"
+      },
+      "label": "AiderProcessTreeDataProvider.test.ts",
+      "description": "Folder: src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "metadata": {
+        "path": "src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts"
+      }
+    },
+    {
+      "id": "aider_process:agent:agent-prodirek-1777258011103",
+      "type": {
+        "category": "process",
+        "type": "agent"
+      },
+      "label": "Agent prodirek-1777258011103",
+      "description": "Container fe4d301ceeffdb920effec5c9cdd9cf3bf737016b93fa4ad93fd99340f0321b5 running agent for prodirek-1777258011103",
+      "status": "running",
+      "metadata": {
+        "updatedAt": "2026-04-27T02:46:53.237Z"
+      },
+      "timestamp": "2026-04-27T02:46:52.531Z"
+    }
+  ],
+  "edges": [
+    {
+      "source": "agent:prodirek",
+      "target": "view:Home",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:prodirek",
+      "target": "view:Kanban",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:prodirek",
+      "target": "view:EisenhowerMatrix",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:prodirek",
+      "target": "view:Gantt",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:prodirek",
+      "target": "view:Chat",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:prodirek",
+      "target": "view:DebugGraph",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "view:Home",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "view:Kanban",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "view:EisenhowerMatrix",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "view:Gantt",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "view:Chat",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "agent:arko",
+      "target": "view:DebugGraph",
+      "attributes": {
+        "type": {
+          "category": "association",
+          "type": "associatedWith",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:Home",
+      "target": "runtime:nodetests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:Home",
+      "target": "runtime:webtests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:Kanban",
+      "target": "runtime:nodetests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:Kanban",
+      "target": "runtime:webtests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:EisenhowerMatrix",
+      "target": "runtime:nodetests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:EisenhowerMatrix",
+      "target": "runtime:webtests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:Gantt",
+      "target": "runtime:nodetests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:Gantt",
+      "target": "runtime:webtests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:Chat",
+      "target": "runtime:nodetests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:Chat",
+      "target": "runtime:webtests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:DebugGraph",
+      "target": "runtime:nodetests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "view:DebugGraph",
+      "target": "runtime:webtests",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "uses",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:55.337Z"
+      }
+    },
+    {
+      "source": "folder:testeranto",
+      "target": "folder:testeranto/reports",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports",
+      "target": "folder:testeranto/reports/nodetests",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests",
+      "target": "folder:testeranto/reports/nodetests/src",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src",
+      "target": "folder:testeranto/reports/nodetests/src/lib",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "provides",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.723Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.725Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.725Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.725Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.725Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "provides",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.725Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.728Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.728Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.728Z"
+      }
+    },
+    {
+      "source": "folder:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.728Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:testeranto/reports/nodetests/src/lib/tiposkripto/tests/circle/Circle.test.ts/tests.json",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "provides",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:42:57.728Z"
+      }
+    },
+    {
+      "source": "folder:src",
+      "target": "folder:src/lib",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib",
+      "target": "folder:src/lib/tiposkripto",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto",
+      "target": "folder:src/lib/tiposkripto/src",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/Adapters.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/Adapters.ts",
+      "target": "file:src/lib/tiposkripto/src/Adapters.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/Adapters.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/verbs",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs",
+      "target": "folder:src/lib/tiposkripto/src/verbs/internal",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/internal",
+      "target": "folder:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs",
+      "target": "folder:src/lib/tiposkripto/src/verbs/bdd",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/bdd",
+      "target": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs",
+      "target": "folder:src/lib/tiposkripto/src/verbs/index.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/index.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/index.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/index.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/bdd",
+      "target": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/bdd",
+      "target": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs",
+      "target": "folder:src/lib/tiposkripto/src/verbs/aaa",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/aaa",
+      "target": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/aaa",
+      "target": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs",
+      "target": "folder:src/lib/tiposkripto/src/verbs/tdt",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/tdt",
+      "target": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/tdt",
+      "target": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/tdt",
+      "target": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/tdt",
+      "target": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/VerbProxies.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/VerbProxies.ts",
+      "target": "file:src/lib/tiposkripto/src/VerbProxies.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/VerbProxies.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "target": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "target": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/TestRunner.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/TestRunner.ts",
+      "target": "file:src/lib/tiposkripto/src/TestRunner.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/TestRunner.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "target": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/Web.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/Web.ts",
+      "target": "file:src/lib/tiposkripto/src/Web.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/src/Web.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto",
+      "target": "folder:src/lib/tiposkripto/tests",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests",
+      "target": "folder:src/lib/tiposkripto/tests/calculator",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator",
+      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator",
+      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator",
+      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator",
+      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator",
+      "target": "folder:src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+      "target": "file:src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/CalculatorReact.tsx",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator",
+      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.adapter.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator",
+      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.implementation.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "test:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:11.734Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests",
+      "target": "folder:src/lib/tiposkripto/tests/abstractBase.test",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/abstractBase.test",
+      "target": "folder:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "target": "file:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "target": "file:src/lib/tiposkripto/tests/abstractBase.test/index.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator",
+      "target": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src",
+      "target": "folder:src/lib/tiposkripto/src/Node.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/src/Node.ts",
+      "target": "file:src/lib/tiposkripto/src/Node.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/Node.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/Adapters.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/VerbProxies.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/index.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.ts",
+      "target": "file:src/lib/tiposkripto/src/TestRunner.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests",
+      "target": "folder:src/lib/tiposkripto/tests/circle",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/circle",
+      "target": "folder:src/lib/tiposkripto/tests/circle/Circle.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/circle/Circle.ts",
+      "target": "file:src/lib/tiposkripto/tests/circle/Circle.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/tests/circle/Circle.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/circle",
+      "target": "folder:src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "target": "file:src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/tests/circle/Circle.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/circle",
+      "target": "folder:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/Node.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/Adapters.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/VerbProxies.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/index.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/TestRunner.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests",
+      "target": "folder:src/lib/tiposkripto/tests/Rectangle",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/Rectangle",
+      "target": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "target": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/Rectangle",
+      "target": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "target": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/Rectangle",
+      "target": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/Node.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/Adapters.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/VerbProxies.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/index.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.ts",
+      "target": "file:src/lib/tiposkripto/src/TestRunner.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src",
+      "target": "folder:src/vscode",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode",
+      "target": "folder:src/vscode/providers",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers",
+      "target": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test",
+      "target": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.implementation.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test",
+      "target": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProviderCore.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test",
+      "target": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.specification.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test",
+      "target": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.adapter.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test",
+      "target": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "contains",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "folder:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "attributes": {
+        "type": {
+          "category": "structural",
+          "type": "locatedIn",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/Node.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/BaseTiposkripto.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/Adapters.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/VerbProxies.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/index.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseGiven.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/internal/CommonUtils.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseWhen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/bdd/BaseThen.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseDescribe.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/aaa/BaseIt.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseConfirm.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseValue.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseShould.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/verbs/tdt/BaseExpected.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/TestJobCreator.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/ClassyImplementations.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    },
+    {
+      "source": "test:nodetests:src/vscode/providers/AiderProcessTreeDataProvider.test/AiderProcessTreeDataProvider.test.ts",
+      "target": "file:src/lib/tiposkripto/src/TestRunner.ts",
+      "attributes": {
+        "type": {
+          "category": "dependency",
+          "type": "requires",
+          "directed": true
+        },
+        "timestamp": "2026-04-27T02:43:12.152Z"
+      }
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "timestamp": "2026-04-27T02:46:53.237Z",
+    "source": "Server_Graph"
+  }
+}

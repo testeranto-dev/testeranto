@@ -2,7 +2,7 @@
   "name": "testeranto",
   "displayName": "Testeranto",
   "description": "the AI powered test framework for polyglot projects",
-  "version": "0.351.0",
+  "version": "0.352.0",
   "engines": {
     "node": ">=20.19.0",
     "vscode": "^1.60.0",
@@ -33,7 +33,6 @@
     "onCommand:testeranto.launchAgent",
     "onView:testeranto.runtimeView",
     "onView:testeranto.dockerProcessView",
-    "onView:testeranto.aiderProcessView",
     "onView:testeranto.fileTreeView",
     "onView:testeranto.agentView",
     "onView:testeranto.viewView",
@@ -64,11 +63,6 @@
           "id": "testeranto.dockerProcessView",
           "name": "Docker Processes",
           "icon": "$(server)"
-        },
-        {
-          "id": "testeranto.aiderProcessView",
-          "name": "Aider Processes",
-          "icon": "$(comment-discussion)"
         },
         {
           "id": "testeranto.fileTreeView",
@@ -159,10 +153,6 @@
       {
         "command": "testeranto.refreshViewTree",
         "title": "Testeranto: Refresh Views"
-      },
-      {
-        "command": "testeranto.openView",
-        "title": "Testeranto: Open View"
       }
     ]
   },
@@ -365,8 +355,6 @@
     "@humanwhocodes/config-array": "^0.13.0",
     "@isomorphic-git/lightning-fs": "^4.6.2",
     "@jest/globals": "^30.0.4",
-    "@react-sigma/core": "^5.0.6",
-    "@react-sigma/layout-forceatlas2": "^5.0.6",
     "@types/babel__generator": "^7.27.0",
     "@types/chokidar": "^2.1.7",
     "@types/dockerode": "3.3.40",
@@ -419,12 +407,12 @@
     "react": "^19.2.4",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.2.4",
+    "react-force-graph": "^1.48.2",
+    "three": "^0.160.0",
     "react-router-dom": "^7.7.0",
     "react-test-renderer": "^19.2.0",
     "sass": "^1.90.0",
     "sigma": "^3.0.2",
-    "three": "^0.184.0",
-    "three-forcegraph": "^1.43.4",
     "tsc-prog": "^2.3.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",

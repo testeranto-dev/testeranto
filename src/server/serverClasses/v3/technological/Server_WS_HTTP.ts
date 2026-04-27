@@ -621,8 +621,21 @@ export class Server_WS_HTTP extends Server_HTTP {
 
   async broadcastGraphUpdated(): Promise<void> {
     this.logBusinessMessage("Broadcasting graph update");
+
+    // Include the full graph data so the debug view can update immediately
+    const graphData = {
+      nodes: this.graph?.nodes || [],
+      edges: this.graph?.edges || [],
+      metadata: {
+        version: '1.0',
+        timestamp: new Date().toISOString(),
+        source: 'Server_WS_HTTP'
+      }
+    };
+
     this.broadcast({
       type: 'graphUpdated',
+      graphData,
       timestamp: new Date().toISOString()
     });
   }
