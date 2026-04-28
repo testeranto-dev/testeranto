@@ -1,265 +1,265 @@
 {
   "items": [
     {
-      "id": "bdd_process:rubytests:src_lib_rubeno_examples_calculator_calculator-test-rb-bdd",
-      "label": "bdd process for src_lib_rubeno_examples_calculator_calculator-test-rb-bdd",
-      "timestamp": "2026-04-28T02:01:08.362Z",
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
+      "timestamp": "2026-04-28T02:46:43.033Z",
       "metadata": {
         "isActive": false,
-        "finishedAt": "2026-04-28T02:01:12.719Z",
-        "updatedAt": "2026-04-28T02:01:12.719Z"
+        "finishedAt": "2026-04-28T02:46:50.999Z",
+        "updatedAt": "2026-04-28T02:46:50.999Z"
       }
     },
     {
       "id": "builder_process:pythontests:builder",
       "label": "builder process for builder",
-      "timestamp": "2026-04-28T02:01:08.389Z",
+      "timestamp": "2026-04-28T02:46:43.036Z",
       "metadata": {
         "isActive": false,
-        "finishedAt": "2026-04-28T02:01:10.663Z",
-        "updatedAt": "2026-04-28T02:01:10.663Z"
-      }
-    },
-    {
-      "id": "builder_process:javatests:builder",
-      "label": "builder process for builder",
-      "timestamp": "2026-04-28T02:01:08.408Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:09.726Z",
-        "updatedAt": "2026-04-28T02:01:09.726Z"
-      }
-    },
-    {
-      "id": "check_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-check-1",
-      "label": "check process for src_java_test_java_com_example_calculator_calculatortest-java-check-1",
-      "timestamp": "2026-04-28T02:01:08.410Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:12.652Z",
-        "updatedAt": "2026-04-28T02:01:12.652Z"
-      }
-    },
-    {
-      "id": "bdd_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-bdd",
-      "label": "bdd process for src_java_test_java_com_example_calculator_calculatortest-java-bdd",
-      "timestamp": "2026-04-28T02:01:08.414Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:11.690Z",
-        "updatedAt": "2026-04-28T02:01:11.690Z"
-      }
-    },
-    {
-      "id": "builder_process:webtests:builder",
-      "label": "builder process for builder",
-      "timestamp": "2026-04-28T02:01:08.414Z",
-      "metadata": {
-        "containerId": "998c3cde4f79048ba6c3d7234b6a25da9b32bb8657d53a4b97dd97e5c9d73693",
-        "serviceName": "webtests-builder",
-        "processType": "builder",
-        "configKey": "webtests",
-        "testName": "builder",
-        "isActive": true,
-        "startedAt": "2026-04-28T02:01:08.414Z",
-        "updatedAt": "2026-04-28T02:01:08.414Z",
-        "isAgentAider": false
+        "finishedAt": "2026-04-28T02:46:46.357Z",
+        "updatedAt": "2026-04-28T02:46:46.357Z"
       }
     },
     {
       "id": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-2",
       "label": "check process for src_lib_pitono_examples_calculator_test-py-check-2",
-      "timestamp": "2026-04-28T02:01:08.417Z",
+      "timestamp": "2026-04-28T02:46:43.055Z",
       "metadata": {
         "isActive": false,
-        "finishedAt": "2026-04-28T02:01:13.003Z",
-        "updatedAt": "2026-04-28T02:01:13.003Z"
-      }
-    },
-    {
-      "id": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-0",
-      "label": "check process for src_lib_pitono_examples_calculator_test-py-check-0",
-      "timestamp": "2026-04-28T02:01:08.417Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:11.192Z",
-        "updatedAt": "2026-04-28T02:01:11.192Z"
-      }
-    },
-    {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
-      "timestamp": "2026-04-28T02:01:08.447Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:13.495Z",
-        "updatedAt": "2026-04-28T02:01:13.495Z"
-      }
-    },
-    {
-      "id": "check_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-check-0",
-      "label": "check process for src_java_test_java_com_example_calculator_calculatortest-java-check-0",
-      "timestamp": "2026-04-28T02:01:08.485Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:12.685Z",
-        "updatedAt": "2026-04-28T02:01:12.685Z"
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
-      "timestamp": "2026-04-28T02:01:08.487Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:17.922Z",
-        "updatedAt": "2026-04-28T02:01:17.922Z"
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
-      "timestamp": "2026-04-28T02:01:08.489Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:18.186Z",
-        "updatedAt": "2026-04-28T02:01:18.186Z"
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
-      "timestamp": "2026-04-28T02:01:08.490Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:18.024Z",
-        "updatedAt": "2026-04-28T02:01:18.024Z"
-      }
-    },
-    {
-      "id": "builder_process:rubytests:builder",
-      "label": "builder process for builder",
-      "timestamp": "2026-04-28T02:01:08.506Z",
-      "metadata": {
-        "containerId": "8aa5aa808ab27323f57835a96736b2ceb044834b9e844261508b6d2c7fb0734b",
-        "serviceName": "rubytests-builder",
-        "processType": "builder",
-        "configKey": "rubytests",
-        "testName": "builder",
-        "isActive": true,
-        "startedAt": "2026-04-28T02:01:08.506Z",
-        "updatedAt": "2026-04-28T02:01:08.506Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
-      "timestamp": "2026-04-28T02:01:08.507Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:54.848Z",
-        "updatedAt": "2026-04-28T02:01:54.848Z"
-      }
-    },
-    {
-      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
-      "timestamp": "2026-04-28T02:01:08.507Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:35.284Z",
-        "updatedAt": "2026-04-28T02:01:35.284Z"
-      }
-    },
-    {
-      "id": "builder_process:nodetests:builder",
-      "label": "builder process for builder",
-      "timestamp": "2026-04-28T02:01:08.511Z",
-      "metadata": {
-        "containerId": "f47eea3b61c613e89019b9229a3beb5e4de77d0ec9db2cb4afe78d9ffafd5a90",
-        "serviceName": "nodetests-builder",
-        "processType": "builder",
-        "configKey": "nodetests",
-        "testName": "builder",
-        "isActive": true,
-        "startedAt": "2026-04-28T02:01:08.511Z",
-        "updatedAt": "2026-04-28T02:01:08.511Z",
-        "isAgentAider": false
-      }
-    },
-    {
-      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
-      "timestamp": "2026-04-28T02:01:08.511Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:18.057Z",
-        "updatedAt": "2026-04-28T02:01:18.057Z"
-      }
-    },
-    {
-      "id": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-1",
-      "label": "check process for src_lib_pitono_examples_calculator_test-py-check-1",
-      "timestamp": "2026-04-28T02:01:08.591Z",
-      "metadata": {
-        "isActive": false,
-        "finishedAt": "2026-04-28T02:01:10.777Z",
-        "updatedAt": "2026-04-28T02:01:10.777Z"
+        "finishedAt": "2026-04-28T02:46:47.089Z",
+        "updatedAt": "2026-04-28T02:46:47.089Z"
       }
     },
     {
       "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
       "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-1",
-      "timestamp": "2026-04-28T02:01:08.600Z",
+      "timestamp": "2026-04-28T02:46:43.056Z",
       "metadata": {
         "isActive": false,
-        "finishedAt": "2026-04-28T02:01:14.414Z",
-        "updatedAt": "2026-04-28T02:01:14.414Z"
-      }
-    },
-    {
-      "id": "unknown_process::",
-      "label": "unknown process for ",
-      "timestamp": "2026-04-28T02:01:08.601Z",
-      "metadata": {
-        "updatedAt": "2026-04-28T02:24:15.728Z"
+        "finishedAt": "2026-04-28T02:46:50.551Z",
+        "updatedAt": "2026-04-28T02:46:50.551Z"
       }
     },
     {
       "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
       "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-check-0",
-      "timestamp": "2026-04-28T02:01:08.610Z",
+      "timestamp": "2026-04-28T02:46:43.056Z",
       "metadata": {
         "isActive": false,
-        "finishedAt": "2026-04-28T02:01:14.955Z",
-        "updatedAt": "2026-04-28T02:01:14.955Z"
+        "finishedAt": "2026-04-28T02:46:51.378Z",
+        "updatedAt": "2026-04-28T02:46:51.378Z"
+      }
+    },
+    {
+      "id": "bdd_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-bdd",
+      "label": "bdd process for src_java_test_java_com_example_calculator_calculatortest-java-bdd",
+      "timestamp": "2026-04-28T02:46:43.060Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:47.140Z",
+        "updatedAt": "2026-04-28T02:46:47.140Z"
+      }
+    },
+    {
+      "id": "builder_process:nodetests:builder",
+      "label": "builder process for builder",
+      "timestamp": "2026-04-28T02:46:43.061Z",
+      "metadata": {
+        "containerId": "ea0633c7c4dee97d5ff546da4b2e5b66304eff60f818796f1e9f70da61ed72c6",
+        "serviceName": "nodetests-builder",
+        "processType": "builder",
+        "configKey": "nodetests",
+        "testName": "builder",
+        "isActive": true,
+        "startedAt": "2026-04-28T02:46:43.061Z",
+        "updatedAt": "2026-04-28T02:46:43.061Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_rectangle_rectangle-test-ts-bdd",
+      "timestamp": "2026-04-28T02:46:43.061Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:53.741Z",
+        "updatedAt": "2026-04-28T02:46:53.741Z"
+      }
+    },
+    {
+      "id": "check_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-check-0",
+      "label": "check process for src_java_test_java_com_example_calculator_calculatortest-java-check-0",
+      "timestamp": "2026-04-28T02:46:43.069Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:46.587Z",
+        "updatedAt": "2026-04-28T02:46:46.587Z"
+      }
+    },
+    {
+      "id": "builder_process:rubytests:builder",
+      "label": "builder process for builder",
+      "timestamp": "2026-04-28T02:46:43.085Z",
+      "metadata": {
+        "containerId": "5027ad73712958c7253b55b27ddff5d0eeb70f09283893894c966fed63fca867",
+        "serviceName": "rubytests-builder",
+        "processType": "builder",
+        "configKey": "rubytests",
+        "testName": "builder",
+        "isActive": true,
+        "startedAt": "2026-04-28T02:46:43.085Z",
+        "updatedAt": "2026-04-28T02:46:43.085Z",
+        "isAgentAider": false
+      }
+    },
+    {
+      "id": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-0",
+      "label": "check process for src_lib_pitono_examples_calculator_test-py-check-0",
+      "timestamp": "2026-04-28T02:46:43.086Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:48.095Z",
+        "updatedAt": "2026-04-28T02:46:48.095Z"
+      }
+    },
+    {
+      "id": "bdd_process:rubytests:src_lib_rubeno_examples_calculator_calculator-test-rb-bdd",
+      "label": "bdd process for src_lib_rubeno_examples_calculator_calculator-test-rb-bdd",
+      "timestamp": "2026-04-28T02:46:43.103Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:47.373Z",
+        "updatedAt": "2026-04-28T02:46:47.373Z"
+      }
+    },
+    {
+      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-1",
+      "timestamp": "2026-04-28T02:46:43.110Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:51.288Z",
+        "updatedAt": "2026-04-28T02:46:51.288Z"
+      }
+    },
+    {
+      "id": "check_process:pythontests:src_lib_pitono_examples_calculator_test-py-check-1",
+      "label": "check process for src_lib_pitono_examples_calculator_test-py-check-1",
+      "timestamp": "2026-04-28T02:46:43.110Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:46.235Z",
+        "updatedAt": "2026-04-28T02:46:46.235Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_circle_circle-test-ts-bdd",
+      "timestamp": "2026-04-28T02:46:43.110Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:53.344Z",
+        "updatedAt": "2026-04-28T02:46:53.344Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd",
+      "timestamp": "2026-04-28T02:46:43.152Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:53.143Z",
+        "updatedAt": "2026-04-28T02:46:53.143Z"
       }
     },
     {
       "id": "bdd_process:pythontests:src_lib_pitono_examples_calculator_test-py-bdd",
       "label": "bdd process for src_lib_pitono_examples_calculator_test-py-bdd",
-      "timestamp": "2026-04-28T02:01:08.641Z",
+      "timestamp": "2026-04-28T02:46:43.154Z",
       "metadata": {
         "isActive": false,
-        "finishedAt": "2026-04-28T02:01:12.796Z",
-        "updatedAt": "2026-04-28T02:01:12.796Z"
+        "finishedAt": "2026-04-28T02:46:46.549Z",
+        "updatedAt": "2026-04-28T02:46:46.549Z"
       }
     },
     {
-      "id": "check_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "label": "check process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-check-0",
-      "timestamp": "2026-04-28T02:01:08.642Z",
+      "id": "check_process:javatests:src_java_test_java_com_example_calculator_calculatortest-java-check-1",
+      "label": "check process for src_java_test_java_com_example_calculator_calculatortest-java-check-1",
+      "timestamp": "2026-04-28T02:46:43.189Z",
       "metadata": {
         "isActive": false,
-        "finishedAt": "2026-04-28T02:01:13.226Z",
-        "updatedAt": "2026-04-28T02:01:13.226Z"
+        "finishedAt": "2026-04-28T02:46:46.445Z",
+        "updatedAt": "2026-04-28T02:46:46.445Z"
+      }
+    },
+    {
+      "id": "bdd_process:nodetests:src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-node-ts-bdd",
+      "timestamp": "2026-04-28T02:46:43.193Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:53.318Z",
+        "updatedAt": "2026-04-28T02:46:53.318Z"
+      }
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-ts-bdd",
+      "timestamp": "2026-04-28T02:46:43.201Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:47:32.338Z",
+        "updatedAt": "2026-04-28T02:47:32.338Z"
+      }
+    },
+    {
+      "id": "unknown_process::",
+      "label": "unknown process for ",
+      "timestamp": "2026-04-28T02:46:43.296Z",
+      "metadata": {
+        "updatedAt": "2026-04-28T09:50:20.579Z"
+      }
+    },
+    {
+      "id": "builder_process:javatests:builder",
+      "label": "builder process for builder",
+      "timestamp": "2026-04-28T02:46:43.300Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:46:45.927Z",
+        "updatedAt": "2026-04-28T02:46:45.927Z"
+      }
+    },
+    {
+      "id": "bdd_process:webtests:src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "label": "bdd process for src_lib_tiposkripto_tests_calculator_calculator-test-web-react-ts-bdd",
+      "timestamp": "2026-04-28T02:46:43.342Z",
+      "metadata": {
+        "isActive": false,
+        "finishedAt": "2026-04-28T02:47:12.694Z",
+        "updatedAt": "2026-04-28T02:47:12.694Z"
+      }
+    },
+    {
+      "id": "builder_process:webtests:builder",
+      "label": "builder process for builder",
+      "timestamp": "2026-04-28T02:46:43.417Z",
+      "metadata": {
+        "containerId": "c0be48dcd7a614517cafea9922ac1cf98df3f14a08f74ec6ee8226de5d39706a",
+        "serviceName": "webtests-builder",
+        "processType": "builder",
+        "configKey": "webtests",
+        "testName": "builder",
+        "isActive": true,
+        "startedAt": "2026-04-28T02:46:43.417Z",
+        "updatedAt": "2026-04-28T02:46:43.417Z",
+        "isAgentAider": false
       }
     },
     {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/calculator/Calculator.test.node.mjs:Step_0",
       "label": "Step_0",
-      "timestamp": "2026-04-28T02:01:17.774Z",
+      "timestamp": "2026-04-28T02:46:53.085Z",
       "metadata": {
         "stepName": "Step_0",
         "stepType": "SpecificationError",
@@ -277,7 +277,7 @@
     {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/circle/Circle.test.mjs:Step_0",
       "label": "Step_0",
-      "timestamp": "2026-04-28T02:01:17.832Z",
+      "timestamp": "2026-04-28T02:46:53.134Z",
       "metadata": {
         "stepName": "Step_0",
         "stepType": "SpecificationError",
@@ -293,121 +293,9 @@
       }
     },
     {
-      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:Step_0",
-      "label": "Step_0",
-      "timestamp": "2026-04-28T02:01:17.832Z",
-      "metadata": {
-        "stepName": "Step_0",
-        "stepType": "Function",
-        "failed": true,
-        "error": {
-          "message": "Step type Function has no runnable method",
-          "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)\n    at new BaseTiposkripto (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23290:18)\n    at new WebTiposkripto (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23439:5)\n    at tiposkripto (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23596:15)\n    at blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:28546:41",
-          "name": "Error"
-        },
-        "features": [],
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
-        "configKey": "webtests"
-      }
-    },
-    {
-      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:step_1",
-      "label": "step_1",
-      "timestamp": "2026-04-28T02:01:17.832Z",
-      "metadata": {
-        "stepName": "step_1",
-        "stepType": "BaseDescribe",
-        "failed": true,
-        "error": {
-          "message": "Cannot read properties of undefined (reading 'querySelectorAll')",
-          "stack": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:28439:37)\n    at BaseIt.test (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21864:34)\n    at BaseDescribe.describe (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21818:36)\n    at async stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:30)\n    at async TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:25)",
-          "name": "TypeError"
-        },
-        "features": [
-          "./Readme.md"
-        ],
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
-        "configKey": "webtests"
-      }
-    },
-    {
-      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:step_2",
-      "label": "step_2",
-      "timestamp": "2026-04-28T02:01:17.832Z",
-      "metadata": {
-        "stepName": "step_2",
-        "stepType": "Unknown",
-        "failed": true,
-        "error": {
-          "message": "Target container is not a DOM element.",
-          "stack": "Error: Target container is not a DOM element.\n    at exports.createRoot (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21367:17)\n    at Object.prepareEach (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:24027:43)\n    at BaseGiven.givenThat (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22808:44)\n    at BaseGiven.give (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21611:31)\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22653:34)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)",
-          "name": "Error"
-        },
-        "features": [
-          "./Readme.md"
-        ],
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
-        "configKey": "webtests"
-      }
-    },
-    {
-      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:Step_3",
-      "label": "Step_3",
-      "timestamp": "2026-04-28T02:01:17.832Z",
-      "metadata": {
-        "stepName": "Step_3",
-        "stepType": "Function",
-        "failed": true,
-        "error": {
-          "message": "Step type Function has no runnable method",
-          "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)",
-          "name": "Error"
-        },
-        "features": [],
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
-        "configKey": "webtests"
-      }
-    },
-    {
-      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:Step_4",
-      "label": "Step_4",
-      "timestamp": "2026-04-28T02:01:17.832Z",
-      "metadata": {
-        "stepName": "Step_4",
-        "stepType": "Function",
-        "failed": true,
-        "error": {
-          "message": "Step type Function has no runnable method",
-          "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)",
-          "name": "Error"
-        },
-        "features": [],
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
-        "configKey": "webtests"
-      }
-    },
-    {
-      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:Step_5",
-      "label": "Step_5",
-      "timestamp": "2026-04-28T02:01:17.832Z",
-      "metadata": {
-        "stepName": "Step_5",
-        "stepType": "Function",
-        "failed": true,
-        "error": {
-          "message": "Step type Function has no runnable method",
-          "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)",
-          "name": "Error"
-        },
-        "features": [],
-        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
-        "configKey": "webtests"
-      }
-    },
-    {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:step_0",
       "label": "step_0",
-      "timestamp": "2026-04-28T02:01:18.136Z",
+      "timestamp": "2026-04-28T02:46:53.582Z",
       "metadata": {
         "stepName": "step_0",
         "stepType": "Unknown",
@@ -427,7 +315,7 @@
     {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:step_1",
       "label": "step_1",
-      "timestamp": "2026-04-28T02:01:18.136Z",
+      "timestamp": "2026-04-28T02:46:53.582Z",
       "metadata": {
         "stepName": "step_1",
         "stepType": "Unknown",
@@ -447,7 +335,7 @@
     {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:step_2",
       "label": "step_2",
-      "timestamp": "2026-04-28T02:01:18.136Z",
+      "timestamp": "2026-04-28T02:46:53.582Z",
       "metadata": {
         "stepName": "step_2",
         "stepType": "Unknown",
@@ -464,7 +352,7 @@
     {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:step_3",
       "label": "step_3",
-      "timestamp": "2026-04-28T02:01:18.136Z",
+      "timestamp": "2026-04-28T02:46:53.582Z",
       "metadata": {
         "stepName": "step_3",
         "stepType": "Unknown",
@@ -481,7 +369,7 @@
     {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:step_4",
       "label": "step_4",
-      "timestamp": "2026-04-28T02:01:18.136Z",
+      "timestamp": "2026-04-28T02:46:53.582Z",
       "metadata": {
         "stepName": "step_4",
         "stepType": "Unknown",
@@ -497,7 +385,7 @@
     {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:step_5",
       "label": "step_5",
-      "timestamp": "2026-04-28T02:01:18.136Z",
+      "timestamp": "2026-04-28T02:46:53.582Z",
       "metadata": {
         "stepName": "step_5",
         "stepType": "Unknown",
@@ -513,7 +401,7 @@
     {
       "id": "verb:nodetests:src/lib/tiposkripto/tests/Rectangle/Rectangle.test.mjs:step_6",
       "label": "step_6",
-      "timestamp": "2026-04-28T02:01:18.136Z",
+      "timestamp": "2026-04-28T02:46:53.582Z",
       "metadata": {
         "stepName": "step_6",
         "stepType": "Unknown",
@@ -527,16 +415,128 @@
       }
     },
     {
+      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:Step_0",
+      "label": "Step_0",
+      "timestamp": "2026-04-28T02:46:55.138Z",
+      "metadata": {
+        "stepName": "Step_0",
+        "stepType": "Function",
+        "failed": true,
+        "error": {
+          "message": "Step type Function has no runnable method",
+          "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22694:36)\n    at TestRunner.runAllTests (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23029:43)\n    at new BaseTiposkripto (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23290:18)\n    at new WebTiposkripto (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23439:5)\n    at tiposkripto (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23596:15)\n    at blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:28546:41",
+          "name": "Error"
+        },
+        "features": [],
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
+        "configKey": "webtests"
+      }
+    },
+    {
+      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:step_1",
+      "label": "step_1",
+      "timestamp": "2026-04-28T02:46:55.138Z",
+      "metadata": {
+        "stepName": "step_1",
+        "stepType": "BaseDescribe",
+        "failed": true,
+        "error": {
+          "message": "Cannot read properties of undefined (reading 'querySelectorAll')",
+          "stack": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:28439:37)\n    at BaseIt.test (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:21864:34)\n    at BaseDescribe.describe (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:21818:36)\n    at async stepRunner (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22694:30)\n    at async TestRunner.runAllTests (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23029:25)",
+          "name": "TypeError"
+        },
+        "features": [
+          "./Readme.md"
+        ],
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
+        "configKey": "webtests"
+      }
+    },
+    {
+      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:step_2",
+      "label": "step_2",
+      "timestamp": "2026-04-28T02:46:55.138Z",
+      "metadata": {
+        "stepName": "step_2",
+        "stepType": "Unknown",
+        "failed": true,
+        "error": {
+          "message": "Target container is not a DOM element.",
+          "stack": "Error: Target container is not a DOM element.\n    at exports.createRoot (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:21367:17)\n    at Object.prepareEach (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:24027:43)\n    at BaseGiven.givenThat (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22808:44)\n    at BaseGiven.give (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:21611:31)\n    at stepRunner (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22653:34)\n    at Object.receiveTestResourceConfig (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22694:36)\n    at TestRunner.runAllTests (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23029:43)",
+          "name": "Error"
+        },
+        "features": [
+          "./Readme.md"
+        ],
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
+        "configKey": "webtests"
+      }
+    },
+    {
+      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:Step_3",
+      "label": "Step_3",
+      "timestamp": "2026-04-28T02:46:55.138Z",
+      "metadata": {
+        "stepName": "Step_3",
+        "stepType": "Function",
+        "failed": true,
+        "error": {
+          "message": "Step type Function has no runnable method",
+          "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22694:36)\n    at TestRunner.runAllTests (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23029:43)",
+          "name": "Error"
+        },
+        "features": [],
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
+        "configKey": "webtests"
+      }
+    },
+    {
+      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:Step_4",
+      "label": "Step_4",
+      "timestamp": "2026-04-28T02:46:55.138Z",
+      "metadata": {
+        "stepName": "Step_4",
+        "stepType": "Function",
+        "failed": true,
+        "error": {
+          "message": "Step type Function has no runnable method",
+          "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22694:36)\n    at TestRunner.runAllTests (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23029:43)",
+          "name": "Error"
+        },
+        "features": [],
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
+        "configKey": "webtests"
+      }
+    },
+    {
+      "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs:Step_5",
+      "label": "Step_5",
+      "timestamp": "2026-04-28T02:46:55.138Z",
+      "metadata": {
+        "stepName": "Step_5",
+        "stepType": "Function",
+        "failed": true,
+        "error": {
+          "message": "Step type Function has no runnable method",
+          "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:22694:36)\n    at TestRunner.runAllTests (blob:null/32d0952a-f501-42c4-a3ea-eb7a6fc67c0a:23029:43)",
+          "name": "Error"
+        },
+        "features": [],
+        "testName": "src/lib/tiposkripto/tests/calculator/Calculator.test.web.react.mjs",
+        "configKey": "webtests"
+      }
+    },
+    {
       "id": "verb:webtests:src/lib/tiposkripto/tests/calculator/Calculator.test.web.mjs:Step_0",
       "label": "Step_0",
-      "timestamp": "2026-04-28T02:01:37.484Z",
+      "timestamp": "2026-04-28T02:47:14.938Z",
       "metadata": {
         "stepName": "Step_0",
         "stepType": "SpecificationError",
         "failed": true,
         "error": {
           "message": "input is not a constructor",
-          "stack": "TypeError: input is not a constructor\n    at another simple calculator (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:6185:49)\n    at blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:1353:38\n    at CalculatorWebTest.specification [as testSpecification] (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:2078:56)\n    at CalculatorWebTest.initialize (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:1633:28)\n    at new WebTiposkripto (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:1824:10)\n    at new CalculatorWebTest (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:6310:5)\n    at blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:6313:35",
+          "stack": "TypeError: input is not a constructor\n    at another simple calculator (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:6185:49)\n    at blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:1353:38\n    at CalculatorWebTest.specification [as testSpecification] (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:2078:56)\n    at CalculatorWebTest.initialize (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:1633:28)\n    at new WebTiposkripto (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:1824:10)\n    at new CalculatorWebTest (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:6310:5)\n    at blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:6313:35",
           "name": "TypeError"
         },
         "features": [],
@@ -546,5 +546,5 @@
     }
   ],
   "viewType": "gantt",
-  "timestamp": "2026-04-28T02:24:15.729Z"
+  "timestamp": "2026-04-28T09:50:20.580Z"
 }

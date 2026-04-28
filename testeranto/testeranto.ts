@@ -215,6 +215,7 @@ const config: ITesterantoConfig = {
   },
 
   volumes: [
+    `${process.cwd()}/.git:/workspace/.git`,
     `${process.cwd()}/src:/workspace/src`,
     `${process.cwd()}/test:/workspace/test`,
     `${process.cwd()}/SOUL.md:/workspace/SOUL.md`,

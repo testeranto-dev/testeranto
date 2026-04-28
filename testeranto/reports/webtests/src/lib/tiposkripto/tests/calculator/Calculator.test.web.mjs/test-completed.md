@@ -29,7 +29,7 @@ Test result details:
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1777341697460,
+  "timestamp": 1777344434905,
   "individualResults": [
     {
       "index": 0,
@@ -38,7 +38,7 @@ Test result details:
       "features": [],
       "error": {
         "message": "input is not a constructor",
-        "stack": "TypeError: input is not a constructor\n    at another simple calculator (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:6185:49)\n    at blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:1353:38\n    at CalculatorWebTest.specification [as testSpecification] (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:2078:56)\n    at CalculatorWebTest.initialize (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:1633:28)\n    at new WebTiposkripto (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:1824:10)\n    at new CalculatorWebTest (blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:6310:5)\n    at blob:null/9817b75d-97bd-4b4f-b379-83219a359e39:6313:35",
+        "stack": "TypeError: input is not a constructor\n    at another simple calculator (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:6185:49)\n    at blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:1353:38\n    at CalculatorWebTest.specification [as testSpecification] (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:2078:56)\n    at CalculatorWebTest.initialize (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:1633:28)\n    at new WebTiposkripto (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:1824:10)\n    at new CalculatorWebTest (blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:6310:5)\n    at blob:null/7e4de188-2b61-4d8e-9fb4-f395d3288c27:6313:35",
         "name": "TypeError"
       },
       "stepName": "Step_0",
