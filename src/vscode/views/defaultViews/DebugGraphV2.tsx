@@ -156,55 +156,10 @@ export const DebugGraphV2: React.FC<DebugGraphV2Props> = ({
     return { nodes, links };
   }, [data]);
 
-  // Create lights array using useMemo so it's stable across renders
-  const lights = useMemo(() => {
-    // Ambient light for base illumination
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
-
-    // Main directional light from top-right
-    const dirLight = new THREE.DirectionalLight(0xffffff, 4.0);
-    dirLight.position.set(10, 10, 10);
-
-    // Fill light from left
-    const fillLight = new THREE.DirectionalLight(0x88aaff, 2.0);
-    fillLight.position.set(-10, 5, 5);
-
-    // Back light for rim effect
-    const backLight = new THREE.DirectionalLight(0xffaa88, 1.5);
-    backLight.position.set(0, -5, -10);
-
-    // Point light near origin for local brightness
-    const pointLight = new THREE.PointLight(0xffffff, 3.0, 50);
-    pointLight.position.set(0, 0, 0);
-
-    // Hemisphere light for sky/ground color
-    const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0x362d59, 1.5);
-
-    return [ambientLight, dirLight, fillLight, backLight, pointLight, hemiLight];
-  }, []);
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <ForceGraph3D
-        ref={graphRef}
-        graphData={graphData}
-        // Customizing the appearance
-        nodeLabel="name"
-        nodeAutoColorBy="nodeType"
-        // Edge glow effect
-        linkDirectionalParticles={4}
-        linkDirectionalParticleSpeed={0.005}
-        linkDirectionalParticleWidth={3}
-        linkDirectionalParticleColor={() => '#ffffff'}
-        linkDirectionalParticleLength={6}
-        linkDirectionalParticleOpacity={0.8}
-        linkDirectionalParticleResolution={8}
-        linkColor={() => '#ffaa00'}
-        linkOpacity={0.6}
-        linkWidth={1.5}
-        backgroundColor="#1a1a2e"
-        lights={lights}
-      />
+      <ForceGraph3D graphData={graphData} />
     </div>
   );
 };

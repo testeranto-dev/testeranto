@@ -1,20 +1,24 @@
-import type { GraphOperation, TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../../graph";
+import Graph from "graphology";
+import type { GraphOperation, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../../graph";
 import type { ITesterantoConfig } from "../../../../../Types";
 
 export function addRuntimeNodesPure(
-  graph: TesterantoGraph<GraphNodeAttributes, GraphEdgeAttributes>,
+  graph: Graph<GraphNodeAttributes, GraphEdgeAttributes>,
   configs: ITesterantoConfig,
   timestamp: string
 ): GraphOperation[] {
   const operations: GraphOperation[] = [];
-  if (!configs.runtimes) return operations;
+
+  if (!configs.runtimes) {
+    console.error("No runtimes found in config");
+    return operations;
+  }
 
   for (const [runtimeName] of Object.entries(configs.runtimes)) {
     const runtimeId = `runtime:${runtimeName}`;
 
-    // Check for existing nodes in the graph
+    // Add runtime node only (edges are added by generateEdgesPure)
     if (!graph.hasNode(runtimeId)) {
-      // Add runtime node only (edges are added by generateEdgesPure)
       operations.push({
         type: 'addNode',
         data: {

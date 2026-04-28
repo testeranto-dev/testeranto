@@ -3,7 +3,7 @@
  */
 export function applyUpdate(update: any): any {
   // Log the update and return it
-  console.log('[applyUpdate] Applying graph update:', update);
+  // console.log('[applyUpdate] Applying graph update:', update);
   return {
     success: true,
     update,

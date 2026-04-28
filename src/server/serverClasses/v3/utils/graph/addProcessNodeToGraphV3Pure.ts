@@ -48,8 +48,8 @@ export function addProcessNodeToGraphV3Pure(
     timestamp,
   });
 
-  // Add edge from test node to process node
-  if (configKey && testName) {
+  // Add edge from test node to process node (only if both configKey and testName are non‑empty)
+  if (configKey && configKey.trim() !== '' && testName && testName.trim() !== '') {
     const testNodeId = `test:${configKey}:${testName}`;
     operations.push({
       type: 'addEdge',
@@ -72,8 +72,8 @@ export function addProcessNodeToGraphV3Pure(
     });
   }
 
-  // Optionally add an edge from the config node (if configKey is known)
-  if (configKey && configKey !== 'agent') {
+  // Optionally add an edge from the config node (only if configKey is non‑empty and not 'agent')
+  if (configKey && configKey.trim() !== '' && configKey !== 'agent') {
     const configNodeId = `config:${configKey}`;
     operations.push({
       type: 'addEdge',

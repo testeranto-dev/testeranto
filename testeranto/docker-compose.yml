@@ -89,24 +89,6 @@ services:
     image: "testeranto-python-pythontests:latest"
     extra_hosts:
       host.docker.internal: "host-gateway"
-  golangtests-builder:
-    container_name: "golangtests-builder"
-    environment:
-      NODE_ENV: production
-      ENV: golang
-      MODE: dev
-    working_dir: /workspace
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/dist:/workspace/dist"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-    command: "go run /workspace/testeranto/golang_runtime.go /workspace/testeranto/testeranto.ts /workspace/testeranto/runtimes/golang/golang.mjs '{\"name\":\"golangtests\",\"tests\":[\"src/lib/golingvu/examples/calculator/golingvu_test.go\"],\"outputs\":[\"coverage.out\",\"coverage.html\"]}'"
-    networks:
-      - allTests_network
-    restart: no
-    image: "testeranto-golang-golangtests:latest"
-    extra_hosts:
-      host.docker.internal: "host-gateway"
   nodetests-src_lib_tiposkripto_tests_abstractbase-test_index-ts-bdd:
     build:
       context: /Users/adam/Code/testeranto
@@ -413,125 +395,22 @@ services:
     restart: no
     extra_hosts:
       host.docker.internal: "host-gateway"
-  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-bdd:
-    build:
-      context: /Users/adam/Code/testeranto
-      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
-    container_name: "golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-bdd"
-    working_dir: /workspace
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-    command: "./testeranto/bundles/golangtests/src/lib/golingvu/examples/calculator/golingvu_test '{\"name\":\"golang-test\",\"ports\":[1111],\"fs\":\"testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/\",\"timeout\":30000,\"retries\":0,\"environment\":{}}'"
+  chrome:
+    image: "browserless/chrome:latest"
+    container_name: "chrome-service"
+    environment:
+      CONNECTION_TIMEOUT: 60000
+      MAX_CONCURRENT_SESSIONS: 1
+      ENABLE_CORS: true
+      PREBOOT_CHROME: true
+      DEFAULT_BLOCK_ADS: true
+    shm_size: 2g
+    expose:
+      - 3000
+    ports:
+      - "9222:3000"
     networks:
       - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-0:
-    build:
-      context: /Users/adam/Code/testeranto
-      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
-    container_name: "golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-0"
-    working_dir: /workspace
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-    command: "go run testeranto/bundles/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go_check_0.go '{\"ports\":[1111],\"fs\":\"testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/\"}'"
-    networks:
-      - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-1:
-    build:
-      context: /Users/adam/Code/testeranto
-      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
-    container_name: "golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-1"
-    working_dir: /workspace
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-    command: "go run testeranto/bundles/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go_check_1.go '{\"ports\":[1111],\"fs\":\"testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/\"}'"
-    networks:
-      - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-2:
-    build:
-      context: /Users/adam/Code/testeranto
-      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
-    container_name: "golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-2"
-    working_dir: /workspace
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-    command: "go run testeranto/bundles/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go_check_2.go '{\"ports\":[1111],\"fs\":\"testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/\"}'"
-    networks:
-      - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-3:
-    build:
-      context: /Users/adam/Code/testeranto
-      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
-    container_name: "golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-3"
-    working_dir: /workspace
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-    command: "go run testeranto/bundles/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go_check_3.go '{\"ports\":[1111],\"fs\":\"testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/\"}'"
-    networks:
-      - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-4:
-    build:
-      context: /Users/adam/Code/testeranto
-      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
-    container_name: "golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-4"
-    working_dir: /workspace
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-    command: "go run testeranto/bundles/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go_check_4.go '{\"ports\":[1111],\"fs\":\"testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/\"}'"
-    networks:
-      - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
-  golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-5:
-    build:
-      context: /Users/adam/Code/testeranto
-      dockerfile: testeranto/runtimes/golang/golang.Dockerfile
-    container_name: "golangtests-src_lib_golingvu_examples_calculator_golingvu_test-go-check-5"
-    working_dir: /workspace
-    volumes:
-      - "/Users/adam/Code/testeranto/src:/workspace/src"
-      - "/Users/adam/Code/testeranto/test:/workspace/test"
-      - "/Users/adam/Code/testeranto/SOUL.md:/workspace/SOUL.md"
-      - "/Users/adam/Code/testeranto/testeranto:/workspace/testeranto"
-    command: "go run testeranto/bundles/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go_check_5.go '{\"ports\":[1111],\"fs\":\"testeranto/reports/golangtests/src/lib/golingvu/examples/calculator/golingvu_test.go/\"}'"
-    networks:
-      - allTests_network
-    restart: no
-    extra_hosts:
-      host.docker.internal: "host-gateway"
 
 networks:
   allTests_network:

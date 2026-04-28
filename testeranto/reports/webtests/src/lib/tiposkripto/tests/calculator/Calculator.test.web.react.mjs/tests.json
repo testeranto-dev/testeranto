@@ -1,0 +1,202 @@
+{
+  "failed": true,
+  "fails": 7,
+  "artifacts": [],
+  "features": [
+    "./Readme.md"
+  ],
+  "tests": 6,
+  "runTimeTests": 6,
+  "testJob": {
+    "name": "CombinedResults"
+  },
+  "timestamp": 1777341677774,
+  "individualResults": [
+    {
+      "index": 0,
+      "failed": true,
+      "fails": 1,
+      "features": [],
+      "error": {
+        "message": "Step type Function has no runnable method",
+        "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)\n    at new BaseTiposkripto (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23290:18)\n    at new WebTiposkripto (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23439:5)\n    at tiposkripto (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23596:15)\n    at blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:28546:41",
+        "name": "Error"
+      },
+      "stepName": "Step_0",
+      "stepType": "Function",
+      "testJob": {
+        "name": "Step_0",
+        "type": "Function",
+        "key": "step_0"
+      }
+    },
+    {
+      "index": 1,
+      "failed": true,
+      "fails": 2,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "Cannot read properties of undefined (reading 'querySelectorAll')",
+        "stack": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:28439:37)\n    at BaseIt.test (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21864:34)\n    at BaseDescribe.describe (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21818:36)\n    at async stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:30)\n    at async TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:25)",
+        "name": "TypeError"
+      },
+      "stepName": "step_1",
+      "stepType": "BaseDescribe",
+      "testJob": {
+        "key": "step_1",
+        "its": [
+          {
+            "name": "can save 1 memory: ",
+            "status": false,
+            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\nTypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:28425:37)\n    at BaseIt.test (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21864:34)\n    at BaseDescribe.describe (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21818:36)\n    at async stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:30)\n    at async TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:25)",
+            "artifacts": []
+          },
+          {
+            "name": "can save 2 memories: ",
+            "status": false,
+            "error": "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\nTypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:28439:37)\n    at BaseIt.test (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21864:34)\n    at BaseDescribe.describe (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21818:36)\n    at async stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:30)\n    at async TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:25)",
+            "artifacts": []
+          }
+        ],
+        "error": [
+          "Cannot read properties of undefined (reading 'querySelectorAll')",
+          "TypeError: Cannot read properties of undefined (reading 'querySelectorAll')\n    at BaseIt.itCB (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:28439:37)\n    at BaseIt.test (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21864:34)\n    at BaseDescribe.describe (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21818:36)\n    at async stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22601:21)\n    at async Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:30)\n    at async TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:25)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": true,
+        "fails": 2
+      }
+    },
+    {
+      "index": 2,
+      "failed": true,
+      "fails": 1,
+      "features": [
+        "./Readme.md"
+      ],
+      "error": {
+        "message": "Target container is not a DOM element.",
+        "stack": "Error: Target container is not a DOM element.\n    at exports.createRoot (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21367:17)\n    at Object.prepareEach (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:24027:43)\n    at BaseGiven.givenThat (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22808:44)\n    at BaseGiven.give (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21611:31)\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22653:34)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)",
+        "name": "Error"
+      },
+      "stepName": "step_2",
+      "stepType": "Unknown",
+      "testJob": {
+        "key": "step_2",
+        "error": [
+          {},
+          "Error: Target container is not a DOM element.\n    at exports.createRoot (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21367:17)\n    at Object.prepareEach (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:24027:43)\n    at BaseGiven.givenThat (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22808:44)\n    at BaseGiven.give (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:21611:31)\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22653:34)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)"
+        ],
+        "failed": true,
+        "features": [
+          "./Readme.md"
+        ],
+        "artifacts": [],
+        "status": false,
+        "fails": 1,
+        "whens": [
+          {
+            "name": "press: 5",
+            "error": null
+          },
+          {
+            "name": "press: +",
+            "error": null
+          },
+          {
+            "name": "press: 3",
+            "error": null
+          },
+          {
+            "name": "press: 3",
+            "error": null
+          },
+          {
+            "name": "press: 3",
+            "error": null
+          },
+          {
+            "name": "press: 3",
+            "error": null
+          },
+          {
+            "name": "enter: ",
+            "error": null
+          }
+        ],
+        "thens": [
+          {
+            "name": "result: 28",
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "failed": true,
+      "fails": 1,
+      "features": [],
+      "error": {
+        "message": "Step type Function has no runnable method",
+        "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)",
+        "name": "Error"
+      },
+      "stepName": "Step_3",
+      "stepType": "Function",
+      "testJob": {
+        "name": "Step_3",
+        "type": "Function",
+        "key": "step_3"
+      }
+    },
+    {
+      "index": 4,
+      "failed": true,
+      "fails": 1,
+      "features": [],
+      "error": {
+        "message": "Step type Function has no runnable method",
+        "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)",
+        "name": "Error"
+      },
+      "stepName": "Step_4",
+      "stepType": "Function",
+      "testJob": {
+        "name": "Step_4",
+        "type": "Function",
+        "key": "step_4"
+      }
+    },
+    {
+      "index": 5,
+      "failed": true,
+      "fails": 1,
+      "features": [],
+      "error": {
+        "message": "Step type Function has no runnable method",
+        "stack": "Error: Step type Function has no runnable method\n    at stepRunner (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22671:19)\n    at Object.receiveTestResourceConfig (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:22694:36)\n    at TestRunner.runAllTests (blob:null/0a6822ca-de5f-4976-8a93-ab4be4e5f5da:23029:43)",
+        "name": "Error"
+      },
+      "stepName": "Step_5",
+      "stepType": "Function",
+      "testJob": {
+        "name": "Step_5",
+        "type": "Function",
+        "key": "step_5"
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 6,
+    "passed": -1,
+    "failed": 7,
+    "successRate": "-16.67%"
+  }
+}

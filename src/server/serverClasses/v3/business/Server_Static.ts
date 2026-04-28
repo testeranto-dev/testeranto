@@ -31,7 +31,7 @@ export abstract class Server_Static extends Server_ApiSpec {
 
     if (this.configs.views) {
       for (const [viewKey, viewConfig] of Object.entries(this.configs.views)) {
-        this.logBusinessMessage(`Generating slice for view: ${viewKey}`);
+        // this.logBusinessMessage(`Generating slice for view: ${viewKey}`);
         await this.generateViewSliceUtil(viewKey, viewConfig);
       }
     }

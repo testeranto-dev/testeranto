@@ -30,7 +30,7 @@ export abstract class Server extends Server_DockerCompose {
   }
 
   protected resourceChanged(path: string): void {
-    this.logBusinessMessage(`Resource changed: ${path}`);
+    // this.logBusinessMessage(`Resource changed: ${path}`);
   }
 
   async start(): Promise<void> {
@@ -224,6 +224,24 @@ export abstract class Server extends Server_DockerCompose {
     return handleAiderRoute(this.graph);
   }
 
+  protected async handleAgentsRoute(request: Request): Promise<Response> {
+    const agents = Object.keys(this.configs.agents || {}).map(name => ({
+      name,
+      config: this.configs.agents?.[name]
+    }));
+
+    return new Response(
+      JSON.stringify({
+        agents,
+        timestamp: new Date().toISOString()
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  }
+
   protected async handleRuntimeRoute(request: Request): Promise<Response> {
     const runtimeNodes = this.queryNodes((node: any) =>
       node.type?.category === 'resource' && node.type?.type === 'runtime'
@@ -249,17 +267,21 @@ export abstract class Server extends Server_DockerCompose {
       const inputFiles: Record<string, string[]> = {};
       for (const testName of config.tests) {
         const testNodeId = `test:${runtimeName}:${testName}`;
-        const testNode = this.graph.nodes.find((n: any) => n.id === testNodeId);
-        if (!testNode) continue;
+        if (!this.graph.hasNode(testNodeId)) continue;
 
-        const fileEdges = this.graph.edges.filter((e: any) =>
-          e.source === testNodeId && e.target.startsWith('file:')
-        );
+        const fileEdges = this.graph.edges().filter(edgeKey => {
+          const source = this.graph.source(edgeKey);
+          const target = this.graph.target(edgeKey);
+          return source === testNodeId && target.startsWith('file:');
+        });
         const files: string[] = [];
-        for (const edge of fileEdges) {
-          const fileNode = this.graph.nodes.find((n: any) => n.id === edge.target);
-          if (fileNode && fileNode.metadata?.filePath) {
-            files.push(fileNode.metadata.filePath);
+        for (const edgeKey of fileEdges) {
+          const target = this.graph.target(edgeKey);
+          if (this.graph.hasNode(target)) {
+            const fileNodeAttrs = this.graph.getNodeAttributes(target);
+            if (fileNodeAttrs.metadata?.filePath) {
+              files.push(fileNodeAttrs.metadata.filePath);
+            }
           }
         }
         inputFiles[testName] = files;
@@ -290,22 +312,6 @@ export abstract class Server extends Server_DockerCompose {
     );
   }
 
-  protected async handleAgentsRoute(request: Request): Promise<Response> {
-    return new Response(
-      JSON.stringify({
-        agents: Object.keys(this.configs.agents).map(name => ({
-          name,
-          config: this.configs.agents?.[name]
-        })),
-        timestamp: new Date().toISOString()
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
-  }
-
   protected async handleAgentSliceRoute(request: Request, agentName: string): Promise<Response> {
     const agentConfig = this.configs.agents?.[agentName];
     if (!agentConfig) {
@@ -321,10 +327,11 @@ export abstract class Server extends Server_DockerCompose {
       );
     }
 
-    const agentNode = this.graph.nodes.find(
-      (n: any) => n.id === `agent:${agentName}`
-    );
-    const metadata = agentNode?.metadata;
+    const agentNodeId = `agent:${agentName}`;
+    let metadata: any = undefined;
+    if (this.graph.hasNode(agentNodeId)) {
+      metadata = this.graph.getNodeAttributes(agentNodeId).metadata;
+    }
 
     const chatNodes = this.queryNodes?.((node: any) =>
       node.type?.category === 'chat' && node.type?.type === 'chat_message'

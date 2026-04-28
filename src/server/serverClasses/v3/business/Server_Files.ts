@@ -221,26 +221,28 @@ export abstract class Server_Files extends Server_Api_Routing {
 
     // Find input files (edges from test node to file nodes)
     const testNodeId = `test:${configKey}:${testName}`;
-    const inputEdges = this.graph.edges.filter(
-      (e: any) => e.source === testNodeId && e.target.startsWith('file:')
-    );
     const inputFiles: string[] = [];
-    for (const edge of inputEdges) {
-      const fileNode = this.graph.nodes.find((n: any) => n.id === edge.target);
-      if (fileNode && fileNode.metadata?.filePath) {
-        inputFiles.push(fileNode.metadata.filePath);
+    for (const edgeKey of this.graph.edges()) {
+      const source = this.graph.source(edgeKey);
+      const target = this.graph.target(edgeKey);
+      if (source === testNodeId && target.startsWith('file:')) {
+        const fileNodeAttrs = this.graph.getNodeAttributes(target);
+        if (fileNodeAttrs.metadata?.filePath) {
+          inputFiles.push(fileNodeAttrs.metadata.filePath);
+        }
       }
     }
 
     // Find output files (edges from file nodes to test node)
-    const outputEdges = this.graph.edges.filter(
-      (e: any) => e.target === testNodeId && e.source.startsWith('file:')
-    );
     const outputFiles: string[] = [];
-    for (const edge of outputEdges) {
-      const fileNode = this.graph.nodes.find((n: any) => n.id === edge.source);
-      if (fileNode && fileNode.metadata?.filePath) {
-        outputFiles.push(fileNode.metadata.filePath);
+    for (const edgeKey of this.graph.edges()) {
+      const source = this.graph.source(edgeKey);
+      const target = this.graph.target(edgeKey);
+      if (target === testNodeId && source.startsWith('file:')) {
+        const fileNodeAttrs = this.graph.getNodeAttributes(source);
+        if (fileNodeAttrs.metadata?.filePath) {
+          outputFiles.push(fileNodeAttrs.metadata.filePath);
+        }
       }
     }
 

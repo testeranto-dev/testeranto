@@ -7,19 +7,19 @@ export const generateViewSliceUtil = async (
   viewConfig: any,
   graphData?: GraphData
 ): Promise<void> => {
-  console.log(`[Server] Generating slice for ${viewKey}`);
-  
+  // console.log(`[Server] Generating slice for ${viewKey}`);
+
   const slicesDir = path.join(process.cwd(), "testeranto", "slices", "views");
-  
+
   // Ensure directory exists
   try {
     await fs.access(slicesDir);
   } catch {
     await fs.mkdir(slicesDir, { recursive: true });
   }
-  
+
   const slicePath = path.join(slicesDir, `${viewKey}.json`);
-  
+
   // Use the slicer function from viewConfig if available and graphData is provided
   let sliceData: any;
   const slicer = viewConfig.slicer;
@@ -34,7 +34,7 @@ export const generateViewSliceUtil = async (
       viewConfig
     };
   }
-  
+
   await fs.writeFile(slicePath, JSON.stringify(sliceData, null, 2), 'utf-8');
-  console.log(`[Server] Generated slice for ${viewKey} at ${slicePath}`);
+  // console.log(`[Server] Generated slice for ${viewKey} at ${slicePath}`);
 };

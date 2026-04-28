@@ -7,6 +7,7 @@ import { getContainerInfo } from "../utils";
 import { getAiderServiceName } from "../utils/aider/getAiderServiceName";
 import { parseDockerEvent } from "../utils/docker/parseDockerEvent";
 import { generateServiceName } from "../utils/generateServiceName";
+import { chromeServiceConfig } from "../../../runtimes/web/docker";
 import { getBaseServiceName } from "../utils/test/getBaseServiceName";
 import { getBddServiceName } from "../utils/test/getBddServiceName";
 import { getInputFiles } from "../utils/test/getInputFiles";
@@ -19,6 +20,7 @@ import { generateBuilderService } from "./utils/generateBuilderService";
 import { generateCheckService } from "./utils/generateCheckService";
 import { generateYaml } from "./utils/generateYaml";
 import { yamlValueToString } from "./utils/yamlValueToString";
+import { handleFileEventUtil } from "../utils/file/handleFileEventUtil";
 
 const execAsync = promisify(exec);
 
@@ -223,6 +225,9 @@ export class Server_DockerCompose extends Server_Api {
       }
     };
 
+    // Add chrome service for web runtime
+    services.chrome = chromeServiceConfig();
+
     this.logBusinessMessage(`Generated ${Object.keys(services).length} services`);
     return services;
   }
@@ -384,7 +389,7 @@ export class Server_DockerCompose extends Server_Api {
       await fs.promises.access(watchDir);
     } catch {
       this.logBusinessMessage(`Directory ${watchDir} does not exist, skipping file events watcher`);
-      return () => {};
+      return () => { };
     }
 
     // Use fs.watch recursively (Node.js 19+ supports recursive on macOS)
@@ -397,7 +402,7 @@ export class Server_DockerCompose extends Server_Api {
       const normalizedPath = fullPath.replace(/\\/g, '/');
 
       // Log every file system event
-      console.log(`[FileEventsWatcher] Raw event: eventType=${eventType}, filename=${filename}, normalizedPath=${normalizedPath}`);
+      // console.log(`[FileEventsWatcher] Raw event: eventType=${eventType}, filename=${filename}, normalizedPath=${normalizedPath}`);
 
       // Determine event type
       let fileEventType: 'change' | 'create' | 'delete';
@@ -413,14 +418,14 @@ export class Server_DockerCompose extends Server_Api {
         fileEventType = 'change';
       }
 
-      console.log(`[FileEventsWatcher] Determined event type: ${fileEventType} for ${normalizedPath}`);
+      // console.log(`[FileEventsWatcher] Determined event type: ${fileEventType} for ${normalizedPath}`);
 
       // Read file content for non-delete events
       let content: string | undefined;
       if (fileEventType !== 'delete') {
         try {
           content = await fs.promises.readFile(normalizedPath, 'utf-8');
-          console.log(`[FileEventsWatcher] Read content for ${normalizedPath}: length=${content.length}`);
+          // console.log(`[FileEventsWatcher] Read content for ${normalizedPath}: length=${content.length}`);
         } catch {
           // File may have been deleted between event and read
           content = undefined;
@@ -432,12 +437,12 @@ export class Server_DockerCompose extends Server_Api {
       const { handleFileEventUtil } = await import('../utils/file/handleFileEventUtil');
       const result = handleFileEventUtil(normalizedPath, fileEventType, content, process.cwd());
 
-      console.log(`[FileEventsWatcher] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
+      // console.log(`[FileEventsWatcher] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
 
       if (result.operations.length > 0) {
-        this.logBusinessMessage(
-          `[FileEventsWatcher] Applying ${result.operations.length} operations for ${fileEventType} on ${normalizedPath}`,
-        );
+        // this.logBusinessMessage(
+        //   `[FileEventsWatcher] Applying ${result.operations.length} operations for ${fileEventType} on ${normalizedPath}`,
+        // );
         this.applyUpdate(result);
         this.saveGraph();
         this.broadcastGraphUpdated();
@@ -514,11 +519,11 @@ export class Server_DockerCompose extends Server_Api {
         }
         const { handleFileEventUtil } = await import('../utils/file/handleFileEventUtil');
         const result = handleFileEventUtil(normalizedPath, 'create', content, process.cwd());
-        console.log(`[InitialScan] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
+        // console.log(`[InitialScan] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
         if (result.operations.length > 0) {
-          this.logBusinessMessage(
-            `[InitialScan] Applying ${result.operations.length} operations for ${normalizedPath}`,
-          );
+          // this.logBusinessMessage(
+          //   `[InitialScan] Applying ${result.operations.length} operations for ${normalizedPath}`,
+          // );
           this.applyUpdate(result);
           this.saveGraph();
           this.broadcastGraphUpdated();
@@ -538,24 +543,24 @@ export class Server_DockerCompose extends Server_Api {
         // Since the first pass already recursed into subdirectories, we just need to
         // process tests.json files at this level.
       } else if (entry.name === 'tests.json') {
-        this.logBusinessMessage(`[InitialScan] Found tests.json at ${fullPath}`);
-        console.log(`[InitialScan] Found tests.json at ${fullPath}`);
+        // this.logBusinessMessage(`[InitialScan] Found tests.json at ${fullPath}`);
+        // console.log(`[InitialScan] Found tests.json at ${fullPath}`);
         const normalizedPath = fullPath.replace(/\\/g, '/');
         let content: string;
         try {
           content = await fs.promises.readFile(fullPath, 'utf-8');
-          console.log(`[InitialScan] Read content for ${normalizedPath}: length=${content.length}`);
+          // console.log(`[InitialScan] Read content for ${normalizedPath}: length=${content.length}`);
         } catch {
           console.log(`[InitialScan] Failed to read content for ${normalizedPath}`);
           continue;
         }
-        const { handleFileEventUtil } = await import('../utils/file/handleFileEventUtil');
+        // const { handleFileEventUtil } = await import('../utils/file/handleFileEventUtil');
         const result = handleFileEventUtil(normalizedPath, 'create', content, process.cwd());
-        console.log(`[InitialScan] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
+        // console.log(`[InitialScan] handleFileEventUtil returned ${result.operations.length} operations for ${normalizedPath}`);
         if (result.operations.length > 0) {
-          this.logBusinessMessage(
-            `[InitialScan] Applying ${result.operations.length} operations for ${normalizedPath}`,
-          );
+          // this.logBusinessMessage(
+          //   `[InitialScan] Applying ${result.operations.length} operations for ${normalizedPath}`,
+          // );
           this.applyUpdate(result);
           this.saveGraph();
           this.broadcastGraphUpdated();
@@ -659,15 +664,6 @@ export class Server_DockerCompose extends Server_Api {
       this.handleDockerEvent(event);
     });
 
-    // Check if Docker is available first
-    try {
-      await execAsync('docker version', { timeout: 5000 });
-      this.logBusinessMessage("Docker version check succeeded");
-    } catch {
-      this.logBusinessMessage("Docker not available, skipping events watcher");
-      return () => { };
-    }
-
     const dockerEvents = spawn('docker', ['events', '--format', '{{json .}}']);
 
     let isRunning = true;
@@ -676,14 +672,14 @@ export class Server_DockerCompose extends Server_Api {
       if (!isRunning) return;
 
       const raw = data.toString();
-      this.logBusinessMessage(`[DockerEventsWatcher] raw data received: ${raw.substring(0, 200)}`);
+      // this.logBusinessMessage(`[DockerEventsWatcher] raw data received: ${raw.substring(0, 200)}`);
 
       const lines = raw.trim().split('\n');
       for (const line of lines) {
         if (line.trim()) {
           try {
             const event = JSON.parse(line);
-            this.logBusinessMessage(`[DockerEventsWatcher] parsed event: type=${event.Type}, action=${event.Action || event.status}, id=${(event.id || event.Actor?.ID || '?').substring(0, 12)}`);
+            // this.logBusinessMessage(`[DockerEventsWatcher] parsed event: type=${event.Type}, action=${event.Action || event.status}, id=${(event.id || event.Actor?.ID || '?').substring(0, 12)}`);
             eventCallback(event);
           } catch (parseError: any) {
             this.logBusinessMessage(`[DockerEventsWatcher] failed to parse line: ${line.substring(0, 100)} error=${parseError.message}`);
@@ -694,9 +690,9 @@ export class Server_DockerCompose extends Server_Api {
 
     dockerEvents.stderr.on('data', (data) => {
       const stderr = data.toString();
-      if (stderr.trim()) {
-        this.logBusinessMessage(`[DockerEventsWatcher] stderr: ${stderr.substring(0, 200)}`);
-      }
+      // if (stderr.trim()) {
+      //   this.logBusinessMessage(`[DockerEventsWatcher] stderr: ${stderr.substring(0, 200)}`);
+      // }
     });
 
     dockerEvents.on('error', (err) => {
@@ -742,7 +738,7 @@ export class Server_DockerCompose extends Server_Api {
     );
 
     if (result.operations.length > 0) {
-      this.logBusinessMessage(`[handleDockerEvent] Applying ${result.operations.length} operations for ${parsed.action} on ${parsed.containerId}`);
+      // this.logBusinessMessage(`[handleDockerEvent] Applying ${result.operations.length} operations for ${parsed.action} on ${parsed.containerId}`);
       this.applyUpdate(result);
       this.saveGraph();
       this.broadcastGraphUpdated();
@@ -772,87 +768,6 @@ export class Server_DockerCompose extends Server_Api {
   private getBaseServiceName(configKey: string, testName: string): string {
     return getBaseServiceName(configKey, testName);
   }
-
-  /**
-   * Create the aider message file for a given test.
-   * Follows V2 Server_Aider.createAiderMessageFile pattern.
-   */
-  // async createAiderMessageFile(testName: string, configKey: string): Promise<string> {
-  //   this.logBusinessMessage(`createAiderMessageFile: ${testName} for config ${configKey}`);
-
-  //   const reportDir = `${process.cwd()}/testeranto/reports/${configKey}/${testName}`;
-  //   const messageFilePath = `${reportDir}/aider-message.txt`;
-
-  //   // Create the report directory if it doesn't exist
-  //   await this.mkdir(reportDir, true);
-
-  //   // Get input files for the test
-  //   const inputFiles = this.getInputFiles(configKey, testName);
-
-  //   let messageContent = '';
-
-  //   // Include all input files, but exclude aider-message.txt to avoid circular reference
-  //   const filteredInputFiles = inputFiles.filter(file => !file.includes('aider-message.txt'));
-
-  //   if (filteredInputFiles.length > 0) {
-  //     messageContent +=
-  //       filteredInputFiles.map((file) => {
-  //         const relativePath = path.relative(process.cwd(), file);
-  //         return `/add ${relativePath}`;
-  //       }).join('\n') + '\n\n';
-  //   }
-
-  //   // Get test-specific output files
-  //   const parentReportDir = path.dirname(reportDir);
-
-  //   // Transform the test file name to match the log file naming pattern
-  //   const testFileName = path.basename(testName);
-  //   const cleanTestName = testFileName
-  //     .toLowerCase()
-  //     .replace(/\./g, '-')
-  //     .replace(/[^a-z0-9-]/g, '');
-
-  //   // Get the runtime config to know how many checks there are
-  //   const runtimeConfig = this.configs.runtimes[configKey];
-  //   const checksCount = runtimeConfig?.checks?.length || 0;
-
-  //   // Always look for bdd log
-  //   const bddLogPath = path.join(parentReportDir, `${cleanTestName}_bdd.log`);
-  //   const bddLogExists = await this.fileExists(bddLogPath);
-  //   if (bddLogExists) {
-  //     const relativeBddLogPath = path.relative(process.cwd(), bddLogPath);
-  //     messageContent += `/read ${relativeBddLogPath}\n`;
-  //   }
-
-  //   // Look for check logs based on checks count
-  //   for (let i = 0; i < checksCount; i++) {
-  //     const checkLogPath = path.join(parentReportDir, `${cleanTestName}_check-${i}.log`);
-  //     const checkLogExists = await this.fileExists(checkLogPath);
-  //     if (checkLogExists) {
-  //       const relativeCheckLogPath = path.relative(process.cwd(), checkLogPath);
-  //       messageContent += `/read ${relativeCheckLogPath}\n`;
-  //     }
-  //   }
-
-  //   // Add the tests.json file from the test-specific directory
-  //   const testsJsonPath = path.join(reportDir, 'tests.json');
-  //   const testsJsonExists = await this.fileExists(testsJsonPath);
-  //   if (testsJsonExists) {
-  //     const relativeTestsJsonPath = path.relative(process.cwd(), testsJsonPath);
-  //     messageContent += `/read ${relativeTestsJsonPath}\n`;
-  //   }
-
-  //   if (messageContent.includes('/read')) {
-  //     messageContent += '\n';
-  //   }
-
-  //   messageContent += 'Observe these reports and apply. Fix any failing tests, and if that is done, cleanup this code.\n\n';
-
-  //   await this.writeFile(messageFilePath, messageContent);
-  //   this.logBusinessMessage(`Created aider message file at ${messageFilePath}`);
-
-  //   return messageFilePath;
-  // }
 
   /**
    * Launch an aider process for the given test.
@@ -887,8 +802,6 @@ export class Server_DockerCompose extends Server_Api {
     }
   }
 
-  // Aider updates are now handled by the Docker events watcher.
-  // No need to manually generate updates.
 
   /**
    * Inform aider about changes (e.g., test results).

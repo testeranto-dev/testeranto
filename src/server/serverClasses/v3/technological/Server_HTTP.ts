@@ -65,16 +65,16 @@ export class Server_HTTP extends Server_STDIO {
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
-    
+
     this.logBusinessMessage(`Handling ${method} ${path}`);
-    
+
     const result = handleHonoRequest({ method, path, url });
-    
+
     // Handle /~/ routes (unified API for all clients)
     if (result.isApiRoute) {
       return await this.handleRouteRequest(request, url);
     }
-    
+
     // Handle root path - redirect to views index
     if (result.isRootPath) {
       // Check if index.html exists in testeranto/views
@@ -96,7 +96,7 @@ export class Server_HTTP extends Server_STDIO {
         }
       );
     }
-    
+
     // For other paths, let Hono's static middleware handle them
     // If we reach here, it means static middleware didn't find the file
     // and we need to handle it as a fallback
@@ -107,11 +107,11 @@ export class Server_HTTP extends Server_STDIO {
     const { handleRouteRequest } = require("../utils/http/handleRouteRequest");
     const routeName = url.pathname.slice(3); // Remove '/~/'
     const method = request.method;
-    
+
     this.logBusinessMessage(`Handling API route: ${method} ${routeName}`);
-    
+
     const result = handleRouteRequest({ routeName, method, url });
-    
+
     // Try to find a matching route handler
     const methodRoutes = this.routes.get(method);
     if (methodRoutes) {
@@ -120,10 +120,10 @@ export class Server_HTTP extends Server_STDIO {
         return await handler(request);
       }
     }
-    
+
     // No route matched, return 404
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Not found',
         message: `No handler for ${method} ${routeName}`,
         timestamp: new Date().toISOString()
@@ -138,11 +138,11 @@ export class Server_HTTP extends Server_STDIO {
   private async handleFallbackRequest(request: Request, path: string): Promise<Response> {
     const { handleFallbackRequest } = require("../utils/http/handleFallbackRequest");
     const result = handleFallbackRequest({ path, method: request.method });
-    
+
     // All static files should be handled by the static middleware
     // If we reach here, it's a 404
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Not found',
         message: `Path ${path} not found`,
         timestamp: new Date().toISOString()
@@ -157,15 +157,15 @@ export class Server_HTTP extends Server_STDIO {
   private async serveFile(filePath: string): Promise<Response> {
     const file = Bun.file(filePath);
     const exists = await file.exists();
-    
+
     if (!exists) {
       return new Response('File not found', { status: 404 });
     }
-    
+
     // Determine content type based on file extension
     const ext = filePath.split('.').pop()?.toLowerCase();
     let contentType = 'text/plain';
-    
+
     if (ext === 'html') contentType = 'text/html';
     else if (ext === 'css') contentType = 'text/css';
     else if (ext === 'js') contentType = 'application/javascript';
@@ -173,7 +173,7 @@ export class Server_HTTP extends Server_STDIO {
     else if (ext === 'png') contentType = 'image/png';
     else if (ext === 'jpg' || ext === 'jpeg') contentType = 'image/jpeg';
     else if (ext === 'svg') contentType = 'image/svg+xml';
-    
+
     return new Response(file, {
       headers: { "Content-Type": contentType }
     });
@@ -186,7 +186,7 @@ export class Server_HTTP extends Server_STDIO {
       this.routes.set(method, new Map());
     }
     this.routes.get(method)!.set(path, handler);
-    
+
     // Also add to Hono app
     const methodLower = method.toLowerCase();
     switch (methodLower) {
@@ -227,8 +227,8 @@ export class Server_HTTP extends Server_STDIO {
         });
         break;
     }
-    
-    this.logBusinessMessage(`Added route ${method} ${path}`);
+
+    // this.logBusinessMessage(`Added route ${method} ${path}`);
   }
 
   removeRoute(method: string, path: string): void {
@@ -238,7 +238,7 @@ export class Server_HTTP extends Server_STDIO {
       methodRoutes.delete(path);
       this.logBusinessMessage(`Removed route ${method} ${path}`);
     }
-    
+
     // Note: Hono doesn't have a built-in way to remove routes
     // We would need to recreate the app or use a different approach
     // For now, we just remove from the internal map
@@ -247,7 +247,7 @@ export class Server_HTTP extends Server_STDIO {
   // Middleware
   useMiddleware(middleware: (request: Request, next: () => Promise<Response>) => Promise<Response>): void {
     this.middlewares.push(middleware);
-    
+
     // Also add to Hono app
     this.app.use(async (c, next) => {
       const response = await middleware(c.req, async () => {
@@ -256,7 +256,7 @@ export class Server_HTTP extends Server_STDIO {
       });
       return response || c.res;
     });
-    
+
     this.logBusinessMessage('Middleware added');
   }
 

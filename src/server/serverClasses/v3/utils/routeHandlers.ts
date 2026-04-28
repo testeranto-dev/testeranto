@@ -1,4 +1,6 @@
-import { GetAiderResponse } from "../../../api";
+
+import type { GetAiderResponse } from "../../../../api";
+import { buildFileTreeFromGraph, queryNodes, queryEdges } from "./graphUtils";
 
 export async function handleFilesRoute(graph: any): Promise<Response> {
   const tree = buildFileTreeFromGraph(graph.nodes, graph.edges);

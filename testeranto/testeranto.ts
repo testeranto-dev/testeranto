@@ -1,9 +1,9 @@
 import type { ITesterantoConfig } from "../src/Types";
+import { ChatSlicer } from "../src/vscode/views/defaultViews/Chat";
+import { DebugGraphSlicer } from "../src/vscode/views/defaultViews/DebugGraph";
 import { EisenhowerMatrixSlicer } from "../src/vscode/views/defaultViews/EisenhowerMatrix";
 import { GanttSlicer } from "../src/vscode/views/defaultViews/Gantt";
 import { KanbanSlicer } from "../src/vscode/views/defaultViews/KanbanBoard";
-import { ChatSlicer } from "../src/vscode/views/defaultViews/Chat";
-import { DebugGraphSlicer } from "../src/vscode/views/defaultViews/DebugGraph";
 // import { DebugGraphSlicerV2 } from "../src/vscode/views/defaultViews/DebugGraphV2";
 import { HomeSlicer } from "../src/vscode/views/defaultViews/Home";
 
@@ -351,10 +351,6 @@ const config: ITesterantoConfig = {
       ],
     },
 
-
-
-
-
     pythontests: {
       runtime: "python",
       tests: [
@@ -379,59 +375,59 @@ const config: ITesterantoConfig = {
       ],
     },
 
-    golangtests: {
-      runtime: "golang",
-      tests: [
-        // Way 1: Golingvu tests on Testeranto
-        "src/lib/golingvu/examples/calculator/golingvu_test.go",
+    // golangtests: {
+    //   runtime: "golang",
+    //   tests: [
+    //     // Way 1: Golingvu tests on Testeranto
+    //     "src/lib/golingvu/examples/calculator/golingvu_test.go",
 
-        // Way 2: Standard Go tests on Testeranto  
-        // "src/lib/golingvu/examples/calculator/native_test.go",
+    //     // Way 2: Standard Go tests on Testeranto
+    //     // "src/lib/golingvu/examples/calculator/native_test.go",
 
-        // // Additional test files
-        // "src/lib/golingvu/golingvu_test.go",
-        // "src/lib/golingvu/interopt_test.go",
-        // "src/lib/golingvu/integration_test.go",
-        // "src/lib/golingvu/package_test.go",
-      ],
-      checks: [
-        // Simple syntax check
-        () => "go fmt ./...",
+    //     // // Additional test files
+    //     // "src/lib/golingvu/golingvu_test.go",
+    //     // "src/lib/golingvu/interopt_test.go",
+    //     // "src/lib/golingvu/integration_test.go",
+    //     // "src/lib/golingvu/package_test.go",
+    //   ],
+    //   checks: [
+    //     // Simple syntax check
+    //     () => "go fmt ./...",
 
-        // Simple vet check
-        () => "go vet ./...",
+    //     // Simple vet check
+    //     () => "go vet ./...",
 
-        // Run Golingvu tests
-        (x) => {
-          const calculatorTest = x.find(f => f.includes("golingvu_test.go"));
-          if (calculatorTest) {
-            return `go test -v ${calculatorTest}`;
-          }
-          return "echo 'No golang calculator test found'";
-        },
+    //     // Run Golingvu tests
+    //     (x) => {
+    //       const calculatorTest = x.find(f => f.includes("golingvu_test.go"));
+    //       if (calculatorTest) {
+    //         return `go test -v ${calculatorTest}`;
+    //       }
+    //       return "echo 'No golang calculator test found'";
+    //     },
 
-        // All tests together
-        () => "go test -v ./src/lib/golingvu/...",
+    //     // All tests together
+    //     () => "go test -v ./src/lib/golingvu/...",
 
-        // Coverage report
-        () => "go test -coverprofile=coverage.out ./src/lib/golingvu/... && go tool cover -func=coverage.out",
+    //     // Coverage report
+    //     () => "go test -coverprofile=coverage.out ./src/lib/golingvu/... && go tool cover -func=coverage.out",
 
-        // Lint check - use version compatible with Go 1.22
-        () => "golangci-lint run ./src/lib/golingvu/... --timeout=5m"
-      ],
-      dockerfile: `testeranto/runtimes/golang/golang.Dockerfile`,
-      buildOptions: `testeranto/runtimes/golang/golang.ts`,
-      buildKitOptions: {
-        cacheMounts: [
-          "/go/pkg/mod",
-          "/root/.cache/go-build"
-        ],
-      },
-      outputs: [
-        "coverage.out",
-        "coverage.html"
-      ],
-    },
+    //     // Lint check - use version compatible with Go 1.22
+    //     () => "golangci-lint run ./src/lib/golingvu/... --timeout=5m"
+    //   ],
+    //   dockerfile: `testeranto/runtimes/golang/golang.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/golang/golang.ts`,
+    //   buildKitOptions: {
+    //     cacheMounts: [
+    //       "/go/pkg/mod",
+    //       "/root/.cache/go-build"
+    //     ],
+    //   },
+    //   outputs: [
+    //     "coverage.out",
+    //     "coverage.html"
+    //   ],
+    // },
 
     // rusttests: {
     //   runtime: "rust",

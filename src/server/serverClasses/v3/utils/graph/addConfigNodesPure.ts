@@ -6,27 +6,6 @@ export function addConfigNodesPure(
   timestamp: string
 ): GraphOperation[] {
   const operations: GraphOperation[] = [];
-  if (!configs.runtimes) return operations;
-
-  for (const [configKey] of Object.entries(configs.runtimes)) {
-    operations.push({
-      type: 'addNode',
-      data: {
-        id: `config:${configKey}`,
-        type: { category: 'resource', type: 'config' },
-        label: configKey,
-        description: `Config: ${configKey}`,
-        status: 'todo',
-        icon: 'gear',
-        metadata: {
-          configKey,
-          timestamp
-        }
-      },
-      timestamp
-    });
-  }
-
   // Add a global config node for agents (which are not tied to a specific runtime)
   operations.push({
     type: 'addNode',
@@ -44,6 +23,30 @@ export function addConfigNodesPure(
     },
     timestamp
   });
+
+  if (!configs.runtimes) {
+    console.error("No runtimes found in config");
+    return operations;
+  }
+
+  for (const configKey of Object.keys(configs.runtimes)) {
+    operations.push({
+      type: 'addNode',
+      data: {
+        id: `config:${configKey}`,
+        type: { category: 'resource', type: 'config' },
+        label: configKey,
+        description: `Config: ${configKey}`,
+        status: 'todo',
+        icon: 'gear',
+        metadata: {
+          configKey,
+          timestamp
+        }
+      },
+      timestamp
+    });
+  }
 
   return operations;
 }

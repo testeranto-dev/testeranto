@@ -2877,6 +2877,55 @@ function setupCleanup(context, outputChannel, terminalManager, statusBarManager,
   );
 }
 
+// src/vscode/views/defaultViews/Chat.ts
+var ChatSlicer = (graphData) => {
+  const messages = graphData.nodes.filter((node) => {
+    if (node.type && typeof node.type === "object") {
+      return node.type.category === "chat" && node.type.type === "chat_message";
+    }
+    return node.type === "chat_message" || node.attributes?.type && node.attributes.type === "chat_message";
+  }).map((node) => ({
+    id: node.id,
+    content: node.content || node.metadata?.content || node.label || node.id,
+    agentName: node.sender || node.agentName || node.metadata?.sender || node.metadata?.agentName,
+    timestamp: node.timestamp || node.metadata?.timestamp,
+    metadata: node.metadata || node.attributes
+  }));
+  return {
+    messages,
+    viewType: "chat",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+};
+
+// src/vscode/views/defaultViews/DebugGraph.ts
+var DebugGraphSlicer = (graphData) => {
+  const nodes = graphData.nodes.map((node) => ({
+    id: node.id,
+    label: node.label,
+    type: node.type,
+    x: Math.random() * 800,
+    // Default positions for sigma.js
+    y: Math.random() * 600,
+    size: 5,
+    color: "#4a90e2",
+    attributes: node.attributes
+  }));
+  const edges = (graphData.edges || []).map((edge) => ({
+    source: edge.source,
+    target: edge.target,
+    type: edge.attributes?.type,
+    weight: edge.attributes?.weight,
+    attributes: edge.attributes
+  }));
+  return {
+    nodes,
+    edges,
+    viewType: "debug",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+};
+
 // src/vscode/views/defaultViews/EisenhowerMatrix.ts
 var EisenhowerMatrixSlicer = (graphData) => {
   const items = graphData.nodes.filter(
@@ -2989,55 +3038,6 @@ var KanbanSlicer = (graphData) => {
   return {
     items,
     viewType: "kanban",
-    timestamp: (/* @__PURE__ */ new Date()).toISOString()
-  };
-};
-
-// src/vscode/views/defaultViews/Chat.ts
-var ChatSlicer = (graphData) => {
-  const messages = graphData.nodes.filter((node) => {
-    if (node.type && typeof node.type === "object") {
-      return node.type.category === "chat" && node.type.type === "chat_message";
-    }
-    return node.type === "chat_message" || node.attributes?.type && node.attributes.type === "chat_message";
-  }).map((node) => ({
-    id: node.id,
-    content: node.content || node.metadata?.content || node.label || node.id,
-    agentName: node.sender || node.agentName || node.metadata?.sender || node.metadata?.agentName,
-    timestamp: node.timestamp || node.metadata?.timestamp,
-    metadata: node.metadata || node.attributes
-  }));
-  return {
-    messages,
-    viewType: "chat",
-    timestamp: (/* @__PURE__ */ new Date()).toISOString()
-  };
-};
-
-// src/vscode/views/defaultViews/DebugGraph.ts
-var DebugGraphSlicer = (graphData) => {
-  const nodes = graphData.nodes.map((node) => ({
-    id: node.id,
-    label: node.label,
-    type: node.type,
-    x: Math.random() * 800,
-    // Default positions for sigma.js
-    y: Math.random() * 600,
-    size: 5,
-    color: "#4a90e2",
-    attributes: node.attributes
-  }));
-  const edges = (graphData.edges || []).map((edge) => ({
-    source: edge.source,
-    target: edge.target,
-    type: edge.attributes?.type,
-    weight: edge.attributes?.weight,
-    attributes: edge.attributes
-  }));
-  return {
-    nodes,
-    edges,
-    viewType: "debug",
     timestamp: (/* @__PURE__ */ new Date()).toISOString()
   };
 };
@@ -3350,53 +3350,53 @@ var config = {
       outputs: [
         "testeranto/reports/pythontests"
       ]
-    },
-    golangtests: {
-      runtime: "golang",
-      tests: [
-        // Way 1: Golingvu tests on Testeranto
-        "src/lib/golingvu/examples/calculator/golingvu_test.go"
-        // Way 2: Standard Go tests on Testeranto  
-        // "src/lib/golingvu/examples/calculator/native_test.go",
-        // // Additional test files
-        // "src/lib/golingvu/golingvu_test.go",
-        // "src/lib/golingvu/interopt_test.go",
-        // "src/lib/golingvu/integration_test.go",
-        // "src/lib/golingvu/package_test.go",
-      ],
-      checks: [
-        // Simple syntax check
-        () => "go fmt ./...",
-        // Simple vet check
-        () => "go vet ./...",
-        // Run Golingvu tests
-        (x) => {
-          const calculatorTest = x.find((f) => f.includes("golingvu_test.go"));
-          if (calculatorTest) {
-            return `go test -v ${calculatorTest}`;
-          }
-          return "echo 'No golang calculator test found'";
-        },
-        // All tests together
-        () => "go test -v ./src/lib/golingvu/...",
-        // Coverage report
-        () => "go test -coverprofile=coverage.out ./src/lib/golingvu/... && go tool cover -func=coverage.out",
-        // Lint check - use version compatible with Go 1.22
-        () => "golangci-lint run ./src/lib/golingvu/... --timeout=5m"
-      ],
-      dockerfile: `testeranto/runtimes/golang/golang.Dockerfile`,
-      buildOptions: `testeranto/runtimes/golang/golang.ts`,
-      buildKitOptions: {
-        cacheMounts: [
-          "/go/pkg/mod",
-          "/root/.cache/go-build"
-        ]
-      },
-      outputs: [
-        "coverage.out",
-        "coverage.html"
-      ]
     }
+    // golangtests: {
+    //   runtime: "golang",
+    //   tests: [
+    //     // Way 1: Golingvu tests on Testeranto
+    //     "src/lib/golingvu/examples/calculator/golingvu_test.go",
+    //     // Way 2: Standard Go tests on Testeranto
+    //     // "src/lib/golingvu/examples/calculator/native_test.go",
+    //     // // Additional test files
+    //     // "src/lib/golingvu/golingvu_test.go",
+    //     // "src/lib/golingvu/interopt_test.go",
+    //     // "src/lib/golingvu/integration_test.go",
+    //     // "src/lib/golingvu/package_test.go",
+    //   ],
+    //   checks: [
+    //     // Simple syntax check
+    //     () => "go fmt ./...",
+    //     // Simple vet check
+    //     () => "go vet ./...",
+    //     // Run Golingvu tests
+    //     (x) => {
+    //       const calculatorTest = x.find(f => f.includes("golingvu_test.go"));
+    //       if (calculatorTest) {
+    //         return `go test -v ${calculatorTest}`;
+    //       }
+    //       return "echo 'No golang calculator test found'";
+    //     },
+    //     // All tests together
+    //     () => "go test -v ./src/lib/golingvu/...",
+    //     // Coverage report
+    //     () => "go test -coverprofile=coverage.out ./src/lib/golingvu/... && go tool cover -func=coverage.out",
+    //     // Lint check - use version compatible with Go 1.22
+    //     () => "golangci-lint run ./src/lib/golingvu/... --timeout=5m"
+    //   ],
+    //   dockerfile: `testeranto/runtimes/golang/golang.Dockerfile`,
+    //   buildOptions: `testeranto/runtimes/golang/golang.ts`,
+    //   buildKitOptions: {
+    //     cacheMounts: [
+    //       "/go/pkg/mod",
+    //       "/root/.cache/go-build"
+    //     ],
+    //   },
+    //   outputs: [
+    //     "coverage.out",
+    //     "coverage.html"
+    //   ],
+    // },
     // rusttests: {
     //   runtime: "rust",
     //   tests: [

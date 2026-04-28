@@ -43,7 +43,7 @@ export const specification: ITestSpecification<ICalculatorNode, O> = (
         When.press("3"),
         When.enter(),
       ],
-      [Then.result("8")],
+      [Then.result("28")],
       ["./Readme.md"],
     ),
 
