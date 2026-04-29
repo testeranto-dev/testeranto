@@ -29,7 +29,7 @@ Test result details:
   "testJob": {
     "name": "CombinedResults"
   },
-  "timestamp": 1777436648148,
+  "timestamp": 1777438409026,
   "individualResults": [
     {
       "index": 0,

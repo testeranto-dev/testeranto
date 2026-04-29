@@ -1,7 +1,7 @@
-[2026-04-29T04:24:06.699Z] Build log for test: src/lib/tiposkripto/tests/abstractBase.test/index.ts
+[2026-04-29T04:53:27.756Z] Build log for test: src/lib/tiposkripto/tests/abstractBase.test/index.ts
 Output: testeranto/bundles/nodetests/src/lib/tiposkripto/tests/abstractBase.test/index.mjs
 Entry point: src/lib/tiposkripto/tests/abstractBase.test/index.ts
 
-[2026-04-29T04:24:06.652Z] INFO: Build started for nodetests
+[2026-04-29T04:53:27.719Z] INFO: Build started for nodetests
 
-[2026-04-29T04:24:06.699Z] Build completed for: src/lib/tiposkripto/tests/abstractBase.test/index.ts
+[2026-04-29T04:53:27.756Z] Build completed for: src/lib/tiposkripto/tests/abstractBase.test/index.ts

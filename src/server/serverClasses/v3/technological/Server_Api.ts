@@ -3,15 +3,25 @@ import type { ITesterantoConfig } from "../../../../Types";
 import type { IMode } from "../../../types";
 import { Server_WS_HTTP } from "./Server_WS_HTTP";
 import { matchWsMessageToApi } from "../utils/api/matchWsMessageToApi";
-import { registerDefaultHttpRoutes } from "../utils/api/registerDefaultHttpRoutes";
+import { handleHttpApiRequest as handleHttpApiRequestUtil } from "../utils/api/handleHttpApiRequest";
+import { handleDefaultApiRequest as handleDefaultApiRequestUtil } from "../utils/api/handleDefaultApiRequest";
+import { handleWebSocketApiMessage as handleWebSocketApiMessageUtil } from "./utils/handleWebSocketApiMessage";
+import { handleWebSocketChatMessage as handleWebSocketChatMessageUtil } from "./utils/api/handleWebSocketChatMessage";
+import { broadcastApiMessage as broadcastApiMessageUtil } from "./utils/api/broadcastApiMessage";
+import { broadcastToApiChannel as broadcastToApiChannelUtil } from "./utils/api/broadcastToApiChannel";
+import { validateHttpApiRequest as validateHttpApiRequestUtil } from "./utils/api/validateHttpApiRequest";
+import { createStandardRequest as createStandardRequestUtil } from "./utils/api/createStandardRequest";
+import { registerDefaultHttpRoutes as registerDefaultHttpRoutesUtil } from "../utils/api/registerDefaultHttpRoutes";
+import { setupApi as setupApiUtil } from "./utils/api/setupApi";
+import { cleanupApi as cleanupApiUtil } from "./utils/api/cleanupApi";
 
 /**
  * Server_Api - Technological Layer (+4.5)
- * 
+ *
  * Extends: Server_WS_HTTP (+4)
  * Extended by: Server_DockerCompose
  * Provides: Unified API handling for both HTTP and WebSocket
- * 
+ *
  * This class handles the technological aspects of API routing (Bun HTTP server).
  * Business logic is delegated to abstract methods implemented by business layers.
  */
@@ -114,275 +124,54 @@ export abstract class Server_Api extends Server_WS_HTTP {
   protected abstract handleViewRoute(request: Request, viewName: string): Promise<Response>;
   protected abstract handlePostChatMessage(request: Request): Promise<Response>;
   protected abstract handleGetChatHistory(request: Request): Promise<Response>;
+  protected abstract handleLaunchAiderForTest(request: Request): Promise<Response>;
 
   // ========== HTTP API Request Handling ==========
 
   private async handleHttpApiRequest(request: Request, endpointKey: string): Promise<Response> {
-    try {
-      // Apply API middleware
-      let index = 0;
-      const next = async (): Promise<Response> => {
-        if (index < this.middlewares.length) {
-          const middleware = this.middlewares[index];
-          index++;
-          return await middleware(request, next);
-        } else {
-          // Check if there's a registered handler for this endpoint
-          const routeName = API[endpointKey as keyof typeof API].path.replace('/~/', '');
-          const handler = this.registeredRoutes.get(routeName);
-
-          if (handler) {
-            // Use the registered handler if available
-            return await handler(request);
-          } else {
-            // No specific handler, delegate to business layer
-            return await this.handleDefaultApiRequest(request, endpointKey);
-          }
-        }
-      };
-
-      return await next();
-    } catch (error: any) {
-      this.logBusinessError(`Error handling HTTP API request for ${endpointKey}:`, error);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: error.message,
-          message: 'Internal server error',
-          timestamp: new Date().toISOString()
-        }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    }
+    return handleHttpApiRequestUtil(
+      request,
+      endpointKey,
+      this.middlewares,
+      this.registeredRoutes,
+      (req, key) => this.handleDefaultApiRequest(req, key),
+      (msg, err) => this.logBusinessError(msg, err),
+    );
   }
 
   private async handleDefaultApiRequest(request: Request, endpointKey: string): Promise<Response> {
-    const endpoint = API[endpointKey as keyof typeof API];
-    const url = new URL(request.url);
-
-    // Delegate to business layer implementations
-    switch (endpointKey) {
-      case 'getFiles':
-        return await this.handleFilesRoute(request);
-      case 'getProcess':
-        return await this.handleProcessRoute(request);
-      case 'getAider':
-        return await this.handleAiderRoute(request);
-      case 'getRuntime':
-        return await this.handleRuntimeRoute(request);
-      case 'getAgents':
-      case 'getAllAgents':
-        return await this.handleAgentsRoute(request);
-      case 'getAgentSlice':
-        const agentName = url.pathname.split('/').pop();
-        return await this.handleAgentSliceRoute(request, agentName || '');
-      case 'getAllViews':
-        return await this.handleAllViewsRoute(request);
-      case 'getView':
-        const viewName = url.pathname.split('/').pop();
-        return await this.handleViewRoute(request, viewName || '');
-      case 'getConfigs':
-        return new Response(
-          JSON.stringify({
-            configs: this.configs,
-            timestamp: new Date().toISOString()
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" }
-          }
-        );
-      case 'getAppState':
-        return new Response(
-          JSON.stringify({
-            isRunning: this.isRunning,
-            startedAt: this.startedAt,
-            mode: this.mode,
-            timestamp: new Date().toISOString()
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" }
-          }
-        );
-      case 'postChatMessage':
-        return await this.handlePostChatMessage(request);
-      case 'getChatHistory':
-        return await this.handleGetChatHistory(request);
-      // case 'spawnAgent':
-      //   {
-      //     return await this.handleSpawnAgent(request);
-      //   }
-      // case 'launchAgent':
-      //   {
-      //     // Extract agent name from URL path: /~/agents/launch/:agentName
-      //     const pathParts = url.pathname.split('/').filter(Boolean);
-      //     const agentName = pathParts[pathParts.length - 1];
-      //     if (!agentName) {
-      //       return new Response(
-      //         JSON.stringify({
-      //           success: false,
-      //           error: 'Missing agent name in URL',
-      //           timestamp: new Date().toISOString()
-      //         }),
-      //         {
-      //           status: 400,
-      //           headers: { "Content-Type": "application/json" }
-      //         }
-      //       );
-      //     }
-      //     // Do NOT spawn the container here. Return the Docker command
-      //     // that the user will run in their own terminal.
-      //     const agentConfig = this.configs.agents?.[agentName];
-      //     if (!agentConfig) {
-      //       return new Response(
-      //         JSON.stringify({
-      //           success: false,
-      //           error: `Agent profile '${agentName}' not found in configuration`,
-      //           timestamp: new Date().toISOString()
-      //         }),
-      //         {
-      //           status: 404,
-      //           headers: { "Content-Type": "application/json" }
-      //         }
-      //       );
-      //     }
-      //     const serviceName = `agent-${agentName}`;
-      //     const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
-      //     const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
-      //     return new Response(
-      //       JSON.stringify({
-      //         success: true,
-      //         agentName,
-      //         containerId: '',          // unknown until the user runs the command
-      //         command,
-      //         timestamp: new Date().toISOString()
-      //       }),
-      //       {
-      //         status: 200,
-      //         headers: { "Content-Type": "application/json" }
-      //       }
-      //     );
-      //   }
-      case 'launchAiderForTest':
-        {
-          return await this.handleLaunchAiderForTest(request);
-        }
-      case 'launchAiderForTest':
-        {
-          return await this.handleLaunchAiderForTest(request);
-        }
-      case 'openProcessTerminal':
-        {
-          const body = await request.json().catch(() => ({}));
-          const { nodeId, label, containerId, serviceName } = body;
-
-          if (!nodeId) {
-            return new Response('Missing required field: nodeId', {
-              status: 400,
-              headers: { "Content-Type": "text/plain" }
-            });
-          }
-
-          try {
-            const result = await this.openProcessTerminal(
-              nodeId,
-              label || nodeId,
-              containerId || '',
-              serviceName || ''
-            );
-
-            // Return just the shell command as plain text
-            return new Response(result.command, {
-              status: 200,
-              headers: { "Content-Type": "text/plain" }
-            });
-          } catch (error: any) {
-            return new Response(error.message, {
-              status: 500,
-              headers: { "Content-Type": "text/plain" }
-            });
-          }
-        }
-      default:
-        // For other endpoints, return a placeholder response
-        return new Response(
-          JSON.stringify({
-            endpoint: endpointKey,
-            method: request.method,
-            path: url.pathname,
-            message: `Endpoint '${endpointKey}' is registered but handler not implemented`,
-            timestamp: new Date().toISOString()
-          }),
-          {
-            status: 501,
-            headers: { "Content-Type": "application/json" }
-          }
-        );
-    }
+    return handleDefaultApiRequestUtil(
+      request,
+      endpointKey,
+      this.configs,
+      this.mode,
+      this.isRunning,
+      this.startedAt,
+      (req) => this.handleFilesRoute(req),
+      (req) => this.handleProcessRoute(req),
+      (req) => this.handleAiderRoute(req),
+      (req) => this.handleRuntimeRoute(req),
+      (req) => this.handleAgentsRoute(req),
+      (req, agentName) => this.handleAgentSliceRoute(req, agentName),
+      (req) => this.handleAllViewsRoute(req),
+      (req, viewName) => this.handleViewRoute(req, viewName),
+      (req) => this.handlePostChatMessage(req),
+      (req) => this.handleGetChatHistory(req),
+      (req) => this.handleLaunchAiderForTest(req),
+      (nodeId, label, containerId, serviceName) => this.openProcessTerminal(nodeId, label, containerId, serviceName),
+    );
   }
-
 
   // ========== WebSocket API Message Handling ==========
 
   protected async handleWebSocketApiMessage(client: any, message: any): Promise<void> {
-    try {
-      const parsedMessage = typeof message === 'string' ? JSON.parse(message) : message;
-
-      if (!parsedMessage.type) {
-        this.sendToClient(client.id, {
-          type: 'error',
-          timestamp: new Date().toISOString(),
-          message: 'WebSocket message must have a type field'
-        });
-        return;
-      }
-
-      // Find the handler for this message type
-      const messageKey = this.matchWsMessageToApi(parsedMessage.type);
-      if (!messageKey) {
-        this.sendToClient(client.id, {
-          type: 'error',
-          timestamp: new Date().toISOString(),
-          message: `Unknown WebSocket message type: ${parsedMessage.type}`
-        });
-        return;
-      }
-
-      const handler = this.registeredWsHandlers.get(messageKey);
-      if (!handler) {
-        this.sendToClient(client.id, {
-          type: 'error',
-          timestamp: new Date().toISOString(),
-          message: `No handler registered for message type: ${parsedMessage.type}`
-        });
-        return;
-      }
-
-      // Execute the handler
-      const result = await handler(parsedMessage, client);
-
-      // Send response if handler returned one
-      if (result) {
-        const response = {
-          type: `${parsedMessage.type}_response`,
-          timestamp: new Date().toISOString(),
-          ...result
-        };
-        this.sendToClient(client.id, response);
-      }
-    } catch (error: any) {
-      this.logBusinessError(`Error handling WebSocket API message:`, error);
-      this.sendToClient(client.id, {
-        type: 'error',
-        timestamp: new Date().toISOString(),
-        message: 'Error processing message',
-        error: error.message
-      });
-    }
+    return handleWebSocketApiMessageUtil(
+      client,
+      message,
+      this.registeredWsHandlers,
+      (clientId, data) => this.sendToClient(clientId, data),
+      (msg, err) => this.logBusinessError(msg, err),
+    );
   }
 
   // ========== API Middleware ==========
@@ -479,184 +268,51 @@ export abstract class Server_Api extends Server_WS_HTTP {
     endpointKey?: string;
     errors?: string[];
   } {
-    const url = new URL(request.url);
-    const routeName = url.pathname.replace('/~/', '');
-    const method = request.method;
-
-    // Use matchApiRoute from api.ts if available
-    const endpointKey = matchApiRoute(routeName, method);
-    if (endpointKey) {
-      return { isValid: true, endpointKey };
-    }
-
-    // Fallback to checking registered routes
-    for (const [key, endpoint] of Object.entries(API)) {
-      const endpointPath = endpoint.path.replace('/~/', '');
-      if (endpointPath === routeName && endpoint.method === method) {
-        return { isValid: true, endpointKey: key };
-      }
-    }
-
-    return {
-      isValid: false,
-      errors: [`No API endpoint found for ${method} ${routeName}`]
-    };
+    return validateHttpApiRequestUtil(request);
   }
 
   // ========== Utility Methods ==========
 
   private createStandardRequest(internalRequest: any): Request {
-    // Convert internal request format to standard Request object
-    // This is a simplified implementation
-    // Since Bun passes a standard Request object, we might not need to convert
-    // But for safety, handle both cases
-    if (internalRequest instanceof Request) {
-      return internalRequest;
-    }
-
-    // Extract properties from internal request object
-    const url = internalRequest.url || 'http://localhost';
-    const method = internalRequest.method || 'GET';
-    const headers = new Headers(internalRequest.headers || {});
-    const body = internalRequest.body || null;
-
-    return new Request(url, {
-      method,
-      headers,
-      body
-    });
+    return createStandardRequestUtil(internalRequest);
   }
 
   private matchWsMessageToApi(type: string): string | null {
     return matchWsMessageToApi(type);
   }
 
-  // ========== Override WebSocket Handling ==========
-
-  // protected override handleWebSocketMessageV2(client: any, data: any): void {
-  //   try {
-  //     const message = JSON.parse(data.toString());
-
-  //     // First, try API message handling
-  //     if (message.type && this.matchWsMessageToApi(message.type)) {
-  //       this.handleWebSocketApiMessage(client, message);
-  //       return;
-  //     }
-
-  //     // Handle chat messages via WebSocket
-  //     if (message.type === 'sendChatMessage') {
-  //       this.handleWebSocketChatMessage(client, message);
-  //       return;
-  //     }
-
-  //     // Fall back to parent implementation for non-API messages
-  //     super.handleWebSocketMessageV2(client, data);
-  //   } catch (error) {
-  //     // If parsing fails, fall back to parent
-  //     super.handleWebSocketMessageV2(client, data);
-  //   }
-  // }
-
   private async handleWebSocketChatMessage(client: any, message: any): Promise<void> {
-    try {
-      const { sender, content } = message;
-
-      if (!sender || !content) {
-        this.sendToClient(client.id, {
-          type: 'error',
-          timestamp: new Date().toISOString(),
-          message: 'Missing required fields: sender and content'
-        });
-        return;
-      }
-
-      // Create a chat message node in the graph
-      const messageId = `chat-ws-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      const chatNode = {
-        id: messageId,
-        type: { category: 'chat', type: 'chat_message' },
-        label: `Chat message from ${sender}`,
-        description: content,
-        metadata: {
-          sender,
-          content,
-          timestamp: new Date().toISOString(),
-          via: 'websocket'
-        },
-        timestamp: new Date().toISOString()
-      };
-
-      // Add to graph
-      this.addNode(chatNode);
-
-      // Update all agent slice files
-      this.updateAllAgentSliceFiles();
-
-      // Broadcast to all clients
-      this.broadcastApiMessage('resourceChanged', {
-        url: '/~/chat',
-        message: 'New chat message added via WebSocket',
-        timestamp: new Date().toISOString()
-      });
-
-      // Send confirmation to the sender
-      this.sendToClient(client.id, {
-        type: 'chatMessageSent',
-        messageId,
-        timestamp: new Date().toISOString(),
-        message: 'Chat message sent successfully'
-      });
-
-      // Broadcast the new message to all subscribed clients
-      this.broadcastToChannel('chat', {
-        type: 'newChatMessage',
-        messageId,
-        sender,
-        content,
-        timestamp: new Date().toISOString()
-      });
-
-    } catch (error: any) {
-      this.logBusinessError('Error handling WebSocket chat message:', error);
-      this.sendToClient(client.id, {
-        type: 'error',
-        timestamp: new Date().toISOString(),
-        message: 'Failed to send chat message',
-        error: error.message
-      });
-    }
+    return handleWebSocketChatMessageUtil(
+      client,
+      message,
+      (node) => this.addNode(node),
+      () => this.updateAllAgentSliceFiles(),
+      (messageType, data) => this.broadcastApiMessage(messageType, data),
+      (clientId, data) => this.sendToClient(clientId, data),
+      (channel, data) => this.broadcastToChannel(channel, data),
+      (msg, err) => this.logBusinessError(msg, err),
+    );
   }
 
   // ========== API Broadcast Methods ==========
 
   broadcastApiMessage(messageType: string, data: any, filter?: (client: any) => boolean): void {
-    const messageSpec = wsApi[messageType as keyof typeof wsApi];
-    if (!messageSpec) {
-      throw new Error(`Cannot broadcast: message type '${messageType}' not found in wsApi`);
-    }
-
-    const message = {
-      type: messageSpec.type,
-      timestamp: new Date().toISOString(),
-      ...data
-    };
-
-    this.broadcast(message, filter);
+    broadcastApiMessageUtil(
+      messageType,
+      data,
+      (message, filterArg) => this.broadcast(message, filterArg),
+      (msg, err) => this.logBusinessError(msg, err),
+    );
   }
 
   broadcastToApiChannel(channel: string, messageType: string, data: any): void {
-    const messageSpec = wsApi[messageType as keyof typeof wsApi];
-    if (!messageSpec) {
-      throw new Error(`Cannot broadcast to channel: message type '${messageType}' not found in wsApi`);
-    }
-
-    const message = {
-      type: messageSpec.type,
-      timestamp: new Date().toISOString(),
-      ...data
-    };
-
-    this.broadcastToChannel(channel, message);
+    broadcastToApiChannelUtil(
+      channel,
+      messageType,
+      data,
+      (ch, msg) => this.broadcastToChannel(ch, msg),
+      (msg, err) => this.logBusinessError(msg, err),
+    );
   }
 
   // ========== API Route Registration ==========
@@ -671,160 +327,25 @@ export abstract class Server_Api extends Server_WS_HTTP {
     this.logBusinessMessage('Spawn‑agent route is defined in api.ts');
   }
 
-  /**
-   * DEPRECATED – The VSCode extension now composes the Docker command locally.
-   * This endpoint should be removed once the new architecture is fully validated.
-   * The extension no longer calls this endpoint.
-   *
-   * Handle a POST /~/agents/spawn request.
-   * Parses the JSON body and delegates to spawnAgent().
-   * Supports requestUid for async graph operation correlation.
-   */
-  // private async handleSpawnAgent(request: Request): Promise<Response> {
-  //   try {
-  //     const body = await request.json();
-  //     const { profile, loadFiles, model } = body;
-
-  //     if (!profile) {
-  //       return new Response(
-  //         JSON.stringify({
-  //           success: false,
-  //           error: 'Missing required field: profile',
-  //           timestamp: new Date().toISOString(),
-  //         }),
-  //         {
-  //           status: 400,
-  //           headers: { 'Content-Type': 'application/json' },
-  //         },
-  //       );
-  //     }
-
-  //     // Do NOT spawn the container here.  The server only returns the
-  //     // Docker command that the user will run in their own terminal.
-  //     // The Docker events watcher will detect the container when it
-  //     // starts and create the graph node asynchronously.
-  //     const agentConfig = this.configs.agents?.[profile];
-  //     if (!agentConfig) {
-  //       return new Response(
-  //         JSON.stringify({
-  //           success: false,
-  //           error: `Agent profile '${profile}' not found in configuration`,
-  //           timestamp: new Date().toISOString(),
-  //         }),
-  //         {
-  //           status: 404,
-  //           headers: { 'Content-Type': 'application/json' },
-  //         },
-  //       );
-  //     }
-
-  //     // Build the docker‑compose command that the user will execute.
-  //     // The service name follows the pattern used by generateAgentService.
-  //     const serviceName = `agent-${profile}`;
-  //     const composePath = `${process.cwd()}/testeranto/docker-compose.yml`;
-  //     const command = `docker compose -f "${composePath}" up -d ${serviceName}`;
-
-  //     return new Response(
-  //       JSON.stringify({
-  //         success: true,
-  //         agentName: profile,
-  //         containerId: '',          // unknown until the user runs the command
-  //         command,
-  //         timestamp: new Date().toISOString(),
-  //       }),
-  //       {
-  //         status: 200,
-  //         headers: { 'Content-Type': 'application/json' },
-  //       },
-  //     );
-  //   } catch (error: any) {
-  //     this.logBusinessError('Error generating agent command:', error);
-  //     return new Response(
-  //       JSON.stringify({
-  //         success: false,
-  //         error: error.message,
-  //         timestamp: new Date().toISOString(),
-  //       }),
-  //       {
-  //         status: 500,
-  //         headers: { 'Content-Type': 'application/json' },
-  //       },
-  //     );
-  //   }
-  // }
-
-  // ========== API Server Lifecycle ==========
-
   async setupApi(): Promise<void> {
-    this.logBusinessMessage("Setting up API server...");
-
-    // Register default WebSocket message handler for API messages
-    this.on('websocketMessage', ({ client, message }) => {
-      if (message.type && this.matchWsMessageToApi(message.type)) {
-        this.handleWebSocketApiMessage(client, message);
-      }
-    });
-
-    // Register default HTTP API routes (generic patterns like /~/agents/:agentName)
-    await this.registerDefaultHttpRoutes();
-
-    this.logBusinessMessage("API server setup complete");
+    await setupApiUtil(
+      (event, handler) => this.on(event, handler),
+      (type) => this.matchWsMessageToApi(type),
+      (client, message) => this.handleWebSocketApiMessage(client, message),
+      (method, path, handler) => this.addRoute(method, path, handler),
+      (request, endpointKey) => this.handleHttpApiRequest(request, endpointKey),
+      (request, viewName) => this.handleViewRoute(request, viewName),
+      this.configs,
+      (msg) => this.logBusinessMessage(msg),
+    );
   }
-
-  private async registerDefaultHttpRoutes(): Promise<void> {
-    const routes = registerDefaultHttpRoutes(this.configs);
-
-    this.logBusinessMessage("Registering all HTTP API routes from api.ts...");
-
-    // First, add a health check route
-    this.addRoute('GET', '/~/health', async (request: Request) => {
-      return new Response(
-        JSON.stringify({
-          status: 'ok',
-          timestamp: new Date().toISOString(),
-          message: 'Testeranto API server is running'
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    });
-    this.logBusinessMessage("Registered health check route: GET /~/health");
-
-    // Register all routes from the API object
-    for (const [endpointKey, endpoint] of Object.entries(API)) {
-      const method = endpoint.method;
-      const path = endpoint.path;
-
-      // Register the route with a handler that will be processed by handleHttpApiRequest
-      this.addRoute(method, path, async (request: Request) => {
-        return await this.handleHttpApiRequest(request, endpointKey);
-      });
-
-      this.logBusinessMessage(`Registered API route: ${method} ${path} (${endpointKey})`);
-    }
-
-    // Also register view routes from config
-    if (this.configs.views) {
-      for (const viewKey of Object.keys(this.configs.views)) {
-        this.addRoute('GET', `/~/views/${viewKey}`, async (request: Request) => {
-          return await this.handleViewRoute(request, viewKey);
-        });
-        this.logBusinessMessage(`Registered view route: GET /~/views/${viewKey}`);
-      }
-    }
-
-    this.logBusinessMessage(`Registered ${Object.keys(API).length} API routes and ${this.configs.views ? Object.keys(this.configs.views).length : 0} view routes`);
-  }
-
-
 
   async cleanupApi(): Promise<void> {
-    this.logBusinessMessage("Cleaning up API server...");
-    this.registeredRoutes.clear();
-    this.registeredWsHandlers.clear();
-    this.apiMiddleware = [];
-    this.logBusinessMessage("API server cleaned up");
+    cleanupApiUtil(
+      this.registeredRoutes,
+      this.registeredWsHandlers,
+      this.apiMiddleware,
+      (msg) => this.logBusinessMessage(msg),
+    );
   }
 }
