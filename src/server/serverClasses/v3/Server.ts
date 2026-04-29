@@ -2,12 +2,11 @@ import type { ITesterantoConfig } from "../../../Types";
 import type { IMode } from "../../types";
 import { Server_DockerCompose } from "./technological/Server_DockerCompose";
 import { handleFilesRoute, handleProcessRoute, handleAiderRoute } from "./utils/routeHandlers";
-import { processTestResults } from "./utils/testResultUtils";
-import { queryNodes, queryEdges } from "./utils/graphUtils";
 import { generateViewSliceUtil } from "./utils/static/generateViewSliceUtil";
 import { writeViewHtmlFileUtil } from "./utils/static/writeViewHtmlFileUtil";
 import { writeViewsIndexHtmlUtil } from "./utils/static/writeViewsIndexHtmlUtil";
 import { type GetAiderResponse } from "../../../api"
+import { writeViewSliceFiles } from "./business/utils/graph/writeViewSliceFiles";
 
 
 export abstract class Server extends Server_DockerCompose {
@@ -50,7 +49,7 @@ export abstract class Server extends Server_DockerCompose {
     this.isRunning = true;
     this.startedAt = new Date();
     await this.notifyStarted();
-    this.writeViewSliceFiles();
+    writeViewSliceFiles(this.graph, this.configs);
     await this.saveGraph();
   }
 

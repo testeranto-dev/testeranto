@@ -4,6 +4,8 @@ import type { TesterantoGraph, GraphNodeAttributes, GraphEdgeAttributes, GraphOp
 import { Server_Api_Routing } from "./Server_Api_Routing";
 import { EventQueue } from "./utils/EventQueue";
 import { parseTestResultVerbs } from "../utils/graph/parseTestResultVerbs";
+import { getStoredHash, setStoredHash } from "./utils/storedHashes";
+import { writeCompletionMarker } from "./utils/writeCompletionMarker";
 
 export abstract class Server_Files extends Server_Api_Routing {
   protected inputFileWatchers: Map<string, () => void> = new Map();
@@ -61,13 +63,9 @@ export abstract class Server_Files extends Server_Api_Routing {
     testResult: any,
   ): Promise<void>;
 
-  // Graph manipulation methods removed.
-  // File events are now handled by the file events watcher in Server_DockerCompose,
-  // which produces GraphOperation objects and calls applyUpdate.
-  // This follows the same pattern as the Docker events watcher.
+  protected abstract writeFile(path: string, content: string): Promise<void>;
 
-  // Docker processes are now started by the Docker events watcher.
-  // No need to manually start them from here.
+  protected abstract logBusinessMessage(message: string): void;
 
   protected async startFileWatching(): Promise<void> {
     for (const [configKey] of Object.entries(this.configs.runtimes)) {
@@ -89,7 +87,6 @@ export abstract class Server_Files extends Server_Api_Routing {
       this.inputFileWatchers.set(configKey, unwatch);
     }
 
-    // Start draining the file event queue periodically
     setInterval(() => {
       this.fileEventQueue.drain(async (event) => {
         await this.handleInputFileChange(event.configKey, event.inputFilePath);
@@ -118,10 +115,6 @@ export abstract class Server_Files extends Server_Api_Routing {
     configKey: string,
     inputFilePath: string,
   ): Promise<void> {
-    if (!(await this.fileExists(inputFilePath))) {
-      return;
-    }
-
     const content = await this.readFile(inputFilePath);
     const allTestsInfo = JSON.parse(content);
 
@@ -136,15 +129,10 @@ export abstract class Server_Files extends Server_Api_Routing {
       }
 
       const newHash = testInfo.hash;
-      const oldHash = this.getStoredHash(configKey, testName);
+      const oldHash = getStoredHash(this.storedHashes, configKey, testName);
 
       if (newHash !== oldHash) {
-        this.setStoredHash(configKey, testName, newHash);
-
-        // Graph manipulation is now handled by the file events watcher
-        // which watches testeranto/bundles/{configKey}/inputFiles.json
-        // and produces GraphOperation objects via handleFileEventUtil.
-        // Only schedule the test here.
+        setStoredHash(this.storedHashes, configKey, testName, newHash);
         await this.scheduleTest(runtime, testName, configKey, configValue);
       }
     }
@@ -155,20 +143,12 @@ export abstract class Server_Files extends Server_Api_Routing {
     testName: string,
     testsJsonPath: string,
   ): Promise<void> {
-    if (!(await this.fileExists(testsJsonPath))) {
-      return;
-    }
-
     const content = await this.readFile(testsJsonPath);
     const testResult = JSON.parse(content);
 
-    // Parse test result to create/update verb nodes in the graph
     const verbOperations = parseTestResultVerbs(testResult, configKey, testName);
-
-    // Remove old verb nodes for this test before adding new ones
     this.removeVerbNodesForTest(configKey, testName);
 
-    // Apply verb operations
     if (verbOperations.length > 0) {
       this.applyUpdate({
         operations: verbOperations,
@@ -176,15 +156,10 @@ export abstract class Server_Files extends Server_Api_Routing {
       });
     }
 
-    // Graph manipulation (output file node, edge, test node update) is now handled
-    // by the file events watcher which watches testeranto/reports/{configKey}/{testName}/tests.json
-    // and produces GraphOperation objects via handleFileEventUtil.
-    // Only process features here.
-
-    const individualResults = testResult.individualResults || [];
+    const individualResults = testResult.individualResults || []; // fallback for missing field
     const features: string[] = [];
     for (const individualResult of individualResults) {
-      const resultFeatures = individualResult.features || [];
+      const resultFeatures = individualResult.features || []; // fallback for missing field
       for (const feature of resultFeatures) {
         if (typeof feature === "string" && !features.includes(feature)) {
           features.push(feature);
@@ -209,79 +184,16 @@ export abstract class Server_Files extends Server_Api_Routing {
       this.featureFileWatchers.set(absoluteFeaturePath, unwatch);
     }
 
-    // Write a completion marker file to signal that the test has finished
-    const completionFilePath = this.joinPaths(
-      this.projectRoot,
-      "testeranto",
-      "reports",
+    await writeCompletionMarker(
+      this.joinPaths.bind(this),
+      this.writeFile.bind(this),
+      this.logBusinessMessage.bind(this),
+      this.graph,
       configKey,
       testName,
-      "test-completed.md"
+      testResult,
+      this.projectRoot,
     );
-
-    // Find input files (edges from test node to file nodes)
-    const testNodeId = `test:${configKey}:${testName}`;
-    const inputFiles: string[] = [];
-    for (const edgeKey of this.graph.edges()) {
-      const source = this.graph.source(edgeKey);
-      const target = this.graph.target(edgeKey);
-      if (source === testNodeId && target.startsWith('file:')) {
-        const fileNodeAttrs = this.graph.getNodeAttributes(target);
-        if (fileNodeAttrs.metadata?.filePath) {
-          inputFiles.push(fileNodeAttrs.metadata.filePath);
-        }
-      }
-    }
-
-    // Find output files (edges from file nodes to test node)
-    const outputFiles: string[] = [];
-    for (const edgeKey of this.graph.edges()) {
-      const source = this.graph.source(edgeKey);
-      const target = this.graph.target(edgeKey);
-      if (target === testNodeId && source.startsWith('file:')) {
-        const fileNodeAttrs = this.graph.getNodeAttributes(source);
-        if (fileNodeAttrs.metadata?.filePath) {
-          outputFiles.push(fileNodeAttrs.metadata.filePath);
-        }
-      }
-    }
-
-    // Build YAML front matter
-    const readYaml = inputFiles.map(f => `  - ${f}`).join('\n');
-    const addYaml = outputFiles.map(f => `  - ${f}`).join('\n');
-
-    // Build a persona message that describes what the agent should do
-    const testPassed = testResult?.passed ?? false;
-    const resultSummary = testPassed ? 'passed' : 'failed';
-
-    const personaBody = `You are an agent that needs to review the test results for ${testName} (${configKey}).
-
-The test ${resultSummary}.
-
-Based on the test results, you need to make changes to the output files listed below.
-Review the input files to understand the expected behavior, then modify the output files accordingly.
-
-Input files (read-only):
-${inputFiles.map(f => `- ${f}`).join('\n')}
-
-Output files (read-write):
-${outputFiles.map(f => `- ${f}`).join('\n')}
-
-Test result details:
-${JSON.stringify(testResult, null, 2)}
-`;
-
-    const completionData = `---
-read:
-${readYaml}
-add:
-${addYaml}
----
-
-${personaBody}
-`;
-    await this.writeFile(completionFilePath, completionData);
-    this.logBusinessMessage(`Test completion marker written to ${completionFilePath}`);
 
     const watcherKey = `${configKey}:${testName}`;
     if (!this.testResultWatchers.has(watcherKey)) {
@@ -292,20 +204,9 @@ ${personaBody}
     }
   }
 
-  // Feature file changes are now handled by the file events watcher
-  // which watches documentation files and produces GraphOperation objects
-  // via handleFileEventUtil.
+  protected async handleFeatureFileChange(featurePath: string): Promise<void> {
+    throw new Error(`handleFeatureFileChange not implemented for ${featurePath}`);
+  }
 
   private storedHashes: Map<string, Map<string, string>> = new Map();
-
-  private getStoredHash(configKey: string, testName: string): string | undefined {
-    return this.storedHashes.get(configKey)?.get(testName);
-  }
-
-  private setStoredHash(configKey: string, testName: string, hash: string): void {
-    if (!this.storedHashes.has(configKey)) {
-      this.storedHashes.set(configKey, new Map());
-    }
-    this.storedHashes.get(configKey)!.set(testName, hash);
-  }
 }

@@ -1,69 +1,70 @@
 import type { GraphOperation, GraphNodeAttributes, GraphEdgeAttributes } from "../../../../../graph";
-
-export interface GraphState {
-  nodes: GraphNodeAttributes[];
-  edges: Array<{
-    source: string;
-    target: string;
-    attributes: GraphEdgeAttributes;
-  }>;
-}
+import type Graph from "graphology";
 
 export function applyOperations(
-  state: GraphState,
+  graph: Graph<GraphNodeAttributes, GraphEdgeAttributes>,
   operations: GraphOperation[],
-): GraphState {
-  const newState: GraphState = {
-    nodes: [...state.nodes],
-    edges: [...state.edges],
-  };
-
+): void {
   for (const op of operations) {
     switch (op.type) {
-      case 'addNode':
-        newState.nodes.push(op.data as GraphNodeAttributes);
+      case 'addNode': {
+        const nodeData = op.data as GraphNodeAttributes;
+        if (!graph.hasNode(nodeData.id)) {
+          graph.addNode(nodeData.id, nodeData);
+        }
         break;
+      }
 
-      case 'addEdge':
-        newState.edges.push({
-          source: op.data.source,
-          target: op.data.target,
-          attributes: op.data.attributes,
-        });
+      case 'addEdge': {
+        const { source, target, attributes } = op.data as {
+          source: string;
+          target: string;
+          attributes: GraphEdgeAttributes;
+        };
+        if (graph.hasNode(source) && graph.hasNode(target)) {
+          if (!graph.hasEdge(source, target)) {
+            graph.addEdge(source, target, attributes);
+          }
+        }
         break;
+      }
 
       case 'updateNode': {
-        const idx = newState.nodes.findIndex(n => n.id === op.data.id);
-        if (idx !== -1) {
-          newState.nodes[idx] = { ...newState.nodes[idx], ...op.data };
+        const { id, ...attrs } = op.data as Partial<GraphNodeAttributes> & { id: string };
+        if (graph.hasNode(id)) {
+          graph.mergeNodeAttributes(id, attrs);
         }
         break;
       }
 
-      case 'removeNode':
-        newState.nodes = newState.nodes.filter(n => n.id !== op.data.id);
-        newState.edges = newState.edges.filter(
-          e => e.source !== op.data.id && e.target !== op.data.id,
-        );
+      case 'removeNode': {
+        const { id } = op.data as { id: string };
+        if (graph.hasNode(id)) {
+          graph.dropNode(id);
+        }
         break;
+      }
 
       case 'updateEdge': {
-        const idx = newState.edges.findIndex(
-          e => e.source === op.data.source && e.target === op.data.target,
-        );
-        if (idx !== -1) {
-          newState.edges[idx] = { ...newState.edges[idx], ...op.data };
+        const { source, target, ...attrs } = op.data as {
+          source: string;
+          target: string;
+        } & Partial<GraphEdgeAttributes>;
+        const edgeKey = graph.edge(source, target);
+        if (edgeKey !== undefined) {
+          graph.mergeEdgeAttributes(edgeKey, attrs);
         }
         break;
       }
 
-      case 'removeEdge':
-        newState.edges = newState.edges.filter(
-          e => !(e.source === op.data.source && e.target === op.data.target),
-        );
+      case 'removeEdge': {
+        const { source, target } = op.data as { source: string; target: string };
+        const edgeKey = graph.edge(source, target);
+        if (edgeKey !== undefined) {
+          graph.dropEdge(edgeKey);
+        }
         break;
+      }
     }
   }
-
-  return newState;
 }
